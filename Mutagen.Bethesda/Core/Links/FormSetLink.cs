@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDSetLink<T> : FormIDLink<T>, IFormIDSetLink<T>, IEquatable<IFormIDSetLinkGetter<T>>
+    public class FormSetLink<T> : FormLink<T>, IFormSetLink<T>, IEquatable<IFormSetLinkGetter<T>>
        where T : class, IMajorRecordCommonGetter
     {
-        public new static readonly IFormIDSetLinkGetter<T> Empty = new FormIDSetLink<T>();
+        public new static readonly IFormSetLinkGetter<T> Empty = new FormSetLink<T>();
 
         public bool HasBeenSet { get; set; }
         public override FormKey FormKey
@@ -19,11 +19,11 @@ namespace Mutagen.Bethesda
             set => this.Set(value, true);
         }
 
-        public FormIDSetLink()
+        public FormSetLink()
         {
         }
 
-        public FormIDSetLink(FormKey formKey)
+        public FormSetLink(FormKey formKey)
         {
             base.FormKey = formKey;
             this.HasBeenSet = true;
@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda
 
         public override bool Equals(object obj)
         {
-            if (!(obj is IFormIDSetLinkGetter<T> rhs)) return false;
+            if (!(obj is IFormSetLinkGetter<T> rhs)) return false;
             return this.Equals(rhs);
         }
 
-        public bool Equals(IFormIDSetLinkGetter<T> other)
+        public bool Equals(IFormSetLinkGetter<T> other)
         {
             if (this.HasBeenSet != other.HasBeenSet) return false;
             if (this.FormKey != other.FormKey) return false;

@@ -11,7 +11,7 @@ using System.Reactive.Subjects;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class FormIDLinkType : ClassType
+    public class FormLinkType : ClassType
     {
         public enum FormIDTypeEnum
         {
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool HasProperty => false;
         public override bool IsEnumerable => false;
 
-        public override string TypeName(bool getter) => $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
+        public override string TypeName(bool getter) => $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "Form" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
         public override Type Type(bool getter) => typeof(FormID);
         public string DirectTypeName(bool getter, bool internalInterface = false)
         {
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
             switch (this.FormIDType)
             {
                 case FormIDTypeEnum.Normal:
-                    linkString = "FormID";
+                    linkString = "Form";
                     break;
                 case FormIDTypeEnum.EDIDChars:
                     linkString = "EDID";

@@ -4,8 +4,8 @@
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
-      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
-      <FormIDLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
       <UInt16 name="EnchantmentPoints" recordType="ANAM" />
       <Data recordType="BMDT">
         <Fields>

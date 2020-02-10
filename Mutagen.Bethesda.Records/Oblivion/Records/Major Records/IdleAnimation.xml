@@ -6,7 +6,7 @@
       <RefList name="Conditions" refName="Condition" />
       <Enum name="AnimationGroupSection" enumName="IdleAnimation.AnimationGroupSectionEnum" byteLength="1" recordType="ANAM" />
       <List name="RelatedIdleAnimations" recordType="DATA" >
-        <FormIDLink refName="IdleAnimation" />
+        <FormLink refName="IdleAnimation" />
       </List>
     </Fields>
   </Object>

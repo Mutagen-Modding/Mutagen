@@ -75,17 +75,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> IActivatorGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> IActivatorGetter.Script => this.Script;
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
-        public IFormIDSetLink<Sound> Sound => this._Sound;
+        protected IFormSetLink<Sound> _Sound = new FormSetLink<Sound>();
+        public IFormSetLink<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<ISoundGetter> IActivatorGetter.Sound => this.Sound;
+        IFormSetLinkGetter<ISoundGetter> IActivatorGetter.Sound => this.Sound;
         #endregion
 
         #region To String
@@ -678,8 +678,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new IFormIDSetLink<Script> Script { get; }
-        new IFormIDSetLink<Sound> Sound { get; }
+        new IFormSetLink<Script> Script { get; }
+        new IFormSetLink<Sound> Sound { get; }
     }
 
     public partial interface IActivatorInternal :
@@ -698,8 +698,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         String? Name { get; }
         IModelGetter? Model { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
-        IFormIDSetLinkGetter<ISoundGetter> Sound { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<ISoundGetter> Sound { get; }
 
     }
 
@@ -1173,9 +1173,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Model:
                     return typeof(Model);
                 case Activator_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case Activator_FieldIndex.Sound:
-                    return typeof(IFormIDSetLink<Sound>);
+                    return typeof(IFormSetLink<Sound>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -2356,12 +2356,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
+        public IFormSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormSetLink<ISoundGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

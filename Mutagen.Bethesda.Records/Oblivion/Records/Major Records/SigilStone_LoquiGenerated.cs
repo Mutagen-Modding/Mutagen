@@ -86,10 +86,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> ISigilStoneGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> ISigilStoneGetter.Script => this.Script;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormIDSetLink<Script> Script { get; }
+        new IFormSetLink<Script> Script { get; }
         new ISetList<Effect> Effects { get; }
         new Byte Uses { get; set; }
         new UInt32 Value { get; set; }
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
         IReadOnlySetList<IEffectGetter> Effects { get; }
         Byte Uses { get; }
         UInt32 Value { get; }
@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Icon:
                     return typeof(String);
                 case SigilStone_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case SigilStone_FieldIndex.Effects:
                     return typeof(ISetList<Effect>);
                 case SigilStone_FieldIndex.Uses:
@@ -3140,7 +3140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryOverlay>.Instance;
         private int? _DATALocation;

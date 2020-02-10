@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<Grass>> _Grasses = new SetList<IFormIDLink<Grass>>();
-        public ISetList<IFormIDLink<Grass>> Grasses => _Grasses;
+        private readonly SetList<IFormLink<Grass>> _Grasses = new SetList<IFormLink<Grass>>();
+        public ISetList<IFormLink<Grass>> Grasses => _Grasses;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;
+        ISetList<IFormLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<IGrassGetter>> IRegionDataGrassesGetter.Grasses => _Grasses;
+        IReadOnlySetList<IFormLinkGetter<IGrassGetter>> IRegionDataGrassesGetter.Grasses => _Grasses;
         #endregion
 
         #endregion
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionData,
         ILoquiObjectSetter<IRegionDataGrassesInternal>
     {
-        new ISetList<IFormIDLink<Grass>> Grasses { get; }
+        new ISetList<IFormLink<Grass>> Grasses { get; }
     }
 
     public partial interface IRegionDataGrassesInternal :
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        IReadOnlySetList<IFormIDLinkGetter<IGrassGetter>> Grasses { get; }
+        IReadOnlySetList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
 
     }
 
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    return typeof(ISetList<IFormIDLink<Grass>>);
+                    return typeof(ISetList<IFormLink<Grass>>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x53474452: // RDGS
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Grass>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Grasses,
@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Grasses.SetTo(
                             rhs.Grasses,
-                            (r) => new FormIDLink<Grass>(r.FormKey));
+                            (r) => new FormLink<Grass>(r.FormKey));
                     }
                     else
                     {
@@ -1629,14 +1629,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Grasses.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)RegionDataGrasses_FieldIndex.Grasses) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<IGrassGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Grasses),
                     item: item.Grasses,
                     fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataGrasses_FieldIndex.Grasses),
-                    transl: (XElement subNode, IFormIDLinkGetter<IGrassGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<IGrassGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
-                        if (ListXmlTranslation<IFormIDLink<Grass>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<Grass>>.Instance.Parse(
                             node: node,
                             enumer: out var GrassesItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -1862,11 +1862,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IGrassGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Grasses,
                 recordType: RegionDataGrasses_Registration.RDGS_HEADER,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<IGrassGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1988,7 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IReadOnlySetList<IFormIDLinkGetter<IGrassGetter>> Grasses { get; private set; } = EmptySetList<IFormIDLinkGetter<IGrassGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = EmptySetList<IFormLinkGetter<IGrassGetter>>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2040,11 +2040,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Grasses = BinaryOverlaySetList<IFormIDLinkGetter<IGrassGetter>>.FactoryByStartIndex(
+                    this.Grasses = BinaryOverlaySetList<IFormLinkGetter<IGrassGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormIDLink<IGrassGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => new FormLink<IGrassGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)RegionDataGrasses_FieldIndex.Grasses);
                 }

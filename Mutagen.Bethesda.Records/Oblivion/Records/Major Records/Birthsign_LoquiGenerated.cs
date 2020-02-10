@@ -86,13 +86,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<Spell>> _Spells = new SetList<IFormIDLink<Spell>>();
-        public ISetList<IFormIDLink<Spell>> Spells => _Spells;
+        private readonly SetList<IFormLink<Spell>> _Spells = new SetList<IFormLink<Spell>>();
+        public ISetList<IFormLink<Spell>> Spells => _Spells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<Spell>> IBirthsign.Spells => _Spells;
+        ISetList<IFormLink<Spell>> IBirthsign.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<ISpellGetter>> IBirthsignGetter.Spells => _Spells;
+        IReadOnlySetList<IFormLinkGetter<ISpellGetter>> IBirthsignGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new ISetList<IFormIDLink<Spell>> Spells { get; }
+        new ISetList<IFormLink<Spell>> Spells { get; }
     }
 
     public partial interface IBirthsignInternal :
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         String? Icon { get; }
         String? Description { get; }
-        IReadOnlySetList<IFormIDLinkGetter<ISpellGetter>> Spells { get; }
+        IReadOnlySetList<IFormLinkGetter<ISpellGetter>> Spells { get; }
 
     }
 
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Description:
                     return typeof(String);
                 case Birthsign_FieldIndex.Spells:
-                    return typeof(ISetList<IFormIDLink<Spell>>);
+                    return typeof(ISetList<IFormLink<Spell>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Spell>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Birthsign_Registration.SPLO_HEADER,
                         masterReferences: masterReferences,
@@ -1794,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Spells.SetTo(
                             rhs.Spells,
-                            (r) => new FormIDLink<Spell>(r.FormKey));
+                            (r) => new FormLink<Spell>(r.FormKey));
                     }
                     else
                     {
@@ -1986,14 +1986,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Spells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Spells) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<ISpellGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)Birthsign_FieldIndex.Spells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Birthsign_FieldIndex.Spells),
-                    transl: (XElement subNode, IFormIDLinkGetter<ISpellGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<ISpellGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Birthsign_FieldIndex.Spells);
-                        if (ListXmlTranslation<IFormIDLink<Spell>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<Spell>>.Instance.Parse(
                             node: node,
                             enumer: out var SpellsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -2303,10 +2303,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<ISpellGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<ISpellGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2460,7 +2460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlySetList<IFormIDLinkGetter<ISpellGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = EmptySetList<IFormLinkGetter<ISpellGetter>>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2528,10 +2528,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    this.Spells = BinaryOverlaySetList<IFormIDLinkGetter<ISpellGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlaySetList<IFormLinkGetter<ISpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormIDLink<ISpellGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

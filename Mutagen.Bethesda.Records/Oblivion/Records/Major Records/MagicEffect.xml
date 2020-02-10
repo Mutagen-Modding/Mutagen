@@ -15,25 +15,25 @@
           <Enum name="MagicSchool" enumName="MagicSchool" byteLength="4" />
           <Enum name="Resistance" enumName="Resistance" byteLength="4" />
           <UInt32 name="CounterEffectCount" />
-          <FormIDLink name="Light" refName="Light" />
+          <FormLink name="Light" refName="Light" />
           <Float name="ProjectileSpeed" />
-          <FormIDLink name="EffectShader" refName="EffectShader" />
+          <FormLink name="EffectShader" refName="EffectShader" />
           <Break />
           <RefDirect name="SubData" hasBeenSet="True" refName="MagicEffectSubData" />
         </Fields>
       </Data>
       <List name="CounterEffects" recordType="ESCE">
-        <FormIDLink refName="MagicEffect" type="EDIDChars" />
+        <FormLink refName="MagicEffect" type="EDIDChars" />
       </List>
     </Fields>
   </Object>
   <Object name="MagicEffectSubData" objType="Subrecord" GUID="ebfe4657-51cf-4f56-95c9-8e3eee98fa5a" ID="56">
     <Fields>
-      <FormIDLink name="EnchantEffect" refName="EffectShader" />
-      <FormIDLink name="CastingSound" refName="Sound" />
-      <FormIDLink name="BoltSound" refName="Sound" />
-      <FormIDLink name="HitSound" refName="Sound" />
-      <FormIDLink name="AreaSound" refName="Sound" />
+      <FormLink name="EnchantEffect" refName="EffectShader" />
+      <FormLink name="CastingSound" refName="Sound" />
+      <FormLink name="BoltSound" refName="Sound" />
+      <FormLink name="HitSound" refName="Sound" />
+      <FormLink name="AreaSound" refName="Sound" />
       <Float name="ConstantEffectEnchantmentFactor" />
       <Float name="ConstantEffectBarterFactor" />
     </Fields>

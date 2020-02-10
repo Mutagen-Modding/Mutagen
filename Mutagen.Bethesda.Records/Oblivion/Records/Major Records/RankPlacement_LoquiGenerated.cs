@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Faction
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Faction> _Faction = new FormIDLink<Faction>();
-        public IFormIDLink<Faction> Faction => this._Faction;
+        protected IFormLink<Faction> _Faction = new FormLink<Faction>();
+        public IFormLink<Faction> Faction => this._Faction;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
+        IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
         public Byte Rank { get; set; } = default;
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRankPlacementGetter,
         ILoquiObjectSetter<IRankPlacement>
     {
-        new IFormIDLink<Faction> Faction { get; }
+        new IFormLink<Faction> Faction { get; }
         new Byte Rank { get; set; }
         new Byte[] Fluff { get; set; }
     }
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IFactionGetter> Faction { get; }
+        IFormLinkGetter<IFactionGetter> Faction { get; }
         Byte Rank { get; }
         ReadOnlySpan<Byte> Fluff { get; }
 
@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    return typeof(IFormIDLink<Faction>);
+                    return typeof(IFormLink<Faction>);
                 case RankPlacement_FieldIndex.Rank:
                     return typeof(Byte);
                 case RankPlacement_FieldIndex.Fluff:
@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IFactionGetter> Faction => new FormIDLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public Byte Rank => _data.Span[4];
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(5, 3).ToArray();
         partial void CustomCtor(

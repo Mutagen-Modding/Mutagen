@@ -25,15 +25,15 @@
       <P2Int32 name="Grid" recordType="XCLC" />
       <RefDirect name="Lighting" refName="CellLighting" />
       <List name="Regions" recordType="XCLR">
-        <FormIDLink refName="Region" />
+        <FormLink refName="Region" />
       </List>
       <Enum name="MusicType" enumName="MusicType" byteLength="1" recordType="XCMT" />
       <Float name="WaterHeight" recordType="XCLW" />
-      <FormIDLink name="Climate" recordType="XCCM" refName="Climate" />
-      <FormIDLink name="Water" recordType="XCWT" refName="Water" />
-      <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
+      <FormLink name="Climate" recordType="XCCM" refName="Climate" />
+      <FormLink name="Water" recordType="XCWT" refName="Water" />
+      <FormLink name="Owner" recordType="XOWN" refName="Faction" />
       <Int32 name="FactionRank" recordType="XRNK" />
-      <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
+      <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="PathGrid" binary="NoGeneration" refName="PathGrid" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
       <ByteArray name="Timestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />

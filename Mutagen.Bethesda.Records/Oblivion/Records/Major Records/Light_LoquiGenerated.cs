@@ -66,10 +66,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> ILightGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> ILightGetter.Script => this.Script;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -215,10 +215,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
-        public IFormIDSetLink<Sound> Sound => this._Sound;
+        protected IFormSetLink<Sound> _Sound = new FormSetLink<Sound>();
+        public IFormSetLink<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
+        IFormSetLinkGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
         #endregion
         #region DATADataTypeState
         public Light.DATADataType DATADataTypeState { get; set; } = default;
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILightInternal>
     {
         new Model? Model { get; set; }
-        new IFormIDSetLink<Script> Script { get; }
+        new IFormSetLink<Script> Script { get; }
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new Int32 Time { get; set; }
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single? Fade { get; set; }
-        new IFormIDSetLink<Sound> Sound { get; }
+        new IFormSetLink<Sound> Sound { get; }
         new Light.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         IModelGetter? Model { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
         String? Name { get; }
         String? Icon { get; }
         Int32 Time { get; }
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion
         UInt32 Value { get; }
         Single Weight { get; }
         Single? Fade { get; }
-        IFormIDSetLinkGetter<ISoundGetter> Sound { get; }
+        IFormSetLinkGetter<ISoundGetter> Sound { get; }
         Light.DATADataType DATADataTypeState { get; }
 
     }
@@ -1742,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Model:
                     return typeof(Model);
                 case Light_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case Light_FieldIndex.Name:
                     return typeof(String);
                 case Light_FieldIndex.Icon:
@@ -1766,7 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Fade:
                     return typeof(Single);
                 case Light_FieldIndex.Sound:
-                    return typeof(IFormIDSetLink<Sound>);
+                    return typeof(IFormSetLink<Sound>);
                 case Light_FieldIndex.DATADataTypeState:
                     return typeof(Light.DATADataType);
                 default:
@@ -3594,7 +3594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -3653,7 +3653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
+        public IFormSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormSetLink<ISoundGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

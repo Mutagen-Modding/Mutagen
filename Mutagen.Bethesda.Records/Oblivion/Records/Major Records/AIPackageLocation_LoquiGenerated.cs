@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocationReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<IPlaced> _LocationReference = new FormIDLink<IPlaced>();
-        public IFormIDLink<IPlaced> LocationReference => this._LocationReference;
+        protected IFormLink<IPlaced> _LocationReference = new FormLink<IPlaced>();
+        public IFormLink<IPlaced> LocationReference => this._LocationReference;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
+        IFormLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
         #endregion
         #region Radius
         public Single Radius { get; set; } = default;
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAIPackageLocation>
     {
         new AIPackageLocation.LocationType Type { get; set; }
-        new IFormIDLink<IPlaced> LocationReference { get; }
+        new IFormLink<IPlaced> LocationReference { get; }
         new Single Radius { get; set; }
     }
 
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         AIPackageLocation.LocationType Type { get; }
-        IFormIDLinkGetter<IPlacedGetter> LocationReference { get; }
+        IFormLinkGetter<IPlacedGetter> LocationReference { get; }
         Single Radius { get; }
 
     }
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackageLocation_FieldIndex.Type:
                     return typeof(AIPackageLocation.LocationType);
                 case AIPackageLocation_FieldIndex.LocationReference:
-                    return typeof(IFormIDLink<IPlaced>);
+                    return typeof(IFormLink<IPlaced>);
                 case AIPackageLocation_FieldIndex.Radius:
                     return typeof(Single);
                 default:
@@ -1976,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public IFormIDLinkGetter<IPlacedGetter> LocationReference => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormLinkGetter<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public Single Radius => SpanExt.GetFloat(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -50,10 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Script> _Script = new FormIDLink<Script>();
-        public IFormIDLink<Script> Script => this._Script;
+        protected IFormLink<Script> _Script = new FormLink<Script>();
+        public IFormLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IScriptGetter> IScriptEffectGetter.Script => this.Script;
+        IFormLinkGetter<IScriptGetter> IScriptEffectGetter.Script => this.Script;
         #endregion
         #region MagicSchool
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffectGetter,
         ILoquiObjectSetter<IScriptEffect>
     {
-        new IFormIDLink<Script> Script { get; }
+        new IFormLink<Script> Script { get; }
         new MagicSchool MagicSchool { get; set; }
         new IEDIDLink<MagicEffect> VisualEffect { get; }
         new ScriptEffect.Flag Flags { get; set; }
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IScriptGetter> Script { get; }
+        IFormLinkGetter<IScriptGetter> Script { get; }
         MagicSchool MagicSchool { get; }
         IEDIDLinkGetter<IMagicEffectGetter> VisualEffect { get; }
         ScriptEffect.Flag Flags { get; }
@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptEffect_FieldIndex.Script:
-                    return typeof(IFormIDLink<Script>);
+                    return typeof(IFormLink<Script>);
                 case ScriptEffect_FieldIndex.MagicSchool:
                     return typeof(MagicSchool);
                 case ScriptEffect_FieldIndex.VisualEffect:
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int _ScriptLocation => _SCITLocation!.Value + 0x0;
         private bool _Script_IsSet => _SCITLocation.HasValue;
-        public IFormIDLinkGetter<IScriptGetter> Script => _Script_IsSet ? new FormIDLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ScriptLocation, 4)))) : FormIDLink<IScriptGetter>.Empty;
+        public IFormLinkGetter<IScriptGetter> Script => _Script_IsSet ? new FormLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ScriptLocation, 4)))) : FormLink<IScriptGetter>.Empty;
         #endregion
         #region MagicSchool
         private int _MagicSchoolLocation => _SCITLocation!.Value + 0x4;

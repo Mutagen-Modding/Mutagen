@@ -3,7 +3,7 @@
   <Object name="Quest" recordType="QUST" objType="Record" baseClass="OblivionMajorRecord" GUID="bcd4f22e-1051-4402-9032-895ecb9ac0ac" ID="148">
     <Interface>INamed</Interface>    
     <Fields>
-      <FormIDLink name="Script" recordType="SCRI" refName="Script" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
       <String name="Name" recordType="FULL" />
       <String name="Icon" recordType="ICON" />
       <Data>
@@ -35,10 +35,10 @@
     <Fields>
       <Data recordType="QSTA">
         <Fields>
-          <FormIDLink name="Target" objType="Record" >
+          <FormLink name="Target" objType="Record" >
             <Interface type="IGetter">IPlacedGetter</Interface>
             <Interface type="ISetter">IPlaced</Interface>
-          </FormIDLink>
+          </FormLink>
           <Enum name="Flags" enumName="QuestTarget.Flag" byteLength="4" />
         </Fields>
       </Data>

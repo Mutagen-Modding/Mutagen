@@ -7,7 +7,7 @@
       <String name="Icon" recordType="ICON" />
       <String name="Description" recordType="DESC" />
       <List name="Spells">
-        <FormIDLink recordType="SPLO" refName="Spell" />
+        <FormLink recordType="SPLO" refName="Spell" />
       </List>
     </Fields>
   </Object>

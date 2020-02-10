@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> IQuestGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> IQuestGetter.Script => this.Script;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IQuestInternal>
     {
-        new IFormIDSetLink<Script> Script { get; }
+        new IFormSetLink<Script> Script { get; }
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new Quest.Flag Flags { get; set; }
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
         String? Name { get; }
         String? Icon { get; }
         Quest.Flag Flags { get; }
@@ -1643,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Quest_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case Quest_FieldIndex.Name:
                     return typeof(String);
                 case Quest_FieldIndex.Icon:
@@ -3330,7 +3330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         #region Name
         private int? _NameLocation;

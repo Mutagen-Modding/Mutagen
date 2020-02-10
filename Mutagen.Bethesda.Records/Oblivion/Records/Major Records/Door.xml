@@ -5,13 +5,13 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
-      <FormIDLink name="OpenSound" refName="Sound" recordType="SNAM" />
-      <FormIDLink name="CloseSound" refName="Sound" recordType="ANAM" />
-      <FormIDLink name="LoopSound" refName="Sound" recordType="BNAM" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="OpenSound" refName="Sound" recordType="SNAM" />
+      <FormLink name="CloseSound" refName="Sound" recordType="ANAM" />
+      <FormLink name="LoopSound" refName="Sound" recordType="BNAM" />
       <Enum name="Flags" enumName="Door.DoorFlag" byteLength="1" recordType="FNAM" />
       <List name="RandomTeleportDestinations">
-        <FormIDLink recordType="TNAM" refName="Place" />
+        <FormLink recordType="TNAM" refName="Place" />
       </List>
     </Fields>
   </Object>

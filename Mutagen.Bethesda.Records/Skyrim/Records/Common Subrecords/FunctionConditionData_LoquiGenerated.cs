@@ -57,10 +57,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParameterOneRecord
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<SkyrimMajorRecord> _ParameterOneRecord = new FormIDLink<SkyrimMajorRecord>();
-        public IFormIDLink<SkyrimMajorRecord> ParameterOneRecord => this._ParameterOneRecord;
+        protected IFormLink<SkyrimMajorRecord> _ParameterOneRecord = new FormLink<SkyrimMajorRecord>();
+        public IFormLink<SkyrimMajorRecord> ParameterOneRecord => this._ParameterOneRecord;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
         #endregion
         #region ParameterOneNumber
         public Int32 ParameterOneNumber { get; set; } = default;
@@ -90,10 +90,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParameterTwoRecord
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<SkyrimMajorRecord> _ParameterTwoRecord = new FormIDLink<SkyrimMajorRecord>();
-        public IFormIDLink<SkyrimMajorRecord> ParameterTwoRecord => this._ParameterTwoRecord;
+        protected IFormLink<SkyrimMajorRecord> _ParameterTwoRecord = new FormLink<SkyrimMajorRecord>();
+        public IFormLink<SkyrimMajorRecord> ParameterTwoRecord => this._ParameterTwoRecord;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
         #endregion
         #region ParameterTwoNumber
         public Int32 ParameterTwoNumber { get; set; } = default;
@@ -894,10 +894,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFunctionConditionData,
         IFunctionConditionDataGetter
     {
-        new IFormIDLink<SkyrimMajorRecord> ParameterOneRecord { get; }
+        new IFormLink<SkyrimMajorRecord> ParameterOneRecord { get; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new IFormIDLink<SkyrimMajorRecord> ParameterTwoRecord { get; }
+        new IFormLink<SkyrimMajorRecord> ParameterTwoRecord { get; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
     }
@@ -911,10 +911,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         UInt16 Function { get; }
         UInt16 Unknown2 { get; }
-        IFormIDLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
         Int32 ParameterOneNumber { get; }
         String? ParameterOneString { get; }
-        IFormIDLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
         Int32 ParameterTwoNumber { get; }
         String? ParameterTwoString { get; }
         Int32 Unknown3 { get; }
@@ -1457,13 +1457,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case FunctionConditionData_FieldIndex.Unknown2:
                     return typeof(UInt16);
                 case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                    return typeof(IFormIDLink<SkyrimMajorRecord>);
+                    return typeof(IFormLink<SkyrimMajorRecord>);
                 case FunctionConditionData_FieldIndex.ParameterOneNumber:
                     return typeof(Int32);
                 case FunctionConditionData_FieldIndex.ParameterOneString:
                     return typeof(String);
                 case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                    return typeof(IFormIDLink<SkyrimMajorRecord>);
+                    return typeof(IFormLink<SkyrimMajorRecord>);
                 case FunctionConditionData_FieldIndex.ParameterTwoNumber:
                     return typeof(Int32);
                 case FunctionConditionData_FieldIndex.ParameterTwoString:

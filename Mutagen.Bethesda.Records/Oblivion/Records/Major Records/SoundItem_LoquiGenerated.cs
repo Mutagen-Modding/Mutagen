@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
-        public IFormIDSetLink<Sound> Sound => this._Sound;
+        protected IFormSetLink<Sound> _Sound = new FormSetLink<Sound>();
+        public IFormSetLink<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
+        IFormSetLinkGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
         #endregion
         #region Chance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISoundItemGetter,
         ILoquiObjectSetter<ISoundItem>
     {
-        new IFormIDSetLink<Sound> Sound { get; }
+        new IFormSetLink<Sound> Sound { get; }
         new Byte? Chance { get; set; }
     }
 
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDSetLinkGetter<ISoundGetter> Sound { get; }
+        IFormSetLinkGetter<ISoundGetter> Sound { get; }
         Byte? Chance { get; }
 
     }
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundItem_FieldIndex.Sound:
-                    return typeof(IFormIDSetLink<Sound>);
+                    return typeof(IFormSetLink<Sound>);
                 case SoundItem_FieldIndex.Chance:
                     return typeof(Byte);
                 default:
@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
+        public IFormSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormSetLink<ISoundGetter>.Empty;
         #endregion
         #region Chance
         private int? _ChanceLocation;

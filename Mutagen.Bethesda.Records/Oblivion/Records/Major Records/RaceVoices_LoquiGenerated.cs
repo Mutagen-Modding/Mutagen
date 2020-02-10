@@ -49,17 +49,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Male
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Race> _Male = new FormIDLink<Race>();
-        public IFormIDLink<Race> Male => this._Male;
+        protected IFormLink<Race> _Male = new FormLink<Race>();
+        public IFormLink<Race> Male => this._Male;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IRaceGetter> IRaceVoicesGetter.Male => this.Male;
+        IFormLinkGetter<IRaceGetter> IRaceVoicesGetter.Male => this.Male;
         #endregion
         #region Female
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Race> _Female = new FormIDLink<Race>();
-        public IFormIDLink<Race> Female => this._Female;
+        protected IFormLink<Race> _Female = new FormLink<Race>();
+        public IFormLink<Race> Female => this._Female;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IRaceGetter> IRaceVoicesGetter.Female => this.Female;
+        IFormLinkGetter<IRaceGetter> IRaceVoicesGetter.Female => this.Female;
         #endregion
 
         #region To String
@@ -583,8 +583,8 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceVoicesGetter,
         ILoquiObjectSetter<IRaceVoices>
     {
-        new IFormIDLink<Race> Male { get; }
-        new IFormIDLink<Race> Female { get; }
+        new IFormLink<Race> Male { get; }
+        new IFormLink<Race> Female { get; }
     }
 
     public partial interface IRaceVoicesGetter :
@@ -600,8 +600,8 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IRaceGetter> Male { get; }
-        IFormIDLinkGetter<IRaceGetter> Female { get; }
+        IFormLinkGetter<IRaceGetter> Male { get; }
+        IFormLinkGetter<IRaceGetter> Female { get; }
 
     }
 
@@ -1057,9 +1057,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    return typeof(IFormIDLink<Race>);
+                    return typeof(IFormLink<Race>);
                 case RaceVoices_FieldIndex.Female:
-                    return typeof(IFormIDLink<Race>);
+                    return typeof(IFormLink<Race>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1895,8 +1895,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IRaceGetter> Male => new FormIDLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IFormIDLinkGetter<IRaceGetter> Female => new FormIDLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormLinkGetter<IRaceGetter> Male => new FormLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IRaceGetter> Female => new FormLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

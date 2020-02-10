@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Reference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<SkyrimMajorRecord> _Reference = new FormIDLink<SkyrimMajorRecord>();
-        public IFormIDLink<SkyrimMajorRecord> Reference => this._Reference;
+        protected IFormLink<SkyrimMajorRecord> _Reference = new FormLink<SkyrimMajorRecord>();
+        public IFormLink<SkyrimMajorRecord> Reference => this._Reference;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<ISkyrimMajorRecordGetter> IVendorLocationGetter.Reference => this.Reference;
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IVendorLocationGetter.Reference => this.Reference;
         #endregion
         #region Radius
         public UInt32 Radius { get; set; } = default;
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IVendorLocation>
     {
         new VendorLocation.LocationType Type { get; set; }
-        new IFormIDLink<SkyrimMajorRecord> Reference { get; }
+        new IFormLink<SkyrimMajorRecord> Reference { get; }
         new UInt32 Radius { get; set; }
     }
 
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         VendorLocation.LocationType Type { get; }
-        IFormIDLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
         UInt32 Radius { get; }
 
     }
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case VendorLocation_FieldIndex.Type:
                     return typeof(VendorLocation.LocationType);
                 case VendorLocation_FieldIndex.Reference:
-                    return typeof(IFormIDLink<SkyrimMajorRecord>);
+                    return typeof(IFormLink<SkyrimMajorRecord>);
                 case VendorLocation_FieldIndex.Radius:
                     return typeof(UInt32);
                 default:
@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public VendorLocation.LocationType Type => (VendorLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public IFormIDLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormIDLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

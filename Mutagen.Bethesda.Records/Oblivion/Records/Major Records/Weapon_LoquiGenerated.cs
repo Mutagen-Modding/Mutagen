@@ -86,17 +86,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> IWeaponGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> IWeaponGetter.Script => this.Script;
         #endregion
         #region Enchantment
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Enchantment> _Enchantment = new FormIDSetLink<Enchantment>();
-        public IFormIDSetLink<Enchantment> Enchantment => this._Enchantment;
+        protected IFormSetLink<Enchantment> _Enchantment = new FormSetLink<Enchantment>();
+        public IFormSetLink<Enchantment> Enchantment => this._Enchantment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IEnchantmentGetter> IWeaponGetter.Enchantment => this.Enchantment;
+        IFormSetLinkGetter<IEnchantmentGetter> IWeaponGetter.Enchantment => this.Enchantment;
         #endregion
         #region EnchantmentPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1110,8 +1110,8 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormIDSetLink<Script> Script { get; }
-        new IFormIDSetLink<Enchantment> Enchantment { get; }
+        new IFormSetLink<Script> Script { get; }
+        new IFormSetLink<Enchantment> Enchantment { get; }
         new UInt16? EnchantmentPoints { get; set; }
         new Weapon.WeaponType Type { get; set; }
         new Single Speed { get; set; }
@@ -1141,8 +1141,8 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
-        IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
         Weapon.WeaponType Type { get; }
         Single Speed { get; }
@@ -1738,9 +1738,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weapon_FieldIndex.Icon:
                     return typeof(String);
                 case Weapon_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case Weapon_FieldIndex.Enchantment:
-                    return typeof(IFormIDSetLink<Enchantment>);
+                    return typeof(IFormSetLink<Enchantment>);
                 case Weapon_FieldIndex.EnchantmentPoints:
                     return typeof(UInt16);
                 case Weapon_FieldIndex.Type:
@@ -3575,12 +3575,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
         public bool Enchantment_IsSet => _EnchantmentLocation.HasValue;
-        public IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormIDSetLink<IEnchantmentGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentLocation.Value, _package.Meta)))) : FormIDSetLink<IEnchantmentGetter>.Empty;
+        public IFormSetLinkGetter<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormSetLink<IEnchantmentGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentLocation.Value, _package.Meta)))) : FormSetLink<IEnchantmentGetter>.Empty;
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;

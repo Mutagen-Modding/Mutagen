@@ -5,7 +5,7 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
       <RefList name="Items" refName="ContainerItem" />
       <Data>
         <Fields>
@@ -13,13 +13,13 @@
           <Float name="Weight" />
         </Fields>
       </Data>
-      <FormIDLink name="OpenSound" refName="Sound" recordType="SNAM" />
-      <FormIDLink name="CloseSound" refName="Sound" recordType="QNAM" />
+      <FormLink name="OpenSound" refName="Sound" recordType="SNAM" />
+      <FormLink name="CloseSound" refName="Sound" recordType="QNAM" />
     </Fields>
   </Object>
   <Object name="ContainerItem" objType="Subrecord" recordType="CNTO" GUID="2cffd274-8e8f-4c07-8b09-679098c41712" ID="72">
     <Fields>
-      <FormIDLink name="Item" refName="ItemAbstract" />
+      <FormLink name="Item" refName="ItemAbstract" />
       <UInt32 name="Count" />
     </Fields>
   </Object>

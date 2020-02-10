@@ -49,17 +49,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Male
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Hair> _Male = new FormIDLink<Hair>();
-        public IFormIDLink<Hair> Male => this._Male;
+        protected IFormLink<Hair> _Male = new FormLink<Hair>();
+        public IFormLink<Hair> Male => this._Male;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IHairGetter> IRaceHairGetter.Male => this.Male;
+        IFormLinkGetter<IHairGetter> IRaceHairGetter.Male => this.Male;
         #endregion
         #region Female
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Hair> _Female = new FormIDLink<Hair>();
-        public IFormIDLink<Hair> Female => this._Female;
+        protected IFormLink<Hair> _Female = new FormLink<Hair>();
+        public IFormLink<Hair> Female => this._Female;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IHairGetter> IRaceHairGetter.Female => this.Female;
+        IFormLinkGetter<IHairGetter> IRaceHairGetter.Female => this.Female;
         #endregion
 
         #region To String
@@ -583,8 +583,8 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceHairGetter,
         ILoquiObjectSetter<IRaceHair>
     {
-        new IFormIDLink<Hair> Male { get; }
-        new IFormIDLink<Hair> Female { get; }
+        new IFormLink<Hair> Male { get; }
+        new IFormLink<Hair> Female { get; }
     }
 
     public partial interface IRaceHairGetter :
@@ -600,8 +600,8 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IHairGetter> Male { get; }
-        IFormIDLinkGetter<IHairGetter> Female { get; }
+        IFormLinkGetter<IHairGetter> Male { get; }
+        IFormLinkGetter<IHairGetter> Female { get; }
 
     }
 
@@ -1057,9 +1057,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    return typeof(IFormIDLink<Hair>);
+                    return typeof(IFormLink<Hair>);
                 case RaceHair_FieldIndex.Female:
-                    return typeof(IFormIDLink<Hair>);
+                    return typeof(IFormLink<Hair>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1895,8 +1895,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IHairGetter> Male => new FormIDLink<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IFormIDLinkGetter<IHairGetter> Female => new FormIDLink<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormLinkGetter<IHairGetter> Male => new FormLink<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IHairGetter> Female => new FormLink<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

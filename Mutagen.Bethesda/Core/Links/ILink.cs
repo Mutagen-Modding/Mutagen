@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
 
     public static class ILinkExt
     {
-        public static void SetToFormKey<T, R>(this IFormIDSetLink<T> link, IFormIDSetLinkGetter<R> rhs)
+        public static void SetToFormKey<T, R>(this IFormSetLink<T> link, IFormSetLinkGetter<R> rhs)
             where R : IMajorRecordCommonGetter
             where T : R
         {

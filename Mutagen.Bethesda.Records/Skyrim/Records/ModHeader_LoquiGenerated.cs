@@ -135,13 +135,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<SkyrimMajorRecord>> _OverriddenForms = new SetList<IFormIDLink<SkyrimMajorRecord>>();
-        public ISetList<IFormIDLink<SkyrimMajorRecord>> OverriddenForms => _OverriddenForms;
+        private readonly SetList<IFormLink<SkyrimMajorRecord>> _OverriddenForms = new SetList<IFormLink<SkyrimMajorRecord>>();
+        public ISetList<IFormLink<SkyrimMajorRecord>> OverriddenForms => _OverriddenForms;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<SkyrimMajorRecord>> IModHeader.OverriddenForms => _OverriddenForms;
+        ISetList<IFormLink<SkyrimMajorRecord>> IModHeader.OverriddenForms => _OverriddenForms;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>> IModHeaderGetter.OverriddenForms => _OverriddenForms;
+        IReadOnlySetList<IFormLinkGetter<ISkyrimMajorRecordGetter>> IModHeaderGetter.OverriddenForms => _OverriddenForms;
         #endregion
 
         #endregion
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Author { get; set; }
         new String? Description { get; set; }
         new IExtendedList<MasterReference> MasterReferences { get; }
-        new ISetList<IFormIDLink<SkyrimMajorRecord>> OverriddenForms { get; }
+        new ISetList<IFormLink<SkyrimMajorRecord>> OverriddenForms { get; }
         new Int32? INTV { get; set; }
         new Int32? INCC { get; set; }
     }
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? Author { get; }
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
-        IReadOnlySetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>> OverriddenForms { get; }
+        IReadOnlySetList<IFormLinkGetter<ISkyrimMajorRecordGetter>> OverriddenForms { get; }
         Int32? INTV { get; }
         Int32? INCC { get; }
 
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.MasterReferences:
                     return typeof(IExtendedList<MasterReference>);
                 case ModHeader_FieldIndex.OverriddenForms:
-                    return typeof(ISetList<IFormIDLink<SkyrimMajorRecord>>);
+                    return typeof(ISetList<IFormLink<SkyrimMajorRecord>>);
                 case ModHeader_FieldIndex.INTV:
                     return typeof(Int32);
                 case ModHeader_FieldIndex.INCC:
@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E4F: // ONAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<SkyrimMajorRecord>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.OverriddenForms,
@@ -2467,7 +2467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.OverriddenForms.SetTo(
                             rhs.OverriddenForms,
-                            (r) => new FormIDLink<SkyrimMajorRecord>(r.FormKey));
+                            (r) => new FormLink<SkyrimMajorRecord>(r.FormKey));
                     }
                     else
                     {
@@ -2700,14 +2700,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.OverriddenForms.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.OverriddenForms) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.OverriddenForms),
                     item: item.OverriddenForms,
                     fieldIndex: (int)ModHeader_FieldIndex.OverriddenForms,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.OverriddenForms),
-                    transl: (XElement subNode, IFormIDLinkGetter<ISkyrimMajorRecordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -3055,7 +3055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
-                        if (ListXmlTranslation<IFormIDLink<SkyrimMajorRecord>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
                             node: node,
                             enumer: out var OverriddenFormsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -3353,11 +3353,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: null);
                     }
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
                 recordType: ModHeader_Registration.ONAM_HEADER,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<ISkyrimMajorRecordGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3532,7 +3532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryOverlay>.Instance;
-        public IReadOnlySetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>> OverriddenForms { get; private set; } = EmptySetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<ISkyrimMajorRecordGetter>> OverriddenForms { get; private set; } = EmptySetList<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance;
         #region INTV
         private int? _INTVLocation;
         public Int32? INTV => _INTVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _INTVLocation.Value, _package.Meta)) : default(Int32?);
@@ -3628,11 +3628,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.OverriddenForms = BinaryOverlaySetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>>.FactoryByStartIndex(
+                    this.OverriddenForms = BinaryOverlaySetList<IFormLinkGetter<ISkyrimMajorRecordGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormIDLink<ISkyrimMajorRecordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
                 }

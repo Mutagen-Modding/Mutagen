@@ -7,8 +7,8 @@
       <RefList name="Entries" refName="LeveledEntry">
         <GenericSpecification TypeToSpecify="T" Definition="NPCSpawn" />
       </RefList>
-      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
-      <FormIDLink name="Template" refName="NPCAbstract" recordType="TNAM" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="Template" refName="NPCAbstract" recordType="TNAM" />
     </Fields>
   </Object>
 </Loqui>

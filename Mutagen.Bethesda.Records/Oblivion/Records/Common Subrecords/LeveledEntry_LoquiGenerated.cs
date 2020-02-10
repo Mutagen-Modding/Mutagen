@@ -64,10 +64,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Reference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<T> _Reference = new FormIDLink<T>();
-        public IFormIDLink<T> Reference => this._Reference;
+        protected IFormLink<T> _Reference = new FormLink<T>();
+        public IFormLink<T> Reference => this._Reference;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<T> ILeveledEntryGetter<T>.Reference => this.Reference;
+        IFormLinkGetter<T> ILeveledEntryGetter<T>.Reference => this.Reference;
         #endregion
         #region Count
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Int16 Level { get; set; }
         new Byte[] Fluff { get; set; }
-        new IFormIDLink<T> Reference { get; }
+        new IFormLink<T> Reference { get; }
         new Int16? Count { get; set; }
         new Byte[]? Fluff2 { get; set; }
     }
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         Int16 Level { get; }
         ReadOnlySpan<Byte> Fluff { get; }
-        IFormIDLinkGetter<T> Reference { get; }
+        IFormLinkGetter<T> Reference { get; }
         Int16? Count { get; }
         #region Fluff2
         ReadOnlySpan<Byte> Fluff2 { get; }
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledEntry_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case LeveledEntry_FieldIndex.Reference:
-                    return typeof(IFormIDLink<T>);
+                    return typeof(IFormLink<T>);
                 case LeveledEntry_FieldIndex.Count:
                     return typeof(Int16);
                 case LeveledEntry_FieldIndex.Fluff2:
@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
-        public IFormIDLinkGetter<T> Reference => new FormIDLink<T>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormLinkGetter<T> Reference => new FormLink<T>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public Int16? Count => _data.Length >= 10 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(8, 2)) : default(Int16?);
         #region Fluff2
         public bool Fluff2_IsSet => _data.Length >= 12;

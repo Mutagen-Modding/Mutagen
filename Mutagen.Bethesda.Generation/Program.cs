@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "FormKeyXmlTranslation.Instance.Write(";
+            string testString = "FormIDLink";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -47,15 +47,15 @@ namespace Mutagen.Bethesda.Generation
             gen.Add(gen.MaskModule);
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             xmlGen.ShouldGenerateXSD = false;
-            xmlGen.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
+            xmlGen.AddTypeAssociation<FormLinkType>(new FormLinkXmlTranslationGeneration());
             xmlGen.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
             xmlGen.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
             xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
             xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
-            gen.MaskModule.AddTypeAssociation<FormIDLinkType>(MaskModule.TypicalField);
+            gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
-            gen.AddTypeAssociation<FormIDLinkType>("FormIDLink");
+            gen.AddTypeAssociation<FormLinkType>("FormLink");
             gen.AddTypeAssociation<FormIDType>("FormID");
             gen.AddTypeAssociation<FormKeyType>("FormKey");
             gen.AddTypeAssociation<ModKeyType>("ModKey");

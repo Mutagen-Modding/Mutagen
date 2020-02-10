@@ -5,8 +5,8 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
-      <FormIDLink name="Ingredient" refName="Ingredient" recordType="PFIG" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="Ingredient" refName="Ingredient" recordType="PFIG" />
       <Data recordType="PFPC">
         <Fields>
           <UInt8 name="Spring" />

@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Generation
                 && !data.RecordType.HasValue
                 && !(field is NothingType)
                 && !(field is PrimitiveType)
-                && !(field is FormIDLinkType)
+                && !(field is FormLinkType)
                 && !(field is ContainerType)
                 && !(field is DictType))
             {

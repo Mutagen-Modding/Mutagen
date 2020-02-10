@@ -9,8 +9,8 @@
   </Object>
   <Object name="LoadScreenLocation" objType="Subrecord" recordType="LNAM" GUID="20b31ea8-66df-4668-9f33-8a69f340c592" ID="162">
     <Fields>
-      <FormIDLink name="Direct" refName="Place" />
-      <FormIDLink name="Indirect" refName="Worldspace" />
+      <FormLink name="Direct" refName="Place" />
+      <FormLink name="Indirect" refName="Worldspace" />
       <P2Int16 name="GridPoint" />
     </Fields>
   </Object>

@@ -6,7 +6,7 @@
       <RefDirect name="Havok" refName="HavokData" />
       <UInt8 name="TextureSpecularExponent" recordType="SNAM" hasBeenSet="True" />
       <List name="PotentialGrass">
-        <FormIDLink recordType="GNAM" refName="Grass" />
+        <FormLink recordType="GNAM" refName="Grass" />
       </List>
     </Fields>
   </Object>

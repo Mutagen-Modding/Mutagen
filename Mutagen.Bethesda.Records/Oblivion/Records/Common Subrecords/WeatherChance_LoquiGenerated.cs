@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weather
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Weather> _Weather = new FormIDLink<Weather>();
-        public IFormIDLink<Weather> Weather => this._Weather;
+        protected IFormLink<Weather> _Weather = new FormLink<Weather>();
+        public IFormLink<Weather> Weather => this._Weather;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IWeatherGetter> IWeatherChanceGetter.Weather => this.Weather;
+        IFormLinkGetter<IWeatherGetter> IWeatherChanceGetter.Weather => this.Weather;
         #endregion
         #region Chance
         public Int32 Chance { get; set; } = default;
@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWeatherChanceGetter,
         ILoquiObjectSetter<IWeatherChance>
     {
-        new IFormIDLink<Weather> Weather { get; }
+        new IFormLink<Weather> Weather { get; }
         new Int32 Chance { get; set; }
     }
 
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IWeatherGetter> Weather { get; }
+        IFormLinkGetter<IWeatherGetter> Weather { get; }
         Int32 Chance { get; }
 
     }
@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherChance_FieldIndex.Weather:
-                    return typeof(IFormIDLink<Weather>);
+                    return typeof(IFormLink<Weather>);
                 case WeatherChance_FieldIndex.Chance:
                     return typeof(Int32);
                 default:
@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IWeatherGetter> Weather => new FormIDLink<IWeatherGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

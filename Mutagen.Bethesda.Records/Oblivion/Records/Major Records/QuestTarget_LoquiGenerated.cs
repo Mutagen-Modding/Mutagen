@@ -50,10 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Target
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<IPlaced> _Target = new FormIDLink<IPlaced>();
-        public IFormIDLink<IPlaced> Target => this._Target;
+        protected IFormLink<IPlaced> _Target = new FormLink<IPlaced>();
+        public IFormLink<IPlaced> Target => this._Target;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
+        IFormLinkGetter<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
         IQuestTargetGetter,
         ILoquiObjectSetter<IQuestTarget>
     {
-        new IFormIDLink<IPlaced> Target { get; }
+        new IFormLink<IPlaced> Target { get; }
         new QuestTarget.Flag Flags { get; set; }
         new ISetList<Condition> Conditions { get; }
         new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IPlacedGetter> Target { get; }
+        IFormLinkGetter<IPlacedGetter> Target { get; }
         QuestTarget.Flag Flags { get; }
         IReadOnlySetList<IConditionGetter> Conditions { get; }
         QuestTarget.QSTADataType QSTADataTypeState { get; }
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case QuestTarget_FieldIndex.Target:
-                    return typeof(IFormIDLink<IPlaced>);
+                    return typeof(IFormLink<IPlaced>);
                 case QuestTarget_FieldIndex.Flags:
                     return typeof(QuestTarget.Flag);
                 case QuestTarget_FieldIndex.Conditions:
@@ -2306,7 +2306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Target
         private int _TargetLocation => _QSTALocation!.Value + 0x0;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormIDLinkGetter<IPlacedGetter> Target => _Target_IsSet ? new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 4)))) : FormIDLink<IPlacedGetter>.Empty;
+        public IFormLinkGetter<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 4)))) : FormLink<IPlacedGetter>.Empty;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value + 0x4;

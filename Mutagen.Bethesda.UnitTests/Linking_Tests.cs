@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FormLink_TryResolve_NoLink()
         {
-            FormIDLink<INPC> formLink = new FormIDLink<INPC>(UnusedFormKey);
+            FormLink<INPC> formLink = new FormLink<INPC>(UnusedFormKey);
             var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
             Assert.False(formLink.TryResolve(package, out var link));
         }
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(ModKey.Dummy);
             var npc = mod.NPCs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
-            FormIDLink<INPC> formLink = new FormIDLink<INPC>(npc.FormKey);
+            FormLink<INPC> formLink = new FormLink<INPC>(npc.FormKey);
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(npc, linkedRec);
         }
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FormLink_Resolve_NoLink()
         {
-            FormIDLink<INPC> formLink = new FormIDLink<INPC>(UnusedFormKey);
+            FormLink<INPC> formLink = new FormLink<INPC>(UnusedFormKey);
             var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
             Assert.Null(formLink.Resolve(package));
         }
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(ModKey.Dummy);
             var npc = mod.NPCs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
-            FormIDLink<INPC> formLink = new FormIDLink<INPC>(npc.FormKey);
+            FormLink<INPC> formLink = new FormLink<INPC>(npc.FormKey);
             Assert.Same(npc, formLink.Resolve(package));
         }
         #endregion

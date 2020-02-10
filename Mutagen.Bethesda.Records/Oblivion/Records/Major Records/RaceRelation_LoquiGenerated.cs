@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Race
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Race> _Race = new FormIDLink<Race>();
-        public IFormIDLink<Race> Race => this._Race;
+        protected IFormLink<Race> _Race = new FormLink<Race>();
+        public IFormLink<Race> Race => this._Race;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IRaceGetter> IRaceRelationGetter.Race => this.Race;
+        IFormLinkGetter<IRaceGetter> IRaceRelationGetter.Race => this.Race;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceRelationGetter,
         ILoquiObjectSetter<IRaceRelation>
     {
-        new IFormIDLink<Race> Race { get; }
+        new IFormLink<Race> Race { get; }
         new Int32 Modifier { get; set; }
     }
 
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IRaceGetter> Race { get; }
+        IFormLinkGetter<IRaceGetter> Race { get; }
         Int32 Modifier { get; }
 
     }
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceRelation_FieldIndex.Race:
-                    return typeof(IFormIDLink<Race>);
+                    return typeof(IFormLink<Race>);
                 case RaceRelation_FieldIndex.Modifier:
                     return typeof(Int32);
                 default:
@@ -1884,7 +1884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IRaceGetter> Race => new FormIDLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

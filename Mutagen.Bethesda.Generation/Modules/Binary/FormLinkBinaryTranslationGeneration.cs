@@ -10,9 +10,9 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class FormIDLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormKey>
+    public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormKey>
     {
-        public FormIDLinkBinaryTranslationGeneration()
+        public FormLinkBinaryTranslationGeneration()
             : base(expectedLen: 4)
         {
             this.AdditionalWriteParams.Add(AdditionalParam);
@@ -33,12 +33,12 @@ namespace Mutagen.Bethesda.Generation
 
         public override string Typename(TypeGeneration typeGen)
         {
-            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            FormLinkType linkType = typeGen as FormLinkType;
             switch (linkType.FormIDType)
             {
-                case FormIDLinkType.FormIDTypeEnum.Normal:
+                case FormLinkType.FormIDTypeEnum.Normal:
                     return "FormLink";
-                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                case FormLinkType.FormIDTypeEnum.EDIDChars:
                     return "RecordType";
                 default:
                     throw new NotImplementedException();
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationAccessor)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
-            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            FormLinkType linkType = typeGen as FormLinkType;
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)
             {
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Generation
             }
             switch (linkType.FormIDType)
             {
-                case FormIDLinkType.FormIDTypeEnum.Normal:
+                case FormLinkType.FormIDTypeEnum.Normal:
                     using (var args = new ArgsWrapper(fg,
                         $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                     {
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                     break;
-                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                case FormLinkType.FormIDTypeEnum.EDIDChars:
                     fg.AppendLine($"{errorMaskAccessor} = null;");
                     fg.AppendLine($"{outItemAccessor.DirectAccess} = new {linkType.TypeName(getter: false)}(HeaderTranslation.ReadNextRecordType(r.Reader));");
                     fg.AppendLine($"return true;");
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationAccessor)
         {
-            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            FormLinkType linkType = typeGen as FormLinkType;
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)
             {
@@ -127,14 +127,14 @@ namespace Mutagen.Bethesda.Generation
                     TypeGen = typeGen,
                     TranslatorLine = $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
-                    ItemAccessor = $"{itemAccessor}.{(linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")}",
+                    ItemAccessor = $"{itemAccessor}.{(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")}",
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                    TypeOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
-                    DefaultOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null",
+                    TypeOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
+                    DefaultOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null",
                     ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}"
                         .Single()
-                        .AndWhen("masterReferences: masterReferences", () => linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal)
+                        .AndWhen("masterReferences: masterReferences", () => linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         .ToArray(),
                     SkipErrorMask = !this.DoErrorMasks,
                 });
@@ -149,14 +149,14 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            FormLinkType linkType = typeGen as FormLinkType;
             switch (linkType.FormIDType)
             {
-                case FormIDLinkType.FormIDTypeEnum.Normal:
+                case FormLinkType.FormIDTypeEnum.Normal:
                     base.GenerateWrite(fg, objGen, typeGen, writerAccessor, itemAccessor, errorMaskAccessor,
                         translationMaskAccessor: translationMaskAccessor);
                     break;
-                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                case FormLinkType.FormIDTypeEnum.EDIDChars:
                     var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
                     using (var args = new ArgsWrapper(fg,
                         $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
@@ -187,12 +187,12 @@ namespace Mutagen.Bethesda.Generation
             Accessor dataAccessor,
             Accessor packageAccessor)
         {
-            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            FormLinkType linkType = typeGen as FormLinkType;
             switch (linkType.FormIDType)
             {
-                case FormIDLinkType.FormIDTypeEnum.Normal:
+                case FormLinkType.FormIDTypeEnum.Normal:
                     return $"new {linkType.DirectTypeName(getter: true, internalInterface: true)}(FormKey.Factory({packageAccessor}.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
-                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                case FormLinkType.FormIDTypeEnum.EDIDChars:
                     return $"new EDIDLink<{linkType.LoquiType.TypeName(getter: true, internalInterface: true)}>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})))";
                 default:
                     throw new NotImplementedException();
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
                 fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
             }
-            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            FormLinkType linkType = typeGen as FormLinkType;
             
             if (data.RecordType.HasValue)
             {

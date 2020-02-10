@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<Quest>> _Quests = new SetList<IFormIDLink<Quest>>();
-        public ISetList<IFormIDLink<Quest>> Quests => _Quests;
+        private readonly SetList<IFormLink<Quest>> _Quests = new SetList<IFormLink<Quest>>();
+        public ISetList<IFormLink<Quest>> Quests => _Quests;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<Quest>> IDialogTopic.Quests => _Quests;
+        ISetList<IFormLink<Quest>> IDialogTopic.Quests => _Quests;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<IQuestGetter>> IDialogTopicGetter.Quests => _Quests;
+        IReadOnlySetList<IFormLinkGetter<IQuestGetter>> IDialogTopicGetter.Quests => _Quests;
         #endregion
 
         #endregion
@@ -873,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>
     {
-        new ISetList<IFormIDLink<Quest>> Quests { get; }
+        new ISetList<IFormLink<Quest>> Quests { get; }
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
         new Byte[] Timestamp { get; set; }
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        IReadOnlySetList<IFormIDLinkGetter<IQuestGetter>> Quests { get; }
+        IReadOnlySetList<IFormLinkGetter<IQuestGetter>> Quests { get; }
         String? Name { get; }
         DialogType? DialogType { get; }
         ReadOnlySpan<Byte> Timestamp { get; }
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    return typeof(ISetList<IFormIDLink<Quest>>);
+                    return typeof(ISetList<IFormLink<Quest>>);
                 case DialogTopic_FieldIndex.Name:
                     return typeof(String);
                 case DialogTopic_FieldIndex.DialogType:
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x49545351: // QSTI
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Quest>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Quest>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
                         masterReferences: masterReferences,
@@ -2035,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Quests.SetTo(
                             rhs.Quests,
-                            (r) => new FormIDLink<Quest>(r.FormKey));
+                            (r) => new FormLink<Quest>(r.FormKey));
                     }
                     else
                     {
@@ -2243,14 +2243,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Quests.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quests) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<IQuestGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<IQuestGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Quests),
                     item: item.Quests,
                     fieldIndex: (int)DialogTopic_FieldIndex.Quests,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Quests),
-                    transl: (XElement subNode, IFormIDLinkGetter<IQuestGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<IQuestGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2420,7 +2420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
-                        if (ListXmlTranslation<IFormIDLink<Quest>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<Quest>>.Instance.Parse(
                             node: node,
                             enumer: out var QuestsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -2649,10 +2649,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IQuestGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IQuestGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Quests,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<IQuestGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IQuestGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2826,7 +2826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IReadOnlySetList<IFormIDLinkGetter<IQuestGetter>> Quests { get; private set; } = EmptySetList<IFormIDLinkGetter<IQuestGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<IQuestGetter>> Quests { get; private set; } = EmptySetList<IFormLinkGetter<IQuestGetter>>.Instance;
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default(string?);
@@ -2896,10 +2896,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x49545351: // QSTI
                 {
-                    this.Quests = BinaryOverlaySetList<IFormIDLinkGetter<IQuestGetter>>.FactoryByArray(
+                    this.Quests = BinaryOverlaySetList<IFormLinkGetter<IQuestGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormIDLink<IQuestGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<IQuestGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

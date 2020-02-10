@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
             var package = this.CreateLinkCache();
             foreach (var rec in router.Values)
             {
-                foreach (var link in rec.Links.WhereCastable<ILinkGetter, IFormIDLink>())
+                foreach (var link in rec.Links.WhereCastable<ILinkGetter, IFormLink>())
                 {
                     if (link.TryResolveFormKey(package, out var formKey)
                         && router.TryGetValue(formKey, out var duppedRecord))

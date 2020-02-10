@@ -48,7 +48,7 @@
   </Object>
   <Object name="ScriptObjectReference" baseClass="ScriptReference" objType="Subrecord" GUID="a00d44e0-398b-45a6-9e45-facc1da7a2b2" ID="61">
     <Fields>
-      <FormIDLink name="Reference" recordType="SCRO" refName="OblivionMajorRecord" hasBeenSet="False" />
+      <FormLink name="Reference" recordType="SCRO" refName="OblivionMajorRecord" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>

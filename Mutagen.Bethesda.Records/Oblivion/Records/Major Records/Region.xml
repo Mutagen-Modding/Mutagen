@@ -4,7 +4,7 @@
     <Fields>
       <String name="Icon" recordType="ICON" binaryOverlay="Custom" />
       <Color name="MapColor" recordType="RCLR" extraByte="true" />
-      <FormIDLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
+      <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
       <RefList name="Areas" refName="RegionArea" />
       <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
       <RefDirect name="Objects" refName="RegionDataObjects" binary="NoGeneration" />
@@ -41,7 +41,7 @@
   </Object>
   <Object name="RegionDataObject" objType="Subrecord" GUID="e814f192-a945-4518-bfd0-00e67eae8105" ID="117">
     <Fields>
-      <FormIDLink name="Object" refName="OblivionMajorRecord" />
+      <FormLink name="Object" refName="OblivionMajorRecord" />
       <UInt16 name="ParentIndex" />
       <ByteArray name="Unknown1" nullable="NotNull" byteLength="2" />
       <Float name="Density" />
@@ -68,7 +68,7 @@
   <Object name="RegionDataGrasses" objType="Subrecord" baseClass="RegionData" GUID="1c951313-4152-4555-922e-549f944794e8" ID="112">
     <Fields>
       <List name="Grasses" recordType="RDGS">
-        <FormIDLink refName="Grass" />
+        <FormLink refName="Grass" />
       </List>
     </Fields>
   </Object>
@@ -80,7 +80,7 @@
   </Object>
   <Object name="RegionSound" objType="Subrecord" GUID="faf7a6a8-9444-4e36-98e6-5a7af8122e29" ID="118">
     <Fields>
-      <FormIDLink name="Sound" refName="Sound" />
+      <FormLink name="Sound" refName="Sound" />
       <Enum name="Flags" enumName="RegionSound.Flag" />
       <Float name="Chance" min="0" max="100" />
     </Fields>

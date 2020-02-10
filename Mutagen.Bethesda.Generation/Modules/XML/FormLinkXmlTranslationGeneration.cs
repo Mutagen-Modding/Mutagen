@@ -9,16 +9,16 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormKey>
+    public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormKey>
     {
         public override string TypeName(TypeGeneration typeGen)
         {
-            FormIDLinkType type = typeGen as FormIDLinkType;
+            FormLinkType type = typeGen as FormLinkType;
             switch (type.FormIDType)
             {
-                case FormIDLinkType.FormIDTypeEnum.Normal:
+                case FormLinkType.FormIDTypeEnum.Normal:
                     return base.TypeName(typeGen);
-                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                case FormLinkType.FormIDTypeEnum.EDIDChars:
                     return "RecordType";
                 default:
                     throw new NotImplementedException();
@@ -27,12 +27,12 @@ namespace Mutagen.Bethesda.Generation
 
         protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
         {
-            FormIDLinkType type = typeGen as FormIDLinkType;
+            FormLinkType type = typeGen as FormLinkType;
             switch (type.FormIDType)
             {
-                case FormIDLinkType.FormIDTypeEnum.Normal:
+                case FormLinkType.FormIDTypeEnum.Normal:
                     return $"{itemAccessor.PropertyOrDirectAccess}.FormKey";
-                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                case FormLinkType.FormIDTypeEnum.EDIDChars:
                     return $"{itemAccessor.PropertyOrDirectAccess}.EDID";
                 default:
                     throw new NotImplementedException();
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            FormLinkType linkType = typeGen as FormLinkType;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor.DirectAccess}{this.TypeName(typeGen)}XmlTranslation.Instance.Parse",
                 $".Bubble((o) => new {linkType.TypeName(getter: false)}(o.Value))"))
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            FormLinkType linkType = typeGen as FormLinkType;
             TranslationGeneration.WrapParseCall(
                 new TranslationWrapParseArgs()
                 {
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Generation
                     TypeGen = typeGen,
                     TranslatorLine = $"{this.TypeName(typeGen)}XmlTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
-                    ItemAccessor = $"{itemAccessor}.{(linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")}",
-                    TypeOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
+                    ItemAccessor = $"{itemAccessor}.{(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")}",
+                    TypeOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     ExtraArgs = $"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {frameAccessor}".Single(),
                 });

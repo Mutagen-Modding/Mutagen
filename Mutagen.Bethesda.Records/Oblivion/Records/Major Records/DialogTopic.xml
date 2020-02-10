@@ -4,7 +4,7 @@
     <Interface>INamed</Interface>
     <Fields>
       <List name="Quests">
-        <FormIDLink recordType="QSTI" refName="Quest" />
+        <FormLink recordType="QSTI" refName="Quest" />
       </List>
       <String name="Name" recordType="FULL" />
       <Enum name="DialogType" recordType="DATA" enumName="DialogType" byteLength="1" />
@@ -21,18 +21,18 @@
           <Enum name="Flags" enumName="DialogItem.Flag" byteLength="1" />
         </Fields>
       </Data>
-      <FormIDLink name="Quest" recordType="QSTI" refName="Quest" />
-      <FormIDLink name="PreviousTopic" recordType="PNAM" refName="DialogItem" />
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <FormLink name="PreviousTopic" recordType="PNAM" refName="DialogItem" />
       <List name="Topics">
-        <FormIDLink recordType="NAME" refName="DialogTopic" />
+        <FormLink recordType="NAME" refName="DialogTopic" />
       </List>
       <RefList name="Responses" refName="DialogResponse" />
       <RefList name="Conditions" refName="Condition" />
       <List name="Choices">
-        <FormIDLink recordType="TCLT" refName="DialogTopic" />
+        <FormLink recordType="TCLT" refName="DialogTopic" />
       </List>
       <List name="LinkFrom">
-        <FormIDLink recordType="TCLF" refName="DialogTopic" />
+        <FormLink recordType="TCLF" refName="DialogTopic" />
       </List>
       <RefDirect name="Script" refName="ScriptFields" nullable="Singleton" />
     </Fields>

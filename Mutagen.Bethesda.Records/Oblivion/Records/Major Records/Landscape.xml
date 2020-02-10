@@ -10,7 +10,7 @@
       <ByteArray name="VertexColors" recordType="VCLR" />
       <RefList name="Layers" refName="BaseLayer" />
       <List name="Textures" recordType="VTEX">
-        <FormIDLink refName="LandTexture" />
+        <FormLink refName="LandTexture" />
       </List>
     </Fields>
   </Object>
@@ -18,7 +18,7 @@
     <Fields>
       <Data recordType="BTXT">
         <Fields>
-          <FormIDLink name="Texture" refName="LandTexture" />
+          <FormLink name="Texture" refName="LandTexture" />
           <Enum name="Quadrant" enumName="AlphaLayer.QuadrantEnum" byteLength="2" />
           <UInt16 name="LayerNumber" setPermission="protected" internalSetInterface="true" />
         </Fields>

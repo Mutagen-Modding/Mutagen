@@ -6,7 +6,7 @@
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" hasBeenSet="True" />
       <List name="Spells">
-        <FormIDLink recordType="SPLO" refName="Spell" />
+        <FormLink recordType="SPLO" refName="Spell" />
       </List>
       <RefList name="Relations" refName="RaceRelation" />
       <Data>
@@ -31,10 +31,10 @@
       <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
       <RefDirect name="BodyData" refName="GenderedBodyData" markerType="NAM1" />
       <List name="Hairs" recordType="HNAM">
-        <FormIDLink refName="Hair" />
+        <FormLink refName="Hair" />
       </List>
       <List name="Eyes" recordType="ENAM">
-        <FormIDLink refName="Eye" />
+        <FormLink refName="Eye" />
       </List>
       <RefDirect name="FaceGenData" refName="FaceGenData" />
       <ByteArray name="Unknown" recordType="SNAM" byteLength="2" nullable="NotNull" />
@@ -48,14 +48,14 @@
   </Object>
   <Object name="RaceVoices" objType="Subrecord" recordType="VNAM" GUID="b13f8f98-6699-43f8-b900-51ecba9fa467" ID="32">
     <Fields>
-      <FormIDLink name="Male" refName="Race" />
-      <FormIDLink name="Female" refName="Race" />
+      <FormLink name="Male" refName="Race" />
+      <FormLink name="Female" refName="Race" />
     </Fields>
   </Object>
   <Object name="RaceHair" objType="Subrecord" recordType="DNAM" GUID="9061ff50-b8b8-429c-9b68-4eb0adf42740" ID="33">
     <Fields>
-      <FormIDLink name="Male" refName="Hair" />
-      <FormIDLink name="Female" refName="Hair" />
+      <FormLink name="Male" refName="Hair" />
+      <FormLink name="Female" refName="Hair" />
     </Fields>
   </Object>
   <Object name="RaceStatsGendered" objType="Subrecord" recordType="ATTR" GUID="f6f95fe6-ec9c-4ddd-9713-820547d6c485" ID="30">
@@ -110,7 +110,7 @@
   </Object>
   <Object name="RaceRelation" objType="Subrecord" recordType="XNAM" GUID="503a83fb-a21e-4f6d-b0ca-752d6f972bda" ID="167">
     <Fields>
-      <FormIDLink name="Race" refName="Race" />
+      <FormLink name="Race" refName="Race" />
       <Int32 name="Modifier" />
     </Fields>
   </Object>

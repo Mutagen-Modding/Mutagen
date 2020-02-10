@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Sound> _Sound = new FormIDLink<Sound>();
-        public IFormIDLink<Sound> Sound => this._Sound;
+        protected IFormLink<Sound> _Sound = new FormLink<Sound>();
+        public IFormLink<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
+        IFormLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
         #endregion
         #region Type
         public WeatherSound.SoundType Type { get; set; } = default;
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWeatherSoundGetter,
         ILoquiObjectSetter<IWeatherSound>
     {
-        new IFormIDLink<Sound> Sound { get; }
+        new IFormLink<Sound> Sound { get; }
         new WeatherSound.SoundType Type { get; set; }
     }
 
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<ISoundGetter> Sound { get; }
+        IFormLinkGetter<ISoundGetter> Sound { get; }
         WeatherSound.SoundType Type { get; }
 
     }
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    return typeof(IFormIDLink<Sound>);
+                    return typeof(IFormLink<Sound>);
                 case WeatherSound_FieldIndex.Type:
                     return typeof(WeatherSound.SoundType);
                 default:
@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<ISoundGetter> Sound => new FormIDLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public WeatherSound.SoundType Type => (WeatherSound.SoundType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -112,13 +112,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<LandTexture>> _Textures = new SetList<IFormIDLink<LandTexture>>();
-        public ISetList<IFormIDLink<LandTexture>> Textures => _Textures;
+        private readonly SetList<IFormLink<LandTexture>> _Textures = new SetList<IFormLink<LandTexture>>();
+        public ISetList<IFormLink<LandTexture>> Textures => _Textures;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<LandTexture>> ILandscape.Textures => _Textures;
+        ISetList<IFormLink<LandTexture>> ILandscape.Textures => _Textures;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<ILandTextureGetter>> ILandscapeGetter.Textures => _Textures;
+        IReadOnlySetList<IFormLinkGetter<ILandTextureGetter>> ILandscapeGetter.Textures => _Textures;
         #endregion
 
         #endregion
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[]? VertexHeightMap { get; set; }
         new Byte[]? VertexColors { get; set; }
         new ISetList<BaseLayer> Layers { get; }
-        new ISetList<IFormIDLink<LandTexture>> Textures { get; }
+        new ISetList<IFormLink<LandTexture>> Textures { get; }
     }
 
     public partial interface ILandscapeInternal :
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
         bool VertexColors_IsSet { get; }
         #endregion
         IReadOnlySetList<IBaseLayerGetter> Layers { get; }
-        IReadOnlySetList<IFormIDLinkGetter<ILandTextureGetter>> Textures { get; }
+        IReadOnlySetList<IFormLinkGetter<ILandTextureGetter>> Textures { get; }
 
     }
 
@@ -1447,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Layers:
                     return typeof(ISetList<BaseLayer>);
                 case Landscape_FieldIndex.Textures:
-                    return typeof(ISetList<IFormIDLink<LandTexture>>);
+                    return typeof(ISetList<IFormLink<LandTexture>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x58455456: // VTEX
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<LandTexture>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandTexture>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Textures,
@@ -2127,7 +2127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Textures.SetTo(
                             rhs.Textures,
-                            (r) => new FormIDLink<LandTexture>(r.FormKey));
+                            (r) => new FormLink<LandTexture>(r.FormKey));
                     }
                     else
                     {
@@ -2350,14 +2350,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Textures.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<ILandTextureGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Textures),
                     item: item.Textures,
                     fieldIndex: (int)Landscape_FieldIndex.Textures,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Textures),
-                    transl: (XElement subNode, IFormIDLinkGetter<ILandTextureGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<ILandTextureGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2577,7 +2577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
-                        if (ListXmlTranslation<IFormIDLink<LandTexture>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<LandTexture>>.Instance.Parse(
                             node: node,
                             enumer: out var TexturesItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -2743,11 +2743,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<ILandTextureGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
                 recordType: Landscape_Registration.VTEX_HEADER,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<ILandTextureGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2909,7 +2909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexColorsLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         public IReadOnlySetList<IBaseLayerGetter> Layers { get; private set; } = EmptySetList<BaseLayerBinaryOverlay>.Instance;
-        public IReadOnlySetList<IFormIDLinkGetter<ILandTextureGetter>> Textures { get; private set; } = EmptySetList<IFormIDLinkGetter<ILandTextureGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<ILandTextureGetter>> Textures { get; private set; } = EmptySetList<IFormLinkGetter<ILandTextureGetter>>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -3005,11 +3005,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Textures = BinaryOverlaySetList<IFormIDLinkGetter<ILandTextureGetter>>.FactoryByStartIndex(
+                    this.Textures = BinaryOverlaySetList<IFormLinkGetter<ILandTextureGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormIDLink<ILandTextureGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => new FormLink<ILandTextureGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
                 }

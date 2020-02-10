@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Generation
         public static async Task<LinkCase> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
         {
             if (obj.Name == "MajorRecord") return LinkCase.Yes;
-            if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is FormIDLinkType)) return LinkCase.Yes;
+            if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is FormLinkType)) return LinkCase.Yes;
             LinkCase bestCase = LinkCase.No;
             foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
             {
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Generation
                             bestCase = subCase;
                         }
                     }
-                    else if (cont.SubTypeGeneration is FormIDLinkType)
+                    else if (cont.SubTypeGeneration is FormLinkType)
                     {
                         return LinkCase.Yes;
                     }
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Generation
                             bestCase = subCase;
                         }
                     }
-                    if (dict.ValueTypeGen is FormIDLinkType)
+                    if (dict.ValueTypeGen is FormLinkType)
                     {
                         return LinkCase.Yes;
                     }
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 foreach (var field in obj.IterateFields())
                 {
-                    if (field is FormIDLinkType)
+                    if (field is FormLinkType)
                     {
                         fg.AppendLine($"yield return obj.{field.Name};");
                     }
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Generation
                                     break;
                             }
                         }
-                        else if (cont.SubTypeGeneration is FormIDLinkType formIDType)
+                        else if (cont.SubTypeGeneration is FormLinkType formIDType)
                         {
                             fg.AppendLine($"foreach (var item in obj.{field.Name})");
                         }
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Generation
                                     break;
                             }
                         }
-                        else if (dict.ValueTypeGen is FormIDLinkType formIDType)
+                        else if (dict.ValueTypeGen is FormLinkType formIDType)
                         {
                             fg.AppendLine($"foreach (var item in obj.{field.Name}.Values)");
                         }

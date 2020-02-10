@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Texture
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<LandTexture> _Texture = new FormIDLink<LandTexture>();
-        public IFormIDLink<LandTexture> Texture => this._Texture;
+        protected IFormLink<LandTexture> _Texture = new FormLink<LandTexture>();
+        public IFormLink<LandTexture> Texture => this._Texture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<ILandTextureGetter> IBaseLayerGetter.Texture => this.Texture;
+        IFormLinkGetter<ILandTextureGetter> IBaseLayerGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBaseLayerGetter,
         ILoquiObjectSetter<IBaseLayerInternal>
     {
-        new IFormIDLink<LandTexture> Texture { get; }
+        new IFormLink<LandTexture> Texture { get; }
         new AlphaLayer.QuadrantEnum Quadrant { get; set; }
         new BaseLayer.BTXTDataType BTXTDataTypeState { get; set; }
     }
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<ILandTextureGetter> Texture { get; }
+        IFormLinkGetter<ILandTextureGetter> Texture { get; }
         AlphaLayer.QuadrantEnum Quadrant { get; }
         UInt16 LayerNumber { get; }
         BaseLayer.BTXTDataType BTXTDataTypeState { get; }
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BaseLayer_FieldIndex.Texture:
-                    return typeof(IFormIDLink<LandTexture>);
+                    return typeof(IFormLink<LandTexture>);
                 case BaseLayer_FieldIndex.Quadrant:
                     return typeof(AlphaLayer.QuadrantEnum);
                 case BaseLayer_FieldIndex.LayerNumber:
@@ -2189,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Texture
         private int _TextureLocation => _BTXTLocation!.Value + 0x0;
         private bool _Texture_IsSet => _BTXTLocation.HasValue;
-        public IFormIDLinkGetter<ILandTextureGetter> Texture => _Texture_IsSet ? new FormIDLink<ILandTextureGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TextureLocation, 4)))) : FormIDLink<ILandTextureGetter>.Empty;
+        public IFormLinkGetter<ILandTextureGetter> Texture => _Texture_IsSet ? new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TextureLocation, 4)))) : FormLink<ILandTextureGetter>.Empty;
         #endregion
         #region Quadrant
         private int _QuadrantLocation => _BTXTLocation!.Value + 0x4;

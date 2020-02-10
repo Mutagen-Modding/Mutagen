@@ -4,34 +4,34 @@
     <Interface type="IGetter">IPlacedGetter</Interface>
     <Interface type="ISetter">IPlaced</Interface>
     <Fields>
-      <FormIDLink name="Base" recordType="NAME" refName="OblivionMajorRecord" />
+      <FormLink name="Base" recordType="NAME" refName="OblivionMajorRecord" />
       <ByteArray name="XPCIFluff" recordType="XPCI" />
       <ByteArray name="FULLFluff" recordType="FULL" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <RefDirect name="Lock" refName="LockInformation" />
-      <FormIDLink name="Owner" recordType="XOWN" objType="Record">
+      <FormLink name="Owner" recordType="XOWN" objType="Record">
         <Interface>IOwner</Interface>
-      </FormIDLink>
+      </FormLink>
       <Int32 name="FactionRank" recordType="XRNK" />
-      <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
+      <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <FormIDLink name="Target" recordType="XTRG" objType="Record" >
+      <FormLink name="Target" recordType="XTRG" objType="Record" >
         <Interface type="IGetter">IPlacedGetter</Interface>
         <Interface type="ISetter">IPlaced</Interface>
-      </FormIDLink>
+      </FormLink>
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />
       <RefDirect name="DistantLODData" refName="DistantLODData" />
       <Float name="Charge" recordType="XCHG" />
       <Int32 name="Health" recordType="XHLT" />
       <Int32 name="LevelModifier" recordType="XLCM" />
-      <FormIDLink name="Unknown" recordType="XRTM" refName="OblivionMajorRecord" />
+      <FormLink name="Unknown" recordType="XRTM" refName="OblivionMajorRecord" />
       <Enum name="ActionFlags" recordType="XACT" enumName="PlacedObject.ActionFlag" byteLength="4" />
       <Int32 name="Count" recordType="XCNT" />
       <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />
       <Bool name="OpenByDefault" recordType="ONAM" binary="Custom" hasBeenSet="False" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />
-      <FormIDLink name="ContainedSoul" recordType="XSOL" refName="SoulGem" />
+      <FormLink name="ContainedSoul" recordType="XSOL" refName="SoulGem" />
       <Data>
         <Fields>
           <P3Float name="Position" />
@@ -42,10 +42,10 @@
   </Object>
   <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
     <Fields>
-      <FormIDLink name="Destination" objType="Record" >
+      <FormLink name="Destination" objType="Record" >
         <Interface type="ISetter">IPlaced</Interface>
         <Interface type="IGetter">IPlacedGetter</Interface>
-      </FormIDLink>
+      </FormLink>
       <P3Float name="Position" />
       <P3Float name="Rotation" />
     </Fields>
@@ -54,7 +54,7 @@
     <Fields>
       <UInt8 name="LockLevel" />
       <ByteArray name="Fluff" byteLength="3" nullable="NotNull" />
-      <FormIDLink name="Key" refName="Key" />
+      <FormLink name="Key" refName="Key" />
       <Enum name="Flags" enumName="LockInformation.Flag" byteLength="4" />
     </Fields>
   </Object>

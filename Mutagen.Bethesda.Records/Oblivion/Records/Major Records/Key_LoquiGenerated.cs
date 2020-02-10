@@ -86,10 +86,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> IKeyGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> IKeyGetter.Script => this.Script;
         #endregion
         #region Value
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormIDSetLink<Script> Script { get; }
+        new IFormSetLink<Script> Script { get; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Key.DATADataType DATADataTypeState { get; set; }
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
         UInt32 Value { get; }
         Single Weight { get; }
         Key.DATADataType DATADataTypeState { get; }
@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Key_FieldIndex.Icon:
                     return typeof(String);
                 case Key_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case Key_FieldIndex.Value:
                     return typeof(UInt32);
                 case Key_FieldIndex.Weight:
@@ -2772,7 +2772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         private int? _DATALocation;
         public Key.DATADataType DATADataTypeState { get; private set; }

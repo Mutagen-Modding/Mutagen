@@ -14,7 +14,7 @@
       <String name="Description" recordType="SNAM" maxLength="512" />
       <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" />
       <List name="OverriddenForms" recordType="ONAM">
-        <FormIDLink refName="SkyrimMajorRecord" />
+        <FormLink refName="SkyrimMajorRecord" />
       </List>
       <Int32 name="INTV" recordType="INTV" />
       <Int32 name="INCC" recordType="INCC" />

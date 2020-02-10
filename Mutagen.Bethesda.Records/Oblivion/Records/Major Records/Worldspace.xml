@@ -5,9 +5,9 @@
     <Interface>IPlace</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
-      <FormIDLink name="Parent" recordType="WNAM" refName="Worldspace" />
-      <FormIDLink name="Climate" recordType="CNAM" refName="Climate" />
-      <FormIDLink name="Water" recordType="NAM2" refName="Water" />
+      <FormLink name="Parent" recordType="WNAM" refName="Worldspace" />
+      <FormLink name="Climate" recordType="CNAM" refName="Climate" />
+      <FormLink name="Water" recordType="NAM2" refName="Water" />
       <String name="Icon" recordType="ICON" />
       <RefDirect name="MapData" refName="MapData" />
       <Enum name="Flags" recordType="DATA" enumName="Worldspace.Flag" byteLength="1" />

@@ -181,36 +181,36 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region DeathItem
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<ItemAbstract> _DeathItem = new FormIDSetLink<ItemAbstract>();
-        public IFormIDSetLink<ItemAbstract> DeathItem => this._DeathItem;
+        protected IFormSetLink<ItemAbstract> _DeathItem = new FormSetLink<ItemAbstract>();
+        public IFormSetLink<ItemAbstract> DeathItem => this._DeathItem;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IItemAbstractGetter> INPCGetter.DeathItem => this.DeathItem;
+        IFormSetLinkGetter<IItemAbstractGetter> INPCGetter.DeathItem => this.DeathItem;
         #endregion
         #region Race
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Race> _Race = new FormIDSetLink<Race>();
-        public IFormIDSetLink<Race> Race => this._Race;
+        protected IFormSetLink<Race> _Race = new FormSetLink<Race>();
+        public IFormSetLink<Race> Race => this._Race;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IRaceGetter> INPCGetter.Race => this.Race;
+        IFormSetLinkGetter<IRaceGetter> INPCGetter.Race => this.Race;
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<SpellAbstract>> _Spells = new SetList<IFormIDLink<SpellAbstract>>();
-        public ISetList<IFormIDLink<SpellAbstract>> Spells => _Spells;
+        private readonly SetList<IFormLink<SpellAbstract>> _Spells = new SetList<IFormLink<SpellAbstract>>();
+        public ISetList<IFormLink<SpellAbstract>> Spells => _Spells;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<SpellAbstract>> INPC.Spells => _Spells;
+        ISetList<IFormLink<SpellAbstract>> INPC.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractGetter>> INPCGetter.Spells => _Spells;
+        IReadOnlySetList<IFormLinkGetter<ISpellAbstractGetter>> INPCGetter.Spells => _Spells;
         #endregion
 
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> INPCGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> INPCGetter.Script => this.Script;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -328,13 +328,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<AIPackage>> _AIPackages = new SetList<IFormIDLink<AIPackage>>();
-        public ISetList<IFormIDLink<AIPackage>> AIPackages => _AIPackages;
+        private readonly SetList<IFormLink<AIPackage>> _AIPackages = new SetList<IFormLink<AIPackage>>();
+        public ISetList<IFormLink<AIPackage>> AIPackages => _AIPackages;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<AIPackage>> INPC.AIPackages => _AIPackages;
+        ISetList<IFormLink<AIPackage>> INPC.AIPackages => _AIPackages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<IAIPackageGetter>> INPCGetter.AIPackages => _AIPackages;
+        IReadOnlySetList<IFormLinkGetter<IAIPackageGetter>> INPCGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
@@ -352,10 +352,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Class
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Class> _Class = new FormIDSetLink<Class>();
-        public IFormIDSetLink<Class> Class => this._Class;
+        protected IFormSetLink<Class> _Class = new FormSetLink<Class>();
+        public IFormSetLink<Class> Class => this._Class;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IClassGetter> INPCGetter.Class => this.Class;
+        IFormSetLinkGetter<IClassGetter> INPCGetter.Class => this.Class;
         #endregion
         #region Armorer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -749,10 +749,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hair
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Hair> _Hair = new FormIDSetLink<Hair>();
-        public IFormIDSetLink<Hair> Hair => this._Hair;
+        protected IFormSetLink<Hair> _Hair = new FormSetLink<Hair>();
+        public IFormSetLink<Hair> Hair => this._Hair;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IHairGetter> INPCGetter.Hair => this.Hair;
+        IFormSetLinkGetter<IHairGetter> INPCGetter.Hair => this.Hair;
         #endregion
         #region HairLength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -767,13 +767,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<Eye>> _Eyes = new SetList<IFormIDLink<Eye>>();
-        public ISetList<IFormIDLink<Eye>> Eyes => _Eyes;
+        private readonly SetList<IFormLink<Eye>> _Eyes = new SetList<IFormLink<Eye>>();
+        public ISetList<IFormLink<Eye>> Eyes => _Eyes;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<Eye>> INPC.Eyes => _Eyes;
+        ISetList<IFormLink<Eye>> INPC.Eyes => _Eyes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<IEyeGetter>> INPCGetter.Eyes => _Eyes;
+        IReadOnlySetList<IFormLinkGetter<IEyeGetter>> INPCGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
@@ -790,10 +790,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CombatStyle
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<CombatStyle> _CombatStyle = new FormIDSetLink<CombatStyle>();
-        public IFormIDSetLink<CombatStyle> CombatStyle => this._CombatStyle;
+        protected IFormSetLink<CombatStyle> _CombatStyle = new FormSetLink<CombatStyle>();
+        public IFormSetLink<CombatStyle> CombatStyle => this._CombatStyle;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<ICombatStyleGetter> INPCGetter.CombatStyle => this.CombatStyle;
+        IFormSetLinkGetter<ICombatStyleGetter> INPCGetter.CombatStyle => this.CombatStyle;
         #endregion
         #region FaceGenGeometrySymmetric
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3624,10 +3624,10 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt16 CalcMin { get; set; }
         new UInt16 CalcMax { get; set; }
         new ISetList<RankPlacement> Factions { get; }
-        new IFormIDSetLink<ItemAbstract> DeathItem { get; }
-        new IFormIDSetLink<Race> Race { get; }
-        new ISetList<IFormIDLink<SpellAbstract>> Spells { get; }
-        new IFormIDSetLink<Script> Script { get; }
+        new IFormSetLink<ItemAbstract> DeathItem { get; }
+        new IFormSetLink<Race> Race { get; }
+        new ISetList<IFormLink<SpellAbstract>> Spells { get; }
+        new IFormSetLink<Script> Script { get; }
         new ISetList<ItemEntry> Items { get; }
         new Byte Aggression { get; set; }
         new Byte Confidence { get; set; }
@@ -3637,9 +3637,9 @@ namespace Mutagen.Bethesda.Oblivion
         new Skill Teaches { get; set; }
         new Byte MaximumTrainingLevel { get; set; }
         new Byte[] Fluff { get; set; }
-        new ISetList<IFormIDLink<AIPackage>> AIPackages { get; }
+        new ISetList<IFormLink<AIPackage>> AIPackages { get; }
         new ISetList<String> Animations { get; }
-        new IFormIDSetLink<Class> Class { get; }
+        new IFormSetLink<Class> Class { get; }
         new Byte Armorer { get; set; }
         new Byte Athletics { get; set; }
         new Byte Blade { get; set; }
@@ -3670,11 +3670,11 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte Endurance { get; set; }
         new Byte Personality { get; set; }
         new Byte Luck { get; set; }
-        new IFormIDSetLink<Hair> Hair { get; }
+        new IFormSetLink<Hair> Hair { get; }
         new Single? HairLength { get; set; }
-        new ISetList<IFormIDLink<Eye>> Eyes { get; }
+        new ISetList<IFormLink<Eye>> Eyes { get; }
         new Color? HairColor { get; set; }
-        new IFormIDSetLink<CombatStyle> CombatStyle { get; }
+        new IFormSetLink<CombatStyle> CombatStyle { get; }
         new Byte[]? FaceGenGeometrySymmetric { get; set; }
         new Byte[]? FaceGenGeometryAsymmetric { get; set; }
         new Byte[]? FaceGenTextureSymmetric { get; set; }
@@ -3708,10 +3708,10 @@ namespace Mutagen.Bethesda.Oblivion
         UInt16 CalcMin { get; }
         UInt16 CalcMax { get; }
         IReadOnlySetList<IRankPlacementGetter> Factions { get; }
-        IFormIDSetLinkGetter<IItemAbstractGetter> DeathItem { get; }
-        IFormIDSetLinkGetter<IRaceGetter> Race { get; }
-        IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractGetter>> Spells { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<IItemAbstractGetter> DeathItem { get; }
+        IFormSetLinkGetter<IRaceGetter> Race { get; }
+        IReadOnlySetList<IFormLinkGetter<ISpellAbstractGetter>> Spells { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
         IReadOnlySetList<IItemEntryGetter> Items { get; }
         Byte Aggression { get; }
         Byte Confidence { get; }
@@ -3721,9 +3721,9 @@ namespace Mutagen.Bethesda.Oblivion
         Skill Teaches { get; }
         Byte MaximumTrainingLevel { get; }
         ReadOnlySpan<Byte> Fluff { get; }
-        IReadOnlySetList<IFormIDLinkGetter<IAIPackageGetter>> AIPackages { get; }
+        IReadOnlySetList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
         IReadOnlySetList<String> Animations { get; }
-        IFormIDSetLinkGetter<IClassGetter> Class { get; }
+        IFormSetLinkGetter<IClassGetter> Class { get; }
         Byte Armorer { get; }
         Byte Athletics { get; }
         Byte Blade { get; }
@@ -3754,11 +3754,11 @@ namespace Mutagen.Bethesda.Oblivion
         Byte Endurance { get; }
         Byte Personality { get; }
         Byte Luck { get; }
-        IFormIDSetLinkGetter<IHairGetter> Hair { get; }
+        IFormSetLinkGetter<IHairGetter> Hair { get; }
         Single? HairLength { get; }
-        IReadOnlySetList<IFormIDLinkGetter<IEyeGetter>> Eyes { get; }
+        IReadOnlySetList<IFormLinkGetter<IEyeGetter>> Eyes { get; }
         Color? HairColor { get; }
-        IFormIDSetLinkGetter<ICombatStyleGetter> CombatStyle { get; }
+        IFormSetLinkGetter<ICombatStyleGetter> CombatStyle { get; }
         #region FaceGenGeometrySymmetric
         ReadOnlySpan<Byte> FaceGenGeometrySymmetric { get; }
         bool FaceGenGeometrySymmetric_IsSet { get; }
@@ -4908,13 +4908,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Factions:
                     return typeof(ISetList<RankPlacement>);
                 case NPC_FieldIndex.DeathItem:
-                    return typeof(IFormIDSetLink<ItemAbstract>);
+                    return typeof(IFormSetLink<ItemAbstract>);
                 case NPC_FieldIndex.Race:
-                    return typeof(IFormIDSetLink<Race>);
+                    return typeof(IFormSetLink<Race>);
                 case NPC_FieldIndex.Spells:
-                    return typeof(ISetList<IFormIDLink<SpellAbstract>>);
+                    return typeof(ISetList<IFormLink<SpellAbstract>>);
                 case NPC_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case NPC_FieldIndex.Items:
                     return typeof(ISetList<ItemEntry>);
                 case NPC_FieldIndex.Aggression:
@@ -4934,11 +4934,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case NPC_FieldIndex.AIPackages:
-                    return typeof(ISetList<IFormIDLink<AIPackage>>);
+                    return typeof(ISetList<IFormLink<AIPackage>>);
                 case NPC_FieldIndex.Animations:
                     return typeof(ISetList<String>);
                 case NPC_FieldIndex.Class:
-                    return typeof(IFormIDSetLink<Class>);
+                    return typeof(IFormSetLink<Class>);
                 case NPC_FieldIndex.Armorer:
                     return typeof(Byte);
                 case NPC_FieldIndex.Athletics:
@@ -5000,15 +5000,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Luck:
                     return typeof(Byte);
                 case NPC_FieldIndex.Hair:
-                    return typeof(IFormIDSetLink<Hair>);
+                    return typeof(IFormSetLink<Hair>);
                 case NPC_FieldIndex.HairLength:
                     return typeof(Single);
                 case NPC_FieldIndex.Eyes:
-                    return typeof(ISetList<IFormIDLink<Eye>>);
+                    return typeof(ISetList<IFormLink<Eye>>);
                 case NPC_FieldIndex.HairColor:
                     return typeof(Color);
                 case NPC_FieldIndex.CombatStyle:
-                    return typeof(IFormIDSetLink<CombatStyle>);
+                    return typeof(IFormSetLink<CombatStyle>);
                 case NPC_FieldIndex.FaceGenGeometrySymmetric:
                     return typeof(Byte[]);
                 case NPC_FieldIndex.FaceGenGeometryAsymmetric:
@@ -5345,7 +5345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<SpellAbstract>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SpellAbstract>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.SPLO_HEADER,
                         masterReferences: masterReferences,
@@ -5399,7 +5399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494B50: // PKID
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<AIPackage>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.PKID_HEADER,
                         masterReferences: masterReferences,
@@ -5490,7 +5490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E45: // ENAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Eye>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Eyes,
@@ -6719,7 +6719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Spells.SetTo(
                             rhs.Spells,
-                            (r) => new FormIDLink<SpellAbstract>(r.FormKey));
+                            (r) => new FormLink<SpellAbstract>(r.FormKey));
                     }
                     else
                     {
@@ -6812,7 +6812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.AIPackages.SetTo(
                             rhs.AIPackages,
-                            (r) => new FormIDLink<AIPackage>(r.FormKey));
+                            (r) => new FormLink<AIPackage>(r.FormKey));
                     }
                     else
                     {
@@ -6994,7 +6994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Eyes.SetTo(
                             rhs.Eyes,
-                            (r) => new FormIDLink<Eye>(r.FormKey));
+                            (r) => new FormLink<Eye>(r.FormKey));
                     }
                     else
                     {
@@ -7401,14 +7401,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Spells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Spells) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<ISpellAbstractGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<ISpellAbstractGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)NPC_FieldIndex.Spells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Spells),
-                    transl: (XElement subNode, IFormIDLinkGetter<ISpellAbstractGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<ISpellAbstractGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -7526,14 +7526,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.AIPackages.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.AIPackages) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<IAIPackageGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.AIPackages),
                     item: item.AIPackages,
                     fieldIndex: (int)NPC_FieldIndex.AIPackages,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.AIPackages),
-                    transl: (XElement subNode, IFormIDLinkGetter<IAIPackageGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<IAIPackageGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -7867,14 +7867,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Eyes.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Eyes) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<IEyeGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Eyes),
                     item: item.Eyes,
                     fieldIndex: (int)NPC_FieldIndex.Eyes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Eyes),
-                    transl: (XElement subNode, IFormIDLinkGetter<IEyeGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<IEyeGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -8339,7 +8339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Spells);
-                        if (ListXmlTranslation<IFormIDLink<SpellAbstract>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<SpellAbstract>>.Instance.Parse(
                             node: node,
                             enumer: out var SpellsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -8559,7 +8559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.AIPackages);
-                        if (ListXmlTranslation<IFormIDLink<AIPackage>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<AIPackage>>.Instance.Parse(
                             node: node,
                             enumer: out var AIPackagesItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -9210,7 +9210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Eyes);
-                        if (ListXmlTranslation<IFormIDLink<Eye>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<Eye>>.Instance.Parse(
                             node: node,
                             enumer: out var EyesItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -9563,10 +9563,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Race,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.RNAM_HEADER),
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<ISpellAbstractGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellAbstractGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<ISpellAbstractGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellAbstractGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -9618,10 +9618,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Fluff);
                 }
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IAIPackageGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AIPackages,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<IAIPackageGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IAIPackageGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -9684,11 +9684,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.HairLength,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.LNAM_HEADER));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IEyeGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Eyes,
                 recordType: NPC_Registration.ENAM_HEADER,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<IEyeGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -9942,18 +9942,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
-        public IFormIDSetLinkGetter<IItemAbstractGetter> DeathItem => _DeathItemLocation.HasValue ? new FormIDSetLink<IItemAbstractGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormIDSetLink<IItemAbstractGetter>.Empty;
+        public IFormSetLinkGetter<IItemAbstractGetter> DeathItem => _DeathItemLocation.HasValue ? new FormSetLink<IItemAbstractGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormSetLink<IItemAbstractGetter>.Empty;
         #endregion
         #region Race
         private int? _RaceLocation;
         public bool Race_IsSet => _RaceLocation.HasValue;
-        public IFormIDSetLinkGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormIDSetLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.Meta)))) : FormIDSetLink<IRaceGetter>.Empty;
+        public IFormSetLinkGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormSetLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.Meta)))) : FormSetLink<IRaceGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IFormIDLinkGetter<ISpellAbstractGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellAbstractGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<ISpellAbstractGetter>> Spells { get; private set; } = EmptySetList<IFormLinkGetter<ISpellAbstractGetter>>.Instance;
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         public IReadOnlySetList<IItemEntryGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryOverlay>.Instance;
         private int? _AIDTLocation;
@@ -9999,12 +9999,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 2).ToArray() : default;
         public bool Fluff_IsSet => _Fluff_IsSet;
         #endregion
-        public IReadOnlySetList<IFormIDLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = EmptySetList<IFormIDLinkGetter<IAIPackageGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = EmptySetList<IFormLinkGetter<IAIPackageGetter>>.Instance;
         public IReadOnlySetList<String> Animations { get; private set; } = EmptySetList<String>.Instance;
         #region Class
         private int? _ClassLocation;
         public bool Class_IsSet => _ClassLocation.HasValue;
-        public IFormIDSetLinkGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormIDSetLink<IClassGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.Meta)))) : FormIDSetLink<IClassGetter>.Empty;
+        public IFormSetLinkGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormSetLink<IClassGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.Meta)))) : FormSetLink<IClassGetter>.Empty;
         #endregion
         private int? _DATALocation;
         public NPC.DATADataType DATADataTypeState { get; private set; }
@@ -10161,13 +10161,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Hair
         private int? _HairLocation;
         public bool Hair_IsSet => _HairLocation.HasValue;
-        public IFormIDSetLinkGetter<IHairGetter> Hair => _HairLocation.HasValue ? new FormIDSetLink<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HairLocation.Value, _package.Meta)))) : FormIDSetLink<IHairGetter>.Empty;
+        public IFormSetLinkGetter<IHairGetter> Hair => _HairLocation.HasValue ? new FormSetLink<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HairLocation.Value, _package.Meta)))) : FormSetLink<IHairGetter>.Empty;
         #endregion
         #region HairLength
         private int? _HairLengthLocation;
         public Single? HairLength => _HairLengthLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _HairLengthLocation.Value, _package.Meta)) : default(Single?);
         #endregion
-        public IReadOnlySetList<IFormIDLinkGetter<IEyeGetter>> Eyes { get; private set; } = EmptySetList<IFormIDLinkGetter<IEyeGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<IEyeGetter>> Eyes { get; private set; } = EmptySetList<IFormLinkGetter<IEyeGetter>>.Instance;
         #region HairColor
         private int? _HairColorLocation;
         public Color? HairColor => _HairColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HairColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
@@ -10175,7 +10175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region CombatStyle
         private int? _CombatStyleLocation;
         public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
-        public IFormIDSetLinkGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormIDSetLink<ICombatStyleGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormIDSetLink<ICombatStyleGetter>.Empty;
+        public IFormSetLinkGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormSetLink<ICombatStyleGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormSetLink<ICombatStyleGetter>.Empty;
         #endregion
         #region FaceGenGeometrySymmetric
         private int? _FaceGenGeometrySymmetricLocation;
@@ -10293,10 +10293,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    this.Spells = BinaryOverlaySetList<IFormIDLinkGetter<ISpellAbstractGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlaySetList<IFormLinkGetter<ISpellAbstractGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormIDLink<ISpellAbstractGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<ISpellAbstractGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -10333,10 +10333,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494B50: // PKID
                 {
-                    this.AIPackages = BinaryOverlaySetList<IFormIDLinkGetter<IAIPackageGetter>>.FactoryByArray(
+                    this.AIPackages = BinaryOverlaySetList<IFormLinkGetter<IAIPackageGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormIDLink<IAIPackageGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<IAIPackageGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -10381,11 +10381,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Eyes = BinaryOverlaySetList<IFormIDLinkGetter<IEyeGetter>>.FactoryByStartIndex(
+                    this.Eyes = BinaryOverlaySetList<IFormLinkGetter<IEyeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormIDLink<IEyeGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => new FormLink<IEyeGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Eyes);
                 }

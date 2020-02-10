@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("foreach (var rec in router.Values)");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"foreach (var link in rec.Links.WhereCastable<ILinkGetter, IFormIDLink>())");
+                    fg.AppendLine($"foreach (var link in rec.Links.WhereCastable<ILinkGetter, IFormLink>())");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"if (link.TryResolveFormKey(package, out var formKey)");

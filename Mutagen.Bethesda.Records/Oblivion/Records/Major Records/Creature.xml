@@ -9,7 +9,7 @@
         <RefDirect refName="ItemEntry" />
       </List>
       <List name="Spells">
-        <FormIDLink refName="SpellAbstract" recordType="SPLO" />
+        <FormLink refName="SpellAbstract" recordType="SPLO" />
       </List>
       <List name="Models" recordType="NIFZ">
         <String />
@@ -29,8 +29,8 @@
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
-      <FormIDLink name="DeathItem" refName="ItemAbstract" recordType="INAM" />
-      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="DeathItem" refName="ItemAbstract" recordType="INAM" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
       <Data recordType="AIDT">
         <Fields>
           <UInt8 name="Aggression" />
@@ -44,7 +44,7 @@
         </Fields>
       </Data>
       <List name="AIPackages">
-        <FormIDLink refName="AIPackage" recordType="PKID" />
+        <FormLink refName="AIPackage" recordType="PKID" />
       </List>
       <List name="Animations" recordType="KFFZ">
         <String />
@@ -69,13 +69,13 @@
         </Fields>
       </Data>
       <UInt8 name="AttackReach" recordType="RNAM" />
-      <FormIDLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
+      <FormLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
       <Float name="TurningSpeed" recordType="TNAM" />
       <Float name="BaseScale" recordType="BNAM" />
       <Float name="FootWeight" recordType="WNAM" />
       <String name="BloodSpray" recordType="NAM0" />
       <String name="BloodDecal" recordType="NAM1" />
-      <FormIDLink name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
+      <FormLink name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
       <RefList name="Sounds" refName="CreatureSound" />
     </Fields>
   </Object>
@@ -87,7 +87,7 @@
   </Object>
   <Object name="SoundItem" objType="Subrecord" GUID="bed98725-1f58-4853-aba1-311221e7aa4e" ID="91">
     <Fields>
-      <FormIDLink name="Sound" refName="Sound" recordType="CSDI" />
+      <FormLink name="Sound" refName="Sound" recordType="CSDI" />
       <UInt8 name="Chance" recordType="CSDC" />
     </Fields>
   </Object>

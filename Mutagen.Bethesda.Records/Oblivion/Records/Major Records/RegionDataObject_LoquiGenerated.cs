@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Object
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<OblivionMajorRecord> _Object = new FormIDLink<OblivionMajorRecord>();
-        public IFormIDLink<OblivionMajorRecord> Object => this._Object;
+        protected IFormLink<OblivionMajorRecord> _Object = new FormLink<OblivionMajorRecord>();
+        public IFormLink<OblivionMajorRecord> Object => this._Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IOblivionMajorRecordGetter> IRegionDataObjectGetter.Object => this.Object;
+        IFormLinkGetter<IOblivionMajorRecordGetter> IRegionDataObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; } = default;
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataObjectGetter,
         ILoquiObjectSetter<IRegionDataObject>
     {
-        new IFormIDLink<OblivionMajorRecord> Object { get; }
+        new IFormLink<OblivionMajorRecord> Object { get; }
         new UInt16 ParentIndex { get; set; }
         new Byte[] Unknown1 { get; set; }
         new Single Density { get; set; }
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IOblivionMajorRecordGetter> Object { get; }
+        IFormLinkGetter<IOblivionMajorRecordGetter> Object { get; }
         UInt16 ParentIndex { get; }
         ReadOnlySpan<Byte> Unknown1 { get; }
         Single Density { get; }
@@ -1698,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    return typeof(IFormIDLink<OblivionMajorRecord>);
+                    return typeof(IFormLink<OblivionMajorRecord>);
                 case RegionDataObject_FieldIndex.ParentIndex:
                     return typeof(UInt16);
                 case RegionDataObject_FieldIndex.Unknown1:
@@ -3201,7 +3201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IOblivionMajorRecordGetter> Object => new FormIDLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(4, 2));
         public ReadOnlySpan<Byte> Unknown1 => _data.Span.Slice(6, 2).ToArray();
         public Single Density => SpanExt.GetFloat(_data.Span.Slice(8, 4));

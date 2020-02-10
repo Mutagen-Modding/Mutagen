@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Reference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<IPlaced> _Reference = new FormIDLink<IPlaced>();
-        public IFormIDLink<IPlaced> Reference => this._Reference;
+        protected IFormLink<IPlaced> _Reference = new FormLink<IPlaced>();
+        public IFormLink<IPlaced> Reference => this._Reference;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter,
         ILoquiObjectSetter<IEnableParent>
     {
-        new IFormIDLink<IPlaced> Reference { get; }
+        new IFormLink<IPlaced> Reference { get; }
         new EnableParent.Flag Flags { get; set; }
     }
 
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IPlacedGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
 
     }
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    return typeof(IFormIDLink<IPlaced>);
+                    return typeof(IFormLink<IPlaced>);
                 case EnableParent_FieldIndex.Flags:
                     return typeof(EnableParent.Flag);
                 default:
@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IPlacedGetter> Reference => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public EnableParent.Flag Flags => (EnableParent.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

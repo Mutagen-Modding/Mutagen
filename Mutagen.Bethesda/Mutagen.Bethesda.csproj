@@ -68,10 +68,10 @@
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Core\Links\EDIDLink.cs" />
     <Compile Include="Core\Links\EDIDSetLink.cs" />
-    <Compile Include="Core\Links\FormIDLink.cs" />
-    <Compile Include="Core\Links\FormIDSetLink.cs" />
+    <Compile Include="Core\Links\FormLink.cs" />
+    <Compile Include="Core\Links\FormSetLink.cs" />
     <Compile Include="Core\Links\IEDIDLink.cs" />
-    <Compile Include="Core\Links\IFormIDLink.cs" />
+    <Compile Include="Core\Links\IFormLink.cs" />
     <Compile Include="Core\Links\ILink.cs" />
     <Compile Include="Core\Links\ILinkContainer.cs" />
     <Compile Include="Core\MasterReferences.cs" />

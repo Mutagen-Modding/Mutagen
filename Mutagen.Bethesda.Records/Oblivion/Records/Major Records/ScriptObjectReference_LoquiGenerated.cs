@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Reference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<OblivionMajorRecord> _Reference = new FormIDLink<OblivionMajorRecord>();
-        public IFormIDLink<OblivionMajorRecord> Reference => this._Reference;
+        protected IFormLink<OblivionMajorRecord> _Reference = new FormLink<OblivionMajorRecord>();
+        public IFormLink<OblivionMajorRecord> Reference => this._Reference;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;
+        IFormLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptReference,
         ILoquiObjectSetter<IScriptObjectReference>
     {
-        new IFormIDLink<OblivionMajorRecord> Reference { get; }
+        new IFormLink<OblivionMajorRecord> Reference { get; }
     }
 
     public partial interface IScriptObjectReferenceGetter :
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        IFormIDLinkGetter<IOblivionMajorRecordGetter> Reference { get; }
+        IFormLinkGetter<IOblivionMajorRecordGetter> Reference { get; }
 
     }
 
@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    return typeof(IFormIDLink<OblivionMajorRecord>);
+                    return typeof(IFormLink<OblivionMajorRecord>);
                 default:
                     return ScriptReference_Registration.GetNthType(index);
             }
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Reference
         private int? _ReferenceLocation;
         public bool Reference_IsSet => _ReferenceLocation.HasValue;
-        public IFormIDLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormIDLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : FormIDLink<IOblivionMajorRecordGetter>.Empty;
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : FormLink<IOblivionMajorRecordGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

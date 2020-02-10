@@ -86,10 +86,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> IAlchemicalApparatusGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> IAlchemicalApparatusGetter.Script => this.Script;
         #endregion
         #region Type
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormIDSetLink<Script> Script { get; }
+        new IFormSetLink<Script> Script { get; }
         new AlchemicalApparatus.ApparatusType Type { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
         AlchemicalApparatus.ApparatusType Type { get; }
         UInt32 Value { get; }
         Single Weight { get; }
@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Icon:
                     return typeof(String);
                 case AlchemicalApparatus_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case AlchemicalApparatus_FieldIndex.Type:
                     return typeof(AlchemicalApparatus.ApparatusType);
                 case AlchemicalApparatus_FieldIndex.Value:
@@ -2970,7 +2970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         private int? _DATALocation;
         public AlchemicalApparatus.DATADataType DATADataTypeState { get; private set; }

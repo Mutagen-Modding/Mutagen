@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Faction
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Faction> _Faction = new FormIDLink<Faction>();
-        public IFormIDLink<Faction> Faction => this._Faction;
+        protected IFormLink<Faction> _Faction = new FormLink<Faction>();
+        public IFormLink<Faction> Faction => this._Faction;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
+        IFormLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRelationGetter,
         ILoquiObjectSetter<IRelation>
     {
-        new IFormIDLink<Faction> Faction { get; }
+        new IFormLink<Faction> Faction { get; }
         new Int32 Modifier { get; set; }
         new Combat GroupCombatReaction { get; set; }
     }
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IFactionGetter> Faction { get; }
+        IFormLinkGetter<IFactionGetter> Faction { get; }
         Int32 Modifier { get; }
         Combat GroupCombatReaction { get; }
 
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    return typeof(IFormIDLink<Faction>);
+                    return typeof(IFormLink<Faction>);
                 case Relation_FieldIndex.Modifier:
                     return typeof(Int32);
                 case Relation_FieldIndex.GroupCombatReaction:
@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IFactionGetter> Faction => new FormIDLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public Combat GroupCombatReaction => (Combat)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(

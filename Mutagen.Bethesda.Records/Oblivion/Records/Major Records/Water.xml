@@ -6,7 +6,7 @@
       <UInt8 name="Opacity" recordType="ANAM" />
       <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" />
       <String name="MaterialID" recordType="MNAM" />
-      <FormIDLink name="Sound" refName="Sound" recordType="SNAM" />
+      <FormLink name="Sound" refName="Sound" recordType="SNAM" />
       <Data binaryOverlay="Custom" >
         <Fields>
           <CustomLogic name="NothingCustomLogic" />
@@ -51,9 +51,9 @@
   </Object>
   <Object name="RelatedWaters" objType="Subrecord" recordType="GNAM" GUID="3ec1f551-bac0-408e-a3ee-2efd4c2f159a" ID="166">
     <Fields>
-      <FormIDLink name="RelatedWaterDaytime" refName="Water" />
-      <FormIDLink name="RelatedWaterNighttime" refName="Water" />
-      <FormIDLink name="RelatedWaterUnderwater" refName="Water" />
+      <FormLink name="RelatedWaterDaytime" refName="Water" />
+      <FormLink name="RelatedWaterNighttime" refName="Water" />
+      <FormLink name="RelatedWaterUnderwater" refName="Water" />
     </Fields>
   </Object>
 </Loqui>

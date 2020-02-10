@@ -6,40 +6,40 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IFormIDLinkGetter : ILinkGetter
+    public interface IFormLinkGetter : ILinkGetter
     {
         FormKey FormKey { get; }
     }
 
-    public interface IFormIDLinkGetter<out TMajor> : ILinkGetter<TMajor>, IFormIDLinkGetter
+    public interface IFormLinkGetter<out TMajor> : ILinkGetter<TMajor>, IFormLinkGetter
        where TMajor : IMajorRecordCommonGetter
     {
     }
 
-    public interface IFormIDLink : IFormIDLinkGetter
+    public interface IFormLink : IFormLinkGetter
     {
         new FormKey FormKey { get; set; }
         void Unset();
     }
 
-    public interface IFormIDLink<TMajor> : IFormIDLinkGetter<TMajor>, IFormIDLink
+    public interface IFormLink<TMajor> : IFormLinkGetter<TMajor>, IFormLink
        where TMajor : IMajorRecordCommonGetter
     {
     }
 
-    public interface IFormIDSetLinkGetter<out TMajor> : IFormIDLinkGetter<TMajor>, ISetLinkGetter<TMajor>
+    public interface IFormSetLinkGetter<out TMajor> : IFormLinkGetter<TMajor>, ISetLinkGetter<TMajor>
        where TMajor : IMajorRecordCommonGetter
     {
     }
 
-    public interface IFormIDSetLink<TMajor> : IFormIDLink<TMajor>, ISetLink<TMajor>, IFormIDSetLinkGetter<TMajor>
+    public interface IFormSetLink<TMajor> : IFormLink<TMajor>, ISetLink<TMajor>, IFormSetLinkGetter<TMajor>
        where TMajor : IMajorRecordCommonGetter
     {
     }
 
     public static class IFormLinkExt
     {
-        public static bool TryResolve<TMajor, TMod>(this IFormIDLinkGetter<TMajor> formIDLink, ILinkCache<TMod> package, out TMajor item)
+        public static bool TryResolve<TMajor, TMod>(this IFormLinkGetter<TMajor> formIDLink, ILinkCache<TMod> package, out TMajor item)
             where TMajor : IMajorRecordCommonGetter
             where TMod : IMod
         {

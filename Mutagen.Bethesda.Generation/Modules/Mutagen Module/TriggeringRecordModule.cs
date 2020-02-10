@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Generation
             await SetContainerSubTriggers(obj, field);
 
             if (field is LoquiType loqui
-                && !(field is FormIDLinkType))
+                && !(field is FormLinkType))
             {
                 IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
                 if (loqui.TargetObjectGeneration != null

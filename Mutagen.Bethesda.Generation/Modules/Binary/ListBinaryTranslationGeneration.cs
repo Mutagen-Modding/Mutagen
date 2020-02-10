@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"thread: true");
                 }
-                if (list.SubTypeGeneration is FormIDLinkType)
+                if (list.SubTypeGeneration is FormLinkType)
                 {
                     args.Add($"masterReferences: masterReferences");
                 }

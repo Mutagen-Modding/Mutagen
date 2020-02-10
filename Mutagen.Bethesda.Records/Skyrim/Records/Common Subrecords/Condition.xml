@@ -9,7 +9,7 @@
   </Object>
   <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" GUID="cafedc3d-b9cf-4eb9-92fc-dd38838b19ce" ID="37" customBinaryEnd="Normal">
     <Fields>
-      <FormIDLink name="ComparisonValue" refName="Global" />
+      <FormLink name="ComparisonValue" refName="Global" />
       <RefDirect name="Data" objType="Record" binary="Custom" refName="ConditionData" generateClassMembers="false" />
     </Fields>
   </Object>
@@ -28,10 +28,10 @@
       <UInt16 name="Function" />
       <UInt16 name="Unknown2" />
       <CustomLogic name="ParameterParsing" />
-      <FormIDLink name="ParameterOneRecord" refName="SkyrimMajorRecord" binary="DoNothing" internalSetInterface="true" />
+      <FormLink name="ParameterOneRecord" refName="SkyrimMajorRecord" binary="DoNothing" internalSetInterface="true" />
       <Int32 name="ParameterOneNumber" binary="DoNothing" internalSetInterface="true" />
       <String name="ParameterOneString" binary="DoNothing" internalSetInterface="true" hasBeenSet="True" />
-      <FormIDLink name="ParameterTwoRecord" refName="SkyrimMajorRecord" binary="DoNothing" internalSetInterface="true" />
+      <FormLink name="ParameterTwoRecord" refName="SkyrimMajorRecord" binary="DoNothing" internalSetInterface="true" />
       <Int32 name="ParameterTwoNumber" binary="DoNothing" internalSetInterface="true" />
       <String name="ParameterTwoString" binary="DoNothing" internalSetInterface="true" hasBeenSet="True" />
       <Int32 name="Unknown3" binary="DoNothing" />
@@ -46,9 +46,9 @@
       <UInt16 name="EventFunction" />
       <!-- ToDo change to enum -->
       <UInt16 name="EventMember" />
-      <FormIDLink name="Parameter3" refName="SkyrimMajorRecord" />
+      <FormLink name="Parameter3" refName="SkyrimMajorRecord" />
       <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" />
-      <FormIDLink name="Reference" refName="SkyrimMajorRecord" />
+      <FormLink name="Reference" refName="SkyrimMajorRecord" />
       <Int32 name="Unknown3" default="-1" />
     </Fields>
   </Object>

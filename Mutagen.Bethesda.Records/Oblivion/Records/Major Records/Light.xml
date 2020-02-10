@@ -4,7 +4,7 @@
     <Interface>INamed</Interface>
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
       <String name="Name" recordType="FULL" />
       <String name="Icon" recordType="ICON" />
       <Data>
@@ -21,7 +21,7 @@
         </Fields>
       </Data>
       <Float name="Fade" recordType="FNAM" />
-      <FormIDLink name="Sound" recordType="SNAM" refName="Sound" />
+      <FormLink name="Sound" recordType="SNAM" refName="Sound" />
     </Fields>
   </Object>
 </Loqui>

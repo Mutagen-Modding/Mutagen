@@ -6,7 +6,7 @@
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <String name="Icon" recordType="ICON" />
-      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
       <Data>
         <Fields>
           <UInt32 name="Value" />

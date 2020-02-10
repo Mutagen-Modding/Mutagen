@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ComparisonValue
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Global> _ComparisonValue = new FormIDLink<Global>();
-        public IFormIDLink<Global> ComparisonValue => this._ComparisonValue;
+        protected IFormLink<Global> _ComparisonValue = new FormLink<Global>();
+        public IFormLink<Global> ComparisonValue => this._ComparisonValue;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;
+        IFormLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;
         #endregion
 
         #region To String
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICondition,
         ILoquiObjectSetter<IConditionGlobal>
     {
-        new IFormIDLink<Global> ComparisonValue { get; }
+        new IFormLink<Global> ComparisonValue { get; }
         new ConditionData Data { get; set; }
     }
 
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
-        IFormIDLinkGetter<IGlobalGetter> ComparisonValue { get; }
+        IFormLinkGetter<IGlobalGetter> ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 
     }
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ConditionGlobal_FieldIndex.ComparisonValue:
-                    return typeof(IFormIDLink<Global>);
+                    return typeof(IFormLink<Global>);
                 case ConditionGlobal_FieldIndex.Data:
                     return typeof(ConditionData);
                 default:
@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IGlobalGetter> ComparisonValue => new FormIDLink<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public IConditionDataGetter Data => GetDataCustom(location: 8);
         partial void CustomCtor(
             IBinaryReadStream stream,

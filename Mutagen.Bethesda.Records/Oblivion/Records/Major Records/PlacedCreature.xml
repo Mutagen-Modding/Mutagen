@@ -4,10 +4,10 @@
     <Interface type="IGetter">IPlacedGetter</Interface>
     <Interface type="ISetter">IPlaced</Interface>
     <Fields>
-      <FormIDLink name="Base" recordType="NAME" refName="Creature" />
-      <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
+      <FormLink name="Base" recordType="NAME" refName="Creature" />
+      <FormLink name="Owner" recordType="XOWN" refName="Faction" />
       <Int32 name="FactionRank" recordType="XRNK" />
-      <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
+      <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />

@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Reference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<IPlaced> _Reference = new FormIDLink<IPlaced>();
-        public IFormIDLink<IPlaced> Reference => this._Reference;
+        protected IFormLink<IPlaced> _Reference = new FormLink<IPlaced>();
+        public IFormLink<IPlaced> Reference => this._Reference;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPointToReferenceMappingGetter,
         ILoquiObjectSetter<IPointToReferenceMapping>
     {
-        new IFormIDLink<IPlaced> Reference { get; }
+        new IFormLink<IPlaced> Reference { get; }
         new IExtendedList<Int16> Points { get; }
     }
 
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IPlacedGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         IReadOnlyList<Int16> Points { get; }
 
     }
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    return typeof(IFormIDLink<IPlaced>);
+                    return typeof(IFormLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
                     return typeof(IExtendedList<Int16>);
                 default:
@@ -2020,7 +2020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IPlacedGetter> Reference => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public IReadOnlyList<Int16> Points => BinaryOverlaySetList<Int16>.FactoryByStartIndex(_data.Slice(4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         partial void CustomCtor(
             IBinaryReadStream stream,

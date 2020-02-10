@@ -86,10 +86,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Enchantment
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Enchantment> _Enchantment = new FormIDSetLink<Enchantment>();
-        public IFormIDSetLink<Enchantment> Enchantment => this._Enchantment;
+        protected IFormSetLink<Enchantment> _Enchantment = new FormSetLink<Enchantment>();
+        public IFormSetLink<Enchantment> Enchantment => this._Enchantment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IEnchantmentGetter> IAmmoGetter.Enchantment => this.Enchantment;
+        IFormSetLinkGetter<IEnchantmentGetter> IAmmoGetter.Enchantment => this.Enchantment;
         #endregion
         #region EnchantmentPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormIDSetLink<Enchantment> Enchantment { get; }
+        new IFormSetLink<Enchantment> Enchantment { get; }
         new UInt16? EnchantmentPoints { get; set; }
         new Single Speed { get; set; }
         new Ammo.AmmoFlag Flags { get; set; }
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment { get; }
+        IFormSetLinkGetter<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
         Single Speed { get; }
         Ammo.AmmoFlag Flags { get; }
@@ -1536,7 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.Icon:
                     return typeof(String);
                 case Ammo_FieldIndex.Enchantment:
-                    return typeof(IFormIDSetLink<Enchantment>);
+                    return typeof(IFormSetLink<Enchantment>);
                 case Ammo_FieldIndex.EnchantmentPoints:
                     return typeof(UInt16);
                 case Ammo_FieldIndex.Speed:
@@ -3173,7 +3173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Enchantment
         private int? _EnchantmentLocation;
         public bool Enchantment_IsSet => _EnchantmentLocation.HasValue;
-        public IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormIDSetLink<IEnchantmentGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentLocation.Value, _package.Meta)))) : FormIDSetLink<IEnchantmentGetter>.Empty;
+        public IFormSetLinkGetter<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormSetLink<IEnchantmentGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentLocation.Value, _package.Meta)))) : FormSetLink<IEnchantmentGetter>.Empty;
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;

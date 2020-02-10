@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDLink<TMajor> : IFormIDLink<TMajor>, IEquatable<IFormIDLinkGetter<TMajor>>
+    public class FormLink<TMajor> : IFormLink<TMajor>, IEquatable<IFormLinkGetter<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
-        public static readonly IFormIDLinkGetter<TMajor> Empty = new FormIDLink<TMajor>();
+        public static readonly IFormLinkGetter<TMajor> Empty = new FormLink<TMajor>();
 
         public virtual FormKey FormKey { get; set; } = FormKey.Null;
         Type ILinkGetter.TargetType => typeof(TMajor);
 
-        public FormIDLink()
+        public FormLink()
         {
         }
 
-        public FormIDLink(FormKey formKey)
+        public FormLink(FormKey formKey)
         {
             this.FormKey = formKey;
         }
@@ -41,12 +41,12 @@ namespace Mutagen.Bethesda
             this.FormKey = FormKey.Null;
         }
 
-        public static bool operator ==(FormIDLink<TMajor> lhs, IFormIDLink<TMajor> rhs)
+        public static bool operator ==(FormLink<TMajor> lhs, IFormLink<TMajor> rhs)
         {
             return lhs.FormKey.Equals(rhs.FormKey);
         }
 
-        public static bool operator !=(FormIDLink<TMajor> lhs, IFormIDLink<TMajor> rhs)
+        public static bool operator !=(FormLink<TMajor> lhs, IFormLink<TMajor> rhs)
         {
             return !lhs.FormKey.Equals(rhs.FormKey);
         }
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda
             return this.Equals(rhs);
         }
 
-        public bool Equals(IFormIDLinkGetter<TMajor> other) => this.FormKey.Equals(other.FormKey);
+        public bool Equals(IFormLinkGetter<TMajor> other) => this.FormKey.Equals(other.FormKey);
 
         public override int GetHashCode() => this.FormKey.GetHashCode();
 

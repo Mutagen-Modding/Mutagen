@@ -86,17 +86,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
         #endregion
         #region Template
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<NPCAbstract> _Template = new FormIDSetLink<NPCAbstract>();
-        public IFormIDSetLink<NPCAbstract> Template => this._Template;
+        protected IFormSetLink<NPCAbstract> _Template = new FormSetLink<NPCAbstract>();
+        public IFormSetLink<NPCAbstract> Template => this._Template;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<INPCAbstractGetter> ILeveledCreatureGetter.Template => this.Template;
+        IFormSetLinkGetter<INPCAbstractGetter> ILeveledCreatureGetter.Template => this.Template;
         #endregion
 
         #region To String
@@ -786,8 +786,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
         new ISetList<LeveledEntry<NPCSpawn>> Entries { get; }
-        new IFormIDSetLink<Script> Script { get; }
-        new IFormIDSetLink<NPCAbstract> Template { get; }
+        new IFormSetLink<Script> Script { get; }
+        new IFormSetLink<NPCAbstract> Template { get; }
     }
 
     public partial interface ILeveledCreatureInternal :
@@ -807,8 +807,8 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlySetList<ILeveledEntryGetter<INPCSpawnGetter>> Entries { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
-        IFormIDSetLinkGetter<INPCAbstractGetter> Template { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<INPCAbstractGetter> Template { get; }
 
     }
 
@@ -1295,9 +1295,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Entries:
                     return typeof(ISetList<LeveledEntry<NPCSpawn>>);
                 case LeveledCreature_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case LeveledCreature_FieldIndex.Template:
-                    return typeof(IFormIDSetLink<NPCAbstract>);
+                    return typeof(IFormSetLink<NPCAbstract>);
                 default:
                     return NPCSpawn_Registration.GetNthType(index);
             }
@@ -2675,12 +2675,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         #region Template
         private int? _TemplateLocation;
         public bool Template_IsSet => _TemplateLocation.HasValue;
-        public IFormIDSetLinkGetter<INPCAbstractGetter> Template => _TemplateLocation.HasValue ? new FormIDSetLink<INPCAbstractGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormIDSetLink<INPCAbstractGetter>.Empty;
+        public IFormSetLinkGetter<INPCAbstractGetter> Template => _TemplateLocation.HasValue ? new FormSetLink<INPCAbstractGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormSetLink<INPCAbstractGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

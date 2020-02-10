@@ -3,7 +3,7 @@
   <Object name="AnimatedObject" objType="Record" baseClass="OblivionMajorRecord" recordType="ANIO" GUID="08eca501-d197-4c2f-aa92-e326a4a9de2d" ID="165">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FormIDLink name="IdleAnimation" refName="IdleAnimation" recordType="DATA" />
+      <FormLink name="IdleAnimation" refName="IdleAnimation" recordType="DATA" />
     </Fields>
   </Object>
 </Loqui>

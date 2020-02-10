@@ -6,12 +6,12 @@
       <String name="Name" recordType="FULL" />
       <RefList name="Relations" refName="Relation" />
       <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" />
-      <FormIDLink name="PrisonMarker" recordType="JAIL" refName="PlacedObject" />
-      <FormIDLink name="FollowerWaitMarker" recordType="WAIT" refName="PlacedObject" />
-      <FormIDLink name="EvidenceChest" recordType="STOL" refName="PlacedObject" />
-      <FormIDLink name="PlayerBelongingsChest" recordType="PLCN" refName="PlacedObject" />
-      <FormIDLink name="CrimeGroup" recordType="CRGR" refName="FormList" />
-      <FormIDLink name="JailOutfit" recordType="JOUT" refName="Outfit" />
+      <FormLink name="PrisonMarker" recordType="JAIL" refName="PlacedObject" />
+      <FormLink name="FollowerWaitMarker" recordType="WAIT" refName="PlacedObject" />
+      <FormLink name="EvidenceChest" recordType="STOL" refName="PlacedObject" />
+      <FormLink name="PlayerBelongingsChest" recordType="PLCN" refName="PlacedObject" />
+      <FormLink name="CrimeGroup" recordType="CRGR" refName="FormList" />
+      <FormLink name="JailOutfit" recordType="JOUT" refName="Outfit" />
       <Data recordType="CRVA" >
         <Fields>
           <Bool name="ArrestCrimeValue" byteLength="1" />
@@ -29,8 +29,8 @@
         </Fields>
       </Data>
       <RefList name="Ranks" refName="Rank" />
-      <FormIDLink name="VendorList" recordType="VEND" refName="FormList" />
-      <FormIDLink name="VendorChest" recordType="VENC" refName="PlacedObject" />
+      <FormLink name="VendorList" recordType="VEND" refName="FormList" />
+      <FormLink name="VendorChest" recordType="VENC" refName="PlacedObject" />
       <RefDirect name="VendorValues" refName="VendorValues" />
       <RefDirect name="VendorLocation" refName="VendorLocation" />
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" />
@@ -56,7 +56,7 @@
   <Object name="VendorLocation" objType="Subrecord" recordType="PLVD" GUID="5bd28818-6711-45ca-bed6-de977e414602" ID="35">
     <Fields>
       <Enum name="Type" enumName="VendorLocation.LocationType" byteLength="4" />
-      <FormIDLink name="Reference" refName="SkyrimMajorRecord" />
+      <FormLink name="Reference" refName="SkyrimMajorRecord" />
       <UInt32 name="Radius" />
     </Fields>
   </Object>

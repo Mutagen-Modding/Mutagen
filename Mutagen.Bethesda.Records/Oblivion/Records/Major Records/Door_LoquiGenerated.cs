@@ -75,31 +75,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
-        public IFormIDSetLink<Script> Script => this._Script;
+        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
+        public IFormSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IScriptGetter> IDoorGetter.Script => this.Script;
+        IFormSetLinkGetter<IScriptGetter> IDoorGetter.Script => this.Script;
         #endregion
         #region OpenSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Sound> _OpenSound = new FormIDSetLink<Sound>();
-        public IFormIDSetLink<Sound> OpenSound => this._OpenSound;
+        protected IFormSetLink<Sound> _OpenSound = new FormSetLink<Sound>();
+        public IFormSetLink<Sound> OpenSound => this._OpenSound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<ISoundGetter> IDoorGetter.OpenSound => this.OpenSound;
+        IFormSetLinkGetter<ISoundGetter> IDoorGetter.OpenSound => this.OpenSound;
         #endregion
         #region CloseSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Sound> _CloseSound = new FormIDSetLink<Sound>();
-        public IFormIDSetLink<Sound> CloseSound => this._CloseSound;
+        protected IFormSetLink<Sound> _CloseSound = new FormSetLink<Sound>();
+        public IFormSetLink<Sound> CloseSound => this._CloseSound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<ISoundGetter> IDoorGetter.CloseSound => this.CloseSound;
+        IFormSetLinkGetter<ISoundGetter> IDoorGetter.CloseSound => this.CloseSound;
         #endregion
         #region LoopSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<Sound> _LoopSound = new FormIDSetLink<Sound>();
-        public IFormIDSetLink<Sound> LoopSound => this._LoopSound;
+        protected IFormSetLink<Sound> _LoopSound = new FormSetLink<Sound>();
+        public IFormSetLink<Sound> LoopSound => this._LoopSound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<ISoundGetter> IDoorGetter.LoopSound => this.LoopSound;
+        IFormSetLinkGetter<ISoundGetter> IDoorGetter.LoopSound => this.LoopSound;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -114,13 +114,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormIDLink<Place>> _RandomTeleportDestinations = new SetList<IFormIDLink<Place>>();
-        public ISetList<IFormIDLink<Place>> RandomTeleportDestinations => _RandomTeleportDestinations;
+        private readonly SetList<IFormLink<Place>> _RandomTeleportDestinations = new SetList<IFormLink<Place>>();
+        public ISetList<IFormLink<Place>> RandomTeleportDestinations => _RandomTeleportDestinations;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormIDLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
+        ISetList<IFormLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormIDLinkGetter<IPlaceGetter>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        IReadOnlySetList<IFormLinkGetter<IPlaceGetter>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -894,12 +894,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new IFormIDSetLink<Script> Script { get; }
-        new IFormIDSetLink<Sound> OpenSound { get; }
-        new IFormIDSetLink<Sound> CloseSound { get; }
-        new IFormIDSetLink<Sound> LoopSound { get; }
+        new IFormSetLink<Script> Script { get; }
+        new IFormSetLink<Sound> OpenSound { get; }
+        new IFormSetLink<Sound> CloseSound { get; }
+        new IFormSetLink<Sound> LoopSound { get; }
         new Door.DoorFlag? Flags { get; set; }
-        new ISetList<IFormIDLink<Place>> RandomTeleportDestinations { get; }
+        new ISetList<IFormLink<Place>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorInternal :
@@ -918,12 +918,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         String? Name { get; }
         IModelGetter? Model { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
-        IFormIDSetLinkGetter<ISoundGetter> OpenSound { get; }
-        IFormIDSetLinkGetter<ISoundGetter> CloseSound { get; }
-        IFormIDSetLinkGetter<ISoundGetter> LoopSound { get; }
+        IFormSetLinkGetter<IScriptGetter> Script { get; }
+        IFormSetLinkGetter<ISoundGetter> OpenSound { get; }
+        IFormSetLinkGetter<ISoundGetter> CloseSound { get; }
+        IFormSetLinkGetter<ISoundGetter> LoopSound { get; }
         Door.DoorFlag? Flags { get; }
-        IReadOnlySetList<IFormIDLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; }
+        IReadOnlySetList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; }
 
     }
 
@@ -1438,17 +1438,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.Model:
                     return typeof(Model);
                 case Door_FieldIndex.Script:
-                    return typeof(IFormIDSetLink<Script>);
+                    return typeof(IFormSetLink<Script>);
                 case Door_FieldIndex.OpenSound:
-                    return typeof(IFormIDSetLink<Sound>);
+                    return typeof(IFormSetLink<Sound>);
                 case Door_FieldIndex.CloseSound:
-                    return typeof(IFormIDSetLink<Sound>);
+                    return typeof(IFormSetLink<Sound>);
                 case Door_FieldIndex.LoopSound:
-                    return typeof(IFormIDSetLink<Sound>);
+                    return typeof(IFormSetLink<Sound>);
                 case Door_FieldIndex.Flags:
                     return typeof(Door.DoorFlag);
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    return typeof(ISetList<IFormIDLink<Place>>);
+                    return typeof(ISetList<IFormLink<Place>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1668,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLink<Place>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Place>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Door_Registration.TNAM_HEADER,
                         masterReferences: masterReferences,
@@ -2129,7 +2129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.RandomTeleportDestinations.SetTo(
                             rhs.RandomTeleportDestinations,
-                            (r) => new FormIDLink<Place>(r.FormKey));
+                            (r) => new FormLink<Place>(r.FormKey));
                     }
                     else
                     {
@@ -2363,14 +2363,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.RandomTeleportDestinations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
             {
-                ListXmlTranslation<IFormIDLinkGetter<IPlaceGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<IPlaceGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.RandomTeleportDestinations),
                     item: item.RandomTeleportDestinations,
                     fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.RandomTeleportDestinations),
-                    transl: (XElement subNode, IFormIDLinkGetter<IPlaceGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<IPlaceGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
-                        if (ListXmlTranslation<IFormIDLink<Place>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<Place>>.Instance.Parse(
                             node: node,
                             enumer: out var RandomTeleportDestinationsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -2779,10 +2779,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(Door_Registration.FNAM_HEADER));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IPlaceGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlaceGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RandomTeleportDestinations,
-                transl: (MutagenWriter subWriter, IFormIDLinkGetter<IPlaceGetter> subItem) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlaceGetter> subItem) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2935,29 +2935,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
         public bool OpenSound_IsSet => _OpenSoundLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoundGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenSoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
+        public IFormSetLinkGetter<ISoundGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenSoundLocation.Value, _package.Meta)))) : FormSetLink<ISoundGetter>.Empty;
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
         public bool CloseSound_IsSet => _CloseSoundLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoundGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CloseSoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
+        public IFormSetLinkGetter<ISoundGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CloseSoundLocation.Value, _package.Meta)))) : FormSetLink<ISoundGetter>.Empty;
         #endregion
         #region LoopSound
         private int? _LoopSoundLocation;
         public bool LoopSound_IsSet => _LoopSoundLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoundGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopSoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
+        public IFormSetLinkGetter<ISoundGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopSoundLocation.Value, _package.Meta)))) : FormSetLink<ISoundGetter>.Empty;
         #endregion
         #region Flags
         private int? _FlagsLocation;
         private bool Flags_IsSet => _FlagsLocation.HasValue;
         public Door.DoorFlag? Flags => Flags_IsSet ? (Door.DoorFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Door.DoorFlag?);
         #endregion
-        public IReadOnlySetList<IFormIDLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = EmptySetList<IFormIDLinkGetter<IPlaceGetter>>.Instance;
+        public IReadOnlySetList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = EmptySetList<IFormLinkGetter<IPlaceGetter>>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -3048,10 +3048,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    this.RandomTeleportDestinations = BinaryOverlaySetList<IFormIDLinkGetter<IPlaceGetter>>.FactoryByArray(
+                    this.RandomTeleportDestinations = BinaryOverlaySetList<IFormLinkGetter<IPlaceGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormIDLink<IPlaceGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<IPlaceGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

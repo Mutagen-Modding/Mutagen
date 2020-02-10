@@ -63,10 +63,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region IdleAnimation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDSetLink<IdleAnimation> _IdleAnimation = new FormIDSetLink<IdleAnimation>();
-        public IFormIDSetLink<IdleAnimation> IdleAnimation => this._IdleAnimation;
+        protected IFormSetLink<IdleAnimation> _IdleAnimation = new FormSetLink<IdleAnimation>();
+        public IFormSetLink<IdleAnimation> IdleAnimation => this._IdleAnimation;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLinkGetter<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation;
+        IFormSetLinkGetter<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation;
         #endregion
 
         #region To String
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAnimatedObjectInternal>
     {
         new Model? Model { get; set; }
-        new IFormIDSetLink<IdleAnimation> IdleAnimation { get; }
+        new IFormSetLink<IdleAnimation> IdleAnimation { get; }
     }
 
     public partial interface IAnimatedObjectInternal :
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         IModelGetter? Model { get; }
-        IFormIDSetLinkGetter<IIdleAnimationGetter> IdleAnimation { get; }
+        IFormSetLinkGetter<IIdleAnimationGetter> IdleAnimation { get; }
 
     }
 
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AnimatedObject_FieldIndex.Model:
                     return typeof(Model);
                 case AnimatedObject_FieldIndex.IdleAnimation:
-                    return typeof(IFormIDSetLink<IdleAnimation>);
+                    return typeof(IFormSetLink<IdleAnimation>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region IdleAnimation
         private int? _IdleAnimationLocation;
         public bool IdleAnimation_IsSet => _IdleAnimationLocation.HasValue;
-        public IFormIDSetLinkGetter<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormIDSetLink<IIdleAnimationGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleAnimationLocation.Value, _package.Meta)))) : FormIDSetLink<IIdleAnimationGetter>.Empty;
+        public IFormSetLinkGetter<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormSetLink<IIdleAnimationGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleAnimationLocation.Value, _package.Meta)))) : FormSetLink<IIdleAnimationGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

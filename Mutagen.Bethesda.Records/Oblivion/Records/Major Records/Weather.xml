@@ -66,7 +66,7 @@
   </Object>
   <Object name="WeatherSound" objType="Subrecord" recordType="SNAM" GUID="eab0c38b-8b31-49b2-8d20-18576d520ca6" ID="104">
     <Fields>
-      <FormIDLink name="Sound" refName="Sound" />
+      <FormLink name="Sound" refName="Sound" />
       <Enum name="Type" enumName="WeatherSound.SoundType" byteLength="4" />
     </Fields>
   </Object>

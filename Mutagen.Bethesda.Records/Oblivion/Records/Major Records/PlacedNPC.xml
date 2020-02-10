@@ -4,13 +4,13 @@
     <Interface type="IGetter">IPlacedGetter</Interface>
     <Interface type="ISetter">IPlaced</Interface>
     <Fields>
-      <FormIDLink name="Base" recordType="NAME" refName="NPC" />
+      <FormLink name="Base" recordType="NAME" refName="NPC" />
       <ByteArray name="XPCIFluff" recordType="XPCI" />
       <ByteArray name="FULLFluff" recordType="FULL" />
       <RefDirect name="DistantLODData" refName="DistantLODData" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <FormIDLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
-      <FormIDLink name="Horse" recordType="XHRS" refName="PlacedCreature" />
+      <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
+      <FormLink name="Horse" recordType="XHRS" refName="PlacedCreature" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />
       <Data>

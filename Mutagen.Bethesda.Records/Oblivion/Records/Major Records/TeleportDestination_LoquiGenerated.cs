@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Destination
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<IPlaced> _Destination = new FormIDLink<IPlaced>();
-        public IFormIDLink<IPlaced> Destination => this._Destination;
+        protected IFormLink<IPlaced> _Destination = new FormLink<IPlaced>();
+        public IFormLink<IPlaced> Destination => this._Destination;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination;
+        IFormLinkGetter<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination;
         #endregion
         #region Position
         public P3Float Position { get; set; } = default;
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
         ITeleportDestinationGetter,
         ILoquiObjectSetter<ITeleportDestination>
     {
-        new IFormIDLink<IPlaced> Destination { get; }
+        new IFormLink<IPlaced> Destination { get; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
     }
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormIDLinkGetter<IPlacedGetter> Destination { get; }
+        IFormLinkGetter<IPlacedGetter> Destination { get; }
         P3Float Position { get; }
         P3Float Rotation { get; }
 
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    return typeof(IFormIDLink<IPlaced>);
+                    return typeof(IFormLink<IPlaced>);
                 case TeleportDestination_FieldIndex.Position:
                     return typeof(P3Float);
                 case TeleportDestination_FieldIndex.Rotation:
@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IPlacedGetter> Destination => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormLinkGetter<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Span.Slice(4, 12));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Span.Slice(16, 12));
         partial void CustomCtor(

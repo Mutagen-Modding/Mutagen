@@ -63,10 +63,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Key
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormIDLink<Key> _Key = new FormIDLink<Key>();
-        public IFormIDLink<Key> Key => this._Key;
+        protected IFormLink<Key> _Key = new FormLink<Key>();
+        public IFormLink<Key> Key => this._Key;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
+        IFormLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
         #endregion
         #region Flags
         public LockInformation.Flag Flags { get; set; } = default;
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte LockLevel { get; set; }
         new Byte[] Fluff { get; set; }
-        new IFormIDLink<Key> Key { get; }
+        new IFormLink<Key> Key { get; }
         new LockInformation.Flag Flags { get; set; }
     }
 
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         Byte LockLevel { get; }
         ReadOnlySpan<Byte> Fluff { get; }
-        IFormIDLinkGetter<IKeyGetter> Key { get; }
+        IFormLinkGetter<IKeyGetter> Key { get; }
         LockInformation.Flag Flags { get; }
 
     }
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LockInformation_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case LockInformation_FieldIndex.Key:
-                    return typeof(IFormIDLink<Key>);
+                    return typeof(IFormLink<Key>);
                 case LockInformation_FieldIndex.Flags:
                     return typeof(LockInformation.Flag);
                 default:
@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Byte LockLevel => _data.Span[0];
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
-        public IFormIDLinkGetter<IKeyGetter> Key => new FormIDLink<IKeyGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
