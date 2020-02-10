@@ -27,11 +27,11 @@ namespace Mutagen.Bethesda.Tests
             if (!GameSetting_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
             var majorFrame = this.Meta.ReadMajorRecordFrame(stream);
-            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.ContentSpan, this.Meta, new RecordType("EDID"), navigateToContent: true);
+            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, new RecordType("EDID"), navigateToContent: true);
             if (edidLoc == -1) return;
-            if ((char)majorFrame.ContentSpan[edidLoc] != 'f') return;
+            if ((char)majorFrame.Content[edidLoc] != 'f') return;
 
-            var dataIndex = UtilityTranslation.FindFirstSubrecord(majorFrame.ContentSpan, this.Meta, new RecordType("DATA"), navigateToContent: true);
+            var dataIndex = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, new RecordType("DATA"), navigateToContent: true);
             if (dataIndex == -1) return;
             stream.Position = loc.Min + majorFrame.Header.HeaderLength + dataIndex;
             ProcessZeroFloat(stream);

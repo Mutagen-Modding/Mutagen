@@ -12,12 +12,12 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly MutagenWriter Writer;
         public readonly long SizePosition;
-        public readonly RecordConstants RecordConstants;
+        public readonly RecordHeaderConstants RecordConstants;
 
         private HeaderExport(
             MutagenWriter writer,
             long sizePosition,
-            RecordConstants recordConstants)
+            RecordHeaderConstants recordConstants)
         {
             this.Writer = writer;
             this.RecordConstants = recordConstants;

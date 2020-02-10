@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Binary
         public ReadOnlySpan<byte> RemainingSpan => this.Reader.RemainingSpan;
         public ReadOnlyMemorySlice<byte> RemainingMemory => this.Reader.RemainingMemory;
 
-        public MetaDataConstants MetaData => this.Reader.MetaData;
+        public GameConstants MetaData => this.Reader.MetaData;
 
         [DebuggerStepThrough]
         public MutagenFrame(IMutagenReadStream reader)

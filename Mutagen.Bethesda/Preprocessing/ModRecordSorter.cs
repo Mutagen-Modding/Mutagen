@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Preprocessing
             Stream outputStream,
             GameMode gameMode)
         {
-            var meta = MetaDataConstants.Get(gameMode);
+            var meta = GameConstants.Get(gameMode);
             using (var inputStream = new MutagenBinaryReadStream(streamCreator(), meta))
             {
                 using (var locatorStream = new MutagenBinaryReadStream(streamCreator(), meta))
@@ -49,10 +49,10 @@ namespace Mutagen.Bethesda.Preprocessing
                                     locatorStream.Position = grupLoc.Value;
                                     foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream, gameMode))
                                     {
-                                        MajorRecordMeta majorMeta = meta.GetMajorRecord(inputStream);
+                                        MajorRecordHeader majorMeta = meta.GetMajorRecord(inputStream);
                                         storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)majorMeta.TotalLength)));
                                         if (grupFrame.Complete) continue;
-                                        GroupRecordMeta subGroupMeta = meta.GetGroup(inputStream);
+                                        GroupHeader subGroupMeta = meta.GetGroup(inputStream);
                                         if (subGroupMeta.IsGroup)
                                         {
                                             storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)subGroupMeta.TotalLength)));

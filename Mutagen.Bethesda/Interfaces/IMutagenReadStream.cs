@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Binary
 {
     public interface IMutagenReadStream : IBinaryReadStream
     {
-        MetaDataConstants MetaData { get; }
+        GameConstants MetaData { get; }
         long OffsetReference { get; }
         IMutagenReadStream ReadAndReframe(int length);
         string ReadZString(int length);

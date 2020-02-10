@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
             var dataFrame = _package.Meta.ReadSubRecordFrame(stream);
-            uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.ContentSpan);
+            uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.Content);
 
             var pgrpMeta = _package.Meta.GetSubRecord(stream);
             if (pgrpMeta.RecordType != PathGridBinaryCreateTranslation.PGRP) return;

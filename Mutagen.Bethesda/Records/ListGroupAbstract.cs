@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda
                 // Parse locations
                 while (stream.Position < finalPos)
                 {
-                    VariableHeaderMeta meta = package.Meta.Constants(objectType).VariableMeta(stream.RemainingSpan);
+                    VariableHeader meta = package.Meta.Constants(objectType).VariableMeta(stream.RemainingSpan);
                     locations.Add(checked((int)stream.Position - offset));
                     stream.Position += checked((int)meta.TotalLength);
                 }

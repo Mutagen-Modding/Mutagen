@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item, MasterReferences masterReferences)
             {
                 var subFrame = frame.MetaData.ReadSubRecordFrame(frame);
-                item.Data = (bool)(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.ContentSpan) != 0);
+                item.Data = (bool)(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content) != 0);
             }
         }
 

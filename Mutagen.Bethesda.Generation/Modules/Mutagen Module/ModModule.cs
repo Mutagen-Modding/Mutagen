@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -421,7 +422,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     "item.ModHeader.WriteToBinary"))
                 {
-                    args.Add($"new MutagenWriter(stream, MetaDataConstants.{obj.GetObjectData().GameMode})");
+                    args.Add($"new MutagenWriter(stream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode})");
                     args.Add($"masterRefs");
                 }
                 int groupCount = obj.IterateFields()
@@ -482,10 +483,10 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("if (group.RecordCache.Count == 0) return;");
                     fg.AppendLine($"var cuts = group.Records.Cut(CutCount).ToArray();");
                     fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
-                    fg.AppendLine($"byte[] groupBytes = new byte[MetaDataConstants.{obj.GetObjectData().GameMode}.GroupConstants.HeaderLength];");
+                    fg.AppendLine($"byte[] groupBytes = new byte[{nameof(GameConstants)}.{obj.GetObjectData().GameMode}.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");
                     fg.AppendLine($"var groupByteStream = new MemoryStream(groupBytes);");
-                    fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.{obj.GetObjectData().GameMode}, dispose: false))");
+                    fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, dispose: false))");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
@@ -496,7 +497,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                     {
                         fg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
-                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, MetaDataConstants.{obj.GetObjectData().GameMode}, dispose: false))");
+                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, dispose: false))");
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine($"foreach (var item in cutItems)");
@@ -531,7 +532,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     "item.ModHeader.WriteToBinary"))
                 {
-                    args.Add($"new MutagenWriter(stream, MetaDataConstants.{obj.GetObjectData().GameMode})");
+                    args.Add($"new MutagenWriter(stream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode})");
                     args.Add($"masterRefs");
                 }
                 fg.AppendLine($"List<Task<IEnumerable<Stream>>> outputStreams = new List<Task<IEnumerable<Stream>>>();");
@@ -579,9 +580,9 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine("if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;");
                     fg.AppendLine($"List<Task<Stream>> streams = new List<Task<Stream>>();");
-                    fg.AppendLine($"byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];");
+                    fg.AppendLine($"byte[] groupBytes = new byte[{nameof(GameConstants)}.Oblivion.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");
-                    fg.AppendLine($"using (var stream = new MutagenWriter(new MemoryStream(groupBytes), MetaDataConstants.{obj.GetObjectData().GameMode}))");
+                    fg.AppendLine($"using (var stream = new MutagenWriter(new MemoryStream(groupBytes), {nameof(GameConstants)}.{obj.GetObjectData().GameMode}))");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
@@ -600,7 +601,7 @@ namespace Mutagen.Bethesda.Generation
                                 using (new BraceWrapper(subFg) { AppendParenthesis = true })
                                 {
                                     subFg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
-                                    subFg.AppendLine($"using (var stream = new MutagenWriter(trib, MetaDataConstants.{obj.GetObjectData().GameMode}, dispose: false))");
+                                    subFg.AppendLine($"using (var stream = new MutagenWriter(trib, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, dispose: false))");
                                     using (new BraceWrapper(subFg))
                                     {
                                         subFg.AppendLine($"foreach (var item in cutItems)");

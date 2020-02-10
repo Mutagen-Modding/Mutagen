@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj, MasterReferences masterReferences)
             {
                 if (frame.Reader.Complete) return;
-                GroupRecordMeta groupMeta = frame.MetaData.GetGroup(frame);
+                GroupHeader groupMeta = frame.MetaData.GetGroup(frame);
                 if (!groupMeta.IsGroup) return;
                 if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                 {
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
                         stream: new BinaryMemoryReadStream(contentSpan),
                         finalPos: contentSpan.Length,
                         trigger: DialogItem_Registration.TRIGGERING_RECORD_TYPE,
-                        constants: MetaDataConstants.Oblivion.MajorConstants,
+                        constants: GameConstants.Oblivion.MajorConstants,
                         skipHeader: false));
             }
         }

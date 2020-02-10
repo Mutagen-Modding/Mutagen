@@ -104,13 +104,13 @@ namespace Mutagen.Bethesda.Oblivion
             public AIPackage.Flag GetFlagsCustom()
             {
                 var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation!.Value - _package.Meta.SubConstants.HeaderLength));
-                if (subFrame.ContentSpan.Length > 4)
+                if (subFrame.Content.Length > 4)
                 {
-                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.ContentSpan));
+                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content));
                 }
                 else
                 {
-                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(subFrame.ContentSpan));
+                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content));
                 }
             }
 
@@ -118,13 +118,13 @@ namespace Mutagen.Bethesda.Oblivion
             public AIPackage.GeneralTypeEnum GetGeneralTypeCustom()
             {
                 var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation!.Value - _package.Meta.SubConstants.HeaderLength));
-                if (subFrame.ContentSpan.Length > 4)
+                if (subFrame.Content.Length > 4)
                 {
-                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.ContentSpan.Slice(4)));
+                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content.Slice(4)));
                 }
                 else
                 {
-                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(subFrame.ContentSpan[2]);
+                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(subFrame.Content[2]);
                 }
             }
         }

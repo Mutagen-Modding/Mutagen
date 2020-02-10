@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Preprocessing
             GameMode gameMode,
             RecordInterest? interest = null)
         {
-            var meta = MetaDataConstants.Get(gameMode);
+            var meta = GameConstants.Get(gameMode);
             using (var inputStream = new MutagenBinaryReadStream(streamCreator(), meta))
             {
                 using (var inputStreamJumpback = new MutagenBinaryReadStream(streamCreator(), meta))
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Preprocessing
                             interest: interest,
                             additionalCriteria: (stream, recType, len) =>
                             {
-                                return MetaDataConstants.Get(gameMode).GetMajorRecord(stream).IsCompressed;
+                                return GameConstants.Get(gameMode).GetMajorRecord(stream).IsCompressed;
                             });
 
                         // Construct group length container for later use

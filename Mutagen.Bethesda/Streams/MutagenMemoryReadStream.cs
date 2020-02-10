@@ -8,16 +8,16 @@ namespace Mutagen.Bethesda.Binary
     public class MutagenMemoryReadStream : BinaryMemoryReadStream, IMutagenReadStream
     {
         public long OffsetReference { get; }
-        public MetaDataConstants MetaData { get; }
+        public GameConstants MetaData { get; }
 
-        public MutagenMemoryReadStream(byte[] data, MetaDataConstants metaData, long offsetReference = 0)
+        public MutagenMemoryReadStream(byte[] data, GameConstants metaData, long offsetReference = 0)
             : base(data)
         {
             this.MetaData = metaData;
             this.OffsetReference = offsetReference;
         }
 
-        public MutagenMemoryReadStream(ReadOnlyMemorySlice<byte> data, MetaDataConstants metaData, long offsetReference = 0)
+        public MutagenMemoryReadStream(ReadOnlyMemorySlice<byte> data, GameConstants metaData, long offsetReference = 0)
             : base(data)
         {
             this.MetaData = metaData;

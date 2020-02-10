@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda
                 ObjectType? lastParsed = default;
                 while (stream.Position < finalPos)
                 {
-                    VariableHeaderMeta varMeta = package.Meta.NextRecordVariableMeta(stream.RemainingSpan);
+                    VariableHeader varMeta = package.Meta.NextRecordVariableMeta(stream.RemainingSpan);
                     if (varMeta.IsGroup)
                     {
                         if (lastParsed != ObjectType.Record)
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        MajorRecordMeta majorMeta = package.Meta.MajorRecord(stream.RemainingSpan);
+                        MajorRecordHeader majorMeta = package.Meta.MajorRecord(stream.RemainingSpan);
                         if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
                         {
                             throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);

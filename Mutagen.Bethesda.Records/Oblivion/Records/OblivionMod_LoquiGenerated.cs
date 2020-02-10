@@ -7644,7 +7644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var masterRefs = new MasterReferences(modKey, item.MasterReferences);
             item.ModHeader.WriteToBinary(
-                new MutagenWriter(stream, MetaDataConstants.Oblivion),
+                new MutagenWriter(stream, GameConstants.Oblivion),
                 masterRefs);
             Stream[] outputStreams = new Stream[56];
             List<Action> toDo = new List<Action>();
@@ -7720,10 +7720,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (group.RecordCache.Count == 0) return;
             var cuts = group.Records.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Oblivion, dispose: false))
+            using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
             {
                 stream.Position += 8;
                 GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);
@@ -7732,7 +7732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
-                using (var stream = new MutagenWriter(trib, MetaDataConstants.Oblivion, dispose: false))
+                using (var stream = new MutagenWriter(trib, GameConstants.Oblivion, dispose: false))
                 {
                     foreach (var item in cutItems)
                     {
@@ -7752,7 +7752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var masterRefs = new MasterReferences(modKey, item.MasterReferences);
             item.ModHeader.WriteToBinary(
-                new MutagenWriter(stream, MetaDataConstants.Oblivion),
+                new MutagenWriter(stream, GameConstants.Oblivion),
                 masterRefs);
             List<Task<IEnumerable<Stream>>> outputStreams = new List<Task<IEnumerable<Stream>>>();
             outputStreams.Add(WriteGroupAsync(item.GameSettings, masterRefs));
@@ -7823,9 +7823,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;
             List<Task<Stream>> streams = new List<Task<Stream>>();
-            byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
-            using (var stream = new MutagenWriter(new MemoryStream(groupBytes), MetaDataConstants.Oblivion))
+            using (var stream = new MutagenWriter(new MemoryStream(groupBytes), GameConstants.Oblivion))
             {
                 stream.Position += 8;
                 GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);
@@ -7837,7 +7837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Task.Run<Stream>(() =>
                     {
                         MemoryTributary trib = new MemoryTributary();
-                        using (var stream = new MutagenWriter(trib, MetaDataConstants.Oblivion, dispose: false))
+                        using (var stream = new MutagenWriter(trib, GameConstants.Oblivion, dispose: false))
                         {
                             foreach (var item in cutItems)
                             {
@@ -13075,7 +13075,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
+                using (var writer = new MutagenWriter(memStream, dispose: false, meta: GameConstants.Get(item.GameMode)))
                 {
                     var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                     OblivionModBinaryWriteTranslation.Instance.Write(

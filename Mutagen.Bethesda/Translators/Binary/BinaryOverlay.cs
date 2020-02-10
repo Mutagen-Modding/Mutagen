@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlayFactoryPackage package)
         {
             int? lastParsed = null;
-            ModHeaderMeta headerMeta = package.Meta.GetHeader(stream);
+            ModHeader headerMeta = package.Meta.GetHeader(stream);
             var minimumFinalPos = checked((int)(stream.Position + headerMeta.TotalLength));
             fill(
                 stream: stream,
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Binary
             stream.Position = (int)headerMeta.TotalLength;
             while (!stream.Complete)
             {
-                GroupRecordMeta groupMeta = package.Meta.GetGroup(stream);
+                GroupHeader groupMeta = package.Meta.GetGroup(stream);
                 if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                MajorRecordMeta majorMeta = _package.Meta.MajorRecord(stream.RemainingSpan);
+                MajorRecordHeader majorMeta = _package.Meta.MajorRecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + majorMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                GroupRecordMeta groupMeta = _package.Meta.Group(stream.RemainingSpan);
+                GroupHeader groupMeta = _package.Meta.Group(stream.RemainingSpan);
                 if (!groupMeta.IsGroup)
                 {
                     throw new DataMisalignedException();
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubRecordMeta subMeta = _package.Meta.SubRecord(stream.RemainingSpan);
+                SubRecordHeader subMeta = _package.Meta.SubRecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubRecordMeta subMeta = _package.Meta.SubRecord(stream.RemainingSpan);
+                SubRecordHeader subMeta = _package.Meta.SubRecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             long finalPos,
             RecordType trigger,
-            RecordConstants constants,
+            RecordHeaderConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             long finalPos,
             ICollection<RecordType> triggers,
-            RecordConstants constants,
+            RecordHeaderConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Binary
             long finalPos,
             ICollection<RecordType> triggers,
             ICollection<RecordType> includeTriggers,
-            RecordConstants constants,
+            RecordHeaderConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();
@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Binary
             long finalPos,
             RecordType trigger,
             ICollection<RecordType> includeTriggers,
-            RecordConstants constants,
+            RecordHeaderConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Binary
             long finalPos,
             ICollection<RecordType> triggers,
             RecordType includeTrigger,
-            RecordConstants constants,
+            RecordHeaderConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Binary
             long finalPos,
             RecordType trigger,
             RecordType includeTrigger,
-            RecordConstants constants,
+            RecordHeaderConstants constants,
             bool skipHeader)
         {
             List<int> ret = new List<int>();

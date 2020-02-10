@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Generation
             var eType = typeGen as EnumType;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");
+                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
 
             TranslationGeneration.WrapParseCall(

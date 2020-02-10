@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         stream: new BinaryMemoryReadStream(contentSpan),
                                         finalPos: subGroupLocation + subGroupMeta.TotalLength,
                                         triggers: TypicalPlacedTypes,
-                                        constants: MetaDataConstants.Oblivion.MajorConstants,
+                                        constants: GameConstants.Oblivion.MajorConstants,
                                         skipHeader: false));
                                 break;
                             }
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         stream: new BinaryMemoryReadStream(contentSpan),
                                         finalPos: subGroupLocation + subGroupMeta.TotalLength,
                                         triggers: TypicalPlacedTypes,
-                                        constants: MetaDataConstants.Oblivion.MajorConstants,
+                                        constants: GameConstants.Oblivion.MajorConstants,
                                         skipHeader: false));
                                 break;
                             }

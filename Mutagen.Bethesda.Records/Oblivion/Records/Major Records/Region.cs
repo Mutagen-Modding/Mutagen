@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static void ParseRegionData(MutagenFrame frame, IRegionInternal item, MasterReferences masterReferences)
         {
             var rdatFrame = frame.MetaData.GetSubRecordFrame(frame);
-            RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.ContentSpan);
+            RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
             var subMeta = frame.MetaData.GetSubRecord(frame, offset: rdatFrame.Header.TotalLength);
             int len = rdatFrame.Header.TotalLength;
             if (IsExpected(dataType, subMeta.RecordType))
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int loc = stream.Position - offset;
             var rdatFrame = this._package.Meta.ReadSubRecordFrame(stream);
-            RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.ContentSpan);
+            RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
             var len = rdatFrame.Header.TotalLength;
             if (!stream.Complete)
             {

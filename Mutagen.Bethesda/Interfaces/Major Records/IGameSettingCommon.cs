@@ -85,16 +85,16 @@ namespace Mutagen.Bethesda
             return input;
         }
 
-        public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlySpan<byte> span, MetaDataConstants meta)
+        public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlySpan<byte> span, GameConstants meta)
         {
             var majorMeta = meta.MajorRecordFrame(span);
-            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.ContentSpan, meta, Constants.EditorID);
+            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);
             if (edidLoc == -1)
             {
                 return GetResponse<GameSettingType>.Fail($"EDID was not located");
             }
-            var edidMeta = meta.SubRecordFrame(majorMeta.ContentSpan.Slice(edidLoc));
-            var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.ContentSpan);
+            var edidMeta = meta.SubRecordFrame(majorMeta.Content.Slice(edidLoc));
+            var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.Content);
             if (edid.Length == 0)
             {
                 return GetResponse<GameSettingType>.Fail("No EDID parsed.");

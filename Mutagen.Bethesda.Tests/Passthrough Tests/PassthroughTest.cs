@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Tests
         public ModKey ModKey => ModKey.Factory(this.FilePath.Name);
 
         public abstract GameMode GameMode { get; }
-        public readonly MetaDataConstants Meta;
+        public readonly GameConstants Meta;
         protected abstract Processor ProcessorFactory();
 
         public PassthroughTest(TestingSettings settings, Target target)
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Tests
             this.NumMasters = target.NumMasters;
             this.Settings = settings.PassthroughSettings;
             this.Target = target;
-            this.Meta = MetaDataConstants.Get(this.GameMode);
+            this.Meta = GameConstants.Get(this.GameMode);
         }
 
         public abstract ModRecordAligner.AlignmentRules GetAlignmentRules();

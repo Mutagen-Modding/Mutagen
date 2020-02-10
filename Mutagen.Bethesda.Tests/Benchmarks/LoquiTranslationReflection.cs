@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             _data[1] = (byte)'M';
             _data[2] = (byte)'M';
             _data[3] = (byte)'O';
-            _frame = new MutagenFrame(new MutagenMemoryReadStream(_data, MetaDataConstants.Oblivion));
+            _frame = new MutagenFrame(new MutagenMemoryReadStream(_data, GameConstants.Oblivion));
         }
 
         [Benchmark]

@@ -2537,7 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var masterRefs = new MasterReferences(modKey, item.MasterReferences);
             item.ModHeader.WriteToBinary(
-                new MutagenWriter(stream, MetaDataConstants.Skyrim),
+                new MutagenWriter(stream, GameConstants.Skyrim),
                 masterRefs);
             Stream[] outputStreams = new Stream[8];
             List<Action> toDo = new List<Action>();
@@ -2565,10 +2565,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (group.RecordCache.Count == 0) return;
             var cuts = group.Records.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[MetaDataConstants.Skyrim.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[GameConstants.Skyrim.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Skyrim, dispose: false))
+            using (var stream = new MutagenWriter(groupByteStream, GameConstants.Skyrim, dispose: false))
             {
                 stream.Position += 8;
                 GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);
@@ -2577,7 +2577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
-                using (var stream = new MutagenWriter(trib, MetaDataConstants.Skyrim, dispose: false))
+                using (var stream = new MutagenWriter(trib, GameConstants.Skyrim, dispose: false))
                 {
                     foreach (var item in cutItems)
                     {
@@ -2597,7 +2597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var masterRefs = new MasterReferences(modKey, item.MasterReferences);
             item.ModHeader.WriteToBinary(
-                new MutagenWriter(stream, MetaDataConstants.Skyrim),
+                new MutagenWriter(stream, GameConstants.Skyrim),
                 masterRefs);
             List<Task<IEnumerable<Stream>>> outputStreams = new List<Task<IEnumerable<Stream>>>();
             outputStreams.Add(WriteGroupAsync(item.GameSettings, masterRefs));
@@ -2620,9 +2620,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;
             List<Task<Stream>> streams = new List<Task<Stream>>();
-            byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
-            using (var stream = new MutagenWriter(new MemoryStream(groupBytes), MetaDataConstants.Skyrim))
+            using (var stream = new MutagenWriter(new MemoryStream(groupBytes), GameConstants.Skyrim))
             {
                 stream.Position += 8;
                 GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);
@@ -2634,7 +2634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Task.Run<Stream>(() =>
                     {
                         MemoryTributary trib = new MemoryTributary();
-                        using (var stream = new MutagenWriter(trib, MetaDataConstants.Skyrim, dispose: false))
+                        using (var stream = new MutagenWriter(trib, GameConstants.Skyrim, dispose: false))
                         {
                             foreach (var item in cutItems)
                             {
@@ -3867,7 +3867,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             using (var memStream = new MemoryTributary())
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
+                using (var writer = new MutagenWriter(memStream, dispose: false, meta: GameConstants.Get(item.GameMode)))
                 {
                     var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                     SkyrimModBinaryWriteTranslation.Instance.Write(

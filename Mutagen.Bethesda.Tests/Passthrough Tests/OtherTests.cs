@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Tests
                 mod.WriteToBinary(
                     oblivionOutputPath,
                     modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
-                var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, meta: MetaDataConstants.Get(GameMode.Oblivion));
+                var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, meta: GameConstants.Get(GameMode.Oblivion));
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {
                     foreach (var rec in fileLocs.ListedRecords.Keys)

@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 }
 
                 var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
-                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, MetaDataConstants.Get(gameMode)))
+                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, GameConstants.Get(gameMode)))
                 {
                     using (var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode))
                     {
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 }
 
                 fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
-                var meta = MetaDataConstants.Get(gameMode);
+                var meta = GameConstants.Get(gameMode);
                 using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, meta))
                 {
                     using (var writer = new MutagenWriter(outputPath.Path, meta))
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Preprocessing
             List<byte[]> grupBytes = new List<byte[]>();
             for (int i = 0; i < 3; i++)
             {
-                MajorRecordMeta majorMeta = reader.MetaData.GetMajorRecord(reader);
+                MajorRecordHeader majorMeta = reader.MetaData.GetMajorRecord(reader);
                 switch (majorMeta.RecordType.Type)
                 {
                     case "ROAD":

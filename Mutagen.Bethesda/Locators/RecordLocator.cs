@@ -23,10 +23,10 @@ namespace Mutagen.Bethesda
             public List<long> GrupLocations = new List<long>();
             public FormID LastParsed;
             public long LastLoc;
-            public MetaDataConstants MetaData { get; }
+            public GameConstants MetaData { get; }
             public Func<IMutagenReadStream, RecordType, uint, bool>? AdditionalCriteria;
 
-            public FileLocationConstructor(MetaDataConstants metaData)
+            public FileLocationConstructor(GameConstants metaData)
             {
                 this.MetaData = metaData;
             }
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda
 
         public static FileLocations GetFileLocations(
             string filePath,
-            MetaDataConstants meta,
+            GameConstants meta,
             RecordInterest? interest = null)
         {
             using (var stream = new MutagenBinaryReadStream(filePath, meta))
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda
 
         private static void SkipHeader(IMutagenReadStream reader)
         {
-            ModHeaderMeta headerMeta = reader.MetaData.GetHeader(reader);
+            ModHeader headerMeta = reader.MetaData.GetHeader(reader);
             if (!headerMeta.HasContent)
             {
                 reader.Position = reader.Length;
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda
             bool checkOverallGrupType)
         {
             var grupLoc = reader.Position;
-            GroupRecordMeta groupMeta = fileLocs.MetaData.GetGroup(reader);
+            GroupHeader groupMeta = fileLocs.MetaData.GetGroup(reader);
             if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException();
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda
             {
                 while (!frame.Complete)
                 {
-                    MajorRecordMeta majorRecordMeta = fileLocs.MetaData.GetMajorRecord(frame.Reader);
+                    MajorRecordHeader majorRecordMeta = fileLocs.MetaData.GetMajorRecord(frame.Reader);
                     var targetRec = majorRecordMeta.RecordType;
                     if (targetRec != grupRec)
                     {
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda
             return grupRec;
         }
 
-        private static bool IsSubLevelGRUP(GroupRecordMeta groupMeta)
+        private static bool IsSubLevelGRUP(GroupHeader groupMeta)
         {
             if (!groupMeta.IsGroup)
             {
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda
             Stack<long> parentGroupLocations)
         {
             var grupLoc = frame.Position;
-            GroupRecordMeta groupMeta = fileLocs.MetaData.GetGroup(frame.Reader);
+            GroupHeader groupMeta = fileLocs.MetaData.GetGroup(frame.Reader);
             if (!groupMeta.IsGroup)
             {
                 throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda
             SkipHeader(reader);
             while (!reader.Complete)
             {
-                GroupRecordMeta groupMeta = reader.MetaData.GetGroup(reader);
+                GroupHeader groupMeta = reader.MetaData.GetGroup(reader);
                 if (!groupMeta.IsGroup)
                 {
                     throw new DataMisalignedException("Group was not read in where expected: 0x" + reader.Position.ToString("X"));
@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda
             GameMode gameMode,
             bool checkOverallGrupType = true)
         {
-            var meta = MetaDataConstants.Get(gameMode);
+            var meta = GameConstants.Get(gameMode);
             var groupMeta = meta.GetGroup(reader);
             var grupLoc = reader.Position;
             var targetRec = groupMeta.ContainedRecordType;
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda
                 while (!frame.Complete)
                 {
                     var recordLocation = reader.Position;
-                    MajorRecordMeta majorMeta = meta.GetMajorRecord(reader);
+                    MajorRecordHeader majorMeta = meta.GetMajorRecord(reader);
                     if (majorMeta.RecordType != targetRec)
                     {
                         var subGroupMeta = meta.GetGroup(reader);

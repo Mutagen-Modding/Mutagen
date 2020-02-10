@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Target settings: " + settings.ToString());
             var dataPath = Path.Combine(settings.DataFolderLocations.Oblivion, "Oblivion.esm");
             data = File.ReadAllBytes(dataPath);
-            stream = new MutagenMemoryReadStream(data, MetaDataConstants.Oblivion);
+            stream = new MutagenMemoryReadStream(data, GameConstants.Oblivion);
         }
 
         [GlobalCleanup]

@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (this.UsingOffsetLength)
                 {
                     var offsetLenFrame = _package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
-                    stream.Position += checked((int)(_package.Meta.SubConstants.HeaderLength + BinaryPrimitives.ReadUInt32LittleEndian(offsetLenFrame.ContentSpan)));
+                    stream.Position += checked((int)(_package.Meta.SubConstants.HeaderLength + BinaryPrimitives.ReadUInt32LittleEndian(offsetLenFrame.Content)));
                 }
             }
 
@@ -478,13 +478,13 @@ namespace Mutagen.Bethesda.Oblivion
                 if (this.UsingOffsetLength)
                 {
                     var lenFrame = this._package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
-                    var len = BinaryPrimitives.ReadInt32LittleEndian(lenFrame.ContentSpan);
+                    var len = BinaryPrimitives.ReadInt32LittleEndian(lenFrame.Content);
                     return _data.Slice(_OffsetDataLocation!.Value + this._package.Meta.SubConstants.HeaderLength, len);
                 }
                 else
                 {
                     var spanFrame = this._package.Meta.SubRecordFrame(this._data.Slice(_OffsetDataLocation!.Value));
-                    return spanFrame.ContentSpan;
+                    return spanFrame.Content;
                 }
             }
 
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     stream: new BinaryMemoryReadStream(stream.RemainingMemory),
                                     finalPos: stream.Length,
                                     trigger: WorldspaceBlock_Registration.TRIGGERING_RECORD_TYPE,
-                                    constants: MetaDataConstants.Oblivion.GroupConstants,
+                                    constants: GameConstants.Oblivion.GroupConstants,
                                     skipHeader: false));
                             break;
                         default:

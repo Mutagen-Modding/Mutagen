@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Tests
     public abstract class Processor
     {
         public abstract GameMode GameMode { get; }
-        public readonly MetaDataConstants Meta;
+        public readonly GameConstants Meta;
         protected RecordLocator.FileLocations _SourceFileLocs;
         protected RecordLocator.FileLocations _AlignedFileLocs;
         protected BinaryFileProcessor.Config _Instructions = new BinaryFileProcessor.Config();
@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Tests
 
         public Processor()
         {
-            this.Meta = MetaDataConstants.Get(this.GameMode);
+            this.Meta = GameConstants.Get(this.GameMode);
         }
 
         public void Process(
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Tests
         {
             stream.Position = loc.Min;
             var majorFrame = this.Meta.ReadMajorRecordFrame(stream);
-            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.ContentSpan, this.Meta, Mutagen.Bethesda.Constants.EditorID);
+            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, Mutagen.Bethesda.Constants.EditorID);
             if (edidLoc == -1) return;
             ProcessStringTermination(
                 stream,
@@ -138,14 +138,14 @@ namespace Mutagen.Bethesda.Tests
         {
             stream.Position = subrecordLoc;
             var subFrame = this.Meta.ReadSubRecordFrame(stream);
-            var nullIndex = MemoryExtensions.IndexOf<byte>(subFrame.ContentSpan, default(byte));
+            var nullIndex = MemoryExtensions.IndexOf<byte>(subFrame.Content, default(byte));
             if (nullIndex == -1) throw new ArgumentException();
-            if (nullIndex == subFrame.ContentSpan.Length - 1) return;
+            if (nullIndex == subFrame.Content.Length - 1) return;
             // Extra content pass null terminator.  Trim
             this._Instructions.SetRemove(
                 section: RangeInt64.FactoryFromLength(
                     subrecordLoc + subFrame.Header.HeaderLength + nullIndex + 1,
-                    subFrame.ContentSpan.Length - nullIndex));
+                    subFrame.Content.Length - nullIndex));
             ProcessSubrecordLengths(
                 stream: stream,
                 amount: nullIndex + 1,

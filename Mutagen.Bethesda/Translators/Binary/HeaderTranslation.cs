@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Binary
             out long finalPos,
             bool hopGroup = true)
         {
-            GroupRecordMeta groupMeta = reader.MetaData.GetGroup(reader);
+            GroupHeader groupMeta = reader.MetaData.GetGroup(reader);
             RecordType ret = groupMeta.RecordType;
             contentLength = checked((int)groupMeta.RecordLength);
             if (groupMeta.IsGroup)
@@ -291,19 +291,19 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public static ReadOnlySpan<byte> ExtractSubrecordSpan(ReadOnlySpan<byte> span, int loc, MetaDataConstants meta)
+        public static ReadOnlySpan<byte> ExtractSubrecordSpan(ReadOnlySpan<byte> span, int loc, GameConstants meta)
         {
             var subMeta = meta.SubRecord(span.Slice(loc));
             return span.Slice(loc + subMeta.HeaderLength, checked((int)subMeta.RecordLength));
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractSubrecordWrapperMemory(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)
+        public static ReadOnlyMemorySlice<byte> ExtractSubrecordWrapperMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             var subMeta = meta.SubRecord(span.Span);
             return span.Slice(subMeta.HeaderLength, subMeta.RecordLength);
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractRecordWrapperMemory(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)
+        public static ReadOnlyMemorySlice<byte> ExtractRecordWrapperMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             var majorMeta = meta.MajorRecord(span.Span);
             var len = majorMeta.RecordLength;
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Binary
             return span.Slice(meta.MajorConstants.TypeAndLengthLength, checked((int)len));
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractGroupWrapperMemory(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)
+        public static ReadOnlyMemorySlice<byte> ExtractGroupWrapperMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             var groupMeta = meta.Group(span.Span);
             var len = groupMeta.ContentLength;

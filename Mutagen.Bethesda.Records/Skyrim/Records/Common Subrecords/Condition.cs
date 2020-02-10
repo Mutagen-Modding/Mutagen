@@ -87,11 +87,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var countMeta = frame.MetaData.ReadSubRecordFrame(frame);
                 if (countMeta.Header.RecordType != Faction_Registration.CITC_HEADER
-                    || countMeta.ContentSpan.Length != 4)
+                    || countMeta.Content.Length != 4)
                 {
                     throw new ArgumentException();
                 }
-                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.ContentSpan);
+                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.Content);
                 List<Condition> conds = new List<Condition>(count);
                 for (int i = 0; i < count; i++)
                 {
@@ -114,10 +114,10 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (subMeta.Header.RecordType.TypeInt)
                 {
                     case 0x31534943: // CIS1
-                        funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.ContentSpan);
+                        funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
                         break;
                     case 0x32534943: // CIS2
-                        funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.ContentSpan);
+                        funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
                         break;
                     default:
                         return;
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     throw new ArgumentException();
                 }
-                Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.ContentSpan[0]);
+                Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
                 if (flag.HasFlag(Condition.Flag.UseGlobal))
                 {
                     return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
@@ -206,11 +206,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var counterMeta = package.Meta.ReadSubRecordFrame(stream);
                 if (counterMeta.Header.RecordType != Faction_Registration.CITC_HEADER
-                    || counterMeta.ContentSpan.Length != 4)
+                    || counterMeta.Content.Length != 4)
                 {
                     throw new ArgumentException();
                 }
-                var count = BinaryPrimitives.ReadUInt32LittleEndian(counterMeta.ContentSpan);
+                var count = BinaryPrimitives.ReadUInt32LittleEndian(counterMeta.Content);
                 var span = stream.RemainingMemory;
                 var pos = stream.Position;
                 var recordLocs = ParseRecordLocations(

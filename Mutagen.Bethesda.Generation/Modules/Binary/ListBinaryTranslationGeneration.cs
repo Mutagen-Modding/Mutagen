@@ -194,11 +194,11 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (data.MarkerType.HasValue)
             {
-                fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
             }
             else if (listBinaryType == ListBinaryType.Trigger)
             {
-                fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
 
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
@@ -254,13 +254,13 @@ namespace Mutagen.Bethesda.Generation
                         switch (loqui.GetObjectType())
                         {
                             case ObjectType.Subrecord:
-                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
+                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
                                 break;
                             case ObjectType.Group:
-                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.GroupConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
+                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.GroupConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
                                 break;
                             case ObjectType.Record:
-                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.MajorConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
+                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.MajorConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
                                 break;
                             case ObjectType.Mod:
                             default:
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
+                        args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
                     }
                 }
                 var subGenTypes = subData.GenerationTypes.ToList();
@@ -538,13 +538,13 @@ namespace Mutagen.Bethesda.Generation
                                         switch (loqui.TargetObjectGeneration.GetObjectType())
                                         {
                                             case ObjectType.Subrecord:
-                                                subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.SubConstants)}");
+                                                subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.SubConstants)}");
                                                 break;
                                             case ObjectType.Record:
-                                                subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.MajorConstants)}");
+                                                subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.MajorConstants)}");
                                                 break;
                                             case ObjectType.Group:
-                                                subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.GroupConstants)}");
+                                                subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.GroupConstants)}");
                                                 break;
                                             case ObjectType.Mod:
                                             default:
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     subArgs.AddPassArg("stream");
                                     subArgs.AddPassArg("finalPos");
-                                    subArgs.Add($"constants: _package.Meta.{nameof(MetaDataConstants.SubConstants)}");
+                                    subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: true");
                                 }

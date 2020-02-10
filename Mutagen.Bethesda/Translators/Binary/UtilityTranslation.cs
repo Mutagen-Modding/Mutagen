@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda
             return record;
         }
 
-        public static ReadOnlyMemorySlice<byte> DecompressSpan(ReadOnlyMemorySlice<byte> slice, MetaDataConstants meta)
+        public static ReadOnlyMemorySlice<byte> DecompressSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
         {
             var majorMeta = meta.MajorRecord(slice);
             if (majorMeta.IsCompressed)
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda
             return slice;
         }
 
-        public static BinaryMemoryReadStream DecompressStream(BinaryMemoryReadStream stream, MetaDataConstants meta)
+        public static BinaryMemoryReadStream DecompressStream(BinaryMemoryReadStream stream, GameConstants meta)
         {
             var majorMeta = meta.GetMajorRecord(stream);
             if (majorMeta.IsCompressed)
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda
         /// <param name="span">Bytes containing subrecords</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <returns>Enumerable of KeyValue pairs of encountered RecordTypes and their locations relative to the input span</returns>
-        public static IEnumerable<KeyValuePair<RecordType, int>> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, MetaDataConstants meta)
+        public static IEnumerable<KeyValuePair<RecordType, int>> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             int loc = 0;
             while (span.Length > loc)
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda
         /// <param name="recordTypes">Record types to locate</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <returns>Array of found record locations</returns>
-        public static int[] FindFirstSubrecords(ReadOnlySpan<byte> data, MetaDataConstants meta, params RecordType[] recordTypes)
+        public static int[] FindFirstSubrecords(ReadOnlySpan<byte> data, GameConstants meta, params RecordType[] recordTypes)
         {
             int loc = 0;
             int[] ret = new int[recordTypes.Length];
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static int FindFirstSubrecord(ReadOnlySpan<byte> data, MetaDataConstants meta, RecordType recordType, bool navigateToContent = false)
+        public static int FindFirstSubrecord(ReadOnlySpan<byte> data, GameConstants meta, RecordType recordType, bool navigateToContent = false)
         {
             int loc = 0;
             while (data.Length > loc)

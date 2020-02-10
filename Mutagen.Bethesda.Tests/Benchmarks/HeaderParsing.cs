@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
     public class HeaderParsing
     {
         static byte[] bytes = new byte[] { 0x54, 0x45, 0x53, 0x34, 0xE8, 0x02, 0x00, 0x00 };
-        static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes, MetaDataConstants.Oblivion));
+        static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes, GameConstants.Oblivion));
         static RecordType type = new RecordType("TES4");
 
         //[Benchmark]
