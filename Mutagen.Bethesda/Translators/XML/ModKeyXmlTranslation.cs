@@ -3,6 +3,7 @@ using Loqui.Xml;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,26 +31,26 @@ namespace Mutagen.Bethesda
             return item;
         }
 
-        public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder? errorMask)
+        public bool Parse(XElement node, [MaybeNullWhen(false)]out ModKey item, ErrorMaskBuilder? errorMask)
         {
             if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask))
             {
-                item = default;
+                item = default!;
                 return false;
             }
 
-            return ModKey.TryFactory(str, out item);
+            return ModKey.TryFactory(str, out item!);
         }
 
-        public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)
+        public bool Parse(XElement node, [MaybeNullWhen(false)]out ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)
         {
             if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask, translationMask))
             {
-                item = default;
+                item = default!;
                 return false;
             }
 
-            return ModKey.TryFactory(str, out item);
+            return ModKey.TryFactory(str, out item!);
         }
 
         public void Write(XElement node, string name, ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)

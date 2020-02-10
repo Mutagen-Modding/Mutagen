@@ -1,6 +1,7 @@
 ﻿using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace Mutagen.Bethesda
     /// General practice is:
     ///  - Use ModKey.TryFactory on a mod's file name when at all possible
     ///  - Use the Dummy singleton only when it is unknown, and no record cross pollination is planned to occur.
-    public struct ModKey : IEquatable<ModKey>
+    public class ModKey : IEquatable<ModKey>
     {
         public static readonly ModKey Null = new ModKey(string.Empty, master: false);
         public string Name { get; private set; }
@@ -71,18 +72,18 @@ namespace Mutagen.Bethesda
             return $"{Name}.{(this.Master ? "esm" : "esp")}";
         }
 
-        public static bool TryFactory(string str, out ModKey modKey)
+        public static bool TryFactory(string str, [MaybeNullWhen(false)]out ModKey modKey)
         {
             if (string.IsNullOrWhiteSpace(str))
             {
-                modKey = default;
+                modKey = default!;
                 return false;
             }
             var index = str.LastIndexOf('.');
             if (index == -1
                 || index != str.Length - 4)
             {
-                modKey = default;
+                modKey = default!;
                 return false;
             }
             var modString = str.Substring(0, index);
@@ -98,7 +99,7 @@ namespace Mutagen.Bethesda
             }
             else
             {
-                modKey = default;
+                modKey = default!;
                 return false;
             }
             var keyIndex = master ? 0 : 1;
@@ -153,14 +154,14 @@ namespace Mutagen.Bethesda
             return ModKey.TryFactory(str, out var modKey) ? modKey : Dummy;
         }
 
-        public static bool operator ==(ModKey a, ModKey b)
+        public static bool operator ==(ModKey? a, ModKey? b)
         {
-            return a.Equals(b);
+            return EqualityComparer<ModKey?>.Default.Equals(a, b);
         }
 
-        public static bool operator !=(ModKey a, ModKey b)
+        public static bool operator !=(ModKey? a, ModKey? b)
         {
-            return !a.Equals(b);
+            return !EqualityComparer<ModKey?>.Default.Equals(a, b);
         }
     }
 }

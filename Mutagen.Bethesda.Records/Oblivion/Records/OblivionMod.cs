@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
 
-        public ModKey ModKey { get; }
+        public ModKey ModKey { get; } = ModKey.Null;
 
         public OblivionMod(ModKey modKey)
             : this()

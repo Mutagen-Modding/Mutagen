@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,15 +13,15 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static ModKeyBinaryTranslation Instance = new ModKeyBinaryTranslation();
 
-        public bool Parse(MutagenFrame frame, out ModKey item)
+        public bool Parse(MutagenFrame frame, [MaybeNullWhen(false)]out ModKey item)
         {
             if (!StringBinaryTranslation.Instance.Parse(frame, out var str))
             {
-                item = default;
+                item = default!;
                 return false;
             }
 
-            return ModKey.TryFactory(str, out item);
+            return ModKey.TryFactory(str, out item!);
         }
 
         public ModKey Parse(MutagenFrame frame)

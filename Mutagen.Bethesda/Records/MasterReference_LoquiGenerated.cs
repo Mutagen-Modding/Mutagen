@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Master
-        public ModKey Master { get; set; } = default;
+        public ModKey Master { get; set; } = ModKey.Null;
         #endregion
         #region FileSize
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Internals
         public void Clear(IMasterReference item)
         {
             ClearPartial();
-            item.Master = default;
+            item.Master = ModKey.Null;
             item.FileSize = default;
         }
         
@@ -1912,7 +1912,7 @@ namespace Mutagen.Bethesda.Internals
 
         #region Master
         private int? _MasterLocation;
-        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _package.Meta))) : default;
+        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MasterLocation.Value, _package.Meta))) : ModKey.Null;
         #endregion
         #region FileSize
         private int? _FileSizeLocation;

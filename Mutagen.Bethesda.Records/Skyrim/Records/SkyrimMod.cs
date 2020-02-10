@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
 
-        public ModKey ModKey { get; }
+        public ModKey ModKey { get; } = ModKey.Null;
 
         public SkyrimMod(ModKey modKey)
             : this()

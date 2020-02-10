@@ -11,5 +11,10 @@ namespace Mutagen.Bethesda.Generation
     {
         public override Type Type(bool getter) => typeof(ModKey);
         public override bool IsClass => true;
+
+        public override string GetDefault()
+        {
+            return "ModKey.Null";
+        }
     }
 }
