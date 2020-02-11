@@ -26,6 +26,10 @@ namespace Mutagen.Bethesda.Oblivion
                     out var parseVal)
                     && parseVal > 0)
                 {
+                    if (!item.Flags.HasValue)
+                    {
+                        item.Flags = default(LeveledFlag);
+                    }
                     item.Flags |= LeveledFlag.CalculateForEachItemInCount;
                 }
             }
