@@ -31,8 +31,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                args.Add($"errorMask: {errorMaskAccessor}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
@@ -70,7 +68,7 @@ namespace Mutagen.Bethesda.Generation
                     TranslationMaskAccessor = translationMaskAccessor,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}".Single(),
-                    SkipErrorMask = !this.DoErrorMasks
+                    SkipErrorMask = true
                 });
         }
 
@@ -92,7 +90,6 @@ namespace Mutagen.Bethesda.Generation
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
                 args.Add(nodeAccessor.DirectAccess);
-                args.Add($"errorMask: out {errorMaskAccessor}");
                 if (asyncMode == AsyncMode.Off)
                 {
                     args.Add($"item: out {outItemAccessor.DirectAccess}");

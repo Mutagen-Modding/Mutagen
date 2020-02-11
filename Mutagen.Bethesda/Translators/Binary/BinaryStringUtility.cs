@@ -58,7 +58,23 @@ namespace Noggog
             return bytes;
         }
 
+        public static ReadOnlyMemorySlice<byte> ProcessNullTermination(ReadOnlyMemorySlice<byte> bytes)
+        {
+            // If null terminated, don't include
+            if (bytes[bytes.Length - 1] == 0)
+            {
+                return bytes.Slice(0, bytes.Length - 1);
+            }
+            return bytes;
+        }
+
         public static string ProcessWholeToZString(ReadOnlySpan<byte> span)
+        {
+            span = ProcessNullTermination(span);
+            return ToZString(span);
+        }
+
+        public static string ProcessWholeToZString(ReadOnlyMemorySlice<byte> span)
         {
             span = ProcessNullTermination(span);
             return ToZString(span);

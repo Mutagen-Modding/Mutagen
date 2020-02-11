@@ -1077,10 +1077,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
+        public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
@@ -1095,10 +1098,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         AACT_HEADER,
                         CLAS_HEADER,
+                        EYES_HEADER,
                         FACT_HEADER,
                         FLST_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
+                        HAIR_HEADER,
+                        HDPT_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
                         OTFT_HEADER,

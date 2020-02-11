@@ -88,9 +88,9 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        protected virtual void PreProcessorJobs(
-            IMutagenReadStream stream)
+        protected virtual void PreProcessorJobs(IMutagenReadStream stream)
         {
+            RemoveEmptyGroups(stream);
         }
 
         protected virtual void AddDynamicProcessorInstructions(
@@ -195,6 +195,17 @@ namespace Mutagen.Bethesda.Tests
                     stream.Position - 4,
                     new byte[4]);
                 return;
+            }
+        }
+
+        public void RemoveEmptyGroups(IMutagenReadStream stream)
+        {
+            foreach (var loc in this._AlignedFileLocs.GrupLocations)
+            {
+                stream.Position = loc;
+                var groupMeta = stream.MetaData.ReadGroup(stream);
+                if (groupMeta.ContentLength != 0) continue;
+                this._Instructions.SetRemove(RangeInt64.FactoryFromLength(loc, groupMeta.HeaderLength));
             }
         }
     }

@@ -2064,7 +2064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region EdgeFallOff
         private int? _EdgeFallOffLocation;
-        public UInt32? EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EdgeFallOffLocation.Value, _package.Meta)) : default(UInt32?);
+        public UInt32? EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EdgeFallOffLocation.Value, _package.Meta)) : default(UInt32?);
         #endregion
         public IReadOnlySetList<P2Float> RegionPoints { get; private set; } = EmptySetList<P2Float>.Instance;
         partial void CustomCtor(

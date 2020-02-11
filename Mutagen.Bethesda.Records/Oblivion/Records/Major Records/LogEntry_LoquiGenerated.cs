@@ -2390,7 +2390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
         #region Entry
         private int? _EntryLocation;
-        public String? Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _EntryLocation.Value, _package.Meta)) : default(string?);
+        public String? Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region ResultScript
         public IScriptFieldsGetter? ResultScript { get; private set; }

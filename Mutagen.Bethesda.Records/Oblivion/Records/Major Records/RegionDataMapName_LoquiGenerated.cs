@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region MapName
         private int? _MapNameLocation;
-        public String? MapName => _MapNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MapNameLocation.Value, _package.Meta)) : default(string?);
+        public String? MapName => _MapNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MapNameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

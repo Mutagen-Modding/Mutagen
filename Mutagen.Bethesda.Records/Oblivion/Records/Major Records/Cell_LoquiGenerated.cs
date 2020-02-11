@@ -5013,7 +5013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -5022,7 +5022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Grid
         private int? _GridLocation;
-        public P2Int? Grid => _GridLocation.HasValue ? P2IntBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordSpan(_data, _GridLocation.Value, _package.Meta)) : default(P2Int?);
+        public P2Int? Grid => _GridLocation.HasValue ? P2IntBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _GridLocation.Value, _package.Meta)) : default(P2Int?);
         #endregion
         #region Lighting
         private RangeInt32? _LightingLocation;
@@ -5038,7 +5038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;
-        public Single? WaterHeight => _WaterHeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterHeightLocation.Value, _package.Meta)) : default(Single?);
+        public Single? WaterHeight => _WaterHeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterHeightLocation.Value, _package.Meta)) : default(Single?);
         #endregion
         #region Climate
         private int? _ClimateLocation;
@@ -5057,7 +5057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
-        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FactionRankLocation.Value, _package.Meta)) : default(Int32?);
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FactionRankLocation.Value, _package.Meta)) : default(Int32?);
         #endregion
         #region GlobalVariable
         private int? _GlobalVariableLocation;

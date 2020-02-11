@@ -3550,7 +3550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Script
         private int? _ScriptLocation;
@@ -3564,7 +3564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;
-        public UInt16? EnchantmentPoints => _EnchantmentPointsLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentPointsLocation.Value, _package.Meta)) : default(UInt16?);
+        public UInt16? EnchantmentPoints => _EnchantmentPointsLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentPointsLocation.Value, _package.Meta)) : default(UInt16?);
         #endregion
         private int? _BMDTLocation;
         public ClothingAbstract.BMDTDataType BMDTDataTypeState { get; private set; }
@@ -3588,7 +3588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MaleIcon
         private int? _MaleIconLocation;
-        public String? MaleIcon => _MaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaleIconLocation.Value, _package.Meta)) : default(string?);
+        public String? MaleIcon => _MaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaleIconLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region FemaleBipedModel
         public IModelGetter? FemaleBipedModel { get; private set; }
@@ -3600,7 +3600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region FemaleIcon
         private int? _FemaleIconLocation;
-        public String? FemaleIcon => _FemaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FemaleIconLocation.Value, _package.Meta)) : default(string?);
+        public String? FemaleIcon => _FemaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleIconLocation.Value, _package.Meta)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

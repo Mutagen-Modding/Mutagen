@@ -3208,7 +3208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MapColor
         private int? _MapColorLocation;
-        public Color? MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _MapColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
+        public Color? MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MapColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;

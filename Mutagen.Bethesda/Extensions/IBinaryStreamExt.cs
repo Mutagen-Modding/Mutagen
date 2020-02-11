@@ -23,5 +23,10 @@ namespace Mutagen.Bethesda
                 green: span[1],
                 blue: span[2]);
         }
+
+        public static Color ReadColor(this ReadOnlyMemorySlice<byte> span)
+        {
+            return span.Span.ReadColor();
+        }
     }
 }

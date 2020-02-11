@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region VariableIndex
         private int? _VariableIndexLocation;
-        public Int32 VariableIndex => _VariableIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VariableIndexLocation.Value, _package.Meta)) : default;
+        public Int32 VariableIndex => _VariableIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VariableIndexLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -2711,7 +2711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region SourceCode
         private int? _SourceCodeLocation;
-        public String? SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SourceCodeLocation.Value, _package.Meta)) : default(string?);
+        public String? SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SourceCodeLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IReadOnlySetList<ILocalVariableGetter> LocalVariables { get; private set; } = EmptySetList<LocalVariableBinaryOverlay>.Instance;
         public IReadOnlySetList<IScriptReferenceGetter> References { get; private set; } = EmptySetList<ScriptReferenceBinaryOverlay>.Instance;

@@ -2163,19 +2163,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region RankNumber
         private int? _RankNumberLocation;
-        public Int32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RankNumberLocation.Value, _package.Meta)) : default(Int32?);
+        public Int32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankNumberLocation.Value, _package.Meta)) : default(Int32?);
         #endregion
         #region MaleName
         private int? _MaleNameLocation;
-        public String? MaleName => _MaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaleNameLocation.Value, _package.Meta)) : default(string?);
+        public String? MaleName => _MaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaleNameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region FemaleName
         private int? _FemaleNameLocation;
-        public String? FemaleName => _FemaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FemaleNameLocation.Value, _package.Meta)) : default(string?);
+        public String? FemaleName => _FemaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleNameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
-        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _InsigniaLocation.Value, _package.Meta)) : default(string?);
+        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.Meta)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -33,15 +33,26 @@ namespace Mutagen.Bethesda.Binary
 
         public virtual string Parse(
             MutagenFrame frame,
-            bool parseWhole)
+            bool parseWhole,
+            StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
         {
-            if (parseWhole)
+            switch (stringBinaryType)
             {
-                return BinaryStringUtility.ProcessWholeToZString(frame.ReadMemory(checked((int)frame.Remaining)));
-            }
-            else
-            {
-                return BinaryStringUtility.ParseUnknownLengthString(frame.Reader);
+                case StringBinaryType.Plain:
+                case StringBinaryType.NullTerminate:
+                    if (parseWhole)
+                    {
+                        return BinaryStringUtility.ProcessWholeToZString(frame.ReadMemory(checked((int)frame.Remaining)));
+                    }
+                    else
+                    {
+                        return BinaryStringUtility.ParseUnknownLengthString(frame.Reader);
+                    }
+                case StringBinaryType.PrependLength:
+                    var len = frame.ReadInt32();
+                    return BinaryStringUtility.ToZString(frame.ReadMemory(len));
+                default:
+                    throw new NotImplementedException();
             }
         }
 

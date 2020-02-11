@@ -146,5 +146,23 @@ namespace Mutagen.Bethesda.Generation
                 return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor})";
             }
         }
+
+        public override void GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            int? currentPosition,
+            DataType dataType = null)
+        {
+            try
+            {
+                base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, dataType);
+            }
+            catch (NotImplementedException)
+            {
+                if (this.ExpectedLength(objGen, typeGen) != null) throw;
+            }
+        }
     }
 }

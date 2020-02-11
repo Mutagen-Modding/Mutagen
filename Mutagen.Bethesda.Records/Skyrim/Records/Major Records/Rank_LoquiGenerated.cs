@@ -2050,15 +2050,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region RankID
         private int? _RankIDLocation;
-        public UInt32? RankID => _RankIDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RankIDLocation.Value, _package.Meta)) : default(UInt32?);
+        public UInt32? RankID => _RankIDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankIDLocation.Value, _package.Meta)) : default(UInt32?);
         #endregion
         #region MaleRankTitle
         private int? _MaleRankTitleLocation;
-        public String? MaleRankTitle => _MaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaleRankTitleLocation.Value, _package.Meta)) : default(string?);
+        public String? MaleRankTitle => _MaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaleRankTitleLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region FemaleRankTitle
         private int? _FemaleRankTitleLocation;
-        public String? FemaleRankTitle => _FemaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FemaleRankTitleLocation.Value, _package.Meta)) : default(string?);
+        public String? FemaleRankTitle => _FemaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleRankTitleLocation.Value, _package.Meta)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
