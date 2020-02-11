@@ -11,24 +11,25 @@ namespace Mutagen.Bethesda.Internals
     {
         public static MasterReferences Empty { get; } = new MasterReferences(ModKey.Null);
 
-        public readonly IList<IMasterReferenceGetter> Masters = new List<IMasterReferenceGetter>();
-        public readonly ModKey CurrentMod;
+        public IReadOnlyList<IMasterReferenceGetter> Masters;
+        public ModKey CurrentMod;
 
         public MasterReferences(ModKey modKey)
         {
             this.CurrentMod = modKey;
+            this.Masters = new List<IMasterReferenceGetter>();
         }
 
         public MasterReferences(ModKey modKey, IEnumerable<IMasterReferenceGetter> masters)
         {
             this.CurrentMod = modKey;
-            this.Masters.AddRange(masters);
+            this.Masters = new List<IMasterReferenceGetter>(masters);
         }
 
-        public MasterReferences(ModKey modKey, params IMasterReferenceGetter[] masters)
+        public MasterReferences(ModKey modKey, IReadOnlyList<IMasterReferenceGetter> masters)
         {
             this.CurrentMod = modKey;
-            this.Masters.AddRange(masters);
+            this.Masters = masters;
         }
     }
 }

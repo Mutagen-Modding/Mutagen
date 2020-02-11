@@ -4678,13 +4678,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x34534554: // TES4
                 {
                     _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    _package.MasterReferences.Masters.SetTo(
+                    _package.MasterReferences.Masters = 
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
                             {
                                 Master = master.Master,
                                 FileSize = master.FileSize,
-                            }));
+                            })
+                        .ToList();
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
                 }
                 case 0x54534D47: // GMST
