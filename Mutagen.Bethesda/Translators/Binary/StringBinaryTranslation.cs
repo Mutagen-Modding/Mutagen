@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Binary
         {
             if (parseWhole)
             {
-                return BinaryStringUtility.ProcessWholeToZString(frame.ReadSpan(checked((int)frame.Remaining)));
+                return BinaryStringUtility.ProcessWholeToZString(frame.ReadMemory(checked((int)frame.Remaining)));
             }
             else
             {

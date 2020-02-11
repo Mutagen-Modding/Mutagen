@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mutagen.Bethesda.Binary;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,33 @@ namespace Noggog
     public class BinaryStringUtility
     {
         // ToDo
-        // Utilize string.Create when it comes out
+        // Can string.Create be used on spans?
+        /// <summary>
+        /// Converts span to a string.  Should be slower than ToZString with ReadOnlyMemorySlice parameter.
+        /// </summary>
+        /// <param name="bytes">Bytes to turn into a string</param>
+        /// <returns>string containing a character for every byte in the input span</returns>
         public unsafe static string ToZString(ReadOnlySpan<byte> bytes)
         {
             Span<char> chars = stackalloc char[bytes.Length];
             ToZStringBuffer(bytes, chars);
             return chars.ToString();
+        }
+
+        /// <summary>
+        /// Converts memory slice to a string.  Should be faster than ToZString with ReadOnlySpan parameter.
+        /// </summary>
+        /// <param name="bytes">Bytes to turn into a string</param>
+        /// <returns>string containing a character for every byte in the input span</returns>
+        public static string ToZString(ReadOnlyMemorySlice<byte> bytes)
+        {
+            return string.Create(bytes.Length, bytes, (chars, state) =>
+            {
+                for (int i = 0; i < state.Length; i++)
+                {
+                    chars[i] = (char)state[i];
+                }
+            });
         }
 
         public static void ToZStringBuffer(ReadOnlySpan<byte> bytes, Span<char> temporaryCharBuffer)
@@ -44,14 +66,15 @@ namespace Noggog
 
         public static string ParseUnknownLengthString(IBinaryReadStream stream)
         {
-            var span = stream.RemainingSpan;
-            var index = span.IndexOf(default(byte));
+            var mem = stream.RemainingMemory;
+            var index = mem.Span.IndexOf(default(byte));
             if (index == -1)
             {
                 throw new ArgumentException();
             }
+            var ret = BinaryStringUtility.ToZString(mem.Slice(0, index));
             stream.Position += index + 1;
-            return BinaryStringUtility.ToZString(span.Slice(0, index));
+            return ret;
         }
     }
 }

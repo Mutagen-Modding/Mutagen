@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Binary
 
         public string ReadZString(int length)
         {
-            return BinaryStringUtility.ToZString(this.ReadSpan(length));
+            return BinaryStringUtility.ToZString(this.ReadMemory(length));
         }
     }
 }

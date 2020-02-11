@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.RecordLength}");
                 }
-                var magicEffName = frame.ReadSpan(4);
+                var magicEffName = frame.ReadMemory(4);
 
                 var efitMeta = frame.MetaData.GetSubRecord(frame);
                 if (efitMeta.RecordType != Effect_Registration.EFIT_HEADER)
@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitMeta.RecordLength}");
                 }
-                var magicEffName2 = frame.GetSpan(amount: Mutagen.Bethesda.Constants.HEADER_LENGTH, offset: efitMeta.HeaderLength);
-                if (!magicEffName.SequenceEqual(magicEffName2))
+                var magicEffName2 = frame.GetMemory(amount: Mutagen.Bethesda.Constants.HEADER_LENGTH, offset: efitMeta.HeaderLength);
+                if (!magicEffName.Span.SequenceEqual(magicEffName2.Span))
                 {
                     throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToZString(magicEffName)} != {BinaryStringUtility.ToZString(magicEffName2)}");
                 }
