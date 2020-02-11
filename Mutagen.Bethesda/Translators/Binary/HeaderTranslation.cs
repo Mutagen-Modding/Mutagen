@@ -297,13 +297,13 @@ namespace Mutagen.Bethesda.Binary
             return span.Slice(loc + subMeta.HeaderLength, checked((int)subMeta.RecordLength));
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractSubrecordWrapperMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
+        public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             var subMeta = meta.SubRecord(span.Span);
             return span.Slice(subMeta.HeaderLength, subMeta.RecordLength);
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractRecordWrapperMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
+        public static ReadOnlyMemorySlice<byte> ExtractRecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             var majorMeta = meta.MajorRecord(span.Span);
             var len = majorMeta.RecordLength;
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Binary
             return span.Slice(meta.MajorConstants.TypeAndLengthLength, checked((int)len));
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractGroupWrapperMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
+        public static ReadOnlyMemorySlice<byte> ExtractGroupMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             var groupMeta = meta.Group(span.Span);
             var len = groupMeta.ContentLength;

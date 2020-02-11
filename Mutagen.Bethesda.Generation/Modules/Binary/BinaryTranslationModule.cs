@@ -1746,13 +1746,13 @@ namespace Mutagen.Bethesda.Generation
                                 switch (obj.GetObjectType())
                                 {
                                     case ObjectType.Record:
-                                        args.Add($"bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta)");
+                                        args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractRecordMemory)}(stream.RemainingMemory, package.Meta)");
                                         break;
                                     case ObjectType.Group:
-                                        args.Add($"bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta)");
+                                        args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractGroupMemory)}(stream.RemainingMemory, package.Meta)");
                                         break;
                                     case ObjectType.Subrecord:
-                                        args.Add($"bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta)");
+                                        args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.Meta)");
                                         break;
                                     case ObjectType.Mod:
                                         args.AddPassArg($"stream");

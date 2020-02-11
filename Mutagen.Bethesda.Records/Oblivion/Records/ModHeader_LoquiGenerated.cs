@@ -3020,7 +3020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ModHeaderBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;

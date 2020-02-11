@@ -2060,7 +2060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new GroupBinaryOverlay<T>(
-                bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
