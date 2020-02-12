@@ -155,13 +155,12 @@ namespace Mutagen.Bethesda.Generation
             int? currentPosition,
             DataType dataType = null)
         {
-            try
+            var data = typeGen.GetFieldData();
+            if (data.BinaryOverlayFallback != BinaryGenerationType.Normal
+                || data.RecordType.HasValue
+                || this.ExpectedLength(objGen, typeGen) != null)
             {
                 base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, dataType);
-            }
-            catch (NotImplementedException)
-            {
-                if (this.ExpectedLength(objGen, typeGen) != null) throw;
             }
         }
     }
