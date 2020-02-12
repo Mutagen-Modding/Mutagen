@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (field is ContainerType cont)
                 {
-                    return cont.SingleTypeGen as LoquiType;
+                    return cont.SubTypeGeneration as LoquiType;
                 }
                 else if (field is DictType dictType)
                 {
