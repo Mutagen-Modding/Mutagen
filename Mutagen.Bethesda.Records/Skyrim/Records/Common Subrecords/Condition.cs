@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
             public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
 
             public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
-
+            
             public int Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(8));
 
             public int Unknown4 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(12));
@@ -391,11 +391,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             private ReadOnlyMemorySlice<byte> _stringParamData1;
             public bool ParameterOneString_IsSet { get; private set; }
-            public string ParameterOneString => BinaryStringUtility.ProcessWholeToZString(_stringParamData1);
+            public string? ParameterOneString => ParameterOneString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1) : null;
 
             private ReadOnlyMemorySlice<byte> _stringParamData2;
             public bool ParameterTwoString_IsSet { get; private set; }
-            public string ParameterTwoString => BinaryStringUtility.ProcessWholeToZString(_stringParamData2);
+            public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2) : null;
 
             partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
             {
