@@ -294,13 +294,13 @@ namespace Mutagen.Bethesda.Binary
         public static ReadOnlySpan<byte> ExtractSubrecordSpan(ReadOnlySpan<byte> span, int loc, GameConstants meta)
         {
             var subMeta = meta.SubRecord(span.Slice(loc));
-            return span.Slice(loc + subMeta.HeaderLength, checked((int)subMeta.RecordLength));
+            return span.Slice(loc + subMeta.HeaderLength, subMeta.RecordLength);
         }
 
         public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, int loc, GameConstants meta)
         {
             var subMeta = meta.SubRecord(span.Span.Slice(loc));
-            return span.Slice(subMeta.HeaderLength, subMeta.RecordLength);
+            return span.Slice(loc + subMeta.HeaderLength, subMeta.RecordLength);
         }
 
         public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
