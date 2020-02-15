@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPointToReferenceMapping item)
         {
             ClearPartial();
-            item.Reference.Unset();
+            item.Reference.FormKey = FormKey.Null;
             item.Points.Clear();
         }
         

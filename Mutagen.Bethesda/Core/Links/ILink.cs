@@ -38,20 +38,6 @@ namespace Mutagen.Bethesda
 
     public static class ILinkExt
     {
-        public static void SetToFormKey<T, R>(this IFormSetLink<T> link, IFormSetLinkGetter<R> rhs)
-            where R : IMajorRecordCommonGetter
-            where T : R
-        {
-            if (rhs.HasBeenSet)
-            {
-                link.FormKey = rhs.FormKey;
-            }
-            else
-            {
-                link.Unset();
-            }
-        }
-
         public static bool TryResolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkCache<TMod> package, out TMajor majorRecord)
             where TMod : IModGetter
             where TMajor : IMajorRecordCommonGetter

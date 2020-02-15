@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Faction.Unset();
+            item.Faction.FormKey = FormKey.Null;
             item.Modifier = default;
         }
         

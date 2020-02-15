@@ -98,10 +98,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Sound> _Sound = new FormSetLink<Sound>();
-        public IFormSetLink<Sound> Sound => this._Sound;
+        protected IFormLinkNullable<Sound> _Sound = new FormLinkNullable<Sound>();
+        public IFormLinkNullable<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
+        IFormLinkNullableGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
         #endregion
         #region WindVelocity
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new String? MaterialID { get; set; }
-        new IFormSetLink<Sound> Sound { get; }
+        new IFormLinkNullable<Sound> Sound { get; }
         new Single WindVelocity { get; set; }
         new Single WindDirection { get; set; }
         new Single WaveAmplitude { get; set; }
@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? Opacity { get; }
         Water.Flag? Flags { get; }
         String? MaterialID { get; }
-        IFormSetLinkGetter<ISoundGetter> Sound { get; }
+        IFormLinkNullableGetter<ISoundGetter> Sound { get; }
         Single WindVelocity { get; }
         Single WindDirection { get; }
         Single WaveAmplitude { get; }
@@ -2743,7 +2743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.MaterialID:
                     return typeof(String);
                 case Water_FieldIndex.Sound:
-                    return typeof(IFormSetLink<Sound>);
+                    return typeof(IFormLinkNullable<Sound>);
                 case Water_FieldIndex.WindVelocity:
                     return typeof(Single);
                 case Water_FieldIndex.WindDirection:
@@ -2863,7 +2863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Opacity = default;
             item.Flags = default;
             item.MaterialID = default;
-            item.Sound.Unset();
+            item.Sound.FormKey = null;
             item.WindVelocity = default;
             item.WindDirection = default;
             item.WaveAmplitude = default;
@@ -3399,7 +3399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Opacity.HasValue && checkMask.Opacity.Value != (item.Opacity != null)) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.MaterialID.HasValue && checkMask.MaterialID.Value != (item.MaterialID != null)) return false;
-            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound.HasBeenSet) return false;
+            if (checkMask.Sound.HasValue && checkMask.Sound.Value != (item.Sound.FormKey != null)) return false;
             if (checkMask.RelatedWaters?.Overall.HasValue ?? false && checkMask.RelatedWaters.Overall.Value != (item.RelatedWaters != null)) return false;
             if (checkMask.RelatedWaters?.Specific != null && (item.RelatedWaters == null || !item.RelatedWaters.HasBeenSet(checkMask.RelatedWaters.Specific))) return false;
             return base.HasBeenSet(
@@ -3415,7 +3415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Opacity = (item.Opacity != null);
             mask.Flags = (item.Flags != null);
             mask.MaterialID = (item.MaterialID != null);
-            mask.Sound = item.Sound.HasBeenSet;
+            mask.Sound = (item.Sound.FormKey != null);
             mask.WindVelocity = true;
             mask.WindDirection = true;
             mask.WaveAmplitude = true;
@@ -3703,7 +3703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetToFormKey(rhs: rhs.Sound);
+                item.Sound.FormKey = rhs.Sound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
             {
@@ -4021,7 +4021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Water_FieldIndex.MaterialID,
                     errorMask: errorMask);
             }
-            if (item.Sound.HasBeenSet
+            if ((item.Sound.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -5548,7 +5548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormSetLink<ISoundGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundGetter>.Empty;
         #endregion
         private int? _DATALocation;
         public Water.DATADataType DATADataTypeState { get; private set; }

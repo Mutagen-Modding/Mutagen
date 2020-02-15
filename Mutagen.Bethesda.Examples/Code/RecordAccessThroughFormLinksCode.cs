@@ -18,9 +18,6 @@ namespace Mutagen.Bethesda.Examples
                 var links = mod.CreateLinkCache();
                 foreach (var npc in mod.NPCs.Records)
                 {
-                    // Not all NPCs have classes, so skip any that don't have one
-                    if (npc.Class == null) continue;
-
                     // Reolve to class major record, and get its name.
                     // Also, we can still get access to the FormID (Or the more strongly typed FormKey) if desired through the property
                     if (npc.Class.TryResolve(links, out var classRecord))

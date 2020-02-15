@@ -33,25 +33,6 @@ namespace Mutagen.Bethesda
             throw new NotImplementedException();
         }
 
-        public bool Parse<T>(
-            XElement node,
-            out IFormSetLink<T> item,
-            ErrorMaskBuilder? errorMask)
-            where T : class, IMajorRecordCommonGetter
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Parse<T>(
-            XElement node,
-            out IFormSetLink<T> item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-            where T : class, IMajorRecordCommonGetter
-        {
-            throw new NotImplementedException();
-        }
-
         protected override FormKey Parse(string str)
         {
             throw new NotImplementedException();

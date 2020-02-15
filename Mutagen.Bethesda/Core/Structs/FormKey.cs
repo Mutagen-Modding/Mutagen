@@ -146,14 +146,14 @@ namespace Mutagen.Bethesda
                 .CombineHashCode(this.ID.GetHashCode());
         }
 
-        public static bool operator ==(FormKey a, FormKey b)
+        public static bool operator ==(FormKey? a, FormKey? b)
         {
-            return a.Equals(b);
+            return EqualityComparer<FormKey?>.Default.Equals(a, b);
         }
 
-        public static bool operator !=(FormKey a, FormKey b)
+        public static bool operator !=(FormKey? a, FormKey? b)
         {
-            return !a.Equals(b);
+            return !EqualityComparer<FormKey?>.Default.Equals(a, b);
         }
     }
 }

@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEnableParent item)
         {
             ClearPartial();
-            item.Reference.Unset();
+            item.Reference.FormKey = FormKey.Null;
             item.Flags = default;
         }
         

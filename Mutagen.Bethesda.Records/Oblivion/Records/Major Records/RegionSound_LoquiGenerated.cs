@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionSound item)
         {
             ClearPartial();
-            item.Sound.Unset();
+            item.Sound.FormKey = FormKey.Null;
             item.Flags = default;
             item.Chance = default;
         }

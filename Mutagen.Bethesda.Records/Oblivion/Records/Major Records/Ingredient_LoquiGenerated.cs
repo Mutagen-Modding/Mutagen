@@ -86,10 +86,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
-        public IFormSetLink<Script> Script => this._Script;
+        protected IFormLinkNullable<Script> _Script = new FormLinkNullable<Script>();
+        public IFormLinkNullable<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IScriptGetter> IIngredientGetter.Script => this.Script;
+        IFormLinkNullableGetter<IScriptGetter> IIngredientGetter.Script => this.Script;
         #endregion
         #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormSetLink<Script> Script { get; }
+        new IFormLinkNullable<Script> Script { get; }
         new Single? Weight { get; set; }
         new UInt32 Value { get; set; }
         new IngredientFlag Flags { get; set; }
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormSetLinkGetter<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
         Single? Weight { get; }
         UInt32 Value { get; }
         IngredientFlag Flags { get; }
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ingredient_FieldIndex.Icon:
                     return typeof(String);
                 case Ingredient_FieldIndex.Script:
-                    return typeof(IFormSetLink<Script>);
+                    return typeof(IFormLinkNullable<Script>);
                 case Ingredient_FieldIndex.Weight:
                     return typeof(Single);
                 case Ingredient_FieldIndex.Value:
@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Script.Unset();
+            item.Script.FormKey = null;
             item.Weight = default;
             item.Value = default;
             item.Flags = default;
@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script.HasBeenSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.Weight.HasValue && checkMask.Weight.Value != (item.Weight != null)) return false;
             if (checkMask.Effects?.Overall.HasValue ?? false && checkMask.Effects!.Overall.Value != item.Effects.HasBeenSet) return false;
             return base.HasBeenSet(
@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
-            mask.Script = item.Script.HasBeenSet;
+            mask.Script = (item.Script.FormKey != null);
             mask.Weight = (item.Weight != null);
             mask.Value = true;
             mask.Flags = true;
@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Script) ?? true))
             {
-                item.Script.SetToFormKey(rhs: rhs.Script);
+                item.Script.FormKey = rhs.Script.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Weight) ?? true))
             {
@@ -2458,7 +2458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Ingredient_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.Script.HasBeenSet
+            if ((item.Script.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3153,7 +3153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
         #endregion
         #region Weight
         private int? _WeightLocation;

@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Links\DirectModLinkCache.cs" />
+    <Compile Include="Core\Links\FormLinkNullable.cs" />
     <Compile Include="Core\Links\ILinkCache.cs" />
     <Compile Include="Core\Links\LoadOrderLinkCache.cs" />
     <Compile Include="Core\LoadOrder.cs" />
@@ -74,9 +75,7 @@
     <Compile Include="Interfaces\IMutagenReadStream.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Core\Links\EDIDLink.cs" />
-    <Compile Include="Core\Links\EDIDSetLink.cs" />
     <Compile Include="Core\Links\FormLink.cs" />
-    <Compile Include="Core\Links\FormSetLink.cs" />
     <Compile Include="Core\Links\IEDIDLink.cs" />
     <Compile Include="Core\Links\IFormLink.cs" />
     <Compile Include="Core\Links\ILink.cs" />

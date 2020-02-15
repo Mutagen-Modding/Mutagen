@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEffect item)
         {
             ClearPartial();
-            item.MagicEffect.Unset();
+            item.MagicEffect.EDID = RecordType.Null;
             item.Magnitude = default;
             item.Area = default;
             item.Duration = default;

@@ -1305,9 +1305,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = default;
             item.EventFunction = default;
             item.EventMember = default;
-            item.Parameter3.Unset();
+            item.Parameter3.FormKey = FormKey.Null;
             item.RunOnType = default;
-            item.Reference.Unset();
+            item.Reference.FormKey = FormKey.Null;
             item.Unknown3 = GetEventData._Unknown3_Default;
             base.Clear(item);
         }

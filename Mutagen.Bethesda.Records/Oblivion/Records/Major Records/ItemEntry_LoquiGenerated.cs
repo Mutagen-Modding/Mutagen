@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IItemEntry item)
         {
             ClearPartial();
-            item.Item.Unset();
+            item.Item.FormKey = FormKey.Null;
             item.Count = default;
         }
         

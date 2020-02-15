@@ -19,7 +19,6 @@ namespace Mutagen.Bethesda
     public interface IFormLink : IFormLinkGetter
     {
         new FormKey FormKey { get; set; }
-        void Unset();
     }
 
     public interface IFormLink<TMajor> : IFormLinkGetter<TMajor>, IFormLink
@@ -27,12 +26,22 @@ namespace Mutagen.Bethesda
     {
     }
 
-    public interface IFormSetLinkGetter<out TMajor> : IFormLinkGetter<TMajor>, ISetLinkGetter<TMajor>
+    public interface IFormLinkNullableGetter : ILinkGetter
+    {
+        FormKey? FormKey { get; }
+    }
+
+    public interface IFormLinkNullableGetter<out TMajor> : ILinkGetter<TMajor>, IFormLinkNullableGetter
        where TMajor : IMajorRecordCommonGetter
     {
     }
 
-    public interface IFormSetLink<TMajor> : IFormLink<TMajor>, ISetLink<TMajor>, IFormSetLinkGetter<TMajor>
+    public interface IFormLinkNullable : IFormLinkNullableGetter
+    {
+        new FormKey? FormKey { get; set; }
+    }
+
+    public interface IFormLinkNullable<TMajor> : IFormLinkNullableGetter<TMajor>, IFormLinkNullable
        where TMajor : IMajorRecordCommonGetter
     {
     }

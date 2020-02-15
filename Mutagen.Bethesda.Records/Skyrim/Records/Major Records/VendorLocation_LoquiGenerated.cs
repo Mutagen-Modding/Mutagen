@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.Reference.Unset();
+            item.Reference.FormKey = FormKey.Null;
             item.Radius = default;
         }
         

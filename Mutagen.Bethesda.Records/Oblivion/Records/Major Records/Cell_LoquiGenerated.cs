@@ -132,24 +132,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Climate
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Climate> _Climate = new FormSetLink<Climate>();
-        public IFormSetLink<Climate> Climate => this._Climate;
+        protected IFormLinkNullable<Climate> _Climate = new FormLinkNullable<Climate>();
+        public IFormLinkNullable<Climate> Climate => this._Climate;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IClimateGetter> ICellGetter.Climate => this.Climate;
+        IFormLinkNullableGetter<IClimateGetter> ICellGetter.Climate => this.Climate;
         #endregion
         #region Water
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Water> _Water = new FormSetLink<Water>();
-        public IFormSetLink<Water> Water => this._Water;
+        protected IFormLinkNullable<Water> _Water = new FormLinkNullable<Water>();
+        public IFormLinkNullable<Water> Water => this._Water;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IWaterGetter> ICellGetter.Water => this.Water;
+        IFormLinkNullableGetter<IWaterGetter> ICellGetter.Water => this.Water;
         #endregion
         #region Owner
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Faction> _Owner = new FormSetLink<Faction>();
-        public IFormSetLink<Faction> Owner => this._Owner;
+        protected IFormLinkNullable<Faction> _Owner = new FormLinkNullable<Faction>();
+        public IFormLinkNullable<Faction> Owner => this._Owner;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IFactionGetter> ICellGetter.Owner => this.Owner;
+        IFormLinkNullableGetter<IFactionGetter> ICellGetter.Owner => this.Owner;
         #endregion
         #region FactionRank
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -164,10 +164,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Global> _GlobalVariable = new FormSetLink<Global>();
-        public IFormSetLink<Global> GlobalVariable => this._GlobalVariable;
+        protected IFormLinkNullable<Global> _GlobalVariable = new FormLinkNullable<Global>();
+        public IFormLinkNullable<Global> GlobalVariable => this._GlobalVariable;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IGlobalGetter> ICellGetter.GlobalVariable => this.GlobalVariable;
+        IFormLinkNullableGetter<IGlobalGetter> ICellGetter.GlobalVariable => this.GlobalVariable;
         #endregion
         #region PathGrid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1636,11 +1636,11 @@ namespace Mutagen.Bethesda.Oblivion
         new ISetList<IFormLink<Region>> Regions { get; }
         new MusicType? MusicType { get; set; }
         new Single? WaterHeight { get; set; }
-        new IFormSetLink<Climate> Climate { get; }
-        new IFormSetLink<Water> Water { get; }
-        new IFormSetLink<Faction> Owner { get; }
+        new IFormLinkNullable<Climate> Climate { get; }
+        new IFormLinkNullable<Water> Water { get; }
+        new IFormLinkNullable<Faction> Owner { get; }
         new Int32? FactionRank { get; set; }
-        new IFormSetLink<Global> GlobalVariable { get; }
+        new IFormLinkNullable<Global> GlobalVariable { get; }
         new PathGrid? PathGrid { get; set; }
         new Landscape? Landscape { get; set; }
         new Byte[] Timestamp { get; set; }
@@ -1674,11 +1674,11 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlySetList<IFormLinkGetter<IRegionGetter>> Regions { get; }
         MusicType? MusicType { get; }
         Single? WaterHeight { get; }
-        IFormSetLinkGetter<IClimateGetter> Climate { get; }
-        IFormSetLinkGetter<IWaterGetter> Water { get; }
-        IFormSetLinkGetter<IFactionGetter> Owner { get; }
+        IFormLinkNullableGetter<IClimateGetter> Climate { get; }
+        IFormLinkNullableGetter<IWaterGetter> Water { get; }
+        IFormLinkNullableGetter<IFactionGetter> Owner { get; }
         Int32? FactionRank { get; }
-        IFormSetLinkGetter<IGlobalGetter> GlobalVariable { get; }
+        IFormLinkNullableGetter<IGlobalGetter> GlobalVariable { get; }
         IPathGridGetter? PathGrid { get; }
         ILandscapeGetter? Landscape { get; }
         ReadOnlySpan<Byte> Timestamp { get; }
@@ -2371,15 +2371,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.WaterHeight:
                     return typeof(Single);
                 case Cell_FieldIndex.Climate:
-                    return typeof(IFormSetLink<Climate>);
+                    return typeof(IFormLinkNullable<Climate>);
                 case Cell_FieldIndex.Water:
-                    return typeof(IFormSetLink<Water>);
+                    return typeof(IFormLinkNullable<Water>);
                 case Cell_FieldIndex.Owner:
-                    return typeof(IFormSetLink<Faction>);
+                    return typeof(IFormLinkNullable<Faction>);
                 case Cell_FieldIndex.FactionRank:
                     return typeof(Int32);
                 case Cell_FieldIndex.GlobalVariable:
-                    return typeof(IFormSetLink<Global>);
+                    return typeof(IFormLinkNullable<Global>);
                 case Cell_FieldIndex.PathGrid:
                     return typeof(PathGrid);
                 case Cell_FieldIndex.Landscape:
@@ -2474,11 +2474,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Regions.Unset();
             item.MusicType = default;
             item.WaterHeight = default;
-            item.Climate.Unset();
-            item.Water.Unset();
-            item.Owner.Unset();
+            item.Climate.FormKey = null;
+            item.Water.FormKey = null;
+            item.Owner.FormKey = null;
             item.FactionRank = default;
-            item.GlobalVariable.Unset();
+            item.GlobalVariable.FormKey = null;
             item.PathGrid = null;
             item.Landscape = null;
             item.Timestamp = new byte[4];
@@ -3005,11 +3005,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Regions?.Overall.HasValue ?? false && checkMask.Regions!.Overall.Value != item.Regions.HasBeenSet) return false;
             if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != (item.MusicType != null)) return false;
             if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != (item.WaterHeight != null)) return false;
-            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate.HasBeenSet) return false;
-            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water.HasBeenSet) return false;
-            if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner.HasBeenSet) return false;
+            if (checkMask.Climate.HasValue && checkMask.Climate.Value != (item.Climate.FormKey != null)) return false;
+            if (checkMask.Water.HasValue && checkMask.Water.Value != (item.Water.FormKey != null)) return false;
+            if (checkMask.Owner.HasValue && checkMask.Owner.Value != (item.Owner.FormKey != null)) return false;
             if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != (item.FactionRank != null)) return false;
-            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable.HasBeenSet) return false;
+            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != (item.GlobalVariable.FormKey != null)) return false;
             if (checkMask.PathGrid?.Overall.HasValue ?? false && checkMask.PathGrid.Overall.Value != (item.PathGrid != null)) return false;
             if (checkMask.PathGrid?.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
             if (checkMask.Landscape?.Overall.HasValue ?? false && checkMask.Landscape.Overall.Value != (item.Landscape != null)) return false;
@@ -3034,11 +3034,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Regions = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Regions.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.MusicType = (item.MusicType != null);
             mask.WaterHeight = (item.WaterHeight != null);
-            mask.Climate = item.Climate.HasBeenSet;
-            mask.Water = item.Water.HasBeenSet;
-            mask.Owner = item.Owner.HasBeenSet;
+            mask.Climate = (item.Climate.FormKey != null);
+            mask.Water = (item.Water.FormKey != null);
+            mask.Owner = (item.Owner.FormKey != null);
             mask.FactionRank = (item.FactionRank != null);
-            mask.GlobalVariable = item.GlobalVariable.HasBeenSet;
+            mask.GlobalVariable = (item.GlobalVariable.FormKey != null);
             var itemPathGrid = item.PathGrid;
             mask.PathGrid = new MaskItem<bool, PathGrid.Mask<bool>?>(itemPathGrid != null, itemPathGrid?.GetHasBeenSetMask());
             var itemLandscape = item.Landscape;
@@ -3517,15 +3517,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
-                item.Climate.SetToFormKey(rhs: rhs.Climate);
+                item.Climate.FormKey = rhs.Climate.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                item.Water.SetToFormKey(rhs: rhs.Water);
+                item.Water.FormKey = rhs.Water.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
-                item.Owner.SetToFormKey(rhs: rhs.Owner);
+                item.Owner.FormKey = rhs.Owner.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
             {
@@ -3533,7 +3533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable.SetToFormKey(rhs: rhs.GlobalVariable);
+                item.GlobalVariable.FormKey = rhs.GlobalVariable.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
@@ -3945,7 +3945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.WaterHeight,
                     errorMask: errorMask);
             }
-            if (item.Climate.HasBeenSet
+            if ((item.Climate.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3955,7 +3955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.Climate,
                     errorMask: errorMask);
             }
-            if (item.Water.HasBeenSet
+            if ((item.Water.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3965,7 +3965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.Water,
                     errorMask: errorMask);
             }
-            if (item.Owner.HasBeenSet
+            if ((item.Owner.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3985,7 +3985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.FactionRank,
                     errorMask: errorMask);
             }
-            if (item.GlobalVariable.HasBeenSet
+            if ((item.GlobalVariable.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -5043,17 +5043,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Climate
         private int? _ClimateLocation;
         public bool Climate_IsSet => _ClimateLocation.HasValue;
-        public IFormSetLinkGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormSetLink<IClimateGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClimateLocation.Value, _package.Meta)))) : FormSetLink<IClimateGetter>.Empty;
+        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClimateLocation.Value, _package.Meta)))) : FormLinkNullable<IClimateGetter>.Empty;
         #endregion
         #region Water
         private int? _WaterLocation;
         public bool Water_IsSet => _WaterLocation.HasValue;
-        public IFormSetLinkGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormSetLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.Meta)))) : FormSetLink<IWaterGetter>.Empty;
+        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.Meta)))) : FormLinkNullable<IWaterGetter>.Empty;
         #endregion
         #region Owner
         private int? _OwnerLocation;
         public bool Owner_IsSet => _OwnerLocation.HasValue;
-        public IFormSetLinkGetter<IFactionGetter> Owner => _OwnerLocation.HasValue ? new FormSetLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormSetLink<IFactionGetter>.Empty;
+        public IFormLinkNullableGetter<IFactionGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormLinkNullable<IFactionGetter>.Empty;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -5062,7 +5062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region GlobalVariable
         private int? _GlobalVariableLocation;
         public bool GlobalVariable_IsSet => _GlobalVariableLocation.HasValue;
-        public IFormSetLinkGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormSetLink<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalVariableLocation.Value, _package.Meta)))) : FormSetLink<IGlobalGetter>.Empty;
+        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalVariableLocation.Value, _package.Meta)))) : FormLinkNullable<IGlobalGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

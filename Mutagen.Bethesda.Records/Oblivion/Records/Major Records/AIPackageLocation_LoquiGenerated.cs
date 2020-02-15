@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.LocationReference.Unset();
+            item.LocationReference.FormKey = FormKey.Null;
             item.Radius = default;
         }
         

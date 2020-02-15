@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.NexTexture.Unset();
+            item.NexTexture.FormKey = FormKey.Null;
             item.Index = default;
         }
         

@@ -75,17 +75,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
-        public IFormSetLink<Script> Script => this._Script;
+        protected IFormLinkNullable<Script> _Script = new FormLinkNullable<Script>();
+        public IFormLinkNullable<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IScriptGetter> IFloraGetter.Script => this.Script;
+        IFormLinkNullableGetter<IScriptGetter> IFloraGetter.Script => this.Script;
         #endregion
         #region Ingredient
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Ingredient> _Ingredient = new FormSetLink<Ingredient>();
-        public IFormSetLink<Ingredient> Ingredient => this._Ingredient;
+        protected IFormLinkNullable<Ingredient> _Ingredient = new FormLinkNullable<Ingredient>();
+        public IFormLinkNullable<Ingredient> Ingredient => this._Ingredient;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;
+        IFormLinkNullableGetter<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;
         #endregion
         #region Spring
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -873,8 +873,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new IFormSetLink<Script> Script { get; }
-        new IFormSetLink<Ingredient> Ingredient { get; }
+        new IFormLinkNullable<Script> Script { get; }
+        new IFormLinkNullable<Ingredient> Ingredient { get; }
         new Byte Spring { get; set; }
         new Byte Summer { get; set; }
         new Byte Fall { get; set; }
@@ -898,8 +898,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         String? Name { get; }
         IModelGetter? Model { get; }
-        IFormSetLinkGetter<IScriptGetter> Script { get; }
-        IFormSetLinkGetter<IIngredientGetter> Ingredient { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IIngredientGetter> Ingredient { get; }
         Byte Spring { get; }
         Byte Summer { get; }
         Byte Fall { get; }
@@ -1428,9 +1428,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Model:
                     return typeof(Model);
                 case Flora_FieldIndex.Script:
-                    return typeof(IFormSetLink<Script>);
+                    return typeof(IFormLinkNullable<Script>);
                 case Flora_FieldIndex.Ingredient:
-                    return typeof(IFormSetLink<Ingredient>);
+                    return typeof(IFormLinkNullable<Ingredient>);
                 case Flora_FieldIndex.Spring:
                     return typeof(Byte);
                 case Flora_FieldIndex.Summer:
@@ -1500,8 +1500,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script.Unset();
-            item.Ingredient.Unset();
+            item.Script.FormKey = null;
+            item.Ingredient.FormKey = null;
             item.Spring = default;
             item.Summer = default;
             item.Fall = default;
@@ -1813,8 +1813,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script.HasBeenSet) return false;
-            if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != item.Ingredient.HasBeenSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
+            if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != (item.Ingredient.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1827,8 +1827,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Script = item.Script.HasBeenSet;
-            mask.Ingredient = item.Ingredient.HasBeenSet;
+            mask.Script = (item.Script.FormKey != null);
+            mask.Ingredient = (item.Ingredient.FormKey != null);
             mask.Spring = true;
             mask.Summer = true;
             mask.Fall = true;
@@ -2046,11 +2046,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
-                item.Script.SetToFormKey(rhs: rhs.Script);
+                item.Script.FormKey = rhs.Script.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient.SetToFormKey(rhs: rhs.Ingredient);
+                item.Ingredient.FormKey = rhs.Ingredient.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
             {
@@ -2236,7 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
             }
-            if (item.Script.HasBeenSet
+            if ((item.Script.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2246,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Flora_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if (item.Ingredient.HasBeenSet
+            if ((item.Ingredient.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2864,12 +2864,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
         #endregion
         #region Ingredient
         private int? _IngredientLocation;
         public bool Ingredient_IsSet => _IngredientLocation.HasValue;
-        public IFormSetLinkGetter<IIngredientGetter> Ingredient => _IngredientLocation.HasValue ? new FormSetLink<IIngredientGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IngredientLocation.Value, _package.Meta)))) : FormSetLink<IIngredientGetter>.Empty;
+        public IFormLinkNullableGetter<IIngredientGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IIngredientGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IngredientLocation.Value, _package.Meta)))) : FormLinkNullable<IIngredientGetter>.Empty;
         #endregion
         private int? _PFPCLocation;
         public Flora.PFPCDataType PFPCDataTypeState { get; private set; }

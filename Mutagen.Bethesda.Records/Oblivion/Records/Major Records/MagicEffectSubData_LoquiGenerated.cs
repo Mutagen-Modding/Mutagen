@@ -1341,11 +1341,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IMagicEffectSubData item)
         {
             ClearPartial();
-            item.EnchantEffect.Unset();
-            item.CastingSound.Unset();
-            item.BoltSound.Unset();
-            item.HitSound.Unset();
-            item.AreaSound.Unset();
+            item.EnchantEffect.FormKey = FormKey.Null;
+            item.CastingSound.FormKey = FormKey.Null;
+            item.BoltSound.FormKey = FormKey.Null;
+            item.HitSound.FormKey = FormKey.Null;
+            item.AreaSound.FormKey = FormKey.Null;
             item.ConstantEffectEnchantmentFactor = default;
             item.ConstantEffectBarterFactor = default;
         }

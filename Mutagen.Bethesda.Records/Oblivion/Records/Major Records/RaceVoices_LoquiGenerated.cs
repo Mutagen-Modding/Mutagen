@@ -1112,8 +1112,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRaceVoices item)
         {
             ClearPartial();
-            item.Male.Unset();
-            item.Female.Unset();
+            item.Male.FormKey = FormKey.Null;
+            item.Female.FormKey = FormKey.Null;
         }
         
         #region Xml Translation

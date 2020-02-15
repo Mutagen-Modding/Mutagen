@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherSound item)
         {
             ClearPartial();
-            item.Sound.Unset();
+            item.Sound.FormKey = FormKey.Null;
             item.Type = default;
         }
         

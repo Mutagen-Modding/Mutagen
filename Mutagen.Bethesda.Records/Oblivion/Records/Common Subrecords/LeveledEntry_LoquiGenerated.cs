@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Level = default;
             item.Fluff = new byte[2];
-            item.Reference.Unset();
+            item.Reference.FormKey = FormKey.Null;
             item.Count = default;
             item.Fluff2 = default;
         }

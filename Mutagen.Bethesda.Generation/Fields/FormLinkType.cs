@@ -27,23 +27,41 @@ namespace Mutagen.Bethesda.Generation
         public override bool HasProperty => false;
         public override bool IsEnumerable => false;
 
-        public override string TypeName(bool getter) => $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "Form" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
+        public override string TypeName(bool getter) => $"I{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
         public override Type Type(bool getter) => typeof(FormID);
+        public string ClassTypeString
+        {
+            get
+            {
+                switch (this.FormIDType)
+                {
+                    case FormIDTypeEnum.Normal:
+                        return "Form";
+                    case FormIDTypeEnum.EDIDChars:
+                        return "EDID";
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+        public string FormIDTypeString
+        {
+            get
+            {
+                switch (this.FormIDType)
+                {
+                    case FormIDTypeEnum.Normal:
+                        return "FormKey";
+                    case FormIDTypeEnum.EDIDChars:
+                        return "EDID";
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
         public string DirectTypeName(bool getter, bool internalInterface = false)
         {
-            string linkString;
-            switch (this.FormIDType)
-            {
-                case FormIDTypeEnum.Normal:
-                    linkString = "Form";
-                    break;
-                case FormIDTypeEnum.EDIDChars:
-                    linkString = "EDID";
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            return $"{linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{LoquiType.TypeName(getter: getter, internalInterface: internalInterface)}>";
+            return $"{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}<{LoquiType.TypeName(getter: getter, internalInterface: internalInterface)}>";
         }
 
         public override async Task Load(XElement node, bool requireName = true)
@@ -101,27 +119,13 @@ namespace Mutagen.Bethesda.Generation
         {
             if (this.HasBeenSet)
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"{accessor.PropertyOrDirectAccess}.{(getter ? "SetToFormKey" : "SetLink")}"))
-                {
-                    args.Add($"rhs: {rhsAccessorPrefix}.{this.GetName(false, property: false)}");
-                }
+                fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhsAccessorPrefix}.{this.GetName(false, property: false)}.{FormIDTypeString};");
             }
             else
             {
                 if (getter)
                 {
-                    switch (this.FormIDType)
-                    {
-                        case FormIDTypeEnum.Normal:
-                            fg.AppendLine($"{accessor.PropertyOrDirectAccess}.FormKey = {rhsAccessorPrefix}.{this.GetName(false, property: false)}.FormKey;");
-                            break;
-                        case FormIDTypeEnum.EDIDChars:
-                            fg.AppendLine($"{accessor.PropertyOrDirectAccess}.EDID = {rhsAccessorPrefix}.{this.GetName(false, property: false)}.EDID;");
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
+                    fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhsAccessorPrefix}.{this.GetName(false, property: false)}.{FormIDTypeString};");
                 }
                 else
                 {
@@ -163,22 +167,29 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateClear(FileGeneration fg, Accessor identifier)
         {
             if (this.ReadOnly || !this.IntegrateField) return;
-            fg.AppendLine($"{identifier.PropertyOrDirectAccess}.Unset();");
+            if (this.HasBeenSet)
+            {
+                fg.AppendLine($"{identifier.PropertyOrDirectAccess}.{FormIDTypeString} = null;");
+            }
+            else
+            {
+                switch (this.FormIDType)
+                {
+                    case FormIDTypeEnum.Normal:
+                        fg.AppendLine($"{identifier.PropertyOrDirectAccess}.{FormIDTypeString} = FormKey.Null;");
+                        break;
+                    case FormIDTypeEnum.EDIDChars:
+                        fg.AppendLine($"{identifier.PropertyOrDirectAccess}.{FormIDTypeString} = RecordType.Null;");
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
         }
 
         public override void GenerateCopySetToConverter(FileGeneration fg)
         {
-            switch (this.FormIDType)
-            {
-                case FormIDTypeEnum.Normal:
-                    fg.AppendLine($"(r) => new {DirectTypeName(getter: false)}(r.FormKey)");
-                    break;
-                case FormIDTypeEnum.EDIDChars:
-                    fg.AppendLine($"(r) => new {DirectTypeName(getter: false)}(r.EDID)");
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+            fg.AppendLine($"(r) => new {DirectTypeName(getter: false)}(r.{FormIDTypeString})");
         }
 
         public override void GenerateForClass(FileGeneration fg)
@@ -206,7 +217,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string HasBeenSetAccessor(bool getter, Accessor accessor = null)
         {
-            return $"{(accessor?.DirectAccess ?? $"this.{this.Name}")}.HasBeenSet";
+            return $"({accessor?.DirectAccess ?? $"this.{this.Name}"}.{FormIDTypeString} != null)";
         }
     }
 }

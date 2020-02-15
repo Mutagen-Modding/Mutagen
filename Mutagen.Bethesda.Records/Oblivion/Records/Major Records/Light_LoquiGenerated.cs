@@ -66,10 +66,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Script> _Script = new FormSetLink<Script>();
-        public IFormSetLink<Script> Script => this._Script;
+        protected IFormLinkNullable<Script> _Script = new FormLinkNullable<Script>();
+        public IFormLinkNullable<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IScriptGetter> ILightGetter.Script => this.Script;
+        IFormLinkNullableGetter<IScriptGetter> ILightGetter.Script => this.Script;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -215,10 +215,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Sound> _Sound = new FormSetLink<Sound>();
-        public IFormSetLink<Sound> Sound => this._Sound;
+        protected IFormLinkNullable<Sound> _Sound = new FormLinkNullable<Sound>();
+        public IFormLinkNullable<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
+        IFormLinkNullableGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
         #endregion
         #region DATADataTypeState
         public Light.DATADataType DATADataTypeState { get; set; } = default;
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILightInternal>
     {
         new Model? Model { get; set; }
-        new IFormSetLink<Script> Script { get; }
+        new IFormLinkNullable<Script> Script { get; }
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new Int32 Time { get; set; }
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single? Fade { get; set; }
-        new IFormSetLink<Sound> Sound { get; }
+        new IFormLinkNullable<Sound> Sound { get; }
         new Light.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         IModelGetter? Model { get; }
-        IFormSetLinkGetter<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
         String? Name { get; }
         String? Icon { get; }
         Int32 Time { get; }
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion
         UInt32 Value { get; }
         Single Weight { get; }
         Single? Fade { get; }
-        IFormSetLinkGetter<ISoundGetter> Sound { get; }
+        IFormLinkNullableGetter<ISoundGetter> Sound { get; }
         Light.DATADataType DATADataTypeState { get; }
 
     }
@@ -1742,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Model:
                     return typeof(Model);
                 case Light_FieldIndex.Script:
-                    return typeof(IFormSetLink<Script>);
+                    return typeof(IFormLinkNullable<Script>);
                 case Light_FieldIndex.Name:
                     return typeof(String);
                 case Light_FieldIndex.Icon:
@@ -1766,7 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Fade:
                     return typeof(Single);
                 case Light_FieldIndex.Sound:
-                    return typeof(IFormSetLink<Sound>);
+                    return typeof(IFormLinkNullable<Sound>);
                 case Light_FieldIndex.DATADataTypeState:
                     return typeof(Light.DATADataType);
                 default:
@@ -1829,7 +1829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Model = null;
-            item.Script.Unset();
+            item.Script.FormKey = null;
             item.Name = default;
             item.Icon = default;
             item.Time = Light._Time_Default;
@@ -1841,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Value = default;
             item.Weight = default;
             item.Fade = default;
-            item.Sound.Unset();
+            item.Sound.FormKey = null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2209,11 +2209,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script.HasBeenSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Fade.HasValue && checkMask.Fade.Value != (item.Fade != null)) return false;
-            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound.HasBeenSet) return false;
+            if (checkMask.Sound.HasValue && checkMask.Sound.Value != (item.Sound.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2225,7 +2225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Script = item.Script.HasBeenSet;
+            mask.Script = (item.Script.FormKey != null);
             mask.Name = (item.Name != null);
             mask.Icon = (item.Icon != null);
             mask.Time = true;
@@ -2237,7 +2237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Value = true;
             mask.Weight = true;
             mask.Fade = (item.Fade != null);
-            mask.Sound = item.Sound.HasBeenSet;
+            mask.Sound = (item.Sound.FormKey != null);
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Script) ?? true))
             {
-                item.Script.SetToFormKey(rhs: rhs.Script);
+                item.Script.FormKey = rhs.Script.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Name) ?? true))
             {
@@ -2546,7 +2546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetToFormKey(rhs: rhs.Sound);
+                item.Sound.FormKey = rhs.Sound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2732,7 +2732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Model));
             }
-            if (item.Script.HasBeenSet
+            if ((item.Script.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2854,7 +2854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Light_FieldIndex.Fade,
                     errorMask: errorMask);
             }
-            if (item.Sound.HasBeenSet
+            if ((item.Sound.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3594,7 +3594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormSetLink<IScriptGetter>.Empty;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -3653,7 +3653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormSetLink<ISoundGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

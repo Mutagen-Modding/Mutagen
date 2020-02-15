@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.LockLevel = default;
             item.Fluff = new byte[3];
-            item.Key.Unset();
+            item.Key.FormKey = FormKey.Null;
             item.Flags = default;
         }
         

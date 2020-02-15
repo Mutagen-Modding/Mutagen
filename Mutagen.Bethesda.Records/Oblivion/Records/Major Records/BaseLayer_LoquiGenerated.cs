@@ -1245,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Clear(IBaseLayerInternal item)
         {
             ClearPartial();
-            item.Texture.Unset();
+            item.Texture.FormKey = FormKey.Null;
             item.Quadrant = default;
             item.BTXTDataTypeState = default;
         }

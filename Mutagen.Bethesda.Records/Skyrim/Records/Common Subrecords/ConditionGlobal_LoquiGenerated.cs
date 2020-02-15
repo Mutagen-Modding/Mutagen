@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IConditionGlobal item)
         {
             ClearPartial();
-            item.ComparisonValue.Unset();
+            item.ComparisonValue.FormKey = FormKey.Null;
             item.Data.Clear();
             base.Clear(item);
         }

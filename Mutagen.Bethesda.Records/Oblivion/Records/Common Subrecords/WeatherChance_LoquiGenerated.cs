@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherChance item)
         {
             ClearPartial();
-            item.Weather.Unset();
+            item.Weather.FormKey = FormKey.Null;
             item.Chance = default;
         }
         

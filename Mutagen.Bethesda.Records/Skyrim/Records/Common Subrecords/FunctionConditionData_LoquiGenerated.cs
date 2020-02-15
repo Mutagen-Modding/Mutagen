@@ -1526,8 +1526,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneRecord.Unset();
-            item.ParameterTwoRecord.Unset();
+            item.ParameterOneRecord.FormKey = FormKey.Null;
+            item.ParameterTwoRecord.FormKey = FormKey.Null;
             item.Unknown3 = default;
             item.Unknown4 = default;
             item.Unknown5 = FunctionConditionData._Unknown5_Default;

@@ -32,21 +32,6 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
-        public bool Parse<T>(
-            MutagenFrame frame,
-            out IEDIDSetLink<T> item,
-            MasterReferences? masterReferences = null)
-            where T : class, IMajorRecordCommonGetter
-        {
-            if (!frame.TryCheckUpcomingRead(4, out var ex))
-            {
-                throw ex;
-            }
-
-            item = new EDIDSetLink<T>(HeaderTranslation.ReadNextRecordType(frame));
-            return true;
-        }
-
         public override void Write(MutagenWriter writer, RecordType item)
         {
             writer.Write(item.TypeInt);
@@ -60,36 +45,12 @@ namespace Mutagen.Bethesda.Binary
                 item.EDID);
         }
 
-        public void Write<T>(
-            MutagenWriter writer,
-            IEDIDSetLinkGetter<T> item)
-            where T : class, IMajorRecordCommonGetter
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item);
-        }
-
         public void Write<M, T>(
             MutagenWriter writer,
             IEDIDLinkGetter<T> item,
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
-            this.Write(
-                writer,
-                item.EDID,
-                header);
-        }
-
-        public void Write<T>(
-            MutagenWriter writer,
-            IEDIDSetLinkGetter<T> item,
-            RecordType header)
-            where T : class, IMajorRecordCommonGetter
-        {
-            if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.EDID,

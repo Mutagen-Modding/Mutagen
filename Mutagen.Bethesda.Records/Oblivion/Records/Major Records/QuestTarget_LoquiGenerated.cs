@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IQuestTarget item)
         {
             ClearPartial();
-            item.Target.Unset();
+            item.Target.FormKey = FormKey.Null;
             item.Flags = default;
             item.Conditions.Unset();
             item.QSTADataTypeState = default;

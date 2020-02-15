@@ -1328,9 +1328,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptEffect item)
         {
             ClearPartial();
-            item.Script.Unset();
+            item.Script.FormKey = FormKey.Null;
             item.MagicSchool = default;
-            item.VisualEffect.Unset();
+            item.VisualEffect.EDID = RecordType.Null;
             item.Flags = default;
             item.Name = default;
             item.SCITDataTypeState = default;

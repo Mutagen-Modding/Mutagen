@@ -76,10 +76,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Worldspace
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Worldspace> _Worldspace = new FormSetLink<Worldspace>();
-        public IFormSetLink<Worldspace> Worldspace => this._Worldspace;
+        protected IFormLinkNullable<Worldspace> _Worldspace = new FormLinkNullable<Worldspace>();
+        public IFormLinkNullable<Worldspace> Worldspace => this._Worldspace;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
+        IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
-        new IFormSetLink<Worldspace> Worldspace { get; }
+        new IFormLinkNullable<Worldspace> Worldspace { get; }
         new ISetList<RegionArea> Areas { get; }
         new RegionDataObjects? Objects { get; set; }
         new RegionDataWeather? Weather { get; set; }
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         String? Icon { get; }
         Color? MapColor { get; }
-        IFormSetLinkGetter<IWorldspaceGetter> Worldspace { get; }
+        IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
         IReadOnlySetList<IRegionAreaGetter> Areas { get; }
         IRegionDataObjectsGetter? Objects { get; }
         IRegionDataWeatherGetter? Weather { get; }
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Region_FieldIndex.MapColor:
                     return typeof(Color);
                 case Region_FieldIndex.Worldspace:
-                    return typeof(IFormSetLink<Worldspace>);
+                    return typeof(IFormLinkNullable<Worldspace>);
                 case Region_FieldIndex.Areas:
                     return typeof(ISetList<RegionArea>);
                 case Region_FieldIndex.Objects:
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Icon = default;
             item.MapColor = default;
-            item.Worldspace.Unset();
+            item.Worldspace.FormKey = null;
             item.Areas.Unset();
             item.Objects = null;
             item.Weather = null;
@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != (item.MapColor != null)) return false;
-            if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != item.Worldspace.HasBeenSet) return false;
+            if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != (item.Worldspace.FormKey != null)) return false;
             if (checkMask.Areas?.Overall.HasValue ?? false && checkMask.Areas!.Overall.Value != item.Areas.HasBeenSet) return false;
             if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects.Overall.Value != (item.Objects != null)) return false;
             if (checkMask.Objects?.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
@@ -1959,7 +1959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Icon = (item.Icon != null);
             mask.MapColor = (item.MapColor != null);
-            mask.Worldspace = item.Worldspace.HasBeenSet;
+            mask.Worldspace = (item.Worldspace.FormKey != null);
             mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>>(item.Areas.HasBeenSet, item.Areas.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemObjects = item.Objects;
             mask.Objects = new MaskItem<bool, RegionDataObjects.Mask<bool>?>(itemObjects != null, itemObjects?.GetHasBeenSetMask());
@@ -2200,7 +2200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace.SetToFormKey(rhs: rhs.Worldspace);
+                item.Worldspace.FormKey = rhs.Worldspace.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
@@ -2525,7 +2525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Region_FieldIndex.MapColor,
                     errorMask: errorMask);
             }
-            if (item.Worldspace.HasBeenSet
+            if ((item.Worldspace.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3213,7 +3213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Worldspace
         private int? _WorldspaceLocation;
         public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
-        public IFormSetLinkGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormSetLink<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormSetLink<IWorldspaceGetter>.Empty;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormLinkNullable<IWorldspaceGetter>.Empty;
         #endregion
         public IReadOnlySetList<IRegionAreaGetter> Areas { get; private set; } = EmptySetList<RegionAreaBinaryOverlay>.Instance;
         #region RegionAreaLogic

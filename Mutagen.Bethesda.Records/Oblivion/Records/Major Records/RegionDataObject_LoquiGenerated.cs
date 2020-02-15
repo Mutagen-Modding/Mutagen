@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionDataObject item)
         {
             ClearPartial();
-            item.Object.Unset();
+            item.Object.FormKey = FormKey.Null;
             item.ParentIndex = default;
             item.Unknown1 = new byte[2];
             item.Density = default;

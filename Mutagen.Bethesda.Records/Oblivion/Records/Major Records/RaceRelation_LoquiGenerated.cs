@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRaceRelation item)
         {
             ClearPartial();
-            item.Race.Unset();
+            item.Race.FormKey = FormKey.Null;
             item.Modifier = default;
         }
         

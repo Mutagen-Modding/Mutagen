@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRankPlacement item)
         {
             ClearPartial();
-            item.Faction.Unset();
+            item.Faction.FormKey = FormKey.Null;
             item.Rank = default;
             item.Fluff = new byte[3];
         }

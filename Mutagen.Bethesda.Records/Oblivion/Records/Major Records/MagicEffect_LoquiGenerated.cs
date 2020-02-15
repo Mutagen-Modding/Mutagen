@@ -1955,9 +1955,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSchool = default;
             item.Resistance = default;
             item.CounterEffectCount = default;
-            item.Light.Unset();
+            item.Light.FormKey = FormKey.Null;
             item.ProjectileSpeed = default;
-            item.EffectShader.Unset();
+            item.EffectShader.FormKey = FormKey.Null;
             item.SubData = new MagicEffectSubData();
             item.CounterEffects.Unset();
             item.DATADataTypeState = default;

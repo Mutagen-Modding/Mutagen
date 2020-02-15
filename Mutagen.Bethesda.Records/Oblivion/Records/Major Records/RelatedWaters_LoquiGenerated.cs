@@ -1160,9 +1160,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelatedWaters item)
         {
             ClearPartial();
-            item.RelatedWaterDaytime.Unset();
-            item.RelatedWaterNighttime.Unset();
-            item.RelatedWaterUnderwater.Unset();
+            item.RelatedWaterDaytime.FormKey = FormKey.Null;
+            item.RelatedWaterNighttime.FormKey = FormKey.Null;
+            item.RelatedWaterUnderwater.FormKey = FormKey.Null;
         }
         
         #region Xml Translation

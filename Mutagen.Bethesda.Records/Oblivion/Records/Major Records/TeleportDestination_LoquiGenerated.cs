@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ITeleportDestination item)
         {
             ClearPartial();
-            item.Destination.Unset();
+            item.Destination.FormKey = FormKey.Null;
             item.Position = default;
             item.Rotation = default;
         }

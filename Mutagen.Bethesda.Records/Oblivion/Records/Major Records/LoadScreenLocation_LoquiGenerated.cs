@@ -1156,8 +1156,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILoadScreenLocation item)
         {
             ClearPartial();
-            item.Direct.Unset();
-            item.Indirect.Unset();
+            item.Direct.FormKey = FormKey.Null;
+            item.Indirect.FormKey = FormKey.Null;
             item.GridPoint = default;
         }
         

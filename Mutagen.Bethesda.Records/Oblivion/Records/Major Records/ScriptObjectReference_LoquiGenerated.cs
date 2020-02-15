@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptObjectReference item)
         {
             ClearPartial();
-            item.Reference.Unset();
+            item.Reference.FormKey = FormKey.Null;
             base.Clear(item);
         }
         

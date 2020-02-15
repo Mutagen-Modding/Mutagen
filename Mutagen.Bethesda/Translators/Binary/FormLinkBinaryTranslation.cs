@@ -92,8 +92,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IFormLinkGetter<T> item,
             MasterReferences masterReferences,
-            RecordType header,
-            bool nullable = false)
+            RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
             FormKeyBinaryTranslation.Instance.Write(
@@ -105,12 +104,12 @@ namespace Mutagen.Bethesda.Binary
 
         public void WriteNullable<T>(
             MutagenWriter writer,
-            IFormSetLinkGetter<T> item,
+            IFormLinkNullableGetter<T> item,
             MasterReferences masterReferences,
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
-            if (!item.HasBeenSet) return;
+            if (item.FormKey == null) return;
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
                 item.FormKey,

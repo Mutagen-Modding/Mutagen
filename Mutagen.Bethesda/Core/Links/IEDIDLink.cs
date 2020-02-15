@@ -20,17 +20,6 @@ namespace Mutagen.Bethesda
        where T : IMajorRecordCommonGetter
     {
         new RecordType EDID { get; set; }
-        void Unset();
-    }
-
-    public interface IEDIDSetLinkGetter<out TMajor> : IEDIDLinkGetter<TMajor>, ISetLinkGetter<TMajor>
-       where TMajor : IMajorRecordCommonGetter
-    {
-    }
-
-    public interface IEDIDSetLink<TMajor> : IEDIDLink<TMajor>, ISetLink<TMajor>, IEDIDSetLinkGetter<TMajor>
-       where TMajor : IMajorRecordCommonGetter
-    {
     }
 
     public static class IEDIDLinkExt

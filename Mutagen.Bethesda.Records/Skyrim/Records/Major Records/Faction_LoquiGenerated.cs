@@ -87,45 +87,45 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PrisonMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<PlacedObject> _PrisonMarker = new FormSetLink<PlacedObject>();
-        public IFormSetLink<PlacedObject> PrisonMarker => this._PrisonMarker;
+        protected IFormLinkNullable<PlacedObject> _PrisonMarker = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> PrisonMarker => this._PrisonMarker;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IPlacedObjectGetter> IFactionGetter.PrisonMarker => this.PrisonMarker;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.PrisonMarker => this.PrisonMarker;
         #endregion
         #region FollowerWaitMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<PlacedObject> _FollowerWaitMarker = new FormSetLink<PlacedObject>();
-        public IFormSetLink<PlacedObject> FollowerWaitMarker => this._FollowerWaitMarker;
+        protected IFormLinkNullable<PlacedObject> _FollowerWaitMarker = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> FollowerWaitMarker => this._FollowerWaitMarker;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IPlacedObjectGetter> IFactionGetter.FollowerWaitMarker => this.FollowerWaitMarker;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.FollowerWaitMarker => this.FollowerWaitMarker;
         #endregion
         #region EvidenceChest
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<PlacedObject> _EvidenceChest = new FormSetLink<PlacedObject>();
-        public IFormSetLink<PlacedObject> EvidenceChest => this._EvidenceChest;
+        protected IFormLinkNullable<PlacedObject> _EvidenceChest = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> EvidenceChest => this._EvidenceChest;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IPlacedObjectGetter> IFactionGetter.EvidenceChest => this.EvidenceChest;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.EvidenceChest => this.EvidenceChest;
         #endregion
         #region PlayerBelongingsChest
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<PlacedObject> _PlayerBelongingsChest = new FormSetLink<PlacedObject>();
-        public IFormSetLink<PlacedObject> PlayerBelongingsChest => this._PlayerBelongingsChest;
+        protected IFormLinkNullable<PlacedObject> _PlayerBelongingsChest = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> PlayerBelongingsChest => this._PlayerBelongingsChest;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IPlacedObjectGetter> IFactionGetter.PlayerBelongingsChest => this.PlayerBelongingsChest;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.PlayerBelongingsChest => this.PlayerBelongingsChest;
         #endregion
         #region CrimeGroup
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<FormList> _CrimeGroup = new FormSetLink<FormList>();
-        public IFormSetLink<FormList> CrimeGroup => this._CrimeGroup;
+        protected IFormLinkNullable<FormList> _CrimeGroup = new FormLinkNullable<FormList>();
+        public IFormLinkNullable<FormList> CrimeGroup => this._CrimeGroup;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IFormListGetter> IFactionGetter.CrimeGroup => this.CrimeGroup;
+        IFormLinkNullableGetter<IFormListGetter> IFactionGetter.CrimeGroup => this.CrimeGroup;
         #endregion
         #region JailOutfit
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<Outfit> _JailOutfit = new FormSetLink<Outfit>();
-        public IFormSetLink<Outfit> JailOutfit => this._JailOutfit;
+        protected IFormLinkNullable<Outfit> _JailOutfit = new FormLinkNullable<Outfit>();
+        public IFormLinkNullable<Outfit> JailOutfit => this._JailOutfit;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IOutfitGetter> IFactionGetter.JailOutfit => this.JailOutfit;
+        IFormLinkNullableGetter<IOutfitGetter> IFactionGetter.JailOutfit => this.JailOutfit;
         #endregion
         #region ArrestCrimeValue
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -276,17 +276,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region VendorList
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<FormList> _VendorList = new FormSetLink<FormList>();
-        public IFormSetLink<FormList> VendorList => this._VendorList;
+        protected IFormLinkNullable<FormList> _VendorList = new FormLinkNullable<FormList>();
+        public IFormLinkNullable<FormList> VendorList => this._VendorList;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IFormListGetter> IFactionGetter.VendorList => this.VendorList;
+        IFormLinkNullableGetter<IFormListGetter> IFactionGetter.VendorList => this.VendorList;
         #endregion
         #region VendorChest
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormSetLink<PlacedObject> _VendorChest = new FormSetLink<PlacedObject>();
-        public IFormSetLink<PlacedObject> VendorChest => this._VendorChest;
+        protected IFormLinkNullable<PlacedObject> _VendorChest = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> VendorChest => this._VendorChest;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormSetLinkGetter<IPlacedObjectGetter> IFactionGetter.VendorChest => this.VendorChest;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.VendorChest => this.VendorChest;
         #endregion
         #region VendorValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1745,12 +1745,12 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Name { get; set; }
         new ISetList<Relation> Relations { get; }
         new Faction.FactionFlag? Flags { get; set; }
-        new IFormSetLink<PlacedObject> PrisonMarker { get; }
-        new IFormSetLink<PlacedObject> FollowerWaitMarker { get; }
-        new IFormSetLink<PlacedObject> EvidenceChest { get; }
-        new IFormSetLink<PlacedObject> PlayerBelongingsChest { get; }
-        new IFormSetLink<FormList> CrimeGroup { get; }
-        new IFormSetLink<Outfit> JailOutfit { get; }
+        new IFormLinkNullable<PlacedObject> PrisonMarker { get; }
+        new IFormLinkNullable<PlacedObject> FollowerWaitMarker { get; }
+        new IFormLinkNullable<PlacedObject> EvidenceChest { get; }
+        new IFormLinkNullable<PlacedObject> PlayerBelongingsChest { get; }
+        new IFormLinkNullable<FormList> CrimeGroup { get; }
+        new IFormLinkNullable<Outfit> JailOutfit { get; }
         new Boolean ArrestCrimeValue { get; set; }
         new Boolean AttackOnSightCrimeValue { get; set; }
         new UInt16 MurderCrimeValue { get; set; }
@@ -1762,8 +1762,8 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16 EscapeCrimeValue { get; set; }
         new UInt16 WerewolfCrimeValue { get; set; }
         new ISetList<Rank> Ranks { get; }
-        new IFormSetLink<FormList> VendorList { get; }
-        new IFormSetLink<PlacedObject> VendorChest { get; }
+        new IFormLinkNullable<FormList> VendorList { get; }
+        new IFormLinkNullable<PlacedObject> VendorChest { get; }
         new VendorValues? VendorValues { get; set; }
         new VendorLocation? VendorLocation { get; set; }
         new ISetList<Condition> Conditions { get; }
@@ -1787,12 +1787,12 @@ namespace Mutagen.Bethesda.Skyrim
         String? Name { get; }
         IReadOnlySetList<IRelationGetter> Relations { get; }
         Faction.FactionFlag? Flags { get; }
-        IFormSetLinkGetter<IPlacedObjectGetter> PrisonMarker { get; }
-        IFormSetLinkGetter<IPlacedObjectGetter> FollowerWaitMarker { get; }
-        IFormSetLinkGetter<IPlacedObjectGetter> EvidenceChest { get; }
-        IFormSetLinkGetter<IPlacedObjectGetter> PlayerBelongingsChest { get; }
-        IFormSetLinkGetter<IFormListGetter> CrimeGroup { get; }
-        IFormSetLinkGetter<IOutfitGetter> JailOutfit { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> PrisonMarker { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> EvidenceChest { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> PlayerBelongingsChest { get; }
+        IFormLinkNullableGetter<IFormListGetter> CrimeGroup { get; }
+        IFormLinkNullableGetter<IOutfitGetter> JailOutfit { get; }
         Boolean ArrestCrimeValue { get; }
         Boolean AttackOnSightCrimeValue { get; }
         UInt16 MurderCrimeValue { get; }
@@ -1804,8 +1804,8 @@ namespace Mutagen.Bethesda.Skyrim
         UInt16 EscapeCrimeValue { get; }
         UInt16 WerewolfCrimeValue { get; }
         IReadOnlySetList<IRankGetter> Ranks { get; }
-        IFormSetLinkGetter<IFormListGetter> VendorList { get; }
-        IFormSetLinkGetter<IPlacedObjectGetter> VendorChest { get; }
+        IFormLinkNullableGetter<IFormListGetter> VendorList { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> VendorChest { get; }
         IVendorValuesGetter? VendorValues { get; }
         IVendorLocationGetter? VendorLocation { get; }
         IReadOnlySetList<IConditionGetter> Conditions { get; }
@@ -2508,17 +2508,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.PrisonMarker:
-                    return typeof(IFormSetLink<PlacedObject>);
+                    return typeof(IFormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.FollowerWaitMarker:
-                    return typeof(IFormSetLink<PlacedObject>);
+                    return typeof(IFormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.EvidenceChest:
-                    return typeof(IFormSetLink<PlacedObject>);
+                    return typeof(IFormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.PlayerBelongingsChest:
-                    return typeof(IFormSetLink<PlacedObject>);
+                    return typeof(IFormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.CrimeGroup:
-                    return typeof(IFormSetLink<FormList>);
+                    return typeof(IFormLinkNullable<FormList>);
                 case Faction_FieldIndex.JailOutfit:
-                    return typeof(IFormSetLink<Outfit>);
+                    return typeof(IFormLinkNullable<Outfit>);
                 case Faction_FieldIndex.ArrestCrimeValue:
                     return typeof(Boolean);
                 case Faction_FieldIndex.AttackOnSightCrimeValue:
@@ -2542,9 +2542,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.Ranks:
                     return typeof(ISetList<Rank>);
                 case Faction_FieldIndex.VendorList:
-                    return typeof(IFormSetLink<FormList>);
+                    return typeof(IFormLinkNullable<FormList>);
                 case Faction_FieldIndex.VendorChest:
-                    return typeof(IFormSetLink<PlacedObject>);
+                    return typeof(IFormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.VendorValues:
                     return typeof(VendorValues);
                 case Faction_FieldIndex.VendorLocation:
@@ -2627,12 +2627,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Relations.Unset();
             item.Flags = default;
-            item.PrisonMarker.Unset();
-            item.FollowerWaitMarker.Unset();
-            item.EvidenceChest.Unset();
-            item.PlayerBelongingsChest.Unset();
-            item.CrimeGroup.Unset();
-            item.JailOutfit.Unset();
+            item.PrisonMarker.FormKey = null;
+            item.FollowerWaitMarker.FormKey = null;
+            item.EvidenceChest.FormKey = null;
+            item.PlayerBelongingsChest.FormKey = null;
+            item.CrimeGroup.FormKey = null;
+            item.JailOutfit.FormKey = null;
             item.ArrestCrimeValue = default;
             item.AttackOnSightCrimeValue = default;
             item.MurderCrimeValue = default;
@@ -2644,8 +2644,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EscapeCrimeValue = default;
             item.WerewolfCrimeValue = default;
             item.Ranks.Unset();
-            item.VendorList.Unset();
-            item.VendorChest.Unset();
+            item.VendorList.FormKey = null;
+            item.VendorChest.FormKey = null;
             item.VendorValues = null;
             item.VendorLocation = null;
             item.Conditions.Unset();
@@ -3224,15 +3224,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Relations?.Overall.HasValue ?? false && checkMask.Relations!.Overall.Value != item.Relations.HasBeenSet) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.PrisonMarker.HasValue && checkMask.PrisonMarker.Value != item.PrisonMarker.HasBeenSet) return false;
-            if (checkMask.FollowerWaitMarker.HasValue && checkMask.FollowerWaitMarker.Value != item.FollowerWaitMarker.HasBeenSet) return false;
-            if (checkMask.EvidenceChest.HasValue && checkMask.EvidenceChest.Value != item.EvidenceChest.HasBeenSet) return false;
-            if (checkMask.PlayerBelongingsChest.HasValue && checkMask.PlayerBelongingsChest.Value != item.PlayerBelongingsChest.HasBeenSet) return false;
-            if (checkMask.CrimeGroup.HasValue && checkMask.CrimeGroup.Value != item.CrimeGroup.HasBeenSet) return false;
-            if (checkMask.JailOutfit.HasValue && checkMask.JailOutfit.Value != item.JailOutfit.HasBeenSet) return false;
+            if (checkMask.PrisonMarker.HasValue && checkMask.PrisonMarker.Value != (item.PrisonMarker.FormKey != null)) return false;
+            if (checkMask.FollowerWaitMarker.HasValue && checkMask.FollowerWaitMarker.Value != (item.FollowerWaitMarker.FormKey != null)) return false;
+            if (checkMask.EvidenceChest.HasValue && checkMask.EvidenceChest.Value != (item.EvidenceChest.FormKey != null)) return false;
+            if (checkMask.PlayerBelongingsChest.HasValue && checkMask.PlayerBelongingsChest.Value != (item.PlayerBelongingsChest.FormKey != null)) return false;
+            if (checkMask.CrimeGroup.HasValue && checkMask.CrimeGroup.Value != (item.CrimeGroup.FormKey != null)) return false;
+            if (checkMask.JailOutfit.HasValue && checkMask.JailOutfit.Value != (item.JailOutfit.FormKey != null)) return false;
             if (checkMask.Ranks?.Overall.HasValue ?? false && checkMask.Ranks!.Overall.Value != item.Ranks.HasBeenSet) return false;
-            if (checkMask.VendorList.HasValue && checkMask.VendorList.Value != item.VendorList.HasBeenSet) return false;
-            if (checkMask.VendorChest.HasValue && checkMask.VendorChest.Value != item.VendorChest.HasBeenSet) return false;
+            if (checkMask.VendorList.HasValue && checkMask.VendorList.Value != (item.VendorList.FormKey != null)) return false;
+            if (checkMask.VendorChest.HasValue && checkMask.VendorChest.Value != (item.VendorChest.FormKey != null)) return false;
             if (checkMask.VendorValues?.Overall.HasValue ?? false && checkMask.VendorValues.Overall.Value != (item.VendorValues != null)) return false;
             if (checkMask.VendorValues?.Specific != null && (item.VendorValues == null || !item.VendorValues.HasBeenSet(checkMask.VendorValues.Specific))) return false;
             if (checkMask.VendorLocation?.Overall.HasValue ?? false && checkMask.VendorLocation.Overall.Value != (item.VendorLocation != null)) return false;
@@ -3250,12 +3250,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Name = (item.Name != null);
             mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Flags = (item.Flags != null);
-            mask.PrisonMarker = item.PrisonMarker.HasBeenSet;
-            mask.FollowerWaitMarker = item.FollowerWaitMarker.HasBeenSet;
-            mask.EvidenceChest = item.EvidenceChest.HasBeenSet;
-            mask.PlayerBelongingsChest = item.PlayerBelongingsChest.HasBeenSet;
-            mask.CrimeGroup = item.CrimeGroup.HasBeenSet;
-            mask.JailOutfit = item.JailOutfit.HasBeenSet;
+            mask.PrisonMarker = (item.PrisonMarker.FormKey != null);
+            mask.FollowerWaitMarker = (item.FollowerWaitMarker.FormKey != null);
+            mask.EvidenceChest = (item.EvidenceChest.FormKey != null);
+            mask.PlayerBelongingsChest = (item.PlayerBelongingsChest.FormKey != null);
+            mask.CrimeGroup = (item.CrimeGroup.FormKey != null);
+            mask.JailOutfit = (item.JailOutfit.FormKey != null);
             mask.ArrestCrimeValue = true;
             mask.AttackOnSightCrimeValue = true;
             mask.MurderCrimeValue = true;
@@ -3267,8 +3267,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.EscapeCrimeValue = true;
             mask.WerewolfCrimeValue = true;
             mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.VendorList = item.VendorList.HasBeenSet;
-            mask.VendorChest = item.VendorChest.HasBeenSet;
+            mask.VendorList = (item.VendorList.FormKey != null);
+            mask.VendorChest = (item.VendorChest.FormKey != null);
             var itemVendorValues = item.VendorValues;
             mask.VendorValues = new MaskItem<bool, VendorValues.Mask<bool>?>(itemVendorValues != null, itemVendorValues?.GetHasBeenSetMask());
             var itemVendorLocation = item.VendorLocation;
@@ -3580,27 +3580,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PrisonMarker) ?? true))
             {
-                item.PrisonMarker.SetToFormKey(rhs: rhs.PrisonMarker);
+                item.PrisonMarker.FormKey = rhs.PrisonMarker.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
-                item.FollowerWaitMarker.SetToFormKey(rhs: rhs.FollowerWaitMarker);
+                item.FollowerWaitMarker.FormKey = rhs.FollowerWaitMarker.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.EvidenceChest) ?? true))
             {
-                item.EvidenceChest.SetToFormKey(rhs: rhs.EvidenceChest);
+                item.EvidenceChest.FormKey = rhs.EvidenceChest.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerBelongingsChest) ?? true))
             {
-                item.PlayerBelongingsChest.SetToFormKey(rhs: rhs.PlayerBelongingsChest);
+                item.PlayerBelongingsChest.FormKey = rhs.PlayerBelongingsChest.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGroup) ?? true))
             {
-                item.CrimeGroup.SetToFormKey(rhs: rhs.CrimeGroup);
+                item.CrimeGroup.FormKey = rhs.CrimeGroup.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
-                item.JailOutfit.SetToFormKey(rhs: rhs.JailOutfit);
+                item.JailOutfit.FormKey = rhs.JailOutfit.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ArrestCrimeValue) ?? true))
             {
@@ -3675,11 +3675,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorList) ?? true))
             {
-                item.VendorList.SetToFormKey(rhs: rhs.VendorList);
+                item.VendorList.FormKey = rhs.VendorList.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorChest) ?? true))
             {
-                item.VendorChest.SetToFormKey(rhs: rhs.VendorChest);
+                item.VendorChest.FormKey = rhs.VendorChest.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
@@ -3951,7 +3951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.PrisonMarker.HasBeenSet
+            if ((item.PrisonMarker.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.PrisonMarker) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3961,7 +3961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.PrisonMarker,
                     errorMask: errorMask);
             }
-            if (item.FollowerWaitMarker.HasBeenSet
+            if ((item.FollowerWaitMarker.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3971,7 +3971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.FollowerWaitMarker,
                     errorMask: errorMask);
             }
-            if (item.EvidenceChest.HasBeenSet
+            if ((item.EvidenceChest.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.EvidenceChest) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3981,7 +3981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.EvidenceChest,
                     errorMask: errorMask);
             }
-            if (item.PlayerBelongingsChest.HasBeenSet
+            if ((item.PlayerBelongingsChest.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerBelongingsChest) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3991,7 +3991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.PlayerBelongingsChest,
                     errorMask: errorMask);
             }
-            if (item.CrimeGroup.HasBeenSet
+            if ((item.CrimeGroup.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGroup) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -4001,7 +4001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.CrimeGroup,
                     errorMask: errorMask);
             }
-            if (item.JailOutfit.HasBeenSet
+            if ((item.JailOutfit.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -4135,7 +4135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if (item.VendorList.HasBeenSet
+            if ((item.VendorList.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorList) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -4145,7 +4145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.VendorList,
                     errorMask: errorMask);
             }
-            if (item.VendorChest.HasBeenSet
+            if ((item.VendorChest.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorChest) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -5240,32 +5240,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PrisonMarker
         private int? _PrisonMarkerLocation;
         public bool PrisonMarker_IsSet => _PrisonMarkerLocation.HasValue;
-        public IFormSetLinkGetter<IPlacedObjectGetter> PrisonMarker => _PrisonMarkerLocation.HasValue ? new FormSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrisonMarkerLocation.Value, _package.Meta)))) : FormSetLink<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> PrisonMarker => _PrisonMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrisonMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
         public bool FollowerWaitMarker_IsSet => _FollowerWaitMarkerLocation.HasValue;
-        public IFormSetLinkGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FollowerWaitMarkerLocation.Value, _package.Meta)))) : FormSetLink<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FollowerWaitMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
         #region EvidenceChest
         private int? _EvidenceChestLocation;
         public bool EvidenceChest_IsSet => _EvidenceChestLocation.HasValue;
-        public IFormSetLinkGetter<IPlacedObjectGetter> EvidenceChest => _EvidenceChestLocation.HasValue ? new FormSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EvidenceChestLocation.Value, _package.Meta)))) : FormSetLink<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> EvidenceChest => _EvidenceChestLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EvidenceChestLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
         #region PlayerBelongingsChest
         private int? _PlayerBelongingsChestLocation;
         public bool PlayerBelongingsChest_IsSet => _PlayerBelongingsChestLocation.HasValue;
-        public IFormSetLinkGetter<IPlacedObjectGetter> PlayerBelongingsChest => _PlayerBelongingsChestLocation.HasValue ? new FormSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerBelongingsChestLocation.Value, _package.Meta)))) : FormSetLink<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerBelongingsChest => _PlayerBelongingsChestLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerBelongingsChestLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
         #region CrimeGroup
         private int? _CrimeGroupLocation;
         public bool CrimeGroup_IsSet => _CrimeGroupLocation.HasValue;
-        public IFormSetLinkGetter<IFormListGetter> CrimeGroup => _CrimeGroupLocation.HasValue ? new FormSetLink<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeGroupLocation.Value, _package.Meta)))) : FormSetLink<IFormListGetter>.Empty;
+        public IFormLinkNullableGetter<IFormListGetter> CrimeGroup => _CrimeGroupLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeGroupLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Empty;
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
         public bool JailOutfit_IsSet => _JailOutfitLocation.HasValue;
-        public IFormSetLinkGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormSetLink<IOutfitGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _JailOutfitLocation.Value, _package.Meta)))) : FormSetLink<IOutfitGetter>.Empty;
+        public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _JailOutfitLocation.Value, _package.Meta)))) : FormLinkNullable<IOutfitGetter>.Empty;
         #endregion
         private int? _CRVALocation;
         public Faction.CRVADataType CRVADataTypeState { get; private set; }
@@ -5323,12 +5323,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VendorList
         private int? _VendorListLocation;
         public bool VendorList_IsSet => _VendorListLocation.HasValue;
-        public IFormSetLinkGetter<IFormListGetter> VendorList => _VendorListLocation.HasValue ? new FormSetLink<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorListLocation.Value, _package.Meta)))) : FormSetLink<IFormListGetter>.Empty;
+        public IFormLinkNullableGetter<IFormListGetter> VendorList => _VendorListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorListLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Empty;
         #endregion
         #region VendorChest
         private int? _VendorChestLocation;
         public bool VendorChest_IsSet => _VendorChestLocation.HasValue;
-        public IFormSetLinkGetter<IPlacedObjectGetter> VendorChest => _VendorChestLocation.HasValue ? new FormSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorChestLocation.Value, _package.Meta)))) : FormSetLink<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> VendorChest => _VendorChestLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorChestLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
