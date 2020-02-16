@@ -28,19 +28,6 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateCopyInRet(
-            FileGeneration fg,
-            ObjectGeneration objGen, 
-            TypeGeneration typeGen,
-            Accessor nodeAccessor,
-            Accessor retAccessor,
-            Accessor outItemAccessor,
-            Accessor errorMaskAccessor, 
-            Accessor translationMaskAccessor)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void GenerateForCommonXSD(XElement rootElement, TypeGeneration typeGen)
         {
             throw new NotImplementedException();

@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b038af03c585a3d0afc556375e220228ee3e841c</Sha>
+         <Sha>12b68ff5b2ec7701d2f639f2830619b7f36b8404</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-11-2020 22:19:35</CommitDate>
-         <Description>WrapperType</Description>
+         <CommitDate>02-16-2020 12:03:52</CommitDate>
+         <Description>Removed CopyInRet systems</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

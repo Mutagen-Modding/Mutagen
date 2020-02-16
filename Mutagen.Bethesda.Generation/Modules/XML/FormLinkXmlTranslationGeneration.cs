@@ -39,28 +39,6 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateCopyInRet(
-            FileGeneration fg,
-            ObjectGeneration objGen,
-            TypeGeneration typeGen,
-            Accessor nodeAccessor,
-            Accessor retAccessor,
-            Accessor outItemAccessor,
-            Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
-        {
-            FormLinkType linkType = typeGen as FormLinkType;
-            using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}{this.TypeName(typeGen)}XmlTranslation.Instance.Parse",
-                $".Bubble((o) => new {linkType.TypeName(getter: false)}(o.Value))"))
-            {
-                args.Add(nodeAccessor.DirectAccess);
-                args.Add($"item: out {outItemAccessor}");
-                args.Add($"nullable: {Nullable.ToString().ToLower()}");
-                args.Add($"errorMask: out {errorMaskAccessor}");
-            }
-        }
-
         public override void GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
