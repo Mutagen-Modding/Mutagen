@@ -419,13 +419,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case ClassTraining_FieldIndex.TrainedSkill:
-                        this.TrainedSkill = (Exception)obj;
+                        this.TrainedSkill = (Exception?)obj;
                         break;
                     case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                        this.MaximumTrainingLevel = (Exception)obj;
+                        this.MaximumTrainingLevel = (Exception?)obj;
                         break;
                     case ClassTraining_FieldIndex.Fluff:
-                        this.Fluff = (Exception)obj;
+                        this.Fluff = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -446,13 +446,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingGetter)rhs, include);
 
@@ -1537,9 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IClassTrainingGetter)item,
                     name: name,
@@ -1599,9 +1599,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "TrainedSkill":
+                    errorMask?.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
                     try
                     {
-                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
                         item.TrainedSkill = EnumXmlTranslation<Skill>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1617,9 +1617,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MaximumTrainingLevel":
+                    errorMask?.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
                     try
                     {
-                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
                         item.MaximumTrainingLevel = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1635,9 +1635,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff":
+                    errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
                     try
                     {
-                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
                         item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 2,
@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingGetter)rhs, include);
 

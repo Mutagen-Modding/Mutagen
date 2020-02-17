@@ -414,13 +414,13 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case AlternateTexture_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case AlternateTexture_FieldIndex.NexTexture:
-                        this.NexTexture = (Exception)obj;
+                        this.NexTexture = (Exception?)obj;
                         break;
                     case AlternateTexture_FieldIndex.Index:
-                        this.Index = (Exception)obj;
+                        this.Index = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -441,13 +441,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlternateTextureGetter)rhs, include);
 
@@ -1544,9 +1544,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IAlternateTextureGetter)item,
                     name: name,
@@ -1606,9 +1606,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)AlternateTexture_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)AlternateTexture_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1624,9 +1624,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "NexTexture":
+                    errorMask?.PushIndex((int)AlternateTexture_FieldIndex.NexTexture);
                     try
                     {
-                        errorMask?.PushIndex((int)AlternateTexture_FieldIndex.NexTexture);
                         item.NexTexture.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1642,9 +1642,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Index":
+                    errorMask?.PushIndex((int)AlternateTexture_FieldIndex.Index);
                     try
                     {
-                        errorMask?.PushIndex((int)AlternateTexture_FieldIndex.Index);
                         item.Index = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlternateTextureGetter)rhs, include);
 

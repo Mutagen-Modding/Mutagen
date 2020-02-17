@@ -393,10 +393,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case EnableParent_FieldIndex.Reference:
-                        this.Reference = (Exception)obj;
+                        this.Reference = (Exception?)obj;
                         break;
                     case EnableParent_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -416,13 +416,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentGetter)rhs, include);
 
@@ -1481,9 +1481,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IEnableParentGetter)item,
                     name: name,
@@ -1543,9 +1543,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Reference":
+                    errorMask?.PushIndex((int)EnableParent_FieldIndex.Reference);
                     try
                     {
-                        errorMask?.PushIndex((int)EnableParent_FieldIndex.Reference);
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1561,9 +1561,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)EnableParent_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)EnableParent_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentGetter)rhs, include);
 

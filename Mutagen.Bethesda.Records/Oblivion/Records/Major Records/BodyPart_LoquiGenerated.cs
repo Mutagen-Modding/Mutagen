@@ -405,10 +405,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case BodyPart_FieldIndex.Index:
-                        this.Index = (Exception)obj;
+                        this.Index = (Exception?)obj;
                         break;
                     case BodyPart_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -428,13 +428,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartGetter)rhs, include);
 
@@ -1533,9 +1533,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IBodyPartGetter)item,
                     name: name,
@@ -1595,9 +1595,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Index":
+                    errorMask?.PushIndex((int)BodyPart_FieldIndex.Index);
                     try
                     {
-                        errorMask?.PushIndex((int)BodyPart_FieldIndex.Index);
                         item.Index = EnumXmlTranslation<Race.BodyIndex>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1613,9 +1613,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)BodyPart_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)BodyPart_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1899,7 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartGetter)rhs, include);
 

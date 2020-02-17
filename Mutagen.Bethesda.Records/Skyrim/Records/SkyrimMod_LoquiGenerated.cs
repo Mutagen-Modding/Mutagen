@@ -771,13 +771,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -817,18 +817,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ExceptionExt.Combine(this.ModHeader?.Overall, rhs.ModHeader?.Overall), (this.ModHeader?.Specific as IErrorMask<ModHeader.ErrorMask>)?.Combine(rhs.ModHeader?.Specific));
-                ret.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ExceptionExt.Combine(this.GameSettings?.Overall, rhs.GameSettings?.Overall), (this.GameSettings?.Specific as IErrorMask<Group.ErrorMask<GameSetting.ErrorMask>>)?.Combine(rhs.GameSettings?.Specific));
-                ret.Keywords = new MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), (this.Keywords?.Specific as IErrorMask<Group.ErrorMask<Keyword.ErrorMask>>)?.Combine(rhs.Keywords?.Specific));
-                ret.LocationReferenceTypes = new MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>(ExceptionExt.Combine(this.LocationReferenceTypes?.Overall, rhs.LocationReferenceTypes?.Overall), (this.LocationReferenceTypes?.Specific as IErrorMask<Group.ErrorMask<LocationReferenceType.ErrorMask>>)?.Combine(rhs.LocationReferenceTypes?.Specific));
-                ret.Actions = new MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>(ExceptionExt.Combine(this.Actions?.Overall, rhs.Actions?.Overall), (this.Actions?.Specific as IErrorMask<Group.ErrorMask<ActionRecord.ErrorMask>>)?.Combine(rhs.Actions?.Specific));
-                ret.TextureSets = new MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>(ExceptionExt.Combine(this.TextureSets?.Overall, rhs.TextureSets?.Overall), (this.TextureSets?.Specific as IErrorMask<Group.ErrorMask<TextureSet.ErrorMask>>)?.Combine(rhs.TextureSets?.Specific));
-                ret.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ExceptionExt.Combine(this.Globals?.Overall, rhs.Globals?.Overall), (this.Globals?.Specific as IErrorMask<Group.ErrorMask<Global.ErrorMask>>)?.Combine(rhs.Globals?.Specific));
-                ret.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ExceptionExt.Combine(this.Classes?.Overall, rhs.Classes?.Overall), (this.Classes?.Specific as IErrorMask<Group.ErrorMask<Class.ErrorMask>>)?.Combine(rhs.Classes?.Specific));
-                ret.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), (this.Factions?.Specific as IErrorMask<Group.ErrorMask<Faction.ErrorMask>>)?.Combine(rhs.Factions?.Specific));
-                ret.HeadParts = new MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), (this.HeadParts?.Specific as IErrorMask<Group.ErrorMask<HeadPart.ErrorMask>>)?.Combine(rhs.HeadParts?.Specific));
-                ret.Hairs = new MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>(ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), (this.Hairs?.Specific as IErrorMask<Group.ErrorMask<Hair.ErrorMask>>)?.Combine(rhs.Hairs?.Specific));
-                ret.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), (this.Eyes?.Specific as IErrorMask<Group.ErrorMask<Eye.ErrorMask>>)?.Combine(rhs.Eyes?.Specific));
+                ret.ModHeader = this.ModHeader.Combine(rhs.ModHeader, (l, r) => l.Combine(r));
+                ret.GameSettings = this.GameSettings.Combine(rhs.GameSettings, (l, r) => l.Combine(r));
+                ret.Keywords = this.Keywords.Combine(rhs.Keywords, (l, r) => l.Combine(r));
+                ret.LocationReferenceTypes = this.LocationReferenceTypes.Combine(rhs.LocationReferenceTypes, (l, r) => l.Combine(r));
+                ret.Actions = this.Actions.Combine(rhs.Actions, (l, r) => l.Combine(r));
+                ret.TextureSets = this.TextureSets.Combine(rhs.TextureSets, (l, r) => l.Combine(r));
+                ret.Globals = this.Globals.Combine(rhs.Globals, (l, r) => l.Combine(r));
+                ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
+                ret.Factions = this.Factions.Combine(rhs.Factions, (l, r) => l.Combine(r));
+                ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
+                ret.Hairs = this.Hairs.Combine(rhs.Hairs, (l, r) => l.Combine(r));
+                ret.Eyes = this.Eyes.Combine(rhs.Eyes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1399,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
 
@@ -2279,9 +2279,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "ModHeader":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
                         item.ModHeader.CopyInFromXml(
                             node: node,
                             translationMask: translationMask,
@@ -3570,9 +3570,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ModHeader) ?? true))
             {
-                var loquiItem = item.ModHeader;
-                ((ModHeaderXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModHeaderItem = item.ModHeader;
+                ((ModHeaderXmlWriteTranslation)((IXmlItem)ModHeaderItem).XmlWriteTranslator).Write(
+                    item: ModHeaderItem,
                     node: node,
                     name: nameof(item.ModHeader),
                     fieldIndex: (int)SkyrimMod_FieldIndex.ModHeader,
@@ -3581,9 +3581,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.GameSettings) ?? true))
             {
-                var loquiItem = item.GameSettings;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGameSettingGetter>(
-                    item: loquiItem,
+                var GameSettingsItem = item.GameSettings;
+                ((GroupXmlWriteTranslation)((IXmlItem)GameSettingsItem).XmlWriteTranslator).Write<IGameSettingGetter>(
+                    item: GameSettingsItem,
                     node: node,
                     name: nameof(item.GameSettings),
                     fieldIndex: (int)SkyrimMod_FieldIndex.GameSettings,
@@ -3592,9 +3592,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Keywords) ?? true))
             {
-                var loquiItem = item.Keywords;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IKeywordGetter>(
-                    item: loquiItem,
+                var KeywordsItem = item.Keywords;
+                ((GroupXmlWriteTranslation)((IXmlItem)KeywordsItem).XmlWriteTranslator).Write<IKeywordGetter>(
+                    item: KeywordsItem,
                     node: node,
                     name: nameof(item.Keywords),
                     fieldIndex: (int)SkyrimMod_FieldIndex.Keywords,
@@ -3603,9 +3603,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LocationReferenceTypes) ?? true))
             {
-                var loquiItem = item.LocationReferenceTypes;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ILocationReferenceTypeGetter>(
-                    item: loquiItem,
+                var LocationReferenceTypesItem = item.LocationReferenceTypes;
+                ((GroupXmlWriteTranslation)((IXmlItem)LocationReferenceTypesItem).XmlWriteTranslator).Write<ILocationReferenceTypeGetter>(
+                    item: LocationReferenceTypesItem,
                     node: node,
                     name: nameof(item.LocationReferenceTypes),
                     fieldIndex: (int)SkyrimMod_FieldIndex.LocationReferenceTypes,
@@ -3614,9 +3614,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Actions) ?? true))
             {
-                var loquiItem = item.Actions;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IActionRecordGetter>(
-                    item: loquiItem,
+                var ActionsItem = item.Actions;
+                ((GroupXmlWriteTranslation)((IXmlItem)ActionsItem).XmlWriteTranslator).Write<IActionRecordGetter>(
+                    item: ActionsItem,
                     node: node,
                     name: nameof(item.Actions),
                     fieldIndex: (int)SkyrimMod_FieldIndex.Actions,
@@ -3625,9 +3625,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.TextureSets) ?? true))
             {
-                var loquiItem = item.TextureSets;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ITextureSetGetter>(
-                    item: loquiItem,
+                var TextureSetsItem = item.TextureSets;
+                ((GroupXmlWriteTranslation)((IXmlItem)TextureSetsItem).XmlWriteTranslator).Write<ITextureSetGetter>(
+                    item: TextureSetsItem,
                     node: node,
                     name: nameof(item.TextureSets),
                     fieldIndex: (int)SkyrimMod_FieldIndex.TextureSets,
@@ -3636,9 +3636,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Globals) ?? true))
             {
-                var loquiItem = item.Globals;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGlobalGetter>(
-                    item: loquiItem,
+                var GlobalsItem = item.Globals;
+                ((GroupXmlWriteTranslation)((IXmlItem)GlobalsItem).XmlWriteTranslator).Write<IGlobalGetter>(
+                    item: GlobalsItem,
                     node: node,
                     name: nameof(item.Globals),
                     fieldIndex: (int)SkyrimMod_FieldIndex.Globals,
@@ -3647,9 +3647,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Classes) ?? true))
             {
-                var loquiItem = item.Classes;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IClassGetter>(
-                    item: loquiItem,
+                var ClassesItem = item.Classes;
+                ((GroupXmlWriteTranslation)((IXmlItem)ClassesItem).XmlWriteTranslator).Write<IClassGetter>(
+                    item: ClassesItem,
                     node: node,
                     name: nameof(item.Classes),
                     fieldIndex: (int)SkyrimMod_FieldIndex.Classes,
@@ -3658,9 +3658,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Factions) ?? true))
             {
-                var loquiItem = item.Factions;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IFactionGetter>(
-                    item: loquiItem,
+                var FactionsItem = item.Factions;
+                ((GroupXmlWriteTranslation)((IXmlItem)FactionsItem).XmlWriteTranslator).Write<IFactionGetter>(
+                    item: FactionsItem,
                     node: node,
                     name: nameof(item.Factions),
                     fieldIndex: (int)SkyrimMod_FieldIndex.Factions,
@@ -3669,9 +3669,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.HeadParts) ?? true))
             {
-                var loquiItem = item.HeadParts;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IHeadPartGetter>(
-                    item: loquiItem,
+                var HeadPartsItem = item.HeadParts;
+                ((GroupXmlWriteTranslation)((IXmlItem)HeadPartsItem).XmlWriteTranslator).Write<IHeadPartGetter>(
+                    item: HeadPartsItem,
                     node: node,
                     name: nameof(item.HeadParts),
                     fieldIndex: (int)SkyrimMod_FieldIndex.HeadParts,
@@ -3680,9 +3680,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hairs) ?? true))
             {
-                var loquiItem = item.Hairs;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IHairGetter>(
-                    item: loquiItem,
+                var HairsItem = item.Hairs;
+                ((GroupXmlWriteTranslation)((IXmlItem)HairsItem).XmlWriteTranslator).Write<IHairGetter>(
+                    item: HairsItem,
                     node: node,
                     name: nameof(item.Hairs),
                     fieldIndex: (int)SkyrimMod_FieldIndex.Hairs,
@@ -3691,9 +3691,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Eyes) ?? true))
             {
-                var loquiItem = item.Eyes;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IEyeGetter>(
-                    item: loquiItem,
+                var EyesItem = item.Eyes;
+                ((GroupXmlWriteTranslation)((IXmlItem)EyesItem).XmlWriteTranslator).Write<IEyeGetter>(
+                    item: EyesItem,
                     node: node,
                     name: nameof(item.Eyes),
                     fieldIndex: (int)SkyrimMod_FieldIndex.Eyes,
@@ -3745,9 +3745,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ISkyrimModGetter)item,
                     name: name,
@@ -3807,9 +3807,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "GameSettings":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
                         item.GameSettings.CopyInFromXml<GameSetting>(
                             node: node,
                             translationMask: translationMask,
@@ -3826,9 +3826,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Keywords":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
                         item.Keywords.CopyInFromXml<Keyword>(
                             node: node,
                             translationMask: translationMask,
@@ -3845,9 +3845,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "LocationReferenceTypes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
                         item.LocationReferenceTypes.CopyInFromXml<LocationReferenceType>(
                             node: node,
                             translationMask: translationMask,
@@ -3864,9 +3864,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Actions":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
                         item.Actions.CopyInFromXml<ActionRecord>(
                             node: node,
                             translationMask: translationMask,
@@ -3883,9 +3883,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "TextureSets":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
                         item.TextureSets.CopyInFromXml<TextureSet>(
                             node: node,
                             translationMask: translationMask,
@@ -3902,9 +3902,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Globals":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
                         item.Globals.CopyInFromXml<Global>(
                             node: node,
                             translationMask: translationMask,
@@ -3921,9 +3921,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Classes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
                         item.Classes.CopyInFromXml<Class>(
                             node: node,
                             translationMask: translationMask,
@@ -3940,9 +3940,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Factions":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Factions);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Factions);
                         item.Factions.CopyInFromXml<Faction>(
                             node: node,
                             translationMask: translationMask,
@@ -3959,9 +3959,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "HeadParts":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.HeadParts);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.HeadParts);
                         item.HeadParts.CopyInFromXml<HeadPart>(
                             node: node,
                             translationMask: translationMask,
@@ -3978,9 +3978,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Hairs":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Hairs);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Hairs);
                         item.Hairs.CopyInFromXml<Hair>(
                             node: node,
                             translationMask: translationMask,
@@ -3997,9 +3997,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Eyes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Eyes);
                     try
                     {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Eyes);
                         item.Eyes.CopyInFromXml<Eye>(
                             node: node,
                             translationMask: translationMask,
@@ -4235,21 +4235,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter)
         {
             MasterReferences masterReferences = new MasterReferences(modKey, item.ModHeader.MasterReferences);
-            {
-                var loquiItem = item.ModHeader;
-                ((ModHeaderBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
+            var ModHeaderItem = item.ModHeader;
+            ((ModHeaderBinaryWriteTranslation)((IBinaryItem)ModHeaderItem).BinaryWriteTranslator).Write(
+                item: ModHeaderItem,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
             if (importMask?.GameSettings ?? true)
             {
                 if (item.GameSettings.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.GameSettings;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
-                        item: loquiItem,
+                    var GameSettingsItem = item.GameSettings;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
+                        item: GameSettingsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4259,9 +4257,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Keywords.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Keywords;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IKeywordGetter>(
-                        item: loquiItem,
+                    var KeywordsItem = item.Keywords;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
+                        item: KeywordsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4271,9 +4269,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.LocationReferenceTypes.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.LocationReferenceTypes;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
-                        item: loquiItem,
+                    var LocationReferenceTypesItem = item.LocationReferenceTypes;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
+                        item: LocationReferenceTypesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4283,9 +4281,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Actions.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Actions;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
-                        item: loquiItem,
+                    var ActionsItem = item.Actions;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
+                        item: ActionsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4295,9 +4293,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.TextureSets.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.TextureSets;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
-                        item: loquiItem,
+                    var TextureSetsItem = item.TextureSets;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
+                        item: TextureSetsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4307,9 +4305,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Globals.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Globals;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGlobalGetter>(
-                        item: loquiItem,
+                    var GlobalsItem = item.Globals;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
+                        item: GlobalsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4319,9 +4317,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Classes.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Classes;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClassGetter>(
-                        item: loquiItem,
+                    var ClassesItem = item.Classes;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
+                        item: ClassesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4331,9 +4329,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Factions.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Factions;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFactionGetter>(
-                        item: loquiItem,
+                    var FactionsItem = item.Factions;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
+                        item: FactionsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4343,9 +4341,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.HeadParts.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.HeadParts;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
-                        item: loquiItem,
+                    var HeadPartsItem = item.HeadParts;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
+                        item: HeadPartsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4355,9 +4353,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Hairs.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Hairs;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IHairGetter>(
-                        item: loquiItem,
+                    var HairsItem = item.Hairs;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
+                        item: HairsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4367,9 +4365,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.Eyes.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Eyes;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IEyeGetter>(
-                        item: loquiItem,
+                    var EyesItem = item.Eyes;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
+                        item: EyesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -4504,7 +4502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
 

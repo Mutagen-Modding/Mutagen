@@ -622,37 +622,37 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case FunctionConditionData_FieldIndex.Function:
-                        this.Function = (Exception)obj;
+                        this.Function = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception)obj;
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                        this.ParameterOneRecord = (Exception)obj;
+                        this.ParameterOneRecord = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                        this.ParameterOneNumber = (Exception)obj;
+                        this.ParameterOneNumber = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.ParameterOneString:
-                        this.ParameterOneString = (Exception)obj;
+                        this.ParameterOneString = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                        this.ParameterTwoRecord = (Exception)obj;
+                        this.ParameterTwoRecord = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                        this.ParameterTwoNumber = (Exception)obj;
+                        this.ParameterTwoNumber = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.ParameterTwoString:
-                        this.ParameterTwoString = (Exception)obj;
+                        this.ParameterTwoString = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception)obj;
+                        this.Unknown3 = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.Unknown4:
-                        this.Unknown4 = (Exception)obj;
+                        this.Unknown4 = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.Unknown5:
-                        this.Unknown5 = (Exception)obj;
+                        this.Unknown5 = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -682,13 +682,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFunctionConditionDataGetter)rhs, include);
 
@@ -2231,9 +2231,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Function":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Function);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Function);
                         item.Function = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2249,9 +2249,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown2":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown2);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown2);
                         item.Unknown2 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2267,9 +2267,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ParameterOneRecord":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneRecord);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneRecord);
                         item.ParameterOneRecord.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2285,9 +2285,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ParameterOneNumber":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneNumber);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneNumber);
                         item.ParameterOneNumber = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2303,9 +2303,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ParameterOneString":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneString);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneString);
                         item.ParameterOneString = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2321,9 +2321,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ParameterTwoRecord":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoRecord);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoRecord);
                         item.ParameterTwoRecord.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2339,9 +2339,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ParameterTwoNumber":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoNumber);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoNumber);
                         item.ParameterTwoNumber = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2357,9 +2357,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ParameterTwoString":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoString);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoString);
                         item.ParameterTwoString = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2375,9 +2375,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown3":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown3);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown3);
                         item.Unknown3 = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2393,9 +2393,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown4":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown4);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown4);
                         item.Unknown4 = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2411,9 +2411,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown5":
+                    errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown5);
                     try
                     {
-                        errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown5);
                         item.Unknown5 = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2633,7 +2633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFunctionConditionDataGetter)rhs, include);
 

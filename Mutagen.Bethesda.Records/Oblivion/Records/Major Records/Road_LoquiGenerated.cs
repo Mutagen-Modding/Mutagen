@@ -452,13 +452,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadGetter)rhs, include);
 
@@ -1390,7 +1390,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadGetter item,
             Road.Mask<bool> mask)
         {
-            mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint.Mask<bool>?>>>(item.Points.HasBeenSet, item.Points.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var PointsItem = item.Points;
+            mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint.Mask<bool>?>>>(PointsItem.HasBeenSet, PointsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1726,9 +1727,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Road_FieldIndex.Points),
                     transl: (XElement subNode, IRoadPointGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RoadPointXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RoadPointXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1843,9 +1844,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Points":
+                    errorMask?.PushIndex((int)Road_FieldIndex.Points);
                     try
                     {
-                        errorMask?.PushIndex((int)Road_FieldIndex.Points);
                         if (ListXmlTranslation<RoadPoint>.Instance.Parse(
                             node: node,
                             enumer: out var PointsItem,
@@ -2103,7 +2104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadGetter)rhs, include);
 

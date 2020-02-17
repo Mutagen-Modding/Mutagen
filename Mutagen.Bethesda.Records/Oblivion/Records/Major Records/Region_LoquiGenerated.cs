@@ -682,13 +682,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Region_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case Region_FieldIndex.MapColor:
-                        this.MapColor = (Exception)obj;
+                        this.MapColor = (Exception?)obj;
                         break;
                     case Region_FieldIndex.Worldspace:
-                        this.Worldspace = (Exception)obj;
+                        this.Worldspace = (Exception?)obj;
                         break;
                     case Region_FieldIndex.Areas:
                         this.Areas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>)obj;
@@ -734,13 +734,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -806,11 +806,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.MapColor = this.MapColor.Combine(rhs.MapColor);
                 ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
                 ret.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ExceptionExt.Combine(this.Areas?.Overall, rhs.Areas?.Overall), ExceptionExt.Combine(this.Areas?.Specific, rhs.Areas?.Specific));
-                ret.Objects = new MaskItem<Exception?, RegionDataObjects.ErrorMask?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), (this.Objects?.Specific as IErrorMask<RegionDataObjects.ErrorMask>)?.Combine(rhs.Objects?.Specific));
-                ret.Weather = new MaskItem<Exception?, RegionDataWeather.ErrorMask?>(ExceptionExt.Combine(this.Weather?.Overall, rhs.Weather?.Overall), (this.Weather?.Specific as IErrorMask<RegionDataWeather.ErrorMask>)?.Combine(rhs.Weather?.Specific));
-                ret.MapName = new MaskItem<Exception?, RegionDataMapName.ErrorMask?>(ExceptionExt.Combine(this.MapName?.Overall, rhs.MapName?.Overall), (this.MapName?.Specific as IErrorMask<RegionDataMapName.ErrorMask>)?.Combine(rhs.MapName?.Specific));
-                ret.Grasses = new MaskItem<Exception?, RegionDataGrasses.ErrorMask?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), (this.Grasses?.Specific as IErrorMask<RegionDataGrasses.ErrorMask>)?.Combine(rhs.Grasses?.Specific));
-                ret.Sounds = new MaskItem<Exception?, RegionDataSounds.ErrorMask?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), (this.Sounds?.Specific as IErrorMask<RegionDataSounds.ErrorMask>)?.Combine(rhs.Sounds?.Specific));
+                ret.Objects = this.Objects.Combine(rhs.Objects, (l, r) => l.Combine(r));
+                ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
+                ret.MapName = this.MapName.Combine(rhs.MapName, (l, r) => l.Combine(r));
+                ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
+                ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGetter)rhs, include);
 
@@ -1805,27 +1805,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Objects = EqualsMaskHelper.EqualsHelper(
                 item.Objects,
                 rhs.Objects,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Weather = EqualsMaskHelper.EqualsHelper(
                 item.Weather,
                 rhs.Weather,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.MapName = EqualsMaskHelper.EqualsHelper(
                 item.MapName,
                 rhs.MapName,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Grasses = EqualsMaskHelper.EqualsHelper(
                 item.Grasses,
                 rhs.Grasses,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Sounds = EqualsMaskHelper.EqualsHelper(
                 item.Sounds,
                 rhs.Sounds,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1960,7 +1960,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Icon = (item.Icon != null);
             mask.MapColor = (item.MapColor != null);
             mask.Worldspace = (item.Worldspace.FormKey != null);
-            mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>>(item.Areas.HasBeenSet, item.Areas.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var AreasItem = item.Areas;
+            mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>>(AreasItem.HasBeenSet, AreasItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemObjects = item.Objects;
             mask.Objects = new MaskItem<bool, RegionDataObjects.Mask<bool>?>(itemObjects != null, itemObjects?.GetHasBeenSetMask());
             var itemWeather = item.Weather;
@@ -2547,9 +2548,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Areas),
                     transl: (XElement subNode, IRegionAreaGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RegionAreaXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RegionAreaXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2559,9 +2560,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Objects != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
-                var loquiItem = item.Objects;
-                ((RegionDataObjectsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ObjectsItem = item.Objects;
+                ((RegionDataObjectsXmlWriteTranslation)((IXmlItem)ObjectsItem).XmlWriteTranslator).Write(
+                    item: ObjectsItem,
                     node: node,
                     name: nameof(item.Objects),
                     fieldIndex: (int)Region_FieldIndex.Objects,
@@ -2571,9 +2572,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Weather != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
             {
-                var loquiItem = item.Weather;
-                ((RegionDataWeatherXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var WeatherItem = item.Weather;
+                ((RegionDataWeatherXmlWriteTranslation)((IXmlItem)WeatherItem).XmlWriteTranslator).Write(
+                    item: WeatherItem,
                     node: node,
                     name: nameof(item.Weather),
                     fieldIndex: (int)Region_FieldIndex.Weather,
@@ -2583,9 +2584,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.MapName != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
             {
-                var loquiItem = item.MapName;
-                ((RegionDataMapNameXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var MapNameItem = item.MapName;
+                ((RegionDataMapNameXmlWriteTranslation)((IXmlItem)MapNameItem).XmlWriteTranslator).Write(
+                    item: MapNameItem,
                     node: node,
                     name: nameof(item.MapName),
                     fieldIndex: (int)Region_FieldIndex.MapName,
@@ -2595,9 +2596,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Grasses != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
             {
-                var loquiItem = item.Grasses;
-                ((RegionDataGrassesXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var GrassesItem = item.Grasses;
+                ((RegionDataGrassesXmlWriteTranslation)((IXmlItem)GrassesItem).XmlWriteTranslator).Write(
+                    item: GrassesItem,
                     node: node,
                     name: nameof(item.Grasses),
                     fieldIndex: (int)Region_FieldIndex.Grasses,
@@ -2607,9 +2608,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Sounds != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
             {
-                var loquiItem = item.Sounds;
-                ((RegionDataSoundsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var SoundsItem = item.Sounds;
+                ((RegionDataSoundsXmlWriteTranslation)((IXmlItem)SoundsItem).XmlWriteTranslator).Write(
+                    item: SoundsItem,
                     node: node,
                     name: nameof(item.Sounds),
                     fieldIndex: (int)Region_FieldIndex.Sounds,
@@ -2724,9 +2725,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Icon":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2742,9 +2743,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MapColor":
+                    errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
                         item.MapColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2760,9 +2761,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Worldspace":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
                         item.Worldspace.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2778,9 +2779,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Areas":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Areas);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Areas);
                         if (ListXmlTranslation<RegionArea>.Instance.Parse(
                             node: node,
                             enumer: out var AreasItem,
@@ -2806,9 +2807,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Objects":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Objects);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Objects);
                         item.Objects = LoquiXmlTranslation<RegionDataObjects>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2825,9 +2826,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Weather":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Weather);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Weather);
                         item.Weather = LoquiXmlTranslation<RegionDataWeather>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2844,9 +2845,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MapName":
+                    errorMask?.PushIndex((int)Region_FieldIndex.MapName);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.MapName);
                         item.MapName = LoquiXmlTranslation<RegionDataMapName>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2863,9 +2864,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Grasses":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
                         item.Grasses = LoquiXmlTranslation<RegionDataGrasses>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2882,9 +2883,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sounds":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
                     try
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
                         item.Sounds = LoquiXmlTranslation<RegionDataSounds>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -3033,16 +3034,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Areas,
                 transl: (MutagenWriter subWriter, IRegionAreaGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((RegionAreaBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((RegionAreaBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             RegionBinaryWriteTranslation.WriteBinaryRegionAreaLogic(
@@ -3165,7 +3163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGetter)rhs, include);
 

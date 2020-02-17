@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Tests
                 switch (enu)
                 {
                     case TargetGroup_FieldIndex.Do:
-                        this.Do = (Exception)obj;
+                        this.Do = (Exception?)obj;
                         break;
                     case TargetGroup_FieldIndex.Targets:
                         this.Targets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Target.ErrorMask?>>?>)obj;
@@ -338,13 +338,13 @@ namespace Mutagen.Bethesda.Tests
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITargetGroupGetter)rhs, include);
 
@@ -1244,7 +1244,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             TargetGroup.Mask<bool> mask)
         {
             mask.Do = true;
-            mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target.Mask<bool>?>>>(true, item.Targets.WithIndex().Select((i) => new MaskItemIndexed<bool, Target.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var TargetsItem = item.Targets;
+            mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target.Mask<bool>?>>>(true, TargetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Target.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1424,9 +1425,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     translationMask: translationMask?.GetSubCrystal((int)TargetGroup_FieldIndex.Targets),
                     transl: (XElement subNode, ITargetGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((TargetXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((TargetXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1478,9 +1479,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ITargetGroupGetter)item,
                     name: name,
@@ -1542,9 +1543,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "Do":
                     if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Do) ?? true))
                     {
+                        errorMask?.PushIndex((int)TargetGroup_FieldIndex.Do);
                         try
                         {
-                            errorMask?.PushIndex((int)TargetGroup_FieldIndex.Do);
                             item.Do = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1563,9 +1564,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "Targets":
                     if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Targets) ?? true))
                     {
+                        errorMask?.PushIndex((int)TargetGroup_FieldIndex.Targets);
                         try
                         {
-                            errorMask?.PushIndex((int)TargetGroup_FieldIndex.Targets);
                             if (ListXmlTranslation<Target>.Instance.Parse(
                                 node: node,
                                 enumer: out var TargetsItem,

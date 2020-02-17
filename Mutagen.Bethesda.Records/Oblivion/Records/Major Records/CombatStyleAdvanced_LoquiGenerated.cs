@@ -788,67 +788,67 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                        this.DodgeFatigueModMult = (Exception)obj;
+                        this.DodgeFatigueModMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                        this.DodgeFatigueModBase = (Exception)obj;
+                        this.DodgeFatigueModBase = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                        this.EncumbSpeedModBase = (Exception)obj;
+                        this.EncumbSpeedModBase = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                        this.EncumbSpeedModMult = (Exception)obj;
+                        this.EncumbSpeedModMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                        this.DodgeWhileUnderAttackMult = (Exception)obj;
+                        this.DodgeWhileUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                        this.DodgeNotUnderAttackMult = (Exception)obj;
+                        this.DodgeNotUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                        this.DodgeBackWhileUnderAttackMult = (Exception)obj;
+                        this.DodgeBackWhileUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                        this.DodgeBackNotUnderAttackMult = (Exception)obj;
+                        this.DodgeBackNotUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                        this.DodgeForwardWhileUnderAttackMult = (Exception)obj;
+                        this.DodgeForwardWhileUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                        this.DodgeForwardNotUnderAttackMult = (Exception)obj;
+                        this.DodgeForwardNotUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                        this.BlockSkillModifierMult = (Exception)obj;
+                        this.BlockSkillModifierMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                        this.BlockSkillModifierBase = (Exception)obj;
+                        this.BlockSkillModifierBase = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                        this.BlockWhileUnderAttackMult = (Exception)obj;
+                        this.BlockWhileUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                        this.BlockNotUnderAttackMult = (Exception)obj;
+                        this.BlockNotUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                        this.AttackSkillModifierMult = (Exception)obj;
+                        this.AttackSkillModifierMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                        this.AttackSkillModifierBase = (Exception)obj;
+                        this.AttackSkillModifierBase = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                        this.AttackWhileUnderAttackMult = (Exception)obj;
+                        this.AttackWhileUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                        this.AttackNotUnderAttackMult = (Exception)obj;
+                        this.AttackNotUnderAttackMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                        this.AttackDuringBlockMult = (Exception)obj;
+                        this.AttackDuringBlockMult = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                        this.PowerAttackFatigueModBase = (Exception)obj;
+                        this.PowerAttackFatigueModBase = (Exception?)obj;
                         break;
                     case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                        this.PowerAttackFatigueModMult = (Exception)obj;
+                        this.PowerAttackFatigueModMult = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -887,13 +887,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleAdvancedGetter)rhs, include);
 
@@ -2743,9 +2743,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ICombatStyleAdvancedGetter)item,
                     name: name,
@@ -2805,9 +2805,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "DodgeFatigueModMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
                         item.DodgeFatigueModMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2823,9 +2823,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeFatigueModBase":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
                         item.DodgeFatigueModBase = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2841,9 +2841,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EncumbSpeedModBase":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
                         item.EncumbSpeedModBase = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2859,9 +2859,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EncumbSpeedModMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
                         item.EncumbSpeedModMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2877,9 +2877,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeWhileUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
                         item.DodgeWhileUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2895,9 +2895,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeNotUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
                         item.DodgeNotUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2913,9 +2913,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeBackWhileUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
                         item.DodgeBackWhileUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2931,9 +2931,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeBackNotUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
                         item.DodgeBackNotUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2949,9 +2949,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeForwardWhileUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
                         item.DodgeForwardWhileUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2967,9 +2967,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeForwardNotUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
                         item.DodgeForwardNotUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2985,9 +2985,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BlockSkillModifierMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
                         item.BlockSkillModifierMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3003,9 +3003,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BlockSkillModifierBase":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
                         item.BlockSkillModifierBase = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3021,9 +3021,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BlockWhileUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
                         item.BlockWhileUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3039,9 +3039,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BlockNotUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
                         item.BlockNotUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3057,9 +3057,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AttackSkillModifierMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
                         item.AttackSkillModifierMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3075,9 +3075,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AttackSkillModifierBase":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
                         item.AttackSkillModifierBase = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3093,9 +3093,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AttackWhileUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
                         item.AttackWhileUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3111,9 +3111,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AttackNotUnderAttackMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
                         item.AttackNotUnderAttackMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3129,9 +3129,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AttackDuringBlockMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
                         item.AttackDuringBlockMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3147,9 +3147,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PowerAttackFatigueModBase":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
                         item.PowerAttackFatigueModBase = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3165,9 +3165,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PowerAttackFatigueModMult":
+                    errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
                         item.PowerAttackFatigueModMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3508,7 +3508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleAdvancedGetter)rhs, include);
 

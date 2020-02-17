@@ -515,28 +515,28 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RaceStats_FieldIndex.Strength:
-                        this.Strength = (Exception)obj;
+                        this.Strength = (Exception?)obj;
                         break;
                     case RaceStats_FieldIndex.Intelligence:
-                        this.Intelligence = (Exception)obj;
+                        this.Intelligence = (Exception?)obj;
                         break;
                     case RaceStats_FieldIndex.Willpower:
-                        this.Willpower = (Exception)obj;
+                        this.Willpower = (Exception?)obj;
                         break;
                     case RaceStats_FieldIndex.Agility:
-                        this.Agility = (Exception)obj;
+                        this.Agility = (Exception?)obj;
                         break;
                     case RaceStats_FieldIndex.Speed:
-                        this.Speed = (Exception)obj;
+                        this.Speed = (Exception?)obj;
                         break;
                     case RaceStats_FieldIndex.Endurance:
-                        this.Endurance = (Exception)obj;
+                        this.Endurance = (Exception?)obj;
                         break;
                     case RaceStats_FieldIndex.Personality:
-                        this.Personality = (Exception)obj;
+                        this.Personality = (Exception?)obj;
                         break;
                     case RaceStats_FieldIndex.Luck:
-                        this.Luck = (Exception)obj;
+                        this.Luck = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -562,13 +562,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGetter)rhs, include);
 
@@ -1863,9 +1863,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRaceStatsGetter)item,
                     name: name,
@@ -1925,9 +1925,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Strength":
+                    errorMask?.PushIndex((int)RaceStats_FieldIndex.Strength);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Strength);
                         item.Strength = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1943,9 +1943,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Intelligence":
+                    errorMask?.PushIndex((int)RaceStats_FieldIndex.Intelligence);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Intelligence);
                         item.Intelligence = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1961,9 +1961,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Willpower":
+                    errorMask?.PushIndex((int)RaceStats_FieldIndex.Willpower);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Willpower);
                         item.Willpower = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1979,9 +1979,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Agility":
+                    errorMask?.PushIndex((int)RaceStats_FieldIndex.Agility);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Agility);
                         item.Agility = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1997,9 +1997,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Speed":
+                    errorMask?.PushIndex((int)RaceStats_FieldIndex.Speed);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Speed);
                         item.Speed = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2015,9 +2015,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Endurance":
+                    errorMask?.PushIndex((int)RaceStats_FieldIndex.Endurance);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Endurance);
                         item.Endurance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2033,9 +2033,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Personality":
+                    errorMask?.PushIndex((int)RaceStats_FieldIndex.Personality);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Personality);
                         item.Personality = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2051,9 +2051,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Luck":
+                    errorMask?.PushIndex((int)RaceStats_FieldIndex.Luck);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Luck);
                         item.Luck = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2333,7 +2333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGetter)rhs, include);
 

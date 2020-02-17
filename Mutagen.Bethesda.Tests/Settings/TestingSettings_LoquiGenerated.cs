@@ -453,19 +453,19 @@ namespace Mutagen.Bethesda.Tests
                 switch (enu)
                 {
                     case TestingSettings_FieldIndex.TestGroupMasks:
-                        this.TestGroupMasks = (Exception)obj;
+                        this.TestGroupMasks = (Exception?)obj;
                         break;
                     case TestingSettings_FieldIndex.TestFlattenedMod:
-                        this.TestFlattenedMod = (Exception)obj;
+                        this.TestFlattenedMod = (Exception?)obj;
                         break;
                     case TestingSettings_FieldIndex.TestBenchmarks:
-                        this.TestBenchmarks = (Exception)obj;
+                        this.TestBenchmarks = (Exception?)obj;
                         break;
                     case TestingSettings_FieldIndex.TestLocators:
-                        this.TestLocators = (Exception)obj;
+                        this.TestLocators = (Exception?)obj;
                         break;
                     case TestingSettings_FieldIndex.TestRecordEnumerables:
-                        this.TestRecordEnumerables = (Exception)obj;
+                        this.TestRecordEnumerables = (Exception?)obj;
                         break;
                     case TestingSettings_FieldIndex.DataFolderLocations:
                         this.DataFolderLocations = (MaskItem<Exception?, DataFolderLocations.ErrorMask?>?)obj;
@@ -500,13 +500,13 @@ namespace Mutagen.Bethesda.Tests
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -571,8 +571,8 @@ namespace Mutagen.Bethesda.Tests
                 ret.TestBenchmarks = this.TestBenchmarks.Combine(rhs.TestBenchmarks);
                 ret.TestLocators = this.TestLocators.Combine(rhs.TestLocators);
                 ret.TestRecordEnumerables = this.TestRecordEnumerables.Combine(rhs.TestRecordEnumerables);
-                ret.DataFolderLocations = new MaskItem<Exception?, DataFolderLocations.ErrorMask?>(ExceptionExt.Combine(this.DataFolderLocations?.Overall, rhs.DataFolderLocations?.Overall), (this.DataFolderLocations?.Specific as IErrorMask<DataFolderLocations.ErrorMask>)?.Combine(rhs.DataFolderLocations?.Specific));
-                ret.PassthroughSettings = new MaskItem<Exception?, PassthroughSettings.ErrorMask?>(ExceptionExt.Combine(this.PassthroughSettings?.Overall, rhs.PassthroughSettings?.Overall), (this.PassthroughSettings?.Specific as IErrorMask<PassthroughSettings.ErrorMask>)?.Combine(rhs.PassthroughSettings?.Specific));
+                ret.DataFolderLocations = this.DataFolderLocations.Combine(rhs.DataFolderLocations, (l, r) => l.Combine(r));
+                ret.PassthroughSettings = this.PassthroughSettings.Combine(rhs.PassthroughSettings, (l, r) => l.Combine(r));
                 ret.TargetGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TargetGroup.ErrorMask?>>?>(ExceptionExt.Combine(this.TargetGroups?.Overall, rhs.TargetGroups?.Overall), ExceptionExt.Combine(this.TargetGroups?.Specific, rhs.TargetGroups?.Specific));
                 return ret;
             }
@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITestingSettingsGetter)rhs, include);
 
@@ -1562,7 +1562,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.TestRecordEnumerables = true;
             mask.DataFolderLocations = new MaskItem<bool, DataFolderLocations.Mask<bool>?>(true, item.DataFolderLocations?.GetHasBeenSetMask());
             mask.PassthroughSettings = new MaskItem<bool, PassthroughSettings.Mask<bool>?>(true, item.PassthroughSettings?.GetHasBeenSetMask());
-            mask.TargetGroups = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TargetGroup.Mask<bool>?>>>(true, item.TargetGroups.WithIndex().Select((i) => new MaskItemIndexed<bool, TargetGroup.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var TargetGroupsItem = item.TargetGroups;
+            mask.TargetGroups = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TargetGroup.Mask<bool>?>>>(true, TargetGroupsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, TargetGroup.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1841,9 +1842,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DataFolderLocations) ?? true))
             {
-                var loquiItem = item.DataFolderLocations;
-                ((DataFolderLocationsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var DataFolderLocationsItem = item.DataFolderLocations;
+                ((DataFolderLocationsXmlWriteTranslation)((IXmlItem)DataFolderLocationsItem).XmlWriteTranslator).Write(
+                    item: DataFolderLocationsItem,
                     node: node,
                     name: nameof(item.DataFolderLocations),
                     fieldIndex: (int)TestingSettings_FieldIndex.DataFolderLocations,
@@ -1852,9 +1853,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.PassthroughSettings) ?? true))
             {
-                var loquiItem = item.PassthroughSettings;
-                ((PassthroughSettingsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var PassthroughSettingsItem = item.PassthroughSettings;
+                ((PassthroughSettingsXmlWriteTranslation)((IXmlItem)PassthroughSettingsItem).XmlWriteTranslator).Write(
+                    item: PassthroughSettingsItem,
                     node: node,
                     name: nameof(item.PassthroughSettings),
                     fieldIndex: (int)TestingSettings_FieldIndex.PassthroughSettings,
@@ -1872,9 +1873,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.TargetGroups),
                     transl: (XElement subNode, ITargetGroupGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((TargetGroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((TargetGroupXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1926,9 +1927,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ITestingSettingsGetter)item,
                     name: name,
@@ -1990,9 +1991,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestGroupMasks":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestGroupMasks) ?? true))
                     {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
                             item.TestGroupMasks = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -2011,9 +2012,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestFlattenedMod":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestFlattenedMod) ?? true))
                     {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
                             item.TestFlattenedMod = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -2032,9 +2033,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestBenchmarks":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestBenchmarks) ?? true))
                     {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestBenchmarks);
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestBenchmarks);
                             item.TestBenchmarks = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -2053,9 +2054,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestLocators":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestLocators) ?? true))
                     {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestLocators);
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestLocators);
                             item.TestLocators = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -2074,9 +2075,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestRecordEnumerables":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestRecordEnumerables) ?? true))
                     {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestRecordEnumerables);
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestRecordEnumerables);
                             item.TestRecordEnumerables = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -2095,9 +2096,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "DataFolderLocations":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DataFolderLocations) ?? true))
                     {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.DataFolderLocations);
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.DataFolderLocations);
                             item.DataFolderLocations = LoquiXmlTranslation<DataFolderLocations>.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask,
@@ -2117,9 +2118,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "PassthroughSettings":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.PassthroughSettings) ?? true))
                     {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughSettings);
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughSettings);
                             item.PassthroughSettings = LoquiXmlTranslation<PassthroughSettings>.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask,
@@ -2139,9 +2140,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TargetGroups":
                     if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TargetGroups) ?? true))
                     {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TargetGroups);
                         try
                         {
-                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TargetGroups);
                             if (ListXmlTranslation<TargetGroup>.Instance.Parse(
                                 node: node,
                                 enumer: out var TargetGroupsItem,

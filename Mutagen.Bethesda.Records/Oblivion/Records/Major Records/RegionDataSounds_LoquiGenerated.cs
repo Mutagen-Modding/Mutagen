@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RegionDataSounds_FieldIndex.MusicType:
-                        this.MusicType = (Exception)obj;
+                        this.MusicType = (Exception?)obj;
                         break;
                     case RegionDataSounds_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>)obj;
@@ -482,13 +482,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataSoundsGetter)rhs, include);
 
@@ -1449,7 +1449,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionDataSounds.Mask<bool> mask)
         {
             mask.MusicType = (item.MusicType != null);
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionSound.Mask<bool>?>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var SoundsItem = item.Sounds;
+            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionSound.Mask<bool>?>>>(SoundsItem.HasBeenSet, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1738,9 +1739,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataSounds_FieldIndex.Sounds),
                     transl: (XElement subNode, IRegionSoundGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RegionSoundXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RegionSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1840,9 +1841,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "MusicType":
+                    errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.MusicType);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.MusicType);
                         item.MusicType = EnumXmlTranslation<MusicType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1858,9 +1859,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sounds":
+                    errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.Sounds);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.Sounds);
                         if (ListXmlTranslation<RegionSound>.Instance.Parse(
                             node: node,
                             enumer: out var SoundsItem,
@@ -1993,14 +1994,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: RegionDataSounds_Registration.RDSD_HEADER,
                 transl: (MutagenWriter subWriter, IRegionSoundGetter subItem) =>
                 {
-                    {
-                        var loquiItem = subItem;
-                        ((RegionSoundBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                            item: loquiItem,
-                            writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
+                    var Item = subItem;
+                    ((RegionSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
                 });
         }
 
@@ -2083,7 +2082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataSoundsGetter)rhs, include);
 

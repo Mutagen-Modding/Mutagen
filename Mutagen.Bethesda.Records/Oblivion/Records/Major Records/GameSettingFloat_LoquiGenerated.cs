@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case GameSettingFloat_FieldIndex.Data:
-                        this.Data = (Exception)obj;
+                        this.Data = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -402,13 +402,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingFloatGetter)rhs, include);
 
@@ -1794,9 +1794,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Data":
+                    errorMask?.PushIndex((int)GameSettingFloat_FieldIndex.Data);
                     try
                     {
-                        errorMask?.PushIndex((int)GameSettingFloat_FieldIndex.Data);
                         item.Data = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingFloatGetter)rhs, include);
 

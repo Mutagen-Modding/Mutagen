@@ -661,31 +661,31 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Potion_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Potion_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case Potion_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case Potion_FieldIndex.Script:
-                        this.Script = (Exception)obj;
+                        this.Script = (Exception?)obj;
                         break;
                     case Potion_FieldIndex.Weight:
-                        this.Weight = (Exception)obj;
+                        this.Weight = (Exception?)obj;
                         break;
                     case Potion_FieldIndex.Value:
-                        this.Value = (Exception)obj;
+                        this.Value = (Exception?)obj;
                         break;
                     case Potion_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Potion_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
                     case Potion_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = (Exception)obj;
+                        this.ENITDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -713,13 +713,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPotionGetter)rhs, include);
 
@@ -1809,7 +1809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Script = object.Equals(item.Script, rhs.Script);
@@ -1952,7 +1952,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Weight = (item.Weight != null);
             mask.Value = true;
             mask.Flags = true;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var EffectsItem = item.Effects;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(EffectsItem.HasBeenSet, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.ENITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2439,9 +2440,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Potion_FieldIndex.Model,
@@ -2511,9 +2512,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Potion_FieldIndex.Effects),
                     transl: (XElement subNode, IEffectGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((EffectXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((EffectXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2652,9 +2653,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2670,9 +2671,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Model":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2689,9 +2690,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2707,9 +2708,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Script":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.Script);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2725,9 +2726,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Weight":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.Weight);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.Weight);
                         item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2743,9 +2744,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Value":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.Value);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.Value);
                         item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2762,9 +2763,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.ENITDataTypeState |= Potion.ENITDataType.Has;
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<IngredientFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2780,9 +2781,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Effects":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.Effects);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.Effects);
                         if (ListXmlTranslation<Effect>.Instance.Parse(
                             node: node,
                             enumer: out var EffectsItem,
@@ -2808,9 +2809,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ENITDataTypeState":
+                    errorMask?.PushIndex((int)Potion_FieldIndex.ENITDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Potion_FieldIndex.ENITDataTypeState);
                         item.ENITDataTypeState = EnumXmlTranslation<Potion.ENITDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2938,16 +2939,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Potion_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2979,16 +2977,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Effects,
                 transl: (MutagenWriter subWriter, IEffectGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((EffectBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((EffectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -3104,7 +3099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPotionGetter)rhs, include);
 

@@ -523,28 +523,28 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Condition_FieldIndex.CompareOperator:
-                        this.CompareOperator = (Exception)obj;
+                        this.CompareOperator = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.Fluff:
-                        this.Fluff = (Exception)obj;
+                        this.Fluff = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.ComparisonValue:
-                        this.ComparisonValue = (Exception)obj;
+                        this.ComparisonValue = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.Function:
-                        this.Function = (Exception)obj;
+                        this.Function = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.FirstParameter:
-                        this.FirstParameter = (Exception)obj;
+                        this.FirstParameter = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.SecondParameter:
-                        this.SecondParameter = (Exception)obj;
+                        this.SecondParameter = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.ThirdParameter:
-                        this.ThirdParameter = (Exception)obj;
+                        this.ThirdParameter = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -570,13 +570,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
 
@@ -1905,9 +1905,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IConditionGetter)item,
                     name: name,
@@ -1967,9 +1967,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "CompareOperator":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
                         item.CompareOperator = EnumXmlTranslation<CompareOperator>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1985,9 +1985,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Condition.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2003,9 +2003,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
                         item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 3,
@@ -2022,9 +2022,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ComparisonValue":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                         item.ComparisonValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2040,9 +2040,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Function":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.Function);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.Function);
                         item.Function = EnumXmlTranslation<Function>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2058,9 +2058,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FirstParameter":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
                         item.FirstParameter = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2076,9 +2076,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SecondParameter":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
                         item.SecondParameter = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2094,9 +2094,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ThirdParameter":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                         item.ThirdParameter = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2423,7 +2423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
 

@@ -414,13 +414,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case TeleportDestination_FieldIndex.Destination:
-                        this.Destination = (Exception)obj;
+                        this.Destination = (Exception?)obj;
                         break;
                     case TeleportDestination_FieldIndex.Position:
-                        this.Position = (Exception)obj;
+                        this.Position = (Exception?)obj;
                         break;
                     case TeleportDestination_FieldIndex.Rotation:
-                        this.Rotation = (Exception)obj;
+                        this.Rotation = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -441,13 +441,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
 
@@ -1548,9 +1548,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ITeleportDestinationGetter)item,
                     name: name,
@@ -1610,9 +1610,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Destination":
+                    errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
                     try
                     {
-                        errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
                         item.Destination.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1628,9 +1628,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Position":
+                    errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
                     try
                     {
-                        errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
                         item.Position = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1646,9 +1646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Rotation":
+                    errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
                     try
                     {
-                        errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
                         item.Rotation = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
 

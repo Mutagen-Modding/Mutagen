@@ -1179,91 +1179,91 @@ namespace Mutagen.Bethesda.Skyrim
                         this.SkillBoost6 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
                         break;
                     case RaceData_FieldIndex.Fluff:
-                        this.Fluff = (Exception)obj;
+                        this.Fluff = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.MaleHeight:
-                        this.MaleHeight = (Exception)obj;
+                        this.MaleHeight = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.FemaleHeight:
-                        this.FemaleHeight = (Exception)obj;
+                        this.FemaleHeight = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.MaleWeight:
-                        this.MaleWeight = (Exception)obj;
+                        this.MaleWeight = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.FemaleWeight:
-                        this.FemaleWeight = (Exception)obj;
+                        this.FemaleWeight = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.StartingHealth:
-                        this.StartingHealth = (Exception)obj;
+                        this.StartingHealth = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.StartingMagicka:
-                        this.StartingMagicka = (Exception)obj;
+                        this.StartingMagicka = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.StartingStamina:
-                        this.StartingStamina = (Exception)obj;
+                        this.StartingStamina = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.BaseCarryWeight:
-                        this.BaseCarryWeight = (Exception)obj;
+                        this.BaseCarryWeight = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.BaseMass:
-                        this.BaseMass = (Exception)obj;
+                        this.BaseMass = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.AccelerationRate:
-                        this.AccelerationRate = (Exception)obj;
+                        this.AccelerationRate = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.DecelerationRate:
-                        this.DecelerationRate = (Exception)obj;
+                        this.DecelerationRate = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.Size:
-                        this.Size = (Exception)obj;
+                        this.Size = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.HeadBipedObject:
-                        this.HeadBipedObject = (Exception)obj;
+                        this.HeadBipedObject = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.HairBipedObject:
-                        this.HairBipedObject = (Exception)obj;
+                        this.HairBipedObject = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.InjuredHealthPercent:
-                        this.InjuredHealthPercent = (Exception)obj;
+                        this.InjuredHealthPercent = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.ShieldBipedObject:
-                        this.ShieldBipedObject = (Exception)obj;
+                        this.ShieldBipedObject = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.HealthRegen:
-                        this.HealthRegen = (Exception)obj;
+                        this.HealthRegen = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.MagickaRegen:
-                        this.MagickaRegen = (Exception)obj;
+                        this.MagickaRegen = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.StaminaRegen:
-                        this.StaminaRegen = (Exception)obj;
+                        this.StaminaRegen = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.UnarmedDamage:
-                        this.UnarmedDamage = (Exception)obj;
+                        this.UnarmedDamage = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.UnarmedReach:
-                        this.UnarmedReach = (Exception)obj;
+                        this.UnarmedReach = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.BodyBipedObject:
-                        this.BodyBipedObject = (Exception)obj;
+                        this.BodyBipedObject = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.AimAngleTolerance:
-                        this.AimAngleTolerance = (Exception)obj;
+                        this.AimAngleTolerance = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.FlightRadius:
-                        this.FlightRadius = (Exception)obj;
+                        this.FlightRadius = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.AngularAccelerationRate:
-                        this.AngularAccelerationRate = (Exception)obj;
+                        this.AngularAccelerationRate = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.AngularTolerance:
-                        this.AngularTolerance = (Exception)obj;
+                        this.AngularTolerance = (Exception?)obj;
                         break;
                     case RaceData_FieldIndex.Flags2:
-                        this.Flags2 = (Exception)obj;
+                        this.Flags2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1317,13 +1317,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1387,13 +1387,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SkillBoost0 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ExceptionExt.Combine(this.SkillBoost0?.Overall, rhs.SkillBoost0?.Overall), (this.SkillBoost0?.Specific as IErrorMask<SkillBoost.ErrorMask>)?.Combine(rhs.SkillBoost0?.Specific));
-                ret.SkillBoost1 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ExceptionExt.Combine(this.SkillBoost1?.Overall, rhs.SkillBoost1?.Overall), (this.SkillBoost1?.Specific as IErrorMask<SkillBoost.ErrorMask>)?.Combine(rhs.SkillBoost1?.Specific));
-                ret.SkillBoost2 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ExceptionExt.Combine(this.SkillBoost2?.Overall, rhs.SkillBoost2?.Overall), (this.SkillBoost2?.Specific as IErrorMask<SkillBoost.ErrorMask>)?.Combine(rhs.SkillBoost2?.Specific));
-                ret.SkillBoost3 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ExceptionExt.Combine(this.SkillBoost3?.Overall, rhs.SkillBoost3?.Overall), (this.SkillBoost3?.Specific as IErrorMask<SkillBoost.ErrorMask>)?.Combine(rhs.SkillBoost3?.Specific));
-                ret.SkillBoost4 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ExceptionExt.Combine(this.SkillBoost4?.Overall, rhs.SkillBoost4?.Overall), (this.SkillBoost4?.Specific as IErrorMask<SkillBoost.ErrorMask>)?.Combine(rhs.SkillBoost4?.Specific));
-                ret.SkillBoost5 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ExceptionExt.Combine(this.SkillBoost5?.Overall, rhs.SkillBoost5?.Overall), (this.SkillBoost5?.Specific as IErrorMask<SkillBoost.ErrorMask>)?.Combine(rhs.SkillBoost5?.Specific));
-                ret.SkillBoost6 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ExceptionExt.Combine(this.SkillBoost6?.Overall, rhs.SkillBoost6?.Overall), (this.SkillBoost6?.Specific as IErrorMask<SkillBoost.ErrorMask>)?.Combine(rhs.SkillBoost6?.Specific));
+                ret.SkillBoost0 = this.SkillBoost0.Combine(rhs.SkillBoost0, (l, r) => l.Combine(r));
+                ret.SkillBoost1 = this.SkillBoost1.Combine(rhs.SkillBoost1, (l, r) => l.Combine(r));
+                ret.SkillBoost2 = this.SkillBoost2.Combine(rhs.SkillBoost2, (l, r) => l.Combine(r));
+                ret.SkillBoost3 = this.SkillBoost3.Combine(rhs.SkillBoost3, (l, r) => l.Combine(r));
+                ret.SkillBoost4 = this.SkillBoost4.Combine(rhs.SkillBoost4, (l, r) => l.Combine(r));
+                ret.SkillBoost5 = this.SkillBoost5.Combine(rhs.SkillBoost5, (l, r) => l.Combine(r));
+                ret.SkillBoost6 = this.SkillBoost6.Combine(rhs.SkillBoost6, (l, r) => l.Combine(r));
                 ret.Fluff = this.Fluff.Combine(rhs.Fluff);
                 ret.MaleHeight = this.MaleHeight.Combine(rhs.MaleHeight);
                 ret.FemaleHeight = this.FemaleHeight.Combine(rhs.FemaleHeight);
@@ -1626,7 +1626,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceDataGetter)rhs, include);
 
@@ -3588,9 +3588,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost0) ?? true))
             {
-                var loquiItem = item.SkillBoost0;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var SkillBoost0Item = item.SkillBoost0;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost0Item).XmlWriteTranslator).Write(
+                    item: SkillBoost0Item,
                     node: node,
                     name: nameof(item.SkillBoost0),
                     fieldIndex: (int)RaceData_FieldIndex.SkillBoost0,
@@ -3599,9 +3599,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost1) ?? true))
             {
-                var loquiItem = item.SkillBoost1;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var SkillBoost1Item = item.SkillBoost1;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost1Item).XmlWriteTranslator).Write(
+                    item: SkillBoost1Item,
                     node: node,
                     name: nameof(item.SkillBoost1),
                     fieldIndex: (int)RaceData_FieldIndex.SkillBoost1,
@@ -3610,9 +3610,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost2) ?? true))
             {
-                var loquiItem = item.SkillBoost2;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var SkillBoost2Item = item.SkillBoost2;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost2Item).XmlWriteTranslator).Write(
+                    item: SkillBoost2Item,
                     node: node,
                     name: nameof(item.SkillBoost2),
                     fieldIndex: (int)RaceData_FieldIndex.SkillBoost2,
@@ -3621,9 +3621,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost3) ?? true))
             {
-                var loquiItem = item.SkillBoost3;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var SkillBoost3Item = item.SkillBoost3;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost3Item).XmlWriteTranslator).Write(
+                    item: SkillBoost3Item,
                     node: node,
                     name: nameof(item.SkillBoost3),
                     fieldIndex: (int)RaceData_FieldIndex.SkillBoost3,
@@ -3632,9 +3632,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost4) ?? true))
             {
-                var loquiItem = item.SkillBoost4;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var SkillBoost4Item = item.SkillBoost4;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost4Item).XmlWriteTranslator).Write(
+                    item: SkillBoost4Item,
                     node: node,
                     name: nameof(item.SkillBoost4),
                     fieldIndex: (int)RaceData_FieldIndex.SkillBoost4,
@@ -3643,9 +3643,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost5) ?? true))
             {
-                var loquiItem = item.SkillBoost5;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var SkillBoost5Item = item.SkillBoost5;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost5Item).XmlWriteTranslator).Write(
+                    item: SkillBoost5Item,
                     node: node,
                     name: nameof(item.SkillBoost5),
                     fieldIndex: (int)RaceData_FieldIndex.SkillBoost5,
@@ -3654,9 +3654,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost6) ?? true))
             {
-                var loquiItem = item.SkillBoost6;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var SkillBoost6Item = item.SkillBoost6;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost6Item).XmlWriteTranslator).Write(
+                    item: SkillBoost6Item,
                     node: node,
                     name: nameof(item.SkillBoost6),
                     fieldIndex: (int)RaceData_FieldIndex.SkillBoost6,
@@ -3969,9 +3969,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRaceDataGetter)item,
                     name: name,
@@ -4031,9 +4031,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "SkillBoost0":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost0);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost0);
                         item.SkillBoost0 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4050,9 +4050,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SkillBoost1":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost1);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost1);
                         item.SkillBoost1 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4069,9 +4069,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SkillBoost2":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost2);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost2);
                         item.SkillBoost2 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4088,9 +4088,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SkillBoost3":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost3);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost3);
                         item.SkillBoost3 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4107,9 +4107,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SkillBoost4":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost4);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost4);
                         item.SkillBoost4 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4126,9 +4126,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SkillBoost5":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost5);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost5);
                         item.SkillBoost5 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4145,9 +4145,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SkillBoost6":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost6);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost6);
                         item.SkillBoost6 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4164,9 +4164,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Fluff":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.Fluff);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.Fluff);
                         item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 2,
@@ -4183,9 +4183,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MaleHeight":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.MaleHeight);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.MaleHeight);
                         item.MaleHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4201,9 +4201,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FemaleHeight":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.FemaleHeight);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.FemaleHeight);
                         item.FemaleHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4219,9 +4219,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MaleWeight":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.MaleWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.MaleWeight);
                         item.MaleWeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4237,9 +4237,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FemaleWeight":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.FemaleWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.FemaleWeight);
                         item.FemaleWeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4255,9 +4255,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Race.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4273,9 +4273,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "StartingHealth":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.StartingHealth);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.StartingHealth);
                         item.StartingHealth = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4291,9 +4291,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "StartingMagicka":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.StartingMagicka);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.StartingMagicka);
                         item.StartingMagicka = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4309,9 +4309,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "StartingStamina":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.StartingStamina);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.StartingStamina);
                         item.StartingStamina = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4327,9 +4327,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BaseCarryWeight":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.BaseCarryWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.BaseCarryWeight);
                         item.BaseCarryWeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4345,9 +4345,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BaseMass":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.BaseMass);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.BaseMass);
                         item.BaseMass = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4363,9 +4363,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AccelerationRate":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.AccelerationRate);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.AccelerationRate);
                         item.AccelerationRate = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4381,9 +4381,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DecelerationRate":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.DecelerationRate);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.DecelerationRate);
                         item.DecelerationRate = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4399,9 +4399,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Size":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.Size);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.Size);
                         item.Size = EnumXmlTranslation<Race.Size>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4417,9 +4417,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "HeadBipedObject":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.HeadBipedObject);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.HeadBipedObject);
                         item.HeadBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4435,9 +4435,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "HairBipedObject":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.HairBipedObject);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.HairBipedObject);
                         item.HairBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4453,9 +4453,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "InjuredHealthPercent":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.InjuredHealthPercent);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.InjuredHealthPercent);
                         item.InjuredHealthPercent = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4471,9 +4471,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ShieldBipedObject":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.ShieldBipedObject);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.ShieldBipedObject);
                         item.ShieldBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4489,9 +4489,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "HealthRegen":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.HealthRegen);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.HealthRegen);
                         item.HealthRegen = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4507,9 +4507,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MagickaRegen":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.MagickaRegen);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.MagickaRegen);
                         item.MagickaRegen = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4525,9 +4525,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "StaminaRegen":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.StaminaRegen);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.StaminaRegen);
                         item.StaminaRegen = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4543,9 +4543,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "UnarmedDamage":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.UnarmedDamage);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.UnarmedDamage);
                         item.UnarmedDamage = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4561,9 +4561,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "UnarmedReach":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.UnarmedReach);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.UnarmedReach);
                         item.UnarmedReach = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4579,9 +4579,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BodyBipedObject":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.BodyBipedObject);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.BodyBipedObject);
                         item.BodyBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4597,9 +4597,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AimAngleTolerance":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.AimAngleTolerance);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.AimAngleTolerance);
                         item.AimAngleTolerance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4615,9 +4615,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FlightRadius":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.FlightRadius);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.FlightRadius);
                         item.FlightRadius = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4633,9 +4633,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AngularAccelerationRate":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.AngularAccelerationRate);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.AngularAccelerationRate);
                         item.AngularAccelerationRate = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4651,9 +4651,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AngularTolerance":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.AngularTolerance);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.AngularTolerance);
                         item.AngularTolerance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4669,9 +4669,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags2":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.Flags2);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceData_FieldIndex.Flags2);
                         item.Flags2 = EnumXmlTranslation<Race.Flag2>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4878,62 +4878,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            {
-                var loquiItem = item.SkillBoost0;
-                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
-            {
-                var loquiItem = item.SkillBoost1;
-                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
-            {
-                var loquiItem = item.SkillBoost2;
-                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
-            {
-                var loquiItem = item.SkillBoost3;
-                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
-            {
-                var loquiItem = item.SkillBoost4;
-                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
-            {
-                var loquiItem = item.SkillBoost5;
-                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
-            {
-                var loquiItem = item.SkillBoost6;
-                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
+            var SkillBoost0Item = item.SkillBoost0;
+            ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost0Item).BinaryWriteTranslator).Write(
+                item: SkillBoost0Item,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
+            var SkillBoost1Item = item.SkillBoost1;
+            ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost1Item).BinaryWriteTranslator).Write(
+                item: SkillBoost1Item,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
+            var SkillBoost2Item = item.SkillBoost2;
+            ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost2Item).BinaryWriteTranslator).Write(
+                item: SkillBoost2Item,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
+            var SkillBoost3Item = item.SkillBoost3;
+            ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost3Item).BinaryWriteTranslator).Write(
+                item: SkillBoost3Item,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
+            var SkillBoost4Item = item.SkillBoost4;
+            ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost4Item).BinaryWriteTranslator).Write(
+                item: SkillBoost4Item,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
+            var SkillBoost5Item = item.SkillBoost5;
+            ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost5Item).BinaryWriteTranslator).Write(
+                item: SkillBoost5Item,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
+            var SkillBoost6Item = item.SkillBoost6;
+            ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost6Item).BinaryWriteTranslator).Write(
+                item: SkillBoost6Item,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);
@@ -5135,7 +5121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceDataGetter)rhs, include);
 

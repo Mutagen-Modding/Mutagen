@@ -391,13 +391,13 @@ namespace Mutagen.Bethesda.Tests
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRecordInterestGetter)rhs, include);
 
@@ -1583,9 +1583,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRecordInterestGetter)item,
                     name: name,
@@ -1647,9 +1647,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "InterestingTypes":
                     if ((translationMask?.GetShouldTranslate((int)RecordInterest_FieldIndex.InterestingTypes) ?? true))
                     {
+                        errorMask?.PushIndex((int)RecordInterest_FieldIndex.InterestingTypes);
                         try
                         {
-                            errorMask?.PushIndex((int)RecordInterest_FieldIndex.InterestingTypes);
                             if (ListXmlTranslation<String>.Instance.Parse(
                                 node: node,
                                 enumer: out var InterestingTypesItem,
@@ -1678,9 +1678,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "UninterestingTypes":
                     if ((translationMask?.GetShouldTranslate((int)RecordInterest_FieldIndex.UninterestingTypes) ?? true))
                     {
+                        errorMask?.PushIndex((int)RecordInterest_FieldIndex.UninterestingTypes);
                         try
                         {
-                            errorMask?.PushIndex((int)RecordInterest_FieldIndex.UninterestingTypes);
                             if (ListXmlTranslation<String>.Instance.Parse(
                                 node: node,
                                 enumer: out var UninterestingTypesItem,

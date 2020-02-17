@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Generation
                     List<string> conditions = new List<string>();
                     if (field.HasBeenSet)
                     {
-                        conditions.Add($"{field.HasBeenSetAccessor(getter: true, accessor: new Accessor(field, "item."))}");
+                        conditions.Add($"{field.HasBeenSetAccessor(getter: true, accessor: Accessor.FromType(field, "item"))}");
                     }
                     if (this.TranslationMaskParameter)
                     {
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
                             objGen: obj,
                             typeGen: field,
                             writerAccessor: $"{XmlTranslationModule.XElementLine.GetParameterName(obj)}",
-                            itemAccessor: new Accessor(field, "item."),
+                            itemAccessor: Accessor.FromType(field, "item"),
                             errorMaskAccessor: $"errorMask",
                             translationMaskAccessor: "translationMask",
                             nameAccessor: $"nameof(item.{field.Name})");
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Generation
                                                 objGen: obj,
                                                 typeGen: subField.Field,
                                                 nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
-                                                itemAccessor: new Accessor(subField.Field, "item."),
+                                                itemAccessor: Accessor.FromType(subField.Field, "item"),
                                                 translationMaskAccessor: "translationMask",
                                                 errorMaskAccessor: $"errorMask");
                                         }
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Generation
                                             objGen: obj,
                                             typeGen: field,
                                             nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
-                                            itemAccessor: new Accessor(field, "item."),
+                                            itemAccessor: Accessor.FromType(field, "item"),
                                             translationMaskAccessor: "translationMask",
                                             errorMaskAccessor: $"errorMask");
                                     }
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Generation
                                             objGen: obj,
                                             typeGen: subField.Field,
                                             nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
-                                            itemAccessor: new Accessor(subField.Field, "item."),
+                                            itemAccessor: Accessor.FromType(subField.Field, "item"),
                                             translationMaskAccessor: "translationMask",
                                             errorMaskAccessor: $"errorMask");
                                     }
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Generation
                                         objGen: obj,
                                         typeGen: field,
                                         nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
-                                        itemAccessor: new Accessor(field, "item."),
+                                        itemAccessor: Accessor.FromType(field, "item"),
                                         translationMaskAccessor: "translationMask",
                                         errorMaskAccessor: $"errorMask");
                                 }

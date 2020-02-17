@@ -600,16 +600,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Faction_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.Relations:
                         this.Relations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>)obj;
                         break;
                     case Faction_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.CrimeGoldMultiplier:
-                        this.CrimeGoldMultiplier = (Exception)obj;
+                        this.CrimeGoldMultiplier = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.Ranks:
                         this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
@@ -636,13 +636,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
@@ -1779,10 +1779,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Faction.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var RelationsItem = item.Relations;
+            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>>(RelationsItem.HasBeenSet, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Flags = (item.Flags != null);
             mask.CrimeGoldMultiplier = (item.CrimeGoldMultiplier != null);
-            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var RanksItem = item.Ranks;
+            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>>(RanksItem.HasBeenSet, RanksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2192,9 +2194,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
                     transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RelationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2233,9 +2235,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
                     transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RankXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RankXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2350,9 +2352,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2368,9 +2370,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Relations":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                         if (ListXmlTranslation<Relation>.Instance.Parse(
                             node: node,
                             enumer: out var RelationsItem,
@@ -2396,9 +2398,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2414,9 +2416,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CrimeGoldMultiplier":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
                         item.CrimeGoldMultiplier = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2432,9 +2434,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Ranks":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                         if (ListXmlTranslation<Rank>.Instance.Parse(
                             node: node,
                             enumer: out var RanksItem,
@@ -2566,16 +2568,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Relations,
                 transl: (MutagenWriter subWriter, IRelationGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((RelationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((RelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.WriteNullable(
@@ -2592,16 +2591,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Ranks,
                 transl: (MutagenWriter subWriter, IRankGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((RankBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((RankBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -2704,7 +2700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 

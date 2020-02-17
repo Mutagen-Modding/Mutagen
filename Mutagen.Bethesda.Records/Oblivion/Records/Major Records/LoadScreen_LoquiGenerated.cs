@@ -490,10 +490,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case LoadScreen_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case LoadScreen_FieldIndex.Description:
-                        this.Description = (Exception)obj;
+                        this.Description = (Exception?)obj;
                         break;
                     case LoadScreen_FieldIndex.Locations:
                         this.Locations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LoadScreenLocation.ErrorMask?>>?>)obj;
@@ -518,13 +518,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenGetter)rhs, include);
 
@@ -1541,7 +1541,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Icon = (item.Icon != null);
             mask.Description = (item.Description != null);
-            mask.Locations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LoadScreenLocation.Mask<bool>?>>>(item.Locations.HasBeenSet, item.Locations.WithIndex().Select((i) => new MaskItemIndexed<bool, LoadScreenLocation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var LocationsItem = item.Locations;
+            mask.Locations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LoadScreenLocation.Mask<bool>?>>>(LocationsItem.HasBeenSet, LocationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LoadScreenLocation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1919,9 +1920,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Locations),
                     transl: (XElement subNode, ILoadScreenLocationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((LoadScreenLocationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((LoadScreenLocationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2036,9 +2037,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Icon":
+                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2054,9 +2055,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Description":
+                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.Description);
                     try
                     {
-                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Description);
                         item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2072,9 +2073,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Locations":
+                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.Locations);
                     try
                     {
-                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Locations);
                         if (ListXmlTranslation<LoadScreenLocation>.Instance.Parse(
                             node: node,
                             enumer: out var LocationsItem,
@@ -2211,16 +2212,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Locations,
                 transl: (MutagenWriter subWriter, ILoadScreenLocationGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((LoadScreenLocationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((LoadScreenLocationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -2323,7 +2321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenGetter)rhs, include);
 

@@ -696,13 +696,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case PlacedNPC_FieldIndex.Base:
-                        this.Base = (Exception)obj;
+                        this.Base = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.XPCIFluff:
-                        this.XPCIFluff = (Exception)obj;
+                        this.XPCIFluff = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.FULLFluff:
-                        this.FULLFluff = (Exception)obj;
+                        this.FULLFluff = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.DistantLODData:
                         this.DistantLODData = (MaskItem<Exception?, DistantLODData.ErrorMask?>?)obj;
@@ -711,25 +711,25 @@ namespace Mutagen.Bethesda.Oblivion
                         this.EnableParent = (MaskItem<Exception?, EnableParent.ErrorMask?>?)obj;
                         break;
                     case PlacedNPC_FieldIndex.MerchantContainer:
-                        this.MerchantContainer = (Exception)obj;
+                        this.MerchantContainer = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.Horse:
-                        this.Horse = (Exception)obj;
+                        this.Horse = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.RagdollData:
-                        this.RagdollData = (Exception)obj;
+                        this.RagdollData = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.Scale:
-                        this.Scale = (Exception)obj;
+                        this.Scale = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.Position:
-                        this.Position = (Exception)obj;
+                        this.Position = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.Rotation:
-                        this.Rotation = (Exception)obj;
+                        this.Rotation = (Exception?)obj;
                         break;
                     case PlacedNPC_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -760,13 +760,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -810,8 +810,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Base = this.Base.Combine(rhs.Base);
                 ret.XPCIFluff = this.XPCIFluff.Combine(rhs.XPCIFluff);
                 ret.FULLFluff = this.FULLFluff.Combine(rhs.FULLFluff);
-                ret.DistantLODData = new MaskItem<Exception?, DistantLODData.ErrorMask?>(ExceptionExt.Combine(this.DistantLODData?.Overall, rhs.DistantLODData?.Overall), (this.DistantLODData?.Specific as IErrorMask<DistantLODData.ErrorMask>)?.Combine(rhs.DistantLODData?.Specific));
-                ret.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ExceptionExt.Combine(this.EnableParent?.Overall, rhs.EnableParent?.Overall), (this.EnableParent?.Specific as IErrorMask<EnableParent.ErrorMask>)?.Combine(rhs.EnableParent?.Specific));
+                ret.DistantLODData = this.DistantLODData.Combine(rhs.DistantLODData, (l, r) => l.Combine(r));
+                ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
                 ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
                 ret.Horse = this.Horse.Combine(rhs.Horse);
                 ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedNPCGetter)rhs, include);
 
@@ -1914,12 +1914,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
                 item.DistantLODData,
                 rhs.DistantLODData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
                 rhs.EnableParent,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.MerchantContainer = object.Equals(item.MerchantContainer, rhs.MerchantContainer);
             ret.Horse = object.Equals(item.Horse, rhs.Horse);
@@ -2564,9 +2564,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.DistantLODData != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.DistantLODData) ?? true))
             {
-                var loquiItem = item.DistantLODData;
-                ((DistantLODDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var DistantLODDataItem = item.DistantLODData;
+                ((DistantLODDataXmlWriteTranslation)((IXmlItem)DistantLODDataItem).XmlWriteTranslator).Write(
+                    item: DistantLODDataItem,
                     node: node,
                     name: nameof(item.DistantLODData),
                     fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
@@ -2576,9 +2576,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.EnableParent != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.EnableParent) ?? true))
             {
-                var loquiItem = item.EnableParent;
-                ((EnableParentXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var EnableParentItem = item.EnableParent;
+                ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
+                    item: EnableParentItem,
                     node: node,
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
@@ -2763,9 +2763,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Base":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
                         item.Base.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2781,9 +2781,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "XPCIFluff":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.XPCIFluff);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.XPCIFluff);
                         item.XPCIFluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2799,9 +2799,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FULLFluff":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.FULLFluff);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.FULLFluff);
                         item.FULLFluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2817,9 +2817,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DistantLODData":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
                         item.DistantLODData = LoquiXmlTranslation<DistantLODData>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2836,9 +2836,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EnableParent":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
                         item.EnableParent = LoquiXmlTranslation<EnableParent>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2855,9 +2855,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MerchantContainer":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
                         item.MerchantContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2873,9 +2873,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Horse":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Horse);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Horse);
                         item.Horse.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2891,9 +2891,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RagdollData":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.RagdollData);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.RagdollData);
                         item.RagdollData = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2909,9 +2909,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Scale":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Scale);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Scale);
                         item.Scale = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2927,9 +2927,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Position":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Position);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Position);
                         item.Position = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2946,9 +2946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= PlacedNPC.DATADataType.Has;
                     break;
                 case "Rotation":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Rotation);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Rotation);
                         item.Rotation = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2964,9 +2964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<PlacedNPC.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3108,27 +3108,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.FULLFluff,
                     header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.FULL_HEADER));
             }
+            if (item.DistantLODData.TryGet(out var DistantLODDataItem))
             {
-                var loquiItem = item.DistantLODData;
-                if (loquiItem != null)
-                {
-                    ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)DistantLODDataItem).BinaryWriteTranslator).Write(
+                    item: DistantLODDataItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
+            if (item.EnableParent.TryGet(out var EnableParentItem))
             {
-                var loquiItem = item.EnableParent;
-                if (loquiItem != null)
-                {
-                    ((EnableParentBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
+                    item: EnableParentItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3263,7 +3257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedNPCGetter)rhs, include);
 

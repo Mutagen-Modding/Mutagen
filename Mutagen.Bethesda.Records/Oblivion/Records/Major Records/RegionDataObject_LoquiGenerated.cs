@@ -724,55 +724,55 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RegionDataObject_FieldIndex.Object:
-                        this.Object = (Exception)obj;
+                        this.Object = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.ParentIndex:
-                        this.ParentIndex = (Exception)obj;
+                        this.ParentIndex = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception)obj;
+                        this.Unknown1 = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.Density:
-                        this.Density = (Exception)obj;
+                        this.Density = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.Clustering:
-                        this.Clustering = (Exception)obj;
+                        this.Clustering = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.MinSlope:
-                        this.MinSlope = (Exception)obj;
+                        this.MinSlope = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.MaxSlope:
-                        this.MaxSlope = (Exception)obj;
+                        this.MaxSlope = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                        this.RadiusWrtPercent = (Exception)obj;
+                        this.RadiusWrtPercent = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.Radius:
-                        this.Radius = (Exception)obj;
+                        this.Radius = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.MinHeight:
-                        this.MinHeight = (Exception)obj;
+                        this.MinHeight = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.MaxHeight:
-                        this.MaxHeight = (Exception)obj;
+                        this.MaxHeight = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.Sink:
-                        this.Sink = (Exception)obj;
+                        this.Sink = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.SinkVariance:
-                        this.SinkVariance = (Exception)obj;
+                        this.SinkVariance = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.SizeVariance:
-                        this.SizeVariance = (Exception)obj;
+                        this.SizeVariance = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.AngleVariance:
-                        this.AngleVariance = (Exception)obj;
+                        this.AngleVariance = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception)obj;
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -807,13 +807,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
 
@@ -2496,9 +2496,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRegionDataObjectGetter)item,
                     name: name,
@@ -2558,9 +2558,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Object":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
                         item.Object.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2576,9 +2576,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParentIndex":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
                         item.ParentIndex = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2594,9 +2594,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Unknown1":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
                         item.Unknown1 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 2,
@@ -2613,9 +2613,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Density":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
                         item.Density = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2631,9 +2631,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Clustering":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
                         item.Clustering = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2649,9 +2649,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MinSlope":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
                         item.MinSlope = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2667,9 +2667,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MaxSlope":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
                         item.MaxSlope = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2685,9 +2685,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<RegionDataObject.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2703,9 +2703,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RadiusWrtPercent":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
                         item.RadiusWrtPercent = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2721,9 +2721,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Radius":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
                         item.Radius = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2739,9 +2739,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MinHeight":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
                         item.MinHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2757,9 +2757,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MaxHeight":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
                         item.MaxHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2775,9 +2775,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sink":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
                         item.Sink = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2793,9 +2793,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SinkVariance":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
                         item.SinkVariance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2811,9 +2811,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SizeVariance":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
                         item.SizeVariance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2829,9 +2829,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AngleVariance":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
                         item.AngleVariance = P3UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2847,9 +2847,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Unknown2":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown2);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown2);
                         item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 6,
@@ -3163,7 +3163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
 

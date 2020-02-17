@@ -684,16 +684,16 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case HeadPart_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case HeadPart_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case HeadPart_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case HeadPart_FieldIndex.Type:
-                        this.Type = (Exception)obj;
+                        this.Type = (Exception?)obj;
                         break;
                     case HeadPart_FieldIndex.ExtraParts:
                         this.ExtraParts = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -702,10 +702,10 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Parts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Part.ErrorMask?>>?>)obj;
                         break;
                     case HeadPart_FieldIndex.TextureSet:
-                        this.TextureSet = (Exception)obj;
+                        this.TextureSet = (Exception?)obj;
                         break;
                     case HeadPart_FieldIndex.ValidRaces:
-                        this.ValidRaces = (Exception)obj;
+                        this.ValidRaces = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -732,13 +732,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ExtraParts?.Overall, rhs.ExtraParts?.Overall), ExceptionExt.Combine(this.ExtraParts?.Specific, rhs.ExtraParts?.Specific));
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartGetter)rhs, include);
 
@@ -1830,7 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Type = item.Type == rhs.Type;
@@ -1985,7 +1985,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Flags = (item.Flags != null);
             mask.Type = (item.Type != null);
             mask.ExtraParts = new MaskItem<bool, IEnumerable<(int, bool)>>(item.ExtraParts.HasBeenSet, Enumerable.Empty<(int, bool)>());
-            mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Part.Mask<bool>?>>>(item.Parts.HasBeenSet, item.Parts.WithIndex().Select((i) => new MaskItemIndexed<bool, Part.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var PartsItem = item.Parts;
+            mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Part.Mask<bool>?>>>(PartsItem.HasBeenSet, PartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Part.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.TextureSet = (item.TextureSet.FormKey != null);
             mask.ValidRaces = (item.ValidRaces.FormKey != null);
             base.FillHasBeenSetMask(
@@ -2445,9 +2446,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)HeadPart_FieldIndex.Model,
@@ -2505,9 +2506,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)HeadPart_FieldIndex.Parts),
                     transl: (XElement subNode, IPartGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((PartXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((PartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2642,9 +2643,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)HeadPart_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2660,9 +2661,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Model":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)HeadPart_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2679,9 +2680,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)HeadPart_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<HeadPart.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2697,9 +2698,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Type":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Type);
                     try
                     {
-                        errorMask?.PushIndex((int)HeadPart_FieldIndex.Type);
                         item.Type = EnumXmlTranslation<HeadPart.TypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2715,9 +2716,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ExtraParts":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.ExtraParts);
                     try
                     {
-                        errorMask?.PushIndex((int)HeadPart_FieldIndex.ExtraParts);
                         if (ListXmlTranslation<IFormLink<HeadPart>>.Instance.Parse(
                             node: node,
                             enumer: out var ExtraPartsItem,
@@ -2743,9 +2744,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Parts":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Parts);
                     try
                     {
-                        errorMask?.PushIndex((int)HeadPart_FieldIndex.Parts);
                         if (ListXmlTranslation<Part>.Instance.Parse(
                             node: node,
                             enumer: out var PartsItem,
@@ -2771,9 +2772,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "TextureSet":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.TextureSet);
                     try
                     {
-                        errorMask?.PushIndex((int)HeadPart_FieldIndex.TextureSet);
                         item.TextureSet.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2789,9 +2790,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ValidRaces":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.ValidRaces);
                     try
                     {
-                        errorMask?.PushIndex((int)HeadPart_FieldIndex.ValidRaces);
                         item.ValidRaces.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2908,16 +2909,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<HeadPart.Flag>.Instance.WriteNullable(
                 writer,
@@ -2945,16 +2943,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Parts,
                 transl: (MutagenWriter subWriter, IPartGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((PartBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((PartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -3067,7 +3062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartGetter)rhs, include);
 

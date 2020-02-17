@@ -452,19 +452,19 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case AIPackageSchedule_FieldIndex.Month:
-                        this.Month = (Exception)obj;
+                        this.Month = (Exception?)obj;
                         break;
                     case AIPackageSchedule_FieldIndex.DayOfWeek:
-                        this.DayOfWeek = (Exception)obj;
+                        this.DayOfWeek = (Exception?)obj;
                         break;
                     case AIPackageSchedule_FieldIndex.Day:
-                        this.Day = (Exception)obj;
+                        this.Day = (Exception?)obj;
                         break;
                     case AIPackageSchedule_FieldIndex.Time:
-                        this.Time = (Exception)obj;
+                        this.Time = (Exception?)obj;
                         break;
                     case AIPackageSchedule_FieldIndex.Duration:
-                        this.Duration = (Exception)obj;
+                        this.Duration = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -487,13 +487,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageScheduleGetter)rhs, include);
 
@@ -1671,9 +1671,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IAIPackageScheduleGetter)item,
                     name: name,
@@ -1733,9 +1733,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Month":
+                    errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
                         item.Month = EnumXmlTranslation<Month>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1751,9 +1751,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DayOfWeek":
+                    errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
                         item.DayOfWeek = EnumXmlTranslation<Weekday>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1769,9 +1769,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Day":
+                    errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
                         item.Day = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1787,9 +1787,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Time":
+                    errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
                         item.Time = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1805,9 +1805,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Duration":
+                    errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
                         item.Duration = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageScheduleGetter)rhs, include);
 

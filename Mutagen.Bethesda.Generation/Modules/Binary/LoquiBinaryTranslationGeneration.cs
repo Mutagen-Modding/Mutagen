@@ -77,13 +77,18 @@ namespace Mutagen.Bethesda.Generation
                 var dictGroup = loquiGen.TargetObjectGeneration.Name == "Group";
                 fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
             }
-            using (new BraceWrapper(fg))
+            using (new BraceWrapper(fg, doIt: isGroup))
             {
-                // We want to cache retrievals, in case it's a wrapper being written
-                fg.AppendLine($"var loquiItem = {itemAccessor.DirectAccess};");
                 if (typeGen.HasBeenSet)
                 {
-                    fg.AppendLine("if (loquiItem != null)");
+                    fg.AppendLine($"if ({itemAccessor.DirectAccess}.TryGet(out var {typeGen.Name}Item))");
+                    itemAccessor = $"{typeGen.Name}Item";
+                }
+                else
+                {
+                    // We want to cache retrievals, in case it's a wrapper being written
+                    fg.AppendLine($"var {typeGen.Name}Item = {itemAccessor.DirectAccess};");
+                    itemAccessor = $"{typeGen.Name}Item";
                 }
                 using (new BraceWrapper(fg, doIt: typeGen.HasBeenSet))
                 {
@@ -95,15 +100,15 @@ namespace Mutagen.Bethesda.Generation
                     string line;
                     if (loquiGen.TargetObjectGeneration != null)
                     {
-                        line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)})loquiItem).{this.Module.TranslationWriteItemMember})";
+                        line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                     }
                     else
                     {
-                        line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)})loquiItem).{this.Module.TranslationWriteItemMember})";
+                        line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                     }
                     using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
                     {
-                        args.Add($"item: loquiItem");
+                        args.Add($"item: {itemAccessor}");
                         args.Add($"writer: {writerAccessor}");
                         args.Add($"masterReferences: masterReferences");
                         if (data?.RecordTypeConverter != null
@@ -478,7 +483,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor)
         {
             LoquiType loqui = typeGen as LoquiType;
-            return $"{this.Module.BinaryOverlayClass(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p)";
+            return $"{this.Module.BinaryOverlayClass(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}), {packageAccessor})";
         }
     }
 }

@@ -422,13 +422,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RankPlacement_FieldIndex.Faction:
-                        this.Faction = (Exception)obj;
+                        this.Faction = (Exception?)obj;
                         break;
                     case RankPlacement_FieldIndex.Rank:
-                        this.Rank = (Exception)obj;
+                        this.Rank = (Exception?)obj;
                         break;
                     case RankPlacement_FieldIndex.Fluff:
-                        this.Fluff = (Exception)obj;
+                        this.Fluff = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -449,13 +449,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankPlacementGetter)rhs, include);
 
@@ -1556,9 +1556,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRankPlacementGetter)item,
                     name: name,
@@ -1618,9 +1618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Faction":
+                    errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
                     try
                     {
-                        errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
                         item.Faction.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1636,9 +1636,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Rank":
+                    errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
                     try
                     {
-                        errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
                         item.Rank = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1654,9 +1654,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff":
+                    errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
                     try
                     {
-                        errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
                         item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 3,
@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankPlacementGetter)rhs, include);
 

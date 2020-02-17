@@ -538,31 +538,31 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case CellLighting_FieldIndex.AmbientColor:
-                        this.AmbientColor = (Exception)obj;
+                        this.AmbientColor = (Exception?)obj;
                         break;
                     case CellLighting_FieldIndex.DirectionalColor:
-                        this.DirectionalColor = (Exception)obj;
+                        this.DirectionalColor = (Exception?)obj;
                         break;
                     case CellLighting_FieldIndex.FogColor:
-                        this.FogColor = (Exception)obj;
+                        this.FogColor = (Exception?)obj;
                         break;
                     case CellLighting_FieldIndex.FogNear:
-                        this.FogNear = (Exception)obj;
+                        this.FogNear = (Exception?)obj;
                         break;
                     case CellLighting_FieldIndex.FogFar:
-                        this.FogFar = (Exception)obj;
+                        this.FogFar = (Exception?)obj;
                         break;
                     case CellLighting_FieldIndex.DirectionalRotationXY:
-                        this.DirectionalRotationXY = (Exception)obj;
+                        this.DirectionalRotationXY = (Exception?)obj;
                         break;
                     case CellLighting_FieldIndex.DirectionalRotationZ:
-                        this.DirectionalRotationZ = (Exception)obj;
+                        this.DirectionalRotationZ = (Exception?)obj;
                         break;
                     case CellLighting_FieldIndex.DirectionalFade:
-                        this.DirectionalFade = (Exception)obj;
+                        this.DirectionalFade = (Exception?)obj;
                         break;
                     case CellLighting_FieldIndex.FogClipDistance:
-                        this.FogClipDistance = (Exception)obj;
+                        this.FogClipDistance = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -589,13 +589,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingGetter)rhs, include);
 
@@ -1947,9 +1947,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ICellLightingGetter)item,
                     name: name,
@@ -2009,9 +2009,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "AmbientColor":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
                         item.AmbientColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2027,9 +2027,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DirectionalColor":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
                         item.DirectionalColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2045,9 +2045,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogColor":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
                         item.FogColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2063,9 +2063,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogNear":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
                         item.FogNear = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2081,9 +2081,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogFar":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
                         item.FogFar = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2099,9 +2099,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DirectionalRotationXY":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
                         item.DirectionalRotationXY = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2117,9 +2117,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DirectionalRotationZ":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
                         item.DirectionalRotationZ = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2135,9 +2135,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DirectionalFade":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
                         item.DirectionalFade = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2153,9 +2153,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogClipDistance":
+                    errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
                     try
                     {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
                         item.FogClipDistance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2459,7 +2459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingGetter)rhs, include);
 

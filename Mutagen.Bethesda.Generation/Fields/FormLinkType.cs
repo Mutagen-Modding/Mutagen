@@ -115,24 +115,24 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (!{accessor.PropertyOrDirectAccess}.Equals({rhsAccessor.PropertyOrDirectAccess})) return false;");
         }
 
-        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, bool protectedMembers, bool getter)
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool getter)
         {
             if (this.HasBeenSet)
             {
-                fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhsAccessorPrefix}.{this.GetName(false, property: false)}.{FormIDTypeString};");
+                fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhs}.{FormIDTypeString};");
             }
             else
             {
                 if (getter)
                 {
-                    fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhsAccessorPrefix}.{this.GetName(false, property: false)}.{FormIDTypeString};");
+                    fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhs}.{FormIDTypeString};");
                 }
                 else
                 {
                     using (var args = new ArgsWrapper(fg,
                         $"{accessor.PropertyOrDirectAccess}.SetLink"))
                     {
-                        args.Add($"value: {rhsAccessorPrefix}.{this.GetName(false, property: false)}");
+                        args.Add($"value: {rhs}");
                     }
                 }
             }

@@ -524,19 +524,19 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Armor_FieldIndex.ArmorValue:
-                        this.ArmorValue = (Exception)obj;
+                        this.ArmorValue = (Exception?)obj;
                         break;
                     case Armor_FieldIndex.Value:
-                        this.Value = (Exception)obj;
+                        this.Value = (Exception?)obj;
                         break;
                     case Armor_FieldIndex.Health:
-                        this.Health = (Exception)obj;
+                        this.Health = (Exception?)obj;
                         break;
                     case Armor_FieldIndex.Weight:
-                        this.Weight = (Exception)obj;
+                        this.Weight = (Exception?)obj;
                         break;
                     case Armor_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -560,13 +560,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorGetter)rhs, include);
 
@@ -2251,9 +2251,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "ArmorValue":
+                    errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
                         item.ArmorValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2270,9 +2270,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Armor.DATADataType.Has;
                     break;
                 case "Value":
+                    errorMask?.PushIndex((int)Armor_FieldIndex.Value);
                     try
                     {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Value);
                         item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2288,9 +2288,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Health":
+                    errorMask?.PushIndex((int)Armor_FieldIndex.Health);
                     try
                     {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Health);
                         item.Health = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2306,9 +2306,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Weight":
+                    errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
                     try
                     {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
                         item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2324,9 +2324,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Armor_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Armor.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2622,7 +2622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorGetter)rhs, include);
 

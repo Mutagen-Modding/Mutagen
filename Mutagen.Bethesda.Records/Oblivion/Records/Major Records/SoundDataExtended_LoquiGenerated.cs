@@ -416,13 +416,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case SoundDataExtended_FieldIndex.StaticAttenuation:
-                        this.StaticAttenuation = (Exception)obj;
+                        this.StaticAttenuation = (Exception?)obj;
                         break;
                     case SoundDataExtended_FieldIndex.StopTime:
-                        this.StopTime = (Exception)obj;
+                        this.StopTime = (Exception?)obj;
                         break;
                     case SoundDataExtended_FieldIndex.StartTime:
-                        this.StartTime = (Exception)obj;
+                        this.StartTime = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -444,13 +444,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataExtendedInternalGetter)rhs, include);
 
@@ -1693,9 +1693,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "StaticAttenuation":
+                    errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
                     try
                     {
-                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
                         item.StaticAttenuation = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1711,9 +1711,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "StopTime":
+                    errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
                     try
                     {
-                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
                         item.StopTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1729,9 +1729,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "StartTime":
+                    errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
                     try
                     {
-                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
                         item.StartTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2031,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataExtendedInternalGetter)rhs, include);
 

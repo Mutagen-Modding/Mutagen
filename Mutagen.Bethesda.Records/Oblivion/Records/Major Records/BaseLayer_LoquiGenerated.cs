@@ -461,16 +461,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case BaseLayer_FieldIndex.Texture:
-                        this.Texture = (Exception)obj;
+                        this.Texture = (Exception?)obj;
                         break;
                     case BaseLayer_FieldIndex.Quadrant:
-                        this.Quadrant = (Exception)obj;
+                        this.Quadrant = (Exception?)obj;
                         break;
                     case BaseLayer_FieldIndex.LayerNumber:
-                        this.LayerNumber = (Exception)obj;
+                        this.LayerNumber = (Exception?)obj;
                         break;
                     case BaseLayer_FieldIndex.BTXTDataTypeState:
-                        this.BTXTDataTypeState = (Exception)obj;
+                        this.BTXTDataTypeState = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -492,13 +492,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg)
+            public virtual void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
 
@@ -1264,9 +1264,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.BTXTDataTypeState |= BaseLayer.BTXTDataType.Has;
                     break;
                 case "LayerNumber":
+                    errorMask?.PushIndex((int)BaseLayer_FieldIndex.LayerNumber);
                     try
                     {
-                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.LayerNumber);
                         item.LayerNumber = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1745,9 +1745,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IBaseLayerGetter)item,
                     name: name,
@@ -1807,9 +1807,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Texture":
+                    errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
                     try
                     {
-                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
                         item.Texture.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1826,9 +1826,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.BTXTDataTypeState |= BaseLayer.BTXTDataType.Has;
                     break;
                 case "Quadrant":
+                    errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
                     try
                     {
-                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
                         item.Quadrant = EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1844,9 +1844,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BTXTDataTypeState":
+                    errorMask?.PushIndex((int)BaseLayer_FieldIndex.BTXTDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.BTXTDataTypeState);
                         item.BTXTDataTypeState = EnumXmlTranslation<BaseLayer.BTXTDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
 

@@ -498,25 +498,25 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case GetEventData_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception)obj;
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     case GetEventData_FieldIndex.EventFunction:
-                        this.EventFunction = (Exception)obj;
+                        this.EventFunction = (Exception?)obj;
                         break;
                     case GetEventData_FieldIndex.EventMember:
-                        this.EventMember = (Exception)obj;
+                        this.EventMember = (Exception?)obj;
                         break;
                     case GetEventData_FieldIndex.Parameter3:
-                        this.Parameter3 = (Exception)obj;
+                        this.Parameter3 = (Exception?)obj;
                         break;
                     case GetEventData_FieldIndex.RunOnType:
-                        this.RunOnType = (Exception)obj;
+                        this.RunOnType = (Exception?)obj;
                         break;
                     case GetEventData_FieldIndex.Reference:
-                        this.Reference = (Exception)obj;
+                        this.Reference = (Exception?)obj;
                         break;
                     case GetEventData_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception)obj;
+                        this.Unknown3 = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -542,13 +542,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGetEventDataGetter)rhs, include);
 
@@ -1904,9 +1904,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Unknown2":
+                    errorMask?.PushIndex((int)GetEventData_FieldIndex.Unknown2);
                     try
                     {
-                        errorMask?.PushIndex((int)GetEventData_FieldIndex.Unknown2);
                         item.Unknown2 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1922,9 +1922,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "EventFunction":
+                    errorMask?.PushIndex((int)GetEventData_FieldIndex.EventFunction);
                     try
                     {
-                        errorMask?.PushIndex((int)GetEventData_FieldIndex.EventFunction);
                         item.EventFunction = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1940,9 +1940,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "EventMember":
+                    errorMask?.PushIndex((int)GetEventData_FieldIndex.EventMember);
                     try
                     {
-                        errorMask?.PushIndex((int)GetEventData_FieldIndex.EventMember);
                         item.EventMember = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1958,9 +1958,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Parameter3":
+                    errorMask?.PushIndex((int)GetEventData_FieldIndex.Parameter3);
                     try
                     {
-                        errorMask?.PushIndex((int)GetEventData_FieldIndex.Parameter3);
                         item.Parameter3.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1976,9 +1976,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "RunOnType":
+                    errorMask?.PushIndex((int)GetEventData_FieldIndex.RunOnType);
                     try
                     {
-                        errorMask?.PushIndex((int)GetEventData_FieldIndex.RunOnType);
                         item.RunOnType = EnumXmlTranslation<Condition.RunOnType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1994,9 +1994,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Reference":
+                    errorMask?.PushIndex((int)GetEventData_FieldIndex.Reference);
                     try
                     {
-                        errorMask?.PushIndex((int)GetEventData_FieldIndex.Reference);
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2012,9 +2012,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown3":
+                    errorMask?.PushIndex((int)GetEventData_FieldIndex.Unknown3);
                     try
                     {
-                        errorMask?.PushIndex((int)GetEventData_FieldIndex.Unknown3);
                         item.Unknown3 = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2212,7 +2212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGetEventDataGetter)rhs, include);
 

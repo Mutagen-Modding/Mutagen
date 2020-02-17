@@ -586,37 +586,37 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case AttackData_FieldIndex.DamageMult:
-                        this.DamageMult = (Exception)obj;
+                        this.DamageMult = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.Chance:
-                        this.Chance = (Exception)obj;
+                        this.Chance = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.Spell:
-                        this.Spell = (Exception)obj;
+                        this.Spell = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.AttackAngle:
-                        this.AttackAngle = (Exception)obj;
+                        this.AttackAngle = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.StrikeAngle:
-                        this.StrikeAngle = (Exception)obj;
+                        this.StrikeAngle = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.Stagger:
-                        this.Stagger = (Exception)obj;
+                        this.Stagger = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.AttackType:
-                        this.AttackType = (Exception)obj;
+                        this.AttackType = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.Knockdown:
-                        this.Knockdown = (Exception)obj;
+                        this.Knockdown = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.RecoveryTime:
-                        this.RecoveryTime = (Exception)obj;
+                        this.RecoveryTime = (Exception?)obj;
                         break;
                     case AttackData_FieldIndex.StaminaMult:
-                        this.StaminaMult = (Exception)obj;
+                        this.StaminaMult = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -645,13 +645,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAttackDataGetter)rhs, include);
 
@@ -2092,9 +2092,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IAttackDataGetter)item,
                     name: name,
@@ -2154,9 +2154,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "DamageMult":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.DamageMult);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.DamageMult);
                         item.DamageMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2172,9 +2172,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Chance":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.Chance);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.Chance);
                         item.Chance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2190,9 +2190,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Spell":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.Spell);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.Spell);
                         item.Spell.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2208,9 +2208,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<AttackData.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2226,9 +2226,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AttackAngle":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.AttackAngle);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.AttackAngle);
                         item.AttackAngle = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2244,9 +2244,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "StrikeAngle":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.StrikeAngle);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.StrikeAngle);
                         item.StrikeAngle = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2262,9 +2262,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Stagger":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.Stagger);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.Stagger);
                         item.Stagger = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2280,9 +2280,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AttackType":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.AttackType);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.AttackType);
                         item.AttackType.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2298,9 +2298,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Knockdown":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.Knockdown);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.Knockdown);
                         item.Knockdown = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2316,9 +2316,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "RecoveryTime":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.RecoveryTime);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.RecoveryTime);
                         item.RecoveryTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2334,9 +2334,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "StaminaMult":
+                    errorMask?.PushIndex((int)AttackData_FieldIndex.StaminaMult);
                     try
                     {
-                        errorMask?.PushIndex((int)AttackData_FieldIndex.StaminaMult);
                         item.StaminaMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2650,7 +2650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAttackDataGetter)rhs, include);
 

@@ -2202,181 +2202,181 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case EffectShader_FieldIndex.FillTexture:
-                        this.FillTexture = (Exception)obj;
+                        this.FillTexture = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderTexture:
-                        this.ParticleShaderTexture = (Exception)obj;
+                        this.ParticleShaderTexture = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                        this.MembraneShaderSourceBlendMode = (Exception)obj;
+                        this.MembraneShaderSourceBlendMode = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                        this.MembraneShaderBlendOperation = (Exception)obj;
+                        this.MembraneShaderBlendOperation = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                        this.MembraneShaderZTestFunction = (Exception)obj;
+                        this.MembraneShaderZTestFunction = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectColor:
-                        this.FillTextureEffectColor = (Exception)obj;
+                        this.FillTextureEffectColor = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                        this.FillTextureEffectAlphaFadeInTime = (Exception)obj;
+                        this.FillTextureEffectAlphaFadeInTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                        this.FillTextureEffectFullAlphaTime = (Exception)obj;
+                        this.FillTextureEffectFullAlphaTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                        this.FillTextureEffectAlphaFadeOutTime = (Exception)obj;
+                        this.FillTextureEffectAlphaFadeOutTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                        this.FillTextureEffectPersistentAlphaRatio = (Exception)obj;
+                        this.FillTextureEffectPersistentAlphaRatio = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                        this.FillTextureEffectAlphaPulseAmplitude = (Exception)obj;
+                        this.FillTextureEffectAlphaPulseAmplitude = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                        this.FillTextureEffectAlphaPulseFrequency = (Exception)obj;
+                        this.FillTextureEffectAlphaPulseFrequency = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                        this.FillTextureEffectTextureAnimationSpeedU = (Exception)obj;
+                        this.FillTextureEffectTextureAnimationSpeedU = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                        this.FillTextureEffectTextureAnimationSpeedV = (Exception)obj;
+                        this.FillTextureEffectTextureAnimationSpeedV = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectFallOff:
-                        this.EdgeEffectFallOff = (Exception)obj;
+                        this.EdgeEffectFallOff = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectColor:
-                        this.EdgeEffectColor = (Exception)obj;
+                        this.EdgeEffectColor = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                        this.EdgeEffectAlphaFadeInTime = (Exception)obj;
+                        this.EdgeEffectAlphaFadeInTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                        this.EdgeEffectFullAlphaTime = (Exception)obj;
+                        this.EdgeEffectFullAlphaTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                        this.EdgeEffectAlphaFadeOutTime = (Exception)obj;
+                        this.EdgeEffectAlphaFadeOutTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                        this.EdgeEffectPersistentAlphaRatio = (Exception)obj;
+                        this.EdgeEffectPersistentAlphaRatio = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                        this.EdgeEffectAlphaPulseAmplitude = (Exception)obj;
+                        this.EdgeEffectAlphaPulseAmplitude = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                        this.EdgeEffectAlphaPulseFrequency = (Exception)obj;
+                        this.EdgeEffectAlphaPulseFrequency = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                        this.FillTextureEffectFullAlphaRatio = (Exception)obj;
+                        this.FillTextureEffectFullAlphaRatio = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                        this.EdgeEffectFullAlphaRatio = (Exception)obj;
+                        this.EdgeEffectFullAlphaRatio = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                        this.MembraneShaderDestBlendMode = (Exception)obj;
+                        this.MembraneShaderDestBlendMode = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                        this.ParticleShaderSourceBlendMode = (Exception)obj;
+                        this.ParticleShaderSourceBlendMode = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                        this.ParticleShaderBlendOperation = (Exception)obj;
+                        this.ParticleShaderBlendOperation = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                        this.ParticleShaderZTestFunction = (Exception)obj;
+                        this.ParticleShaderZTestFunction = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                        this.ParticleShaderDestBlendMode = (Exception)obj;
+                        this.ParticleShaderDestBlendMode = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                        this.ParticleShaderParticleBirthRampUpTime = (Exception)obj;
+                        this.ParticleShaderParticleBirthRampUpTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                        this.ParticleShaderFullParticleBirthTime = (Exception)obj;
+                        this.ParticleShaderFullParticleBirthTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                        this.ParticleShaderParticleBirthRampDownTime = (Exception)obj;
+                        this.ParticleShaderParticleBirthRampDownTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                        this.ParticleShaderFullParticleBirthRatio = (Exception)obj;
+                        this.ParticleShaderFullParticleBirthRatio = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                        this.ParticleShaderPersistentParticleBirthRatio = (Exception)obj;
+                        this.ParticleShaderPersistentParticleBirthRatio = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                        this.ParticleShaderParticleLifetime = (Exception)obj;
+                        this.ParticleShaderParticleLifetime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                        this.ParticleShaderParticleLifetimePlusMinus = (Exception)obj;
+                        this.ParticleShaderParticleLifetimePlusMinus = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                        this.ParticleShaderInitialSpeedAlongNormal = (Exception)obj;
+                        this.ParticleShaderInitialSpeedAlongNormal = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                        this.ParticleShaderAccelerationAlongNormal = (Exception)obj;
+                        this.ParticleShaderAccelerationAlongNormal = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                        this.ParticleShaderInitialVelocity1 = (Exception)obj;
+                        this.ParticleShaderInitialVelocity1 = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                        this.ParticleShaderInitialVelocity2 = (Exception)obj;
+                        this.ParticleShaderInitialVelocity2 = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                        this.ParticleShaderInitialVelocity3 = (Exception)obj;
+                        this.ParticleShaderInitialVelocity3 = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                        this.ParticleShaderAcceleration1 = (Exception)obj;
+                        this.ParticleShaderAcceleration1 = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                        this.ParticleShaderAcceleration2 = (Exception)obj;
+                        this.ParticleShaderAcceleration2 = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                        this.ParticleShaderAcceleration3 = (Exception)obj;
+                        this.ParticleShaderAcceleration3 = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                        this.ParticleShaderScaleKey1 = (Exception)obj;
+                        this.ParticleShaderScaleKey1 = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                        this.ParticleShaderScaleKey2 = (Exception)obj;
+                        this.ParticleShaderScaleKey2 = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                        this.ParticleShaderScaleKey1Time = (Exception)obj;
+                        this.ParticleShaderScaleKey1Time = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                        this.ParticleShaderScaleKey2Time = (Exception)obj;
+                        this.ParticleShaderScaleKey2Time = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey1Color:
-                        this.ColorKey1Color = (Exception)obj;
+                        this.ColorKey1Color = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey2Color:
-                        this.ColorKey2Color = (Exception)obj;
+                        this.ColorKey2Color = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey3Color:
-                        this.ColorKey3Color = (Exception)obj;
+                        this.ColorKey3Color = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                        this.ColorKey1ColorAlpha = (Exception)obj;
+                        this.ColorKey1ColorAlpha = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                        this.ColorKey2ColorAlpha = (Exception)obj;
+                        this.ColorKey2ColorAlpha = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                        this.ColorKey3ColorAlpha = (Exception)obj;
+                        this.ColorKey3ColorAlpha = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                        this.ColorKey1ColorKeyTime = (Exception)obj;
+                        this.ColorKey1ColorKeyTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                        this.ColorKey2ColorKeyTime = (Exception)obj;
+                        this.ColorKey2ColorKeyTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                        this.ColorKey3ColorKeyTime = (Exception)obj;
+                        this.ColorKey3ColorKeyTime = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -2454,13 +2454,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -2888,7 +2888,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderGetter)rhs, include);
 
@@ -6263,9 +6263,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "FillTexture":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTexture);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTexture);
                         item.FillTexture = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6281,9 +6281,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderTexture":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderTexture);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderTexture);
                         item.ParticleShaderTexture = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6299,9 +6299,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<EffectShader.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6318,9 +6318,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= EffectShader.DATADataType.Has;
                     break;
                 case "MembraneShaderSourceBlendMode":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode);
                         item.MembraneShaderSourceBlendMode = EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6336,9 +6336,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MembraneShaderBlendOperation":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderBlendOperation);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderBlendOperation);
                         item.MembraneShaderBlendOperation = EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6354,9 +6354,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MembraneShaderZTestFunction":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderZTestFunction);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderZTestFunction);
                         item.MembraneShaderZTestFunction = EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6372,9 +6372,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectColor":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectColor);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectColor);
                         item.FillTextureEffectColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6390,9 +6390,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectAlphaFadeInTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime);
                         item.FillTextureEffectAlphaFadeInTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6408,9 +6408,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectFullAlphaTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime);
                         item.FillTextureEffectFullAlphaTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6426,9 +6426,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectAlphaFadeOutTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime);
                         item.FillTextureEffectAlphaFadeOutTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6444,9 +6444,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectPersistentAlphaRatio":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio);
                         item.FillTextureEffectPersistentAlphaRatio = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6462,9 +6462,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectAlphaPulseAmplitude":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude);
                         item.FillTextureEffectAlphaPulseAmplitude = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6480,9 +6480,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectAlphaPulseFrequency":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency);
                         item.FillTextureEffectAlphaPulseFrequency = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6498,9 +6498,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectTextureAnimationSpeedU":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU);
                         item.FillTextureEffectTextureAnimationSpeedU = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6516,9 +6516,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectTextureAnimationSpeedV":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV);
                         item.FillTextureEffectTextureAnimationSpeedV = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6534,9 +6534,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectFallOff":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFallOff);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFallOff);
                         item.EdgeEffectFallOff = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6552,9 +6552,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectColor":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectColor);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectColor);
                         item.EdgeEffectColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6570,9 +6570,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectAlphaFadeInTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime);
                         item.EdgeEffectAlphaFadeInTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6588,9 +6588,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectFullAlphaTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime);
                         item.EdgeEffectFullAlphaTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6606,9 +6606,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectAlphaFadeOutTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime);
                         item.EdgeEffectAlphaFadeOutTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6624,9 +6624,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectPersistentAlphaRatio":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio);
                         item.EdgeEffectPersistentAlphaRatio = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6642,9 +6642,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectAlphaPulseAmplitude":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude);
                         item.EdgeEffectAlphaPulseAmplitude = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6660,9 +6660,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectAlphaPulseFrequency":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency);
                         item.EdgeEffectAlphaPulseFrequency = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6678,9 +6678,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FillTextureEffectFullAlphaRatio":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio);
                         item.FillTextureEffectFullAlphaRatio = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6696,9 +6696,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EdgeEffectFullAlphaRatio":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio);
                         item.EdgeEffectFullAlphaRatio = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6714,9 +6714,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MembraneShaderDestBlendMode":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode);
                         item.MembraneShaderDestBlendMode = EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6732,9 +6732,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderSourceBlendMode":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode);
                         item.ParticleShaderSourceBlendMode = EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6751,9 +6751,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState &= ~EffectShader.DATADataType.Break0;
                     break;
                 case "ParticleShaderBlendOperation":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderBlendOperation);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderBlendOperation);
                         item.ParticleShaderBlendOperation = EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6769,9 +6769,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderZTestFunction":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderZTestFunction);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderZTestFunction);
                         item.ParticleShaderZTestFunction = EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6787,9 +6787,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderDestBlendMode":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderDestBlendMode);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderDestBlendMode);
                         item.ParticleShaderDestBlendMode = EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6805,9 +6805,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderParticleBirthRampUpTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime);
                         item.ParticleShaderParticleBirthRampUpTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6823,9 +6823,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderFullParticleBirthTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime);
                         item.ParticleShaderFullParticleBirthTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6841,9 +6841,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderParticleBirthRampDownTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime);
                         item.ParticleShaderParticleBirthRampDownTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6859,9 +6859,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderFullParticleBirthRatio":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio);
                         item.ParticleShaderFullParticleBirthRatio = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6877,9 +6877,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderPersistentParticleBirthRatio":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio);
                         item.ParticleShaderPersistentParticleBirthRatio = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6895,9 +6895,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderParticleLifetime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleLifetime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleLifetime);
                         item.ParticleShaderParticleLifetime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6913,9 +6913,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderParticleLifetimePlusMinus":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus);
                         item.ParticleShaderParticleLifetimePlusMinus = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6931,9 +6931,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderInitialSpeedAlongNormal":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal);
                         item.ParticleShaderInitialSpeedAlongNormal = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6949,9 +6949,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderAccelerationAlongNormal":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal);
                         item.ParticleShaderAccelerationAlongNormal = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6967,9 +6967,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderInitialVelocity1":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1);
                         item.ParticleShaderInitialVelocity1 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -6985,9 +6985,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderInitialVelocity2":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2);
                         item.ParticleShaderInitialVelocity2 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7003,9 +7003,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderInitialVelocity3":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3);
                         item.ParticleShaderInitialVelocity3 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7021,9 +7021,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderAcceleration1":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration1);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration1);
                         item.ParticleShaderAcceleration1 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7039,9 +7039,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderAcceleration2":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration2);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration2);
                         item.ParticleShaderAcceleration2 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7057,9 +7057,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderAcceleration3":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration3);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration3);
                         item.ParticleShaderAcceleration3 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7075,9 +7075,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderScaleKey1":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey1);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey1);
                         item.ParticleShaderScaleKey1 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7093,9 +7093,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderScaleKey2":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey2);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey2);
                         item.ParticleShaderScaleKey2 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7111,9 +7111,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderScaleKey1Time":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time);
                         item.ParticleShaderScaleKey1Time = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7129,9 +7129,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ParticleShaderScaleKey2Time":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time);
                         item.ParticleShaderScaleKey2Time = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7147,9 +7147,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey1Color":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1Color);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1Color);
                         item.ColorKey1Color = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7165,9 +7165,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey2Color":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2Color);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2Color);
                         item.ColorKey2Color = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7183,9 +7183,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey3Color":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3Color);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3Color);
                         item.ColorKey3Color = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7201,9 +7201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey1ColorAlpha":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1ColorAlpha);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1ColorAlpha);
                         item.ColorKey1ColorAlpha = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7219,9 +7219,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey2ColorAlpha":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2ColorAlpha);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2ColorAlpha);
                         item.ColorKey2ColorAlpha = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7237,9 +7237,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey3ColorAlpha":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3ColorAlpha);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3ColorAlpha);
                         item.ColorKey3ColorAlpha = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7255,9 +7255,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey1ColorKeyTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1ColorKeyTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1ColorKeyTime);
                         item.ColorKey1ColorKeyTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7273,9 +7273,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey2ColorKeyTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2ColorKeyTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2ColorKeyTime);
                         item.ColorKey2ColorKeyTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7291,9 +7291,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorKey3ColorKeyTime":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime);
                         item.ColorKey3ColorKeyTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7309,9 +7309,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)EffectShader_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)EffectShader_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<EffectShader.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7735,7 +7735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderGetter)rhs, include);
 

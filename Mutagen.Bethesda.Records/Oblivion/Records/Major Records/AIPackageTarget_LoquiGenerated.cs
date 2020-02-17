@@ -410,13 +410,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case AIPackageTarget_FieldIndex.ObjectType:
-                        this.ObjectType = (Exception)obj;
+                        this.ObjectType = (Exception?)obj;
                         break;
                     case AIPackageTarget_FieldIndex.Object:
-                        this.Object = (Exception)obj;
+                        this.Object = (Exception?)obj;
                         break;
                     case AIPackageTarget_FieldIndex.Count:
-                        this.Count = (Exception)obj;
+                        this.Count = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -437,13 +437,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetGetter)rhs, include);
 
@@ -1537,9 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IAIPackageTargetGetter)item,
                     name: name,
@@ -1599,9 +1599,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "ObjectType":
+                    errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
                         item.ObjectType = EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1617,9 +1617,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Object":
+                    errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
                         item.Object = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1635,9 +1635,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Count":
+                    errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
                         item.Count = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetGetter)rhs, include);
 

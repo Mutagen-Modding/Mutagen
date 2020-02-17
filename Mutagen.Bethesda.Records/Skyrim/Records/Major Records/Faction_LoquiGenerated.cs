@@ -1255,70 +1255,70 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Faction_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.Relations:
                         this.Relations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>)obj;
                         break;
                     case Faction_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.PrisonMarker:
-                        this.PrisonMarker = (Exception)obj;
+                        this.PrisonMarker = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.FollowerWaitMarker:
-                        this.FollowerWaitMarker = (Exception)obj;
+                        this.FollowerWaitMarker = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.EvidenceChest:
-                        this.EvidenceChest = (Exception)obj;
+                        this.EvidenceChest = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.PlayerBelongingsChest:
-                        this.PlayerBelongingsChest = (Exception)obj;
+                        this.PlayerBelongingsChest = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.CrimeGroup:
-                        this.CrimeGroup = (Exception)obj;
+                        this.CrimeGroup = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.JailOutfit:
-                        this.JailOutfit = (Exception)obj;
+                        this.JailOutfit = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.ArrestCrimeValue:
-                        this.ArrestCrimeValue = (Exception)obj;
+                        this.ArrestCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.AttackOnSightCrimeValue:
-                        this.AttackOnSightCrimeValue = (Exception)obj;
+                        this.AttackOnSightCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.MurderCrimeValue:
-                        this.MurderCrimeValue = (Exception)obj;
+                        this.MurderCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.AssaultCrimeValue:
-                        this.AssaultCrimeValue = (Exception)obj;
+                        this.AssaultCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.TrespassCrimeValue:
-                        this.TrespassCrimeValue = (Exception)obj;
+                        this.TrespassCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.PickpocketCrimeValue:
-                        this.PickpocketCrimeValue = (Exception)obj;
+                        this.PickpocketCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.UnknownCrimeValue:
-                        this.UnknownCrimeValue = (Exception)obj;
+                        this.UnknownCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.StealMultCrimeValue:
-                        this.StealMultCrimeValue = (Exception)obj;
+                        this.StealMultCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.EscapeCrimeValue:
-                        this.EscapeCrimeValue = (Exception)obj;
+                        this.EscapeCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.WerewolfCrimeValue:
-                        this.WerewolfCrimeValue = (Exception)obj;
+                        this.WerewolfCrimeValue = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.Ranks:
                         this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
                         break;
                     case Faction_FieldIndex.VendorList:
-                        this.VendorList = (Exception)obj;
+                        this.VendorList = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.VendorChest:
-                        this.VendorChest = (Exception)obj;
+                        this.VendorChest = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.VendorValues:
                         this.VendorValues = (MaskItem<Exception?, VendorValues.ErrorMask?>?)obj;
@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
                     case Faction_FieldIndex.CRVADataTypeState:
-                        this.CRVADataTypeState = (Exception)obj;
+                        this.CRVADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1375,13 +1375,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1530,8 +1530,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
                 ret.VendorList = this.VendorList.Combine(rhs.VendorList);
                 ret.VendorChest = this.VendorChest.Combine(rhs.VendorChest);
-                ret.VendorValues = new MaskItem<Exception?, VendorValues.ErrorMask?>(ExceptionExt.Combine(this.VendorValues?.Overall, rhs.VendorValues?.Overall), (this.VendorValues?.Specific as IErrorMask<VendorValues.ErrorMask>)?.Combine(rhs.VendorValues?.Specific));
-                ret.VendorLocation = new MaskItem<Exception?, VendorLocation.ErrorMask?>(ExceptionExt.Combine(this.VendorLocation?.Overall, rhs.VendorLocation?.Overall), (this.VendorLocation?.Specific as IErrorMask<VendorLocation.ErrorMask>)?.Combine(rhs.VendorLocation?.Specific));
+                ret.VendorValues = this.VendorValues.Combine(rhs.VendorValues, (l, r) => l.Combine(r));
+                ret.VendorLocation = this.VendorLocation.Combine(rhs.VendorLocation, (l, r) => l.Combine(r));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.CRVADataTypeState = this.CRVADataTypeState.Combine(rhs.CRVADataTypeState);
                 return ret;
@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
@@ -3006,12 +3006,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.VendorValues = EqualsMaskHelper.EqualsHelper(
                 item.VendorValues,
                 rhs.VendorValues,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.VendorLocation = EqualsMaskHelper.EqualsHelper(
                 item.VendorLocation,
                 rhs.VendorLocation,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -3248,7 +3248,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Faction.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var RelationsItem = item.Relations;
+            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>>(RelationsItem.HasBeenSet, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Flags = (item.Flags != null);
             mask.PrisonMarker = (item.PrisonMarker.FormKey != null);
             mask.FollowerWaitMarker = (item.FollowerWaitMarker.FormKey != null);
@@ -3266,14 +3267,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.StealMultCrimeValue = true;
             mask.EscapeCrimeValue = true;
             mask.WerewolfCrimeValue = true;
-            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var RanksItem = item.Ranks;
+            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>>(RanksItem.HasBeenSet, RanksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.VendorList = (item.VendorList.FormKey != null);
             mask.VendorChest = (item.VendorChest.FormKey != null);
             var itemVendorValues = item.VendorValues;
             mask.VendorValues = new MaskItem<bool, VendorValues.Mask<bool>?>(itemVendorValues != null, itemVendorValues?.GetHasBeenSetMask());
             var itemVendorLocation = item.VendorLocation;
             mask.VendorLocation = new MaskItem<bool, VendorLocation.Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(ConditionsItem.HasBeenSet, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.CRVADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -3932,9 +3935,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
                     transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RelationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4126,9 +4129,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
                     transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RankXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RankXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4158,9 +4161,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.VendorValues != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
-                var loquiItem = item.VendorValues;
-                ((VendorValuesXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var VendorValuesItem = item.VendorValues;
+                ((VendorValuesXmlWriteTranslation)((IXmlItem)VendorValuesItem).XmlWriteTranslator).Write(
+                    item: VendorValuesItem,
                     node: node,
                     name: nameof(item.VendorValues),
                     fieldIndex: (int)Faction_FieldIndex.VendorValues,
@@ -4170,9 +4173,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.VendorLocation != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
             {
-                var loquiItem = item.VendorLocation;
-                ((VendorLocationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var VendorLocationItem = item.VendorLocation;
+                ((VendorLocationXmlWriteTranslation)((IXmlItem)VendorLocationItem).XmlWriteTranslator).Write(
+                    item: VendorLocationItem,
                     node: node,
                     name: nameof(item.VendorLocation),
                     fieldIndex: (int)Faction_FieldIndex.VendorLocation,
@@ -4191,9 +4194,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4317,9 +4320,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4335,9 +4338,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Relations":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                         if (ListXmlTranslation<Relation>.Instance.Parse(
                             node: node,
                             enumer: out var RelationsItem,
@@ -4363,9 +4366,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4381,9 +4384,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "PrisonMarker":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.PrisonMarker);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.PrisonMarker);
                         item.PrisonMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4399,9 +4402,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FollowerWaitMarker":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.FollowerWaitMarker);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.FollowerWaitMarker);
                         item.FollowerWaitMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4417,9 +4420,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "EvidenceChest":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.EvidenceChest);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.EvidenceChest);
                         item.EvidenceChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4435,9 +4438,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "PlayerBelongingsChest":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.PlayerBelongingsChest);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.PlayerBelongingsChest);
                         item.PlayerBelongingsChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4453,9 +4456,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "CrimeGroup":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGroup);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGroup);
                         item.CrimeGroup.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4471,9 +4474,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "JailOutfit":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.JailOutfit);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.JailOutfit);
                         item.JailOutfit.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4489,9 +4492,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ArrestCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.ArrestCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.ArrestCrimeValue);
                         item.ArrestCrimeValue = BooleanXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4508,9 +4511,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CRVADataTypeState |= Faction.CRVADataType.Has;
                     break;
                 case "AttackOnSightCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.AttackOnSightCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.AttackOnSightCrimeValue);
                         item.AttackOnSightCrimeValue = BooleanXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4526,9 +4529,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MurderCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.MurderCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.MurderCrimeValue);
                         item.MurderCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4544,9 +4547,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AssaultCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.AssaultCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.AssaultCrimeValue);
                         item.AssaultCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4562,9 +4565,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "TrespassCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.TrespassCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.TrespassCrimeValue);
                         item.TrespassCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4580,9 +4583,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "PickpocketCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.PickpocketCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.PickpocketCrimeValue);
                         item.PickpocketCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4598,9 +4601,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "UnknownCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.UnknownCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.UnknownCrimeValue);
                         item.UnknownCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4616,9 +4619,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "StealMultCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.StealMultCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.StealMultCrimeValue);
                         item.StealMultCrimeValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4635,9 +4638,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CRVADataTypeState &= ~Faction.CRVADataType.Break0;
                     break;
                 case "EscapeCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.EscapeCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.EscapeCrimeValue);
                         item.EscapeCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4654,9 +4657,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CRVADataTypeState &= ~Faction.CRVADataType.Break1;
                     break;
                 case "WerewolfCrimeValue":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.WerewolfCrimeValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.WerewolfCrimeValue);
                         item.WerewolfCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4672,9 +4675,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Ranks":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                         if (ListXmlTranslation<Rank>.Instance.Parse(
                             node: node,
                             enumer: out var RanksItem,
@@ -4700,9 +4703,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "VendorList":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorList);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.VendorList);
                         item.VendorList.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4718,9 +4721,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "VendorChest":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorChest);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.VendorChest);
                         item.VendorChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4736,9 +4739,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "VendorValues":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorValues);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.VendorValues);
                         item.VendorValues = LoquiXmlTranslation<VendorValues>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4755,9 +4758,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "VendorLocation":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorLocation);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.VendorLocation);
                         item.VendorLocation = LoquiXmlTranslation<VendorLocation>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4774,9 +4777,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Conditions":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.Conditions);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Conditions);
                         if (ListXmlTranslation<Condition>.Instance.Parse(
                             node: node,
                             enumer: out var ConditionsItem,
@@ -4802,9 +4805,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "CRVADataTypeState":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.CRVADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.CRVADataTypeState);
                         item.CRVADataTypeState = EnumXmlTranslation<Faction.CRVADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4953,16 +4956,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Relations,
                 transl: (MutagenWriter subWriter, IRelationGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((RelationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((RelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.WriteNullable(
@@ -5029,16 +5029,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Ranks,
                 transl: (MutagenWriter subWriter, IRankGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((RankBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((RankBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -5051,27 +5048,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.VendorChest,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.VENC_HEADER),
                 masterReferences: masterReferences);
+            if (item.VendorValues.TryGet(out var VendorValuesItem))
             {
-                var loquiItem = item.VendorValues;
-                if (loquiItem != null)
-                {
-                    ((VendorValuesBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((VendorValuesBinaryWriteTranslation)((IBinaryItem)VendorValuesItem).BinaryWriteTranslator).Write(
+                    item: VendorValuesItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
+            if (item.VendorLocation.TryGet(out var VendorLocationItem))
             {
-                var loquiItem = item.VendorLocation;
-                if (loquiItem != null)
-                {
-                    ((VendorLocationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((VendorLocationBinaryWriteTranslation)((IBinaryItem)VendorLocationItem).BinaryWriteTranslator).Write(
+                    item: VendorLocationItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             FactionBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
@@ -5193,7 +5184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 

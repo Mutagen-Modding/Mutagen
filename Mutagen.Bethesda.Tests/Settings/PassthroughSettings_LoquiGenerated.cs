@@ -383,28 +383,28 @@ namespace Mutagen.Bethesda.Tests
                 switch (enu)
                 {
                     case PassthroughSettings_FieldIndex.ReuseCaches:
-                        this.ReuseCaches = (Exception)obj;
+                        this.ReuseCaches = (Exception?)obj;
                         break;
                     case PassthroughSettings_FieldIndex.ReorderRecords:
-                        this.ReorderRecords = (Exception)obj;
+                        this.ReorderRecords = (Exception?)obj;
                         break;
                     case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                        this.DeleteCachesAfter = (Exception)obj;
+                        this.DeleteCachesAfter = (Exception?)obj;
                         break;
                     case PassthroughSettings_FieldIndex.TestNormal:
-                        this.TestNormal = (Exception)obj;
+                        this.TestNormal = (Exception?)obj;
                         break;
                     case PassthroughSettings_FieldIndex.TestBinaryOverlay:
-                        this.TestBinaryOverlay = (Exception)obj;
+                        this.TestBinaryOverlay = (Exception?)obj;
                         break;
                     case PassthroughSettings_FieldIndex.TestImport:
-                        this.TestImport = (Exception)obj;
+                        this.TestImport = (Exception?)obj;
                         break;
                     case PassthroughSettings_FieldIndex.TestFolder:
-                        this.TestFolder = (Exception)obj;
+                        this.TestFolder = (Exception?)obj;
                         break;
                     case PassthroughSettings_FieldIndex.TestCopyIn:
-                        this.TestCopyIn = (Exception)obj;
+                        this.TestCopyIn = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -430,13 +430,13 @@ namespace Mutagen.Bethesda.Tests
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPassthroughSettingsGetter)rhs, include);
 
@@ -1742,9 +1742,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IPassthroughSettingsGetter)item,
                     name: name,
@@ -1806,9 +1806,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "ReuseCaches":
                     if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
                     {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
                             item.ReuseCaches = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1827,9 +1827,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "ReorderRecords":
                     if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReorderRecords) ?? true))
                     {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReorderRecords);
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReorderRecords);
                             item.ReorderRecords = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1848,9 +1848,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "DeleteCachesAfter":
                     if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DeleteCachesAfter) ?? true))
                     {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
                             item.DeleteCachesAfter = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1869,9 +1869,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestNormal":
                     if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestNormal) ?? true))
                     {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
                             item.TestNormal = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1890,9 +1890,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestBinaryOverlay":
                     if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestBinaryOverlay) ?? true))
                     {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestBinaryOverlay);
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestBinaryOverlay);
                             item.TestBinaryOverlay = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1911,9 +1911,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestImport":
                     if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestImport) ?? true))
                     {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestImport);
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestImport);
                             item.TestImport = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1932,9 +1932,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestFolder":
                     if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestFolder) ?? true))
                     {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
                             item.TestFolder = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1953,9 +1953,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "TestCopyIn":
                     if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestCopyIn) ?? true))
                     {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestCopyIn);
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestCopyIn);
                             item.TestCopyIn = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);

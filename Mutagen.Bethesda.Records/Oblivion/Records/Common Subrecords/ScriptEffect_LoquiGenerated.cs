@@ -513,22 +513,22 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case ScriptEffect_FieldIndex.Script:
-                        this.Script = (Exception)obj;
+                        this.Script = (Exception?)obj;
                         break;
                     case ScriptEffect_FieldIndex.MagicSchool:
-                        this.MagicSchool = (Exception)obj;
+                        this.MagicSchool = (Exception?)obj;
                         break;
                     case ScriptEffect_FieldIndex.VisualEffect:
-                        this.VisualEffect = (Exception)obj;
+                        this.VisualEffect = (Exception?)obj;
                         break;
                     case ScriptEffect_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case ScriptEffect_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case ScriptEffect_FieldIndex.SCITDataTypeState:
-                        this.SCITDataTypeState = (Exception)obj;
+                        this.SCITDataTypeState = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -552,13 +552,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptEffectGetter)rhs, include);
 
@@ -1858,9 +1858,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IScriptEffectGetter)item,
                     name: name,
@@ -1920,9 +1920,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Script":
+                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
                     try
                     {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1939,9 +1939,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.SCITDataTypeState |= ScriptEffect.SCITDataType.Has;
                     break;
                 case "MagicSchool":
+                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
                     try
                     {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
                         item.MagicSchool = EnumXmlTranslation<MagicSchool>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1958,9 +1958,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.SCITDataTypeState &= ~ScriptEffect.SCITDataType.Break0;
                     break;
                 case "VisualEffect":
+                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
                     try
                     {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
                         item.VisualEffect.EDID = RecordTypeXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1976,9 +1976,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1995,9 +1995,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.SCITDataTypeState &= ~ScriptEffect.SCITDataType.Break1;
                     break;
                 case "Name":
+                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2013,9 +2013,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SCITDataTypeState":
+                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.SCITDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.SCITDataTypeState);
                         item.SCITDataTypeState = EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2332,7 +2332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptEffectGetter)rhs, include);
 

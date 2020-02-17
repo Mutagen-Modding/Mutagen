@@ -579,22 +579,22 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case SpellUnleveled_FieldIndex.Type:
-                        this.Type = (Exception)obj;
+                        this.Type = (Exception?)obj;
                         break;
                     case SpellUnleveled_FieldIndex.Cost:
-                        this.Cost = (Exception)obj;
+                        this.Cost = (Exception?)obj;
                         break;
                     case SpellUnleveled_FieldIndex.Level:
-                        this.Level = (Exception)obj;
+                        this.Level = (Exception?)obj;
                         break;
                     case SpellUnleveled_FieldIndex.Flag:
-                        this.Flag = (Exception)obj;
+                        this.Flag = (Exception?)obj;
                         break;
                     case SpellUnleveled_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
                     case SpellUnleveled_FieldIndex.SPITDataTypeState:
-                        this.SPITDataTypeState = (Exception)obj;
+                        this.SPITDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -619,13 +619,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellUnleveledGetter)rhs, include);
 
@@ -1733,7 +1733,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Cost = true;
             mask.Level = true;
             mask.Flag = true;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var EffectsItem = item.Effects;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(EffectsItem.HasBeenSet, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.SPITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2263,9 +2264,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)SpellUnleveled_FieldIndex.Effects),
                     transl: (XElement subNode, IEffectGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((EffectXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((EffectXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2419,9 +2420,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Type":
+                    errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
                     try
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
                         item.Type = EnumXmlTranslation<Spell.SpellType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2438,9 +2439,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.SPITDataTypeState |= SpellUnleveled.SPITDataType.Has;
                     break;
                 case "Cost":
+                    errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
                     try
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
                         item.Cost = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2456,9 +2457,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Level":
+                    errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
                     try
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
                         item.Level = EnumXmlTranslation<Spell.SpellLevel>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2474,9 +2475,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flag":
+                    errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
                     try
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
                         item.Flag = EnumXmlTranslation<Spell.SpellFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2492,9 +2493,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Effects":
+                    errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
                     try
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
                         if (ListXmlTranslation<Effect>.Instance.Parse(
                             node: node,
                             enumer: out var EffectsItem,
@@ -2520,9 +2521,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SPITDataTypeState":
+                    errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.SPITDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.SPITDataTypeState);
                         item.SPITDataTypeState = EnumXmlTranslation<SpellUnleveled.SPITDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2669,16 +2670,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Effects,
                 transl: (MutagenWriter subWriter, IEffectGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((EffectBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((EffectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -2807,7 +2805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellUnleveledGetter)rhs, include);
 

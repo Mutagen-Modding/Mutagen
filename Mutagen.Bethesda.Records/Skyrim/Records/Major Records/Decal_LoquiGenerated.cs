@@ -580,37 +580,37 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Decal_FieldIndex.MinWidth:
-                        this.MinWidth = (Exception)obj;
+                        this.MinWidth = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.MaxWidth:
-                        this.MaxWidth = (Exception)obj;
+                        this.MaxWidth = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.MinHeight:
-                        this.MinHeight = (Exception)obj;
+                        this.MinHeight = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.MaxHeight:
-                        this.MaxHeight = (Exception)obj;
+                        this.MaxHeight = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.Depth:
-                        this.Depth = (Exception)obj;
+                        this.Depth = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.Shininess:
-                        this.Shininess = (Exception)obj;
+                        this.Shininess = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.ParallaxScale:
-                        this.ParallaxScale = (Exception)obj;
+                        this.ParallaxScale = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.ParallaxPasses:
-                        this.ParallaxPasses = (Exception)obj;
+                        this.ParallaxPasses = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.Unknown:
-                        this.Unknown = (Exception)obj;
+                        this.Unknown = (Exception?)obj;
                         break;
                     case Decal_FieldIndex.Color:
-                        this.Color = (Exception)obj;
+                        this.Color = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -639,13 +639,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDecalGetter)rhs, include);
 
@@ -2077,9 +2077,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IDecalGetter)item,
                     name: name,
@@ -2139,9 +2139,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "MinWidth":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.MinWidth);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.MinWidth);
                         item.MinWidth = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2157,9 +2157,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MaxWidth":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.MaxWidth);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.MaxWidth);
                         item.MaxWidth = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2175,9 +2175,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MinHeight":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.MinHeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.MinHeight);
                         item.MinHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2193,9 +2193,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MaxHeight":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.MaxHeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.MaxHeight);
                         item.MaxHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2211,9 +2211,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Depth":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.Depth);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.Depth);
                         item.Depth = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2229,9 +2229,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Shininess":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.Shininess);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.Shininess);
                         item.Shininess = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2247,9 +2247,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ParallaxScale":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxScale);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxScale);
                         item.ParallaxScale = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2265,9 +2265,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ParallaxPasses":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxPasses);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxPasses);
                         item.ParallaxPasses = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2283,9 +2283,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Decal.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2301,9 +2301,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.Unknown);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.Unknown);
                         item.Unknown = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2319,9 +2319,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Color":
+                    errorMask?.PushIndex((int)Decal_FieldIndex.Color);
                     try
                     {
-                        errorMask?.PushIndex((int)Decal_FieldIndex.Color);
                         item.Color = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2630,7 +2630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDecalGetter)rhs, include);
 

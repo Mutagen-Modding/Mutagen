@@ -405,10 +405,10 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Part_FieldIndex.PartType:
-                        this.PartType = (Exception)obj;
+                        this.PartType = (Exception?)obj;
                         break;
                     case Part_FieldIndex.FileName:
-                        this.FileName = (Exception)obj;
+                        this.FileName = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -428,13 +428,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPartGetter)rhs, include);
 
@@ -1533,9 +1533,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IPartGetter)item,
                     name: name,
@@ -1595,9 +1595,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "PartType":
+                    errorMask?.PushIndex((int)Part_FieldIndex.PartType);
                     try
                     {
-                        errorMask?.PushIndex((int)Part_FieldIndex.PartType);
                         item.PartType = EnumXmlTranslation<Part.PartTypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1613,9 +1613,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FileName":
+                    errorMask?.PushIndex((int)Part_FieldIndex.FileName);
                     try
                     {
-                        errorMask?.PushIndex((int)Part_FieldIndex.FileName);
                         item.FileName = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1899,7 +1899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPartGetter)rhs, include);
 

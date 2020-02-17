@@ -483,10 +483,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case MapMarker_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case MapMarker_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case MapMarker_FieldIndex.Types:
                         this.Types = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -510,13 +510,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerGetter)rhs, include);
 
@@ -1746,9 +1746,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IMapMarkerGetter)item,
                     name: name,
@@ -1808,9 +1808,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Flags":
+                    errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<MapMarker.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1826,9 +1826,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Name":
+                    errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1844,9 +1844,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Types":
+                    errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
                     try
                     {
-                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
                         if (ListXmlTranslation<MapMarker.Type>.Instance.Parse(
                             node: node,
                             enumer: out var TypesItem,
@@ -2151,7 +2151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerGetter)rhs, include);
 

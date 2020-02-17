@@ -517,22 +517,22 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case LocalVariable_FieldIndex.Index:
-                        this.Index = (Exception)obj;
+                        this.Index = (Exception?)obj;
                         break;
                     case LocalVariable_FieldIndex.Fluff:
-                        this.Fluff = (Exception)obj;
+                        this.Fluff = (Exception?)obj;
                         break;
                     case LocalVariable_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case LocalVariable_FieldIndex.Fluff2:
-                        this.Fluff2 = (Exception)obj;
+                        this.Fluff2 = (Exception?)obj;
                         break;
                     case LocalVariable_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case LocalVariable_FieldIndex.SLSDDataTypeState:
-                        this.SLSDDataTypeState = (Exception)obj;
+                        this.SLSDDataTypeState = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -556,13 +556,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableGetter)rhs, include);
 
@@ -1828,9 +1828,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ILocalVariableGetter)item,
                     name: name,
@@ -1890,9 +1890,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Index":
+                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Index);
                     try
                     {
-                        errorMask?.PushIndex((int)LocalVariable_FieldIndex.Index);
                         item.Index = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1909,9 +1909,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.SLSDDataTypeState |= LocalVariable.SLSDDataType.Has;
                     break;
                 case "Fluff":
+                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Fluff);
                     try
                     {
-                        errorMask?.PushIndex((int)LocalVariable_FieldIndex.Fluff);
                         item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 12,
@@ -1928,9 +1928,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)LocalVariable_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Script.LocalVariableFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1946,9 +1946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff2":
+                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Fluff2);
                     try
                     {
-                        errorMask?.PushIndex((int)LocalVariable_FieldIndex.Fluff2);
                         item.Fluff2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 4,
@@ -1965,9 +1965,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Name":
+                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)LocalVariable_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1983,9 +1983,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SLSDDataTypeState":
+                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.SLSDDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)LocalVariable_FieldIndex.SLSDDataTypeState);
                         item.SLSDDataTypeState = EnumXmlTranslation<LocalVariable.SLSDDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2292,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableGetter)rhs, include);
 

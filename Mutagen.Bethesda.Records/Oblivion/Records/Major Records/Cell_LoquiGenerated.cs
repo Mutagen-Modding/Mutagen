@@ -1161,13 +1161,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Cell_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.Grid:
-                        this.Grid = (Exception)obj;
+                        this.Grid = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.Lighting:
                         this.Lighting = (MaskItem<Exception?, CellLighting.ErrorMask?>?)obj;
@@ -1176,25 +1176,25 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Regions = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Cell_FieldIndex.MusicType:
-                        this.MusicType = (Exception)obj;
+                        this.MusicType = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.WaterHeight:
-                        this.WaterHeight = (Exception)obj;
+                        this.WaterHeight = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.Climate:
-                        this.Climate = (Exception)obj;
+                        this.Climate = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.Water:
-                        this.Water = (Exception)obj;
+                        this.Water = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.Owner:
-                        this.Owner = (Exception)obj;
+                        this.Owner = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.FactionRank:
-                        this.FactionRank = (Exception)obj;
+                        this.FactionRank = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.GlobalVariable:
-                        this.GlobalVariable = (Exception)obj;
+                        this.GlobalVariable = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.PathGrid:
                         this.PathGrid = (MaskItem<Exception?, PathGrid.ErrorMask?>?)obj;
@@ -1203,22 +1203,22 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Landscape = (MaskItem<Exception?, Landscape.ErrorMask?>?)obj;
                         break;
                     case Cell_FieldIndex.Timestamp:
-                        this.Timestamp = (Exception)obj;
+                        this.Timestamp = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.PersistentTimestamp:
-                        this.PersistentTimestamp = (Exception)obj;
+                        this.PersistentTimestamp = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.Persistent:
                         this.Persistent = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
                         break;
                     case Cell_FieldIndex.TemporaryTimestamp:
-                        this.TemporaryTimestamp = (Exception)obj;
+                        this.TemporaryTimestamp = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.Temporary:
                         this.Temporary = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
                         break;
                     case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                        this.VisibleWhenDistantTimestamp = (Exception)obj;
+                        this.VisibleWhenDistantTimestamp = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.VisibleWhenDistant:
                         this.VisibleWhenDistant = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
@@ -1261,13 +1261,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Grid = this.Grid.Combine(rhs.Grid);
-                ret.Lighting = new MaskItem<Exception?, CellLighting.ErrorMask?>(ExceptionExt.Combine(this.Lighting?.Overall, rhs.Lighting?.Overall), (this.Lighting?.Specific as IErrorMask<CellLighting.ErrorMask>)?.Combine(rhs.Lighting?.Specific));
+                ret.Lighting = this.Lighting.Combine(rhs.Lighting, (l, r) => l.Combine(r));
                 ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
                 ret.MusicType = this.MusicType.Combine(rhs.MusicType);
                 ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
@@ -1425,8 +1425,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Owner = this.Owner.Combine(rhs.Owner);
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
-                ret.PathGrid = new MaskItem<Exception?, PathGrid.ErrorMask?>(ExceptionExt.Combine(this.PathGrid?.Overall, rhs.PathGrid?.Overall), (this.PathGrid?.Specific as IErrorMask<PathGrid.ErrorMask>)?.Combine(rhs.PathGrid?.Specific));
-                ret.Landscape = new MaskItem<Exception?, Landscape.ErrorMask?>(ExceptionExt.Combine(this.Landscape?.Overall, rhs.Landscape?.Overall), (this.Landscape?.Specific as IErrorMask<Landscape.ErrorMask>)?.Combine(rhs.Landscape?.Specific));
+                ret.PathGrid = this.PathGrid.Combine(rhs.PathGrid, (l, r) => l.Combine(r));
+                ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
                 ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellGetter)rhs, include);
 
@@ -2761,7 +2761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Lighting = EqualsMaskHelper.EqualsHelper(
                 item.Lighting,
                 rhs.Lighting,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Regions = item.Regions.CollectionEqualsHelper(
                 rhs.Regions,
@@ -2777,12 +2777,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PathGrid = EqualsMaskHelper.EqualsHelper(
                 item.PathGrid,
                 rhs.PathGrid,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Landscape = EqualsMaskHelper.EqualsHelper(
                 item.Landscape,
                 rhs.Landscape,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp, rhs.Timestamp);
             ret.PersistentTimestamp = MemoryExtensions.SequenceEqual(item.PersistentTimestamp, rhs.PersistentTimestamp);
@@ -3045,11 +3045,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Landscape = new MaskItem<bool, Landscape.Mask<bool>?>(itemLandscape != null, itemLandscape?.GetHasBeenSetMask());
             mask.Timestamp = true;
             mask.PersistentTimestamp = true;
-            mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(item.Persistent.HasBeenSet, item.Persistent.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            var PersistentItem = item.Persistent;
+            mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(PersistentItem.HasBeenSet, PersistentItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
             mask.TemporaryTimestamp = true;
-            mask.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(item.Temporary.HasBeenSet, item.Temporary.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            var TemporaryItem = item.Temporary;
+            mask.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(TemporaryItem.HasBeenSet, TemporaryItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
             mask.VisibleWhenDistantTimestamp = true;
-            mask.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            var VisibleWhenDistantItem = item.VisibleWhenDistant;
+            mask.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(VisibleWhenDistantItem.HasBeenSet, VisibleWhenDistantItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3897,9 +3900,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Lighting != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
             {
-                var loquiItem = item.Lighting;
-                ((CellLightingXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var LightingItem = item.Lighting;
+                ((CellLightingXmlWriteTranslation)((IXmlItem)LightingItem).XmlWriteTranslator).Write(
+                    item: LightingItem,
                     node: node,
                     name: nameof(item.Lighting),
                     fieldIndex: (int)Cell_FieldIndex.Lighting,
@@ -3998,9 +4001,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.PathGrid != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
-                var loquiItem = item.PathGrid;
-                ((PathGridXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var PathGridItem = item.PathGrid;
+                ((PathGridXmlWriteTranslation)((IXmlItem)PathGridItem).XmlWriteTranslator).Write(
+                    item: PathGridItem,
                     node: node,
                     name: nameof(item.PathGrid),
                     fieldIndex: (int)Cell_FieldIndex.PathGrid,
@@ -4010,9 +4013,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Landscape != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
-                var loquiItem = item.Landscape;
-                ((LandscapeXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var LandscapeItem = item.Landscape;
+                ((LandscapeXmlWriteTranslation)((IXmlItem)LandscapeItem).XmlWriteTranslator).Write(
+                    item: LandscapeItem,
                     node: node,
                     name: nameof(item.Landscape),
                     fieldIndex: (int)Cell_FieldIndex.Landscape,
@@ -4049,9 +4052,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Persistent),
                     transl: (XElement subNode, IPlacedGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((IXmlWriteTranslator)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4079,9 +4082,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Temporary),
                     transl: (XElement subNode, IPlacedGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((IXmlWriteTranslator)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4109,9 +4112,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.VisibleWhenDistant),
                     transl: (XElement subNode, IPlacedGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((IXmlWriteTranslator)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((IXmlWriteTranslator)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4241,9 +4244,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4259,9 +4262,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Cell.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4277,9 +4280,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Grid":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
                         item.Grid = P2IntXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4295,9 +4298,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Lighting":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                         item.Lighting = LoquiXmlTranslation<CellLighting>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4314,9 +4317,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Regions":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
                         if (ListXmlTranslation<IFormLink<Region>>.Instance.Parse(
                             node: node,
                             enumer: out var RegionsItem,
@@ -4342,9 +4345,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MusicType":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
                         item.MusicType = EnumXmlTranslation<MusicType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4360,9 +4363,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "WaterHeight":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
                         item.WaterHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4378,9 +4381,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Climate":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Climate);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Climate);
                         item.Climate.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4396,9 +4399,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Water":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Water);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Water);
                         item.Water.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4414,9 +4417,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Owner":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Owner);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Owner);
                         item.Owner.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4432,9 +4435,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FactionRank":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
                         item.FactionRank = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4450,9 +4453,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "GlobalVariable":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.GlobalVariable);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.GlobalVariable);
                         item.GlobalVariable.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4468,9 +4471,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PathGrid":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
                         item.PathGrid = LoquiXmlTranslation<PathGrid>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4487,9 +4490,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Landscape":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
                         item.Landscape = LoquiXmlTranslation<Landscape>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4506,9 +4509,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Timestamp":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Timestamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Timestamp);
                         item.Timestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 4,
@@ -4525,9 +4528,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PersistentTimestamp":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.PersistentTimestamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.PersistentTimestamp);
                         item.PersistentTimestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 4,
@@ -4544,9 +4547,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Persistent":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
                         if (ListXmlTranslation<IPlaced>.Instance.Parse(
                             node: node,
                             enumer: out var PersistentItem,
@@ -4572,9 +4575,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "TemporaryTimestamp":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.TemporaryTimestamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.TemporaryTimestamp);
                         item.TemporaryTimestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 4,
@@ -4591,9 +4594,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Temporary":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
                         if (ListXmlTranslation<IPlaced>.Instance.Parse(
                             node: node,
                             enumer: out var TemporaryItem,
@@ -4619,9 +4622,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "VisibleWhenDistantTimestamp":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistantTimestamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistantTimestamp);
                         item.VisibleWhenDistantTimestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 4,
@@ -4638,9 +4641,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "VisibleWhenDistant":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
                     try
                     {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
                         if (ListXmlTranslation<IPlaced>.Instance.Parse(
                             node: node,
                             enumer: out var VisibleWhenDistantItem,
@@ -4801,16 +4804,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Grid,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLC_HEADER));
+            if (item.Lighting.TryGet(out var LightingItem))
             {
-                var loquiItem = item.Lighting;
-                if (loquiItem != null)
-                {
-                    ((CellLightingBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((CellLightingBinaryWriteTranslation)((IBinaryItem)LightingItem).BinaryWriteTranslator).Write(
+                    item: LightingItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
                 writer: writer,
@@ -4973,7 +4973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellGetter)rhs, include);
 

@@ -847,46 +847,46 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case Tree_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.SpeedTreeSeeds:
                         this.SpeedTreeSeeds = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Tree_FieldIndex.LeafCurvature:
-                        this.LeafCurvature = (Exception)obj;
+                        this.LeafCurvature = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.MinimumLeafAngle:
-                        this.MinimumLeafAngle = (Exception)obj;
+                        this.MinimumLeafAngle = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.MaximumLeafAngle:
-                        this.MaximumLeafAngle = (Exception)obj;
+                        this.MaximumLeafAngle = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.BranchDimmingValue:
-                        this.BranchDimmingValue = (Exception)obj;
+                        this.BranchDimmingValue = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.LeafDimmingValue:
-                        this.LeafDimmingValue = (Exception)obj;
+                        this.LeafDimmingValue = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.ShadowRadius:
-                        this.ShadowRadius = (Exception)obj;
+                        this.ShadowRadius = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.RockingSpeed:
-                        this.RockingSpeed = (Exception)obj;
+                        this.RockingSpeed = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.RustleSpeed:
-                        this.RustleSpeed = (Exception)obj;
+                        this.RustleSpeed = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.BillboardWidth:
-                        this.BillboardWidth = (Exception)obj;
+                        this.BillboardWidth = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.BillboardHeight:
-                        this.BillboardHeight = (Exception)obj;
+                        this.BillboardHeight = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = (Exception)obj;
+                        this.CNAMDataTypeState = (Exception?)obj;
                         break;
                     case Tree_FieldIndex.BNAMDataTypeState:
-                        this.BNAMDataTypeState = (Exception)obj;
+                        this.BNAMDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -920,13 +920,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SpeedTreeSeeds?.Overall, rhs.SpeedTreeSeeds?.Overall), ExceptionExt.Combine(this.SpeedTreeSeeds?.Specific, rhs.SpeedTreeSeeds?.Specific));
                 ret.LeafCurvature = this.LeafCurvature.Combine(rhs.LeafCurvature);
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeGetter)rhs, include);
 
@@ -2121,7 +2121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.SpeedTreeSeeds = item.SpeedTreeSeeds.CollectionEqualsHelper(
@@ -2731,9 +2731,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Tree_FieldIndex.Model,
@@ -2991,9 +2991,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Model":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -3010,9 +3010,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3028,9 +3028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SpeedTreeSeeds":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
                         if (ListXmlTranslation<UInt32>.Instance.Parse(
                             node: node,
                             enumer: out var SpeedTreeSeedsItem,
@@ -3056,9 +3056,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LeafCurvature":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
                         item.LeafCurvature = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3075,9 +3075,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CNAMDataTypeState |= Tree.CNAMDataType.Has;
                     break;
                 case "MinimumLeafAngle":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
                         item.MinimumLeafAngle = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3093,9 +3093,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MaximumLeafAngle":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
                         item.MaximumLeafAngle = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3111,9 +3111,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BranchDimmingValue":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
                         item.BranchDimmingValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3129,9 +3129,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LeafDimmingValue":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
                         item.LeafDimmingValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3147,9 +3147,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ShadowRadius":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
                         item.ShadowRadius = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3165,9 +3165,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RockingSpeed":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
                         item.RockingSpeed = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3183,9 +3183,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RustleSpeed":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
                         item.RustleSpeed = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3201,9 +3201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BillboardWidth":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
                         item.BillboardWidth = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3220,9 +3220,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.BNAMDataTypeState |= Tree.BNAMDataType.Has;
                     break;
                 case "BillboardHeight":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
                         item.BillboardHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3238,9 +3238,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CNAMDataTypeState":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.CNAMDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.CNAMDataTypeState);
                         item.CNAMDataTypeState = EnumXmlTranslation<Tree.CNAMDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3256,9 +3256,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BNAMDataTypeState":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.BNAMDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.BNAMDataTypeState);
                         item.BNAMDataTypeState = EnumXmlTranslation<Tree.BNAMDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3381,16 +3381,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3542,7 +3539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeGetter)rhs, include);
 

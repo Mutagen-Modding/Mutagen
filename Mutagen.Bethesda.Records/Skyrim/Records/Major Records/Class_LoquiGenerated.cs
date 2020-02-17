@@ -1303,97 +1303,97 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Class_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Description:
-                        this.Description = (Exception)obj;
+                        this.Description = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Unknown:
-                        this.Unknown = (Exception)obj;
+                        this.Unknown = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Teaches:
-                        this.Teaches = (Exception)obj;
+                        this.Teaches = (Exception?)obj;
                         break;
                     case Class_FieldIndex.MaxTrainingLevel:
-                        this.MaxTrainingLevel = (Exception)obj;
+                        this.MaxTrainingLevel = (Exception?)obj;
                         break;
                     case Class_FieldIndex.OneHandedWeight:
-                        this.OneHandedWeight = (Exception)obj;
+                        this.OneHandedWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.TwoHandedWeight:
-                        this.TwoHandedWeight = (Exception)obj;
+                        this.TwoHandedWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.MarksmanWeight:
-                        this.MarksmanWeight = (Exception)obj;
+                        this.MarksmanWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.BlockWeight:
-                        this.BlockWeight = (Exception)obj;
+                        this.BlockWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.SmithingWeight:
-                        this.SmithingWeight = (Exception)obj;
+                        this.SmithingWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.HeavyArmorWeight:
-                        this.HeavyArmorWeight = (Exception)obj;
+                        this.HeavyArmorWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.LightArmorWeight:
-                        this.LightArmorWeight = (Exception)obj;
+                        this.LightArmorWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.PickpocketWeight:
-                        this.PickpocketWeight = (Exception)obj;
+                        this.PickpocketWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.LockpickingWeight:
-                        this.LockpickingWeight = (Exception)obj;
+                        this.LockpickingWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.SneakWeight:
-                        this.SneakWeight = (Exception)obj;
+                        this.SneakWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.AlchemyWeight:
-                        this.AlchemyWeight = (Exception)obj;
+                        this.AlchemyWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.SpeechcraftWeight:
-                        this.SpeechcraftWeight = (Exception)obj;
+                        this.SpeechcraftWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.AlterationWeight:
-                        this.AlterationWeight = (Exception)obj;
+                        this.AlterationWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.ConjurationWeight:
-                        this.ConjurationWeight = (Exception)obj;
+                        this.ConjurationWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.DestructionWeight:
-                        this.DestructionWeight = (Exception)obj;
+                        this.DestructionWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.IllusionWeight:
-                        this.IllusionWeight = (Exception)obj;
+                        this.IllusionWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.RestorationWeight:
-                        this.RestorationWeight = (Exception)obj;
+                        this.RestorationWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.EnchantingWeight:
-                        this.EnchantingWeight = (Exception)obj;
+                        this.EnchantingWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.BleedoutDefault:
-                        this.BleedoutDefault = (Exception)obj;
+                        this.BleedoutDefault = (Exception?)obj;
                         break;
                     case Class_FieldIndex.VoicePoints:
-                        this.VoicePoints = (Exception)obj;
+                        this.VoicePoints = (Exception?)obj;
                         break;
                     case Class_FieldIndex.HealthWeight:
-                        this.HealthWeight = (Exception)obj;
+                        this.HealthWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.MagickaWeight:
-                        this.MagickaWeight = (Exception)obj;
+                        this.MagickaWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.StaminaWeight:
-                        this.StaminaWeight = (Exception)obj;
+                        this.StaminaWeight = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception)obj;
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     case Class_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1443,13 +1443,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 
@@ -4071,9 +4071,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4089,9 +4089,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Description":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Description);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Description);
                         item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4107,9 +4107,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4125,9 +4125,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Unknown);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Unknown);
                         item.Unknown = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4144,9 +4144,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DATADataTypeState |= Class.DATADataType.Has;
                     break;
                 case "Teaches":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Teaches);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Teaches);
                         item.Teaches = EnumXmlTranslation<Skill>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4162,9 +4162,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MaxTrainingLevel":
+                    errorMask?.PushIndex((int)Class_FieldIndex.MaxTrainingLevel);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.MaxTrainingLevel);
                         item.MaxTrainingLevel = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4180,9 +4180,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "OneHandedWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.OneHandedWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.OneHandedWeight);
                         item.OneHandedWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4198,9 +4198,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "TwoHandedWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.TwoHandedWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.TwoHandedWeight);
                         item.TwoHandedWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4216,9 +4216,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MarksmanWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.MarksmanWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.MarksmanWeight);
                         item.MarksmanWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4234,9 +4234,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BlockWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.BlockWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.BlockWeight);
                         item.BlockWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4252,9 +4252,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SmithingWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.SmithingWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.SmithingWeight);
                         item.SmithingWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4270,9 +4270,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "HeavyArmorWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.HeavyArmorWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.HeavyArmorWeight);
                         item.HeavyArmorWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4288,9 +4288,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "LightArmorWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.LightArmorWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.LightArmorWeight);
                         item.LightArmorWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4306,9 +4306,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "PickpocketWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.PickpocketWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.PickpocketWeight);
                         item.PickpocketWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4324,9 +4324,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "LockpickingWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.LockpickingWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.LockpickingWeight);
                         item.LockpickingWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4342,9 +4342,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SneakWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.SneakWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.SneakWeight);
                         item.SneakWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4360,9 +4360,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AlchemyWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.AlchemyWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.AlchemyWeight);
                         item.AlchemyWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4378,9 +4378,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "SpeechcraftWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.SpeechcraftWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.SpeechcraftWeight);
                         item.SpeechcraftWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4396,9 +4396,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AlterationWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.AlterationWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.AlterationWeight);
                         item.AlterationWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4414,9 +4414,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ConjurationWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.ConjurationWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.ConjurationWeight);
                         item.ConjurationWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4432,9 +4432,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DestructionWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.DestructionWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.DestructionWeight);
                         item.DestructionWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4450,9 +4450,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "IllusionWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.IllusionWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.IllusionWeight);
                         item.IllusionWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4468,9 +4468,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "RestorationWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.RestorationWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.RestorationWeight);
                         item.RestorationWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4486,9 +4486,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "EnchantingWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.EnchantingWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.EnchantingWeight);
                         item.EnchantingWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4504,9 +4504,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BleedoutDefault":
+                    errorMask?.PushIndex((int)Class_FieldIndex.BleedoutDefault);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.BleedoutDefault);
                         item.BleedoutDefault = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4522,9 +4522,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "VoicePoints":
+                    errorMask?.PushIndex((int)Class_FieldIndex.VoicePoints);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.VoicePoints);
                         item.VoicePoints = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4540,9 +4540,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "HealthWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.HealthWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.HealthWeight);
                         item.HealthWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4558,9 +4558,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MagickaWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.MagickaWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.MagickaWeight);
                         item.MagickaWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4576,9 +4576,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "StaminaWeight":
+                    errorMask?.PushIndex((int)Class_FieldIndex.StaminaWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.StaminaWeight);
                         item.StaminaWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4594,9 +4594,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown2":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Unknown2);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Unknown2);
                         item.Unknown2 = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4612,9 +4612,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Class_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Class.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4890,7 +4890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 

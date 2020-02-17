@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
@@ -1494,9 +1494,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
             {
+                errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
                 try
                 {
-                    errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
                     KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
                         node: node,
                         name: nameof(item.RecordCache),
@@ -1505,9 +1505,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         valTransl: (XElement subNode, T subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictTranslMask) =>
                         {
-                            var loquiItem = subItem;
-                            ((SkyrimMajorRecordXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                                item: loquiItem,
+                            var Item = subItem;
+                            ((SkyrimMajorRecordXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
                                 node: subNode,
                                 name: null,
                                 errorMask: dictSubMask,
@@ -1566,9 +1566,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IGroupGetter<T>)item,
                     name: name,
@@ -1629,9 +1629,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "GroupType":
+                    errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
                     try
                     {
-                        errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
                         item.GroupType = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1647,9 +1647,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "LastModified":
+                    errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
                     try
                     {
-                        errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
                         item.LastModified = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1665,9 +1665,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown":
+                    errorMask?.PushIndex((int)Group_FieldIndex.Unknown);
                     try
                     {
-                        errorMask?.PushIndex((int)Group_FieldIndex.Unknown);
                         item.Unknown = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1929,16 +1929,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.RecordCache.Items,
                 transl: (MutagenWriter r, T dictSubItem) =>
                 {
+                    if (dictSubItem.TryGet(out var Item))
                     {
-                        var loquiItem = dictSubItem;
-                        if (loquiItem != null)
-                        {
-                            ((SkyrimMajorRecordBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: r,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((SkyrimMajorRecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: r,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -2050,7 +2047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
@@ -2422,13 +2419,13 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Group_FieldIndex.GroupType:
-                        this.GroupType = (Exception)obj;
+                        this.GroupType = (Exception?)obj;
                         break;
                     case Group_FieldIndex.LastModified:
-                        this.LastModified = (Exception)obj;
+                        this.LastModified = (Exception?)obj;
                         break;
                     case Group_FieldIndex.Unknown:
-                        this.Unknown = (Exception)obj;
+                        this.Unknown = (Exception?)obj;
                         break;
                     case Group_FieldIndex.RecordCache:
                         this.RecordCache = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>)obj;
@@ -2453,13 +2450,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
         
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

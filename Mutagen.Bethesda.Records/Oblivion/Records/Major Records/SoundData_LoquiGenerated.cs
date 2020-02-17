@@ -425,16 +425,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case SoundData_FieldIndex.MinimumAttenuationDistance:
-                        this.MinimumAttenuationDistance = (Exception)obj;
+                        this.MinimumAttenuationDistance = (Exception?)obj;
                         break;
                     case SoundData_FieldIndex.MaximumAttenuationDistance:
-                        this.MaximumAttenuationDistance = (Exception)obj;
+                        this.MaximumAttenuationDistance = (Exception?)obj;
                         break;
                     case SoundData_FieldIndex.FrequencyAdjustment:
-                        this.FrequencyAdjustment = (Exception)obj;
+                        this.FrequencyAdjustment = (Exception?)obj;
                         break;
                     case SoundData_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -456,13 +456,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg)
+            public virtual void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataInternalGetter)rhs, include);
 
@@ -1637,9 +1637,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ISoundDataInternalGetter)item,
                     name: name,
@@ -1699,9 +1699,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "MinimumAttenuationDistance":
+                    errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
                     try
                     {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
                         item.MinimumAttenuationDistance = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1717,9 +1717,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MaximumAttenuationDistance":
+                    errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
                     try
                     {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
                         item.MaximumAttenuationDistance = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1735,9 +1735,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FrequencyAdjustment":
+                    errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
                     try
                     {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
                         item.FrequencyAdjustment = Int8XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1753,9 +1753,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2113,7 +2113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataInternalGetter)rhs, include);
 

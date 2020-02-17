@@ -614,10 +614,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case AIPackage_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case AIPackage_FieldIndex.GeneralType:
-                        this.GeneralType = (Exception)obj;
+                        this.GeneralType = (Exception?)obj;
                         break;
                     case AIPackage_FieldIndex.Location:
                         this.Location = (MaskItem<Exception?, AIPackageLocation.ErrorMask?>?)obj;
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
                     case AIPackage_FieldIndex.PKDTDataTypeState:
-                        this.PKDTDataTypeState = (Exception)obj;
+                        this.PKDTDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -658,13 +658,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -726,9 +726,9 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.GeneralType = this.GeneralType.Combine(rhs.GeneralType);
-                ret.Location = new MaskItem<Exception?, AIPackageLocation.ErrorMask?>(ExceptionExt.Combine(this.Location?.Overall, rhs.Location?.Overall), (this.Location?.Specific as IErrorMask<AIPackageLocation.ErrorMask>)?.Combine(rhs.Location?.Specific));
-                ret.Schedule = new MaskItem<Exception?, AIPackageSchedule.ErrorMask?>(ExceptionExt.Combine(this.Schedule?.Overall, rhs.Schedule?.Overall), (this.Schedule?.Specific as IErrorMask<AIPackageSchedule.ErrorMask>)?.Combine(rhs.Schedule?.Specific));
-                ret.Target = new MaskItem<Exception?, AIPackageTarget.ErrorMask?>(ExceptionExt.Combine(this.Target?.Overall, rhs.Target?.Overall), (this.Target?.Specific as IErrorMask<AIPackageTarget.ErrorMask>)?.Combine(rhs.Target?.Specific));
+                ret.Location = this.Location.Combine(rhs.Location, (l, r) => l.Combine(r));
+                ret.Schedule = this.Schedule.Combine(rhs.Schedule, (l, r) => l.Combine(r));
+                ret.Target = this.Target.Combine(rhs.Target, (l, r) => l.Combine(r));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.PKDTDataTypeState = this.PKDTDataTypeState.Combine(rhs.PKDTDataTypeState);
                 return ret;
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageGetter)rhs, include);
 
@@ -1701,17 +1701,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Location = EqualsMaskHelper.EqualsHelper(
                 item.Location,
                 rhs.Location,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Schedule = EqualsMaskHelper.EqualsHelper(
                 item.Schedule,
                 rhs.Schedule,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Target = EqualsMaskHelper.EqualsHelper(
                 item.Target,
                 rhs.Target,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -1841,7 +1841,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Schedule = new MaskItem<bool, AIPackageSchedule.Mask<bool>?>(itemSchedule != null, itemSchedule?.GetHasBeenSetMask());
             var itemTarget = item.Target;
             mask.Target = new MaskItem<bool, AIPackageTarget.Mask<bool>?>(itemTarget != null, itemTarget?.GetHasBeenSetMask());
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(ConditionsItem.HasBeenSet, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.PKDTDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2308,9 +2309,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Location != null)
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Location) ?? true))
             {
-                var loquiItem = item.Location;
-                ((AIPackageLocationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var LocationItem = item.Location;
+                ((AIPackageLocationXmlWriteTranslation)((IXmlItem)LocationItem).XmlWriteTranslator).Write(
+                    item: LocationItem,
                     node: node,
                     name: nameof(item.Location),
                     fieldIndex: (int)AIPackage_FieldIndex.Location,
@@ -2320,9 +2321,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Schedule != null)
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Schedule) ?? true))
             {
-                var loquiItem = item.Schedule;
-                ((AIPackageScheduleXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ScheduleItem = item.Schedule;
+                ((AIPackageScheduleXmlWriteTranslation)((IXmlItem)ScheduleItem).XmlWriteTranslator).Write(
+                    item: ScheduleItem,
                     node: node,
                     name: nameof(item.Schedule),
                     fieldIndex: (int)AIPackage_FieldIndex.Schedule,
@@ -2332,9 +2333,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Target != null)
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Target) ?? true))
             {
-                var loquiItem = item.Target;
-                ((AIPackageTargetXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var TargetItem = item.Target;
+                ((AIPackageTargetXmlWriteTranslation)((IXmlItem)TargetItem).XmlWriteTranslator).Write(
+                    item: TargetItem,
                     node: node,
                     name: nameof(item.Target),
                     fieldIndex: (int)AIPackage_FieldIndex.Target,
@@ -2353,9 +2354,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2479,9 +2480,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Flags":
+                    errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<AIPackage.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2498,9 +2499,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.PKDTDataTypeState |= AIPackage.PKDTDataType.Has;
                     break;
                 case "GeneralType":
+                    errorMask?.PushIndex((int)AIPackage_FieldIndex.GeneralType);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.GeneralType);
                         item.GeneralType = EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2516,9 +2517,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Location":
+                    errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
                         item.Location = LoquiXmlTranslation<AIPackageLocation>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2535,9 +2536,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Schedule":
+                    errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
                         item.Schedule = LoquiXmlTranslation<AIPackageSchedule>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2554,9 +2555,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Target":
+                    errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
                         item.Target = LoquiXmlTranslation<AIPackageTarget>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2573,9 +2574,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Conditions":
+                    errorMask?.PushIndex((int)AIPackage_FieldIndex.Conditions);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Conditions);
                         if (ListXmlTranslation<Condition>.Instance.Parse(
                             node: node,
                             enumer: out var ConditionsItem,
@@ -2601,9 +2602,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PKDTDataTypeState":
+                    errorMask?.PushIndex((int)AIPackage_FieldIndex.PKDTDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.PKDTDataTypeState);
                         item.PKDTDataTypeState = EnumXmlTranslation<AIPackage.PKDTDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2772,54 +2773,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         masterReferences: masterReferences);
                 }
             }
+            if (item.Location.TryGet(out var LocationItem))
             {
-                var loquiItem = item.Location;
-                if (loquiItem != null)
-                {
-                    ((AIPackageLocationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((AIPackageLocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
+                    item: LocationItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
+            if (item.Schedule.TryGet(out var ScheduleItem))
             {
-                var loquiItem = item.Schedule;
-                if (loquiItem != null)
-                {
-                    ((AIPackageScheduleBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((AIPackageScheduleBinaryWriteTranslation)((IBinaryItem)ScheduleItem).BinaryWriteTranslator).Write(
+                    item: ScheduleItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
+            if (item.Target.TryGet(out var TargetItem))
             {
-                var loquiItem = item.Target;
-                if (loquiItem != null)
-                {
-                    ((AIPackageTargetBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((AIPackageTargetBinaryWriteTranslation)((IBinaryItem)TargetItem).BinaryWriteTranslator).Write(
+                    item: TargetItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
                 transl: (MutagenWriter subWriter, IConditionGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((ConditionBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -2954,7 +2943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageGetter)rhs, include);
 

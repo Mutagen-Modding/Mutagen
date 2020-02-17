@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.AttackData = (MaskItem<Exception?, AttackData.ErrorMask?>?)obj;
                         break;
                     case Attack_FieldIndex.AttackEvent:
-                        this.AttackEvent = (Exception)obj;
+                        this.AttackEvent = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -433,13 +433,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.AttackData = new MaskItem<Exception?, AttackData.ErrorMask?>(ExceptionExt.Combine(this.AttackData?.Overall, rhs.AttackData?.Overall), (this.AttackData?.Specific as IErrorMask<AttackData.ErrorMask>)?.Combine(rhs.AttackData?.Specific));
+                ret.AttackData = this.AttackData.Combine(rhs.AttackData, (l, r) => l.Combine(r));
                 ret.AttackEvent = this.AttackEvent.Combine(rhs.AttackEvent);
                 return ret;
             }
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAttackGetter)rhs, include);
 
@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.AttackData = EqualsMaskHelper.EqualsHelper(
                 item.AttackData,
                 rhs.AttackData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.AttackEvent = string.Equals(item.AttackEvent, rhs.AttackEvent);
         }
@@ -1520,9 +1520,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.AttackData != null)
                 && (translationMask?.GetShouldTranslate((int)Attack_FieldIndex.AttackData) ?? true))
             {
-                var loquiItem = item.AttackData;
-                ((AttackDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var AttackDataItem = item.AttackData;
+                ((AttackDataXmlWriteTranslation)((IXmlItem)AttackDataItem).XmlWriteTranslator).Write(
+                    item: AttackDataItem,
                     node: node,
                     name: nameof(item.AttackData),
                     fieldIndex: (int)Attack_FieldIndex.AttackData,
@@ -1584,9 +1584,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IAttackGetter)item,
                     name: name,
@@ -1646,9 +1646,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "AttackData":
+                    errorMask?.PushIndex((int)Attack_FieldIndex.AttackData);
                     try
                     {
-                        errorMask?.PushIndex((int)Attack_FieldIndex.AttackData);
                         item.AttackData = LoquiXmlTranslation<AttackData>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -1665,9 +1665,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AttackEvent":
+                    errorMask?.PushIndex((int)Attack_FieldIndex.AttackEvent);
                     try
                     {
-                        errorMask?.PushIndex((int)Attack_FieldIndex.AttackEvent);
                         item.AttackEvent = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1859,16 +1859,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
+            if (item.AttackData.TryGet(out var AttackDataItem))
             {
-                var loquiItem = item.AttackData;
-                if (loquiItem != null)
-                {
-                    ((AttackDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((AttackDataBinaryWriteTranslation)((IBinaryItem)AttackDataItem).BinaryWriteTranslator).Write(
+                    item: AttackDataItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1957,7 +1954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAttackGetter)rhs, include);
 

@@ -8,31 +8,13 @@ using Loqui;
 using System.IO;
 using Loqui.Internal;
 using Mutagen.Bethesda.Internals;
+using static Mutagen.Bethesda.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Binary
 {
     public class ListBinaryTranslation<T>
     {
         public static readonly ListBinaryTranslation<T> Instance = new ListBinaryTranslation<T>();
-
-        public delegate bool BinarySubParseDelegate(
-            MutagenFrame reader,
-            out T item);
-        public delegate bool BinaryMasterParseDelegate(
-            MutagenFrame reader,
-            out T item,
-            MasterReferences masterReferences);
-        public delegate bool BinarySubParseRecordDelegate(
-            MutagenFrame reader,
-            RecordType header,
-            out T item);
-        public delegate void BinarySubWriteDelegate(
-            MutagenWriter writer,
-            T item);
-        public delegate void BinaryMasterWriteDelegate(
-            MutagenWriter writer,
-            T item,
-            MasterReferences masterReferences);
 
         public static readonly bool IsLoqui;
 
@@ -46,7 +28,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             RecordType triggeringRecord,
             int lengthLength,
-            BinarySubParseDelegate transl)
+            BinarySubParseDelegate<T> transl)
         {
             var ret = new List<T>();
             while (!frame.Complete && !frame.Reader.Complete)
@@ -74,7 +56,7 @@ namespace Mutagen.Bethesda.Binary
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
             long lengthLength,
-            BinarySubParseRecordDelegate transl,
+            BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null)
         {
             var ret = new List<T>();
@@ -106,7 +88,7 @@ namespace Mutagen.Bethesda.Binary
             IList<T> item,
             RecordType triggeringRecord,
             int lengthLength,
-            BinarySubParseDelegate transl)
+            BinarySubParseDelegate<T> transl)
         {
             var enumer = ParseRepeatedItem(
                 frame,
@@ -129,7 +111,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             int lengthLength,
             MasterReferences masterReferences,
-            BinaryMasterParseDelegate transl)
+            BinaryMasterParseDelegate<T> transl)
         {
             ParseRepeatedItem(
                 frame: frame,
@@ -148,7 +130,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             IList<T> item,
             long lengthLength,
-            BinarySubParseDelegate transl,
+            BinarySubParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord)
         {
             this.ParseRepeatedItem(
@@ -164,7 +146,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             IList<T> item,
             long lengthLength,
-            BinarySubParseRecordDelegate transl,
+            BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null)
         {
             var enumer = ParseRepeatedItem(
@@ -185,7 +167,7 @@ namespace Mutagen.Bethesda.Binary
 
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            BinarySubParseDelegate transl)
+            BinarySubParseDelegate<T> transl)
         {
             var ret = new List<T>();
             while (!frame.Complete)
@@ -201,7 +183,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             IList<T> item,
-            BinarySubParseDelegate transl)
+            BinarySubParseDelegate<T> transl)
         {
             var enumer = ParseRepeatedItem(
                 frame,
@@ -220,7 +202,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             IList<T> item,
             MasterReferences masterReferences,
-            BinaryMasterParseDelegate transl)
+            BinaryMasterParseDelegate<T> transl)
         {
             ParseRepeatedItem(
                 frame: frame,
@@ -234,7 +216,7 @@ namespace Mutagen.Bethesda.Binary
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
             int amount,
-            BinarySubParseDelegate transl)
+            BinarySubParseDelegate<T> transl)
         {
             var ret = new List<T>();
             for (int i = 0; i < amount; i++)
@@ -251,7 +233,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             IList<T> item,
             int amount,
-            BinarySubParseDelegate transl)
+            BinarySubParseDelegate<T> transl)
         {
             var enumer = ParseRepeatedItem(
                 frame,
@@ -272,7 +254,7 @@ namespace Mutagen.Bethesda.Binary
             int amount,
             RecordType triggeringRecord,
             MasterReferences masterReferences,
-            BinaryMasterParseDelegate transl)
+            BinaryMasterParseDelegate<T> transl)
         {
             var ret = new List<T>();
             for (int i = 0; i < amount; i++)
@@ -301,7 +283,7 @@ namespace Mutagen.Bethesda.Binary
             int amount,
             RecordType triggeringRecord,
             MasterReferences masterReferences,
-            BinaryMasterParseDelegate transl)
+            BinaryMasterParseDelegate<T> transl)
         {
             var enumer = ParseRepeatedItem(
                 frame,
@@ -322,7 +304,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             IEnumerable<T> items,
-            BinarySubWriteDelegate transl)
+            BinarySubWriteDelegate<T> transl)
         {
             foreach (var item in items)
             {
@@ -334,7 +316,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IReadOnlySetList<T> items,
             RecordType recordType,
-            BinarySubWriteDelegate transl)
+            BinarySubWriteDelegate<T> transl)
         {
             if (!items.HasBeenSet) return;
             this.WriteRecordList(
@@ -348,7 +330,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IReadOnlyList<T> items,
             RecordType recordType,
-            BinarySubWriteDelegate transl)
+            BinarySubWriteDelegate<T> transl)
         {
             this.WriteRecordList(
                 writer: writer,
@@ -361,7 +343,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IReadOnlyList<T> items,
             RecordType recordType,
-            BinarySubWriteDelegate transl)
+            BinarySubWriteDelegate<T> transl)
         {
             using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
             {

@@ -1298,16 +1298,16 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Race_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Race_FieldIndex.Description:
-                        this.Description = (Exception)obj;
+                        this.Description = (Exception?)obj;
                         break;
                     case Race_FieldIndex.ActorEffect:
                         this.ActorEffect = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Race_FieldIndex.Skin:
-                        this.Skin = (Exception)obj;
+                        this.Skin = (Exception?)obj;
                         break;
                     case Race_FieldIndex.BodyTemplate:
                         this.BodyTemplate = (MaskItem<Exception?, BodyTemplate.ErrorMask?>?)obj;
@@ -1319,16 +1319,16 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Data = (MaskItem<Exception?, RaceData.ErrorMask?>?)obj;
                         break;
                     case Race_FieldIndex.MaleSkeletalModel:
-                        this.MaleSkeletalModel = (Exception)obj;
+                        this.MaleSkeletalModel = (Exception?)obj;
                         break;
                     case Race_FieldIndex.FemaleSkeletalModel:
-                        this.FemaleSkeletalModel = (Exception)obj;
+                        this.FemaleSkeletalModel = (Exception?)obj;
                         break;
                     case Race_FieldIndex.MovementTypeNames:
                         this.MovementTypeNames = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Race_FieldIndex.Voices:
-                        this.Voices = (Exception)obj;
+                        this.Voices = (Exception?)obj;
                         break;
                     case Race_FieldIndex.DecapitateArmors:
                         this.DecapitateArmors = (MaskItem<Exception?, GenderedFormLinks.ErrorMask<Armor.ErrorMask>?>?)obj;
@@ -1337,16 +1337,16 @@ namespace Mutagen.Bethesda.Skyrim
                         this.DefaultHairColors = (MaskItem<Exception?, GenderedFormLinks.ErrorMask<ColorRecord.ErrorMask>?>?)obj;
                         break;
                     case Race_FieldIndex.NumberOfTintsInList:
-                        this.NumberOfTintsInList = (Exception)obj;
+                        this.NumberOfTintsInList = (Exception?)obj;
                         break;
                     case Race_FieldIndex.FacegenMainClamp:
-                        this.FacegenMainClamp = (Exception)obj;
+                        this.FacegenMainClamp = (Exception?)obj;
                         break;
                     case Race_FieldIndex.FacegenFaceClamp:
-                        this.FacegenFaceClamp = (Exception)obj;
+                        this.FacegenFaceClamp = (Exception?)obj;
                         break;
                     case Race_FieldIndex.AttackRace:
-                        this.AttackRace = (Exception)obj;
+                        this.AttackRace = (Exception?)obj;
                         break;
                     case Race_FieldIndex.Attacks:
                         this.Attacks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>)obj;
@@ -1361,7 +1361,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Eyes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Race_FieldIndex.BodyPartData:
-                        this.BodyPartData = (Exception)obj;
+                        this.BodyPartData = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1402,13 +1402,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1610,21 +1610,21 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
                 ret.Skin = this.Skin.Combine(rhs.Skin);
-                ret.BodyTemplate = new MaskItem<Exception?, BodyTemplate.ErrorMask?>(ExceptionExt.Combine(this.BodyTemplate?.Overall, rhs.BodyTemplate?.Overall), (this.BodyTemplate?.Specific as IErrorMask<BodyTemplate.ErrorMask>)?.Combine(rhs.BodyTemplate?.Specific));
+                ret.BodyTemplate = this.BodyTemplate.Combine(rhs.BodyTemplate, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Data = new MaskItem<Exception?, RaceData.ErrorMask?>(ExceptionExt.Combine(this.Data?.Overall, rhs.Data?.Overall), (this.Data?.Specific as IErrorMask<RaceData.ErrorMask>)?.Combine(rhs.Data?.Specific));
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.MaleSkeletalModel = this.MaleSkeletalModel.Combine(rhs.MaleSkeletalModel);
                 ret.FemaleSkeletalModel = this.FemaleSkeletalModel.Combine(rhs.FemaleSkeletalModel);
                 ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
                 ret.Voices = this.Voices.Combine(rhs.Voices);
-                ret.DecapitateArmors = new MaskItem<Exception?, GenderedFormLinks.ErrorMask<Armor.ErrorMask>?>(ExceptionExt.Combine(this.DecapitateArmors?.Overall, rhs.DecapitateArmors?.Overall), (this.DecapitateArmors?.Specific as IErrorMask<GenderedFormLinks.ErrorMask<Armor.ErrorMask>>)?.Combine(rhs.DecapitateArmors?.Specific));
-                ret.DefaultHairColors = new MaskItem<Exception?, GenderedFormLinks.ErrorMask<ColorRecord.ErrorMask>?>(ExceptionExt.Combine(this.DefaultHairColors?.Overall, rhs.DefaultHairColors?.Overall), (this.DefaultHairColors?.Specific as IErrorMask<GenderedFormLinks.ErrorMask<ColorRecord.ErrorMask>>)?.Combine(rhs.DefaultHairColors?.Specific));
+                ret.DecapitateArmors = this.DecapitateArmors.Combine(rhs.DecapitateArmors, (l, r) => l.Combine(r));
+                ret.DefaultHairColors = this.DefaultHairColors.Combine(rhs.DefaultHairColors, (l, r) => l.Combine(r));
                 ret.NumberOfTintsInList = this.NumberOfTintsInList.Combine(rhs.NumberOfTintsInList);
                 ret.FacegenMainClamp = this.FacegenMainClamp.Combine(rhs.FacegenMainClamp);
                 ret.FacegenFaceClamp = this.FacegenFaceClamp.Combine(rhs.FacegenFaceClamp);
                 ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
                 ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
-                ret.BodyData = new MaskItem<Exception?, BodyDataPair.ErrorMask?>(ExceptionExt.Combine(this.BodyData?.Overall, rhs.BodyData?.Overall), (this.BodyData?.Specific as IErrorMask<BodyDataPair.ErrorMask>)?.Combine(rhs.BodyData?.Specific));
+                ret.BodyData = this.BodyData.Combine(rhs.BodyData, (l, r) => l.Combine(r));
                 ret.Hairs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), ExceptionExt.Combine(this.Hairs?.Specific, rhs.Hairs?.Specific));
                 ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
                 ret.BodyPartData = this.BodyPartData.Combine(rhs.BodyPartData);
@@ -1794,7 +1794,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceGetter)rhs, include);
 
@@ -3036,7 +3036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.BodyTemplate = EqualsMaskHelper.EqualsHelper(
                 item.BodyTemplate,
                 rhs.BodyTemplate,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
@@ -3045,7 +3045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.MaleSkeletalModel = string.Equals(item.MaleSkeletalModel, rhs.MaleSkeletalModel);
             ret.FemaleSkeletalModel = string.Equals(item.FemaleSkeletalModel, rhs.FemaleSkeletalModel);
@@ -3067,12 +3067,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DecapitateArmors = EqualsMaskHelper.EqualsHelper(
                 item.DecapitateArmors,
                 rhs.DecapitateArmors,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.DefaultHairColors = EqualsMaskHelper.EqualsHelper(
                 item.DefaultHairColors,
                 rhs.DefaultHairColors,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.NumberOfTintsInList = item.NumberOfTintsInList == rhs.NumberOfTintsInList;
             ret.FacegenMainClamp = item.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp);
@@ -3085,7 +3085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.BodyData = EqualsMaskHelper.EqualsHelper(
                 item.BodyData,
                 rhs.BodyData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Hairs = item.Hairs.CollectionEqualsHelper(
                 rhs.Hairs,
@@ -3392,7 +3392,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.FacegenMainClamp = (item.FacegenMainClamp != null);
             mask.FacegenFaceClamp = (item.FacegenFaceClamp != null);
             mask.AttackRace = (item.AttackRace.FormKey != null);
-            mask.Attacks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Attack.Mask<bool>?>>>(item.Attacks.HasBeenSet, item.Attacks.WithIndex().Select((i) => new MaskItemIndexed<bool, Attack.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var AttacksItem = item.Attacks;
+            mask.Attacks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Attack.Mask<bool>?>>>(AttacksItem.HasBeenSet, AttacksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Attack.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemBodyData = item.BodyData;
             mask.BodyData = new MaskItem<bool, BodyDataPair.Mask<bool>?>(itemBodyData != null, itemBodyData?.GetHasBeenSetMask());
             mask.Hairs = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Hairs.HasBeenSet, Enumerable.Empty<(int, bool)>());
@@ -4232,9 +4233,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.BodyTemplate != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
             {
-                var loquiItem = item.BodyTemplate;
-                ((BodyTemplateXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var BodyTemplateItem = item.BodyTemplate;
+                ((BodyTemplateXmlWriteTranslation)((IXmlItem)BodyTemplateItem).XmlWriteTranslator).Write(
+                    item: BodyTemplateItem,
                     node: node,
                     name: nameof(item.BodyTemplate),
                     fieldIndex: (int)Race_FieldIndex.BodyTemplate,
@@ -4263,9 +4264,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Data != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
             {
-                var loquiItem = item.Data;
-                ((RaceDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var DataItem = item.Data;
+                ((RaceDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    item: DataItem,
                     node: node,
                     name: nameof(item.Data),
                     fieldIndex: (int)Race_FieldIndex.Data,
@@ -4328,9 +4329,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.DecapitateArmors != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
             {
-                var loquiItem = item.DecapitateArmors;
-                ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IArmorGetter>(
-                    item: loquiItem,
+                var DecapitateArmorsItem = item.DecapitateArmors;
+                ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)DecapitateArmorsItem).XmlWriteTranslator).Write<IArmorGetter>(
+                    item: DecapitateArmorsItem,
                     node: node,
                     name: nameof(item.DecapitateArmors),
                     fieldIndex: (int)Race_FieldIndex.DecapitateArmors,
@@ -4340,9 +4341,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.DefaultHairColors != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
-                var loquiItem = item.DefaultHairColors;
-                ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IColorRecordGetter>(
-                    item: loquiItem,
+                var DefaultHairColorsItem = item.DefaultHairColors;
+                ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)DefaultHairColorsItem).XmlWriteTranslator).Write<IColorRecordGetter>(
+                    item: DefaultHairColorsItem,
                     node: node,
                     name: nameof(item.DefaultHairColors),
                     fieldIndex: (int)Race_FieldIndex.DefaultHairColors,
@@ -4401,9 +4402,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Attacks),
                     transl: (XElement subNode, IAttackGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((AttackXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((AttackXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4413,9 +4414,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.BodyData != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                var loquiItem = item.BodyData;
-                ((BodyDataPairXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var BodyDataItem = item.BodyData;
+                ((BodyDataPairXmlWriteTranslation)((IXmlItem)BodyDataItem).XmlWriteTranslator).Write(
+                    item: BodyDataItem,
                     node: node,
                     name: nameof(item.BodyData),
                     fieldIndex: (int)Race_FieldIndex.BodyData,
@@ -4578,9 +4579,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4596,9 +4597,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Description":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Description);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Description);
                         item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4614,9 +4615,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ActorEffect":
+                    errorMask?.PushIndex((int)Race_FieldIndex.ActorEffect);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.ActorEffect);
                         if (ListXmlTranslation<IFormLink<SpellAbstract>>.Instance.Parse(
                             node: node,
                             enumer: out var ActorEffectItem,
@@ -4642,9 +4643,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Skin":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Skin);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Skin);
                         item.Skin.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4660,9 +4661,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BodyTemplate":
+                    errorMask?.PushIndex((int)Race_FieldIndex.BodyTemplate);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.BodyTemplate);
                         item.BodyTemplate = LoquiXmlTranslation<BodyTemplate>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4679,9 +4680,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Keywords":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Keywords);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Keywords);
                         if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
                             node: node,
                             enumer: out var KeywordsItem,
@@ -4707,9 +4708,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Data":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Data);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Data);
                         item.Data = LoquiXmlTranslation<RaceData>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4726,9 +4727,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MaleSkeletalModel":
+                    errorMask?.PushIndex((int)Race_FieldIndex.MaleSkeletalModel);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.MaleSkeletalModel);
                         item.MaleSkeletalModel = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4744,9 +4745,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FemaleSkeletalModel":
+                    errorMask?.PushIndex((int)Race_FieldIndex.FemaleSkeletalModel);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FemaleSkeletalModel);
                         item.FemaleSkeletalModel = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4762,9 +4763,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MovementTypeNames":
+                    errorMask?.PushIndex((int)Race_FieldIndex.MovementTypeNames);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.MovementTypeNames);
                         if (ListXmlTranslation<String>.Instance.Parse(
                             node: node,
                             enumer: out var MovementTypeNamesItem,
@@ -4799,9 +4800,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask)));
                     break;
                 case "DecapitateArmors":
+                    errorMask?.PushIndex((int)Race_FieldIndex.DecapitateArmors);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.DecapitateArmors);
                         item.DecapitateArmors = LoquiXmlTranslation<GenderedFormLinks<Armor>>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4818,9 +4819,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DefaultHairColors":
+                    errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColors);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColors);
                         item.DefaultHairColors = LoquiXmlTranslation<GenderedFormLinks<ColorRecord>>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4837,9 +4838,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "NumberOfTintsInList":
+                    errorMask?.PushIndex((int)Race_FieldIndex.NumberOfTintsInList);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.NumberOfTintsInList);
                         item.NumberOfTintsInList = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4855,9 +4856,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FacegenMainClamp":
+                    errorMask?.PushIndex((int)Race_FieldIndex.FacegenMainClamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FacegenMainClamp);
                         item.FacegenMainClamp = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4873,9 +4874,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FacegenFaceClamp":
+                    errorMask?.PushIndex((int)Race_FieldIndex.FacegenFaceClamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FacegenFaceClamp);
                         item.FacegenFaceClamp = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4891,9 +4892,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "AttackRace":
+                    errorMask?.PushIndex((int)Race_FieldIndex.AttackRace);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.AttackRace);
                         item.AttackRace.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4909,9 +4910,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Attacks":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Attacks);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Attacks);
                         if (ListXmlTranslation<Attack>.Instance.Parse(
                             node: node,
                             enumer: out var AttacksItem,
@@ -4937,9 +4938,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BodyData":
+                    errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
                         item.BodyData = LoquiXmlTranslation<BodyDataPair>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4956,9 +4957,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Hairs":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
                         if (ListXmlTranslation<IFormLink<Hair>>.Instance.Parse(
                             node: node,
                             enumer: out var HairsItem,
@@ -4984,9 +4985,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Eyes":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
                         if (ListXmlTranslation<IFormLink<Eye>>.Instance.Parse(
                             node: node,
                             enumer: out var EyesItem,
@@ -5012,9 +5013,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BodyPartData":
+                    errorMask?.PushIndex((int)Race_FieldIndex.BodyPartData);
                     try
                     {
-                        errorMask?.PushIndex((int)Race_FieldIndex.BodyPartData);
                         item.BodyPartData.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5168,16 +5169,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Skin,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.WNAM_HEADER),
                 masterReferences: masterReferences);
+            if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
             {
-                var loquiItem = item.BodyTemplate;
-                if (loquiItem != null)
-                {
-                    ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
+                    item: BodyTemplateItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
                 writer: writer,
@@ -5190,16 +5188,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         header: recordTypeConverter.ConvertToCustom(Race_Registration.KWDA_HEADER),
                         masterReferences: masterReferences);
                 });
+            if (item.Data.TryGet(out var DataItem))
             {
-                var loquiItem = item.Data;
-                if (loquiItem != null)
-                {
-                    ((RaceDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((RaceDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -5227,27 +5222,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.Voices.Female,
                     masterReferences: masterReferences);
             }
+            if (item.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
             {
-                var loquiItem = item.DecapitateArmors;
-                if (loquiItem != null)
-                {
-                    ((GenderedFormLinksBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IArmorGetter>(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((GenderedFormLinksBinaryWriteTranslation)((IBinaryItem)DecapitateArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
+                    item: DecapitateArmorsItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
+            if (item.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
             {
-                var loquiItem = item.DefaultHairColors;
-                if (loquiItem != null)
-                {
-                    ((GenderedFormLinksBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IColorRecordGetter>(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((GenderedFormLinksBinaryWriteTranslation)((IBinaryItem)DefaultHairColorsItem).BinaryWriteTranslator).Write<IColorRecordGetter>(
+                    item: DefaultHairColorsItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -5271,29 +5260,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Attacks,
                 transl: (MutagenWriter subWriter, IAttackGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((AttackBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
+            if (item.BodyData.TryGet(out var BodyDataItem))
             {
-                var loquiItem = item.BodyData;
-                if (loquiItem != null)
-                {
-                    using (HeaderExport.ExportHeader(writer, Race_Registration.NAM1_HEADER, ObjectType.Subrecord)) { }
-                    ((BodyDataPairBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                using (HeaderExport.ExportHeader(writer, Race_Registration.NAM1_HEADER, ObjectType.Subrecord)) { }
+                ((BodyDataPairBinaryWriteTranslation)((IBinaryItem)BodyDataItem).BinaryWriteTranslator).Write(
+                    item: BodyDataItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Write(
                 writer: writer,
@@ -5438,7 +5421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceGetter)rhs, include);
 

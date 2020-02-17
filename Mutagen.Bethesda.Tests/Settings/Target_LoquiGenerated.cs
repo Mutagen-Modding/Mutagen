@@ -355,19 +355,19 @@ namespace Mutagen.Bethesda.Tests
                 switch (enu)
                 {
                     case Target_FieldIndex.Do:
-                        this.Do = (Exception)obj;
+                        this.Do = (Exception?)obj;
                         break;
                     case Target_FieldIndex.Path:
-                        this.Path = (Exception)obj;
+                        this.Path = (Exception?)obj;
                         break;
                     case Target_FieldIndex.NumMasters:
-                        this.NumMasters = (Exception)obj;
+                        this.NumMasters = (Exception?)obj;
                         break;
                     case Target_FieldIndex.GameMode:
-                        this.GameMode = (Exception)obj;
+                        this.GameMode = (Exception?)obj;
                         break;
                     case Target_FieldIndex.ExpectedBaseGroupCount:
-                        this.ExpectedBaseGroupCount = (Exception)obj;
+                        this.ExpectedBaseGroupCount = (Exception?)obj;
                         break;
                     case Target_FieldIndex.Interest:
                         this.Interest = (MaskItem<Exception?, RecordInterest.ErrorMask?>?)obj;
@@ -394,13 +394,13 @@ namespace Mutagen.Bethesda.Tests
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Tests
                 ret.NumMasters = this.NumMasters.Combine(rhs.NumMasters);
                 ret.GameMode = this.GameMode.Combine(rhs.GameMode);
                 ret.ExpectedBaseGroupCount = this.ExpectedBaseGroupCount.Combine(rhs.ExpectedBaseGroupCount);
-                ret.Interest = new MaskItem<Exception?, RecordInterest.ErrorMask?>(ExceptionExt.Combine(this.Interest?.Overall, rhs.Interest?.Overall), (this.Interest?.Specific as IErrorMask<RecordInterest.ErrorMask>)?.Combine(rhs.Interest?.Specific));
+                ret.Interest = this.Interest.Combine(rhs.Interest, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITargetGetter)rhs, include);
 
@@ -1596,9 +1596,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
             {
-                var loquiItem = item.Interest;
-                ((RecordInterestXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var InterestItem = item.Interest;
+                ((RecordInterestXmlWriteTranslation)((IXmlItem)InterestItem).XmlWriteTranslator).Write(
+                    item: InterestItem,
                     node: node,
                     name: nameof(item.Interest),
                     fieldIndex: (int)Target_FieldIndex.Interest,
@@ -1650,9 +1650,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ITargetGetter)item,
                     name: name,
@@ -1714,9 +1714,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "Do":
                     if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Do) ?? true))
                     {
+                        errorMask?.PushIndex((int)Target_FieldIndex.Do);
                         try
                         {
-                            errorMask?.PushIndex((int)Target_FieldIndex.Do);
                             item.Do = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1735,9 +1735,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "Path":
                     if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Path) ?? true))
                     {
+                        errorMask?.PushIndex((int)Target_FieldIndex.Path);
                         try
                         {
-                            errorMask?.PushIndex((int)Target_FieldIndex.Path);
                             item.Path = StringXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1756,9 +1756,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "NumMasters":
                     if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.NumMasters) ?? true))
                     {
+                        errorMask?.PushIndex((int)Target_FieldIndex.NumMasters);
                         try
                         {
-                            errorMask?.PushIndex((int)Target_FieldIndex.NumMasters);
                             item.NumMasters = ByteXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1777,9 +1777,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "GameMode":
                     if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.GameMode) ?? true))
                     {
+                        errorMask?.PushIndex((int)Target_FieldIndex.GameMode);
                         try
                         {
-                            errorMask?.PushIndex((int)Target_FieldIndex.GameMode);
                             item.GameMode = EnumXmlTranslation<Mutagen.Bethesda.GameMode>.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1798,9 +1798,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "ExpectedBaseGroupCount":
                     if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
                     {
+                        errorMask?.PushIndex((int)Target_FieldIndex.ExpectedBaseGroupCount);
                         try
                         {
-                            errorMask?.PushIndex((int)Target_FieldIndex.ExpectedBaseGroupCount);
                             item.ExpectedBaseGroupCount = ByteXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1819,9 +1819,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "Interest":
                     if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
                     {
+                        errorMask?.PushIndex((int)Target_FieldIndex.Interest);
                         try
                         {
-                            errorMask?.PushIndex((int)Target_FieldIndex.Interest);
                             item.Interest = LoquiXmlTranslation<RecordInterest>.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask,

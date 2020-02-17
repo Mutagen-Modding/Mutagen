@@ -616,31 +616,31 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case AlchemicalApparatus_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case AlchemicalApparatus_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case AlchemicalApparatus_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case AlchemicalApparatus_FieldIndex.Script:
-                        this.Script = (Exception)obj;
+                        this.Script = (Exception?)obj;
                         break;
                     case AlchemicalApparatus_FieldIndex.Type:
-                        this.Type = (Exception)obj;
+                        this.Type = (Exception?)obj;
                         break;
                     case AlchemicalApparatus_FieldIndex.Value:
-                        this.Value = (Exception)obj;
+                        this.Value = (Exception?)obj;
                         break;
                     case AlchemicalApparatus_FieldIndex.Weight:
-                        this.Weight = (Exception)obj;
+                        this.Weight = (Exception?)obj;
                         break;
                     case AlchemicalApparatus_FieldIndex.Quality:
-                        this.Quality = (Exception)obj;
+                        this.Quality = (Exception?)obj;
                         break;
                     case AlchemicalApparatus_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -668,13 +668,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Type = this.Type.Combine(rhs.Type);
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlchemicalApparatusGetter)rhs, include);
 
@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Script = object.Equals(item.Script, rhs.Script);
@@ -2294,9 +2294,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
@@ -2494,9 +2494,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2512,9 +2512,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Model":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2531,9 +2531,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2549,9 +2549,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Script":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Script);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2567,9 +2567,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Type":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Type);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Type);
                         item.Type = EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2586,9 +2586,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= AlchemicalApparatus.DATADataType.Has;
                     break;
                 case "Value":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Value);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Value);
                         item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2604,9 +2604,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Weight":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Weight);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Weight);
                         item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2622,9 +2622,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Quality":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Quality);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Quality);
                         item.Quality = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2640,9 +2640,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<AlchemicalApparatus.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2770,16 +2770,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2921,7 +2918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlchemicalApparatusGetter)rhs, include);
 

@@ -410,13 +410,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case HavokData_FieldIndex.Material:
-                        this.Material = (Exception)obj;
+                        this.Material = (Exception?)obj;
                         break;
                     case HavokData_FieldIndex.Friction:
-                        this.Friction = (Exception)obj;
+                        this.Friction = (Exception?)obj;
                         break;
                     case HavokData_FieldIndex.Restitution:
-                        this.Restitution = (Exception)obj;
+                        this.Restitution = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -437,13 +437,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHavokDataGetter)rhs, include);
 
@@ -1537,9 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IHavokDataGetter)item,
                     name: name,
@@ -1599,9 +1599,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Material":
+                    errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
                     try
                     {
-                        errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
                         item.Material = EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1617,9 +1617,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Friction":
+                    errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
                     try
                     {
-                        errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
                         item.Friction = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1635,9 +1635,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Restitution":
+                    errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
                     try
                     {
-                        errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
                         item.Restitution = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHavokDataGetter)rhs, include);
 

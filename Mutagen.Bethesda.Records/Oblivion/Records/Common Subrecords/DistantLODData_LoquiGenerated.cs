@@ -410,13 +410,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case DistantLODData_FieldIndex.Unknown0:
-                        this.Unknown0 = (Exception)obj;
+                        this.Unknown0 = (Exception?)obj;
                         break;
                     case DistantLODData_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception)obj;
+                        this.Unknown1 = (Exception?)obj;
                         break;
                     case DistantLODData_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception)obj;
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -437,13 +437,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataGetter)rhs, include);
 
@@ -1537,9 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IDistantLODDataGetter)item,
                     name: name,
@@ -1599,9 +1599,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Unknown0":
+                    errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown0);
                     try
                     {
-                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown0);
                         item.Unknown0 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1617,9 +1617,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Unknown1":
+                    errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown1);
                     try
                     {
-                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown1);
                         item.Unknown1 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1635,9 +1635,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Unknown2":
+                    errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown2);
                     try
                     {
-                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown2);
                         item.Unknown2 = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataGetter)rhs, include);
 

@@ -414,13 +414,13 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case VendorLocation_FieldIndex.Type:
-                        this.Type = (Exception)obj;
+                        this.Type = (Exception?)obj;
                         break;
                     case VendorLocation_FieldIndex.Reference:
-                        this.Reference = (Exception)obj;
+                        this.Reference = (Exception?)obj;
                         break;
                     case VendorLocation_FieldIndex.Radius:
-                        this.Radius = (Exception)obj;
+                        this.Radius = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -441,13 +441,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVendorLocationGetter)rhs, include);
 
@@ -1548,9 +1548,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IVendorLocationGetter)item,
                     name: name,
@@ -1610,9 +1610,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Type":
+                    errorMask?.PushIndex((int)VendorLocation_FieldIndex.Type);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorLocation_FieldIndex.Type);
                         item.Type = EnumXmlTranslation<VendorLocation.LocationType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1628,9 +1628,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Reference":
+                    errorMask?.PushIndex((int)VendorLocation_FieldIndex.Reference);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorLocation_FieldIndex.Reference);
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1646,9 +1646,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Radius":
+                    errorMask?.PushIndex((int)VendorLocation_FieldIndex.Radius);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorLocation_FieldIndex.Radius);
                         item.Radius = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVendorLocationGetter)rhs, include);
 

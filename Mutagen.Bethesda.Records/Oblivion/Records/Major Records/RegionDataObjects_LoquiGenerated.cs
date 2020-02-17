@@ -449,13 +449,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectsGetter)rhs, include);
 
@@ -1380,7 +1380,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObjectsGetter item,
             RegionDataObjects.Mask<bool> mask)
         {
-            mask.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionDataObject.Mask<bool>?>>>(item.Objects.HasBeenSet, item.Objects.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionDataObject.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var ObjectsItem = item.Objects;
+            mask.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionDataObject.Mask<bool>?>>>(ObjectsItem.HasBeenSet, ObjectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionDataObject.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1650,9 +1651,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataObjects_FieldIndex.Objects),
                     transl: (XElement subNode, IRegionDataObjectGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RegionDataObjectXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RegionDataObjectXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1752,9 +1753,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Objects":
+                    errorMask?.PushIndex((int)RegionDataObjects_FieldIndex.Objects);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionDataObjects_FieldIndex.Objects);
                         if (ListXmlTranslation<RegionDataObject>.Instance.Parse(
                             node: node,
                             enumer: out var ObjectsItem,
@@ -1882,14 +1883,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: RegionDataObjects_Registration.RDOT_HEADER,
                 transl: (MutagenWriter subWriter, IRegionDataObjectGetter subItem) =>
                 {
-                    {
-                        var loquiItem = subItem;
-                        ((RegionDataObjectBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                            item: loquiItem,
-                            writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
+                    var Item = subItem;
+                    ((RegionDataObjectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
                 });
         }
 
@@ -1972,7 +1971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectsGetter)rhs, include);
 

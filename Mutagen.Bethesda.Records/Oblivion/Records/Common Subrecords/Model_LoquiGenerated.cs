@@ -419,13 +419,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Model_FieldIndex.File:
-                        this.File = (Exception)obj;
+                        this.File = (Exception?)obj;
                         break;
                     case Model_FieldIndex.BoundRadius:
-                        this.BoundRadius = (Exception)obj;
+                        this.BoundRadius = (Exception?)obj;
                         break;
                     case Model_FieldIndex.Hashes:
-                        this.Hashes = (Exception)obj;
+                        this.Hashes = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -446,13 +446,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelGetter)rhs, include);
 
@@ -1596,9 +1596,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IModelGetter)item,
                     name: name,
@@ -1658,9 +1658,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "File":
+                    errorMask?.PushIndex((int)Model_FieldIndex.File);
                     try
                     {
-                        errorMask?.PushIndex((int)Model_FieldIndex.File);
                         item.File = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1676,9 +1676,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BoundRadius":
+                    errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
                     try
                     {
-                        errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
                         item.BoundRadius = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1694,9 +1694,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Hashes":
+                    errorMask?.PushIndex((int)Model_FieldIndex.Hashes);
                     try
                     {
-                        errorMask?.PushIndex((int)Model_FieldIndex.Hashes);
                         item.Hashes = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1986,7 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelGetter)rhs, include);
 

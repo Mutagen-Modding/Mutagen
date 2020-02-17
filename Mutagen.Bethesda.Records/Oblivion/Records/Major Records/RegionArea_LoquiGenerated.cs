@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RegionArea_FieldIndex.EdgeFallOff:
-                        this.EdgeFallOff = (Exception)obj;
+                        this.EdgeFallOff = (Exception?)obj;
                         break;
                     case RegionArea_FieldIndex.RegionPoints:
                         this.RegionPoints = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -476,13 +476,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionAreaGetter)rhs, include);
 
@@ -1650,9 +1650,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRegionAreaGetter)item,
                     name: name,
@@ -1712,9 +1712,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "EdgeFallOff":
+                    errorMask?.PushIndex((int)RegionArea_FieldIndex.EdgeFallOff);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionArea_FieldIndex.EdgeFallOff);
                         item.EdgeFallOff = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1730,9 +1730,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RegionPoints":
+                    errorMask?.PushIndex((int)RegionArea_FieldIndex.RegionPoints);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionArea_FieldIndex.RegionPoints);
                         if (ListXmlTranslation<P2Float>.Instance.Parse(
                             node: node,
                             enumer: out var RegionPointsItem,
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionAreaGetter)rhs, include);
 

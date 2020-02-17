@@ -862,37 +862,37 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Worldspace_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.Parent:
-                        this.Parent = (Exception)obj;
+                        this.Parent = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.Climate:
-                        this.Climate = (Exception)obj;
+                        this.Climate = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.Water:
-                        this.Water = (Exception)obj;
+                        this.Water = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.MapData:
                         this.MapData = (MaskItem<Exception?, MapData.ErrorMask?>?)obj;
                         break;
                     case Worldspace_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.ObjectBoundsMin:
-                        this.ObjectBoundsMin = (Exception)obj;
+                        this.ObjectBoundsMin = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.ObjectBoundsMax:
-                        this.ObjectBoundsMax = (Exception)obj;
+                        this.ObjectBoundsMax = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.Music:
-                        this.Music = (Exception)obj;
+                        this.Music = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.OffsetData:
-                        this.OffsetData = (Exception)obj;
+                        this.OffsetData = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.Road:
                         this.Road = (MaskItem<Exception?, Road.ErrorMask?>?)obj;
@@ -901,13 +901,13 @@ namespace Mutagen.Bethesda.Oblivion
                         this.TopCell = (MaskItem<Exception?, Cell.ErrorMask?>?)obj;
                         break;
                     case Worldspace_FieldIndex.SubCellsTimestamp:
-                        this.SubCellsTimestamp = (Exception)obj;
+                        this.SubCellsTimestamp = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.SubCells:
                         this.SubCells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>)obj;
                         break;
                     case Worldspace_FieldIndex.UsingOffsetLength:
-                        this.UsingOffsetLength = (Exception)obj;
+                        this.UsingOffsetLength = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -942,13 +942,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1022,14 +1022,14 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Climate = this.Climate.Combine(rhs.Climate);
                 ret.Water = this.Water.Combine(rhs.Water);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.MapData = new MaskItem<Exception?, MapData.ErrorMask?>(ExceptionExt.Combine(this.MapData?.Overall, rhs.MapData?.Overall), (this.MapData?.Specific as IErrorMask<MapData.ErrorMask>)?.Combine(rhs.MapData?.Specific));
+                ret.MapData = this.MapData.Combine(rhs.MapData, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ObjectBoundsMin = this.ObjectBoundsMin.Combine(rhs.ObjectBoundsMin);
                 ret.ObjectBoundsMax = this.ObjectBoundsMax.Combine(rhs.ObjectBoundsMax);
                 ret.Music = this.Music.Combine(rhs.Music);
                 ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
-                ret.Road = new MaskItem<Exception?, Road.ErrorMask?>(ExceptionExt.Combine(this.Road?.Overall, rhs.Road?.Overall), (this.Road?.Specific as IErrorMask<Road.ErrorMask>)?.Combine(rhs.Road?.Specific));
-                ret.TopCell = new MaskItem<Exception?, Cell.ErrorMask?>(ExceptionExt.Combine(this.TopCell?.Overall, rhs.TopCell?.Overall), (this.TopCell?.Specific as IErrorMask<Cell.ErrorMask>)?.Combine(rhs.TopCell?.Specific));
+                ret.Road = this.Road.Combine(rhs.Road, (l, r) => l.Combine(r));
+                ret.TopCell = this.TopCell.Combine(rhs.TopCell, (l, r) => l.Combine(r));
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
                 ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
                 ret.UsingOffsetLength = this.UsingOffsetLength.Combine(rhs.UsingOffsetLength);
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceGetter)rhs, include);
 
@@ -2272,7 +2272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MapData = EqualsMaskHelper.EqualsHelper(
                 item.MapData,
                 rhs.MapData,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.ObjectBoundsMin = item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
@@ -2282,12 +2282,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Road = EqualsMaskHelper.EqualsHelper(
                 item.Road,
                 rhs.Road,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.TopCell = EqualsMaskHelper.EqualsHelper(
                 item.TopCell,
                 rhs.TopCell,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.SubCellsTimestamp = MemoryExtensions.SequenceEqual(item.SubCellsTimestamp, rhs.SubCellsTimestamp);
             ret.SubCells = item.SubCells.CollectionEqualsHelper(
@@ -2473,7 +2473,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemTopCell = item.TopCell;
             mask.TopCell = new MaskItem<bool, Cell.Mask<bool>?>(itemTopCell != null, itemTopCell?.GetHasBeenSetMask());
             mask.SubCellsTimestamp = true;
-            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>>>(item.SubCells.HasBeenSet, item.SubCells.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var SubCellsItem = item.SubCells;
+            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>>>(SubCellsItem.HasBeenSet, SubCellsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.UsingOffsetLength = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -3217,9 +3218,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.MapData != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
-                var loquiItem = item.MapData;
-                ((MapDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var MapDataItem = item.MapData;
+                ((MapDataXmlWriteTranslation)((IXmlItem)MapDataItem).XmlWriteTranslator).Write(
+                    item: MapDataItem,
                     node: node,
                     name: nameof(item.MapData),
                     fieldIndex: (int)Worldspace_FieldIndex.MapData,
@@ -3279,9 +3280,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Road != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
-                var loquiItem = item.Road;
-                ((RoadXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var RoadItem = item.Road;
+                ((RoadXmlWriteTranslation)((IXmlItem)RoadItem).XmlWriteTranslator).Write(
+                    item: RoadItem,
                     node: node,
                     name: nameof(item.Road),
                     fieldIndex: (int)Worldspace_FieldIndex.Road,
@@ -3291,9 +3292,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.TopCell != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
-                var loquiItem = item.TopCell;
-                ((CellXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var TopCellItem = item.TopCell;
+                ((CellXmlWriteTranslation)((IXmlItem)TopCellItem).XmlWriteTranslator).Write(
+                    item: TopCellItem,
                     node: node,
                     name: nameof(item.TopCell),
                     fieldIndex: (int)Worldspace_FieldIndex.TopCell,
@@ -3321,9 +3322,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells),
                     transl: (XElement subNode, IWorldspaceBlockGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((WorldspaceBlockXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((WorldspaceBlockXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -3462,9 +3463,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3480,9 +3481,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Parent":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
                         item.Parent.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3498,9 +3499,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Climate":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.Climate);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Climate);
                         item.Climate.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3516,9 +3517,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Water":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.Water);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Water);
                         item.Water.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3534,9 +3535,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3552,9 +3553,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MapData":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                         item.MapData = LoquiXmlTranslation<MapData>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -3571,9 +3572,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Worldspace.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3589,9 +3590,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ObjectBoundsMin":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMin);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMin);
                         item.ObjectBoundsMin = P2FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3607,9 +3608,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ObjectBoundsMax":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMax);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMax);
                         item.ObjectBoundsMax = P2FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3625,9 +3626,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Music":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.Music);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Music);
                         item.Music = EnumXmlTranslation<MusicType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3643,9 +3644,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "OffsetData":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.OffsetData);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.OffsetData);
                         item.OffsetData = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3661,9 +3662,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Road":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.Road);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Road);
                         item.Road = LoquiXmlTranslation<Road>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -3680,9 +3681,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "TopCell":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                         item.TopCell = LoquiXmlTranslation<Cell>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -3699,9 +3700,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SubCellsTimestamp":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCellsTimestamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCellsTimestamp);
                         item.SubCellsTimestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 4,
@@ -3718,9 +3719,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SubCells":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
                         if (ListXmlTranslation<WorldspaceBlock>.Instance.Parse(
                             node: node,
                             enumer: out var SubCellsItem,
@@ -3746,9 +3747,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "UsingOffsetLength":
+                    errorMask?.PushIndex((int)Worldspace_FieldIndex.UsingOffsetLength);
                     try
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.UsingOffsetLength);
                         item.UsingOffsetLength = BooleanXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3942,16 +3943,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.MapData.TryGet(out var MapDataItem))
             {
-                var loquiItem = item.MapData;
-                if (loquiItem != null)
-                {
-                    ((MapDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((MapDataBinaryWriteTranslation)((IBinaryItem)MapDataItem).BinaryWriteTranslator).Write(
+                    item: MapDataItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.WriteNullable(
                 writer,
@@ -4128,7 +4126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceGetter)rhs, include);
 

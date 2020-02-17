@@ -579,28 +579,28 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Textures_FieldIndex.Diffuse:
-                        this.Diffuse = (Exception)obj;
+                        this.Diffuse = (Exception?)obj;
                         break;
                     case Textures_FieldIndex.NormalOrGloss:
-                        this.NormalOrGloss = (Exception)obj;
+                        this.NormalOrGloss = (Exception?)obj;
                         break;
                     case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
-                        this.EnvironmentMaskOrSubsurfaceTint = (Exception)obj;
+                        this.EnvironmentMaskOrSubsurfaceTint = (Exception?)obj;
                         break;
                     case Textures_FieldIndex.GlowOrDetailMap:
-                        this.GlowOrDetailMap = (Exception)obj;
+                        this.GlowOrDetailMap = (Exception?)obj;
                         break;
                     case Textures_FieldIndex.Height:
-                        this.Height = (Exception)obj;
+                        this.Height = (Exception?)obj;
                         break;
                     case Textures_FieldIndex.Environment:
-                        this.Environment = (Exception)obj;
+                        this.Environment = (Exception?)obj;
                         break;
                     case Textures_FieldIndex.Multilayer:
-                        this.Multilayer = (Exception)obj;
+                        this.Multilayer = (Exception?)obj;
                         break;
                     case Textures_FieldIndex.BacklightMaskOrSpecular:
-                        this.BacklightMaskOrSpecular = (Exception)obj;
+                        this.BacklightMaskOrSpecular = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -626,13 +626,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITexturesGetter)rhs, include);
 
@@ -2075,9 +2075,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ITexturesGetter)item,
                     name: name,
@@ -2137,9 +2137,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Diffuse":
+                    errorMask?.PushIndex((int)Textures_FieldIndex.Diffuse);
                     try
                     {
-                        errorMask?.PushIndex((int)Textures_FieldIndex.Diffuse);
                         item.Diffuse = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2155,9 +2155,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "NormalOrGloss":
+                    errorMask?.PushIndex((int)Textures_FieldIndex.NormalOrGloss);
                     try
                     {
-                        errorMask?.PushIndex((int)Textures_FieldIndex.NormalOrGloss);
                         item.NormalOrGloss = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2173,9 +2173,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "EnvironmentMaskOrSubsurfaceTint":
+                    errorMask?.PushIndex((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
                     try
                     {
-                        errorMask?.PushIndex((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
                         item.EnvironmentMaskOrSubsurfaceTint = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2191,9 +2191,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "GlowOrDetailMap":
+                    errorMask?.PushIndex((int)Textures_FieldIndex.GlowOrDetailMap);
                     try
                     {
-                        errorMask?.PushIndex((int)Textures_FieldIndex.GlowOrDetailMap);
                         item.GlowOrDetailMap = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2209,9 +2209,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Height":
+                    errorMask?.PushIndex((int)Textures_FieldIndex.Height);
                     try
                     {
-                        errorMask?.PushIndex((int)Textures_FieldIndex.Height);
                         item.Height = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2227,9 +2227,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Environment":
+                    errorMask?.PushIndex((int)Textures_FieldIndex.Environment);
                     try
                     {
-                        errorMask?.PushIndex((int)Textures_FieldIndex.Environment);
                         item.Environment = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2245,9 +2245,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Multilayer":
+                    errorMask?.PushIndex((int)Textures_FieldIndex.Multilayer);
                     try
                     {
-                        errorMask?.PushIndex((int)Textures_FieldIndex.Multilayer);
                         item.Multilayer = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2263,9 +2263,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "BacklightMaskOrSpecular":
+                    errorMask?.PushIndex((int)Textures_FieldIndex.BacklightMaskOrSpecular);
                     try
                     {
-                        errorMask?.PushIndex((int)Textures_FieldIndex.BacklightMaskOrSpecular);
                         item.BacklightMaskOrSpecular = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2579,7 +2579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITexturesGetter)rhs, include);
 

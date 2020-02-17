@@ -421,13 +421,13 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Condition_FieldIndex.CompareOperator:
-                        this.CompareOperator = (Exception)obj;
+                        this.CompareOperator = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Condition_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception)obj;
+                        this.Unknown1 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -448,13 +448,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg)
+            public virtual void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
 
@@ -1515,9 +1515,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IConditionGetter)item,
                     name: name,
@@ -1577,9 +1577,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "CompareOperator":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
                         item.CompareOperator = EnumXmlTranslation<CompareOperator>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1595,9 +1595,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Condition.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1613,9 +1613,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown1":
+                    errorMask?.PushIndex((int)Condition_FieldIndex.Unknown1);
                     try
                     {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.Unknown1);
                         item.Unknown1 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 3,
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
 

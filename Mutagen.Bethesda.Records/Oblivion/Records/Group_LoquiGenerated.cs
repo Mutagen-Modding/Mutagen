@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
@@ -1454,9 +1454,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
             {
+                errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
                 try
                 {
-                    errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
                     KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
                         node: node,
                         name: nameof(item.RecordCache),
@@ -1465,9 +1465,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask,
                         valTransl: (XElement subNode, T subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictTranslMask) =>
                         {
-                            var loquiItem = subItem;
-                            ((OblivionMajorRecordXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                                item: loquiItem,
+                            var Item = subItem;
+                            ((OblivionMajorRecordXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
                                 node: subNode,
                                 name: null,
                                 errorMask: dictSubMask,
@@ -1526,9 +1526,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IGroupGetter<T>)item,
                     name: name,
@@ -1589,9 +1589,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "GroupType":
+                    errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
                     try
                     {
-                        errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
                         item.GroupType = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1607,9 +1607,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LastModified":
+                    errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
                     try
                     {
-                        errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
                         item.LastModified = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1870,16 +1870,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.RecordCache.Items,
                 transl: (MutagenWriter r, T dictSubItem) =>
                 {
+                    if (dictSubItem.TryGet(out var Item))
                     {
-                        var loquiItem = dictSubItem;
-                        if (loquiItem != null)
-                        {
-                            ((OblivionMajorRecordBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: r,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((OblivionMajorRecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: r,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -1991,7 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
@@ -2344,10 +2341,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Group_FieldIndex.GroupType:
-                        this.GroupType = (Exception)obj;
+                        this.GroupType = (Exception?)obj;
                         break;
                     case Group_FieldIndex.LastModified:
-                        this.LastModified = (Exception)obj;
+                        this.LastModified = (Exception?)obj;
                         break;
                     case Group_FieldIndex.RecordCache:
                         this.RecordCache = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>)obj;
@@ -2371,13 +2368,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
         
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

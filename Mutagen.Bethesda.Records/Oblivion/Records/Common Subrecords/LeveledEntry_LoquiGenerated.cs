@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledEntryGetter<T>)rhs, include);
 
@@ -1448,9 +1448,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ILeveledEntryGetter<T>)item,
                     name: name,
@@ -1511,9 +1511,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Level":
+                    errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
                         item.Level = Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1529,9 +1529,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff":
+                    errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
                         item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 2,
@@ -1548,9 +1548,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Reference":
+                    errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Reference);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Reference);
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1566,9 +1566,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Count":
+                    errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Count);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Count);
                         item.Count = Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1584,9 +1584,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff2":
+                    errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff2);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff2);
                         item.Fluff2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 2,
@@ -1901,7 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledEntryGetter<T>)rhs, include);
 
@@ -2219,19 +2219,19 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case LeveledEntry_FieldIndex.Level:
-                        this.Level = (Exception)obj;
+                        this.Level = (Exception?)obj;
                         break;
                     case LeveledEntry_FieldIndex.Fluff:
-                        this.Fluff = (Exception)obj;
+                        this.Fluff = (Exception?)obj;
                         break;
                     case LeveledEntry_FieldIndex.Reference:
-                        this.Reference = (Exception)obj;
+                        this.Reference = (Exception?)obj;
                         break;
                     case LeveledEntry_FieldIndex.Count:
-                        this.Count = (Exception)obj;
+                        this.Count = (Exception?)obj;
                         break;
                     case LeveledEntry_FieldIndex.Fluff2:
-                        this.Fluff2 = (Exception)obj;
+                        this.Fluff2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2254,13 +2254,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
         
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

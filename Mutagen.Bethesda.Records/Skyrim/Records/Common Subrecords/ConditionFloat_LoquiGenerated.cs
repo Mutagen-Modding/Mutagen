@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case ConditionFloat_FieldIndex.ComparisonValue:
-                        this.ComparisonValue = (Exception)obj;
+                        this.ComparisonValue = (Exception?)obj;
                         break;
                     case ConditionFloat_FieldIndex.Data:
                         this.Data = (MaskItem<Exception?, ConditionData.ErrorMask?>?)obj;
@@ -415,13 +415,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ComparisonValue = this.ComparisonValue.Combine(rhs.ComparisonValue);
-                ret.Data = new MaskItem<Exception?, ConditionData.ErrorMask?>(ExceptionExt.Combine(this.Data?.Overall, rhs.Data?.Overall), (this.Data?.Specific as IErrorMask<ConditionData.ErrorMask>)?.Combine(rhs.Data?.Specific));
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionFloatGetter)rhs, include);
 
@@ -1511,9 +1511,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)ConditionFloat_FieldIndex.Data) ?? true))
             {
-                var loquiItem = item.Data;
-                ((ConditionDataXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var DataItem = item.Data;
+                ((ConditionDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    item: DataItem,
                     node: node,
                     name: nameof(item.Data),
                     fieldIndex: (int)ConditionFloat_FieldIndex.Data,
@@ -1613,9 +1613,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "ComparisonValue":
+                    errorMask?.PushIndex((int)ConditionFloat_FieldIndex.ComparisonValue);
                     try
                     {
-                        errorMask?.PushIndex((int)ConditionFloat_FieldIndex.ComparisonValue);
                         item.ComparisonValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1631,9 +1631,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Data":
+                    errorMask?.PushIndex((int)ConditionFloat_FieldIndex.Data);
                     try
                     {
-                        errorMask?.PushIndex((int)ConditionFloat_FieldIndex.Data);
                         item.Data = LoquiXmlTranslation<ConditionData>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionFloatGetter)rhs, include);
 

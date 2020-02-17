@@ -470,16 +470,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RegionData_FieldIndex.DataType:
-                        this.DataType = (Exception)obj;
+                        this.DataType = (Exception?)obj;
                         break;
                     case RegionData_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case RegionData_FieldIndex.Priority:
-                        this.Priority = (Exception)obj;
+                        this.Priority = (Exception?)obj;
                         break;
                     case RegionData_FieldIndex.RDATDataTypeState:
-                        this.RDATDataTypeState = (Exception)obj;
+                        this.RDATDataTypeState = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -501,13 +501,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg)
+            public virtual void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGetter)rhs, include);
 
@@ -1234,9 +1234,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.RDATDataTypeState |= RegionData.RDATDataType.Has;
                     break;
                 case "DataType":
+                    errorMask?.PushIndex((int)RegionData_FieldIndex.DataType);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionData_FieldIndex.DataType);
                         item.DataType = EnumXmlTranslation<RegionData.RegionDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1703,9 +1703,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRegionDataGetter)item,
                     name: name,
@@ -1765,9 +1765,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Flags":
+                    errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1783,9 +1783,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Priority":
+                    errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
                         item.Priority = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1801,9 +1801,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RDATDataTypeState":
+                    errorMask?.PushIndex((int)RegionData_FieldIndex.RDATDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)RegionData_FieldIndex.RDATDataTypeState);
                         item.RDATDataTypeState = EnumXmlTranslation<RegionData.RDATDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2110,7 +2110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGetter)rhs, include);
 

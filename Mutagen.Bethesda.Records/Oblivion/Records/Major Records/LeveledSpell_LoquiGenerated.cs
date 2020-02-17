@@ -490,10 +490,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case LeveledSpell_FieldIndex.ChanceNone:
-                        this.ChanceNone = (Exception)obj;
+                        this.ChanceNone = (Exception?)obj;
                         break;
                     case LeveledSpell_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case LeveledSpell_FieldIndex.Entries:
                         this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<SpellAbstract.ErrorMask>?>>?>)obj;
@@ -518,13 +518,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledSpellGetter)rhs, include);
 
@@ -1542,7 +1542,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.ChanceNone = (item.ChanceNone != null);
             mask.Flags = (item.Flags != null);
-            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var EntriesItem = item.Entries;
+            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>>(EntriesItem.HasBeenSet, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1979,9 +1980,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LeveledSpell_FieldIndex.Entries),
                     transl: (XElement subNode, ILeveledEntryGetter<ISpellAbstractGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ISpellAbstractGetter>(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<ISpellAbstractGetter>(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2111,9 +2112,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "ChanceNone":
+                    errorMask?.PushIndex((int)LeveledSpell_FieldIndex.ChanceNone);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledSpell_FieldIndex.ChanceNone);
                         item.ChanceNone = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2129,9 +2130,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)LeveledSpell_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledSpell_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<LeveledFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2147,9 +2148,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Entries":
+                    errorMask?.PushIndex((int)LeveledSpell_FieldIndex.Entries);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledSpell_FieldIndex.Entries);
                         if (ListXmlTranslation<LeveledEntry<SpellAbstract>>.Instance.Parse(
                             node: node,
                             enumer: out var EntriesItem,
@@ -2285,16 +2286,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Entries,
                 transl: (MutagenWriter subWriter, ILeveledEntryGetter<ISpellAbstractGetter> subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISpellAbstractGetter>(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<ISpellAbstractGetter>(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -2410,7 +2408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledSpellGetter)rhs, include);
 

@@ -622,25 +622,25 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Door_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Door_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case Door_FieldIndex.Script:
-                        this.Script = (Exception)obj;
+                        this.Script = (Exception?)obj;
                         break;
                     case Door_FieldIndex.OpenSound:
-                        this.OpenSound = (Exception)obj;
+                        this.OpenSound = (Exception?)obj;
                         break;
                     case Door_FieldIndex.CloseSound:
-                        this.CloseSound = (Exception)obj;
+                        this.CloseSound = (Exception?)obj;
                         break;
                     case Door_FieldIndex.LoopSound:
-                        this.LoopSound = (Exception)obj;
+                        this.LoopSound = (Exception?)obj;
                         break;
                     case Door_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Door_FieldIndex.RandomTeleportDestinations:
                         this.RandomTeleportDestinations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -670,13 +670,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
                 ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDoorGetter)rhs, include);
 
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Script = object.Equals(item.Script, rhs.Script);
             ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
@@ -2301,9 +2301,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Door_FieldIndex.Model,
@@ -2487,9 +2487,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Door_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Door_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2505,9 +2505,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Model":
+                    errorMask?.PushIndex((int)Door_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Door_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2524,9 +2524,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Script":
+                    errorMask?.PushIndex((int)Door_FieldIndex.Script);
                     try
                     {
-                        errorMask?.PushIndex((int)Door_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2542,9 +2542,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "OpenSound":
+                    errorMask?.PushIndex((int)Door_FieldIndex.OpenSound);
                     try
                     {
-                        errorMask?.PushIndex((int)Door_FieldIndex.OpenSound);
                         item.OpenSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2560,9 +2560,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CloseSound":
+                    errorMask?.PushIndex((int)Door_FieldIndex.CloseSound);
                     try
                     {
-                        errorMask?.PushIndex((int)Door_FieldIndex.CloseSound);
                         item.CloseSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2578,9 +2578,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LoopSound":
+                    errorMask?.PushIndex((int)Door_FieldIndex.LoopSound);
                     try
                     {
-                        errorMask?.PushIndex((int)Door_FieldIndex.LoopSound);
                         item.LoopSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2596,9 +2596,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Door_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Door_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2614,9 +2614,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RandomTeleportDestinations":
+                    errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
                     try
                     {
-                        errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
                         if (ListXmlTranslation<IFormLink<Place>>.Instance.Parse(
                             node: node,
                             enumer: out var RandomTeleportDestinationsItem,
@@ -2743,16 +2743,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Door_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2890,7 +2887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDoorGetter)rhs, include);
 

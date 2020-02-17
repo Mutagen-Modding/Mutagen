@@ -433,16 +433,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case WeatherType_FieldIndex.Sunrise:
-                        this.Sunrise = (Exception)obj;
+                        this.Sunrise = (Exception?)obj;
                         break;
                     case WeatherType_FieldIndex.Day:
-                        this.Day = (Exception)obj;
+                        this.Day = (Exception?)obj;
                         break;
                     case WeatherType_FieldIndex.Sunset:
-                        this.Sunset = (Exception)obj;
+                        this.Sunset = (Exception?)obj;
                         break;
                     case WeatherType_FieldIndex.Night:
-                        this.Night = (Exception)obj;
+                        this.Night = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -464,13 +464,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherTypeGetter)rhs, include);
 
@@ -1605,9 +1605,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IWeatherTypeGetter)item,
                     name: name,
@@ -1667,9 +1667,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Sunrise":
+                    errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunrise);
                     try
                     {
-                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunrise);
                         item.Sunrise = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1685,9 +1685,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Day":
+                    errorMask?.PushIndex((int)WeatherType_FieldIndex.Day);
                     try
                     {
-                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Day);
                         item.Day = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1703,9 +1703,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sunset":
+                    errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunset);
                     try
                     {
-                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunset);
                         item.Sunset = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1721,9 +1721,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Night":
+                    errorMask?.PushIndex((int)WeatherType_FieldIndex.Night);
                     try
                     {
-                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Night);
                         item.Night = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherTypeGetter)rhs, include);
 

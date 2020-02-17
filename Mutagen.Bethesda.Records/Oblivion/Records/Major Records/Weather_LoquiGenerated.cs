@@ -1628,10 +1628,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Weather_FieldIndex.TextureLowerLayer:
-                        this.TextureLowerLayer = (Exception)obj;
+                        this.TextureLowerLayer = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.TextureUpperLayer:
-                        this.TextureUpperLayer = (Exception)obj;
+                        this.TextureUpperLayer = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
@@ -1640,109 +1640,109 @@ namespace Mutagen.Bethesda.Oblivion
                         this.WeatherTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>)obj;
                         break;
                     case Weather_FieldIndex.FogDayNear:
-                        this.FogDayNear = (Exception)obj;
+                        this.FogDayNear = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.FogDayFar:
-                        this.FogDayFar = (Exception)obj;
+                        this.FogDayFar = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.FogNightNear:
-                        this.FogNightNear = (Exception)obj;
+                        this.FogNightNear = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.FogNightFar:
-                        this.FogNightFar = (Exception)obj;
+                        this.FogNightFar = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                        this.HdrEyeAdaptSpeed = (Exception)obj;
+                        this.HdrEyeAdaptSpeed = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrBlurRadius:
-                        this.HdrBlurRadius = (Exception)obj;
+                        this.HdrBlurRadius = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrBlurPasses:
-                        this.HdrBlurPasses = (Exception)obj;
+                        this.HdrBlurPasses = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrEmissiveMult:
-                        this.HdrEmissiveMult = (Exception)obj;
+                        this.HdrEmissiveMult = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrTargetLum:
-                        this.HdrTargetLum = (Exception)obj;
+                        this.HdrTargetLum = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrUpperLumClamp:
-                        this.HdrUpperLumClamp = (Exception)obj;
+                        this.HdrUpperLumClamp = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrBrightScale:
-                        this.HdrBrightScale = (Exception)obj;
+                        this.HdrBrightScale = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrBrightClamp:
-                        this.HdrBrightClamp = (Exception)obj;
+                        this.HdrBrightClamp = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrLumRampNoTex:
-                        this.HdrLumRampNoTex = (Exception)obj;
+                        this.HdrLumRampNoTex = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrLumRampMin:
-                        this.HdrLumRampMin = (Exception)obj;
+                        this.HdrLumRampMin = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrLumRampMax:
-                        this.HdrLumRampMax = (Exception)obj;
+                        this.HdrLumRampMax = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrSunlightDimmer:
-                        this.HdrSunlightDimmer = (Exception)obj;
+                        this.HdrSunlightDimmer = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrGrassDimmer:
-                        this.HdrGrassDimmer = (Exception)obj;
+                        this.HdrGrassDimmer = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HdrTreeDimmer:
-                        this.HdrTreeDimmer = (Exception)obj;
+                        this.HdrTreeDimmer = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.WindSpeed:
-                        this.WindSpeed = (Exception)obj;
+                        this.WindSpeed = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.CloudSpeedLower:
-                        this.CloudSpeedLower = (Exception)obj;
+                        this.CloudSpeedLower = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.CloudSpeedUpper:
-                        this.CloudSpeedUpper = (Exception)obj;
+                        this.CloudSpeedUpper = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.TransDelta:
-                        this.TransDelta = (Exception)obj;
+                        this.TransDelta = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.SunGlare:
-                        this.SunGlare = (Exception)obj;
+                        this.SunGlare = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.SunDamage:
-                        this.SunDamage = (Exception)obj;
+                        this.SunDamage = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                        this.PrecipitationBeginFadeIn = (Exception)obj;
+                        this.PrecipitationBeginFadeIn = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.PrecipitationEndFadeOut:
-                        this.PrecipitationEndFadeOut = (Exception)obj;
+                        this.PrecipitationEndFadeOut = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                        this.ThunderLightningBeginFadeIn = (Exception)obj;
+                        this.ThunderLightningBeginFadeIn = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                        this.ThunderLightningEndFadeOut = (Exception)obj;
+                        this.ThunderLightningEndFadeOut = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.ThunderLightningFrequency:
-                        this.ThunderLightningFrequency = (Exception)obj;
+                        this.ThunderLightningFrequency = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.Classification:
-                        this.Classification = (Exception)obj;
+                        this.Classification = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.LightningColor:
-                        this.LightningColor = (Exception)obj;
+                        this.LightningColor = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>)obj;
                         break;
                     case Weather_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = (Exception)obj;
+                        this.FNAMDataTypeState = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = (Exception)obj;
+                        this.HNAMDataTypeState = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1800,13 +1800,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.TextureLowerLayer = this.TextureLowerLayer.Combine(rhs.TextureLowerLayer);
                 ret.TextureUpperLayer = this.TextureUpperLayer.Combine(rhs.TextureUpperLayer);
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.WeatherTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ExceptionExt.Combine(this.WeatherTypes?.Overall, rhs.WeatherTypes?.Overall), ExceptionExt.Combine(this.WeatherTypes?.Specific, rhs.WeatherTypes?.Specific));
                 ret.FogDayNear = this.FogDayNear.Combine(rhs.FogDayNear);
                 ret.FogDayFar = this.FogDayFar.Combine(rhs.FogDayFar);
@@ -2193,7 +2193,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 
@@ -3582,7 +3582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.WeatherTypes = item.WeatherTypes.CollectionEqualsHelper(
                 rhs.WeatherTypes,
@@ -3886,7 +3886,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.TextureUpperLayer = (item.TextureUpperLayer != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>>(item.WeatherTypes.HasBeenSet, item.WeatherTypes.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var WeatherTypesItem = item.WeatherTypes;
+            mask.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>>(WeatherTypesItem.HasBeenSet, WeatherTypesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.FogDayNear = true;
             mask.FogDayFar = true;
             mask.FogNightNear = true;
@@ -3918,7 +3919,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ThunderLightningFrequency = true;
             mask.Classification = true;
             mask.LightningColor = true;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var SoundsItem = item.Sounds;
+            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>>(SoundsItem.HasBeenSet, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.FNAMDataTypeState = true;
             mask.HNAMDataTypeState = true;
             mask.DATADataTypeState = true;
@@ -4558,9 +4560,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Weather_FieldIndex.Model,
@@ -4579,9 +4581,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.WeatherTypes),
                     transl: (XElement subNode, IWeatherTypeGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((WeatherTypeXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((WeatherTypeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -4888,9 +4890,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Sounds),
                     transl: (XElement subNode, IWeatherSoundGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((WeatherSoundXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((WeatherSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -5032,9 +5034,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "TextureLowerLayer":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
                         item.TextureLowerLayer = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5050,9 +5052,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "TextureUpperLayer":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
                         item.TextureUpperLayer = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5068,9 +5070,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Model":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -5087,9 +5089,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "WeatherTypes":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
                         if (ListXmlTranslation<WeatherType>.Instance.Parse(
                             node: node,
                             enumer: out var WeatherTypesItem,
@@ -5115,9 +5117,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogDayNear":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
                         item.FogDayNear = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5134,9 +5136,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.FNAMDataTypeState |= Weather.FNAMDataType.Has;
                     break;
                 case "FogDayFar":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
                         item.FogDayFar = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5152,9 +5154,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogNightNear":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
                         item.FogNightNear = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5170,9 +5172,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogNightFar":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
                         item.FogNightFar = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5188,9 +5190,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrEyeAdaptSpeed":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
                         item.HdrEyeAdaptSpeed = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5207,9 +5209,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.HNAMDataTypeState |= Weather.HNAMDataType.Has;
                     break;
                 case "HdrBlurRadius":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
                         item.HdrBlurRadius = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5225,9 +5227,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrBlurPasses":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
                         item.HdrBlurPasses = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5243,9 +5245,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrEmissiveMult":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
                         item.HdrEmissiveMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5261,9 +5263,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrTargetLum":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
                         item.HdrTargetLum = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5279,9 +5281,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrUpperLumClamp":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
                         item.HdrUpperLumClamp = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5297,9 +5299,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrBrightScale":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
                         item.HdrBrightScale = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5315,9 +5317,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrBrightClamp":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
                         item.HdrBrightClamp = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5333,9 +5335,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrLumRampNoTex":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
                         item.HdrLumRampNoTex = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5351,9 +5353,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrLumRampMin":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
                         item.HdrLumRampMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5369,9 +5371,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrLumRampMax":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
                         item.HdrLumRampMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5387,9 +5389,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrSunlightDimmer":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
                         item.HdrSunlightDimmer = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5405,9 +5407,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrGrassDimmer":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
                         item.HdrGrassDimmer = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5423,9 +5425,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HdrTreeDimmer":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
                         item.HdrTreeDimmer = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5441,9 +5443,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "WindSpeed":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
                         item.WindSpeed = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5460,9 +5462,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Weather.DATADataType.Has;
                     break;
                 case "CloudSpeedLower":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
                         item.CloudSpeedLower = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5478,9 +5480,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CloudSpeedUpper":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
                         item.CloudSpeedUpper = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5496,9 +5498,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "TransDelta":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
                         item.TransDelta = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5514,9 +5516,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SunGlare":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
                         item.SunGlare = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5532,9 +5534,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SunDamage":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
                         item.SunDamage = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5550,9 +5552,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PrecipitationBeginFadeIn":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
                         item.PrecipitationBeginFadeIn = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5568,9 +5570,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PrecipitationEndFadeOut":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
                         item.PrecipitationEndFadeOut = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5586,9 +5588,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ThunderLightningBeginFadeIn":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
                         item.ThunderLightningBeginFadeIn = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5604,9 +5606,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ThunderLightningEndFadeOut":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
                         item.ThunderLightningEndFadeOut = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5622,9 +5624,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ThunderLightningFrequency":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
                         item.ThunderLightningFrequency = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5640,9 +5642,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Classification":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
                         item.Classification = EnumXmlTranslation<Weather.WeatherClassification>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5658,9 +5660,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LightningColor":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
                         item.LightningColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5676,9 +5678,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sounds":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
                         if (ListXmlTranslation<WeatherSound>.Instance.Parse(
                             node: node,
                             enumer: out var SoundsItem,
@@ -5704,9 +5706,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FNAMDataTypeState":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.FNAMDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FNAMDataTypeState);
                         item.FNAMDataTypeState = EnumXmlTranslation<Weather.FNAMDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5722,9 +5724,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HNAMDataTypeState":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HNAMDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HNAMDataTypeState);
                         item.HNAMDataTypeState = EnumXmlTranslation<Weather.HNAMDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5740,9 +5742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Weather.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5875,16 +5877,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.TextureUpperLayer,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.DNAM_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
                 writer: writer,
@@ -5892,14 +5891,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: Weather_Registration.NAM0_HEADER,
                 transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem) =>
                 {
-                    {
-                        var loquiItem = subItem;
-                        ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                            item: loquiItem,
-                            writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
+                    var Item = subItem;
+                    ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
                 });
             if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
             {
@@ -5996,16 +5993,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Sounds,
                 transl: (MutagenWriter subWriter, IWeatherSoundGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((WeatherSoundBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((WeatherSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -6108,7 +6102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 

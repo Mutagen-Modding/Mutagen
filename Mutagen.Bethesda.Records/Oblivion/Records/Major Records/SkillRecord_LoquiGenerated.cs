@@ -732,43 +732,43 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case SkillRecord_FieldIndex.Skill:
-                        this.Skill = (Exception)obj;
+                        this.Skill = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.Description:
-                        this.Description = (Exception)obj;
+                        this.Description = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.Action:
-                        this.Action = (Exception)obj;
+                        this.Action = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.Attribute:
-                        this.Attribute = (Exception)obj;
+                        this.Attribute = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.Specialization:
-                        this.Specialization = (Exception)obj;
+                        this.Specialization = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.UseValueFirst:
-                        this.UseValueFirst = (Exception)obj;
+                        this.UseValueFirst = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.UseValueSecond:
-                        this.UseValueSecond = (Exception)obj;
+                        this.UseValueSecond = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.ApprenticeText:
-                        this.ApprenticeText = (Exception)obj;
+                        this.ApprenticeText = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.JourneymanText:
-                        this.JourneymanText = (Exception)obj;
+                        this.JourneymanText = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.ExpertText:
-                        this.ExpertText = (Exception)obj;
+                        this.ExpertText = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.MasterText:
-                        this.MasterText = (Exception)obj;
+                        this.MasterText = (Exception?)obj;
                         break;
                     case SkillRecord_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -800,13 +800,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordGetter)rhs, include);
 
@@ -2716,9 +2716,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Skill":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Skill);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Skill);
                         item.Skill = EnumXmlTranslation<ActorValue>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2734,9 +2734,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Description":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Description);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Description);
                         item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2752,9 +2752,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2770,9 +2770,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Action":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
                         item.Action = EnumXmlTranslation<ActorValue>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2789,9 +2789,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= SkillRecord.DATADataType.Has;
                     break;
                 case "Attribute":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
                         item.Attribute = EnumXmlTranslation<ActorValue>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2807,9 +2807,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Specialization":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
                         item.Specialization = EnumXmlTranslation<Specialization>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2825,9 +2825,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "UseValueFirst":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
                         item.UseValueFirst = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2843,9 +2843,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "UseValueSecond":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
                         item.UseValueSecond = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2861,9 +2861,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ApprenticeText":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
                         item.ApprenticeText = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2879,9 +2879,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "JourneymanText":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
                         item.JourneymanText = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2897,9 +2897,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ExpertText":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
                         item.ExpertText = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2915,9 +2915,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MasterText":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.MasterText);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.MasterText);
                         item.MasterText = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2933,9 +2933,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<SkillRecord.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3217,7 +3217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordGetter)rhs, include);
 

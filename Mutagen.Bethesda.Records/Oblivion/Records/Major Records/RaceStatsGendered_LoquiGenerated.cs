@@ -425,13 +425,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -461,8 +461,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Male = new MaskItem<Exception?, RaceStats.ErrorMask?>(ExceptionExt.Combine(this.Male?.Overall, rhs.Male?.Overall), (this.Male?.Specific as IErrorMask<RaceStats.ErrorMask>)?.Combine(rhs.Male?.Specific));
-                ret.Female = new MaskItem<Exception?, RaceStats.ErrorMask?>(ExceptionExt.Combine(this.Female?.Overall, rhs.Female?.Overall), (this.Female?.Specific as IErrorMask<RaceStats.ErrorMask>)?.Combine(rhs.Female?.Specific));
+                ret.Male = this.Male.Combine(rhs.Male, (l, r) => l.Combine(r));
+                ret.Female = this.Female.Combine(rhs.Female, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGenderedGetter)rhs, include);
 
@@ -1464,9 +1464,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Male) ?? true))
             {
-                var loquiItem = item.Male;
-                ((RaceStatsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var MaleItem = item.Male;
+                ((RaceStatsXmlWriteTranslation)((IXmlItem)MaleItem).XmlWriteTranslator).Write(
+                    item: MaleItem,
                     node: node,
                     name: nameof(item.Male),
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
@@ -1475,9 +1475,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Female) ?? true))
             {
-                var loquiItem = item.Female;
-                ((RaceStatsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var FemaleItem = item.Female;
+                ((RaceStatsXmlWriteTranslation)((IXmlItem)FemaleItem).XmlWriteTranslator).Write(
+                    item: FemaleItem,
                     node: node,
                     name: nameof(item.Female),
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
@@ -1529,9 +1529,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRaceStatsGenderedGetter)item,
                     name: name,
@@ -1591,9 +1591,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Male":
+                    errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Male);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Male);
                         item.Male = LoquiXmlTranslation<RaceStats>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -1610,9 +1610,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Female":
+                    errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Female);
                     try
                     {
-                        errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Female);
                         item.Female = LoquiXmlTranslation<RaceStats>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -1804,22 +1804,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            {
-                var loquiItem = item.Male;
-                ((RaceStatsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
-            {
-                var loquiItem = item.Female;
-                ((RaceStatsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
+            var MaleItem = item.Male;
+            ((RaceStatsBinaryWriteTranslation)((IBinaryItem)MaleItem).BinaryWriteTranslator).Write(
+                item: MaleItem,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
+            var FemaleItem = item.Female;
+            ((RaceStatsBinaryWriteTranslation)((IBinaryItem)FemaleItem).BinaryWriteTranslator).Write(
+                item: FemaleItem,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
         }
 
         public void Write(
@@ -1907,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGenderedGetter)rhs, include);
 

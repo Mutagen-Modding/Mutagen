@@ -675,37 +675,37 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Ammo_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case Ammo_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.Enchantment:
-                        this.Enchantment = (Exception)obj;
+                        this.Enchantment = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.EnchantmentPoints:
-                        this.EnchantmentPoints = (Exception)obj;
+                        this.EnchantmentPoints = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.Speed:
-                        this.Speed = (Exception)obj;
+                        this.Speed = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.Value:
-                        this.Value = (Exception)obj;
+                        this.Value = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.Weight:
-                        this.Weight = (Exception)obj;
+                        this.Weight = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.Damage:
-                        this.Damage = (Exception)obj;
+                        this.Damage = (Exception?)obj;
                         break;
                     case Ammo_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -735,13 +735,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
                 ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmoGetter)rhs, include);
 
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
@@ -2437,9 +2437,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Ammo_FieldIndex.Model,
@@ -2656,9 +2656,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2674,9 +2674,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Model":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2693,9 +2693,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2711,9 +2711,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Enchantment":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Enchantment);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Enchantment);
                         item.Enchantment.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2729,9 +2729,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EnchantmentPoints":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.EnchantmentPoints);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.EnchantmentPoints);
                         item.EnchantmentPoints = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2747,9 +2747,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Speed":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Speed);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Speed);
                         item.Speed = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2766,9 +2766,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Ammo.DATADataType.Has;
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Ammo.AmmoFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2784,9 +2784,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Value":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Value);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Value);
                         item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2802,9 +2802,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Weight":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Weight);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Weight);
                         item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2820,9 +2820,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Damage":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Damage);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.Damage);
                         item.Damage = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2838,9 +2838,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Ammo_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Ammo.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2968,16 +2968,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Ammo_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3124,7 +3121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmoGetter)rhs, include);
 

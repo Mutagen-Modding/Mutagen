@@ -577,28 +577,28 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case DialogResponse_FieldIndex.Emotion:
-                        this.Emotion = (Exception)obj;
+                        this.Emotion = (Exception?)obj;
                         break;
                     case DialogResponse_FieldIndex.EmotionValue:
-                        this.EmotionValue = (Exception)obj;
+                        this.EmotionValue = (Exception?)obj;
                         break;
                     case DialogResponse_FieldIndex.Fluff1:
-                        this.Fluff1 = (Exception)obj;
+                        this.Fluff1 = (Exception?)obj;
                         break;
                     case DialogResponse_FieldIndex.ResponseNumber:
-                        this.ResponseNumber = (Exception)obj;
+                        this.ResponseNumber = (Exception?)obj;
                         break;
                     case DialogResponse_FieldIndex.Fluff2:
-                        this.Fluff2 = (Exception)obj;
+                        this.Fluff2 = (Exception?)obj;
                         break;
                     case DialogResponse_FieldIndex.ResponseText:
-                        this.ResponseText = (Exception)obj;
+                        this.ResponseText = (Exception?)obj;
                         break;
                     case DialogResponse_FieldIndex.ActorNotes:
-                        this.ActorNotes = (Exception)obj;
+                        this.ActorNotes = (Exception?)obj;
                         break;
                     case DialogResponse_FieldIndex.TRDTDataTypeState:
-                        this.TRDTDataTypeState = (Exception)obj;
+                        this.TRDTDataTypeState = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -624,13 +624,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponseGetter)rhs, include);
 
@@ -1993,9 +1993,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IDialogResponseGetter)item,
                     name: name,
@@ -2055,9 +2055,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Emotion":
+                    errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
                     try
                     {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
                         item.Emotion = EnumXmlTranslation<EmotionType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2074,9 +2074,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.TRDTDataTypeState |= DialogResponse.TRDTDataType.Has;
                     break;
                 case "EmotionValue":
+                    errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
                     try
                     {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
                         item.EmotionValue = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2092,9 +2092,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff1":
+                    errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
                     try
                     {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
                         item.Fluff1 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 4,
@@ -2111,9 +2111,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ResponseNumber":
+                    errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
                     try
                     {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
                         item.ResponseNumber = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2129,9 +2129,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff2":
+                    errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
                     try
                     {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
                         item.Fluff2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 3,
@@ -2148,9 +2148,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ResponseText":
+                    errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
                     try
                     {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
                         item.ResponseText = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2166,9 +2166,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ActorNotes":
+                    errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
                     try
                     {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
                         item.ActorNotes = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2184,9 +2184,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "TRDTDataTypeState":
+                    errorMask?.PushIndex((int)DialogResponse_FieldIndex.TRDTDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.TRDTDataTypeState);
                         item.TRDTDataTypeState = EnumXmlTranslation<DialogResponse.TRDTDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2499,7 +2499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponseGetter)rhs, include);
 

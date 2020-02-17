@@ -540,19 +540,19 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case LeveledCreature_FieldIndex.ChanceNone:
-                        this.ChanceNone = (Exception)obj;
+                        this.ChanceNone = (Exception?)obj;
                         break;
                     case LeveledCreature_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case LeveledCreature_FieldIndex.Entries:
                         this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NPCSpawn.ErrorMask>?>>?>)obj;
                         break;
                     case LeveledCreature_FieldIndex.Script:
-                        this.Script = (Exception)obj;
+                        this.Script = (Exception?)obj;
                         break;
                     case LeveledCreature_FieldIndex.Template:
-                        this.Template = (Exception)obj;
+                        this.Template = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -576,13 +576,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureGetter)rhs, include);
 
@@ -1672,7 +1672,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.ChanceNone = (item.ChanceNone != null);
             mask.Flags = (item.Flags != null);
-            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var EntriesItem = item.Entries;
+            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>>(EntriesItem.HasBeenSet, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Script = (item.Script.FormKey != null);
             mask.Template = (item.Template.FormKey != null);
             base.FillHasBeenSetMask(
@@ -2131,9 +2132,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries),
                     transl: (XElement subNode, ILeveledEntryGetter<INPCSpawnGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<INPCSpawnGetter>(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<INPCSpawnGetter>(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2283,9 +2284,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "ChanceNone":
+                    errorMask?.PushIndex((int)LeveledCreature_FieldIndex.ChanceNone);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledCreature_FieldIndex.ChanceNone);
                         item.ChanceNone = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2301,9 +2302,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<LeveledFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2319,9 +2320,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Entries":
+                    errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Entries);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Entries);
                         if (ListXmlTranslation<LeveledEntry<NPCSpawn>>.Instance.Parse(
                             node: node,
                             enumer: out var EntriesItem,
@@ -2347,9 +2348,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Script":
+                    errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Script);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2365,9 +2366,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Template":
+                    errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Template);
                     try
                     {
-                        errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Template);
                         item.Template.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2493,16 +2494,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Entries,
                 transl: (MutagenWriter subWriter, ILeveledEntryGetter<INPCSpawnGetter> subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<INPCSpawnGetter>(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<INPCSpawnGetter>(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -2628,7 +2626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureGetter)rhs, include);
 

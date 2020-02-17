@@ -402,13 +402,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Fields = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ExceptionExt.Combine(this.Fields?.Overall, rhs.Fields?.Overall), (this.Fields?.Specific as IErrorMask<ScriptFields.ErrorMask>)?.Combine(rhs.Fields?.Specific));
+                ret.Fields = this.Fields.Combine(rhs.Fields, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptGetter)rhs, include);
 
@@ -1101,9 +1101,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Fields":
+                    errorMask?.PushIndex((int)Script_FieldIndex.Fields);
                     try
                     {
-                        errorMask?.PushIndex((int)Script_FieldIndex.Fields);
                         item.Fields.CopyInFromXml(
                             node: node,
                             translationMask: translationMask,
@@ -1644,9 +1644,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
             {
-                var loquiItem = item.Fields;
-                ((ScriptFieldsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var FieldsItem = item.Fields;
+                ((ScriptFieldsXmlWriteTranslation)((IXmlItem)FieldsItem).XmlWriteTranslator).Write(
+                    item: FieldsItem,
                     node: node,
                     name: nameof(item.Fields),
                     fieldIndex: (int)Script_FieldIndex.Fields,
@@ -1857,14 +1857,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            {
-                var loquiItem = item.Fields;
-                ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
+            var FieldsItem = item.Fields;
+            ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)FieldsItem).BinaryWriteTranslator).Write(
+                item: FieldsItem,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
         }
 
         public void Write(
@@ -1965,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptGetter)rhs, include);
 

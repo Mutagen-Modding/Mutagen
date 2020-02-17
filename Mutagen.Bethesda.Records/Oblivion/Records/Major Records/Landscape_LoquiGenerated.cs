@@ -629,16 +629,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Landscape_FieldIndex.Unknown:
-                        this.Unknown = (Exception)obj;
+                        this.Unknown = (Exception?)obj;
                         break;
                     case Landscape_FieldIndex.VertexNormals:
-                        this.VertexNormals = (Exception)obj;
+                        this.VertexNormals = (Exception?)obj;
                         break;
                     case Landscape_FieldIndex.VertexHeightMap:
-                        this.VertexHeightMap = (Exception)obj;
+                        this.VertexHeightMap = (Exception?)obj;
                         break;
                     case Landscape_FieldIndex.VertexColors:
-                        this.VertexColors = (Exception)obj;
+                        this.VertexColors = (Exception?)obj;
                         break;
                     case Landscape_FieldIndex.Layers:
                         this.Layers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>)obj;
@@ -669,13 +669,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeGetter)rhs, include);
 
@@ -1861,7 +1861,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.VertexNormals = item.VertexNormals_IsSet;
             mask.VertexHeightMap = item.VertexHeightMap_IsSet;
             mask.VertexColors = item.VertexColors_IsSet;
-            mask.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer.Mask<bool>?>>>(item.Layers.HasBeenSet, item.Layers.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var LayersItem = item.Layers;
+            mask.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer.Mask<bool>?>>>(LayersItem.HasBeenSet, LayersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Textures = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Textures.HasBeenSet, Enumerable.Empty<(int, bool)>());
             base.FillHasBeenSetMask(
                 item: item,
@@ -2338,9 +2339,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers),
                     transl: (XElement subNode, IBaseLayerGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((BaseLayerXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((BaseLayerXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2474,9 +2475,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Unknown":
+                    errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
                     try
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
                         item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2492,9 +2493,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "VertexNormals":
+                    errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
                     try
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
                         item.VertexNormals = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2510,9 +2511,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "VertexHeightMap":
+                    errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
                     try
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
                         item.VertexHeightMap = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2528,9 +2529,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "VertexColors":
+                    errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
                     try
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
                         item.VertexColors = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2546,9 +2547,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Layers":
+                    errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
                     try
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
                         if (ListXmlTranslation<BaseLayer>.Instance.Parse(
                             node: node,
                             enumer: out var LayersItem,
@@ -2574,9 +2575,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Textures":
+                    errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
                     try
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
                         if (ListXmlTranslation<IFormLink<LandTexture>>.Instance.Parse(
                             node: node,
                             enumer: out var TexturesItem,
@@ -2731,16 +2732,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Layers,
                 transl: (MutagenWriter subWriter, IBaseLayerGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((BaseLayerBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((BaseLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
@@ -2854,7 +2852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeGetter)rhs, include);
 

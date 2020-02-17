@@ -514,25 +514,25 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case MagicEffectSubData_FieldIndex.EnchantEffect:
-                        this.EnchantEffect = (Exception)obj;
+                        this.EnchantEffect = (Exception?)obj;
                         break;
                     case MagicEffectSubData_FieldIndex.CastingSound:
-                        this.CastingSound = (Exception)obj;
+                        this.CastingSound = (Exception?)obj;
                         break;
                     case MagicEffectSubData_FieldIndex.BoltSound:
-                        this.BoltSound = (Exception)obj;
+                        this.BoltSound = (Exception?)obj;
                         break;
                     case MagicEffectSubData_FieldIndex.HitSound:
-                        this.HitSound = (Exception)obj;
+                        this.HitSound = (Exception?)obj;
                         break;
                     case MagicEffectSubData_FieldIndex.AreaSound:
-                        this.AreaSound = (Exception)obj;
+                        this.AreaSound = (Exception?)obj;
                         break;
                     case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                        this.ConstantEffectEnchantmentFactor = (Exception)obj;
+                        this.ConstantEffectEnchantmentFactor = (Exception?)obj;
                         break;
                     case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                        this.ConstantEffectBarterFactor = (Exception)obj;
+                        this.ConstantEffectBarterFactor = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -557,13 +557,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSubDataGetter)rhs, include);
 
@@ -1842,9 +1842,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IMagicEffectSubDataGetter)item,
                     name: name,
@@ -1904,9 +1904,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "EnchantEffect":
+                    errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
                     try
                     {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
                         item.EnchantEffect.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1922,9 +1922,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CastingSound":
+                    errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
                     try
                     {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
                         item.CastingSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1940,9 +1940,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BoltSound":
+                    errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
                     try
                     {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
                         item.BoltSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1958,9 +1958,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HitSound":
+                    errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
                     try
                     {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
                         item.HitSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1976,9 +1976,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AreaSound":
+                    errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
                     try
                     {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
                         item.AreaSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1994,9 +1994,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ConstantEffectEnchantmentFactor":
+                    errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
                     try
                     {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
                         item.ConstantEffectEnchantmentFactor = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2012,9 +2012,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ConstantEffectBarterFactor":
+                    errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
                     try
                     {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
                         item.ConstantEffectBarterFactor = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2312,7 +2312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSubDataGetter)rhs, include);
 

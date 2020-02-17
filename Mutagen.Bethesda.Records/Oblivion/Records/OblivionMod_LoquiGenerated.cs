@@ -2300,13 +2300,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -2391,63 +2391,63 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ExceptionExt.Combine(this.ModHeader?.Overall, rhs.ModHeader?.Overall), (this.ModHeader?.Specific as IErrorMask<ModHeader.ErrorMask>)?.Combine(rhs.ModHeader?.Specific));
-                ret.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ExceptionExt.Combine(this.GameSettings?.Overall, rhs.GameSettings?.Overall), (this.GameSettings?.Specific as IErrorMask<Group.ErrorMask<GameSetting.ErrorMask>>)?.Combine(rhs.GameSettings?.Specific));
-                ret.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ExceptionExt.Combine(this.Globals?.Overall, rhs.Globals?.Overall), (this.Globals?.Specific as IErrorMask<Group.ErrorMask<Global.ErrorMask>>)?.Combine(rhs.Globals?.Specific));
-                ret.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ExceptionExt.Combine(this.Classes?.Overall, rhs.Classes?.Overall), (this.Classes?.Specific as IErrorMask<Group.ErrorMask<Class.ErrorMask>>)?.Combine(rhs.Classes?.Specific));
-                ret.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), (this.Factions?.Specific as IErrorMask<Group.ErrorMask<Faction.ErrorMask>>)?.Combine(rhs.Factions?.Specific));
-                ret.Hairs = new MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>(ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), (this.Hairs?.Specific as IErrorMask<Group.ErrorMask<Hair.ErrorMask>>)?.Combine(rhs.Hairs?.Specific));
-                ret.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), (this.Eyes?.Specific as IErrorMask<Group.ErrorMask<Eye.ErrorMask>>)?.Combine(rhs.Eyes?.Specific));
-                ret.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ExceptionExt.Combine(this.Races?.Overall, rhs.Races?.Overall), (this.Races?.Specific as IErrorMask<Group.ErrorMask<Race.ErrorMask>>)?.Combine(rhs.Races?.Specific));
-                ret.Sounds = new MaskItem<Exception?, Group.ErrorMask<Sound.ErrorMask>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), (this.Sounds?.Specific as IErrorMask<Group.ErrorMask<Sound.ErrorMask>>)?.Combine(rhs.Sounds?.Specific));
-                ret.Skills = new MaskItem<Exception?, Group.ErrorMask<SkillRecord.ErrorMask>?>(ExceptionExt.Combine(this.Skills?.Overall, rhs.Skills?.Overall), (this.Skills?.Specific as IErrorMask<Group.ErrorMask<SkillRecord.ErrorMask>>)?.Combine(rhs.Skills?.Specific));
-                ret.MagicEffects = new MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>(ExceptionExt.Combine(this.MagicEffects?.Overall, rhs.MagicEffects?.Overall), (this.MagicEffects?.Specific as IErrorMask<Group.ErrorMask<MagicEffect.ErrorMask>>)?.Combine(rhs.MagicEffects?.Specific));
-                ret.Scripts = new MaskItem<Exception?, Group.ErrorMask<Script.ErrorMask>?>(ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), (this.Scripts?.Specific as IErrorMask<Group.ErrorMask<Script.ErrorMask>>)?.Combine(rhs.Scripts?.Specific));
-                ret.LandTextures = new MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>(ExceptionExt.Combine(this.LandTextures?.Overall, rhs.LandTextures?.Overall), (this.LandTextures?.Specific as IErrorMask<Group.ErrorMask<LandTexture.ErrorMask>>)?.Combine(rhs.LandTextures?.Specific));
-                ret.Enchantments = new MaskItem<Exception?, Group.ErrorMask<Enchantment.ErrorMask>?>(ExceptionExt.Combine(this.Enchantments?.Overall, rhs.Enchantments?.Overall), (this.Enchantments?.Specific as IErrorMask<Group.ErrorMask<Enchantment.ErrorMask>>)?.Combine(rhs.Enchantments?.Specific));
-                ret.Spells = new MaskItem<Exception?, Group.ErrorMask<SpellUnleveled.ErrorMask>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), (this.Spells?.Specific as IErrorMask<Group.ErrorMask<SpellUnleveled.ErrorMask>>)?.Combine(rhs.Spells?.Specific));
-                ret.Birthsigns = new MaskItem<Exception?, Group.ErrorMask<Birthsign.ErrorMask>?>(ExceptionExt.Combine(this.Birthsigns?.Overall, rhs.Birthsigns?.Overall), (this.Birthsigns?.Specific as IErrorMask<Group.ErrorMask<Birthsign.ErrorMask>>)?.Combine(rhs.Birthsigns?.Specific));
-                ret.Activators = new MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>(ExceptionExt.Combine(this.Activators?.Overall, rhs.Activators?.Overall), (this.Activators?.Specific as IErrorMask<Group.ErrorMask<Activator.ErrorMask>>)?.Combine(rhs.Activators?.Specific));
-                ret.AlchemicalApparatus = new MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>(ExceptionExt.Combine(this.AlchemicalApparatus?.Overall, rhs.AlchemicalApparatus?.Overall), (this.AlchemicalApparatus?.Specific as IErrorMask<Group.ErrorMask<AlchemicalApparatus.ErrorMask>>)?.Combine(rhs.AlchemicalApparatus?.Specific));
-                ret.Armors = new MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>(ExceptionExt.Combine(this.Armors?.Overall, rhs.Armors?.Overall), (this.Armors?.Specific as IErrorMask<Group.ErrorMask<Armor.ErrorMask>>)?.Combine(rhs.Armors?.Specific));
-                ret.Books = new MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>(ExceptionExt.Combine(this.Books?.Overall, rhs.Books?.Overall), (this.Books?.Specific as IErrorMask<Group.ErrorMask<Book.ErrorMask>>)?.Combine(rhs.Books?.Specific));
-                ret.Clothes = new MaskItem<Exception?, Group.ErrorMask<Clothing.ErrorMask>?>(ExceptionExt.Combine(this.Clothes?.Overall, rhs.Clothes?.Overall), (this.Clothes?.Specific as IErrorMask<Group.ErrorMask<Clothing.ErrorMask>>)?.Combine(rhs.Clothes?.Specific));
-                ret.Containers = new MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>(ExceptionExt.Combine(this.Containers?.Overall, rhs.Containers?.Overall), (this.Containers?.Specific as IErrorMask<Group.ErrorMask<Container.ErrorMask>>)?.Combine(rhs.Containers?.Specific));
-                ret.Doors = new MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>(ExceptionExt.Combine(this.Doors?.Overall, rhs.Doors?.Overall), (this.Doors?.Specific as IErrorMask<Group.ErrorMask<Door.ErrorMask>>)?.Combine(rhs.Doors?.Specific));
-                ret.Ingredients = new MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>(ExceptionExt.Combine(this.Ingredients?.Overall, rhs.Ingredients?.Overall), (this.Ingredients?.Specific as IErrorMask<Group.ErrorMask<Ingredient.ErrorMask>>)?.Combine(rhs.Ingredients?.Specific));
-                ret.Lights = new MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>(ExceptionExt.Combine(this.Lights?.Overall, rhs.Lights?.Overall), (this.Lights?.Specific as IErrorMask<Group.ErrorMask<Light.ErrorMask>>)?.Combine(rhs.Lights?.Specific));
-                ret.Miscellaneous = new MaskItem<Exception?, Group.ErrorMask<Miscellaneous.ErrorMask>?>(ExceptionExt.Combine(this.Miscellaneous?.Overall, rhs.Miscellaneous?.Overall), (this.Miscellaneous?.Specific as IErrorMask<Group.ErrorMask<Miscellaneous.ErrorMask>>)?.Combine(rhs.Miscellaneous?.Specific));
-                ret.Statics = new MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>(ExceptionExt.Combine(this.Statics?.Overall, rhs.Statics?.Overall), (this.Statics?.Specific as IErrorMask<Group.ErrorMask<Static.ErrorMask>>)?.Combine(rhs.Statics?.Specific));
-                ret.Grasses = new MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), (this.Grasses?.Specific as IErrorMask<Group.ErrorMask<Grass.ErrorMask>>)?.Combine(rhs.Grasses?.Specific));
-                ret.Trees = new MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>(ExceptionExt.Combine(this.Trees?.Overall, rhs.Trees?.Overall), (this.Trees?.Specific as IErrorMask<Group.ErrorMask<Tree.ErrorMask>>)?.Combine(rhs.Trees?.Specific));
-                ret.Flora = new MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>(ExceptionExt.Combine(this.Flora?.Overall, rhs.Flora?.Overall), (this.Flora?.Specific as IErrorMask<Group.ErrorMask<Flora.ErrorMask>>)?.Combine(rhs.Flora?.Specific));
-                ret.Furnature = new MaskItem<Exception?, Group.ErrorMask<Furnature.ErrorMask>?>(ExceptionExt.Combine(this.Furnature?.Overall, rhs.Furnature?.Overall), (this.Furnature?.Specific as IErrorMask<Group.ErrorMask<Furnature.ErrorMask>>)?.Combine(rhs.Furnature?.Specific));
-                ret.Weapons = new MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>(ExceptionExt.Combine(this.Weapons?.Overall, rhs.Weapons?.Overall), (this.Weapons?.Specific as IErrorMask<Group.ErrorMask<Weapon.ErrorMask>>)?.Combine(rhs.Weapons?.Specific));
-                ret.Ammo = new MaskItem<Exception?, Group.ErrorMask<Ammo.ErrorMask>?>(ExceptionExt.Combine(this.Ammo?.Overall, rhs.Ammo?.Overall), (this.Ammo?.Specific as IErrorMask<Group.ErrorMask<Ammo.ErrorMask>>)?.Combine(rhs.Ammo?.Specific));
-                ret.NPCs = new MaskItem<Exception?, Group.ErrorMask<NPC.ErrorMask>?>(ExceptionExt.Combine(this.NPCs?.Overall, rhs.NPCs?.Overall), (this.NPCs?.Specific as IErrorMask<Group.ErrorMask<NPC.ErrorMask>>)?.Combine(rhs.NPCs?.Specific));
-                ret.Creatures = new MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>(ExceptionExt.Combine(this.Creatures?.Overall, rhs.Creatures?.Overall), (this.Creatures?.Specific as IErrorMask<Group.ErrorMask<Creature.ErrorMask>>)?.Combine(rhs.Creatures?.Specific));
-                ret.LeveledCreatures = new MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>(ExceptionExt.Combine(this.LeveledCreatures?.Overall, rhs.LeveledCreatures?.Overall), (this.LeveledCreatures?.Specific as IErrorMask<Group.ErrorMask<LeveledCreature.ErrorMask>>)?.Combine(rhs.LeveledCreatures?.Specific));
-                ret.SoulGems = new MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>(ExceptionExt.Combine(this.SoulGems?.Overall, rhs.SoulGems?.Overall), (this.SoulGems?.Specific as IErrorMask<Group.ErrorMask<SoulGem.ErrorMask>>)?.Combine(rhs.SoulGems?.Specific));
-                ret.Keys = new MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>(ExceptionExt.Combine(this.Keys?.Overall, rhs.Keys?.Overall), (this.Keys?.Specific as IErrorMask<Group.ErrorMask<Key.ErrorMask>>)?.Combine(rhs.Keys?.Specific));
-                ret.Potions = new MaskItem<Exception?, Group.ErrorMask<Potion.ErrorMask>?>(ExceptionExt.Combine(this.Potions?.Overall, rhs.Potions?.Overall), (this.Potions?.Specific as IErrorMask<Group.ErrorMask<Potion.ErrorMask>>)?.Combine(rhs.Potions?.Specific));
-                ret.Subspaces = new MaskItem<Exception?, Group.ErrorMask<Subspace.ErrorMask>?>(ExceptionExt.Combine(this.Subspaces?.Overall, rhs.Subspaces?.Overall), (this.Subspaces?.Specific as IErrorMask<Group.ErrorMask<Subspace.ErrorMask>>)?.Combine(rhs.Subspaces?.Specific));
-                ret.SigilStones = new MaskItem<Exception?, Group.ErrorMask<SigilStone.ErrorMask>?>(ExceptionExt.Combine(this.SigilStones?.Overall, rhs.SigilStones?.Overall), (this.SigilStones?.Specific as IErrorMask<Group.ErrorMask<SigilStone.ErrorMask>>)?.Combine(rhs.SigilStones?.Specific));
-                ret.LeveledItems = new MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>(ExceptionExt.Combine(this.LeveledItems?.Overall, rhs.LeveledItems?.Overall), (this.LeveledItems?.Specific as IErrorMask<Group.ErrorMask<LeveledItem.ErrorMask>>)?.Combine(rhs.LeveledItems?.Specific));
-                ret.Weathers = new MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), (this.Weathers?.Specific as IErrorMask<Group.ErrorMask<Weather.ErrorMask>>)?.Combine(rhs.Weathers?.Specific));
-                ret.Climates = new MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>(ExceptionExt.Combine(this.Climates?.Overall, rhs.Climates?.Overall), (this.Climates?.Specific as IErrorMask<Group.ErrorMask<Climate.ErrorMask>>)?.Combine(rhs.Climates?.Specific));
-                ret.Regions = new MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), (this.Regions?.Specific as IErrorMask<Group.ErrorMask<Region.ErrorMask>>)?.Combine(rhs.Regions?.Specific));
-                ret.Cells = new MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>(ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), (this.Cells?.Specific as IErrorMask<ListGroup.ErrorMask<CellBlock.ErrorMask>>)?.Combine(rhs.Cells?.Specific));
-                ret.Worldspaces = new MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>(ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), (this.Worldspaces?.Specific as IErrorMask<Group.ErrorMask<Worldspace.ErrorMask>>)?.Combine(rhs.Worldspaces?.Specific));
-                ret.DialogTopics = new MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>(ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), (this.DialogTopics?.Specific as IErrorMask<Group.ErrorMask<DialogTopic.ErrorMask>>)?.Combine(rhs.DialogTopics?.Specific));
-                ret.Quests = new MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>(ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), (this.Quests?.Specific as IErrorMask<Group.ErrorMask<Quest.ErrorMask>>)?.Combine(rhs.Quests?.Specific));
-                ret.IdleAnimations = new MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>(ExceptionExt.Combine(this.IdleAnimations?.Overall, rhs.IdleAnimations?.Overall), (this.IdleAnimations?.Specific as IErrorMask<Group.ErrorMask<IdleAnimation.ErrorMask>>)?.Combine(rhs.IdleAnimations?.Specific));
-                ret.AIPackages = new MaskItem<Exception?, Group.ErrorMask<AIPackage.ErrorMask>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), (this.AIPackages?.Specific as IErrorMask<Group.ErrorMask<AIPackage.ErrorMask>>)?.Combine(rhs.AIPackages?.Specific));
-                ret.CombatStyles = new MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>(ExceptionExt.Combine(this.CombatStyles?.Overall, rhs.CombatStyles?.Overall), (this.CombatStyles?.Specific as IErrorMask<Group.ErrorMask<CombatStyle.ErrorMask>>)?.Combine(rhs.CombatStyles?.Specific));
-                ret.LoadScreens = new MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>(ExceptionExt.Combine(this.LoadScreens?.Overall, rhs.LoadScreens?.Overall), (this.LoadScreens?.Specific as IErrorMask<Group.ErrorMask<LoadScreen.ErrorMask>>)?.Combine(rhs.LoadScreens?.Specific));
-                ret.LeveledSpells = new MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>(ExceptionExt.Combine(this.LeveledSpells?.Overall, rhs.LeveledSpells?.Overall), (this.LeveledSpells?.Specific as IErrorMask<Group.ErrorMask<LeveledSpell.ErrorMask>>)?.Combine(rhs.LeveledSpells?.Specific));
-                ret.AnimatedObjects = new MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>(ExceptionExt.Combine(this.AnimatedObjects?.Overall, rhs.AnimatedObjects?.Overall), (this.AnimatedObjects?.Specific as IErrorMask<Group.ErrorMask<AnimatedObject.ErrorMask>>)?.Combine(rhs.AnimatedObjects?.Specific));
-                ret.Waters = new MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>(ExceptionExt.Combine(this.Waters?.Overall, rhs.Waters?.Overall), (this.Waters?.Specific as IErrorMask<Group.ErrorMask<Water.ErrorMask>>)?.Combine(rhs.Waters?.Specific));
-                ret.EffectShaders = new MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>(ExceptionExt.Combine(this.EffectShaders?.Overall, rhs.EffectShaders?.Overall), (this.EffectShaders?.Specific as IErrorMask<Group.ErrorMask<EffectShader.ErrorMask>>)?.Combine(rhs.EffectShaders?.Specific));
+                ret.ModHeader = this.ModHeader.Combine(rhs.ModHeader, (l, r) => l.Combine(r));
+                ret.GameSettings = this.GameSettings.Combine(rhs.GameSettings, (l, r) => l.Combine(r));
+                ret.Globals = this.Globals.Combine(rhs.Globals, (l, r) => l.Combine(r));
+                ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
+                ret.Factions = this.Factions.Combine(rhs.Factions, (l, r) => l.Combine(r));
+                ret.Hairs = this.Hairs.Combine(rhs.Hairs, (l, r) => l.Combine(r));
+                ret.Eyes = this.Eyes.Combine(rhs.Eyes, (l, r) => l.Combine(r));
+                ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
+                ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
+                ret.Skills = this.Skills.Combine(rhs.Skills, (l, r) => l.Combine(r));
+                ret.MagicEffects = this.MagicEffects.Combine(rhs.MagicEffects, (l, r) => l.Combine(r));
+                ret.Scripts = this.Scripts.Combine(rhs.Scripts, (l, r) => l.Combine(r));
+                ret.LandTextures = this.LandTextures.Combine(rhs.LandTextures, (l, r) => l.Combine(r));
+                ret.Enchantments = this.Enchantments.Combine(rhs.Enchantments, (l, r) => l.Combine(r));
+                ret.Spells = this.Spells.Combine(rhs.Spells, (l, r) => l.Combine(r));
+                ret.Birthsigns = this.Birthsigns.Combine(rhs.Birthsigns, (l, r) => l.Combine(r));
+                ret.Activators = this.Activators.Combine(rhs.Activators, (l, r) => l.Combine(r));
+                ret.AlchemicalApparatus = this.AlchemicalApparatus.Combine(rhs.AlchemicalApparatus, (l, r) => l.Combine(r));
+                ret.Armors = this.Armors.Combine(rhs.Armors, (l, r) => l.Combine(r));
+                ret.Books = this.Books.Combine(rhs.Books, (l, r) => l.Combine(r));
+                ret.Clothes = this.Clothes.Combine(rhs.Clothes, (l, r) => l.Combine(r));
+                ret.Containers = this.Containers.Combine(rhs.Containers, (l, r) => l.Combine(r));
+                ret.Doors = this.Doors.Combine(rhs.Doors, (l, r) => l.Combine(r));
+                ret.Ingredients = this.Ingredients.Combine(rhs.Ingredients, (l, r) => l.Combine(r));
+                ret.Lights = this.Lights.Combine(rhs.Lights, (l, r) => l.Combine(r));
+                ret.Miscellaneous = this.Miscellaneous.Combine(rhs.Miscellaneous, (l, r) => l.Combine(r));
+                ret.Statics = this.Statics.Combine(rhs.Statics, (l, r) => l.Combine(r));
+                ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
+                ret.Trees = this.Trees.Combine(rhs.Trees, (l, r) => l.Combine(r));
+                ret.Flora = this.Flora.Combine(rhs.Flora, (l, r) => l.Combine(r));
+                ret.Furnature = this.Furnature.Combine(rhs.Furnature, (l, r) => l.Combine(r));
+                ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
+                ret.Ammo = this.Ammo.Combine(rhs.Ammo, (l, r) => l.Combine(r));
+                ret.NPCs = this.NPCs.Combine(rhs.NPCs, (l, r) => l.Combine(r));
+                ret.Creatures = this.Creatures.Combine(rhs.Creatures, (l, r) => l.Combine(r));
+                ret.LeveledCreatures = this.LeveledCreatures.Combine(rhs.LeveledCreatures, (l, r) => l.Combine(r));
+                ret.SoulGems = this.SoulGems.Combine(rhs.SoulGems, (l, r) => l.Combine(r));
+                ret.Keys = this.Keys.Combine(rhs.Keys, (l, r) => l.Combine(r));
+                ret.Potions = this.Potions.Combine(rhs.Potions, (l, r) => l.Combine(r));
+                ret.Subspaces = this.Subspaces.Combine(rhs.Subspaces, (l, r) => l.Combine(r));
+                ret.SigilStones = this.SigilStones.Combine(rhs.SigilStones, (l, r) => l.Combine(r));
+                ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
+                ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
+                ret.Climates = this.Climates.Combine(rhs.Climates, (l, r) => l.Combine(r));
+                ret.Regions = this.Regions.Combine(rhs.Regions, (l, r) => l.Combine(r));
+                ret.Cells = this.Cells.Combine(rhs.Cells, (l, r) => l.Combine(r));
+                ret.Worldspaces = this.Worldspaces.Combine(rhs.Worldspaces, (l, r) => l.Combine(r));
+                ret.DialogTopics = this.DialogTopics.Combine(rhs.DialogTopics, (l, r) => l.Combine(r));
+                ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
+                ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
+                ret.AIPackages = this.AIPackages.Combine(rhs.AIPackages, (l, r) => l.Combine(r));
+                ret.CombatStyles = this.CombatStyles.Combine(rhs.CombatStyles, (l, r) => l.Combine(r));
+                ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
+                ret.LeveledSpells = this.LeveledSpells.Combine(rhs.LeveledSpells, (l, r) => l.Combine(r));
+                ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
+                ret.Waters = this.Waters.Combine(rhs.Waters, (l, r) => l.Combine(r));
+                ret.EffectShaders = this.EffectShaders.Combine(rhs.EffectShaders, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4146,7 +4146,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
 
@@ -5790,9 +5790,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "ModHeader":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
                         item.ModHeader.CopyInFromXml(
                             node: node,
                             translationMask: translationMask,
@@ -5809,9 +5809,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Cells":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
                         item.Cells.CopyInFromXml<CellBlock>(
                             node: node,
                             translationMask: translationMask,
@@ -10241,9 +10241,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.ModHeader) ?? true))
             {
-                var loquiItem = item.ModHeader;
-                ((ModHeaderXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModHeaderItem = item.ModHeader;
+                ((ModHeaderXmlWriteTranslation)((IXmlItem)ModHeaderItem).XmlWriteTranslator).Write(
+                    item: ModHeaderItem,
                     node: node,
                     name: nameof(item.ModHeader),
                     fieldIndex: (int)OblivionMod_FieldIndex.ModHeader,
@@ -10252,9 +10252,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
             {
-                var loquiItem = item.GameSettings;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGameSettingGetter>(
-                    item: loquiItem,
+                var GameSettingsItem = item.GameSettings;
+                ((GroupXmlWriteTranslation)((IXmlItem)GameSettingsItem).XmlWriteTranslator).Write<IGameSettingGetter>(
+                    item: GameSettingsItem,
                     node: node,
                     name: nameof(item.GameSettings),
                     fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
@@ -10263,9 +10263,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Globals) ?? true))
             {
-                var loquiItem = item.Globals;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGlobalGetter>(
-                    item: loquiItem,
+                var GlobalsItem = item.Globals;
+                ((GroupXmlWriteTranslation)((IXmlItem)GlobalsItem).XmlWriteTranslator).Write<IGlobalGetter>(
+                    item: GlobalsItem,
                     node: node,
                     name: nameof(item.Globals),
                     fieldIndex: (int)OblivionMod_FieldIndex.Globals,
@@ -10274,9 +10274,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Classes) ?? true))
             {
-                var loquiItem = item.Classes;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IClassGetter>(
-                    item: loquiItem,
+                var ClassesItem = item.Classes;
+                ((GroupXmlWriteTranslation)((IXmlItem)ClassesItem).XmlWriteTranslator).Write<IClassGetter>(
+                    item: ClassesItem,
                     node: node,
                     name: nameof(item.Classes),
                     fieldIndex: (int)OblivionMod_FieldIndex.Classes,
@@ -10285,9 +10285,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Factions) ?? true))
             {
-                var loquiItem = item.Factions;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IFactionGetter>(
-                    item: loquiItem,
+                var FactionsItem = item.Factions;
+                ((GroupXmlWriteTranslation)((IXmlItem)FactionsItem).XmlWriteTranslator).Write<IFactionGetter>(
+                    item: FactionsItem,
                     node: node,
                     name: nameof(item.Factions),
                     fieldIndex: (int)OblivionMod_FieldIndex.Factions,
@@ -10296,9 +10296,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Hairs) ?? true))
             {
-                var loquiItem = item.Hairs;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IHairGetter>(
-                    item: loquiItem,
+                var HairsItem = item.Hairs;
+                ((GroupXmlWriteTranslation)((IXmlItem)HairsItem).XmlWriteTranslator).Write<IHairGetter>(
+                    item: HairsItem,
                     node: node,
                     name: nameof(item.Hairs),
                     fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
@@ -10307,9 +10307,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Eyes) ?? true))
             {
-                var loquiItem = item.Eyes;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IEyeGetter>(
-                    item: loquiItem,
+                var EyesItem = item.Eyes;
+                ((GroupXmlWriteTranslation)((IXmlItem)EyesItem).XmlWriteTranslator).Write<IEyeGetter>(
+                    item: EyesItem,
                     node: node,
                     name: nameof(item.Eyes),
                     fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
@@ -10318,9 +10318,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Races) ?? true))
             {
-                var loquiItem = item.Races;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IRaceGetter>(
-                    item: loquiItem,
+                var RacesItem = item.Races;
+                ((GroupXmlWriteTranslation)((IXmlItem)RacesItem).XmlWriteTranslator).Write<IRaceGetter>(
+                    item: RacesItem,
                     node: node,
                     name: nameof(item.Races),
                     fieldIndex: (int)OblivionMod_FieldIndex.Races,
@@ -10329,9 +10329,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Sounds) ?? true))
             {
-                var loquiItem = item.Sounds;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ISoundGetter>(
-                    item: loquiItem,
+                var SoundsItem = item.Sounds;
+                ((GroupXmlWriteTranslation)((IXmlItem)SoundsItem).XmlWriteTranslator).Write<ISoundGetter>(
+                    item: SoundsItem,
                     node: node,
                     name: nameof(item.Sounds),
                     fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
@@ -10340,9 +10340,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Skills) ?? true))
             {
-                var loquiItem = item.Skills;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ISkillRecordGetter>(
-                    item: loquiItem,
+                var SkillsItem = item.Skills;
+                ((GroupXmlWriteTranslation)((IXmlItem)SkillsItem).XmlWriteTranslator).Write<ISkillRecordGetter>(
+                    item: SkillsItem,
                     node: node,
                     name: nameof(item.Skills),
                     fieldIndex: (int)OblivionMod_FieldIndex.Skills,
@@ -10351,9 +10351,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.MagicEffects) ?? true))
             {
-                var loquiItem = item.MagicEffects;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IMagicEffectGetter>(
-                    item: loquiItem,
+                var MagicEffectsItem = item.MagicEffects;
+                ((GroupXmlWriteTranslation)((IXmlItem)MagicEffectsItem).XmlWriteTranslator).Write<IMagicEffectGetter>(
+                    item: MagicEffectsItem,
                     node: node,
                     name: nameof(item.MagicEffects),
                     fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
@@ -10362,9 +10362,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Scripts) ?? true))
             {
-                var loquiItem = item.Scripts;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IScriptGetter>(
-                    item: loquiItem,
+                var ScriptsItem = item.Scripts;
+                ((GroupXmlWriteTranslation)((IXmlItem)ScriptsItem).XmlWriteTranslator).Write<IScriptGetter>(
+                    item: ScriptsItem,
                     node: node,
                     name: nameof(item.Scripts),
                     fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
@@ -10373,9 +10373,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LandTextures) ?? true))
             {
-                var loquiItem = item.LandTextures;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ILandTextureGetter>(
-                    item: loquiItem,
+                var LandTexturesItem = item.LandTextures;
+                ((GroupXmlWriteTranslation)((IXmlItem)LandTexturesItem).XmlWriteTranslator).Write<ILandTextureGetter>(
+                    item: LandTexturesItem,
                     node: node,
                     name: nameof(item.LandTextures),
                     fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
@@ -10384,9 +10384,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Enchantments) ?? true))
             {
-                var loquiItem = item.Enchantments;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IEnchantmentGetter>(
-                    item: loquiItem,
+                var EnchantmentsItem = item.Enchantments;
+                ((GroupXmlWriteTranslation)((IXmlItem)EnchantmentsItem).XmlWriteTranslator).Write<IEnchantmentGetter>(
+                    item: EnchantmentsItem,
                     node: node,
                     name: nameof(item.Enchantments),
                     fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
@@ -10395,9 +10395,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Spells) ?? true))
             {
-                var loquiItem = item.Spells;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ISpellUnleveledGetter>(
-                    item: loquiItem,
+                var SpellsItem = item.Spells;
+                ((GroupXmlWriteTranslation)((IXmlItem)SpellsItem).XmlWriteTranslator).Write<ISpellUnleveledGetter>(
+                    item: SpellsItem,
                     node: node,
                     name: nameof(item.Spells),
                     fieldIndex: (int)OblivionMod_FieldIndex.Spells,
@@ -10406,9 +10406,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Birthsigns) ?? true))
             {
-                var loquiItem = item.Birthsigns;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IBirthsignGetter>(
-                    item: loquiItem,
+                var BirthsignsItem = item.Birthsigns;
+                ((GroupXmlWriteTranslation)((IXmlItem)BirthsignsItem).XmlWriteTranslator).Write<IBirthsignGetter>(
+                    item: BirthsignsItem,
                     node: node,
                     name: nameof(item.Birthsigns),
                     fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
@@ -10417,9 +10417,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Activators) ?? true))
             {
-                var loquiItem = item.Activators;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IActivatorGetter>(
-                    item: loquiItem,
+                var ActivatorsItem = item.Activators;
+                ((GroupXmlWriteTranslation)((IXmlItem)ActivatorsItem).XmlWriteTranslator).Write<IActivatorGetter>(
+                    item: ActivatorsItem,
                     node: node,
                     name: nameof(item.Activators),
                     fieldIndex: (int)OblivionMod_FieldIndex.Activators,
@@ -10428,9 +10428,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AlchemicalApparatus) ?? true))
             {
-                var loquiItem = item.AlchemicalApparatus;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IAlchemicalApparatusGetter>(
-                    item: loquiItem,
+                var AlchemicalApparatusItem = item.AlchemicalApparatus;
+                ((GroupXmlWriteTranslation)((IXmlItem)AlchemicalApparatusItem).XmlWriteTranslator).Write<IAlchemicalApparatusGetter>(
+                    item: AlchemicalApparatusItem,
                     node: node,
                     name: nameof(item.AlchemicalApparatus),
                     fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
@@ -10439,9 +10439,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Armors) ?? true))
             {
-                var loquiItem = item.Armors;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IArmorGetter>(
-                    item: loquiItem,
+                var ArmorsItem = item.Armors;
+                ((GroupXmlWriteTranslation)((IXmlItem)ArmorsItem).XmlWriteTranslator).Write<IArmorGetter>(
+                    item: ArmorsItem,
                     node: node,
                     name: nameof(item.Armors),
                     fieldIndex: (int)OblivionMod_FieldIndex.Armors,
@@ -10450,9 +10450,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Books) ?? true))
             {
-                var loquiItem = item.Books;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IBookGetter>(
-                    item: loquiItem,
+                var BooksItem = item.Books;
+                ((GroupXmlWriteTranslation)((IXmlItem)BooksItem).XmlWriteTranslator).Write<IBookGetter>(
+                    item: BooksItem,
                     node: node,
                     name: nameof(item.Books),
                     fieldIndex: (int)OblivionMod_FieldIndex.Books,
@@ -10461,9 +10461,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Clothes) ?? true))
             {
-                var loquiItem = item.Clothes;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IClothingGetter>(
-                    item: loquiItem,
+                var ClothesItem = item.Clothes;
+                ((GroupXmlWriteTranslation)((IXmlItem)ClothesItem).XmlWriteTranslator).Write<IClothingGetter>(
+                    item: ClothesItem,
                     node: node,
                     name: nameof(item.Clothes),
                     fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
@@ -10472,9 +10472,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Containers) ?? true))
             {
-                var loquiItem = item.Containers;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IContainerGetter>(
-                    item: loquiItem,
+                var ContainersItem = item.Containers;
+                ((GroupXmlWriteTranslation)((IXmlItem)ContainersItem).XmlWriteTranslator).Write<IContainerGetter>(
+                    item: ContainersItem,
                     node: node,
                     name: nameof(item.Containers),
                     fieldIndex: (int)OblivionMod_FieldIndex.Containers,
@@ -10483,9 +10483,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Doors) ?? true))
             {
-                var loquiItem = item.Doors;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IDoorGetter>(
-                    item: loquiItem,
+                var DoorsItem = item.Doors;
+                ((GroupXmlWriteTranslation)((IXmlItem)DoorsItem).XmlWriteTranslator).Write<IDoorGetter>(
+                    item: DoorsItem,
                     node: node,
                     name: nameof(item.Doors),
                     fieldIndex: (int)OblivionMod_FieldIndex.Doors,
@@ -10494,9 +10494,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ingredients) ?? true))
             {
-                var loquiItem = item.Ingredients;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IIngredientGetter>(
-                    item: loquiItem,
+                var IngredientsItem = item.Ingredients;
+                ((GroupXmlWriteTranslation)((IXmlItem)IngredientsItem).XmlWriteTranslator).Write<IIngredientGetter>(
+                    item: IngredientsItem,
                     node: node,
                     name: nameof(item.Ingredients),
                     fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
@@ -10505,9 +10505,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Lights) ?? true))
             {
-                var loquiItem = item.Lights;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ILightGetter>(
-                    item: loquiItem,
+                var LightsItem = item.Lights;
+                ((GroupXmlWriteTranslation)((IXmlItem)LightsItem).XmlWriteTranslator).Write<ILightGetter>(
+                    item: LightsItem,
                     node: node,
                     name: nameof(item.Lights),
                     fieldIndex: (int)OblivionMod_FieldIndex.Lights,
@@ -10516,9 +10516,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Miscellaneous) ?? true))
             {
-                var loquiItem = item.Miscellaneous;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IMiscellaneousGetter>(
-                    item: loquiItem,
+                var MiscellaneousItem = item.Miscellaneous;
+                ((GroupXmlWriteTranslation)((IXmlItem)MiscellaneousItem).XmlWriteTranslator).Write<IMiscellaneousGetter>(
+                    item: MiscellaneousItem,
                     node: node,
                     name: nameof(item.Miscellaneous),
                     fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
@@ -10527,9 +10527,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Statics) ?? true))
             {
-                var loquiItem = item.Statics;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IStaticGetter>(
-                    item: loquiItem,
+                var StaticsItem = item.Statics;
+                ((GroupXmlWriteTranslation)((IXmlItem)StaticsItem).XmlWriteTranslator).Write<IStaticGetter>(
+                    item: StaticsItem,
                     node: node,
                     name: nameof(item.Statics),
                     fieldIndex: (int)OblivionMod_FieldIndex.Statics,
@@ -10538,9 +10538,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Grasses) ?? true))
             {
-                var loquiItem = item.Grasses;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IGrassGetter>(
-                    item: loquiItem,
+                var GrassesItem = item.Grasses;
+                ((GroupXmlWriteTranslation)((IXmlItem)GrassesItem).XmlWriteTranslator).Write<IGrassGetter>(
+                    item: GrassesItem,
                     node: node,
                     name: nameof(item.Grasses),
                     fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
@@ -10549,9 +10549,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Trees) ?? true))
             {
-                var loquiItem = item.Trees;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ITreeGetter>(
-                    item: loquiItem,
+                var TreesItem = item.Trees;
+                ((GroupXmlWriteTranslation)((IXmlItem)TreesItem).XmlWriteTranslator).Write<ITreeGetter>(
+                    item: TreesItem,
                     node: node,
                     name: nameof(item.Trees),
                     fieldIndex: (int)OblivionMod_FieldIndex.Trees,
@@ -10560,9 +10560,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Flora) ?? true))
             {
-                var loquiItem = item.Flora;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IFloraGetter>(
-                    item: loquiItem,
+                var FloraItem = item.Flora;
+                ((GroupXmlWriteTranslation)((IXmlItem)FloraItem).XmlWriteTranslator).Write<IFloraGetter>(
+                    item: FloraItem,
                     node: node,
                     name: nameof(item.Flora),
                     fieldIndex: (int)OblivionMod_FieldIndex.Flora,
@@ -10571,9 +10571,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Furnature) ?? true))
             {
-                var loquiItem = item.Furnature;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IFurnatureGetter>(
-                    item: loquiItem,
+                var FurnatureItem = item.Furnature;
+                ((GroupXmlWriteTranslation)((IXmlItem)FurnatureItem).XmlWriteTranslator).Write<IFurnatureGetter>(
+                    item: FurnatureItem,
                     node: node,
                     name: nameof(item.Furnature),
                     fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
@@ -10582,9 +10582,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weapons) ?? true))
             {
-                var loquiItem = item.Weapons;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IWeaponGetter>(
-                    item: loquiItem,
+                var WeaponsItem = item.Weapons;
+                ((GroupXmlWriteTranslation)((IXmlItem)WeaponsItem).XmlWriteTranslator).Write<IWeaponGetter>(
+                    item: WeaponsItem,
                     node: node,
                     name: nameof(item.Weapons),
                     fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
@@ -10593,9 +10593,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammo) ?? true))
             {
-                var loquiItem = item.Ammo;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IAmmoGetter>(
-                    item: loquiItem,
+                var AmmoItem = item.Ammo;
+                ((GroupXmlWriteTranslation)((IXmlItem)AmmoItem).XmlWriteTranslator).Write<IAmmoGetter>(
+                    item: AmmoItem,
                     node: node,
                     name: nameof(item.Ammo),
                     fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
@@ -10604,9 +10604,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.NPCs) ?? true))
             {
-                var loquiItem = item.NPCs;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<INPCGetter>(
-                    item: loquiItem,
+                var NPCsItem = item.NPCs;
+                ((GroupXmlWriteTranslation)((IXmlItem)NPCsItem).XmlWriteTranslator).Write<INPCGetter>(
+                    item: NPCsItem,
                     node: node,
                     name: nameof(item.NPCs),
                     fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
@@ -10615,9 +10615,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Creatures) ?? true))
             {
-                var loquiItem = item.Creatures;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ICreatureGetter>(
-                    item: loquiItem,
+                var CreaturesItem = item.Creatures;
+                ((GroupXmlWriteTranslation)((IXmlItem)CreaturesItem).XmlWriteTranslator).Write<ICreatureGetter>(
+                    item: CreaturesItem,
                     node: node,
                     name: nameof(item.Creatures),
                     fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
@@ -10626,9 +10626,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledCreatures) ?? true))
             {
-                var loquiItem = item.LeveledCreatures;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ILeveledCreatureGetter>(
-                    item: loquiItem,
+                var LeveledCreaturesItem = item.LeveledCreatures;
+                ((GroupXmlWriteTranslation)((IXmlItem)LeveledCreaturesItem).XmlWriteTranslator).Write<ILeveledCreatureGetter>(
+                    item: LeveledCreaturesItem,
                     node: node,
                     name: nameof(item.LeveledCreatures),
                     fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
@@ -10637,9 +10637,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SoulGems) ?? true))
             {
-                var loquiItem = item.SoulGems;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ISoulGemGetter>(
-                    item: loquiItem,
+                var SoulGemsItem = item.SoulGems;
+                ((GroupXmlWriteTranslation)((IXmlItem)SoulGemsItem).XmlWriteTranslator).Write<ISoulGemGetter>(
+                    item: SoulGemsItem,
                     node: node,
                     name: nameof(item.SoulGems),
                     fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
@@ -10648,9 +10648,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Keys) ?? true))
             {
-                var loquiItem = item.Keys;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IKeyGetter>(
-                    item: loquiItem,
+                var KeysItem = item.Keys;
+                ((GroupXmlWriteTranslation)((IXmlItem)KeysItem).XmlWriteTranslator).Write<IKeyGetter>(
+                    item: KeysItem,
                     node: node,
                     name: nameof(item.Keys),
                     fieldIndex: (int)OblivionMod_FieldIndex.Keys,
@@ -10659,9 +10659,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Potions) ?? true))
             {
-                var loquiItem = item.Potions;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IPotionGetter>(
-                    item: loquiItem,
+                var PotionsItem = item.Potions;
+                ((GroupXmlWriteTranslation)((IXmlItem)PotionsItem).XmlWriteTranslator).Write<IPotionGetter>(
+                    item: PotionsItem,
                     node: node,
                     name: nameof(item.Potions),
                     fieldIndex: (int)OblivionMod_FieldIndex.Potions,
@@ -10670,9 +10670,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Subspaces) ?? true))
             {
-                var loquiItem = item.Subspaces;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ISubspaceGetter>(
-                    item: loquiItem,
+                var SubspacesItem = item.Subspaces;
+                ((GroupXmlWriteTranslation)((IXmlItem)SubspacesItem).XmlWriteTranslator).Write<ISubspaceGetter>(
+                    item: SubspacesItem,
                     node: node,
                     name: nameof(item.Subspaces),
                     fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
@@ -10681,9 +10681,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SigilStones) ?? true))
             {
-                var loquiItem = item.SigilStones;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ISigilStoneGetter>(
-                    item: loquiItem,
+                var SigilStonesItem = item.SigilStones;
+                ((GroupXmlWriteTranslation)((IXmlItem)SigilStonesItem).XmlWriteTranslator).Write<ISigilStoneGetter>(
+                    item: SigilStonesItem,
                     node: node,
                     name: nameof(item.SigilStones),
                     fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
@@ -10692,9 +10692,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledItems) ?? true))
             {
-                var loquiItem = item.LeveledItems;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ILeveledItemGetter>(
-                    item: loquiItem,
+                var LeveledItemsItem = item.LeveledItems;
+                ((GroupXmlWriteTranslation)((IXmlItem)LeveledItemsItem).XmlWriteTranslator).Write<ILeveledItemGetter>(
+                    item: LeveledItemsItem,
                     node: node,
                     name: nameof(item.LeveledItems),
                     fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
@@ -10703,9 +10703,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weathers) ?? true))
             {
-                var loquiItem = item.Weathers;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IWeatherGetter>(
-                    item: loquiItem,
+                var WeathersItem = item.Weathers;
+                ((GroupXmlWriteTranslation)((IXmlItem)WeathersItem).XmlWriteTranslator).Write<IWeatherGetter>(
+                    item: WeathersItem,
                     node: node,
                     name: nameof(item.Weathers),
                     fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
@@ -10714,9 +10714,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Climates) ?? true))
             {
-                var loquiItem = item.Climates;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IClimateGetter>(
-                    item: loquiItem,
+                var ClimatesItem = item.Climates;
+                ((GroupXmlWriteTranslation)((IXmlItem)ClimatesItem).XmlWriteTranslator).Write<IClimateGetter>(
+                    item: ClimatesItem,
                     node: node,
                     name: nameof(item.Climates),
                     fieldIndex: (int)OblivionMod_FieldIndex.Climates,
@@ -10725,9 +10725,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Regions) ?? true))
             {
-                var loquiItem = item.Regions;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IRegionGetter>(
-                    item: loquiItem,
+                var RegionsItem = item.Regions;
+                ((GroupXmlWriteTranslation)((IXmlItem)RegionsItem).XmlWriteTranslator).Write<IRegionGetter>(
+                    item: RegionsItem,
                     node: node,
                     name: nameof(item.Regions),
                     fieldIndex: (int)OblivionMod_FieldIndex.Regions,
@@ -10736,9 +10736,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
             {
-                var loquiItem = item.Cells;
-                ((ListGroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ICellBlockGetter>(
-                    item: loquiItem,
+                var CellsItem = item.Cells;
+                ((ListGroupXmlWriteTranslation)((IXmlItem)CellsItem).XmlWriteTranslator).Write<ICellBlockGetter>(
+                    item: CellsItem,
                     node: node,
                     name: nameof(item.Cells),
                     fieldIndex: (int)OblivionMod_FieldIndex.Cells,
@@ -10747,9 +10747,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Worldspaces) ?? true))
             {
-                var loquiItem = item.Worldspaces;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IWorldspaceGetter>(
-                    item: loquiItem,
+                var WorldspacesItem = item.Worldspaces;
+                ((GroupXmlWriteTranslation)((IXmlItem)WorldspacesItem).XmlWriteTranslator).Write<IWorldspaceGetter>(
+                    item: WorldspacesItem,
                     node: node,
                     name: nameof(item.Worldspaces),
                     fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
@@ -10758,9 +10758,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.DialogTopics) ?? true))
             {
-                var loquiItem = item.DialogTopics;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IDialogTopicGetter>(
-                    item: loquiItem,
+                var DialogTopicsItem = item.DialogTopics;
+                ((GroupXmlWriteTranslation)((IXmlItem)DialogTopicsItem).XmlWriteTranslator).Write<IDialogTopicGetter>(
+                    item: DialogTopicsItem,
                     node: node,
                     name: nameof(item.DialogTopics),
                     fieldIndex: (int)OblivionMod_FieldIndex.DialogTopics,
@@ -10769,9 +10769,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Quests) ?? true))
             {
-                var loquiItem = item.Quests;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IQuestGetter>(
-                    item: loquiItem,
+                var QuestsItem = item.Quests;
+                ((GroupXmlWriteTranslation)((IXmlItem)QuestsItem).XmlWriteTranslator).Write<IQuestGetter>(
+                    item: QuestsItem,
                     node: node,
                     name: nameof(item.Quests),
                     fieldIndex: (int)OblivionMod_FieldIndex.Quests,
@@ -10780,9 +10780,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.IdleAnimations) ?? true))
             {
-                var loquiItem = item.IdleAnimations;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IIdleAnimationGetter>(
-                    item: loquiItem,
+                var IdleAnimationsItem = item.IdleAnimations;
+                ((GroupXmlWriteTranslation)((IXmlItem)IdleAnimationsItem).XmlWriteTranslator).Write<IIdleAnimationGetter>(
+                    item: IdleAnimationsItem,
                     node: node,
                     name: nameof(item.IdleAnimations),
                     fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
@@ -10791,9 +10791,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AIPackages) ?? true))
             {
-                var loquiItem = item.AIPackages;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IAIPackageGetter>(
-                    item: loquiItem,
+                var AIPackagesItem = item.AIPackages;
+                ((GroupXmlWriteTranslation)((IXmlItem)AIPackagesItem).XmlWriteTranslator).Write<IAIPackageGetter>(
+                    item: AIPackagesItem,
                     node: node,
                     name: nameof(item.AIPackages),
                     fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
@@ -10802,9 +10802,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.CombatStyles) ?? true))
             {
-                var loquiItem = item.CombatStyles;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ICombatStyleGetter>(
-                    item: loquiItem,
+                var CombatStylesItem = item.CombatStyles;
+                ((GroupXmlWriteTranslation)((IXmlItem)CombatStylesItem).XmlWriteTranslator).Write<ICombatStyleGetter>(
+                    item: CombatStylesItem,
                     node: node,
                     name: nameof(item.CombatStyles),
                     fieldIndex: (int)OblivionMod_FieldIndex.CombatStyles,
@@ -10813,9 +10813,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LoadScreens) ?? true))
             {
-                var loquiItem = item.LoadScreens;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ILoadScreenGetter>(
-                    item: loquiItem,
+                var LoadScreensItem = item.LoadScreens;
+                ((GroupXmlWriteTranslation)((IXmlItem)LoadScreensItem).XmlWriteTranslator).Write<ILoadScreenGetter>(
+                    item: LoadScreensItem,
                     node: node,
                     name: nameof(item.LoadScreens),
                     fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
@@ -10824,9 +10824,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledSpells) ?? true))
             {
-                var loquiItem = item.LeveledSpells;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<ILeveledSpellGetter>(
-                    item: loquiItem,
+                var LeveledSpellsItem = item.LeveledSpells;
+                ((GroupXmlWriteTranslation)((IXmlItem)LeveledSpellsItem).XmlWriteTranslator).Write<ILeveledSpellGetter>(
+                    item: LeveledSpellsItem,
                     node: node,
                     name: nameof(item.LeveledSpells),
                     fieldIndex: (int)OblivionMod_FieldIndex.LeveledSpells,
@@ -10835,9 +10835,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AnimatedObjects) ?? true))
             {
-                var loquiItem = item.AnimatedObjects;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IAnimatedObjectGetter>(
-                    item: loquiItem,
+                var AnimatedObjectsItem = item.AnimatedObjects;
+                ((GroupXmlWriteTranslation)((IXmlItem)AnimatedObjectsItem).XmlWriteTranslator).Write<IAnimatedObjectGetter>(
+                    item: AnimatedObjectsItem,
                     node: node,
                     name: nameof(item.AnimatedObjects),
                     fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
@@ -10846,9 +10846,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Waters) ?? true))
             {
-                var loquiItem = item.Waters;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IWaterGetter>(
-                    item: loquiItem,
+                var WatersItem = item.Waters;
+                ((GroupXmlWriteTranslation)((IXmlItem)WatersItem).XmlWriteTranslator).Write<IWaterGetter>(
+                    item: WatersItem,
                     node: node,
                     name: nameof(item.Waters),
                     fieldIndex: (int)OblivionMod_FieldIndex.Waters,
@@ -10857,9 +10857,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.EffectShaders) ?? true))
             {
-                var loquiItem = item.EffectShaders;
-                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IEffectShaderGetter>(
-                    item: loquiItem,
+                var EffectShadersItem = item.EffectShaders;
+                ((GroupXmlWriteTranslation)((IXmlItem)EffectShadersItem).XmlWriteTranslator).Write<IEffectShaderGetter>(
+                    item: EffectShadersItem,
                     node: node,
                     name: nameof(item.EffectShaders),
                     fieldIndex: (int)OblivionMod_FieldIndex.EffectShaders,
@@ -10911,9 +10911,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IOblivionModGetter)item,
                     name: name,
@@ -10973,9 +10973,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "GameSettings":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
                         item.GameSettings.CopyInFromXml<GameSetting>(
                             node: node,
                             translationMask: translationMask,
@@ -10992,9 +10992,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Globals":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
                         item.Globals.CopyInFromXml<Global>(
                             node: node,
                             translationMask: translationMask,
@@ -11011,9 +11011,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Classes":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
                         item.Classes.CopyInFromXml<Class>(
                             node: node,
                             translationMask: translationMask,
@@ -11030,9 +11030,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Factions":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
                         item.Factions.CopyInFromXml<Faction>(
                             node: node,
                             translationMask: translationMask,
@@ -11049,9 +11049,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Hairs":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
                         item.Hairs.CopyInFromXml<Hair>(
                             node: node,
                             translationMask: translationMask,
@@ -11068,9 +11068,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Eyes":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
                         item.Eyes.CopyInFromXml<Eye>(
                             node: node,
                             translationMask: translationMask,
@@ -11087,9 +11087,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Races":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
                         item.Races.CopyInFromXml<Race>(
                             node: node,
                             translationMask: translationMask,
@@ -11106,9 +11106,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sounds":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
                         item.Sounds.CopyInFromXml<Sound>(
                             node: node,
                             translationMask: translationMask,
@@ -11125,9 +11125,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Skills":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
                         item.Skills.CopyInFromXml<SkillRecord>(
                             node: node,
                             translationMask: translationMask,
@@ -11144,9 +11144,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MagicEffects":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
                         item.MagicEffects.CopyInFromXml<MagicEffect>(
                             node: node,
                             translationMask: translationMask,
@@ -11163,9 +11163,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Scripts":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
                         item.Scripts.CopyInFromXml<Script>(
                             node: node,
                             translationMask: translationMask,
@@ -11182,9 +11182,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LandTextures":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
                         item.LandTextures.CopyInFromXml<LandTexture>(
                             node: node,
                             translationMask: translationMask,
@@ -11201,9 +11201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Enchantments":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
                         item.Enchantments.CopyInFromXml<Enchantment>(
                             node: node,
                             translationMask: translationMask,
@@ -11220,9 +11220,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Spells":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
                         item.Spells.CopyInFromXml<SpellUnleveled>(
                             node: node,
                             translationMask: translationMask,
@@ -11239,9 +11239,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Birthsigns":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
                         item.Birthsigns.CopyInFromXml<Birthsign>(
                             node: node,
                             translationMask: translationMask,
@@ -11258,9 +11258,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Activators":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
                         item.Activators.CopyInFromXml<Activator>(
                             node: node,
                             translationMask: translationMask,
@@ -11277,9 +11277,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AlchemicalApparatus":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                         item.AlchemicalApparatus.CopyInFromXml<AlchemicalApparatus>(
                             node: node,
                             translationMask: translationMask,
@@ -11296,9 +11296,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Armors":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
                         item.Armors.CopyInFromXml<Armor>(
                             node: node,
                             translationMask: translationMask,
@@ -11315,9 +11315,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Books":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
                         item.Books.CopyInFromXml<Book>(
                             node: node,
                             translationMask: translationMask,
@@ -11334,9 +11334,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Clothes":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
                         item.Clothes.CopyInFromXml<Clothing>(
                             node: node,
                             translationMask: translationMask,
@@ -11353,9 +11353,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Containers":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
                         item.Containers.CopyInFromXml<Container>(
                             node: node,
                             translationMask: translationMask,
@@ -11372,9 +11372,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Doors":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
                         item.Doors.CopyInFromXml<Door>(
                             node: node,
                             translationMask: translationMask,
@@ -11391,9 +11391,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Ingredients":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
                         item.Ingredients.CopyInFromXml<Ingredient>(
                             node: node,
                             translationMask: translationMask,
@@ -11410,9 +11410,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Lights":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
                         item.Lights.CopyInFromXml<Light>(
                             node: node,
                             translationMask: translationMask,
@@ -11429,9 +11429,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Miscellaneous":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
                         item.Miscellaneous.CopyInFromXml<Miscellaneous>(
                             node: node,
                             translationMask: translationMask,
@@ -11448,9 +11448,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Statics":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
                         item.Statics.CopyInFromXml<Static>(
                             node: node,
                             translationMask: translationMask,
@@ -11467,9 +11467,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Grasses":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
                         item.Grasses.CopyInFromXml<Grass>(
                             node: node,
                             translationMask: translationMask,
@@ -11486,9 +11486,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Trees":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
                         item.Trees.CopyInFromXml<Tree>(
                             node: node,
                             translationMask: translationMask,
@@ -11505,9 +11505,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flora":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
                         item.Flora.CopyInFromXml<Flora>(
                             node: node,
                             translationMask: translationMask,
@@ -11524,9 +11524,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Furnature":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
                         item.Furnature.CopyInFromXml<Furnature>(
                             node: node,
                             translationMask: translationMask,
@@ -11543,9 +11543,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Weapons":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
                         item.Weapons.CopyInFromXml<Weapon>(
                             node: node,
                             translationMask: translationMask,
@@ -11562,9 +11562,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Ammo":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
                         item.Ammo.CopyInFromXml<Ammo>(
                             node: node,
                             translationMask: translationMask,
@@ -11581,9 +11581,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "NPCs":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
                         item.NPCs.CopyInFromXml<NPC>(
                             node: node,
                             translationMask: translationMask,
@@ -11600,9 +11600,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Creatures":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
                         item.Creatures.CopyInFromXml<Creature>(
                             node: node,
                             translationMask: translationMask,
@@ -11619,9 +11619,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LeveledCreatures":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
                         item.LeveledCreatures.CopyInFromXml<LeveledCreature>(
                             node: node,
                             translationMask: translationMask,
@@ -11638,9 +11638,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SoulGems":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
                         item.SoulGems.CopyInFromXml<SoulGem>(
                             node: node,
                             translationMask: translationMask,
@@ -11657,9 +11657,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Keys":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
                         item.Keys.CopyInFromXml<Key>(
                             node: node,
                             translationMask: translationMask,
@@ -11676,9 +11676,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Potions":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
                         item.Potions.CopyInFromXml<Potion>(
                             node: node,
                             translationMask: translationMask,
@@ -11695,9 +11695,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Subspaces":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
                         item.Subspaces.CopyInFromXml<Subspace>(
                             node: node,
                             translationMask: translationMask,
@@ -11714,9 +11714,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SigilStones":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
                         item.SigilStones.CopyInFromXml<SigilStone>(
                             node: node,
                             translationMask: translationMask,
@@ -11733,9 +11733,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LeveledItems":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
                         item.LeveledItems.CopyInFromXml<LeveledItem>(
                             node: node,
                             translationMask: translationMask,
@@ -11752,9 +11752,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Weathers":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
                         item.Weathers.CopyInFromXml<Weather>(
                             node: node,
                             translationMask: translationMask,
@@ -11771,9 +11771,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Climates":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
                         item.Climates.CopyInFromXml<Climate>(
                             node: node,
                             translationMask: translationMask,
@@ -11790,9 +11790,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Regions":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
                         item.Regions.CopyInFromXml<Region>(
                             node: node,
                             translationMask: translationMask,
@@ -11809,9 +11809,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Worldspaces":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
                         item.Worldspaces.CopyInFromXml<Worldspace>(
                             node: node,
                             translationMask: translationMask,
@@ -11828,9 +11828,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DialogTopics":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
                         item.DialogTopics.CopyInFromXml<DialogTopic>(
                             node: node,
                             translationMask: translationMask,
@@ -11847,9 +11847,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Quests":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
                         item.Quests.CopyInFromXml<Quest>(
                             node: node,
                             translationMask: translationMask,
@@ -11866,9 +11866,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "IdleAnimations":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
                         item.IdleAnimations.CopyInFromXml<IdleAnimation>(
                             node: node,
                             translationMask: translationMask,
@@ -11885,9 +11885,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AIPackages":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
                         item.AIPackages.CopyInFromXml<AIPackage>(
                             node: node,
                             translationMask: translationMask,
@@ -11904,9 +11904,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CombatStyles":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
                         item.CombatStyles.CopyInFromXml<CombatStyle>(
                             node: node,
                             translationMask: translationMask,
@@ -11923,9 +11923,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LoadScreens":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
                         item.LoadScreens.CopyInFromXml<LoadScreen>(
                             node: node,
                             translationMask: translationMask,
@@ -11942,9 +11942,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LeveledSpells":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
                         item.LeveledSpells.CopyInFromXml<LeveledSpell>(
                             node: node,
                             translationMask: translationMask,
@@ -11961,9 +11961,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AnimatedObjects":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
                         item.AnimatedObjects.CopyInFromXml<AnimatedObject>(
                             node: node,
                             translationMask: translationMask,
@@ -11980,9 +11980,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Waters":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
                         item.Waters.CopyInFromXml<Water>(
                             node: node,
                             translationMask: translationMask,
@@ -11999,9 +11999,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EffectShaders":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
                         item.EffectShaders.CopyInFromXml<EffectShader>(
                             node: node,
                             translationMask: translationMask,
@@ -12327,21 +12327,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter)
         {
             MasterReferences masterReferences = new MasterReferences(modKey, item.ModHeader.MasterReferences);
-            {
-                var loquiItem = item.ModHeader;
-                ((ModHeaderBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
+            var ModHeaderItem = item.ModHeader;
+            ((ModHeaderBinaryWriteTranslation)((IBinaryItem)ModHeaderItem).BinaryWriteTranslator).Write(
+                item: ModHeaderItem,
+                writer: writer,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
             if (importMask?.GameSettings ?? true)
             {
                 if (item.GameSettings.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.GameSettings;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
-                        item: loquiItem,
+                    var GameSettingsItem = item.GameSettings;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
+                        item: GameSettingsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12351,9 +12349,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Globals.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Globals;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGlobalGetter>(
-                        item: loquiItem,
+                    var GlobalsItem = item.Globals;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
+                        item: GlobalsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12363,9 +12361,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Classes.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Classes;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClassGetter>(
-                        item: loquiItem,
+                    var ClassesItem = item.Classes;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
+                        item: ClassesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12375,9 +12373,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Factions.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Factions;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFactionGetter>(
-                        item: loquiItem,
+                    var FactionsItem = item.Factions;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
+                        item: FactionsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12387,9 +12385,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Hairs.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Hairs;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IHairGetter>(
-                        item: loquiItem,
+                    var HairsItem = item.Hairs;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
+                        item: HairsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12399,9 +12397,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Eyes.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Eyes;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IEyeGetter>(
-                        item: loquiItem,
+                    var EyesItem = item.Eyes;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
+                        item: EyesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12411,9 +12409,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Races.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Races;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IRaceGetter>(
-                        item: loquiItem,
+                    var RacesItem = item.Races;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
+                        item: RacesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12423,9 +12421,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Sounds.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Sounds;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISoundGetter>(
-                        item: loquiItem,
+                    var SoundsItem = item.Sounds;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundsItem).BinaryWriteTranslator).Write<ISoundGetter>(
+                        item: SoundsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12435,9 +12433,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Skills.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Skills;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISkillRecordGetter>(
-                        item: loquiItem,
+                    var SkillsItem = item.Skills;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SkillsItem).BinaryWriteTranslator).Write<ISkillRecordGetter>(
+                        item: SkillsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12447,9 +12445,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.MagicEffects.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.MagicEffects;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
-                        item: loquiItem,
+                    var MagicEffectsItem = item.MagicEffects;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
+                        item: MagicEffectsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12459,9 +12457,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Scripts.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Scripts;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IScriptGetter>(
-                        item: loquiItem,
+                    var ScriptsItem = item.Scripts;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ScriptsItem).BinaryWriteTranslator).Write<IScriptGetter>(
+                        item: ScriptsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12471,9 +12469,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LandTextures.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.LandTextures;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
-                        item: loquiItem,
+                    var LandTexturesItem = item.LandTextures;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LandTexturesItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
+                        item: LandTexturesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12483,9 +12481,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Enchantments.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Enchantments;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IEnchantmentGetter>(
-                        item: loquiItem,
+                    var EnchantmentsItem = item.Enchantments;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)EnchantmentsItem).BinaryWriteTranslator).Write<IEnchantmentGetter>(
+                        item: EnchantmentsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12495,9 +12493,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Spells.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Spells;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISpellUnleveledGetter>(
-                        item: loquiItem,
+                    var SpellsItem = item.Spells;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellUnleveledGetter>(
+                        item: SpellsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12507,9 +12505,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Birthsigns.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Birthsigns;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IBirthsignGetter>(
-                        item: loquiItem,
+                    var BirthsignsItem = item.Birthsigns;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)BirthsignsItem).BinaryWriteTranslator).Write<IBirthsignGetter>(
+                        item: BirthsignsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12519,9 +12517,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Activators.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Activators;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IActivatorGetter>(
-                        item: loquiItem,
+                    var ActivatorsItem = item.Activators;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
+                        item: ActivatorsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12531,9 +12529,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.AlchemicalApparatus.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.AlchemicalApparatus;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
-                        item: loquiItem,
+                    var AlchemicalApparatusItem = item.AlchemicalApparatus;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AlchemicalApparatusItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
+                        item: AlchemicalApparatusItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12543,9 +12541,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Armors.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Armors;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IArmorGetter>(
-                        item: loquiItem,
+                    var ArmorsItem = item.Armors;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
+                        item: ArmorsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12555,9 +12553,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Books.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Books;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IBookGetter>(
-                        item: loquiItem,
+                    var BooksItem = item.Books;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
+                        item: BooksItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12567,9 +12565,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Clothes.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Clothes;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClothingGetter>(
-                        item: loquiItem,
+                    var ClothesItem = item.Clothes;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClothesItem).BinaryWriteTranslator).Write<IClothingGetter>(
+                        item: ClothesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12579,9 +12577,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Containers.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Containers;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IContainerGetter>(
-                        item: loquiItem,
+                    var ContainersItem = item.Containers;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
+                        item: ContainersItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12591,9 +12589,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Doors.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Doors;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IDoorGetter>(
-                        item: loquiItem,
+                    var DoorsItem = item.Doors;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
+                        item: DoorsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12603,9 +12601,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Ingredients.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Ingredients;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IIngredientGetter>(
-                        item: loquiItem,
+                    var IngredientsItem = item.Ingredients;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
+                        item: IngredientsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12615,9 +12613,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Lights.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Lights;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILightGetter>(
-                        item: loquiItem,
+                    var LightsItem = item.Lights;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LightsItem).BinaryWriteTranslator).Write<ILightGetter>(
+                        item: LightsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12627,9 +12625,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Miscellaneous.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Miscellaneous;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IMiscellaneousGetter>(
-                        item: loquiItem,
+                    var MiscellaneousItem = item.Miscellaneous;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MiscellaneousItem).BinaryWriteTranslator).Write<IMiscellaneousGetter>(
+                        item: MiscellaneousItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12639,9 +12637,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Statics.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Statics;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IStaticGetter>(
-                        item: loquiItem,
+                    var StaticsItem = item.Statics;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
+                        item: StaticsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12651,9 +12649,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Grasses.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Grasses;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGrassGetter>(
-                        item: loquiItem,
+                    var GrassesItem = item.Grasses;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
+                        item: GrassesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12663,9 +12661,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Trees.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Trees;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ITreeGetter>(
-                        item: loquiItem,
+                    var TreesItem = item.Trees;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)TreesItem).BinaryWriteTranslator).Write<ITreeGetter>(
+                        item: TreesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12675,9 +12673,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Flora.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Flora;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFloraGetter>(
-                        item: loquiItem,
+                    var FloraItem = item.Flora;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FloraItem).BinaryWriteTranslator).Write<IFloraGetter>(
+                        item: FloraItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12687,9 +12685,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Furnature.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Furnature;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFurnatureGetter>(
-                        item: loquiItem,
+                    var FurnatureItem = item.Furnature;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FurnatureItem).BinaryWriteTranslator).Write<IFurnatureGetter>(
+                        item: FurnatureItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12699,9 +12697,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Weapons.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Weapons;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IWeaponGetter>(
-                        item: loquiItem,
+                    var WeaponsItem = item.Weapons;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
+                        item: WeaponsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12711,9 +12709,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Ammo.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Ammo;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IAmmoGetter>(
-                        item: loquiItem,
+                    var AmmoItem = item.Ammo;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AmmoItem).BinaryWriteTranslator).Write<IAmmoGetter>(
+                        item: AmmoItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12723,9 +12721,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.NPCs.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.NPCs;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<INPCGetter>(
-                        item: loquiItem,
+                    var NPCsItem = item.NPCs;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)NPCsItem).BinaryWriteTranslator).Write<INPCGetter>(
+                        item: NPCsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12735,9 +12733,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Creatures.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Creatures;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ICreatureGetter>(
-                        item: loquiItem,
+                    var CreaturesItem = item.Creatures;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)CreaturesItem).BinaryWriteTranslator).Write<ICreatureGetter>(
+                        item: CreaturesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12747,9 +12745,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LeveledCreatures.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.LeveledCreatures;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILeveledCreatureGetter>(
-                        item: loquiItem,
+                    var LeveledCreaturesItem = item.LeveledCreatures;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledCreaturesItem).BinaryWriteTranslator).Write<ILeveledCreatureGetter>(
+                        item: LeveledCreaturesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12759,9 +12757,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.SoulGems.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.SoulGems;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
-                        item: loquiItem,
+                    var SoulGemsItem = item.SoulGems;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoulGemsItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
+                        item: SoulGemsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12771,9 +12769,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Keys.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Keys;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IKeyGetter>(
-                        item: loquiItem,
+                    var KeysItem = item.Keys;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)KeysItem).BinaryWriteTranslator).Write<IKeyGetter>(
+                        item: KeysItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12783,9 +12781,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Potions.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Potions;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IPotionGetter>(
-                        item: loquiItem,
+                    var PotionsItem = item.Potions;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)PotionsItem).BinaryWriteTranslator).Write<IPotionGetter>(
+                        item: PotionsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12795,9 +12793,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Subspaces.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Subspaces;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISubspaceGetter>(
-                        item: loquiItem,
+                    var SubspacesItem = item.Subspaces;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SubspacesItem).BinaryWriteTranslator).Write<ISubspaceGetter>(
+                        item: SubspacesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12807,9 +12805,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.SigilStones.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.SigilStones;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISigilStoneGetter>(
-                        item: loquiItem,
+                    var SigilStonesItem = item.SigilStones;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SigilStonesItem).BinaryWriteTranslator).Write<ISigilStoneGetter>(
+                        item: SigilStonesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12819,9 +12817,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LeveledItems.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.LeveledItems;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
-                        item: loquiItem,
+                    var LeveledItemsItem = item.LeveledItems;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
+                        item: LeveledItemsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12831,9 +12829,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Weathers.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Weathers;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IWeatherGetter>(
-                        item: loquiItem,
+                    var WeathersItem = item.Weathers;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
+                        item: WeathersItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12843,9 +12841,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Climates.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Climates;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClimateGetter>(
-                        item: loquiItem,
+                    var ClimatesItem = item.Climates;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
+                        item: ClimatesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12855,9 +12853,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Regions.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Regions;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IRegionGetter>(
-                        item: loquiItem,
+                    var RegionsItem = item.Regions;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
+                        item: RegionsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12867,9 +12865,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Cells.Records.Count > 0)
                 {
-                    var loquiItem = item.Cells;
-                    ((ListGroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
-                        item: loquiItem,
+                    var CellsItem = item.Cells;
+                    ((ListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
+                        item: CellsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12879,9 +12877,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Worldspaces.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Worldspaces;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
-                        item: loquiItem,
+                    var WorldspacesItem = item.Worldspaces;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
+                        item: WorldspacesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12891,9 +12889,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.DialogTopics.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.DialogTopics;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
-                        item: loquiItem,
+                    var DialogTopicsItem = item.DialogTopics;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
+                        item: DialogTopicsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12903,9 +12901,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Quests.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Quests;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IQuestGetter>(
-                        item: loquiItem,
+                    var QuestsItem = item.Quests;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
+                        item: QuestsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12915,9 +12913,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.IdleAnimations.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.IdleAnimations;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
-                        item: loquiItem,
+                    var IdleAnimationsItem = item.IdleAnimations;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
+                        item: IdleAnimationsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12927,9 +12925,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.AIPackages.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.AIPackages;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IAIPackageGetter>(
-                        item: loquiItem,
+                    var AIPackagesItem = item.AIPackages;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AIPackagesItem).BinaryWriteTranslator).Write<IAIPackageGetter>(
+                        item: AIPackagesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12939,9 +12937,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.CombatStyles.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.CombatStyles;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
-                        item: loquiItem,
+                    var CombatStylesItem = item.CombatStyles;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
+                        item: CombatStylesItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12951,9 +12949,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LoadScreens.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.LoadScreens;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
-                        item: loquiItem,
+                    var LoadScreensItem = item.LoadScreens;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
+                        item: LoadScreensItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12963,9 +12961,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.LeveledSpells.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.LeveledSpells;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
-                        item: loquiItem,
+                    var LeveledSpellsItem = item.LeveledSpells;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledSpellsItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
+                        item: LeveledSpellsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12975,9 +12973,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.AnimatedObjects.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.AnimatedObjects;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
-                        item: loquiItem,
+                    var AnimatedObjectsItem = item.AnimatedObjects;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
+                        item: AnimatedObjectsItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12987,9 +12985,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Waters.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.Waters;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IWaterGetter>(
-                        item: loquiItem,
+                    var WatersItem = item.Waters;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
+                        item: WatersItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -12999,9 +12997,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.EffectShaders.RecordCache.Count > 0)
                 {
-                    var loquiItem = item.EffectShaders;
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
-                        item: loquiItem,
+                    var EffectShadersItem = item.EffectShaders;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
+                        item: EffectShadersItem,
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
@@ -13136,7 +13134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
 

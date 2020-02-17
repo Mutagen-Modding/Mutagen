@@ -878,7 +878,7 @@ namespace Mutagen.Bethesda.Generation
                 objGen: obj,
                 typeGen: field,
                 readerAccessor: frameAccessor,
-                itemAccessor: new Accessor(field, "item."),
+                itemAccessor: Accessor.FromType(field, "item"),
                 translationAccessor: null,
                 errorMaskAccessor: null);
         }
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Generation
                                 objGen: obj,
                                 typeGen: field,
                                 writerAccessor: "writer",
-                                itemAccessor: new Accessor(field, "item."),
+                                itemAccessor: Accessor.FromType(field, "item"),
                                 translationAccessor: null,
                                 errorMaskAccessor: null);
                         }
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Generation
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
 
-                        var accessor = new Accessor(field, "item.");
+                        var accessor = Accessor.FromType(field, "item");
                         if (field is DataType dataType)
                         {
                             fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Generation
                                             typeGen: subField.Field,
                                             writerAccessor: "writer",
                                                 translationAccessor: null,
-                                            itemAccessor: new Accessor(subField.Field, "item."),
+                                            itemAccessor: Accessor.FromType(subField.Field, "item"),
                                             errorMaskAccessor: null);
                                     }
                                     for (int i = 0; i < dataType.BreakIndices.Count; i++)

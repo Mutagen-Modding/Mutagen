@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Decal = (MaskItem<Exception?, Decal.ErrorMask?>?)obj;
                         break;
                     case TextureSet_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -517,13 +517,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -556,9 +556,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ExceptionExt.Combine(this.ObjectBounds?.Overall, rhs.ObjectBounds?.Overall), (this.ObjectBounds?.Specific as IErrorMask<ObjectBounds.ErrorMask>)?.Combine(rhs.ObjectBounds?.Specific));
-                ret.Textures = new MaskItem<Exception?, Textures.ErrorMask?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), (this.Textures?.Specific as IErrorMask<Textures.ErrorMask>)?.Combine(rhs.Textures?.Specific));
-                ret.Decal = new MaskItem<Exception?, Decal.ErrorMask?>(ExceptionExt.Combine(this.Decal?.Overall, rhs.Decal?.Overall), (this.Decal?.Specific as IErrorMask<Decal.ErrorMask>)?.Combine(rhs.Decal?.Specific));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Textures = this.Textures.Combine(rhs.Textures, (l, r) => l.Combine(r));
+                ret.Decal = this.Decal.Combine(rhs.Decal, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITextureSetGetter)rhs, include);
 
@@ -1447,17 +1447,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
                 item.ObjectBounds,
                 rhs.ObjectBounds,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Textures = EqualsMaskHelper.EqualsHelper(
                 item.Textures,
                 rhs.Textures,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Decal = EqualsMaskHelper.EqualsHelper(
                 item.Decal,
                 rhs.Decal,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1955,9 +1955,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.ObjectBounds != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
             {
-                var loquiItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
                     node: node,
                     name: nameof(item.ObjectBounds),
                     fieldIndex: (int)TextureSet_FieldIndex.ObjectBounds,
@@ -1967,9 +1967,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Textures != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Textures) ?? true))
             {
-                var loquiItem = item.Textures;
-                ((TexturesXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var TexturesItem = item.Textures;
+                ((TexturesXmlWriteTranslation)((IXmlItem)TexturesItem).XmlWriteTranslator).Write(
+                    item: TexturesItem,
                     node: node,
                     name: nameof(item.Textures),
                     fieldIndex: (int)TextureSet_FieldIndex.Textures,
@@ -1979,9 +1979,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Decal != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
             {
-                var loquiItem = item.Decal;
-                ((DecalXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var DecalItem = item.Decal;
+                ((DecalXmlWriteTranslation)((IXmlItem)DecalItem).XmlWriteTranslator).Write(
+                    item: DecalItem,
                     node: node,
                     name: nameof(item.Decal),
                     fieldIndex: (int)TextureSet_FieldIndex.Decal,
@@ -2106,9 +2106,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "ObjectBounds":
+                    errorMask?.PushIndex((int)TextureSet_FieldIndex.ObjectBounds);
                     try
                     {
-                        errorMask?.PushIndex((int)TextureSet_FieldIndex.ObjectBounds);
                         item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2125,9 +2125,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Textures":
+                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Textures);
                     try
                     {
-                        errorMask?.PushIndex((int)TextureSet_FieldIndex.Textures);
                         item.Textures = LoquiXmlTranslation<Textures>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2144,9 +2144,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Decal":
+                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
                     try
                     {
-                        errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
                         item.Decal = LoquiXmlTranslation<Decal>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2163,9 +2163,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)TextureSet_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<TextureSet.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2277,38 +2277,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
+            if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
             {
-                var loquiItem = item.ObjectBounds;
-                if (loquiItem != null)
-                {
-                    ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
+            if (item.Textures.TryGet(out var TexturesItem))
             {
-                var loquiItem = item.Textures;
-                if (loquiItem != null)
-                {
-                    ((TexturesBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((TexturesBinaryWriteTranslation)((IBinaryItem)TexturesItem).BinaryWriteTranslator).Write(
+                    item: TexturesItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
+            if (item.Decal.TryGet(out var DecalItem))
             {
-                var loquiItem = item.Decal;
-                if (loquiItem != null)
-                {
-                    ((DecalBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
+                    item: DecalItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<TextureSet.Flag>.Instance.WriteNullable(
                 writer,
@@ -2415,7 +2406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITextureSetGetter)rhs, include);
 

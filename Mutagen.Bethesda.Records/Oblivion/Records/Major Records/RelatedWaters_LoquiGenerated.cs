@@ -422,13 +422,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                        this.RelatedWaterDaytime = (Exception)obj;
+                        this.RelatedWaterDaytime = (Exception?)obj;
                         break;
                     case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                        this.RelatedWaterNighttime = (Exception)obj;
+                        this.RelatedWaterNighttime = (Exception?)obj;
                         break;
                     case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                        this.RelatedWaterUnderwater = (Exception)obj;
+                        this.RelatedWaterUnderwater = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -449,13 +449,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
 
@@ -1564,9 +1564,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRelatedWatersGetter)item,
                     name: name,
@@ -1626,9 +1626,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "RelatedWaterDaytime":
+                    errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
                     try
                     {
-                        errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
                         item.RelatedWaterDaytime.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1644,9 +1644,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RelatedWaterNighttime":
+                    errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
                     try
                     {
-                        errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
                         item.RelatedWaterNighttime.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1662,9 +1662,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RelatedWaterUnderwater":
+                    errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
                     try
                     {
-                        errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
                         item.RelatedWaterUnderwater.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1954,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
 

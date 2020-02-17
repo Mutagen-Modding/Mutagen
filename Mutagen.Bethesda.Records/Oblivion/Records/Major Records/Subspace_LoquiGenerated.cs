@@ -467,16 +467,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Subspace_FieldIndex.X:
-                        this.X = (Exception)obj;
+                        this.X = (Exception?)obj;
                         break;
                     case Subspace_FieldIndex.Y:
-                        this.Y = (Exception)obj;
+                        this.Y = (Exception?)obj;
                         break;
                     case Subspace_FieldIndex.Z:
-                        this.Z = (Exception)obj;
+                        this.Z = (Exception?)obj;
                         break;
                     case Subspace_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception)obj;
+                        this.DNAMDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -499,13 +499,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISubspaceGetter)rhs, include);
 
@@ -1948,9 +1948,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "X":
+                    errorMask?.PushIndex((int)Subspace_FieldIndex.X);
                     try
                     {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.X);
                         item.X = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1967,9 +1967,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DNAMDataTypeState |= Subspace.DNAMDataType.Has;
                     break;
                 case "Y":
+                    errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
                     try
                     {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
                         item.Y = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1985,9 +1985,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Z":
+                    errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
                     try
                     {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
                         item.Z = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2003,9 +2003,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DNAMDataTypeState":
+                    errorMask?.PushIndex((int)Subspace_FieldIndex.DNAMDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.DNAMDataTypeState);
                         item.DNAMDataTypeState = EnumXmlTranslation<Subspace.DNAMDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2243,7 +2243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISubspaceGetter)rhs, include);
 

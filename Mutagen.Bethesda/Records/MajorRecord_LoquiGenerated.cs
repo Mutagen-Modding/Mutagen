@@ -436,16 +436,16 @@ namespace Mutagen.Bethesda
                 switch (enu)
                 {
                     case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                        this.MajorRecordFlagsRaw = (Exception)obj;
+                        this.MajorRecordFlagsRaw = (Exception?)obj;
                         break;
                     case MajorRecord_FieldIndex.FormKey:
-                        this.FormKey = (Exception)obj;
+                        this.FormKey = (Exception?)obj;
                         break;
                     case MajorRecord_FieldIndex.Version:
-                        this.Version = (Exception)obj;
+                        this.Version = (Exception?)obj;
                         break;
                     case MajorRecord_FieldIndex.EditorID:
-                        this.EditorID = (Exception)obj;
+                        this.EditorID = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -467,13 +467,13 @@ namespace Mutagen.Bethesda
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg)
+            public virtual void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordGetter)rhs, include);
 
@@ -1428,9 +1428,9 @@ namespace Mutagen.Bethesda.Internals
             switch (name)
             {
                 case "FormKey":
+                    errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
                     try
                     {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
                         item.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1949,9 +1949,9 @@ namespace Mutagen.Bethesda.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IMajorRecordGetter)item,
                     name: name,
@@ -2011,9 +2011,9 @@ namespace Mutagen.Bethesda.Internals
             switch (name)
             {
                 case "MajorRecordFlagsRaw":
+                    errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw);
                     try
                     {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw);
                         item.MajorRecordFlagsRaw = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2029,9 +2029,9 @@ namespace Mutagen.Bethesda.Internals
                     }
                     break;
                 case "Version":
+                    errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
                     try
                     {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
                         item.Version = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2047,9 +2047,9 @@ namespace Mutagen.Bethesda.Internals
                     }
                     break;
                 case "EditorID":
+                    errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
                     try
                     {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
                         item.EditorID = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2345,7 +2345,7 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordGetter)rhs, include);
 

@@ -782,43 +782,43 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case Grass_FieldIndex.Density:
-                        this.Density = (Exception)obj;
+                        this.Density = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.MinSlope:
-                        this.MinSlope = (Exception)obj;
+                        this.MinSlope = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.MaxSlope:
-                        this.MaxSlope = (Exception)obj;
+                        this.MaxSlope = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.Fluff1:
-                        this.Fluff1 = (Exception)obj;
+                        this.Fluff1 = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.UnitFromWaterAmount:
-                        this.UnitFromWaterAmount = (Exception)obj;
+                        this.UnitFromWaterAmount = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.Fluff2:
-                        this.Fluff2 = (Exception)obj;
+                        this.Fluff2 = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.UnitFromWaterMode:
-                        this.UnitFromWaterMode = (Exception)obj;
+                        this.UnitFromWaterMode = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.PositionRange:
-                        this.PositionRange = (Exception)obj;
+                        this.PositionRange = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.HeightRange:
-                        this.HeightRange = (Exception)obj;
+                        this.HeightRange = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.ColorRange:
-                        this.ColorRange = (Exception)obj;
+                        this.ColorRange = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.WavePeriod:
-                        this.WavePeriod = (Exception)obj;
+                        this.WavePeriod = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Grass_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -851,13 +851,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -900,7 +900,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Density = this.Density.Combine(rhs.Density);
                 ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
                 ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGrassGetter)rhs, include);
 
@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Density = item.Density == rhs.Density;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
@@ -2527,9 +2527,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Grass_FieldIndex.Model,
@@ -2764,9 +2764,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Model":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2783,9 +2783,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Density":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.Density);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Density);
                         item.Density = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2802,9 +2802,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Grass.DATADataType.Has;
                     break;
                 case "MinSlope":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
                         item.MinSlope = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2820,9 +2820,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MaxSlope":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
                         item.MaxSlope = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2838,9 +2838,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff1":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
                         item.Fluff1 = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2856,9 +2856,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "UnitFromWaterAmount":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
                         item.UnitFromWaterAmount = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2874,9 +2874,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff2":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
                         item.Fluff2 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2892,9 +2892,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "UnitFromWaterMode":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
                         item.UnitFromWaterMode = EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2910,9 +2910,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PositionRange":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
                         item.PositionRange = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2928,9 +2928,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HeightRange":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
                         item.HeightRange = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2946,9 +2946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ColorRange":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
                         item.ColorRange = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2964,9 +2964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "WavePeriod":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
                         item.WavePeriod = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2982,9 +2982,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3000,9 +3000,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Grass.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3125,16 +3125,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
             {
@@ -3268,7 +3265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGrassGetter)rhs, include);
 

@@ -474,10 +474,10 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RoadPoint_FieldIndex.Point:
-                        this.Point = (Exception)obj;
+                        this.Point = (Exception?)obj;
                         break;
                     case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                        this.NumConnectionsFluffBytes = (Exception)obj;
+                        this.NumConnectionsFluffBytes = (Exception?)obj;
                         break;
                     case RoadPoint_FieldIndex.Connections:
                         this.Connections = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -501,13 +501,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadPointGetter)rhs, include);
 
@@ -1659,9 +1659,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IRoadPointGetter)item,
                     name: name,
@@ -1721,9 +1721,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Point":
+                    errorMask?.PushIndex((int)RoadPoint_FieldIndex.Point);
                     try
                     {
-                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.Point);
                         item.Point = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1739,9 +1739,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "NumConnectionsFluffBytes":
+                    errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
                     try
                     {
-                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
                         item.NumConnectionsFluffBytes = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 3,
@@ -1758,9 +1758,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Connections":
+                    errorMask?.PushIndex((int)RoadPoint_FieldIndex.Connections);
                     try
                     {
-                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.Connections);
                         if (ListXmlTranslation<P3Float>.Instance.Parse(
                             node: node,
                             enumer: out var ConnectionsItem,
@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadPointGetter)rhs, include);
 

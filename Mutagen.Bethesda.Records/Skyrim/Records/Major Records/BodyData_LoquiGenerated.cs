@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case BodyData_FieldIndex.Index:
-                        this.Index = (Exception)obj;
+                        this.Index = (Exception?)obj;
                         break;
                     case BodyData_FieldIndex.Part:
                         this.Part = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
@@ -425,13 +425,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Index = this.Index.Combine(rhs.Index);
-                ret.Part = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Part?.Overall, rhs.Part?.Overall), (this.Part?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Part?.Specific));
+                ret.Part = this.Part.Combine(rhs.Part, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyDataGetter)rhs, include);
 
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Part = EqualsMaskHelper.EqualsHelper(
                 item.Part,
                 rhs.Part,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
         }
         
@@ -1495,9 +1495,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Part != null)
                 && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.Part) ?? true))
             {
-                var loquiItem = item.Part;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var PartItem = item.Part;
+                ((ModelXmlWriteTranslation)((IXmlItem)PartItem).XmlWriteTranslator).Write(
+                    item: PartItem,
                     node: node,
                     name: nameof(item.Part),
                     fieldIndex: (int)BodyData_FieldIndex.Part,
@@ -1549,9 +1549,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IBodyDataGetter)item,
                     name: name,
@@ -1611,9 +1611,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Index":
+                    errorMask?.PushIndex((int)BodyData_FieldIndex.Index);
                     try
                     {
-                        errorMask?.PushIndex((int)BodyData_FieldIndex.Index);
                         item.Index = EnumXmlTranslation<BodyData.PartIndex>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1629,9 +1629,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Part":
+                    errorMask?.PushIndex((int)BodyData_FieldIndex.Part);
                     try
                     {
-                        errorMask?.PushIndex((int)BodyData_FieldIndex.Part);
                         item.Part = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -1835,16 +1835,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
+            if (item.Part.TryGet(out var PartItem))
             {
-                var loquiItem = item.Part;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)PartItem).BinaryWriteTranslator).Write(
+                    item: PartItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
         }
 
@@ -1932,7 +1929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyDataGetter)rhs, include);
 

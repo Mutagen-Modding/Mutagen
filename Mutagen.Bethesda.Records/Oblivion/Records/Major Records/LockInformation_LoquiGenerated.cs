@@ -443,16 +443,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case LockInformation_FieldIndex.LockLevel:
-                        this.LockLevel = (Exception)obj;
+                        this.LockLevel = (Exception?)obj;
                         break;
                     case LockInformation_FieldIndex.Fluff:
-                        this.Fluff = (Exception)obj;
+                        this.Fluff = (Exception?)obj;
                         break;
                     case LockInformation_FieldIndex.Key:
-                        this.Key = (Exception)obj;
+                        this.Key = (Exception?)obj;
                         break;
                     case LockInformation_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -474,13 +474,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationGetter)rhs, include);
 
@@ -1623,9 +1623,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (ILockInformationGetter)item,
                     name: name,
@@ -1685,9 +1685,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "LockLevel":
+                    errorMask?.PushIndex((int)LockInformation_FieldIndex.LockLevel);
                     try
                     {
-                        errorMask?.PushIndex((int)LockInformation_FieldIndex.LockLevel);
                         item.LockLevel = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1703,9 +1703,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fluff":
+                    errorMask?.PushIndex((int)LockInformation_FieldIndex.Fluff);
                     try
                     {
-                        errorMask?.PushIndex((int)LockInformation_FieldIndex.Fluff);
                         item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 3,
@@ -1722,9 +1722,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Key":
+                    errorMask?.PushIndex((int)LockInformation_FieldIndex.Key);
                     try
                     {
-                        errorMask?.PushIndex((int)LockInformation_FieldIndex.Key);
                         item.Key.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1740,9 +1740,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)LockInformation_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)LockInformation_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationGetter)rhs, include);
 

@@ -473,22 +473,22 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case VendorValues_FieldIndex.StartHour:
-                        this.StartHour = (Exception)obj;
+                        this.StartHour = (Exception?)obj;
                         break;
                     case VendorValues_FieldIndex.EndHour:
-                        this.EndHour = (Exception)obj;
+                        this.EndHour = (Exception?)obj;
                         break;
                     case VendorValues_FieldIndex.Radius:
-                        this.Radius = (Exception)obj;
+                        this.Radius = (Exception?)obj;
                         break;
                     case VendorValues_FieldIndex.OnlyBuysStolenItems:
-                        this.OnlyBuysStolenItems = (Exception)obj;
+                        this.OnlyBuysStolenItems = (Exception?)obj;
                         break;
                     case VendorValues_FieldIndex.NotSellBuy:
-                        this.NotSellBuy = (Exception)obj;
+                        this.NotSellBuy = (Exception?)obj;
                         break;
                     case VendorValues_FieldIndex.Unknown:
-                        this.Unknown = (Exception)obj;
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -512,13 +512,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVendorValuesGetter)rhs, include);
 
@@ -1738,9 +1738,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IVendorValuesGetter)item,
                     name: name,
@@ -1800,9 +1800,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "StartHour":
+                    errorMask?.PushIndex((int)VendorValues_FieldIndex.StartHour);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorValues_FieldIndex.StartHour);
                         item.StartHour = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1818,9 +1818,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "EndHour":
+                    errorMask?.PushIndex((int)VendorValues_FieldIndex.EndHour);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorValues_FieldIndex.EndHour);
                         item.EndHour = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1836,9 +1836,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Radius":
+                    errorMask?.PushIndex((int)VendorValues_FieldIndex.Radius);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorValues_FieldIndex.Radius);
                         item.Radius = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1854,9 +1854,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "OnlyBuysStolenItems":
+                    errorMask?.PushIndex((int)VendorValues_FieldIndex.OnlyBuysStolenItems);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorValues_FieldIndex.OnlyBuysStolenItems);
                         item.OnlyBuysStolenItems = BooleanXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1872,9 +1872,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "NotSellBuy":
+                    errorMask?.PushIndex((int)VendorValues_FieldIndex.NotSellBuy);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorValues_FieldIndex.NotSellBuy);
                         item.NotSellBuy = BooleanXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1890,9 +1890,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Unknown":
+                    errorMask?.PushIndex((int)VendorValues_FieldIndex.Unknown);
                     try
                     {
-                        errorMask?.PushIndex((int)VendorValues_FieldIndex.Unknown);
                         item.Unknown = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2176,7 +2176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVendorValuesGetter)rhs, include);
 

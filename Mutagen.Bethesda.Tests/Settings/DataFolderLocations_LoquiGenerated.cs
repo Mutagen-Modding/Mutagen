@@ -256,10 +256,10 @@ namespace Mutagen.Bethesda.Tests
                 switch (enu)
                 {
                     case DataFolderLocations_FieldIndex.Oblivion:
-                        this.Oblivion = (Exception)obj;
+                        this.Oblivion = (Exception?)obj;
                         break;
                     case DataFolderLocations_FieldIndex.Skyrim:
-                        this.Skyrim = (Exception)obj;
+                        this.Skyrim = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -279,13 +279,13 @@ namespace Mutagen.Bethesda.Tests
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDataFolderLocationsGetter)rhs, include);
 
@@ -1345,9 +1345,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IDataFolderLocationsGetter)item,
                     name: name,
@@ -1409,9 +1409,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "Oblivion":
                     if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Oblivion) ?? true))
                     {
+                        errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Oblivion);
                         try
                         {
-                            errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Oblivion);
                             item.Oblivion = StringXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
@@ -1430,9 +1430,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case "Skyrim":
                     if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Skyrim) ?? true))
                     {
+                        errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Skyrim);
                         try
                         {
-                            errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Skyrim);
                             item.Skyrim = StringXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);

@@ -504,16 +504,16 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case QuestTarget_FieldIndex.Target:
-                        this.Target = (Exception)obj;
+                        this.Target = (Exception?)obj;
                         break;
                     case QuestTarget_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case QuestTarget_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
                     case QuestTarget_FieldIndex.QSTADataTypeState:
-                        this.QSTADataTypeState = (Exception)obj;
+                        this.QSTADataTypeState = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -535,13 +535,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
 
@@ -1533,7 +1533,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Target = true;
             mask.Flags = true;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(ConditionsItem.HasBeenSet, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.QSTADataTypeState = true;
         }
         
@@ -1755,9 +1756,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1818,9 +1819,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IQuestTargetGetter)item,
                     name: name,
@@ -1880,9 +1881,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Target":
+                    errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
                     try
                     {
-                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
                         item.Target.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1899,9 +1900,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.QSTADataTypeState |= QuestTarget.QSTADataType.Has;
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<QuestTarget.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1917,9 +1918,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Conditions":
+                    errorMask?.PushIndex((int)QuestTarget_FieldIndex.Conditions);
                     try
                     {
-                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Conditions);
                         if (ListXmlTranslation<Condition>.Instance.Parse(
                             node: node,
                             enumer: out var ConditionsItem,
@@ -1945,9 +1946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "QSTADataTypeState":
+                    errorMask?.PushIndex((int)QuestTarget_FieldIndex.QSTADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.QSTADataTypeState);
                         item.QSTADataTypeState = EnumXmlTranslation<QuestTarget.QSTADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2165,16 +2166,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Conditions,
                 transl: (MutagenWriter subWriter, IConditionGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((ConditionBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -2263,7 +2261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
 

@@ -1557,118 +1557,118 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case CombatStyle_FieldIndex.DodgePercentChance:
-                        this.DodgePercentChance = (Exception)obj;
+                        this.DodgePercentChance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.LeftRightPercentChance:
-                        this.LeftRightPercentChance = (Exception)obj;
+                        this.LeftRightPercentChance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                        this.DodgeLeftRightTimerMin = (Exception)obj;
+                        this.DodgeLeftRightTimerMin = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                        this.DodgeLeftRightTimerMax = (Exception)obj;
+                        this.DodgeLeftRightTimerMax = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                        this.DodgeForwardTimerMin = (Exception)obj;
+                        this.DodgeForwardTimerMin = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                        this.DodgeForwardTimerMax = (Exception)obj;
+                        this.DodgeForwardTimerMax = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                        this.DodgeBackTimerMin = (Exception)obj;
+                        this.DodgeBackTimerMin = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                        this.DodgeBackTimerMax = (Exception)obj;
+                        this.DodgeBackTimerMax = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.IdleTimerMin:
-                        this.IdleTimerMin = (Exception)obj;
+                        this.IdleTimerMin = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.IdleTimerMax:
-                        this.IdleTimerMax = (Exception)obj;
+                        this.IdleTimerMax = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.BlockPercentChance:
-                        this.BlockPercentChance = (Exception)obj;
+                        this.BlockPercentChance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.AttackPercentChance:
-                        this.AttackPercentChance = (Exception)obj;
+                        this.AttackPercentChance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                        this.RecoilStaggerBonusToAttack = (Exception)obj;
+                        this.RecoilStaggerBonusToAttack = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                        this.UnconsciousBonusToAttack = (Exception)obj;
+                        this.UnconsciousBonusToAttack = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                        this.HandToHandBonusToAttack = (Exception)obj;
+                        this.HandToHandBonusToAttack = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                        this.PowerAttackPercentChance = (Exception)obj;
+                        this.PowerAttackPercentChance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                        this.RecoilStaggerBonusToPowerAttack = (Exception)obj;
+                        this.RecoilStaggerBonusToPowerAttack = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                        this.UnconsciousBonusToPowerAttack = (Exception)obj;
+                        this.UnconsciousBonusToPowerAttack = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.PowerAttackNormal:
-                        this.PowerAttackNormal = (Exception)obj;
+                        this.PowerAttackNormal = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.PowerAttackForward:
-                        this.PowerAttackForward = (Exception)obj;
+                        this.PowerAttackForward = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.PowerAttackBack:
-                        this.PowerAttackBack = (Exception)obj;
+                        this.PowerAttackBack = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.PowerAttackLeft:
-                        this.PowerAttackLeft = (Exception)obj;
+                        this.PowerAttackLeft = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.PowerAttackRight:
-                        this.PowerAttackRight = (Exception)obj;
+                        this.PowerAttackRight = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.HoldTimerMin:
-                        this.HoldTimerMin = (Exception)obj;
+                        this.HoldTimerMin = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.HoldTimerMax:
-                        this.HoldTimerMax = (Exception)obj;
+                        this.HoldTimerMax = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                        this.AcrobaticDodgePercentChance = (Exception)obj;
+                        this.AcrobaticDodgePercentChance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.RangeMultOptimal:
-                        this.RangeMultOptimal = (Exception)obj;
+                        this.RangeMultOptimal = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.RangeMultMax:
-                        this.RangeMultMax = (Exception)obj;
+                        this.RangeMultMax = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                        this.SwitchDistanceMelee = (Exception)obj;
+                        this.SwitchDistanceMelee = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                        this.SwitchDistanceRanged = (Exception)obj;
+                        this.SwitchDistanceRanged = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.BuffStandoffDistance:
-                        this.BuffStandoffDistance = (Exception)obj;
+                        this.BuffStandoffDistance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.RangedStandoffDistance:
-                        this.RangedStandoffDistance = (Exception)obj;
+                        this.RangedStandoffDistance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.GroupStandoffDistance:
-                        this.GroupStandoffDistance = (Exception)obj;
+                        this.GroupStandoffDistance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                        this.RushingAttackPercentChance = (Exception)obj;
+                        this.RushingAttackPercentChance = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                        this.RushingAttackDistanceMult = (Exception)obj;
+                        this.RushingAttackDistanceMult = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.Advanced:
                         this.Advanced = (MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>?)obj;
                         break;
                     case CombatStyle_FieldIndex.CSTDDataTypeState:
-                        this.CSTDDataTypeState = (Exception)obj;
+                        this.CSTDDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1725,13 +1725,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.GroupStandoffDistance = this.GroupStandoffDistance.Combine(rhs.GroupStandoffDistance);
                 ret.RushingAttackPercentChance = this.RushingAttackPercentChance.Combine(rhs.RushingAttackPercentChance);
                 ret.RushingAttackDistanceMult = this.RushingAttackDistanceMult.Combine(rhs.RushingAttackDistanceMult);
-                ret.Advanced = new MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>(ExceptionExt.Combine(this.Advanced?.Overall, rhs.Advanced?.Overall), (this.Advanced?.Specific as IErrorMask<CombatStyleAdvanced.ErrorMask>)?.Combine(rhs.Advanced?.Specific));
+                ret.Advanced = this.Advanced.Combine(rhs.Advanced, (l, r) => l.Combine(r));
                 ret.CSTDDataTypeState = this.CSTDDataTypeState.Combine(rhs.CSTDDataTypeState);
                 return ret;
             }
@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleGetter)rhs, include);
 
@@ -3430,7 +3430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Advanced = EqualsMaskHelper.EqualsHelper(
                 item.Advanced,
                 rhs.Advanced,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.CSTDDataTypeState = item.CSTDDataTypeState == rhs.CSTDDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -4581,9 +4581,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Advanced != null)
                 && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
-                var loquiItem = item.Advanced;
-                ((CombatStyleAdvancedXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var AdvancedItem = item.Advanced;
+                ((CombatStyleAdvancedXmlWriteTranslation)((IXmlItem)AdvancedItem).XmlWriteTranslator).Write(
+                    item: AdvancedItem,
                     node: node,
                     name: nameof(item.Advanced),
                     fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
@@ -4707,9 +4707,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "DodgePercentChance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
                         item.DodgePercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4726,9 +4726,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Has;
                     break;
                 case "LeftRightPercentChance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
                         item.LeftRightPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4744,9 +4744,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeLeftRightTimerMin":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
                         item.DodgeLeftRightTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4762,9 +4762,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeLeftRightTimerMax":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
                         item.DodgeLeftRightTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4780,9 +4780,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeForwardTimerMin":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
                         item.DodgeForwardTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4798,9 +4798,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeForwardTimerMax":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
                         item.DodgeForwardTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4816,9 +4816,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeBackTimerMin":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
                         item.DodgeBackTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4834,9 +4834,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DodgeBackTimerMax":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
                         item.DodgeBackTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4852,9 +4852,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "IdleTimerMin":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
                         item.IdleTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4870,9 +4870,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "IdleTimerMax":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
                         item.IdleTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4888,9 +4888,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BlockPercentChance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
                         item.BlockPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4906,9 +4906,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AttackPercentChance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
                         item.AttackPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4924,9 +4924,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RecoilStaggerBonusToAttack":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
                         item.RecoilStaggerBonusToAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4942,9 +4942,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "UnconsciousBonusToAttack":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
                         item.UnconsciousBonusToAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4960,9 +4960,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HandToHandBonusToAttack":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
                         item.HandToHandBonusToAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4978,9 +4978,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PowerAttackPercentChance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
                         item.PowerAttackPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4996,9 +4996,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RecoilStaggerBonusToPowerAttack":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
                         item.RecoilStaggerBonusToPowerAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5014,9 +5014,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "UnconsciousBonusToPowerAttack":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
                         item.UnconsciousBonusToPowerAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5032,9 +5032,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PowerAttackNormal":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
                         item.PowerAttackNormal = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5050,9 +5050,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PowerAttackForward":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
                         item.PowerAttackForward = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5068,9 +5068,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PowerAttackBack":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
                         item.PowerAttackBack = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5086,9 +5086,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PowerAttackLeft":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
                         item.PowerAttackLeft = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5104,9 +5104,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PowerAttackRight":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
                         item.PowerAttackRight = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5122,9 +5122,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HoldTimerMin":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
                         item.HoldTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5140,9 +5140,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "HoldTimerMax":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
                         item.HoldTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5158,9 +5158,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<CombatStyle.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5176,9 +5176,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AcrobaticDodgePercentChance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
                         item.AcrobaticDodgePercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5194,9 +5194,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RangeMultOptimal":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
                         item.RangeMultOptimal = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5213,9 +5213,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CSTDDataTypeState &= ~CombatStyle.CSTDDataType.Break0;
                     break;
                 case "RangeMultMax":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
                         item.RangeMultMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5231,9 +5231,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SwitchDistanceMelee":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
                         item.SwitchDistanceMelee = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5250,9 +5250,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CSTDDataTypeState &= ~CombatStyle.CSTDDataType.Break1;
                     break;
                 case "SwitchDistanceRanged":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
                         item.SwitchDistanceRanged = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5268,9 +5268,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BuffStandoffDistance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
                         item.BuffStandoffDistance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5286,9 +5286,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RangedStandoffDistance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
                         item.RangedStandoffDistance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5305,9 +5305,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CSTDDataTypeState &= ~CombatStyle.CSTDDataType.Break2;
                     break;
                 case "GroupStandoffDistance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
                         item.GroupStandoffDistance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5323,9 +5323,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RushingAttackPercentChance":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
                         item.RushingAttackPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5342,9 +5342,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CSTDDataTypeState &= ~CombatStyle.CSTDDataType.Break3;
                     break;
                 case "RushingAttackDistanceMult":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
                         item.RushingAttackDistanceMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5360,9 +5360,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Advanced":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                         item.Advanced = LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -5379,9 +5379,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CSTDDataTypeState":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.CSTDDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.CSTDDataTypeState);
                         item.CSTDDataTypeState = EnumXmlTranslation<CombatStyle.CSTDDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5636,16 +5636,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            if (item.Advanced.TryGet(out var AdvancedItem))
             {
-                var loquiItem = item.Advanced;
-                if (loquiItem != null)
-                {
-                    ((CombatStyleAdvancedBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((CombatStyleAdvancedBinaryWriteTranslation)((IBinaryItem)AdvancedItem).BinaryWriteTranslator).Write(
+                    item: AdvancedItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
         }
 
@@ -5763,7 +5760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleGetter)rhs, include);
 

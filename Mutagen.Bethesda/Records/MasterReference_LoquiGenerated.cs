@@ -396,10 +396,10 @@ namespace Mutagen.Bethesda
                 switch (enu)
                 {
                     case MasterReference_FieldIndex.Master:
-                        this.Master = (Exception)obj;
+                        this.Master = (Exception?)obj;
                         break;
                     case MasterReference_FieldIndex.FileSize:
-                        this.FileSize = (Exception)obj;
+                        this.FileSize = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -419,13 +419,13 @@ namespace Mutagen.Bethesda
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
 
@@ -1509,9 +1509,9 @@ namespace Mutagen.Bethesda.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IMasterReferenceGetter)item,
                     name: name,
@@ -1571,9 +1571,9 @@ namespace Mutagen.Bethesda.Internals
             switch (name)
             {
                 case "Master":
+                    errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
                     try
                     {
-                        errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
                         item.Master = ModKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1589,9 +1589,9 @@ namespace Mutagen.Bethesda.Internals
                     }
                     break;
                 case "FileSize":
+                    errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
                     try
                     {
-                        errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
                         item.FileSize = UInt64XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1873,7 +1873,7 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
 

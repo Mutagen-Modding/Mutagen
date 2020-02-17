@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, bool protectedMembers, bool deepCopy)
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
         {
             if (!deepCopy)
             {
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Generation
             }
             if (this.HasBeenSet)
             {
-                fg.AppendLine($"if ({rhsAccessorPrefix}.{this.Name} == null)");
+                fg.AppendLine($"if ({rhs} == null)");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"{accessor} = null;");
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateSetNth(FileGeneration fg, string accessorPrefix, string rhsAccessorPrefix, bool internalUse)
+        public override void GenerateSetNth(FileGeneration fg, Accessor accessor, Accessor rhs, bool internalUse)
         {
             throw new NotImplementedException();
         }

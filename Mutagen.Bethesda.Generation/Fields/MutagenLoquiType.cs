@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
             return this.TargetObjectGeneration?.GetObjectType();
         }
 
-        public override void GenerateTypicalMakeCopy(FileGeneration fg, string retAccessor, Accessor rhsAccessor, string copyMaskAccessor, bool deepCopy, bool doTranslationMask)
+        public override void GenerateTypicalMakeCopy(FileGeneration fg, Accessor retAccessor, Accessor rhsAccessor, Accessor copyMaskAccessor, bool deepCopy, bool doTranslationMask)
         {
             if (this.GetObjectType() != ObjectType.Record)
             {

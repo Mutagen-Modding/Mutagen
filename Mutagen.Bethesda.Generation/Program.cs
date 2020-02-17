@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "VoicesLocation = (ushort)(stream.Position - offset);";
+            string testString = "(loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs)";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

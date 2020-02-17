@@ -410,13 +410,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case MapData_FieldIndex.UsableDimensions:
-                        this.UsableDimensions = (Exception)obj;
+                        this.UsableDimensions = (Exception?)obj;
                         break;
                     case MapData_FieldIndex.CellCoordinatesNWCell:
-                        this.CellCoordinatesNWCell = (Exception)obj;
+                        this.CellCoordinatesNWCell = (Exception?)obj;
                         break;
                     case MapData_FieldIndex.CellCoordinatesSECell:
-                        this.CellCoordinatesSECell = (Exception)obj;
+                        this.CellCoordinatesSECell = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -437,13 +437,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapDataGetter)rhs, include);
 
@@ -1537,9 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IMapDataGetter)item,
                     name: name,
@@ -1599,9 +1599,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "UsableDimensions":
+                    errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
                     try
                     {
-                        errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
                         item.UsableDimensions = P2IntXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1617,9 +1617,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CellCoordinatesNWCell":
+                    errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
                     try
                     {
-                        errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
                         item.CellCoordinatesNWCell = P2Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1635,9 +1635,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CellCoordinatesSECell":
+                    errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
                     try
                     {
-                        errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
                         item.CellCoordinatesSECell = P2Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapDataGetter)rhs, include);
 

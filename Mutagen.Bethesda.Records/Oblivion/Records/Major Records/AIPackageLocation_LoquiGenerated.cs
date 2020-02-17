@@ -414,13 +414,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case AIPackageLocation_FieldIndex.Type:
-                        this.Type = (Exception)obj;
+                        this.Type = (Exception?)obj;
                         break;
                     case AIPackageLocation_FieldIndex.LocationReference:
-                        this.LocationReference = (Exception)obj;
+                        this.LocationReference = (Exception?)obj;
                         break;
                     case AIPackageLocation_FieldIndex.Radius:
-                        this.Radius = (Exception)obj;
+                        this.Radius = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -441,13 +441,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationGetter)rhs, include);
 
@@ -1548,9 +1548,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IAIPackageLocationGetter)item,
                     name: name,
@@ -1610,9 +1610,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Type":
+                    errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
                         item.Type = EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1628,9 +1628,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LocationReference":
+                    errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
                         item.LocationReference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1646,9 +1646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Radius":
+                    errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
                     try
                     {
-                        errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
                         item.Radius = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationGetter)rhs, include);
 

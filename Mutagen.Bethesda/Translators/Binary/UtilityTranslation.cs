@@ -19,6 +19,25 @@ namespace Mutagen.Bethesda
         private static readonly byte[] _Zeros = new byte[8];
         public static ReadOnlyMemorySlice<byte> Zeros => new ReadOnlyMemorySlice<byte>(_Zeros);
 
+        public delegate bool BinarySubParseDelegate<T>(
+            MutagenFrame reader,
+            out T item);
+        public delegate bool BinaryMasterParseDelegate<T>(
+            MutagenFrame reader,
+            out T item,
+            MasterReferences masterReferences);
+        public delegate bool BinarySubParseRecordDelegate<T>(
+            MutagenFrame reader,
+            RecordType header,
+            out T item);
+        public delegate void BinarySubWriteDelegate<T>(
+            MutagenWriter writer,
+            T item);
+        public delegate void BinaryMasterWriteDelegate<T>(
+            MutagenWriter writer,
+            T item,
+            MasterReferences masterReferences);
+
         public delegate void RecordStructFill<R>(
             R record,
             MutagenFrame frame,

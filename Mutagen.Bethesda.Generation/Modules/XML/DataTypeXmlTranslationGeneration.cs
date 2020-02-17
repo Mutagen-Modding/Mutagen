@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Generation
                         typeGen: subField.Field,
                         writerAccessor: writerAccessor,
                         translationMaskAccessor: "translationMask",
-                        itemAccessor: new Accessor(subField.Field, "item."),
+                        itemAccessor: Accessor.FromType(subField.Field, "item"),
                         errorMaskAccessor: $"errorMask");
                 }
             }

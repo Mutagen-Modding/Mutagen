@@ -2227,7 +2227,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Creature_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
@@ -2242,58 +2242,58 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Models = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Creature_FieldIndex.NIFT:
-                        this.NIFT = (Exception)obj;
+                        this.NIFT = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.BaseSpellPoints:
-                        this.BaseSpellPoints = (Exception)obj;
+                        this.BaseSpellPoints = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Fatigue:
-                        this.Fatigue = (Exception)obj;
+                        this.Fatigue = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.BarterGold:
-                        this.BarterGold = (Exception)obj;
+                        this.BarterGold = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.LevelOffset:
-                        this.LevelOffset = (Exception)obj;
+                        this.LevelOffset = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.CalcMin:
-                        this.CalcMin = (Exception)obj;
+                        this.CalcMin = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.CalcMax:
-                        this.CalcMax = (Exception)obj;
+                        this.CalcMax = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Factions:
                         this.Factions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>)obj;
                         break;
                     case Creature_FieldIndex.DeathItem:
-                        this.DeathItem = (Exception)obj;
+                        this.DeathItem = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Script:
-                        this.Script = (Exception)obj;
+                        this.Script = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Aggression:
-                        this.Aggression = (Exception)obj;
+                        this.Aggression = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Confidence:
-                        this.Confidence = (Exception)obj;
+                        this.Confidence = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.EnergyLevel:
-                        this.EnergyLevel = (Exception)obj;
+                        this.EnergyLevel = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Responsibility:
-                        this.Responsibility = (Exception)obj;
+                        this.Responsibility = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.BuySellServices:
-                        this.BuySellServices = (Exception)obj;
+                        this.BuySellServices = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Teaches:
-                        this.Teaches = (Exception)obj;
+                        this.Teaches = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.MaximumTrainingLevel:
-                        this.MaximumTrainingLevel = (Exception)obj;
+                        this.MaximumTrainingLevel = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.AIPackages:
                         this.AIPackages = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -2302,85 +2302,85 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Animations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Creature_FieldIndex.CreatureType:
-                        this.CreatureType = (Exception)obj;
+                        this.CreatureType = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.CombatSkill:
-                        this.CombatSkill = (Exception)obj;
+                        this.CombatSkill = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.MagicSkill:
-                        this.MagicSkill = (Exception)obj;
+                        this.MagicSkill = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.StealthSkill:
-                        this.StealthSkill = (Exception)obj;
+                        this.StealthSkill = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.SoulLevel:
-                        this.SoulLevel = (Exception)obj;
+                        this.SoulLevel = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Health:
-                        this.Health = (Exception)obj;
+                        this.Health = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.AttackDamage:
-                        this.AttackDamage = (Exception)obj;
+                        this.AttackDamage = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Strength:
-                        this.Strength = (Exception)obj;
+                        this.Strength = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Intelligence:
-                        this.Intelligence = (Exception)obj;
+                        this.Intelligence = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Willpower:
-                        this.Willpower = (Exception)obj;
+                        this.Willpower = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Agility:
-                        this.Agility = (Exception)obj;
+                        this.Agility = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Speed:
-                        this.Speed = (Exception)obj;
+                        this.Speed = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Endurance:
-                        this.Endurance = (Exception)obj;
+                        this.Endurance = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Personality:
-                        this.Personality = (Exception)obj;
+                        this.Personality = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Luck:
-                        this.Luck = (Exception)obj;
+                        this.Luck = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.AttackReach:
-                        this.AttackReach = (Exception)obj;
+                        this.AttackReach = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.CombatStyle:
-                        this.CombatStyle = (Exception)obj;
+                        this.CombatStyle = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.TurningSpeed:
-                        this.TurningSpeed = (Exception)obj;
+                        this.TurningSpeed = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.BaseScale:
-                        this.BaseScale = (Exception)obj;
+                        this.BaseScale = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.FootWeight:
-                        this.FootWeight = (Exception)obj;
+                        this.FootWeight = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.BloodSpray:
-                        this.BloodSpray = (Exception)obj;
+                        this.BloodSpray = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.BloodDecal:
-                        this.BloodDecal = (Exception)obj;
+                        this.BloodDecal = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.InheritsSoundFrom:
-                        this.InheritsSoundFrom = (Exception)obj;
+                        this.InheritsSoundFrom = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>)obj;
                         break;
                     case Creature_FieldIndex.ACBSDataTypeState:
-                        this.ACBSDataTypeState = (Exception)obj;
+                        this.ACBSDataTypeState = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.AIDTDataTypeState:
-                        this.AIDTDataTypeState = (Exception)obj;
+                        this.AIDTDataTypeState = (Exception?)obj;
                         break;
                     case Creature_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -2451,13 +2451,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -2707,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
                 ret.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
@@ -3029,7 +3029,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureGetter)rhs, include);
 
@@ -4786,7 +4786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
@@ -5255,7 +5255,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var ItemsItem = item.Items;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>>(ItemsItem.HasBeenSet, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.Models = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Models.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.NIFT = item.NIFT_IsSet;
@@ -5266,7 +5267,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.LevelOffset = true;
             mask.CalcMin = true;
             mask.CalcMax = true;
-            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var FactionsItem = item.Factions;
+            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>>(FactionsItem.HasBeenSet, FactionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.DeathItem = (item.DeathItem.FormKey != null);
             mask.Script = (item.Script.FormKey != null);
             mask.Aggression = true;
@@ -5301,7 +5303,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.BloodSpray = (item.BloodSpray != null);
             mask.BloodDecal = (item.BloodDecal != null);
             mask.InheritsSoundFrom = (item.InheritsSoundFrom.FormKey != null);
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound.Mask<bool>?>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var SoundsItem = item.Sounds;
+            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound.Mask<bool>?>>>(SoundsItem.HasBeenSet, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.ACBSDataTypeState = true;
             mask.AIDTDataTypeState = true;
             mask.DATADataTypeState = true;
@@ -6295,9 +6298,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Creature_FieldIndex.Model,
@@ -6316,9 +6319,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Items),
                     transl: (XElement subNode, IItemEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((ItemEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((ItemEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -6451,9 +6454,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Factions),
                     transl: (XElement subNode, IRankPlacementGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((RankPlacementXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((RankPlacementXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -6814,9 +6817,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Sounds),
                     transl: (XElement subNode, ICreatureSoundGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((CreatureSoundXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((CreatureSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -6988,9 +6991,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7006,9 +7009,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Model":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -7025,9 +7028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Items":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Items);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Items);
                         if (ListXmlTranslation<ItemEntry>.Instance.Parse(
                             node: node,
                             enumer: out var ItemsItem,
@@ -7053,9 +7056,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Spells":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
                         if (ListXmlTranslation<IFormLink<SpellAbstract>>.Instance.Parse(
                             node: node,
                             enumer: out var SpellsItem,
@@ -7081,9 +7084,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Models":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Models);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Models);
                         if (ListXmlTranslation<String>.Instance.Parse(
                             node: node,
                             enumer: out var ModelsItem,
@@ -7109,9 +7112,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "NIFT":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.NIFT);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.NIFT);
                         item.NIFT = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7127,9 +7130,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7146,9 +7149,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.ACBSDataTypeState |= Creature.ACBSDataType.Has;
                     break;
                 case "BaseSpellPoints":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.BaseSpellPoints);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BaseSpellPoints);
                         item.BaseSpellPoints = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7164,9 +7167,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fatigue":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Fatigue);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Fatigue);
                         item.Fatigue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7182,9 +7185,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BarterGold":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.BarterGold);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BarterGold);
                         item.BarterGold = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7200,9 +7203,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LevelOffset":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.LevelOffset);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.LevelOffset);
                         item.LevelOffset = Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7218,9 +7221,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CalcMin":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.CalcMin);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CalcMin);
                         item.CalcMin = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7236,9 +7239,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CalcMax":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.CalcMax);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CalcMax);
                         item.CalcMax = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7254,9 +7257,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Factions":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Factions);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Factions);
                         if (ListXmlTranslation<RankPlacement>.Instance.Parse(
                             node: node,
                             enumer: out var FactionsItem,
@@ -7282,9 +7285,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DeathItem":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.DeathItem);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.DeathItem);
                         item.DeathItem.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7300,9 +7303,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Script":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Script);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7318,9 +7321,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Aggression":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Aggression);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Aggression);
                         item.Aggression = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7337,9 +7340,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.AIDTDataTypeState |= Creature.AIDTDataType.Has;
                     break;
                 case "Confidence":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Confidence);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Confidence);
                         item.Confidence = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7355,9 +7358,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EnergyLevel":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.EnergyLevel);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.EnergyLevel);
                         item.EnergyLevel = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7373,9 +7376,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Responsibility":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Responsibility);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Responsibility);
                         item.Responsibility = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7391,9 +7394,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BuySellServices":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.BuySellServices);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BuySellServices);
                         item.BuySellServices = EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7409,9 +7412,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Teaches":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Teaches);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Teaches);
                         item.Teaches = EnumXmlTranslation<Skill>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7427,9 +7430,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MaximumTrainingLevel":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.MaximumTrainingLevel);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.MaximumTrainingLevel);
                         item.MaximumTrainingLevel = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7445,9 +7448,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AIPackages":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.AIPackages);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.AIPackages);
                         if (ListXmlTranslation<IFormLink<AIPackage>>.Instance.Parse(
                             node: node,
                             enumer: out var AIPackagesItem,
@@ -7473,9 +7476,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Animations":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Animations);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Animations);
                         if (ListXmlTranslation<String>.Instance.Parse(
                             node: node,
                             enumer: out var AnimationsItem,
@@ -7501,9 +7504,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CreatureType":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.CreatureType);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CreatureType);
                         item.CreatureType = EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7520,9 +7523,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Creature.DATADataType.Has;
                     break;
                 case "CombatSkill":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
                         item.CombatSkill = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7538,9 +7541,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MagicSkill":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
                         item.MagicSkill = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7556,9 +7559,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "StealthSkill":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
                         item.StealthSkill = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7574,9 +7577,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SoulLevel":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.SoulLevel);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.SoulLevel);
                         item.SoulLevel = EnumXmlTranslation<SoulLevel>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7592,9 +7595,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Health":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Health);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Health);
                         item.Health = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7610,9 +7613,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AttackDamage":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.AttackDamage);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.AttackDamage);
                         item.AttackDamage = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7628,9 +7631,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Strength":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Strength);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Strength);
                         item.Strength = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7646,9 +7649,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Intelligence":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Intelligence);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Intelligence);
                         item.Intelligence = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7664,9 +7667,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Willpower":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Willpower);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Willpower);
                         item.Willpower = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7682,9 +7685,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Agility":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Agility);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Agility);
                         item.Agility = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7700,9 +7703,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Speed":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Speed);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Speed);
                         item.Speed = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7718,9 +7721,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Endurance":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Endurance);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Endurance);
                         item.Endurance = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7736,9 +7739,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Personality":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Personality);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Personality);
                         item.Personality = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7754,9 +7757,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Luck":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Luck);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Luck);
                         item.Luck = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7772,9 +7775,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AttackReach":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.AttackReach);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.AttackReach);
                         item.AttackReach = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7790,9 +7793,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CombatStyle":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.CombatStyle);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CombatStyle);
                         item.CombatStyle.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7808,9 +7811,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "TurningSpeed":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.TurningSpeed);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.TurningSpeed);
                         item.TurningSpeed = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7826,9 +7829,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BaseScale":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.BaseScale);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BaseScale);
                         item.BaseScale = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7844,9 +7847,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FootWeight":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.FootWeight);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.FootWeight);
                         item.FootWeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7862,9 +7865,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BloodSpray":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.BloodSpray);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BloodSpray);
                         item.BloodSpray = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7880,9 +7883,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "BloodDecal":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.BloodDecal);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BloodDecal);
                         item.BloodDecal = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7898,9 +7901,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "InheritsSoundFrom":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.InheritsSoundFrom);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.InheritsSoundFrom);
                         item.InheritsSoundFrom.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7916,9 +7919,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sounds":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.Sounds);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Sounds);
                         if (ListXmlTranslation<CreatureSound>.Instance.Parse(
                             node: node,
                             enumer: out var SoundsItem,
@@ -7944,9 +7947,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ACBSDataTypeState":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.ACBSDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.ACBSDataTypeState);
                         item.ACBSDataTypeState = EnumXmlTranslation<Creature.ACBSDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7962,9 +7965,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "AIDTDataTypeState":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.AIDTDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.AIDTDataTypeState);
                         item.AIDTDataTypeState = EnumXmlTranslation<Creature.AIDTDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -7980,9 +7983,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Creature_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Creature.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -8110,32 +8113,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IItemEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.Items,
                 transl: (MutagenWriter subWriter, IItemEntryGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((ItemEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((ItemEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellAbstractGetter>>.Instance.Write(
@@ -8182,16 +8179,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Factions,
                 transl: (MutagenWriter subWriter, IRankPlacementGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((RankPlacementBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((RankPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -8308,16 +8302,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Sounds,
                 transl: (MutagenWriter subWriter, ICreatureSoundGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((CreatureSoundBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((CreatureSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -8446,7 +8437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureGetter)rhs, include);
 

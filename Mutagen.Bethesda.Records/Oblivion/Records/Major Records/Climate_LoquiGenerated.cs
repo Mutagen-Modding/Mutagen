@@ -765,37 +765,37 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>)obj;
                         break;
                     case Climate_FieldIndex.SunTexture:
-                        this.SunTexture = (Exception)obj;
+                        this.SunTexture = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.SunGlareTexture:
-                        this.SunGlareTexture = (Exception)obj;
+                        this.SunGlareTexture = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case Climate_FieldIndex.SunriseBegin:
-                        this.SunriseBegin = (Exception)obj;
+                        this.SunriseBegin = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.SunriseEnd:
-                        this.SunriseEnd = (Exception)obj;
+                        this.SunriseEnd = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.SunsetBegin:
-                        this.SunsetBegin = (Exception)obj;
+                        this.SunsetBegin = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.SunsetEnd:
-                        this.SunsetEnd = (Exception)obj;
+                        this.SunsetEnd = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.Volatility:
-                        this.Volatility = (Exception)obj;
+                        this.Volatility = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.Phase:
-                        this.Phase = (Exception)obj;
+                        this.Phase = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.PhaseLength:
-                        this.PhaseLength = (Exception)obj;
+                        this.PhaseLength = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = (Exception)obj;
+                        this.TNAMDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -826,13 +826,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -900,7 +900,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
                 ret.SunTexture = this.SunTexture.Combine(rhs.SunTexture);
                 ret.SunGlareTexture = this.SunGlareTexture.Combine(rhs.SunGlareTexture);
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.SunriseBegin = this.SunriseBegin.Combine(rhs.SunriseBegin);
                 ret.SunriseEnd = this.SunriseEnd.Combine(rhs.SunriseEnd);
                 ret.SunsetBegin = this.SunsetBegin.Combine(rhs.SunsetBegin);
@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClimateGetter)rhs, include);
 
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.SunriseBegin = item.SunriseBegin == rhs.SunriseBegin;
             ret.SunriseEnd = item.SunriseEnd == rhs.SunriseEnd;
@@ -2130,7 +2130,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateGetter item,
             Climate.Mask<bool> mask)
         {
-            mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance.Mask<bool>?>>>(item.Weathers.HasBeenSet, item.Weathers.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var WeathersItem = item.Weathers;
+            mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance.Mask<bool>?>>>(WeathersItem.HasBeenSet, WeathersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.SunTexture = (item.SunTexture != null);
             mask.SunGlareTexture = (item.SunGlareTexture != null);
             var itemModel = item.Model;
@@ -2579,9 +2580,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Weathers),
                     transl: (XElement subNode, IWeatherChanceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((WeatherChanceXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((WeatherChanceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -2611,9 +2612,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Climate_FieldIndex.Model,
@@ -2803,9 +2804,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Weathers":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
                         if (ListXmlTranslation<WeatherChance>.Instance.Parse(
                             node: node,
                             enumer: out var WeathersItem,
@@ -2831,9 +2832,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SunTexture":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.SunTexture);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunTexture);
                         item.SunTexture = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2849,9 +2850,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SunGlareTexture":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
                         item.SunGlareTexture = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2867,9 +2868,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Model":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2886,9 +2887,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SunriseBegin":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
                         item.SunriseBegin = DateTimeXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2905,9 +2906,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
                     break;
                 case "SunriseEnd":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
                         item.SunriseEnd = DateTimeXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2923,9 +2924,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SunsetBegin":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
                         item.SunsetBegin = DateTimeXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2941,9 +2942,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SunsetEnd":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
                         item.SunsetEnd = DateTimeXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2959,9 +2960,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Volatility":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
                         item.Volatility = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2977,9 +2978,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Phase":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
                         item.Phase = EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2995,9 +2996,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PhaseLength":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
                         item.PhaseLength = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3013,9 +3014,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "TNAMDataTypeState":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.TNAMDataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.TNAMDataTypeState);
                         item.TNAMDataTypeState = EnumXmlTranslation<Climate.TNAMDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3240,14 +3241,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: Climate_Registration.WLST_HEADER,
                 transl: (MutagenWriter subWriter, IWeatherChanceGetter subItem) =>
                 {
-                    {
-                        var loquiItem = subItem;
-                        ((WeatherChanceBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                            item: loquiItem,
-                            writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
+                    var Item = subItem;
+                    ((WeatherChanceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
                 });
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3259,16 +3258,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.SunGlareTexture,
                 header: recordTypeConverter.ConvertToCustom(Climate_Registration.GNAM_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             if (item.TNAMDataTypeState.HasFlag(Climate.TNAMDataType.Has))
             {
@@ -3497,7 +3493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClimateGetter)rhs, include);
 

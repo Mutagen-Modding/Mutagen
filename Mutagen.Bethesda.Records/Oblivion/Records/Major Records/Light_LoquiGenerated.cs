@@ -803,46 +803,46 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case Light_FieldIndex.Script:
-                        this.Script = (Exception)obj;
+                        this.Script = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Time:
-                        this.Time = (Exception)obj;
+                        this.Time = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Radius:
-                        this.Radius = (Exception)obj;
+                        this.Radius = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Color:
-                        this.Color = (Exception)obj;
+                        this.Color = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Light_FieldIndex.FalloffExponent:
-                        this.FalloffExponent = (Exception)obj;
+                        this.FalloffExponent = (Exception?)obj;
                         break;
                     case Light_FieldIndex.FOV:
-                        this.FOV = (Exception)obj;
+                        this.FOV = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Value:
-                        this.Value = (Exception)obj;
+                        this.Value = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Weight:
-                        this.Weight = (Exception)obj;
+                        this.Weight = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Fade:
-                        this.Fade = (Exception)obj;
+                        this.Fade = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Sound:
-                        this.Sound = (Exception)obj;
+                        this.Sound = (Exception?)obj;
                         break;
                     case Light_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -876,13 +876,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightGetter)rhs, include);
 
@@ -2074,7 +2074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Script = object.Equals(item.Script, rhs.Script);
             ret.Name = string.Equals(item.Name, rhs.Name);
@@ -2723,9 +2723,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.Model) ?? true))
             {
-                var loquiItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var ModelItem = item.Model;
+                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                    item: ModelItem,
                     node: node,
                     name: nameof(item.Model),
                     fieldIndex: (int)Light_FieldIndex.Model,
@@ -2996,9 +2996,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Model":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Model);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Model);
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -3015,9 +3015,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Script":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Script);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3033,9 +3033,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Name":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3051,9 +3051,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3069,9 +3069,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Time":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Time);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Time);
                         item.Time = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3088,9 +3088,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Light.DATADataType.Has;
                     break;
                 case "Radius":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Radius);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Radius);
                         item.Radius = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3106,9 +3106,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Color":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Color);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Color);
                         item.Color = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3124,9 +3124,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3142,9 +3142,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FalloffExponent":
+                    errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
                         item.FalloffExponent = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3160,9 +3160,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FOV":
+                    errorMask?.PushIndex((int)Light_FieldIndex.FOV);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.FOV);
                         item.FOV = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3178,9 +3178,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Value":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Value);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Value);
                         item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3197,9 +3197,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState &= ~Light.DATADataType.Break0;
                     break;
                 case "Weight":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Weight);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Weight);
                         item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3215,9 +3215,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Fade":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Fade);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Fade);
                         item.Fade = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3233,9 +3233,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sound":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Sound);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Sound);
                         item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3251,9 +3251,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Light_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Light_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Light.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3376,16 +3376,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
+            if (item.Model.TryGet(out var ModelItem))
             {
-                var loquiItem = item.Model;
-                if (loquiItem != null)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3553,7 +3550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightGetter)rhs, include);
 

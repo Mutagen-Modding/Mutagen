@@ -1414,103 +1414,103 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Water_FieldIndex.Texture:
-                        this.Texture = (Exception)obj;
+                        this.Texture = (Exception?)obj;
                         break;
                     case Water_FieldIndex.Opacity:
-                        this.Opacity = (Exception)obj;
+                        this.Opacity = (Exception?)obj;
                         break;
                     case Water_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Water_FieldIndex.MaterialID:
-                        this.MaterialID = (Exception)obj;
+                        this.MaterialID = (Exception?)obj;
                         break;
                     case Water_FieldIndex.Sound:
-                        this.Sound = (Exception)obj;
+                        this.Sound = (Exception?)obj;
                         break;
                     case Water_FieldIndex.WindVelocity:
-                        this.WindVelocity = (Exception)obj;
+                        this.WindVelocity = (Exception?)obj;
                         break;
                     case Water_FieldIndex.WindDirection:
-                        this.WindDirection = (Exception)obj;
+                        this.WindDirection = (Exception?)obj;
                         break;
                     case Water_FieldIndex.WaveAmplitude:
-                        this.WaveAmplitude = (Exception)obj;
+                        this.WaveAmplitude = (Exception?)obj;
                         break;
                     case Water_FieldIndex.WaveFrequency:
-                        this.WaveFrequency = (Exception)obj;
+                        this.WaveFrequency = (Exception?)obj;
                         break;
                     case Water_FieldIndex.SunPower:
-                        this.SunPower = (Exception)obj;
+                        this.SunPower = (Exception?)obj;
                         break;
                     case Water_FieldIndex.ReflectivityAmount:
-                        this.ReflectivityAmount = (Exception)obj;
+                        this.ReflectivityAmount = (Exception?)obj;
                         break;
                     case Water_FieldIndex.FresnelAmount:
-                        this.FresnelAmount = (Exception)obj;
+                        this.FresnelAmount = (Exception?)obj;
                         break;
                     case Water_FieldIndex.ScrollXSpeed:
-                        this.ScrollXSpeed = (Exception)obj;
+                        this.ScrollXSpeed = (Exception?)obj;
                         break;
                     case Water_FieldIndex.ScrollYSpeed:
-                        this.ScrollYSpeed = (Exception)obj;
+                        this.ScrollYSpeed = (Exception?)obj;
                         break;
                     case Water_FieldIndex.FogDistanceNearPlane:
-                        this.FogDistanceNearPlane = (Exception)obj;
+                        this.FogDistanceNearPlane = (Exception?)obj;
                         break;
                     case Water_FieldIndex.FogDistanceFarPlane:
-                        this.FogDistanceFarPlane = (Exception)obj;
+                        this.FogDistanceFarPlane = (Exception?)obj;
                         break;
                     case Water_FieldIndex.ShallowColor:
-                        this.ShallowColor = (Exception)obj;
+                        this.ShallowColor = (Exception?)obj;
                         break;
                     case Water_FieldIndex.DeepColor:
-                        this.DeepColor = (Exception)obj;
+                        this.DeepColor = (Exception?)obj;
                         break;
                     case Water_FieldIndex.ReflectionColor:
-                        this.ReflectionColor = (Exception)obj;
+                        this.ReflectionColor = (Exception?)obj;
                         break;
                     case Water_FieldIndex.TextureBlend:
-                        this.TextureBlend = (Exception)obj;
+                        this.TextureBlend = (Exception?)obj;
                         break;
                     case Water_FieldIndex.RainSimulatorForce:
-                        this.RainSimulatorForce = (Exception)obj;
+                        this.RainSimulatorForce = (Exception?)obj;
                         break;
                     case Water_FieldIndex.RainSimulatorVelocity:
-                        this.RainSimulatorVelocity = (Exception)obj;
+                        this.RainSimulatorVelocity = (Exception?)obj;
                         break;
                     case Water_FieldIndex.RainSimulatorFalloff:
-                        this.RainSimulatorFalloff = (Exception)obj;
+                        this.RainSimulatorFalloff = (Exception?)obj;
                         break;
                     case Water_FieldIndex.RainSimulatorDampner:
-                        this.RainSimulatorDampner = (Exception)obj;
+                        this.RainSimulatorDampner = (Exception?)obj;
                         break;
                     case Water_FieldIndex.RainSimulatorStartingSize:
-                        this.RainSimulatorStartingSize = (Exception)obj;
+                        this.RainSimulatorStartingSize = (Exception?)obj;
                         break;
                     case Water_FieldIndex.DisplacementSimulatorForce:
-                        this.DisplacementSimulatorForce = (Exception)obj;
+                        this.DisplacementSimulatorForce = (Exception?)obj;
                         break;
                     case Water_FieldIndex.DisplacementSimulatorVelocity:
-                        this.DisplacementSimulatorVelocity = (Exception)obj;
+                        this.DisplacementSimulatorVelocity = (Exception?)obj;
                         break;
                     case Water_FieldIndex.DisplacementSimulatorFalloff:
-                        this.DisplacementSimulatorFalloff = (Exception)obj;
+                        this.DisplacementSimulatorFalloff = (Exception?)obj;
                         break;
                     case Water_FieldIndex.DisplacementSimulatorDampner:
-                        this.DisplacementSimulatorDampner = (Exception)obj;
+                        this.DisplacementSimulatorDampner = (Exception?)obj;
                         break;
                     case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                        this.DisplacementSimulatorStartingSize = (Exception)obj;
+                        this.DisplacementSimulatorStartingSize = (Exception?)obj;
                         break;
                     case Water_FieldIndex.Damage:
-                        this.Damage = (Exception)obj;
+                        this.Damage = (Exception?)obj;
                         break;
                     case Water_FieldIndex.RelatedWaters:
                         this.RelatedWaters = (MaskItem<Exception?, RelatedWaters.ErrorMask?>?)obj;
                         break;
                     case Water_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1562,13 +1562,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.DisplacementSimulatorDampner = this.DisplacementSimulatorDampner.Combine(rhs.DisplacementSimulatorDampner);
                 ret.DisplacementSimulatorStartingSize = this.DisplacementSimulatorStartingSize.Combine(rhs.DisplacementSimulatorStartingSize);
                 ret.Damage = this.Damage.Combine(rhs.Damage);
-                ret.RelatedWaters = new MaskItem<Exception?, RelatedWaters.ErrorMask?>(ExceptionExt.Combine(this.RelatedWaters?.Overall, rhs.RelatedWaters?.Overall), (this.RelatedWaters?.Specific as IErrorMask<RelatedWaters.ErrorMask>)?.Combine(rhs.RelatedWaters?.Specific));
+                ret.RelatedWaters = this.RelatedWaters.Combine(rhs.RelatedWaters, (l, r) => l.Combine(r));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
@@ -1871,7 +1871,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterGetter)rhs, include);
 
@@ -3203,7 +3203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.RelatedWaters = EqualsMaskHelper.EqualsHelper(
                 item.RelatedWaters,
                 rhs.RelatedWaters,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -4287,9 +4287,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.RelatedWaters != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
-                var loquiItem = item.RelatedWaters;
-                ((RelatedWatersXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                    item: loquiItem,
+                var RelatedWatersItem = item.RelatedWaters;
+                ((RelatedWatersXmlWriteTranslation)((IXmlItem)RelatedWatersItem).XmlWriteTranslator).Write(
+                    item: RelatedWatersItem,
                     node: node,
                     name: nameof(item.RelatedWaters),
                     fieldIndex: (int)Water_FieldIndex.RelatedWaters,
@@ -4413,9 +4413,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Texture":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Texture);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Texture);
                         item.Texture = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4431,9 +4431,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Opacity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
                         item.Opacity = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4449,9 +4449,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<Water.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4467,9 +4467,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MaterialID":
+                    errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
                         item.MaterialID = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4485,9 +4485,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Sound":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Sound);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Sound);
                         item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4503,9 +4503,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "WindVelocity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
                         item.WindVelocity = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4522,9 +4522,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState &= ~Water.DATADataType.Break0;
                     break;
                 case "WindDirection":
+                    errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
                         item.WindDirection = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4540,9 +4540,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "WaveAmplitude":
+                    errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
                         item.WaveAmplitude = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4558,9 +4558,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "WaveFrequency":
+                    errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
                         item.WaveFrequency = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4576,9 +4576,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SunPower":
+                    errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
                         item.SunPower = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4594,9 +4594,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ReflectivityAmount":
+                    errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
                         item.ReflectivityAmount = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4612,9 +4612,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FresnelAmount":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
                         item.FresnelAmount = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4630,9 +4630,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ScrollXSpeed":
+                    errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
                         item.ScrollXSpeed = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4648,9 +4648,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ScrollYSpeed":
+                    errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
                         item.ScrollYSpeed = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4666,9 +4666,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogDistanceNearPlane":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
                         item.FogDistanceNearPlane = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4684,9 +4684,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "FogDistanceFarPlane":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
                         item.FogDistanceFarPlane = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4703,9 +4703,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState &= ~Water.DATADataType.Break1;
                     break;
                 case "ShallowColor":
+                    errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
                         item.ShallowColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4721,9 +4721,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DeepColor":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
                         item.DeepColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4739,9 +4739,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ReflectionColor":
+                    errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
                         item.ReflectionColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4757,9 +4757,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "TextureBlend":
+                    errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
                         item.TextureBlend = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4775,9 +4775,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RainSimulatorForce":
+                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
                         item.RainSimulatorForce = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4794,9 +4794,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState &= ~Water.DATADataType.Break2;
                     break;
                 case "RainSimulatorVelocity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
                         item.RainSimulatorVelocity = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4812,9 +4812,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RainSimulatorFalloff":
+                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
                         item.RainSimulatorFalloff = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4830,9 +4830,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RainSimulatorDampner":
+                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
                         item.RainSimulatorDampner = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4848,9 +4848,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RainSimulatorStartingSize":
+                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
                         item.RainSimulatorStartingSize = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4866,9 +4866,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DisplacementSimulatorForce":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
                         item.DisplacementSimulatorForce = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4884,9 +4884,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DisplacementSimulatorVelocity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
                         item.DisplacementSimulatorVelocity = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4903,9 +4903,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState &= ~Water.DATADataType.Break3;
                     break;
                 case "DisplacementSimulatorFalloff":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
                         item.DisplacementSimulatorFalloff = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4921,9 +4921,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DisplacementSimulatorDampner":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
                         item.DisplacementSimulatorDampner = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4939,9 +4939,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DisplacementSimulatorStartingSize":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
                         item.DisplacementSimulatorStartingSize = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4957,9 +4957,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Damage":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Damage);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Damage);
                         item.Damage = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -4975,9 +4975,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "RelatedWaters":
+                    errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                         item.RelatedWaters = LoquiXmlTranslation<RelatedWaters>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -4994,9 +4994,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Water.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -5319,16 +5319,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            if (item.RelatedWaters.TryGet(out var RelatedWatersItem))
             {
-                var loquiItem = item.RelatedWaters;
-                if (loquiItem != null)
-                {
-                    ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                        item: loquiItem,
-                        writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
+                ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)RelatedWatersItem).BinaryWriteTranslator).Write(
+                    item: RelatedWatersItem,
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
             }
         }
 
@@ -5494,7 +5491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterGetter)rhs, include);
 

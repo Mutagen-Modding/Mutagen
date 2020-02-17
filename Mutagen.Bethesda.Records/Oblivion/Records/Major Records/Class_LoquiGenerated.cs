@@ -742,34 +742,34 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case Class_FieldIndex.Name:
-                        this.Name = (Exception)obj;
+                        this.Name = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Description:
-                        this.Description = (Exception)obj;
+                        this.Description = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Icon:
-                        this.Icon = (Exception)obj;
+                        this.Icon = (Exception?)obj;
                         break;
                     case Class_FieldIndex.PrimaryAttributes:
                         this.PrimaryAttributes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Class_FieldIndex.Specialization:
-                        this.Specialization = (Exception)obj;
+                        this.Specialization = (Exception?)obj;
                         break;
                     case Class_FieldIndex.SecondaryAttributes:
                         this.SecondaryAttributes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Class_FieldIndex.Flags:
-                        this.Flags = (Exception)obj;
+                        this.Flags = (Exception?)obj;
                         break;
                     case Class_FieldIndex.ClassServices:
-                        this.ClassServices = (Exception)obj;
+                        this.ClassServices = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Training:
                         this.Training = (MaskItem<Exception?, ClassTraining.ErrorMask?>?)obj;
                         break;
                     case Class_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception)obj;
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -798,13 +798,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public override void ToString(FileGeneration fg)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SecondaryAttributes?.Overall, rhs.SecondaryAttributes?.Overall), ExceptionExt.Combine(this.SecondaryAttributes?.Specific, rhs.SecondaryAttributes?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
-                ret.Training = new MaskItem<Exception?, ClassTraining.ErrorMask?>(ExceptionExt.Combine(this.Training?.Overall, rhs.Training?.Overall), (this.Training?.Specific as IErrorMask<ClassTraining.ErrorMask>)?.Combine(rhs.Training?.Specific));
+                ret.Training = this.Training.Combine(rhs.Training, (l, r) => l.Combine(r));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 
@@ -2563,9 +2563,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
                     {
-                        var loquiItem = item.Training;
-                        ((ClassTrainingXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var TrainingItem = item.Training;
+                        ((ClassTrainingXmlWriteTranslation)((IXmlItem)TrainingItem).XmlWriteTranslator).Write(
+                            item: TrainingItem,
                             node: node,
                             name: nameof(item.Training),
                             fieldIndex: (int)Class_FieldIndex.Training,
@@ -2695,9 +2695,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Name);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Name);
                         item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2713,9 +2713,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Description":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Description);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Description);
                         item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2731,9 +2731,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Icon);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Icon);
                         item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2749,9 +2749,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "PrimaryAttributes":
+                    errorMask?.PushIndex((int)Class_FieldIndex.PrimaryAttributes);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.PrimaryAttributes);
                         if (ListXmlTranslation<ActorValue>.Instance.Parse(
                             node: node,
                             enumer: out var PrimaryAttributesItem,
@@ -2778,9 +2778,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Class.DATADataType.Has;
                     break;
                 case "Specialization":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
                         item.Specialization = EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2796,9 +2796,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "SecondaryAttributes":
+                    errorMask?.PushIndex((int)Class_FieldIndex.SecondaryAttributes);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.SecondaryAttributes);
                         if (ListXmlTranslation<ActorValue>.Instance.Parse(
                             node: node,
                             enumer: out var SecondaryAttributesItem,
@@ -2824,9 +2824,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Flags);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Flags);
                         item.Flags = EnumXmlTranslation<ClassFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2842,9 +2842,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ClassServices":
+                    errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
                         item.ClassServices = EnumXmlTranslation<ClassService>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -2860,9 +2860,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Training":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Training);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Training);
                         item.Training = LoquiXmlTranslation<ClassTraining>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
@@ -2880,9 +2880,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState &= ~Class.DATADataType.Break0;
                     break;
                 case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Class_FieldIndex.DATADataTypeState);
                     try
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.DATADataTypeState);
                         item.DATADataTypeState = EnumXmlTranslation<Class.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -3058,14 +3058,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         length: 4);
                     if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
                     {
-                        {
-                            var loquiItem = item.Training;
-                            ((ClassTrainingBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: writer,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        var TrainingItem = item.Training;
+                        ((ClassTrainingBinaryWriteTranslation)((IBinaryItem)TrainingItem).BinaryWriteTranslator).Write(
+                            item: TrainingItem,
+                            writer: writer,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 }
             }
@@ -3169,7 +3167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 

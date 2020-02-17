@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case QuestStage_FieldIndex.Stage:
-                        this.Stage = (Exception)obj;
+                        this.Stage = (Exception?)obj;
                         break;
                     case QuestStage_FieldIndex.LogEntries:
                         this.LogEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>)obj;
@@ -471,13 +471,13 @@ namespace Mutagen.Bethesda.Oblivion
             public override string ToString()
             {
                 var fg = new FileGeneration();
-                ToString(fg);
+                ToString(fg, null);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg)
+            public void ToString(FileGeneration fg, string? name = null)
             {
-                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestStageGetter)rhs, include);
 
@@ -1412,7 +1412,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             QuestStage.Mask<bool> mask)
         {
             mask.Stage = true;
-            mask.LogEntries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LogEntry.Mask<bool>?>>>(item.LogEntries.HasBeenSet, item.LogEntries.WithIndex().Select((i) => new MaskItemIndexed<bool, LogEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var LogEntriesItem = item.LogEntries;
+            mask.LogEntries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LogEntry.Mask<bool>?>>>(LogEntriesItem.HasBeenSet, LogEntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LogEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1613,9 +1614,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries),
                     transl: (XElement subNode, ILogEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var loquiItem = subItem;
-                        ((LogEntryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
-                            item: loquiItem,
+                        var Item = subItem;
+                        ((LogEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
                             node: subNode,
                             name: null,
                             errorMask: listSubMask,
@@ -1667,9 +1668,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
+            errorMask?.PushIndex(fieldIndex);
             try
             {
-                errorMask?.PushIndex(fieldIndex);
                 Write(
                     item: (IQuestStageGetter)item,
                     name: name,
@@ -1729,9 +1730,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Stage":
+                    errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
                     try
                     {
-                        errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
                         item.Stage = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
@@ -1747,9 +1748,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LogEntries":
+                    errorMask?.PushIndex((int)QuestStage_FieldIndex.LogEntries);
                     try
                     {
-                        errorMask?.PushIndex((int)QuestStage_FieldIndex.LogEntries);
                         if (ListXmlTranslation<LogEntry>.Instance.Parse(
                             node: node,
                             enumer: out var LogEntriesItem,
@@ -1960,16 +1961,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.LogEntries,
                 transl: (MutagenWriter subWriter, ILogEntryGetter subItem) =>
                 {
+                    if (subItem.TryGet(out var Item))
                     {
-                        var loquiItem = subItem;
-                        if (loquiItem != null)
-                        {
-                            ((LogEntryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                                item: loquiItem,
-                                writer: subWriter,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
-                        }
+                        ((LogEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
                     }
                 });
         }
@@ -2054,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestStageGetter)rhs, include);
 
