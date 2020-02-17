@@ -267,6 +267,58 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public IEnumerable<T> ParseRepeatedItem(
+            MutagenFrame frame,
+            int amount,
+            RecordType triggeringRecord,
+            MasterReferences masterReferences,
+            BinaryMasterParseDelegate transl)
+        {
+            var ret = new List<T>();
+            for (int i = 0; i < amount; i++)
+            {
+                if (!HeaderTranslation.TryGetRecordType(frame.Reader, frame.MetaData.SubConstants.LengthLength, triggeringRecord)) break;
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                }
+                var startingPos = frame.Position;
+                if (transl(frame, out var subIitem, masterReferences))
+                {
+                    ret.Add(subIitem);
+                }
+                if (frame.Position == startingPos)
+                {
+                    throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
+                }
+            }
+            return ret;
+        }
+
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            IList<T> item,
+            int amount,
+            RecordType triggeringRecord,
+            MasterReferences masterReferences,
+            BinaryMasterParseDelegate transl)
+        {
+            var enumer = ParseRepeatedItem(
+                frame,
+                amount: amount,
+                masterReferences: masterReferences,
+                transl: transl,
+                triggeringRecord: triggeringRecord);
+            if (item is ISetList<T> setList)
+            {
+                setList.SetTo(enumer);
+            }
+            else
+            {
+                item.SetTo(enumer);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IEnumerable<T> items,

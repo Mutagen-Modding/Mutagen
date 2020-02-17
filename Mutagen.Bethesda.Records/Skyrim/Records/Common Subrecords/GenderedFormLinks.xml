@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GenderedFormLinks" objType="Subrecord" GUID="5f2c8f19-105f-49bf-b0e8-306df7d6ac1c" ID="54">
+    <Generic name="T" isClass="true">
+      <Where>SkyrimMajorRecord</Where>
+    </Generic>
+    <Fields>
+      <FormLink name="Male">
+        <Generic>T</Generic>
+      </FormLink>
+      <FormLink name="Female">
+        <Generic>T</Generic>
+      </FormLink>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" GUID="54b1dfac-1494-41b6-b6d3-653bc47987eb" ID="49">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <String name="Description" recordType="DESC" />
+      <List name="ActorEffect" counterRecType="SPCT">
+        <FormLink refName="SpellAbstract" recordType="SPLO" />
+      </List>
+      <FormLink name="Skin" refName="Armor" recordType="WNAM" />
+      <RefDirect name="BodyTemplate" refName="BodyTemplate" />
+      <List name="Keywords" counterRecType="KSIZ">
+        <FormLink refName="Keyword" recordType="KWDA" />
+      </List>
+      <RefDirect name="Data" refName="RaceData" />
+      <String name="MaleSkeletalModel" markerType="MNAM" recordType="ANAM" />
+      <String name="FemaleSkeletalModel" markerType="FNAM" recordType="ANAM" />
+      <Nothing name="NAM2Marker" recordType="NAM2" />
+      <List name="MovementTypeNames">
+        <String recordType="MTNM" />
+      </List>
+      <Gendered name="Voices" recordType="VTCK" >
+        <FormLink refName="VoiceType" />
+      </Gendered>
+      <Ref name="DecapitateArmors" recordType="DNAM">
+        <Direct refName="GenderedFormLinks">
+          <GenericSpecification TypeToSpecify="T" Definition="Armor" />
+        </Direct>
+      </Ref>
+      <Ref name="DefaultHairColors" recordType="HCLF">
+        <Direct refName="GenderedFormLinks">
+          <GenericSpecification TypeToSpecify="T" Definition="ColorRecord" />
+        </Direct>
+      </Ref>
+      <UInt16 name="NumberOfTintsInList" recordType="TINL" />
+      <Float name="FacegenMainClamp" recordType="PNAM" />
+      <Float name="FacegenFaceClamp" recordType="UNAM" />
+      <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
+      <RefList name="Attacks" refName="Attack" />
+      <RefDirect name="BodyData" markerType="NAM1" refName="BodyDataPair" />
+      <List name="Hairs" recordType="HNAM">
+        <FormLink refName="Hair" />
+      </List>
+      <List name="Eyes" recordType="ENAM">
+        <FormLink refName="Eye" />
+      </List>
+      <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
+      <CustomLogic name="ExtraMarkers" />
+    </Fields>
+  </Object>
+  <Object name="BodyTemplate" recordType="BODT" objType="Subrecord" GUID="8f6a5735-ee64-4fe6-b024-fffabb2bd8e4" ID="51">
+    <Fields>
+      <Enum name="FirstPersonFlags" enumName="BipedObjectFlag" byteLength="4" />
+      <Enum name="Flags" enumName="BodyTemplate.Flag" byteLength="4" />
+      <Enum name="ArmorType" enumName="ArmorType" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="RaceData" recordType="DATA" objType="Subrecord" GUID="b455e069-05b6-4f16-b587-b7f1530d620b" ID="52">
+    <Fields>
+      <RefDirect name="SkillBoost0" refName="SkillBoost" />
+      <RefDirect name="SkillBoost1" refName="SkillBoost" />
+      <RefDirect name="SkillBoost2" refName="SkillBoost" />
+      <RefDirect name="SkillBoost3" refName="SkillBoost" />
+      <RefDirect name="SkillBoost4" refName="SkillBoost" />
+      <RefDirect name="SkillBoost5" refName="SkillBoost" />
+      <RefDirect name="SkillBoost6" refName="SkillBoost" />
+      <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
+      <Float name="MaleHeight" />
+      <Float name="FemaleHeight" />
+      <Float name="MaleWeight" />
+      <Float name="FemaleWeight" />
+      <Enum name="Flags" enumName="Race.Flag" byteLength="4" />
+      <Float name="StartingHealth" />
+      <Float name="StartingMagicka" />
+      <Float name="StartingStamina" />
+      <Float name="BaseCarryWeight" />
+      <Float name="BaseMass" />
+      <Float name="AccelerationRate" />
+      <Float name="DecelerationRate" />
+      <Enum name="Size" enumName="Race.Size" byteLength="1" />
+      <Enum name="HeadBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+      <Enum name="HairBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+      <Float name="InjuredHealthPercent" />
+      <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+      <Float name="HealthRegen" />
+      <Float name="MagickaRegen" />
+      <Float name="StaminaRegen" />
+      <Float name="UnarmedDamage" />
+      <Float name="UnarmedReach" />
+      <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+      <Float name="AimAngleTolerance" />
+      <Float name="FlightRadius" />
+      <Float name="AngularAccelerationRate" />
+      <Float name="AngularTolerance" />
+      <Enum name="Flags2" enumName="Race.Flag2" byteLength="4" />
+      <CustomLogic name="MountData" />
+    </Fields>
+  </Object>
+  <Object name="SkillBoost" objType="Subrecord" GUID="8397e320-5ee6-4314-b35a-b69c871fa3ec" ID="53">
+    <Fields>
+      <Enum name="Skill" enumName="ActorValueExtended" byteLength="1" />
+      <Int8 name="Boost" />
+    </Fields>
+  </Object>
+  <Object name="BodyDataPair" objType="Subrecord" GUID="046e44ba-578b-4c1a-8073-2ba3fe0772ea" ID="59">
+    <Fields>
+      <RefDirect name="Male" markerType="MNAM" refName="BodyData" />
+      <RefDirect name="Female" markerType="FNAM" refName="BodyData" />
+    </Fields>
+  </Object>
+  <Object name="BodyData" objType="Subrecord" GUID="baeb0edf-c312-4f2b-9a87-b0bc6542773b" ID="60">
+    <Fields>
+      <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" />
+      <RefDirect name="Part" refName="Model" />
+    </Fields>
+  </Object>
+</Loqui>

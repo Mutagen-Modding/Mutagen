@@ -49,18 +49,38 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             FormLinkType linkType = typeGen as FormLinkType;
-            TranslationGeneration.WrapParseCall(
-                new TranslationWrapParseArgs()
+            MaskGenerationUtility.WrapErrorFieldIndexPush(fg,
+                () =>
                 {
-                    FG = fg,
-                    TypeGen = typeGen,
-                    TranslatorLine = $"{this.TypeName(typeGen)}XmlTranslation.Instance",
-                    MaskAccessor = errorMaskAccessor,
-                    ItemAccessor = $"{itemAccessor}.{(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")}",
-                    TypeOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
-                    IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                    ExtraArgs = $"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {frameAccessor}".Single(),
-                });
+                    if (itemAccessor.DirectIsAssignment)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"{itemAccessor}.{(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))
+                        {
+                            args.AddPassArg("node");
+                            args.AddPassArg("errorMask");
+                        }
+                    }
+                    else
+                    {
+                        using (var args = new FunctionWrapper(fg,
+                            itemAccessor.Assign($"new {linkType.DirectTypeName(getter: false)}")))
+                        {
+                            args.Add(subFg =>
+                            {
+                                using (var subArgs = new FunctionWrapper(subFg,
+                                    $"FormKeyXmlTranslation.Instance.Parse"))
+                                {
+                                    subArgs.AddPassArg("node");
+                                    subArgs.AddPassArg("errorMask");
+                                }
+                            });
+                        }
+                    }
+                },
+                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                errorMaskAccessor: errorMaskAccessor,
+                doIt: typeGen.HasIndex);
         }
     }
 }

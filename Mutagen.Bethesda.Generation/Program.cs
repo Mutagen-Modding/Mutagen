@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "ExtractSubrecordWrapperMemory";
+            string testString = "VoicesLocation = (ushort)(stream.Position - offset);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -52,7 +52,9 @@ namespace Mutagen.Bethesda.Generation
             xmlGen.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
             xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
             xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
+            xmlGen.AddTypeAssociation<GenderedType>(new GenderedTypeXmlTranslationGeneration());
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
+            gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
             gen.AddTypeAssociation<FormLinkType>("FormLink");
@@ -66,6 +68,7 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<TransferType>("Transfer");
             gen.AddTypeAssociation<GroupType>("Group");
             gen.AddTypeAssociation<SpecialParseType>("SpecialParse");
+            gen.AddTypeAssociation<GenderedType>("Gendered");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();

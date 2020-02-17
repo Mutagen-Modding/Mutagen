@@ -242,6 +242,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (!typeGen.CanBeNullable(getter: true))
                         {
+                            throw new NotImplementedException();
                             fg.AppendLine($"public bool {typeGen.Name}_IsSet => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)};");
                             fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")};");
                         }

@@ -51,6 +51,20 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Part_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Hair_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Eye_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Armor_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Race_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.SpellAbstract_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.BodyTemplate_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.RaceData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.SkillBoost_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.GenderedFormLinks_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.VoiceType_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ColorRecord_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Attack_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.AttackData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.BodyDataPair_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.BodyData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.BodyPartData_Registration.Instance);
         }
     }
 }

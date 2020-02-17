@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
+                $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {GetWriteAccessor(itemAccessor)}");
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
                 && counterRecObj is string counterRecType)
             {
-                fg.AppendLine("frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip counter");
+                fg.AppendLine("var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content);");
             }
             else if (data.MarkerType.HasValue)
             {
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Generation
                 if (list is ArrayType arr
                     && arr.FixedSize.HasValue)
                 {
-                    args.Add($"frame: frame");
+                    args.AddPassArg($"frame");
                     args.Add($"amount: {arr.FixedSize.Value}");
                 }
                 else
@@ -228,20 +228,26 @@ namespace Mutagen.Bethesda.Generation
                     switch (listBinaryType)
                     {
                         case ListBinaryType.SubTrigger:
-                            args.Add($"frame: frame");
+                            args.AddPassArg($"frame");
                             args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
                             break;
                         case ListBinaryType.Trigger:
                             args.Add($"frame: frame.SpawnWithLength(contentLength)");
                             break;
                         case ListBinaryType.CounterRecord:
+                            args.AddPassArg($"frame");
+                            args.AddPassArg($"amount");
+                            if (subData.HasTrigger)
+                            {
+                                args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                            }
                             break;
                         case ListBinaryType.PrependCount:
                             args.Add("amount: frame.ReadInt32()");
-                            args.Add($"frame: frame");
+                            args.AddPassArg($"frame");
                             break;
                         case ListBinaryType.Frame:
-                            args.Add($"frame: frame");
+                            args.AddPassArg($"frame");
                             break;
                         default:
                             throw new NotImplementedException();
@@ -260,7 +266,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"lengthLength: {len}");
                 }
-                else if (list.SubTypeGeneration.GetFieldData().HasTrigger)
+                else if (listBinaryType != ListBinaryType.CounterRecord 
+                    && list.SubTypeGeneration.GetFieldData().HasTrigger)
                 {
                     if (list.SubTypeGeneration is MutagenLoquiType loqui)
                     {
@@ -668,7 +675,7 @@ namespace Mutagen.Bethesda.Generation
                         throw new NotImplementedException();
                     }
                     using (var args = new ArgsWrapper(fg,
-                        $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByStartIndex"))
+                        $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByStartIndex"))
                     {
                         args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                         args.Add($"package: _package");

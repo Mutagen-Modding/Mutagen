@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
         new FormKey FormKey { get; set; }
     }
 
-    public interface IFormLink<TMajor> : IFormLinkGetter<TMajor>, IFormLink
+    public interface IFormLink<out TMajor> : IFormLinkGetter<TMajor>, IFormLink
        where TMajor : IMajorRecordCommonGetter
     {
     }

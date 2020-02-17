@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{itemAccessor.DirectAccess} = {loquiGen.TargetObjectGeneration.Namespace}.{loquiGen.ObjectTypeName}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
+                        $"{itemAccessor.DirectAccess} = {loquiGen.TargetObjectGeneration.Namespace}.{loquiGen.TypeName(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                     {
                         args.Add($"frame: {frameAccessor}");
                         if (data?.RecordTypeConverter != null

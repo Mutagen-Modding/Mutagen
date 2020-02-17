@@ -25,11 +25,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 data.MarkerType = new RecordType(markerAttr);
             }
-            if (recordAttr != null
-                && markerAttr != null)
-            {
-                throw new ArgumentException($"{obj.Name} {field.Name} cannot have both record type and marker type defined");
-            }
             if (obj.IsTopLevelGroup() && (field.Name?.Equals("Items") ?? false))
             {
                 DictType dict = field as DictType;

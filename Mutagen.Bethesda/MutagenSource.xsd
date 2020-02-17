@@ -97,6 +97,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="markerType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Used to specify the RecordType used for a prepending marker subrecord
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -240,6 +247,7 @@
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Group" type="GroupType" />
         <xs:element name="CustomLogic" type="CustomLogic" />
+        <xs:element name="Gendered" type="NGenderedItem" />
       </xs:choice>
     </xs:group>
 
@@ -254,6 +262,7 @@
         <xs:element name="SpecialParse" type="SpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
         <xs:element name="Transfer" type="TransferType"/>
+        <xs:element name="Gendered" type="GenderedItem" />
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -416,6 +425,24 @@
       <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
     </xs:choice>
     <xs:attribute name="Min" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="GenderedItem" >
+    <xs:complexContent>
+      <xs:extension base="Field" >
+        <xs:sequence>
+          <xs:group ref="FieldOptions" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NGenderedItem" >
+    <xs:complexContent>
+      <xs:extension base="GenderedItem">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
   
   <xs:complexType name="DataTypeFields" >

@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>b2e83820a4b9f72d2fe108f656c033e8c2647614</Sha>
+         <Sha>0a5d14254db9189513a3a6b61a40e6ed878db794</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-11-2020 17:02:13</CommitDate>
-         <Description>ListExt.Empty</Description>
+         <CommitDate>02-16-2020 15:34:07</CommitDate>
+         <Description>ObjectExt.NullSame</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>12b68ff5b2ec7701d2f639f2830619b7f36b8404</Sha>
+         <Sha>92d59f6313422e4ca8c91f292bf09071b8510521</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-16-2020 12:03:52</CommitDate>
-         <Description>Removed CopyInRet systems</Description>
+         <CommitDate>02-17-2020 16:47:28</CommitDate>
+         <Description>TypeGeneration.GetDuplicate</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

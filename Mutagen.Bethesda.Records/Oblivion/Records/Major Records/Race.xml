@@ -11,9 +11,13 @@
       <RefList name="Relations" refName="RaceRelation" />
       <Data>
         <Fields>
-          <Array name="SkillBoosts" fixedSize="7" nullable="false" >
-            <RefDirect refName="SkillBoost" />
-          </Array>
+          <RefDirect name="SkillBoost0" refName="SkillBoost" />
+          <RefDirect name="SkillBoost1" refName="SkillBoost" />
+          <RefDirect name="SkillBoost2" refName="SkillBoost" />
+          <RefDirect name="SkillBoost3" refName="SkillBoost" />
+          <RefDirect name="SkillBoost4" refName="SkillBoost" />
+          <RefDirect name="SkillBoost5" refName="SkillBoost" />
+          <RefDirect name="SkillBoost6" refName="SkillBoost" />
           <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
           <Float name="MaleHeight" />
           <Float name="FemaleHeight" />

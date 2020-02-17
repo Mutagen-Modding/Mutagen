@@ -219,5 +219,10 @@ namespace Mutagen.Bethesda.Generation
         {
             return $"({accessor?.DirectAccess ?? $"this.{this.Name}"}.{FormIDTypeString} != null)";
         }
+
+        public override string GetDuplicate(Accessor accessor)
+        {
+            return $"new {this.DirectTypeName(getter: false, internalInterface: true)}({accessor}.{FormIDTypeString})";
+        }
     }
 }

@@ -1552,11 +1552,17 @@
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\ProtocolDefinition_Oblivion.cs" />
+    <Compile Include="Skyrim\Records\Common Enums\ActorValueExtended.cs" />
+    <Compile Include="Skyrim\Records\Common Enums\ArmorType.cs" />
+    <Compile Include="Skyrim\Records\Common Enums\BipedObject.cs" />
     <Compile Include="Skyrim\Records\Common Enums\Combat.cs" />
     <Compile Include="Skyrim\Records\Common Enums\Skill.cs" />
     <Compile Include="Skyrim\Records\Common Enums\VendorLocation.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\AlternateTexture.cs">
       <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\AttackData.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
@@ -1575,6 +1581,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Group_LoquiGenerated.cs">
       <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BodyData.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BodyTemplate.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Decal.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -1629,6 +1641,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedObject_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Race.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Rank_LoquiGenerated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
@@ -1750,6 +1765,48 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Eye_LoquiGenerated.cs">
       <DependentUpon>Eye.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Armor_LoquiGenerated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Race_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SpellAbstract_LoquiGenerated.cs">
+      <DependentUpon>SpellAbstract.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BodyTemplate_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RaceData_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SkillBoost_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\VoiceType_LoquiGenerated.cs">
+      <DependentUpon>VoiceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ColorRecord_LoquiGenerated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Attack_LoquiGenerated.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\AttackData_LoquiGenerated.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BodyDataPair_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BodyData_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BodyPartData_LoquiGenerated.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\GenderedFormLinks_LoquiGenerated.cs">
+      <DependentUpon>GenderedFormLinks.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

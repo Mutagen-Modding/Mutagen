@@ -101,7 +101,9 @@ namespace Mutagen.Bethesda.Generation
             };
             this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
             this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
+            this._typeGenerations[typeof(NothingType)] = new NothingBinaryTranslationGeneration();
             this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
+            this._typeGenerations[typeof(GenderedType)] = new GenderedTypeBinaryTranslationGeneration();
             APILine[] modAPILines = new APILine[]
             {
                 new APILine(
@@ -859,6 +861,18 @@ namespace Mutagen.Bethesda.Generation
                     isAsync: false);
                 return;
             }
+
+            if (data.MarkerType != null && data.RecordType != null)
+            {
+                // Skip marker
+                fg.AppendLine("frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength;");
+                // read in target record type.
+                fg.AppendLine("var nextRec = frame.MetaData.GetSubRecord(frame);");
+                // Return if it's not there
+                fg.AppendLine($"if (nextRec.RecordType != {obj.RecordTypeHeaderName(data.RecordType.Value)}) throw new ArgumentException(\"Marker was read but not followed by expected subrecord.\");");
+                fg.AppendLine("contentLength = nextRec.RecordLength;");
+            }
+
             generator.GenerateCopyIn(
                 fg: fg,
                 objGen: obj,
@@ -1540,7 +1554,10 @@ namespace Mutagen.Bethesda.Generation
                     expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                     nonIntegrated: true))
                 {
-                    if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
+                    if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen))
+                    {
+                        throw new NotImplementedException();
+                    }
                     using (new RegionWrapper(fg, field.Name)
                     {
                         AppendExtraLine = false,

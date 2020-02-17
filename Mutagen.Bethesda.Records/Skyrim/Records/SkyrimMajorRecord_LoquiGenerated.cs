@@ -1076,7 +1076,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
+        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
@@ -1088,7 +1091,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
+        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
+        public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1097,7 +1103,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     new RecordType[]
                     {
                         AACT_HEADER,
+                        ARMO_HEADER,
+                        BPTD_HEADER,
                         CLAS_HEADER,
+                        CLFM_HEADER,
                         EYES_HEADER,
                         FACT_HEADER,
                         FLST_HEADER,
@@ -1109,7 +1118,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         LCRT_HEADER,
                         OTFT_HEADER,
                         REFR_HEADER,
-                        TXST_HEADER
+                        RACE_HEADER,
+                        SPEL_HEADER,
+                        TXST_HEADER,
+                        VTYP_HEADER
                     })
             );
         });
