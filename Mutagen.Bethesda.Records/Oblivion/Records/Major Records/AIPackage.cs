@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool GetFlagsIsSetCustom() => _PKDTLocation.HasValue;
             public AIPackage.Flag GetFlagsCustom()
             {
+                if (!_Flags_IsSet) return default;
                 var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation!.Value - _package.Meta.SubConstants.HeaderLength));
                 if (subFrame.Content.Length > 4)
                 {
@@ -117,6 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool GetGeneralTypeIsSetCustom() => _PKDTLocation.HasValue;
             public AIPackage.GeneralTypeEnum GetGeneralTypeCustom()
             {
+                if (!_GeneralType_IsSet) return default;
                 var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation!.Value - _package.Meta.SubConstants.HeaderLength));
                 if (subFrame.Content.Length > 4)
                 {
