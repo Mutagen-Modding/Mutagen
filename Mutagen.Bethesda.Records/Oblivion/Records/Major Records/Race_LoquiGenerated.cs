@@ -306,15 +306,8 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IRaceGetter.FaceGenFaceClamp => this.FaceGenFaceClamp;
         #endregion
         #region RaceStats
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RaceStatsGendered? _RaceStats;
-        public RaceStatsGendered? RaceStats
-        {
-            get => _RaceStats;
-            set => _RaceStats = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRaceStatsGenderedGetter? IRaceGetter.RaceStats => this.RaceStats;
+        public GenderedItem<RaceStats>? RaceStats { get; set; }
+        IGenderedItemGetter<IRaceStatsGetter>? IRaceGetter.RaceStats => this.RaceStats;
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -581,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DefaultHairColor = initialValue;
                 this.FaceGenMainClamp = initialValue;
                 this.FaceGenFaceClamp = initialValue;
-                this.RaceStats = new MaskItem<T, RaceStatsGendered.Mask<T>?>(initialValue, new RaceStatsGendered.Mask<T>(initialValue));
+                this.RaceStats = new MaskItem<T, GenderedItem<RaceStats.Mask<T>?>?>(initialValue, default);
                 this.FaceData = new MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, FacePart.Mask<T>?>>());
                 this.BodyData = new MaskItem<T, GenderedBodyData.Mask<T>?>(initialValue, new GenderedBodyData.Mask<T>(initialValue));
                 this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
@@ -656,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DefaultHairColor = DefaultHairColor;
                 this.FaceGenMainClamp = FaceGenMainClamp;
                 this.FaceGenFaceClamp = FaceGenFaceClamp;
-                this.RaceStats = new MaskItem<T, RaceStatsGendered.Mask<T>?>(RaceStats, new RaceStatsGendered.Mask<T>(RaceStats));
+                this.RaceStats = new MaskItem<T, GenderedItem<RaceStats.Mask<T>?>?>(RaceStats, default);
                 this.FaceData = new MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart.Mask<T>?>>>(FaceData, Enumerable.Empty<MaskItemIndexed<T, FacePart.Mask<T>?>>());
                 this.BodyData = new MaskItem<T, GenderedBodyData.Mask<T>?>(BodyData, new GenderedBodyData.Mask<T>(BodyData));
                 this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Hairs, Enumerable.Empty<(int Index, T Value)>());
@@ -697,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
             public T DefaultHairColor;
             public T FaceGenMainClamp;
             public T FaceGenFaceClamp;
-            public MaskItem<T, RaceStatsGendered.Mask<T>?>? RaceStats { get; set; }
+            public MaskItem<T, GenderedItem<RaceStats.Mask<T>?>?>? RaceStats;
             public MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart.Mask<T>?>>>? FaceData;
             public MaskItem<T, GenderedBodyData.Mask<T>?>? BodyData { get; set; }
             public MaskItem<T, IEnumerable<(int Index, T Value)>>? Hairs;
@@ -872,11 +865,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.DefaultHairColor)) return false;
                 if (!eval(this.FaceGenMainClamp)) return false;
                 if (!eval(this.FaceGenFaceClamp)) return false;
-                if (RaceStats != null)
-                {
-                    if (!eval(this.RaceStats.Overall)) return false;
-                    if (this.RaceStats.Specific != null && !this.RaceStats.Specific.AllEqual(eval)) return false;
-                }
+                if (!GenderedItem.AllEqualMask(
+                    this.RaceStats,
+                    eval: eval)) return false;
                 if (this.FaceData != null)
                 {
                     if (!eval(this.FaceData.Overall)) return false;
@@ -987,7 +978,16 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.DefaultHairColor = eval(this.DefaultHairColor);
                 obj.FaceGenMainClamp = eval(this.FaceGenMainClamp);
                 obj.FaceGenFaceClamp = eval(this.FaceGenFaceClamp);
-                obj.RaceStats = this.RaceStats == null ? null : new MaskItem<R, RaceStatsGendered.Mask<R>?>(eval(this.RaceStats.Overall), this.RaceStats.Specific?.Translate(eval));
+                if (this.RaceStats == null)
+                {
+                    obj.RaceStats = null;
+                }
+                else
+                {
+                    obj.RaceStats = new MaskItem<R, GenderedItem<RaceStats.Mask<R>?>?>(
+                        eval(this.RaceStats.Overall),
+                        this.RaceStats.Specific == null ? null : new GenderedItem<RaceStats.Mask<R>?>(this.RaceStats.Specific.Male?.Translate(eval), this.RaceStats.Specific.Female?.Translate(eval)));
+                }
                 if (FaceData != null)
                 {
                     obj.FaceData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacePart.Mask<R>?>>>(eval(this.FaceData.Overall), Enumerable.Empty<MaskItemIndexed<R, FacePart.Mask<R>?>>());
@@ -1195,7 +1195,10 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.RaceStats?.Overall ?? true)
                     {
-                        RaceStats?.ToString(fg);
+                        if (RaceStats != null)
+                        {
+                            fg.AppendLine($"RaceStats => {RaceStats}");
+                        }
                     }
                     if (printMask?.FaceData?.Overall ?? true)
                     {
@@ -1331,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? DefaultHairColor;
             public Exception? FaceGenMainClamp;
             public Exception? FaceGenFaceClamp;
-            public MaskItem<Exception?, RaceStatsGendered.ErrorMask?>? RaceStats;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? RaceStats;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacePart.ErrorMask?>>?>? FaceData;
             public MaskItem<Exception?, GenderedBodyData.ErrorMask?>? BodyData;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Hairs;
@@ -1484,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.FaceGenFaceClamp = ex;
                         break;
                     case Race_FieldIndex.RaceStats:
-                        this.RaceStats = new MaskItem<Exception?, RaceStatsGendered.ErrorMask?>(ex, null);
+                        this.RaceStats = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.FaceData:
                         this.FaceData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacePart.ErrorMask?>>?>(ex, null);
@@ -1585,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.FaceGenFaceClamp = (Exception?)obj;
                         break;
                     case Race_FieldIndex.RaceStats:
-                        this.RaceStats = (MaskItem<Exception?, RaceStatsGendered.ErrorMask?>?)obj;
+                        this.RaceStats = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.FaceData:
                         this.FaceData = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacePart.ErrorMask?>>?>)obj;
@@ -1752,7 +1755,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine($"DefaultHairColor => {DefaultHairColor}");
                 fg.AppendLine($"FaceGenMainClamp => {FaceGenMainClamp}");
                 fg.AppendLine($"FaceGenFaceClamp => {FaceGenFaceClamp}");
-                RaceStats?.ToString(fg);
+                if (RaceStats != null)
+                {
+                    fg.AppendLine($"RaceStats => {RaceStats}");
+                }
                 fg.AppendLine("FaceData =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
@@ -1862,7 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.DefaultHairColor = this.DefaultHairColor.Combine(rhs.DefaultHairColor);
                 ret.FaceGenMainClamp = this.FaceGenMainClamp.Combine(rhs.FaceGenMainClamp);
                 ret.FaceGenFaceClamp = this.FaceGenFaceClamp.Combine(rhs.FaceGenFaceClamp);
-                ret.RaceStats = this.RaceStats.Combine(rhs.RaceStats, (l, r) => l.Combine(r));
+                ret.RaceStats = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.RaceStats?.Overall, rhs.RaceStats?.Overall), GenderedItem.Combine(this.RaceStats?.Specific, rhs.RaceStats?.Specific));
                 ret.FaceData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacePart.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceData?.Overall, rhs.FaceData?.Overall), ExceptionExt.Combine(this.FaceData?.Specific, rhs.FaceData?.Specific));
                 ret.BodyData = this.BodyData.Combine(rhs.BodyData, (l, r) => l.Combine(r));
                 ret.Hairs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), ExceptionExt.Combine(this.Hairs?.Specific, rhs.Hairs?.Specific));
@@ -1914,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool DefaultHairColor;
             public bool FaceGenMainClamp;
             public bool FaceGenFaceClamp;
-            public MaskItem<bool, RaceStatsGendered.TranslationMask?> RaceStats;
+            public MaskItem<bool, GenderedItem<RaceStats.TranslationMask?>?> RaceStats;
             public MaskItem<bool, FacePart.TranslationMask?> FaceData;
             public MaskItem<bool, GenderedBodyData.TranslationMask?> BodyData;
             public bool Hairs;
@@ -1950,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DefaultHairColor = defaultOn;
                 this.FaceGenMainClamp = defaultOn;
                 this.FaceGenFaceClamp = defaultOn;
-                this.RaceStats = new MaskItem<bool, RaceStatsGendered.TranslationMask?>(defaultOn, null);
+                this.RaceStats = new MaskItem<bool, GenderedItem<RaceStats.TranslationMask?>?>(defaultOn, default);
                 this.FaceData = new MaskItem<bool, FacePart.TranslationMask?>(defaultOn, null);
                 this.BodyData = new MaskItem<bool, GenderedBodyData.TranslationMask?>(defaultOn, null);
                 this.Hairs = defaultOn;
@@ -1987,7 +1993,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((DefaultHairColor, null));
                 ret.Add((FaceGenMainClamp, null));
                 ret.Add((FaceGenFaceClamp, null));
-                ret.Add((RaceStats?.Overall ?? true, RaceStats?.Specific?.GetCrystal()));
+                ret.Add((RaceStats?.Overall ?? true, null));
                 ret.Add((FaceData?.Overall ?? true, FaceData?.Specific?.GetCrystal()));
                 ret.Add((BodyData?.Overall ?? true, BodyData?.Specific?.GetCrystal()));
                 ret.Add((Hairs, null));
@@ -2110,7 +2116,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? DefaultHairColor { get; set; }
         new Int32? FaceGenMainClamp { get; set; }
         new Int32? FaceGenFaceClamp { get; set; }
-        new RaceStatsGendered? RaceStats { get; set; }
+        new GenderedItem<RaceStats>? RaceStats { get; set; }
         new ISetList<FacePart> FaceData { get; }
         new GenderedBodyData? BodyData { get; set; }
         new ISetList<IFormLink<Hair>> Hairs { get; }
@@ -2125,6 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRace,
         IRaceGetter
     {
+        new GenderedItem<RaceStats>? RaceStats { get; set; }
     }
 
     public partial interface IRaceGetter :
@@ -2156,7 +2163,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? DefaultHairColor { get; }
         Int32? FaceGenMainClamp { get; }
         Int32? FaceGenFaceClamp { get; }
-        IRaceStatsGenderedGetter? RaceStats { get; }
+        IGenderedItemGetter<IRaceStatsGetter>? RaceStats { get; }
         IReadOnlySetList<IFacePartGetter> FaceData { get; }
         IGenderedBodyDataGetter? BodyData { get; }
         IReadOnlySetList<IFormLinkGetter<IHairGetter>> Hairs { get; }
@@ -2941,7 +2948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.FaceGenFaceClamp:
                     return typeof(Int32);
                 case Race_FieldIndex.RaceStats:
-                    return typeof(RaceStatsGendered);
+                    return typeof(GenderedItem<RaceStats>);
                 case Race_FieldIndex.FaceData:
                     return typeof(ISetList<FacePart>);
                 case Race_FieldIndex.BodyData:
@@ -3277,10 +3284,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x52545441: // ATTR
                 {
-                    item.RaceStats = Mutagen.Bethesda.Oblivion.RaceStatsGendered.CreateFromBinary(
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.RaceStats = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation<RaceStats>.Parse(
                         frame: frame,
-                        recordTypeConverter: null,
-                        masterReferences: masterReferences);
+                        masterReferences: masterReferences,
+                        transl: LoquiBinaryTranslation<RaceStats>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
                 case 0x304D414E: // NAM0
@@ -3436,11 +3444,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DefaultHairColor = item.DefaultHairColor == rhs.DefaultHairColor;
             ret.FaceGenMainClamp = item.FaceGenMainClamp == rhs.FaceGenMainClamp;
             ret.FaceGenFaceClamp = item.FaceGenFaceClamp == rhs.FaceGenFaceClamp;
-            ret.RaceStats = EqualsMaskHelper.EqualsHelper(
-                item.RaceStats,
-                rhs.RaceStats,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.RaceStats = GenderedItem.EqualityMaskHelper(
+                lhs: item.RaceStats,
+                rhs: rhs.RaceStats,
+                maskGetter: (l, r, i) => l.GetEqualsMask(r, i),
+                include: include);
             ret.FaceData = item.FaceData.CollectionEqualsHelper(
                 rhs.FaceData,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3723,8 +3731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != (item.DefaultHairColor != null)) return false;
             if (checkMask.FaceGenMainClamp.HasValue && checkMask.FaceGenMainClamp.Value != (item.FaceGenMainClamp != null)) return false;
             if (checkMask.FaceGenFaceClamp.HasValue && checkMask.FaceGenFaceClamp.Value != (item.FaceGenFaceClamp != null)) return false;
-            if (checkMask.RaceStats?.Overall.HasValue ?? false && checkMask.RaceStats.Overall.Value != (item.RaceStats != null)) return false;
-            if (checkMask.RaceStats?.Specific != null && (item.RaceStats == null || !item.RaceStats.HasBeenSet(checkMask.RaceStats.Specific))) return false;
+            if (checkMask.RaceStats?.Overall ?? false) return false;
             if (checkMask.FaceData?.Overall.HasValue ?? false && checkMask.FaceData!.Overall.Value != item.FaceData.HasBeenSet) return false;
             if (checkMask.BodyData?.Overall.HasValue ?? false && checkMask.BodyData.Overall.Value != (item.BodyData != null)) return false;
             if (checkMask.BodyData?.Specific != null && (item.BodyData == null || !item.BodyData.HasBeenSet(checkMask.BodyData.Specific))) return false;
@@ -3768,7 +3775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.FaceGenMainClamp = (item.FaceGenMainClamp != null);
             mask.FaceGenFaceClamp = (item.FaceGenFaceClamp != null);
             var itemRaceStats = item.RaceStats;
-            mask.RaceStats = new MaskItem<bool, RaceStatsGendered.Mask<bool>?>(itemRaceStats != null, itemRaceStats?.GetHasBeenSetMask());
+            mask.RaceStats = new MaskItem<bool, GenderedItem<RaceStats.Mask<bool>?>?>(itemRaceStats != null, itemRaceStats == null ? null : new GenderedItem<RaceStats.Mask<bool>?>(itemRaceStats.Male.GetHasBeenSetMask(), itemRaceStats.Female.GetHasBeenSetMask()));
             var FaceDataItem = item.FaceData;
             mask.FaceData = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, FacePart.Mask<bool>?>>>(FaceDataItem.HasBeenSet, FaceDataItem.WithIndex().Select((i) => new MaskItemIndexed<bool, FacePart.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemBodyData = item.BodyData;
@@ -3850,7 +3857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.DefaultHairColor != rhs.DefaultHairColor) return false;
             if (lhs.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
             if (lhs.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
-            if (!object.Equals(lhs.RaceStats, rhs.RaceStats)) return false;
+            if (!Equals(lhs.RaceStats, rhs.RaceStats)) return false;
             if (!lhs.FaceData.SequenceEqual(rhs.FaceData)) return false;
             if (!object.Equals(lhs.BodyData, rhs.BodyData)) return false;
             if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
@@ -3927,7 +3934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.RaceStats.TryGet(out var RaceStatsitem))
             {
-                ret = HashHelper.GetHashCode(RaceStatsitem).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(RaceStatsitem.Male, RaceStatsitem.Female).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.FaceData).CombineHashCode(ret);
             if (item.BodyData.TryGet(out var BodyDataitem))
@@ -4362,15 +4369,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
                 try
                 {
-                    if(rhs.RaceStats.TryGet(out var rhsRaceStats))
+                    if (!rhs.RaceStats.TryGet(out var rhsRaceStatsitem))
                     {
-                        item.RaceStats = rhsRaceStats.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Race_FieldIndex.RaceStats));
+                        item.RaceStats = null;
                     }
                     else
                     {
-                        item.RaceStats = default;
+                        item.RaceStats = new GenderedItem<RaceStats>(
+                            male: rhsRaceStatsitem.Male.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal)),
+                            female: rhsRaceStatsitem.Female.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal)));
                     }
                 }
                 catch (Exception ex)
@@ -4926,14 +4937,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.RaceStats != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.RaceStats) ?? true))
             {
-                var RaceStatsItem = item.RaceStats;
-                ((RaceStatsGenderedXmlWriteTranslation)((IXmlItem)RaceStatsItem).XmlWriteTranslator).Write(
-                    item: RaceStatsItem,
-                    node: node,
-                    name: nameof(item.RaceStats),
-                    fieldIndex: (int)Race_FieldIndex.RaceStats,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.RaceStats));
+                {
+                    var Item = item.RaceStats.Male;
+                    ((RaceStatsXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                        item: Item,
+                        node: node,
+                        name: nameof(item.RaceStats),
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+                {
+                    var Item = item.RaceStats.Female;
+                    ((RaceStatsXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                        item: Item,
+                        node: node,
+                        name: nameof(item.RaceStats),
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
             }
             if (item.FaceData.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
@@ -5575,10 +5596,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
                     try
                     {
-                        item.RaceStats = LoquiXmlTranslation<RaceStatsGendered>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.RaceStats));
+                        item.RaceStats = new GenderedItem<RaceStats>(
+                            male: LoquiXmlTranslation<RaceStats>.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask,
+                                translationMask: null),
+                            female: LoquiXmlTranslation<RaceStats>.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask,
+                                translationMask: null));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5987,13 +6013,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.FaceGenFaceClamp,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.UNAM_HEADER));
-            if (item.RaceStats.TryGet(out var RaceStatsItem))
+            if (item.RaceStats.TryGet(out var RaceStatsitem))
             {
-                ((RaceStatsGenderedBinaryWriteTranslation)((IBinaryItem)RaceStatsItem).BinaryWriteTranslator).Write(
-                    item: RaceStatsItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.ATTR_HEADER)))
+                {
+                    {
+                        var Item = RaceStatsitem.Male;
+                        ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: writer,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
+                    }
+                    {
+                        var Item = RaceStatsitem.Female;
+                        ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: writer,
+                            masterReferences: masterReferences,
+                            recordTypeConverter: null);
+                    }
+                }
             }
             using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, ObjectType.Subrecord)) { }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
@@ -6300,10 +6340,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32? FaceGenFaceClamp => _FaceGenFaceClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FaceGenFaceClampLocation.Value, _package.Meta)) : default(Int32?);
         #endregion
         #region RaceStats
-        private RangeInt32? _RaceStatsLocation;
-        private bool _RaceStats_IsSet => _RaceStatsLocation.HasValue;
-        public IRaceStatsGenderedGetter? RaceStats => _RaceStats_IsSet ? RaceStatsGenderedBinaryOverlay.RaceStatsGenderedFactory(new BinaryMemoryReadStream(_data.Slice(_RaceStatsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool RaceStats_IsSet => _RaceStatsLocation.HasValue;
+        private int? _RaceStatsLocation;
+        public IGenderedItemGetter<IRaceStatsGetter>? RaceStats
+        {
+            get
+            {
+                if (!_RaceStatsLocation.HasValue) return default;
+                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _RaceStatsLocation.Value, _package.Meta);
+                return new GenderedItem<IRaceStatsGetter>(
+                    RaceStatsBinaryOverlay.RaceStatsFactory(new BinaryMemoryReadStream(data), _package),
+                    RaceStatsBinaryOverlay.RaceStatsFactory(new BinaryMemoryReadStream(data.Slice(8)), _package));
+            }
+        }
         #endregion
         public IReadOnlySetList<IFacePartGetter> FaceData { get; private set; } = EmptySetList<FacePartBinaryOverlay>.Instance;
         #region BodyData
@@ -6443,7 +6491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x52545441: // ATTR
                 {
-                    _RaceStatsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _RaceStatsLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
                 case 0x304D414E: // NAM0

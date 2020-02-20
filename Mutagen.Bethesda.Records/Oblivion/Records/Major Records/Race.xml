@@ -31,7 +31,9 @@
       <UInt8 name="DefaultHairColor" recordType="CNAM" />
       <Int32 name="FaceGenMainClamp" recordType="PNAM" hasBeenSet="True" />
       <Int32 name="FaceGenFaceClamp" recordType="UNAM" hasBeenSet="True" />
-      <RefDirect name="RaceStats" refName="RaceStatsGendered" />
+      <Gendered name="RaceStats" recordType="ATTR" >
+        <RefDirect refName="RaceStats" />
+      </Gendered>
       <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
       <RefDirect name="BodyData" refName="GenderedBodyData" markerType="NAM1" />
       <List name="Hairs" recordType="HNAM">
@@ -60,12 +62,6 @@
     <Fields>
       <FormLink name="Male" refName="Hair" />
       <FormLink name="Female" refName="Hair" />
-    </Fields>
-  </Object>
-  <Object name="RaceStatsGendered" objType="Subrecord" recordType="ATTR" GUID="f6f95fe6-ec9c-4ddd-9713-820547d6c485" ID="30">
-    <Fields>
-      <RefDirect name="Male" refName="RaceStats" />
-      <RefDirect name="Female" refName="RaceStats" />
     </Fields>
   </Object>
   <Object name="RaceStats" objType="Subrecord" GUID="3cbe1b09-d220-47e3-a57d-3d9a4feada8b" ID="31">

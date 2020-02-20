@@ -13,18 +13,25 @@ namespace Mutagen.Bethesda.Generation
         {
             GenderedType gendered = typeGen as GenderedType;
             var gen = this.XmlMod.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
-            using (var args = new ArgsWrapper(fg,
-                $"{itemAccessor} = new {typeGen.TypeName(getter: false)}"))
-            {
-                args.Add(subFg =>
+            MaskGenerationUtility.WrapErrorFieldIndexPush(
+                fg,
+                () =>
                 {
-                    gen.GenerateCopyIn(subFg, objGen, gendered.SubTypeGeneration, nodeAccessor, Accessor.ConstructorParam($"male"), errorMaskAccessor, translationMaskAccessor);
-                });
-                args.Add(subFg =>
-                {
-                    gen.GenerateCopyIn(subFg, objGen, gendered.SubTypeGeneration, nodeAccessor, Accessor.ConstructorParam($"female"), errorMaskAccessor, translationMaskAccessor);
-                });
-            }
+                    using (var args = new ArgsWrapper(fg,
+                        $"{itemAccessor} = new {typeGen.TypeName(getter: false)}"))
+                    {
+                        args.Add(subFg =>
+                        {
+                            gen.GenerateCopyIn(subFg, objGen, gendered.SubTypeGeneration, nodeAccessor, Accessor.ConstructorParam($"male"), errorMaskAccessor, translationMaskAccessor: null);
+                        });
+                        args.Add(subFg =>
+                        {
+                            gen.GenerateCopyIn(subFg, objGen, gendered.SubTypeGeneration, nodeAccessor, Accessor.ConstructorParam($"female"), errorMaskAccessor, translationMaskAccessor: null);
+                        });
+                    }
+                },
+                errorMaskAccessor,
+                typeGen.HasIndex ? typeGen.IndexEnumInt : default(Accessor));
         }
 
         public override void GenerateForCommonXSD(XElement rootElement, TypeGeneration typeGen)
@@ -41,8 +48,14 @@ namespace Mutagen.Bethesda.Generation
         {
             GenderedType gendered = typeGen as GenderedType;
             var gen = this.XmlMod.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
-            gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Male", errorMaskAccessor, nameAccessor, translationMaskAccessor);
-            gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Female", errorMaskAccessor, nameAccessor, translationMaskAccessor);
+            using (new BraceWrapper(fg))
+            {
+                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Male", errorMaskAccessor, nameAccessor, translationMaskAccessor);
+            }
+            using (new BraceWrapper(fg))
+            {
+                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Female", errorMaskAccessor, nameAccessor, translationMaskAccessor);
+            }
         }
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)

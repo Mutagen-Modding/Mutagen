@@ -50,12 +50,13 @@ namespace Mutagen.Bethesda.Generation
             }
             if (this.HasBeenSet)
             {
-                fg.AppendLine($"if ({rhs} == null)");
+                fg.AppendLine($"if (!{rhs}.TryGet(out var rhs{this.Name}item))");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"{accessor} = null;");
                 }
                 fg.AppendLine("else");
+                rhs = $"rhs{this.Name}item";
             }
             using (new BraceWrapper(fg, doIt: this.HasBeenSet))
             {
@@ -65,25 +66,31 @@ namespace Mutagen.Bethesda.Generation
                     if (this.isLoquiSingle)
                     {
                         LoquiType loqui = this.SubTypeGeneration as LoquiType;
-                        loqui.GenerateTypicalMakeCopy(
-                            fg,
-                            retAccessor: $"male: ",
-                            rhsAccessor: $"{accessor}.Male",
-                            copyMaskAccessor: $"{copyMaskAccessor}.Male",
-                            deepCopy: deepCopy,
-                            doTranslationMask: false);
-                        loqui.GenerateTypicalMakeCopy(
-                            fg,
-                            retAccessor: $"female: ",
-                            rhsAccessor: $"{accessor}.Female",
-                            copyMaskAccessor: $"{copyMaskAccessor}.Female",
-                            deepCopy: deepCopy,
-                            doTranslationMask: false);
+                        args.Add(subFg =>
+                        {
+                            loqui.GenerateTypicalMakeCopy(
+                                subFg,
+                                retAccessor: $"male: ",
+                                rhsAccessor: $"{rhs}.Male",
+                                copyMaskAccessor: $"{copyMaskAccessor}.Male",
+                                deepCopy: deepCopy,
+                                doTranslationMask: false);
+                        });
+                        args.Add(subFg =>
+                        {
+                            loqui.GenerateTypicalMakeCopy(
+                                subFg,
+                                retAccessor: $"female: ",
+                                rhsAccessor: $"{rhs}.Female",
+                                copyMaskAccessor: $"{copyMaskAccessor}.Female",
+                                deepCopy: deepCopy,
+                                doTranslationMask: false);
+                        });
                     }
                     else
                     {
-                        args.Add($"male: {this.SubTypeGeneration.GetDuplicate($"rhs.{this.Name}.Male")}");
-                        args.Add($"female: {this.SubTypeGeneration.GetDuplicate($"rhs.{this.Name}.Female")}");
+                        args.Add($"male: {this.SubTypeGeneration.GetDuplicate($"rhs{this.Name}item.Male")}");
+                        args.Add($"female: {this.SubTypeGeneration.GetDuplicate($"rhs{this.Name}item.Female")}");
                     }
                 }
             }
@@ -105,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
             LoquiType loqui = this.SubTypeGeneration as LoquiType;
             if (loqui != null)
             {
-                typeStr = $"GenderedItem<{loqui.GetMaskString("bool")}>";
+                typeStr = $"GenderedItem<{loqui.GetMaskString("bool")}?>";
             }
             else
             {
@@ -114,14 +121,23 @@ namespace Mutagen.Bethesda.Generation
 
             if (this.HasBeenSet)
             {
-                fg.AppendLine($"if ({accessor} == null || {rhsAccessor} == null)");
-                using (new BraceWrapper(fg))
+                using (var args = new ArgsWrapper(fg,
+                    $"ret.{this.Name} = {nameof(GenderedItem)}.{nameof(GenderedItem.EqualityMaskHelper)}"))
                 {
-                    fg.AppendLine($"ret.{this.Name} = new MaskItem<bool, {typeStr}?>({accessor} == null && {rhsAccessor} == null, default);");
+                    args.Add($"lhs: {accessor.DirectAccess}");
+                    args.Add($"rhs: {rhsAccessor.DirectAccess}");
+                    if (loqui == null)
+                    {
+                        args.Add($"maskGetter: (l, r, i) => EqualityComparer<{this.SubTypeGeneration.TypeName(getter: true)}>.Default.Equals(l, r)");
+                    }
+                    else
+                    {
+                        args.Add("maskGetter: (l, r, i) => l.GetEqualsMask(r, i)");
+                    }
+                    args.AddPassArg("include");
                 }
             }
-            fg.AppendLine("else");
-            using (new BraceWrapper(fg))
+            else
             {
                 if (loqui != null)
                 {
@@ -135,12 +151,11 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"var spec = new {typeStr}"))
+                        $"ret.{this.Name} = new {typeStr}"))
                     {
                         args.Add($"male: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Male", $"{rhsAccessor}.Male")}");
                         args.Add($"female: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Female", $"{rhsAccessor}.Female")}");
                     }
-                    fg.AppendLine($"ret.{this.Name} = new MaskItem<bool, {typeStr}?>(spec.Male && spec.Female, spec);");
                 }
             }
         }
@@ -163,9 +178,11 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new NotImplementedException();
             }
-            if (this.SubTypeGeneration is LoquiType loqui)
+            if (this.SubTypeGeneration is LoquiType loqui
+                && this.HasBeenSet)
             {
-                throw new NotImplementedException();
+                fg.AppendLine($"var item{this.Name} = {accessor};");
+                fg.AppendLine($"{retAccessor} = new MaskItem<bool, GenderedItem<{loqui.GetMaskString("bool")}?>?>(item{this.Name} != null, item{this.Name} == null ? null : new GenderedItem<{loqui.GetMaskString("bool")}?>(item{this.Name}.Male.GetHasBeenSetMask(), item{this.Name}.Female.GetHasBeenSetMask()));");
             }
             else if (this.HasBeenSet)
             {
@@ -181,7 +198,11 @@ namespace Mutagen.Bethesda.Generation
         {
             if (this.HasBeenSet)
             {
-                fg.AppendLine($"{hashResultAccessor} = ({accessor} != null ? HashHelper.GetHashCode({accessor}.Male, {accessor}.Female) : 0).CombineHashCode({hashResultAccessor});");
+                fg.AppendLine($"if ({accessor}.TryGet(out var {this.Name}item))");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"{hashResultAccessor} = HashHelper.GetHashCode({this.Name}item.Male, {this.Name}item.Female).CombineHashCode({hashResultAccessor});");
+                }
             }
             else
             {
@@ -218,19 +239,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateToString(FileGeneration fg, string name, Accessor accessor, string fgAccessor)
         {
-            fg.AppendLine($"if ({accessor} != null)");
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"{fgAccessor}.{nameof(FileGeneration.AppendLine)}(\"{name} =>\");");
-                fg.AppendLine($"{fgAccessor}.{nameof(FileGeneration.AppendLine)}(\"[\");");
-                fg.AppendLine($"using (new DepthWrapper({fgAccessor}))");
-                using (new BraceWrapper(fg))
-                {
-                    this.SubTypeGeneration.GenerateToString(fg, "Male", $"{accessor.DirectAccess}.Male", fgAccessor);
-                    this.SubTypeGeneration.GenerateToString(fg, "Female", $"{accessor.DirectAccess}.Female", fgAccessor);
-                }
-                fg.AppendLine($"{fgAccessor}.{nameof(FileGeneration.AppendLine)}(\"]\");");
-            }
+            fg.AppendLine($"{accessor}{(this.HasBeenSet ? "?" : null)}.ToString({fgAccessor}, \"{name}\");");
         }
 
         public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier)

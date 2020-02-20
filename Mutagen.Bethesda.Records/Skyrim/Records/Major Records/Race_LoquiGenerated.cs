@@ -688,7 +688,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (this.Voices?.Specific != null && (!eval(this.Voices.Specific.Male) || !eval(this.Voices.Specific.Female))) return false;
+                if (!GenderedItem.AllEqual(
+                    this.Voices,
+                    eval: eval)) return false;
                 if (DecapitateArmors != null)
                 {
                     if (!eval(this.DecapitateArmors.Overall)) return false;
@@ -813,8 +815,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else
                 {
-                    var spec = this.Voices.Specific == null ? null : new GenderedItem<R>(eval(this.Voices.Specific.Male), eval(this.Voices.Specific.Female));
-                    obj.Voices = new MaskItem<R, GenderedItem<R>?>(eval(this.Voices.Overall), spec);
+                    obj.Voices = new MaskItem<R, GenderedItem<R>?>(
+                        eval(this.Voices.Overall),
+                        this.Voices.Specific == null ? null : new GenderedItem<R>(eval(this.Voices.Specific.Male), eval(this.Voices.Specific.Female)));
                 }
                 obj.DecapitateArmors = this.DecapitateArmors == null ? null : new MaskItem<R, GenderedFormLinks.Mask<R>?>(eval(this.DecapitateArmors.Overall), this.DecapitateArmors.Specific?.Translate(eval));
                 obj.DefaultHairColors = this.DefaultHairColors == null ? null : new MaskItem<R, GenderedFormLinks.Mask<R>?>(eval(this.DefaultHairColors.Overall), this.DefaultHairColors.Specific?.Translate(eval));
@@ -1146,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? MaleSkeletalModel;
             public Exception? FemaleSkeletalModel;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MovementTypeNames;
-            public Exception? Voices;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Voices;
             public MaskItem<Exception?, GenderedFormLinks.ErrorMask<Armor.ErrorMask>?>? DecapitateArmors;
             public MaskItem<Exception?, GenderedFormLinks.ErrorMask<ColorRecord.ErrorMask>?>? DefaultHairColors;
             public Exception? NumberOfTintsInList;
@@ -1251,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Race_FieldIndex.Voices:
-                        this.Voices = ex;
+                        this.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.DecapitateArmors:
                         this.DecapitateArmors = new MaskItem<Exception?, GenderedFormLinks.ErrorMask<Armor.ErrorMask>?>(ex, null);
@@ -1328,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.MovementTypeNames = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Race_FieldIndex.Voices:
-                        this.Voices = (Exception?)obj;
+                        this.Voices = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.DecapitateArmors:
                         this.DecapitateArmors = (MaskItem<Exception?, GenderedFormLinks.ErrorMask<Armor.ErrorMask>?>?)obj;
@@ -1616,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MaleSkeletalModel = this.MaleSkeletalModel.Combine(rhs.MaleSkeletalModel);
                 ret.FemaleSkeletalModel = this.FemaleSkeletalModel.Combine(rhs.FemaleSkeletalModel);
                 ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
-                ret.Voices = this.Voices.Combine(rhs.Voices);
+                ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
                 ret.DecapitateArmors = this.DecapitateArmors.Combine(rhs.DecapitateArmors, (l, r) => l.Combine(r));
                 ret.DefaultHairColors = this.DefaultHairColors.Combine(rhs.DefaultHairColors, (l, r) => l.Combine(r));
                 ret.NumberOfTintsInList = this.NumberOfTintsInList.Combine(rhs.NumberOfTintsInList);
@@ -1660,7 +1663,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool MaleSkeletalModel;
             public bool FemaleSkeletalModel;
             public bool MovementTypeNames;
-            public bool Voices;
+            public MaskItem<bool, GenderedItem<bool>?> Voices;
             public MaskItem<bool, GenderedFormLinks.TranslationMask<Armor.TranslationMask>?> DecapitateArmors;
             public MaskItem<bool, GenderedFormLinks.TranslationMask<ColorRecord.TranslationMask>?> DefaultHairColors;
             public bool NumberOfTintsInList;
@@ -1688,7 +1691,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MaleSkeletalModel = defaultOn;
                 this.FemaleSkeletalModel = defaultOn;
                 this.MovementTypeNames = defaultOn;
-                this.Voices = defaultOn;
+                this.Voices = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.DecapitateArmors = new MaskItem<bool, GenderedFormLinks.TranslationMask<Armor.TranslationMask>?>(defaultOn, null);
                 this.DefaultHairColors = new MaskItem<bool, GenderedFormLinks.TranslationMask<ColorRecord.TranslationMask>?>(defaultOn, null);
                 this.NumberOfTintsInList = defaultOn;
@@ -1717,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MaleSkeletalModel, null));
                 ret.Add((FemaleSkeletalModel, null));
                 ret.Add((MovementTypeNames, null));
-                ret.Add((Voices, null));
+                ret.Add((Voices?.Overall ?? true, null));
                 ret.Add((DecapitateArmors?.Overall ?? true, DecapitateArmors?.Specific?.GetCrystal()));
                 ret.Add((DefaultHairColors?.Overall ?? true, DefaultHairColors?.Specific?.GetCrystal()));
                 ret.Add((NumberOfTintsInList, null));
@@ -2870,7 +2873,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4B435456: // VTCK
                 {
-                    Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation<IFormLink<VoiceType>>.Instance.Parse(frame: frame);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation<IFormLink<VoiceType>>.Parse(
+                        frame: frame,
+                        masterReferences: masterReferences,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
                 case 0x4D414E44: // DNAM
@@ -3053,17 +3060,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.MovementTypeNames,
                 (l, r) => string.Equals(l, r),
                 include);
-            if (item.Voices == null || rhs.Voices == null)
-            {
-                ret.Voices = new MaskItem<bool, GenderedItem<bool>?>(item.Voices == null && rhs.Voices == null, default);
-            }
-            else
-            {
-                var spec = new GenderedItem<bool>(
-                    male: object.Equals(item.Voices.Male, rhs.Voices.Male),
-                    female: object.Equals(item.Voices.Female, rhs.Voices.Female));
-                ret.Voices = new MaskItem<bool, GenderedItem<bool>?>(spec.Male && spec.Female, spec);
-            }
+            ret.Voices = GenderedItem.EqualityMaskHelper(
+                lhs: item.Voices,
+                rhs: rhs.Voices,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkGetter<IVoiceTypeGetter>>.Default.Equals(l, r),
+                include: include);
             ret.DecapitateArmors = EqualsMaskHelper.EqualsHelper(
                 item.DecapitateArmors,
                 rhs.DecapitateArmors,
@@ -3231,17 +3232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Voices?.Overall ?? true)
             {
-                if (item.Voices != null)
-                {
-                    fg.AppendLine("Voices =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"Male => {item.Voices.Male}");
-                        fg.AppendLine($"Female => {item.Voices.Female}");
-                    }
-                    fg.AppendLine("]");
-                }
+                item.Voices?.ToString(fg, "Voices");
             }
             if (printMask?.DecapitateArmors?.Overall ?? true)
             {
@@ -3529,7 +3520,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ret = HashHelper.GetHashCode(FemaleSkeletalModelitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.MovementTypeNames).CombineHashCode(ret);
-            ret = (item.Voices != null ? HashHelper.GetHashCode(item.Voices.Male, item.Voices.Female) : 0).CombineHashCode(ret);
+            if (item.Voices.TryGet(out var Voicesitem))
+            {
+                ret = HashHelper.GetHashCode(Voicesitem.Male, Voicesitem.Female).CombineHashCode(ret);
+            }
             if (item.DecapitateArmors.TryGet(out var DecapitateArmorsitem))
             {
                 ret = HashHelper.GetHashCode(DecapitateArmorsitem).CombineHashCode(ret);
@@ -3837,15 +3831,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Voices);
                 try
                 {
-                    if (rhs.Voices == null)
+                    if (!rhs.Voices.TryGet(out var rhsVoicesitem))
                     {
                         item.Voices = null;
                     }
                     else
                     {
                         item.Voices = new GenderedItem<IFormLink<VoiceType>>(
-                            male: new FormLink<VoiceType>(rhs.Voices.Male.FormKey),
-                            female: new FormLink<VoiceType>(rhs.Voices.Female.FormKey));
+                            male: new FormLink<VoiceType>(rhsVoicesitem.Male.FormKey),
+                            female: new FormLink<VoiceType>(rhsVoicesitem.Female.FormKey));
                     }
                 }
                 catch (Exception ex)
@@ -4315,16 +4309,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Voices != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Voices),
-                    item: item.Voices.Male.FormKey,
-                    errorMask: errorMask);
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Voices),
-                    item: item.Voices.Female.FormKey,
-                    errorMask: errorMask);
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Voices),
+                        item: item.Voices.Male.FormKey,
+                        errorMask: errorMask);
+                }
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Voices),
+                        item: item.Voices.Female.FormKey,
+                        errorMask: errorMask);
+                }
             }
             if ((item.DecapitateArmors != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
@@ -4791,13 +4789,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Voices":
-                    item.Voices = new GenderedItem<IFormLink<VoiceType>>(
-                        male: new FormLink<VoiceType>(FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask)),
-                        female: new FormLink<VoiceType>(FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask)));
+                    errorMask?.PushIndex((int)Race_FieldIndex.Voices);
+                    try
+                    {
+                        item.Voices = new GenderedItem<IFormLink<VoiceType>>(
+                            male: new FormLink<VoiceType>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)),
+                            female: new FormLink<VoiceType>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "DecapitateArmors":
                     errorMask?.PushIndex((int)Race_FieldIndex.DecapitateArmors);
@@ -5211,16 +5222,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.MovementTypeNames,
                 recordType: Race_Registration.MTNM_HEADER,
                 transl: StringBinaryTranslation.Instance.Write);
-            if (item.Voices != null)
+            if (item.Voices.TryGet(out var Voicesitem))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Voices.Male,
-                    masterReferences: masterReferences);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Voices.Female,
-                    masterReferences: masterReferences);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.VTCK_HEADER)))
+                {
+                    {
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: Voicesitem.Male,
+                            masterReferences: masterReferences);
+                    }
+                    {
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: Voicesitem.Female,
+                            masterReferences: masterReferences);
+                    }
+                }
             }
             if (item.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
             {
@@ -5493,7 +5511,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlySetList<String> MovementTypeNames { get; private set; } = EmptySetList<String>.Instance;
         #region Voices
         private int? _VoicesLocation;
-        public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>>? Voices => _VoicesLocation.HasValue ? new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data))), new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4))))) : default;
+        public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>>? Voices
+        {
+            get
+            {
+                if (!_VoicesLocation.HasValue) return default;
+                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _VoicesLocation.Value, _package.Meta);
+                return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
+                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
+                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+            }
+        }
         #endregion
         #region DecapitateArmors
         public IGenderedFormLinksGetter<IArmorGetter>? DecapitateArmors { get; private set; }
