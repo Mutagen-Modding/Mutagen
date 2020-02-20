@@ -1004,12 +1004,10 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Voices?.Overall ?? true)
+                    if (Voices != null
+                        && (printMask?.Voices?.Overall ?? true))
                     {
-                        if (Voices != null)
-                        {
-                            fg.AppendLine($"Voices => {Voices}");
-                        }
+                        fg.AppendLine($"Voices => {Voices}");
                     }
                     if (printMask?.DecapitateArmors?.Overall ?? true)
                     {

@@ -91,13 +91,25 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"this.{field.Name} = {(field.HasBeenSet ? $"new MaskItem<T, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default)" : $"new GenderedItem<{SubMaskString(field, typeStr)}>({valueStr}, {valueStr})")};");
         }
 
-        public override void GenerateForErrorMaskToString(FileGeneration fg, TypeGeneration field, string accessor, bool topLevel)
+        public override void GenerateMaskToString(FileGeneration fg, TypeGeneration field, string accessor, bool topLevel, bool printMask)
         {
             if (!field.IntegrateField) return;
-            fg.AppendLine($"if ({accessor} != null)");
-            using (new BraceWrapper(fg))
+            bool doIf;
+            using (var args = new IfWrapper(fg, ANDs: true))
             {
-                base.GenerateForErrorMaskToString(fg, field, accessor, topLevel);
+                if (field.HasBeenSet)
+                {
+                    args.Add($"{accessor} != null");
+                }
+                if (printMask)
+                {
+                    args.Add($"({GenerateBoolMaskCheck(field, "printMask")})");
+                }
+                doIf = !args.Empty;
+            }
+            using (new BraceWrapper(fg, doIf))
+            {
+                fg.AppendLine($"fg.{nameof(FileGeneration.AppendLine)}($\"{field.Name} => {{{accessor}}}\");");
             }
         }
 

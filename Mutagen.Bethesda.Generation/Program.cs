@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "(loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs)";
+            string testString = "RaceStats => {RaceStats}";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

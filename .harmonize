@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>99197820c51d1cf0f08ab54754e61f35e71a93ad</Sha>
+         <Sha>65ff2a9177ae68255a0d4812e78ddb591665fefd</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-18-2020 13:48:19</CommitDate>
-         <Description>EqualsMaskHelper passes include enum to subFunc</Description>
+         <CommitDate>02-19-2020 22:46:16</CommitDate>
+         <Description>Mask printmask generation tweaks</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

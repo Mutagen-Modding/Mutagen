@@ -1193,12 +1193,10 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendLine($"FaceGenFaceClamp => {FaceGenFaceClamp}");
                     }
-                    if (printMask?.RaceStats?.Overall ?? true)
+                    if (RaceStats != null
+                        && (printMask?.RaceStats?.Overall ?? true))
                     {
-                        if (RaceStats != null)
-                        {
-                            fg.AppendLine($"RaceStats => {RaceStats}");
-                        }
+                        fg.AppendLine($"RaceStats => {RaceStats}");
                     }
                     if (printMask?.FaceData?.Overall ?? true)
                     {
