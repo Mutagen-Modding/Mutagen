@@ -285,10 +285,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (this.Weathers != null)
                 {
                     if (!eval(this.Weathers.Overall)) return false;
@@ -297,11 +297,31 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Weathers.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (this.Weathers != null)
+                {
+                    if (eval(this.Weathers.Overall)) return true;
+                    if (this.Weathers.Specific != null)
+                    {
+                        foreach (var item in this.Weathers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 

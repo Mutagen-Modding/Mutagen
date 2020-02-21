@@ -1411,10 +1411,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.FillTexture)) return false;
                 if (!eval(this.ParticleShaderTexture)) return false;
                 if (!eval(this.Flags)) return false;
@@ -1475,6 +1475,73 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.ColorKey3ColorKeyTime)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.FillTexture)) return true;
+                if (eval(this.ParticleShaderTexture)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.MembraneShaderSourceBlendMode)) return true;
+                if (eval(this.MembraneShaderBlendOperation)) return true;
+                if (eval(this.MembraneShaderZTestFunction)) return true;
+                if (eval(this.FillTextureEffectColor)) return true;
+                if (eval(this.FillTextureEffectAlphaFadeInTime)) return true;
+                if (eval(this.FillTextureEffectFullAlphaTime)) return true;
+                if (eval(this.FillTextureEffectAlphaFadeOutTime)) return true;
+                if (eval(this.FillTextureEffectPersistentAlphaRatio)) return true;
+                if (eval(this.FillTextureEffectAlphaPulseAmplitude)) return true;
+                if (eval(this.FillTextureEffectAlphaPulseFrequency)) return true;
+                if (eval(this.FillTextureEffectTextureAnimationSpeedU)) return true;
+                if (eval(this.FillTextureEffectTextureAnimationSpeedV)) return true;
+                if (eval(this.EdgeEffectFallOff)) return true;
+                if (eval(this.EdgeEffectColor)) return true;
+                if (eval(this.EdgeEffectAlphaFadeInTime)) return true;
+                if (eval(this.EdgeEffectFullAlphaTime)) return true;
+                if (eval(this.EdgeEffectAlphaFadeOutTime)) return true;
+                if (eval(this.EdgeEffectPersistentAlphaRatio)) return true;
+                if (eval(this.EdgeEffectAlphaPulseAmplitude)) return true;
+                if (eval(this.EdgeEffectAlphaPulseFrequency)) return true;
+                if (eval(this.FillTextureEffectFullAlphaRatio)) return true;
+                if (eval(this.EdgeEffectFullAlphaRatio)) return true;
+                if (eval(this.MembraneShaderDestBlendMode)) return true;
+                if (eval(this.ParticleShaderSourceBlendMode)) return true;
+                if (eval(this.ParticleShaderBlendOperation)) return true;
+                if (eval(this.ParticleShaderZTestFunction)) return true;
+                if (eval(this.ParticleShaderDestBlendMode)) return true;
+                if (eval(this.ParticleShaderParticleBirthRampUpTime)) return true;
+                if (eval(this.ParticleShaderFullParticleBirthTime)) return true;
+                if (eval(this.ParticleShaderParticleBirthRampDownTime)) return true;
+                if (eval(this.ParticleShaderFullParticleBirthRatio)) return true;
+                if (eval(this.ParticleShaderPersistentParticleBirthRatio)) return true;
+                if (eval(this.ParticleShaderParticleLifetime)) return true;
+                if (eval(this.ParticleShaderParticleLifetimePlusMinus)) return true;
+                if (eval(this.ParticleShaderInitialSpeedAlongNormal)) return true;
+                if (eval(this.ParticleShaderAccelerationAlongNormal)) return true;
+                if (eval(this.ParticleShaderInitialVelocity1)) return true;
+                if (eval(this.ParticleShaderInitialVelocity2)) return true;
+                if (eval(this.ParticleShaderInitialVelocity3)) return true;
+                if (eval(this.ParticleShaderAcceleration1)) return true;
+                if (eval(this.ParticleShaderAcceleration2)) return true;
+                if (eval(this.ParticleShaderAcceleration3)) return true;
+                if (eval(this.ParticleShaderScaleKey1)) return true;
+                if (eval(this.ParticleShaderScaleKey2)) return true;
+                if (eval(this.ParticleShaderScaleKey1Time)) return true;
+                if (eval(this.ParticleShaderScaleKey2Time)) return true;
+                if (eval(this.ColorKey1Color)) return true;
+                if (eval(this.ColorKey2Color)) return true;
+                if (eval(this.ColorKey3Color)) return true;
+                if (eval(this.ColorKey1ColorAlpha)) return true;
+                if (eval(this.ColorKey2ColorAlpha)) return true;
+                if (eval(this.ColorKey3ColorAlpha)) return true;
+                if (eval(this.ColorKey1ColorKeyTime)) return true;
+                if (eval(this.ColorKey2ColorKeyTime)) return true;
+                if (eval(this.ColorKey3ColorKeyTime)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 

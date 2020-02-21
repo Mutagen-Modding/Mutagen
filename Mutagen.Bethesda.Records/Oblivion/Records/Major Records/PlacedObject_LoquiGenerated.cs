@@ -679,22 +679,22 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Base)) return false;
                 if (!eval(this.XPCIFluff)) return false;
                 if (!eval(this.FULLFluff)) return false;
                 if (TeleportDestination != null)
                 {
                     if (!eval(this.TeleportDestination.Overall)) return false;
-                    if (this.TeleportDestination.Specific != null && !this.TeleportDestination.Specific.AllEqual(eval)) return false;
+                    if (this.TeleportDestination.Specific != null && !this.TeleportDestination.Specific.All(eval)) return false;
                 }
                 if (Lock != null)
                 {
                     if (!eval(this.Lock.Overall)) return false;
-                    if (this.Lock.Specific != null && !this.Lock.Specific.AllEqual(eval)) return false;
+                    if (this.Lock.Specific != null && !this.Lock.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Owner)) return false;
                 if (!eval(this.FactionRank)) return false;
@@ -702,14 +702,14 @@ namespace Mutagen.Bethesda.Oblivion
                 if (EnableParent != null)
                 {
                     if (!eval(this.EnableParent.Overall)) return false;
-                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.AllEqual(eval)) return false;
+                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Target)) return false;
                 if (!eval(this.SpeedTreeSeed)) return false;
                 if (DistantLODData != null)
                 {
                     if (!eval(this.DistantLODData.Overall)) return false;
-                    if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.AllEqual(eval)) return false;
+                    if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Charge)) return false;
                 if (!eval(this.Health)) return false;
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (MapMarker != null)
                 {
                     if (!eval(this.MapMarker.Overall)) return false;
-                    if (this.MapMarker.Specific != null && !this.MapMarker.Specific.AllEqual(eval)) return false;
+                    if (this.MapMarker.Specific != null && !this.MapMarker.Specific.All(eval)) return false;
                 }
                 if (!eval(this.OpenByDefault)) return false;
                 if (!eval(this.RagdollData)) return false;
@@ -730,6 +730,60 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Rotation)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Base)) return true;
+                if (eval(this.XPCIFluff)) return true;
+                if (eval(this.FULLFluff)) return true;
+                if (TeleportDestination != null)
+                {
+                    if (eval(this.TeleportDestination.Overall)) return true;
+                    if (this.TeleportDestination.Specific != null && this.TeleportDestination.Specific.Any(eval)) return true;
+                }
+                if (Lock != null)
+                {
+                    if (eval(this.Lock.Overall)) return true;
+                    if (this.Lock.Specific != null && this.Lock.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
+                if (eval(this.GlobalVariable)) return true;
+                if (EnableParent != null)
+                {
+                    if (eval(this.EnableParent.Overall)) return true;
+                    if (this.EnableParent.Specific != null && this.EnableParent.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Target)) return true;
+                if (eval(this.SpeedTreeSeed)) return true;
+                if (DistantLODData != null)
+                {
+                    if (eval(this.DistantLODData.Overall)) return true;
+                    if (this.DistantLODData.Specific != null && this.DistantLODData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Charge)) return true;
+                if (eval(this.Health)) return true;
+                if (eval(this.LevelModifier)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.ActionFlags)) return true;
+                if (eval(this.Count)) return true;
+                if (MapMarker != null)
+                {
+                    if (eval(this.MapMarker.Overall)) return true;
+                    if (this.MapMarker.Specific != null && this.MapMarker.Specific.Any(eval)) return true;
+                }
+                if (eval(this.OpenByDefault)) return true;
+                if (eval(this.RagdollData)) return true;
+                if (eval(this.Scale)) return true;
+                if (eval(this.ContainedSoul)) return true;
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -3735,26 +3789,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.TeleportDestination != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
             {
-                var TeleportDestinationItem = item.TeleportDestination;
-                ((TeleportDestinationXmlWriteTranslation)((IXmlItem)TeleportDestinationItem).XmlWriteTranslator).Write(
-                    item: TeleportDestinationItem,
-                    node: node,
-                    name: nameof(item.TeleportDestination),
-                    fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
+                if (item.TeleportDestination.TryGet(out var TeleportDestinationItem))
+                {
+                    ((TeleportDestinationXmlWriteTranslation)((IXmlItem)TeleportDestinationItem).XmlWriteTranslator).Write(
+                        item: TeleportDestinationItem,
+                        node: node,
+                        name: nameof(item.TeleportDestination),
+                        fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
+                }
             }
             if ((item.Lock != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
             {
-                var LockItem = item.Lock;
-                ((LockInformationXmlWriteTranslation)((IXmlItem)LockItem).XmlWriteTranslator).Write(
-                    item: LockItem,
-                    node: node,
-                    name: nameof(item.Lock),
-                    fieldIndex: (int)PlacedObject_FieldIndex.Lock,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
+                if (item.Lock.TryGet(out var LockItem))
+                {
+                    ((LockInformationXmlWriteTranslation)((IXmlItem)LockItem).XmlWriteTranslator).Write(
+                        item: LockItem,
+                        node: node,
+                        name: nameof(item.Lock),
+                        fieldIndex: (int)PlacedObject_FieldIndex.Lock,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
+                }
             }
             if ((item.Owner.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
@@ -3789,14 +3847,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.EnableParent != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
-                var EnableParentItem = item.EnableParent;
-                ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
-                    item: EnableParentItem,
-                    node: node,
-                    name: nameof(item.EnableParent),
-                    fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
+                if (item.EnableParent.TryGet(out var EnableParentItem))
+                {
+                    ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
+                        item: EnableParentItem,
+                        node: node,
+                        name: nameof(item.EnableParent),
+                        fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
+                }
             }
             if ((item.Target.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
@@ -3821,14 +3881,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.DistantLODData != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLODData) ?? true))
             {
-                var DistantLODDataItem = item.DistantLODData;
-                ((DistantLODDataXmlWriteTranslation)((IXmlItem)DistantLODDataItem).XmlWriteTranslator).Write(
-                    item: DistantLODDataItem,
-                    node: node,
-                    name: nameof(item.DistantLODData),
-                    fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DistantLODData));
+                if (item.DistantLODData.TryGet(out var DistantLODDataItem))
+                {
+                    ((DistantLODDataXmlWriteTranslation)((IXmlItem)DistantLODDataItem).XmlWriteTranslator).Write(
+                        item: DistantLODDataItem,
+                        node: node,
+                        name: nameof(item.DistantLODData),
+                        fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DistantLODData));
+                }
             }
             if ((item.Charge != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
@@ -3893,14 +3955,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.MapMarker != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
             {
-                var MapMarkerItem = item.MapMarker;
-                ((MapMarkerXmlWriteTranslation)((IXmlItem)MapMarkerItem).XmlWriteTranslator).Write(
-                    item: MapMarkerItem,
-                    node: node,
-                    name: nameof(item.MapMarker),
-                    fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
+                if (item.MapMarker.TryGet(out var MapMarkerItem))
+                {
+                    ((MapMarkerXmlWriteTranslation)((IXmlItem)MapMarkerItem).XmlWriteTranslator).Write(
+                        item: MapMarkerItem,
+                        node: node,
+                        name: nameof(item.MapMarker),
+                        fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
+                }
             }
             if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
             {

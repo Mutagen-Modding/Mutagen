@@ -320,14 +320,25 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public virtual bool AllEqual(Func<T, bool> eval)
+            #region All
+            public virtual bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Texture)) return false;
                 if (!eval(this.Quadrant)) return false;
                 if (!eval(this.LayerNumber)) return false;
                 if (!eval(this.BTXTDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public virtual bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Texture)) return true;
+                if (eval(this.Quadrant)) return true;
+                if (eval(this.LayerNumber)) return true;
+                if (eval(this.BTXTDataTypeState)) return true;
+                return false;
             }
             #endregion
 

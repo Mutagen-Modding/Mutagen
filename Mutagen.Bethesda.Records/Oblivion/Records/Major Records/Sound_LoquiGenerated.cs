@@ -304,17 +304,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.File)) return false;
                 if (Data != null)
                 {
                     if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.AllEqual(eval)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.File)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 
@@ -1732,14 +1746,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Data != null)
                 && (translationMask?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
             {
-                var DataItem = item.Data;
-                ((SoundDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
-                    node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Sound_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data));
+                if (item.Data.TryGet(out var DataItem))
+                {
+                    ((SoundDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
+                        node: node,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Sound_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data));
+                }
             }
         }
 

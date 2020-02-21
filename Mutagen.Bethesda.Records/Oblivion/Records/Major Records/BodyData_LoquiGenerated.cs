@@ -290,13 +290,13 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
-                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 if (this.BodyParts != null)
                 {
@@ -306,11 +306,35 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.BodyParts.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.BodyParts != null)
+                {
+                    if (eval(this.BodyParts.Overall)) return true;
+                    if (this.BodyParts.Specific != null)
+                    {
+                        foreach (var item in this.BodyParts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 
@@ -1634,14 +1658,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
             {
-                var ModelItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                    item: ModelItem,
-                    node: node,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)BodyData_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)BodyData_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
+                }
             }
             if (item.BodyParts.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.BodyParts) ?? true))
@@ -1655,13 +1681,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.BodyParts),
                     transl: (XElement subNode, IBodyPartGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((BodyPartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((BodyPartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
         }

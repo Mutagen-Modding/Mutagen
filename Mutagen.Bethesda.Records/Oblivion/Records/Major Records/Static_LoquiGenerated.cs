@@ -287,16 +287,29 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
-                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 
@@ -1634,14 +1647,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
             {
-                var ModelItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                    item: ModelItem,
-                    node: node,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Static_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Static_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
+                }
             }
         }
 

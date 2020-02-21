@@ -419,10 +419,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Script)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Icon)) return false;
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Conditions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Stages.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -460,12 +460,62 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Targets.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Script)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Icon)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Priority)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Stages != null)
+                {
+                    if (eval(this.Stages.Overall)) return true;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Targets != null)
+                {
+                    if (eval(this.Targets.Overall)) return true;
+                    if (this.Targets.Specific != null)
+                    {
+                        foreach (var item in this.Targets.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -2651,13 +2701,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if (item.Stages.HasBeenSet
@@ -2672,13 +2724,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Stages),
                     transl: (XElement subNode, IQuestStageGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((QuestStageXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((QuestStageXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if (item.Targets.HasBeenSet
@@ -2693,13 +2747,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Targets),
                     transl: (XElement subNode, IQuestTargetGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((QuestTargetXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((QuestTargetXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.DATADataTypeState) ?? true))

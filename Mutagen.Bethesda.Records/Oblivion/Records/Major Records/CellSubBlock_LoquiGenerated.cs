@@ -308,8 +308,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.BlockNumber)) return false;
                 if (!eval(this.GroupType)) return false;
@@ -322,11 +322,33 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Cells.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.BlockNumber)) return true;
+                if (eval(this.GroupType)) return true;
+                if (eval(this.LastModified)) return true;
+                if (this.Cells != null)
+                {
+                    if (eval(this.Cells.Overall)) return true;
+                    if (this.Cells.Specific != null)
+                    {
+                        foreach (var item in this.Cells.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 
@@ -1845,13 +1867,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)CellSubBlock_FieldIndex.Cells),
                     transl: (XElement subNode, ICellGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((CellXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((CellXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
         }

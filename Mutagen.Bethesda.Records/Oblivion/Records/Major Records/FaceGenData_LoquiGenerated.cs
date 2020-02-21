@@ -308,13 +308,23 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.SymmetricGeometry)) return false;
                 if (!eval(this.AsymmetricGeometry)) return false;
                 if (!eval(this.SymmetricTexture)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.SymmetricGeometry)) return true;
+                if (eval(this.AsymmetricGeometry)) return true;
+                if (eval(this.SymmetricTexture)) return true;
+                return false;
             }
             #endregion
 

@@ -2065,8 +2065,8 @@ namespace Mutagen.Bethesda.Oblivion
         
             #endregion
         
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Level)) return false;
                 if (!eval(this.Fluff)) return false;
@@ -2074,6 +2074,18 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Count)) return false;
                 if (!eval(this.Fluff2)) return false;
                 return true;
+            }
+            #endregion
+        
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Level)) return true;
+                if (eval(this.Fluff)) return true;
+                if (eval(this.Reference)) return true;
+                if (eval(this.Count)) return true;
+                if (eval(this.Fluff2)) return true;
+                return false;
             }
             #endregion
         

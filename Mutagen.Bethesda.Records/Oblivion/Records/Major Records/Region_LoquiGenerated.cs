@@ -422,10 +422,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Icon)) return false;
                 if (!eval(this.MapColor)) return false;
                 if (!eval(this.Worldspace)) return false;
@@ -437,36 +437,84 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Areas.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 if (Objects != null)
                 {
                     if (!eval(this.Objects.Overall)) return false;
-                    if (this.Objects.Specific != null && !this.Objects.Specific.AllEqual(eval)) return false;
+                    if (this.Objects.Specific != null && !this.Objects.Specific.All(eval)) return false;
                 }
                 if (Weather != null)
                 {
                     if (!eval(this.Weather.Overall)) return false;
-                    if (this.Weather.Specific != null && !this.Weather.Specific.AllEqual(eval)) return false;
+                    if (this.Weather.Specific != null && !this.Weather.Specific.All(eval)) return false;
                 }
                 if (MapName != null)
                 {
                     if (!eval(this.MapName.Overall)) return false;
-                    if (this.MapName.Specific != null && !this.MapName.Specific.AllEqual(eval)) return false;
+                    if (this.MapName.Specific != null && !this.MapName.Specific.All(eval)) return false;
                 }
                 if (Grasses != null)
                 {
                     if (!eval(this.Grasses.Overall)) return false;
-                    if (this.Grasses.Specific != null && !this.Grasses.Specific.AllEqual(eval)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.All(eval)) return false;
                 }
                 if (Sounds != null)
                 {
                     if (!eval(this.Sounds.Overall)) return false;
-                    if (this.Sounds.Specific != null && !this.Sounds.Specific.AllEqual(eval)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Icon)) return true;
+                if (eval(this.MapColor)) return true;
+                if (eval(this.Worldspace)) return true;
+                if (this.Areas != null)
+                {
+                    if (eval(this.Areas.Overall)) return true;
+                    if (this.Areas.Specific != null)
+                    {
+                        foreach (var item in this.Areas.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Objects != null)
+                {
+                    if (eval(this.Objects.Overall)) return true;
+                    if (this.Objects.Specific != null && this.Objects.Specific.Any(eval)) return true;
+                }
+                if (Weather != null)
+                {
+                    if (eval(this.Weather.Overall)) return true;
+                    if (this.Weather.Specific != null && this.Weather.Specific.Any(eval)) return true;
+                }
+                if (MapName != null)
+                {
+                    if (eval(this.MapName.Overall)) return true;
+                    if (this.MapName.Specific != null && this.MapName.Specific.Any(eval)) return true;
+                }
+                if (Grasses != null)
+                {
+                    if (eval(this.Grasses.Overall)) return true;
+                    if (this.Grasses.Specific != null && this.Grasses.Specific.Any(eval)) return true;
+                }
+                if (Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 
@@ -2548,74 +2596,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Areas),
                     transl: (XElement subNode, IRegionAreaGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((RegionAreaXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((RegionAreaXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((item.Objects != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
-                var ObjectsItem = item.Objects;
-                ((RegionDataObjectsXmlWriteTranslation)((IXmlItem)ObjectsItem).XmlWriteTranslator).Write(
-                    item: ObjectsItem,
-                    node: node,
-                    name: nameof(item.Objects),
-                    fieldIndex: (int)Region_FieldIndex.Objects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
+                if (item.Objects.TryGet(out var ObjectsItem))
+                {
+                    ((RegionDataObjectsXmlWriteTranslation)((IXmlItem)ObjectsItem).XmlWriteTranslator).Write(
+                        item: ObjectsItem,
+                        node: node,
+                        name: nameof(item.Objects),
+                        fieldIndex: (int)Region_FieldIndex.Objects,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
+                }
             }
             if ((item.Weather != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
             {
-                var WeatherItem = item.Weather;
-                ((RegionDataWeatherXmlWriteTranslation)((IXmlItem)WeatherItem).XmlWriteTranslator).Write(
-                    item: WeatherItem,
-                    node: node,
-                    name: nameof(item.Weather),
-                    fieldIndex: (int)Region_FieldIndex.Weather,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
+                if (item.Weather.TryGet(out var WeatherItem))
+                {
+                    ((RegionDataWeatherXmlWriteTranslation)((IXmlItem)WeatherItem).XmlWriteTranslator).Write(
+                        item: WeatherItem,
+                        node: node,
+                        name: nameof(item.Weather),
+                        fieldIndex: (int)Region_FieldIndex.Weather,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
+                }
             }
             if ((item.MapName != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
             {
-                var MapNameItem = item.MapName;
-                ((RegionDataMapNameXmlWriteTranslation)((IXmlItem)MapNameItem).XmlWriteTranslator).Write(
-                    item: MapNameItem,
-                    node: node,
-                    name: nameof(item.MapName),
-                    fieldIndex: (int)Region_FieldIndex.MapName,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName));
+                if (item.MapName.TryGet(out var MapNameItem))
+                {
+                    ((RegionDataMapNameXmlWriteTranslation)((IXmlItem)MapNameItem).XmlWriteTranslator).Write(
+                        item: MapNameItem,
+                        node: node,
+                        name: nameof(item.MapName),
+                        fieldIndex: (int)Region_FieldIndex.MapName,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName));
+                }
             }
             if ((item.Grasses != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
             {
-                var GrassesItem = item.Grasses;
-                ((RegionDataGrassesXmlWriteTranslation)((IXmlItem)GrassesItem).XmlWriteTranslator).Write(
-                    item: GrassesItem,
-                    node: node,
-                    name: nameof(item.Grasses),
-                    fieldIndex: (int)Region_FieldIndex.Grasses,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
+                if (item.Grasses.TryGet(out var GrassesItem))
+                {
+                    ((RegionDataGrassesXmlWriteTranslation)((IXmlItem)GrassesItem).XmlWriteTranslator).Write(
+                        item: GrassesItem,
+                        node: node,
+                        name: nameof(item.Grasses),
+                        fieldIndex: (int)Region_FieldIndex.Grasses,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
+                }
             }
             if ((item.Sounds != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
             {
-                var SoundsItem = item.Sounds;
-                ((RegionDataSoundsXmlWriteTranslation)((IXmlItem)SoundsItem).XmlWriteTranslator).Write(
-                    item: SoundsItem,
-                    node: node,
-                    name: nameof(item.Sounds),
-                    fieldIndex: (int)Region_FieldIndex.Sounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
+                if (item.Sounds.TryGet(out var SoundsItem))
+                {
+                    ((RegionDataSoundsXmlWriteTranslation)((IXmlItem)SoundsItem).XmlWriteTranslator).Write(
+                        item: SoundsItem,
+                        node: node,
+                        name: nameof(item.Sounds),
+                        fieldIndex: (int)Region_FieldIndex.Sounds,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
+                }
             }
         }
 

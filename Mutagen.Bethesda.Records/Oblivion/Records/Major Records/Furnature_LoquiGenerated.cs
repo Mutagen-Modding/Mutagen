@@ -336,19 +336,35 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
-                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Script)) return false;
                 if (!eval(this.MarkerFlags)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Script)) return true;
+                if (eval(this.MarkerFlags)) return true;
+                return false;
             }
             #endregion
 
@@ -1890,14 +1906,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Furnature_FieldIndex.Model) ?? true))
             {
-                var ModelItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                    item: ModelItem,
-                    node: node,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Furnature_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Furnature_FieldIndex.Model));
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Furnature_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Furnature_FieldIndex.Model));
+                }
             }
             if ((item.Script.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Furnature_FieldIndex.Script) ?? true))

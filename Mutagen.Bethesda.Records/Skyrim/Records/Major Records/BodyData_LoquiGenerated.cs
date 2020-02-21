@@ -281,16 +281,29 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Index)) return false;
                 if (Part != null)
                 {
                     if (!eval(this.Part.Overall)) return false;
-                    if (this.Part.Specific != null && !this.Part.Specific.AllEqual(eval)) return false;
+                    if (this.Part.Specific != null && !this.Part.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Index)) return true;
+                if (Part != null)
+                {
+                    if (eval(this.Part.Overall)) return true;
+                    if (this.Part.Specific != null && this.Part.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 
@@ -1495,14 +1508,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Part != null)
                 && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.Part) ?? true))
             {
-                var PartItem = item.Part;
-                ((ModelXmlWriteTranslation)((IXmlItem)PartItem).XmlWriteTranslator).Write(
-                    item: PartItem,
-                    node: node,
-                    name: nameof(item.Part),
-                    fieldIndex: (int)BodyData_FieldIndex.Part,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Part));
+                if (item.Part.TryGet(out var PartItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)PartItem).XmlWriteTranslator).Write(
+                        item: PartItem,
+                        node: node,
+                        name: nameof(item.Part),
+                        fieldIndex: (int)BodyData_FieldIndex.Part,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Part));
+                }
             }
         }
 

@@ -342,10 +342,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (this.PointToPointConnections != null)
                 {
                     if (!eval(this.PointToPointConnections.Overall)) return false;
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.PointToPointConnections.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.InterCellConnections.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -379,11 +379,56 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.PointToReferenceMappings.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (this.PointToPointConnections != null)
+                {
+                    if (eval(this.PointToPointConnections.Overall)) return true;
+                    if (this.PointToPointConnections.Specific != null)
+                    {
+                        foreach (var item in this.PointToPointConnections.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Unknown)) return true;
+                if (this.InterCellConnections != null)
+                {
+                    if (eval(this.InterCellConnections.Overall)) return true;
+                    if (this.InterCellConnections.Specific != null)
+                    {
+                        foreach (var item in this.InterCellConnections.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.PointToReferenceMappings != null)
+                {
+                    if (eval(this.PointToReferenceMappings.Overall)) return true;
+                    if (this.PointToReferenceMappings.Specific != null)
+                    {
+                        foreach (var item in this.PointToReferenceMappings.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 
@@ -2276,13 +2321,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings),
                     transl: (XElement subNode, IPointToReferenceMappingGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((PointToReferenceMappingXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((PointToReferenceMappingXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
         }

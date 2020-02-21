@@ -207,8 +207,8 @@ namespace Mutagen.Bethesda.Tests
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.TestGroupMasks)) return false;
                 if (!eval(this.TestFlattenedMod)) return false;
@@ -218,12 +218,12 @@ namespace Mutagen.Bethesda.Tests
                 if (DataFolderLocations != null)
                 {
                     if (!eval(this.DataFolderLocations.Overall)) return false;
-                    if (this.DataFolderLocations.Specific != null && !this.DataFolderLocations.Specific.AllEqual(eval)) return false;
+                    if (this.DataFolderLocations.Specific != null && !this.DataFolderLocations.Specific.All(eval)) return false;
                 }
                 if (PassthroughSettings != null)
                 {
                     if (!eval(this.PassthroughSettings.Overall)) return false;
-                    if (this.PassthroughSettings.Specific != null && !this.PassthroughSettings.Specific.AllEqual(eval)) return false;
+                    if (this.PassthroughSettings.Specific != null && !this.PassthroughSettings.Specific.All(eval)) return false;
                 }
                 if (this.TargetGroups != null)
                 {
@@ -233,11 +233,45 @@ namespace Mutagen.Bethesda.Tests
                         foreach (var item in this.TargetGroups.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.TestGroupMasks)) return true;
+                if (eval(this.TestFlattenedMod)) return true;
+                if (eval(this.TestBenchmarks)) return true;
+                if (eval(this.TestLocators)) return true;
+                if (eval(this.TestRecordEnumerables)) return true;
+                if (DataFolderLocations != null)
+                {
+                    if (eval(this.DataFolderLocations.Overall)) return true;
+                    if (this.DataFolderLocations.Specific != null && this.DataFolderLocations.Specific.Any(eval)) return true;
+                }
+                if (PassthroughSettings != null)
+                {
+                    if (eval(this.PassthroughSettings.Overall)) return true;
+                    if (this.PassthroughSettings.Specific != null && this.PassthroughSettings.Specific.Any(eval)) return true;
+                }
+                if (this.TargetGroups != null)
+                {
+                    if (eval(this.TargetGroups.Overall)) return true;
+                    if (this.TargetGroups.Specific != null)
+                    {
+                        foreach (var item in this.TargetGroups.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 

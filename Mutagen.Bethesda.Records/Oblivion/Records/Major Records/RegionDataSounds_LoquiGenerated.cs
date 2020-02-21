@@ -302,10 +302,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.MusicType)) return false;
                 if (this.Sounds != null)
                 {
@@ -315,11 +315,32 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Sounds.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.MusicType)) return true;
+                if (this.Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null)
+                    {
+                        foreach (var item in this.Sounds.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 

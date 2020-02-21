@@ -281,13 +281,23 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Material)) return false;
                 if (!eval(this.Friction)) return false;
                 if (!eval(this.Restitution)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Material)) return true;
+                if (eval(this.Friction)) return true;
+                if (eval(this.Restitution)) return true;
+                return false;
             }
             #endregion
 

@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Tests
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.ReuseCaches)) return false;
                 if (!eval(this.ReorderRecords)) return false;
@@ -206,6 +206,21 @@ namespace Mutagen.Bethesda.Tests
                 if (!eval(this.TestFolder)) return false;
                 if (!eval(this.TestCopyIn)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.ReuseCaches)) return true;
+                if (eval(this.ReorderRecords)) return true;
+                if (eval(this.DeleteCachesAfter)) return true;
+                if (eval(this.TestNormal)) return true;
+                if (eval(this.TestBinaryOverlay)) return true;
+                if (eval(this.TestImport)) return true;
+                if (eval(this.TestFolder)) return true;
+                if (eval(this.TestCopyIn)) return true;
+                return false;
             }
             #endregion
 

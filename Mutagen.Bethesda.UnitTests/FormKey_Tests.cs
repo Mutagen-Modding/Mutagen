@@ -55,12 +55,6 @@ namespace Mutagen.Bethesda.UnitTests
                 FormKey.TryFactory("00C51AOblivionesm", out FormKey id));
         }
 
-        [Fact]
-        public void Null_Hash()
-        {
-            Assert.Equal(0, FormKey.Null.GetHashCode());
-        }
-
         #region BinaryTranslation
         public ModKey TargetModKey() => new ModKey("Master2", true);
 

@@ -848,10 +848,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.Icon)) return false;
@@ -884,6 +884,45 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Unknown2)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Icon)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.Teaches)) return true;
+                if (eval(this.MaxTrainingLevel)) return true;
+                if (eval(this.OneHandedWeight)) return true;
+                if (eval(this.TwoHandedWeight)) return true;
+                if (eval(this.MarksmanWeight)) return true;
+                if (eval(this.BlockWeight)) return true;
+                if (eval(this.SmithingWeight)) return true;
+                if (eval(this.HeavyArmorWeight)) return true;
+                if (eval(this.LightArmorWeight)) return true;
+                if (eval(this.PickpocketWeight)) return true;
+                if (eval(this.LockpickingWeight)) return true;
+                if (eval(this.SneakWeight)) return true;
+                if (eval(this.AlchemyWeight)) return true;
+                if (eval(this.SpeechcraftWeight)) return true;
+                if (eval(this.AlterationWeight)) return true;
+                if (eval(this.ConjurationWeight)) return true;
+                if (eval(this.DestructionWeight)) return true;
+                if (eval(this.IllusionWeight)) return true;
+                if (eval(this.RestorationWeight)) return true;
+                if (eval(this.EnchantingWeight)) return true;
+                if (eval(this.BleedoutDefault)) return true;
+                if (eval(this.VoicePoints)) return true;
+                if (eval(this.HealthWeight)) return true;
+                if (eval(this.MagickaWeight)) return true;
+                if (eval(this.StaminaWeight)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 

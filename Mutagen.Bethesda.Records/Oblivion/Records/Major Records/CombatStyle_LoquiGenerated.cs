@@ -1014,10 +1014,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.DodgePercentChance)) return false;
                 if (!eval(this.LeftRightPercentChance)) return false;
                 if (!eval(this.DodgeLeftRightTimerMin)) return false;
@@ -1057,10 +1057,60 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Advanced != null)
                 {
                     if (!eval(this.Advanced.Overall)) return false;
-                    if (this.Advanced.Specific != null && !this.Advanced.Specific.AllEqual(eval)) return false;
+                    if (this.Advanced.Specific != null && !this.Advanced.Specific.All(eval)) return false;
                 }
                 if (!eval(this.CSTDDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.DodgePercentChance)) return true;
+                if (eval(this.LeftRightPercentChance)) return true;
+                if (eval(this.DodgeLeftRightTimerMin)) return true;
+                if (eval(this.DodgeLeftRightTimerMax)) return true;
+                if (eval(this.DodgeForwardTimerMin)) return true;
+                if (eval(this.DodgeForwardTimerMax)) return true;
+                if (eval(this.DodgeBackTimerMin)) return true;
+                if (eval(this.DodgeBackTimerMax)) return true;
+                if (eval(this.IdleTimerMin)) return true;
+                if (eval(this.IdleTimerMax)) return true;
+                if (eval(this.BlockPercentChance)) return true;
+                if (eval(this.AttackPercentChance)) return true;
+                if (eval(this.RecoilStaggerBonusToAttack)) return true;
+                if (eval(this.UnconsciousBonusToAttack)) return true;
+                if (eval(this.HandToHandBonusToAttack)) return true;
+                if (eval(this.PowerAttackPercentChance)) return true;
+                if (eval(this.RecoilStaggerBonusToPowerAttack)) return true;
+                if (eval(this.UnconsciousBonusToPowerAttack)) return true;
+                if (eval(this.PowerAttackNormal)) return true;
+                if (eval(this.PowerAttackForward)) return true;
+                if (eval(this.PowerAttackBack)) return true;
+                if (eval(this.PowerAttackLeft)) return true;
+                if (eval(this.PowerAttackRight)) return true;
+                if (eval(this.HoldTimerMin)) return true;
+                if (eval(this.HoldTimerMax)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.AcrobaticDodgePercentChance)) return true;
+                if (eval(this.RangeMultOptimal)) return true;
+                if (eval(this.RangeMultMax)) return true;
+                if (eval(this.SwitchDistanceMelee)) return true;
+                if (eval(this.SwitchDistanceRanged)) return true;
+                if (eval(this.BuffStandoffDistance)) return true;
+                if (eval(this.RangedStandoffDistance)) return true;
+                if (eval(this.GroupStandoffDistance)) return true;
+                if (eval(this.RushingAttackPercentChance)) return true;
+                if (eval(this.RushingAttackDistanceMult)) return true;
+                if (Advanced != null)
+                {
+                    if (eval(this.Advanced.Overall)) return true;
+                    if (this.Advanced.Specific != null && this.Advanced.Specific.Any(eval)) return true;
+                }
+                if (eval(this.CSTDDataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -4581,14 +4631,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Advanced != null)
                 && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
-                var AdvancedItem = item.Advanced;
-                ((CombatStyleAdvancedXmlWriteTranslation)((IXmlItem)AdvancedItem).XmlWriteTranslator).Write(
-                    item: AdvancedItem,
-                    node: node,
-                    name: nameof(item.Advanced),
-                    fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
+                if (item.Advanced.TryGet(out var AdvancedItem))
+                {
+                    ((CombatStyleAdvancedXmlWriteTranslation)((IXmlItem)AdvancedItem).XmlWriteTranslator).Write(
+                        item: AdvancedItem,
+                        node: node,
+                        name: nameof(item.Advanced),
+                        fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
+                }
             }
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSTDDataTypeState) ?? true))
             {

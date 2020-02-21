@@ -1181,15 +1181,15 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
-                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 if (this.Items != null)
                 {
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Items.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Factions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Sounds.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -1315,6 +1315,143 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.AIDTDataTypeState)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.Items != null)
+                {
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Spells != null)
+                {
+                    if (eval(this.Spells.Overall)) return true;
+                    if (this.Spells.Specific != null)
+                    {
+                        foreach (var item in this.Spells.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Models != null)
+                {
+                    if (eval(this.Models.Overall)) return true;
+                    if (this.Models.Specific != null)
+                    {
+                        foreach (var item in this.Models.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.NIFT)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.BaseSpellPoints)) return true;
+                if (eval(this.Fatigue)) return true;
+                if (eval(this.BarterGold)) return true;
+                if (eval(this.LevelOffset)) return true;
+                if (eval(this.CalcMin)) return true;
+                if (eval(this.CalcMax)) return true;
+                if (this.Factions != null)
+                {
+                    if (eval(this.Factions.Overall)) return true;
+                    if (this.Factions.Specific != null)
+                    {
+                        foreach (var item in this.Factions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DeathItem)) return true;
+                if (eval(this.Script)) return true;
+                if (eval(this.Aggression)) return true;
+                if (eval(this.Confidence)) return true;
+                if (eval(this.EnergyLevel)) return true;
+                if (eval(this.Responsibility)) return true;
+                if (eval(this.BuySellServices)) return true;
+                if (eval(this.Teaches)) return true;
+                if (eval(this.MaximumTrainingLevel)) return true;
+                if (this.AIPackages != null)
+                {
+                    if (eval(this.AIPackages.Overall)) return true;
+                    if (this.AIPackages.Specific != null)
+                    {
+                        foreach (var item in this.AIPackages.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Animations != null)
+                {
+                    if (eval(this.Animations.Overall)) return true;
+                    if (this.Animations.Specific != null)
+                    {
+                        foreach (var item in this.Animations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.CreatureType)) return true;
+                if (eval(this.CombatSkill)) return true;
+                if (eval(this.MagicSkill)) return true;
+                if (eval(this.StealthSkill)) return true;
+                if (eval(this.SoulLevel)) return true;
+                if (eval(this.Health)) return true;
+                if (eval(this.AttackDamage)) return true;
+                if (eval(this.Strength)) return true;
+                if (eval(this.Intelligence)) return true;
+                if (eval(this.Willpower)) return true;
+                if (eval(this.Agility)) return true;
+                if (eval(this.Speed)) return true;
+                if (eval(this.Endurance)) return true;
+                if (eval(this.Personality)) return true;
+                if (eval(this.Luck)) return true;
+                if (eval(this.AttackReach)) return true;
+                if (eval(this.CombatStyle)) return true;
+                if (eval(this.TurningSpeed)) return true;
+                if (eval(this.BaseScale)) return true;
+                if (eval(this.FootWeight)) return true;
+                if (eval(this.BloodSpray)) return true;
+                if (eval(this.BloodDecal)) return true;
+                if (eval(this.InheritsSoundFrom)) return true;
+                if (this.Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null)
+                    {
+                        foreach (var item in this.Sounds.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ACBSDataTypeState)) return true;
+                if (eval(this.AIDTDataTypeState)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -6298,14 +6435,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Model) ?? true))
             {
-                var ModelItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                    item: ModelItem,
-                    node: node,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Creature_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Model));
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Creature_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Model));
+                }
             }
             if (item.Items.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
@@ -6319,13 +6458,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Items),
                     transl: (XElement subNode, IItemEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((ItemEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((ItemEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if (item.Spells.HasBeenSet
@@ -6454,13 +6595,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Factions),
                     transl: (XElement subNode, IRankPlacementGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((RankPlacementXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((RankPlacementXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((item.DeathItem.FormKey != null)
@@ -6817,13 +6960,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Sounds),
                     transl: (XElement subNode, ICreatureSoundGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((CreatureSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((CreatureSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.ACBSDataTypeState) ?? true))

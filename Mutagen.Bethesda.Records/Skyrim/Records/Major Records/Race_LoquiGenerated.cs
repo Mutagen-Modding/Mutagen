@@ -636,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (this.ActorEffect != null)
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (BodyTemplate != null)
                 {
                     if (!eval(this.BodyTemplate.Overall)) return false;
-                    if (this.BodyTemplate.Specific != null && !this.BodyTemplate.Specific.AllEqual(eval)) return false;
+                    if (this.BodyTemplate.Specific != null && !this.BodyTemplate.Specific.All(eval)) return false;
                 }
                 if (this.Keywords != null)
                 {
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Data != null)
                 {
                     if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.AllEqual(eval)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
                 }
                 if (!eval(this.MaleSkeletalModel)) return false;
                 if (!eval(this.FemaleSkeletalModel)) return false;
@@ -688,18 +688,18 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!GenderedItem.AllEqual(
+                if (!GenderedItem.All(
                     this.Voices,
                     eval: eval)) return false;
                 if (DecapitateArmors != null)
                 {
                     if (!eval(this.DecapitateArmors.Overall)) return false;
-                    if (this.DecapitateArmors.Specific != null && !this.DecapitateArmors.Specific.AllEqual(eval)) return false;
+                    if (this.DecapitateArmors.Specific != null && !this.DecapitateArmors.Specific.All(eval)) return false;
                 }
                 if (DefaultHairColors != null)
                 {
                     if (!eval(this.DefaultHairColors.Overall)) return false;
-                    if (this.DefaultHairColors.Specific != null && !this.DefaultHairColors.Specific.AllEqual(eval)) return false;
+                    if (this.DefaultHairColors.Specific != null && !this.DefaultHairColors.Specific.All(eval)) return false;
                 }
                 if (!eval(this.NumberOfTintsInList)) return false;
                 if (!eval(this.FacegenMainClamp)) return false;
@@ -713,14 +713,14 @@ namespace Mutagen.Bethesda.Skyrim
                         foreach (var item in this.Attacks.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 if (BodyData != null)
                 {
                     if (!eval(this.BodyData.Overall)) return false;
-                    if (this.BodyData.Specific != null && !this.BodyData.Specific.AllEqual(eval)) return false;
+                    if (this.BodyData.Specific != null && !this.BodyData.Specific.All(eval)) return false;
                 }
                 if (this.Hairs != null)
                 {
@@ -746,6 +746,119 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.BodyPartData)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (this.ActorEffect != null)
+                {
+                    if (eval(this.ActorEffect.Overall)) return true;
+                    if (this.ActorEffect.Specific != null)
+                    {
+                        foreach (var item in this.ActorEffect.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Skin)) return true;
+                if (BodyTemplate != null)
+                {
+                    if (eval(this.BodyTemplate.Overall)) return true;
+                    if (this.BodyTemplate.Specific != null && this.BodyTemplate.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (eval(this.MaleSkeletalModel)) return true;
+                if (eval(this.FemaleSkeletalModel)) return true;
+                if (this.MovementTypeNames != null)
+                {
+                    if (eval(this.MovementTypeNames.Overall)) return true;
+                    if (this.MovementTypeNames.Specific != null)
+                    {
+                        foreach (var item in this.MovementTypeNames.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (GenderedItem.Any(
+                    this.Voices,
+                    eval: eval)) return true;
+                if (DecapitateArmors != null)
+                {
+                    if (eval(this.DecapitateArmors.Overall)) return true;
+                    if (this.DecapitateArmors.Specific != null && this.DecapitateArmors.Specific.Any(eval)) return true;
+                }
+                if (DefaultHairColors != null)
+                {
+                    if (eval(this.DefaultHairColors.Overall)) return true;
+                    if (this.DefaultHairColors.Specific != null && this.DefaultHairColors.Specific.Any(eval)) return true;
+                }
+                if (eval(this.NumberOfTintsInList)) return true;
+                if (eval(this.FacegenMainClamp)) return true;
+                if (eval(this.FacegenFaceClamp)) return true;
+                if (eval(this.AttackRace)) return true;
+                if (this.Attacks != null)
+                {
+                    if (eval(this.Attacks.Overall)) return true;
+                    if (this.Attacks.Specific != null)
+                    {
+                        foreach (var item in this.Attacks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (BodyData != null)
+                {
+                    if (eval(this.BodyData.Overall)) return true;
+                    if (this.BodyData.Specific != null && this.BodyData.Specific.Any(eval)) return true;
+                }
+                if (this.Hairs != null)
+                {
+                    if (eval(this.Hairs.Overall)) return true;
+                    if (this.Hairs.Specific != null)
+                    {
+                        foreach (var item in this.Hairs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Eyes != null)
+                {
+                    if (eval(this.Eyes.Overall)) return true;
+                    if (this.Eyes.Specific != null)
+                    {
+                        foreach (var item in this.Eyes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.BodyPartData)) return true;
+                return false;
             }
             #endregion
 
@@ -4225,14 +4338,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.BodyTemplate != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
             {
-                var BodyTemplateItem = item.BodyTemplate;
-                ((BodyTemplateXmlWriteTranslation)((IXmlItem)BodyTemplateItem).XmlWriteTranslator).Write(
-                    item: BodyTemplateItem,
-                    node: node,
-                    name: nameof(item.BodyTemplate),
-                    fieldIndex: (int)Race_FieldIndex.BodyTemplate,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate));
+                if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
+                {
+                    ((BodyTemplateXmlWriteTranslation)((IXmlItem)BodyTemplateItem).XmlWriteTranslator).Write(
+                        item: BodyTemplateItem,
+                        node: node,
+                        name: nameof(item.BodyTemplate),
+                        fieldIndex: (int)Race_FieldIndex.BodyTemplate,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate));
+                }
             }
             if (item.Keywords.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
@@ -4256,14 +4371,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Data != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
             {
-                var DataItem = item.Data;
-                ((RaceDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
-                    node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Race_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Data));
+                if (item.Data.TryGet(out var DataItem))
+                {
+                    ((RaceDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
+                        node: node,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Race_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Data));
+                }
             }
             if ((item.MaleSkeletalModel != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleSkeletalModel) ?? true))
@@ -4325,26 +4442,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.DecapitateArmors != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
             {
-                var DecapitateArmorsItem = item.DecapitateArmors;
-                ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)DecapitateArmorsItem).XmlWriteTranslator).Write<IArmorGetter>(
-                    item: DecapitateArmorsItem,
-                    node: node,
-                    name: nameof(item.DecapitateArmors),
-                    fieldIndex: (int)Race_FieldIndex.DecapitateArmors,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DecapitateArmors));
+                if (item.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
+                {
+                    ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)DecapitateArmorsItem).XmlWriteTranslator).Write<IArmorGetter>(
+                        item: DecapitateArmorsItem,
+                        node: node,
+                        name: nameof(item.DecapitateArmors),
+                        fieldIndex: (int)Race_FieldIndex.DecapitateArmors,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DecapitateArmors));
+                }
             }
             if ((item.DefaultHairColors != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
-                var DefaultHairColorsItem = item.DefaultHairColors;
-                ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)DefaultHairColorsItem).XmlWriteTranslator).Write<IColorRecordGetter>(
-                    item: DefaultHairColorsItem,
-                    node: node,
-                    name: nameof(item.DefaultHairColors),
-                    fieldIndex: (int)Race_FieldIndex.DefaultHairColors,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHairColors));
+                if (item.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
+                {
+                    ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)DefaultHairColorsItem).XmlWriteTranslator).Write<IColorRecordGetter>(
+                        item: DefaultHairColorsItem,
+                        node: node,
+                        name: nameof(item.DefaultHairColors),
+                        fieldIndex: (int)Race_FieldIndex.DefaultHairColors,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHairColors));
+                }
             }
             if ((item.NumberOfTintsInList != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
@@ -4398,26 +4519,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Attacks),
                     transl: (XElement subNode, IAttackGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((AttackXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((AttackXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((item.BodyData != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                var BodyDataItem = item.BodyData;
-                ((BodyDataPairXmlWriteTranslation)((IXmlItem)BodyDataItem).XmlWriteTranslator).Write(
-                    item: BodyDataItem,
-                    node: node,
-                    name: nameof(item.BodyData),
-                    fieldIndex: (int)Race_FieldIndex.BodyData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyData));
+                if (item.BodyData.TryGet(out var BodyDataItem))
+                {
+                    ((BodyDataPairXmlWriteTranslation)((IXmlItem)BodyDataItem).XmlWriteTranslator).Write(
+                        item: BodyDataItem,
+                        node: node,
+                        name: nameof(item.BodyData),
+                        fieldIndex: (int)Race_FieldIndex.BodyData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyData));
+                }
             }
             if (item.Hairs.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))

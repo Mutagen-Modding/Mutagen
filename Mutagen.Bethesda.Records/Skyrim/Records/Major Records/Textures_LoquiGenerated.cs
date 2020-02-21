@@ -390,8 +390,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Diffuse)) return false;
                 if (!eval(this.NormalOrGloss)) return false;
@@ -402,6 +402,21 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Multilayer)) return false;
                 if (!eval(this.BacklightMaskOrSpecular)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Diffuse)) return true;
+                if (eval(this.NormalOrGloss)) return true;
+                if (eval(this.EnvironmentMaskOrSubsurfaceTint)) return true;
+                if (eval(this.GlowOrDetailMap)) return true;
+                if (eval(this.Height)) return true;
+                if (eval(this.Environment)) return true;
+                if (eval(this.Multilayer)) return true;
+                if (eval(this.BacklightMaskOrSpecular)) return true;
+                return false;
             }
             #endregion
 

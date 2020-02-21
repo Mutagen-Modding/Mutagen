@@ -295,14 +295,25 @@ namespace Mutagen.Bethesda
 
             #endregion
 
-            #region All Equal
-            public virtual bool AllEqual(Func<T, bool> eval)
+            #region All
+            public virtual bool All(Func<T, bool> eval)
             {
                 if (!eval(this.MajorRecordFlagsRaw)) return false;
                 if (!eval(this.FormKey)) return false;
                 if (!eval(this.Version)) return false;
                 if (!eval(this.EditorID)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public virtual bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.MajorRecordFlagsRaw)) return true;
+                if (eval(this.FormKey)) return true;
+                if (eval(this.Version)) return true;
+                if (eval(this.EditorID)) return true;
+                return false;
             }
             #endregion
 

@@ -712,10 +712,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (this.Spells != null)
@@ -737,59 +737,59 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Relations.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 if (SkillBoost0 != null)
                 {
                     if (!eval(this.SkillBoost0.Overall)) return false;
-                    if (this.SkillBoost0.Specific != null && !this.SkillBoost0.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost0.Specific != null && !this.SkillBoost0.Specific.All(eval)) return false;
                 }
                 if (SkillBoost1 != null)
                 {
                     if (!eval(this.SkillBoost1.Overall)) return false;
-                    if (this.SkillBoost1.Specific != null && !this.SkillBoost1.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost1.Specific != null && !this.SkillBoost1.Specific.All(eval)) return false;
                 }
                 if (SkillBoost2 != null)
                 {
                     if (!eval(this.SkillBoost2.Overall)) return false;
-                    if (this.SkillBoost2.Specific != null && !this.SkillBoost2.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost2.Specific != null && !this.SkillBoost2.Specific.All(eval)) return false;
                 }
                 if (SkillBoost3 != null)
                 {
                     if (!eval(this.SkillBoost3.Overall)) return false;
-                    if (this.SkillBoost3.Specific != null && !this.SkillBoost3.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost3.Specific != null && !this.SkillBoost3.Specific.All(eval)) return false;
                 }
                 if (SkillBoost4 != null)
                 {
                     if (!eval(this.SkillBoost4.Overall)) return false;
-                    if (this.SkillBoost4.Specific != null && !this.SkillBoost4.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost4.Specific != null && !this.SkillBoost4.Specific.All(eval)) return false;
                 }
                 if (SkillBoost5 != null)
                 {
                     if (!eval(this.SkillBoost5.Overall)) return false;
-                    if (this.SkillBoost5.Specific != null && !this.SkillBoost5.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost5.Specific != null && !this.SkillBoost5.Specific.All(eval)) return false;
                 }
                 if (SkillBoost6 != null)
                 {
                     if (!eval(this.SkillBoost6.Overall)) return false;
-                    if (this.SkillBoost6.Specific != null && !this.SkillBoost6.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost6.Specific != null && !this.SkillBoost6.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Fluff)) return false;
                 if (!eval(this.Height.Male) || !eval(this.Height.Female)) return false;
                 if (!eval(this.Weight.Male) || !eval(this.Weight.Female)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!GenderedItem.AllEqual(
+                if (!GenderedItem.All(
                     this.Voices,
                     eval: eval)) return false;
-                if (!GenderedItem.AllEqual(
+                if (!GenderedItem.All(
                     this.DefaultHair,
                     eval: eval)) return false;
                 if (!eval(this.DefaultHairColor)) return false;
                 if (!eval(this.FaceGenMainClamp)) return false;
                 if (!eval(this.FaceGenFaceClamp)) return false;
-                if (!GenderedItem.AllEqualMask(
+                if (!GenderedItem.AllMask(
                     this.RaceStats,
                     eval: eval)) return false;
                 if (this.FaceData != null)
@@ -800,14 +800,14 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.FaceData.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 if (BodyData != null)
                 {
                     if (!eval(this.BodyData.Overall)) return false;
-                    if (this.BodyData.Specific != null && !this.BodyData.Specific.AllEqual(eval)) return false;
+                    if (this.BodyData.Specific != null && !this.BodyData.Specific.All(eval)) return false;
                 }
                 if (this.Hairs != null)
                 {
@@ -834,11 +834,141 @@ namespace Mutagen.Bethesda.Oblivion
                 if (FaceGenData != null)
                 {
                     if (!eval(this.FaceGenData.Overall)) return false;
-                    if (this.FaceGenData.Specific != null && !this.FaceGenData.Specific.AllEqual(eval)) return false;
+                    if (this.FaceGenData.Specific != null && !this.FaceGenData.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (this.Spells != null)
+                {
+                    if (eval(this.Spells.Overall)) return true;
+                    if (this.Spells.Specific != null)
+                    {
+                        foreach (var item in this.Spells.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Relations != null)
+                {
+                    if (eval(this.Relations.Overall)) return true;
+                    if (this.Relations.Specific != null)
+                    {
+                        foreach (var item in this.Relations.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (SkillBoost0 != null)
+                {
+                    if (eval(this.SkillBoost0.Overall)) return true;
+                    if (this.SkillBoost0.Specific != null && this.SkillBoost0.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost1 != null)
+                {
+                    if (eval(this.SkillBoost1.Overall)) return true;
+                    if (this.SkillBoost1.Specific != null && this.SkillBoost1.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost2 != null)
+                {
+                    if (eval(this.SkillBoost2.Overall)) return true;
+                    if (this.SkillBoost2.Specific != null && this.SkillBoost2.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost3 != null)
+                {
+                    if (eval(this.SkillBoost3.Overall)) return true;
+                    if (this.SkillBoost3.Specific != null && this.SkillBoost3.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost4 != null)
+                {
+                    if (eval(this.SkillBoost4.Overall)) return true;
+                    if (this.SkillBoost4.Specific != null && this.SkillBoost4.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost5 != null)
+                {
+                    if (eval(this.SkillBoost5.Overall)) return true;
+                    if (this.SkillBoost5.Specific != null && this.SkillBoost5.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost6 != null)
+                {
+                    if (eval(this.SkillBoost6.Overall)) return true;
+                    if (this.SkillBoost6.Specific != null && this.SkillBoost6.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Fluff)) return true;
+                if (eval(this.Height.Male) || eval(this.Height.Female)) return true;
+                if (eval(this.Weight.Male) || eval(this.Weight.Female)) return true;
+                if (eval(this.Flags)) return true;
+                if (GenderedItem.Any(
+                    this.Voices,
+                    eval: eval)) return true;
+                if (GenderedItem.Any(
+                    this.DefaultHair,
+                    eval: eval)) return true;
+                if (eval(this.DefaultHairColor)) return true;
+                if (eval(this.FaceGenMainClamp)) return true;
+                if (eval(this.FaceGenFaceClamp)) return true;
+                if (GenderedItem.AnyMask(
+                    this.RaceStats,
+                    eval: eval)) return true;
+                if (this.FaceData != null)
+                {
+                    if (eval(this.FaceData.Overall)) return true;
+                    if (this.FaceData.Specific != null)
+                    {
+                        foreach (var item in this.FaceData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (BodyData != null)
+                {
+                    if (eval(this.BodyData.Overall)) return true;
+                    if (this.BodyData.Specific != null && this.BodyData.Specific.Any(eval)) return true;
+                }
+                if (this.Hairs != null)
+                {
+                    if (eval(this.Hairs.Overall)) return true;
+                    if (this.Hairs.Specific != null)
+                    {
+                        foreach (var item in this.Hairs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Eyes != null)
+                {
+                    if (eval(this.Eyes.Overall)) return true;
+                    if (this.Eyes.Specific != null)
+                    {
+                        foreach (var item in this.Eyes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (FaceGenData != null)
+                {
+                    if (eval(this.FaceGenData.Overall)) return true;
+                    if (this.FaceGenData.Specific != null && this.FaceGenData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Unknown)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -4621,13 +4751,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Relations),
                     transl: (XElement subNode, IRaceRelationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((RaceRelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((RaceRelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
@@ -4862,26 +4994,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceData),
                     transl: (XElement subNode, IFacePartGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((FacePartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((FacePartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((item.BodyData != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                var BodyDataItem = item.BodyData;
-                ((GenderedBodyDataXmlWriteTranslation)((IXmlItem)BodyDataItem).XmlWriteTranslator).Write(
-                    item: BodyDataItem,
-                    node: node,
-                    name: nameof(item.BodyData),
-                    fieldIndex: (int)Race_FieldIndex.BodyData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyData));
+                if (item.BodyData.TryGet(out var BodyDataItem))
+                {
+                    ((GenderedBodyDataXmlWriteTranslation)((IXmlItem)BodyDataItem).XmlWriteTranslator).Write(
+                        item: BodyDataItem,
+                        node: node,
+                        name: nameof(item.BodyData),
+                        fieldIndex: (int)Race_FieldIndex.BodyData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyData));
+                }
             }
             if (item.Hairs.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
@@ -4924,14 +5060,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.FaceGenData != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenData) ?? true))
             {
-                var FaceGenDataItem = item.FaceGenData;
-                ((FaceGenDataXmlWriteTranslation)((IXmlItem)FaceGenDataItem).XmlWriteTranslator).Write(
-                    item: FaceGenDataItem,
-                    node: node,
-                    name: nameof(item.FaceGenData),
-                    fieldIndex: (int)Race_FieldIndex.FaceGenData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceGenData));
+                if (item.FaceGenData.TryGet(out var FaceGenDataItem))
+                {
+                    ((FaceGenDataXmlWriteTranslation)((IXmlItem)FaceGenDataItem).XmlWriteTranslator).Write(
+                        item: FaceGenDataItem,
+                        node: node,
+                        name: nameof(item.FaceGenData),
+                        fieldIndex: (int)Race_FieldIndex.FaceGenData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceGenData));
+                }
             }
             if (item.Unknown_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))

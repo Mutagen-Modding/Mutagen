@@ -299,8 +299,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Month)) return false;
                 if (!eval(this.DayOfWeek)) return false;
@@ -308,6 +308,18 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Time)) return false;
                 if (!eval(this.Duration)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Month)) return true;
+                if (eval(this.DayOfWeek)) return true;
+                if (eval(this.Day)) return true;
+                if (eval(this.Time)) return true;
+                if (eval(this.Duration)) return true;
+                return false;
             }
             #endregion
 

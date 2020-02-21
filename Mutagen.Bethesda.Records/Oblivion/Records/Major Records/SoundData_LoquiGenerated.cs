@@ -284,14 +284,25 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public virtual bool AllEqual(Func<T, bool> eval)
+            #region All
+            public virtual bool All(Func<T, bool> eval)
             {
                 if (!eval(this.MinimumAttenuationDistance)) return false;
                 if (!eval(this.MaximumAttenuationDistance)) return false;
                 if (!eval(this.FrequencyAdjustment)) return false;
                 if (!eval(this.Flags)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public virtual bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.MinimumAttenuationDistance)) return true;
+                if (eval(this.MaximumAttenuationDistance)) return true;
+                if (eval(this.FrequencyAdjustment)) return true;
+                if (eval(this.Flags)) return true;
+                return false;
             }
             #endregion
 

@@ -1505,13 +1505,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         valTransl: (XElement subNode, T subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictTranslMask) =>
                         {
-                            var Item = subItem;
-                            ((SkyrimMajorRecordXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: dictSubMask,
-                                translationMask: dictTranslMask);
+                            if (subItem.TryGet(out var Item))
+                            {
+                                ((SkyrimMajorRecordXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                    item: Item,
+                                    node: subNode,
+                                    name: null,
+                                    errorMask: dictSubMask,
+                                    translationMask: dictTranslMask);
+                            }
                         });
                 }
                 catch (Exception ex)
@@ -2230,8 +2232,8 @@ namespace Mutagen.Bethesda.Skyrim
         
             #endregion
         
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.GroupType)) return false;
                 if (!eval(this.LastModified)) return false;
@@ -2244,11 +2246,33 @@ namespace Mutagen.Bethesda.Skyrim
                         foreach (var item in this.RecordCache.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                            if (!item.Specific?.All(eval) ?? false) return false;
                         }
                     }
                 }
                 return true;
+            }
+            #endregion
+        
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.GroupType)) return true;
+                if (eval(this.LastModified)) return true;
+                if (eval(this.Unknown)) return true;
+                if (this.RecordCache != null)
+                {
+                    if (eval(this.RecordCache.Overall)) return true;
+                    if (this.RecordCache.Specific != null)
+                    {
+                        foreach (var item in this.RecordCache.Specific)
+                        {
+                            if (eval(item.Overall)) return true;
+                            if (item.Specific?.Any(eval) ?? false) return true;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
         

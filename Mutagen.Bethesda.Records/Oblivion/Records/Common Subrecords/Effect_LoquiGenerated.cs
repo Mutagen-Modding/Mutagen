@@ -389,8 +389,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.MagicEffect)) return false;
                 if (!eval(this.Magnitude)) return false;
@@ -401,10 +401,29 @@ namespace Mutagen.Bethesda.Oblivion
                 if (ScriptEffect != null)
                 {
                     if (!eval(this.ScriptEffect.Overall)) return false;
-                    if (this.ScriptEffect.Specific != null && !this.ScriptEffect.Specific.AllEqual(eval)) return false;
+                    if (this.ScriptEffect.Specific != null && !this.ScriptEffect.Specific.All(eval)) return false;
                 }
                 if (!eval(this.EFITDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.MagicEffect)) return true;
+                if (eval(this.Magnitude)) return true;
+                if (eval(this.Area)) return true;
+                if (eval(this.Duration)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.ActorValue)) return true;
+                if (ScriptEffect != null)
+                {
+                    if (eval(this.ScriptEffect.Overall)) return true;
+                    if (this.ScriptEffect.Specific != null && this.ScriptEffect.Specific.Any(eval)) return true;
+                }
+                if (eval(this.EFITDataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -1975,14 +1994,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.ScriptEffect != null)
                 && (translationMask?.GetShouldTranslate((int)Effect_FieldIndex.ScriptEffect) ?? true))
             {
-                var ScriptEffectItem = item.ScriptEffect;
-                ((ScriptEffectXmlWriteTranslation)((IXmlItem)ScriptEffectItem).XmlWriteTranslator).Write(
-                    item: ScriptEffectItem,
-                    node: node,
-                    name: nameof(item.ScriptEffect),
-                    fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect));
+                if (item.ScriptEffect.TryGet(out var ScriptEffectItem))
+                {
+                    ((ScriptEffectXmlWriteTranslation)((IXmlItem)ScriptEffectItem).XmlWriteTranslator).Write(
+                        item: ScriptEffectItem,
+                        node: node,
+                        name: nameof(item.ScriptEffect),
+                        fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect));
+                }
             }
             if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.EFITDataTypeState) ?? true))
             {

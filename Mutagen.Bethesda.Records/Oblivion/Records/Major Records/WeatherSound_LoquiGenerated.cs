@@ -276,12 +276,21 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Sound)) return false;
                 if (!eval(this.Type)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Sound)) return true;
+                if (eval(this.Type)) return true;
+                return false;
             }
             #endregion
 

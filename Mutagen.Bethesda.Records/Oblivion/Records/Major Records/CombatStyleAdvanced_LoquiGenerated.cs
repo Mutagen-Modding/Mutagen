@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.DodgeFatigueModMult)) return false;
                 if (!eval(this.DodgeFatigueModBase)) return false;
@@ -468,6 +468,34 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.PowerAttackFatigueModBase)) return false;
                 if (!eval(this.PowerAttackFatigueModMult)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.DodgeFatigueModMult)) return true;
+                if (eval(this.DodgeFatigueModBase)) return true;
+                if (eval(this.EncumbSpeedModBase)) return true;
+                if (eval(this.EncumbSpeedModMult)) return true;
+                if (eval(this.DodgeWhileUnderAttackMult)) return true;
+                if (eval(this.DodgeNotUnderAttackMult)) return true;
+                if (eval(this.DodgeBackWhileUnderAttackMult)) return true;
+                if (eval(this.DodgeBackNotUnderAttackMult)) return true;
+                if (eval(this.DodgeForwardWhileUnderAttackMult)) return true;
+                if (eval(this.DodgeForwardNotUnderAttackMult)) return true;
+                if (eval(this.BlockSkillModifierMult)) return true;
+                if (eval(this.BlockSkillModifierBase)) return true;
+                if (eval(this.BlockWhileUnderAttackMult)) return true;
+                if (eval(this.BlockNotUnderAttackMult)) return true;
+                if (eval(this.AttackSkillModifierMult)) return true;
+                if (eval(this.AttackSkillModifierBase)) return true;
+                if (eval(this.AttackWhileUnderAttackMult)) return true;
+                if (eval(this.AttackNotUnderAttackMult)) return true;
+                if (eval(this.AttackDuringBlockMult)) return true;
+                if (eval(this.PowerAttackFatigueModBase)) return true;
+                if (eval(this.PowerAttackFatigueModMult)) return true;
+                return false;
             }
             #endregion
 

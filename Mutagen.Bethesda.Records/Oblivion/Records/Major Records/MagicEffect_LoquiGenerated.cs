@@ -540,17 +540,17 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.Icon)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
-                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.BaseCost)) return false;
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (SubData != null)
                 {
                     if (!eval(this.SubData.Overall)) return false;
-                    if (this.SubData.Specific != null && !this.SubData.Specific.AllEqual(eval)) return false;
+                    if (this.SubData.Specific != null && !this.SubData.Specific.All(eval)) return false;
                 }
                 if (this.CounterEffects != null)
                 {
@@ -579,6 +579,48 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Icon)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Flags)) return true;
+                if (eval(this.BaseCost)) return true;
+                if (eval(this.Unused)) return true;
+                if (eval(this.MagicSchool)) return true;
+                if (eval(this.Resistance)) return true;
+                if (eval(this.CounterEffectCount)) return true;
+                if (eval(this.Light)) return true;
+                if (eval(this.ProjectileSpeed)) return true;
+                if (eval(this.EffectShader)) return true;
+                if (SubData != null)
+                {
+                    if (eval(this.SubData.Overall)) return true;
+                    if (this.SubData.Specific != null && this.SubData.Specific.Any(eval)) return true;
+                }
+                if (this.CounterEffects != null)
+                {
+                    if (eval(this.CounterEffects.Overall)) return true;
+                    if (this.CounterEffects.Specific != null)
+                    {
+                        foreach (var item in this.CounterEffects.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -2880,14 +2922,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Model) ?? true))
             {
-                var ModelItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                    item: ModelItem,
-                    node: node,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)MagicEffect_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Model));
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)MagicEffect_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Model));
+                }
             }
             if (item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Has))
             {

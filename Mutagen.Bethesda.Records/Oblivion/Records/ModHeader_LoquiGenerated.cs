@@ -405,8 +405,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.FormID)) return false;
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Stats != null)
                 {
                     if (!eval(this.Stats.Overall)) return false;
-                    if (this.Stats.Specific != null && !this.Stats.Specific.AllEqual(eval)) return false;
+                    if (this.Stats.Specific != null && !this.Stats.Specific.All(eval)) return false;
                 }
                 if (!eval(this.TypeOffsets)) return false;
                 if (!eval(this.Deleted)) return false;
@@ -428,12 +428,44 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.MasterReferences.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 if (!eval(this.VestigialData)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Flags)) return true;
+                if (eval(this.FormID)) return true;
+                if (eval(this.Version)) return true;
+                if (Stats != null)
+                {
+                    if (eval(this.Stats.Overall)) return true;
+                    if (this.Stats.Specific != null && this.Stats.Specific.Any(eval)) return true;
+                }
+                if (eval(this.TypeOffsets)) return true;
+                if (eval(this.Deleted)) return true;
+                if (eval(this.Author)) return true;
+                if (eval(this.Description)) return true;
+                if (this.MasterReferences != null)
+                {
+                    if (eval(this.MasterReferences.Overall)) return true;
+                    if (this.MasterReferences.Specific != null)
+                    {
+                        foreach (var item in this.MasterReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.VestigialData)) return true;
+                return false;
             }
             #endregion
 

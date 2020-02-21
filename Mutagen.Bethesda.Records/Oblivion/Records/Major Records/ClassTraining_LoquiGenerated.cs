@@ -290,13 +290,23 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.TrainedSkill)) return false;
                 if (!eval(this.MaximumTrainingLevel)) return false;
                 if (!eval(this.Fluff)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.TrainedSkill)) return true;
+                if (eval(this.MaximumTrainingLevel)) return true;
+                if (eval(this.Fluff)) return true;
+                return false;
             }
             #endregion
 

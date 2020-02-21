@@ -378,10 +378,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.VertexNormals)) return false;
                 if (!eval(this.VertexHeightMap)) return false;
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Layers.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -410,6 +410,41 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.VertexNormals)) return true;
+                if (eval(this.VertexHeightMap)) return true;
+                if (eval(this.VertexColors)) return true;
+                if (this.Layers != null)
+                {
+                    if (eval(this.Layers.Overall)) return true;
+                    if (this.Layers.Specific != null)
+                    {
+                        foreach (var item in this.Layers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Textures != null)
+                {
+                    if (eval(this.Textures.Overall)) return true;
+                    if (this.Textures.Specific != null)
+                    {
+                        foreach (var item in this.Textures.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 
@@ -2339,13 +2374,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers),
                     transl: (XElement subNode, IBaseLayerGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((BaseLayerXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((BaseLayerXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if (item.Textures.HasBeenSet

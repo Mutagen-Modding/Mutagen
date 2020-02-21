@@ -342,27 +342,51 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (ObjectBounds != null)
                 {
                     if (!eval(this.ObjectBounds.Overall)) return false;
-                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.AllEqual(eval)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (Textures != null)
                 {
                     if (!eval(this.Textures.Overall)) return false;
-                    if (this.Textures.Specific != null && !this.Textures.Specific.AllEqual(eval)) return false;
+                    if (this.Textures.Specific != null && !this.Textures.Specific.All(eval)) return false;
                 }
                 if (Decal != null)
                 {
                     if (!eval(this.Decal.Overall)) return false;
-                    if (this.Decal.Specific != null && !this.Decal.Specific.AllEqual(eval)) return false;
+                    if (this.Decal.Specific != null && !this.Decal.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Flags)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (Textures != null)
+                {
+                    if (eval(this.Textures.Overall)) return true;
+                    if (this.Textures.Specific != null && this.Textures.Specific.Any(eval)) return true;
+                }
+                if (Decal != null)
+                {
+                    if (eval(this.Decal.Overall)) return true;
+                    if (this.Decal.Specific != null && this.Decal.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Flags)) return true;
+                return false;
             }
             #endregion
 
@@ -1955,38 +1979,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.ObjectBounds != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
             {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)TextureSet_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
+                if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
+                {
+                    ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                        item: ObjectBoundsItem,
+                        node: node,
+                        name: nameof(item.ObjectBounds),
+                        fieldIndex: (int)TextureSet_FieldIndex.ObjectBounds,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
+                }
             }
             if ((item.Textures != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Textures) ?? true))
             {
-                var TexturesItem = item.Textures;
-                ((TexturesXmlWriteTranslation)((IXmlItem)TexturesItem).XmlWriteTranslator).Write(
-                    item: TexturesItem,
-                    node: node,
-                    name: nameof(item.Textures),
-                    fieldIndex: (int)TextureSet_FieldIndex.Textures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures));
+                if (item.Textures.TryGet(out var TexturesItem))
+                {
+                    ((TexturesXmlWriteTranslation)((IXmlItem)TexturesItem).XmlWriteTranslator).Write(
+                        item: TexturesItem,
+                        node: node,
+                        name: nameof(item.Textures),
+                        fieldIndex: (int)TextureSet_FieldIndex.Textures,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures));
+                }
             }
             if ((item.Decal != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
             {
-                var DecalItem = item.Decal;
-                ((DecalXmlWriteTranslation)((IXmlItem)DecalItem).XmlWriteTranslator).Write(
-                    item: DecalItem,
-                    node: node,
-                    name: nameof(item.Decal),
-                    fieldIndex: (int)TextureSet_FieldIndex.Decal,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
+                if (item.Decal.TryGet(out var DecalItem))
+                {
+                    ((DecalXmlWriteTranslation)((IXmlItem)DecalItem).XmlWriteTranslator).Write(
+                        item: DecalItem,
+                        node: node,
+                        name: nameof(item.Decal),
+                        fieldIndex: (int)TextureSet_FieldIndex.Decal,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
+                }
             }
             if ((item.Flags != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))

@@ -329,14 +329,25 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public virtual bool AllEqual(Func<T, bool> eval)
+            #region All
+            public virtual bool All(Func<T, bool> eval)
             {
                 if (!eval(this.DataType)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Priority)) return false;
                 if (!eval(this.RDATDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public virtual bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.DataType)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Priority)) return true;
+                if (eval(this.RDATDataTypeState)) return true;
+                return false;
             }
             #endregion
 

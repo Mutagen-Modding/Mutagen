@@ -251,10 +251,17 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public virtual bool AllEqual(Func<T, bool> eval)
+            #region All
+            public virtual bool All(Func<T, bool> eval)
             {
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public virtual bool Any(Func<T, bool> eval)
+            {
+                return false;
             }
             #endregion
 

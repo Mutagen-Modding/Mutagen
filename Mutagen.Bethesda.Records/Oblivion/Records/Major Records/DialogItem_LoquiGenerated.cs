@@ -447,10 +447,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.DialogType)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Quest)) return false;
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Responses.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Conditions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -515,10 +515,85 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Script != null)
                 {
                     if (!eval(this.Script.Overall)) return false;
-                    if (this.Script.Specific != null && !this.Script.Specific.AllEqual(eval)) return false;
+                    if (this.Script.Specific != null && !this.Script.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.DialogType)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Quest)) return true;
+                if (eval(this.PreviousTopic)) return true;
+                if (this.Topics != null)
+                {
+                    if (eval(this.Topics.Overall)) return true;
+                    if (this.Topics.Specific != null)
+                    {
+                        foreach (var item in this.Topics.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Responses != null)
+                {
+                    if (eval(this.Responses.Overall)) return true;
+                    if (this.Responses.Specific != null)
+                    {
+                        foreach (var item in this.Responses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Choices != null)
+                {
+                    if (eval(this.Choices.Overall)) return true;
+                    if (this.Choices.Specific != null)
+                    {
+                        foreach (var item in this.Choices.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.LinkFrom != null)
+                {
+                    if (eval(this.LinkFrom.Overall)) return true;
+                    if (this.LinkFrom.Specific != null)
+                    {
+                        foreach (var item in this.LinkFrom.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Script != null)
+                {
+                    if (eval(this.Script.Overall)) return true;
+                    if (this.Script.Specific != null && this.Script.Specific.Any(eval)) return true;
+                }
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -3082,13 +3157,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Responses),
                     transl: (XElement subNode, IDialogResponseGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((DialogResponseXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((DialogResponseXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if (item.Conditions.HasBeenSet
@@ -3103,13 +3180,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if (item.Choices.HasBeenSet

@@ -337,8 +337,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.EnchantEffect)) return false;
                 if (!eval(this.CastingSound)) return false;
@@ -348,6 +348,20 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.ConstantEffectEnchantmentFactor)) return false;
                 if (!eval(this.ConstantEffectBarterFactor)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.EnchantEffect)) return true;
+                if (eval(this.CastingSound)) return true;
+                if (eval(this.BoltSound)) return true;
+                if (eval(this.HitSound)) return true;
+                if (eval(this.AreaSound)) return true;
+                if (eval(this.ConstantEffectEnchantmentFactor)) return true;
+                if (eval(this.ConstantEffectBarterFactor)) return true;
+                return false;
             }
             #endregion
 

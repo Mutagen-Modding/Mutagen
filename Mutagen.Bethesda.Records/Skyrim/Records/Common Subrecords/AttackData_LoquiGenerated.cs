@@ -361,8 +361,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.DamageMult)) return false;
                 if (!eval(this.Chance)) return false;
@@ -376,6 +376,24 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.RecoveryTime)) return false;
                 if (!eval(this.StaminaMult)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.DamageMult)) return true;
+                if (eval(this.Chance)) return true;
+                if (eval(this.Spell)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.AttackAngle)) return true;
+                if (eval(this.StrikeAngle)) return true;
+                if (eval(this.Stagger)) return true;
+                if (eval(this.AttackType)) return true;
+                if (eval(this.Knockdown)) return true;
+                if (eval(this.RecoveryTime)) return true;
+                if (eval(this.StaminaMult)) return true;
+                return false;
             }
             #endregion
 

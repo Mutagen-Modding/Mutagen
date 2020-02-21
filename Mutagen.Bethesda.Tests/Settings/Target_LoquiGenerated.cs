@@ -186,8 +186,8 @@ namespace Mutagen.Bethesda.Tests
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Do)) return false;
                 if (!eval(this.Path)) return false;
@@ -197,9 +197,26 @@ namespace Mutagen.Bethesda.Tests
                 if (Interest != null)
                 {
                     if (!eval(this.Interest.Overall)) return false;
-                    if (this.Interest.Specific != null && !this.Interest.Specific.AllEqual(eval)) return false;
+                    if (this.Interest.Specific != null && !this.Interest.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Do)) return true;
+                if (eval(this.Path)) return true;
+                if (eval(this.NumMasters)) return true;
+                if (eval(this.GameMode)) return true;
+                if (eval(this.ExpectedBaseGroupCount)) return true;
+                if (Interest != null)
+                {
+                    if (eval(this.Interest.Overall)) return true;
+                    if (this.Interest.Specific != null && this.Interest.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 

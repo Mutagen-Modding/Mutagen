@@ -289,8 +289,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.EdgeFallOff)) return false;
                 if (this.RegionPoints != null)
@@ -305,6 +305,25 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.EdgeFallOff)) return true;
+                if (this.RegionPoints != null)
+                {
+                    if (eval(this.RegionPoints.Overall)) return true;
+                    if (this.RegionPoints.Specific != null)
+                    {
+                        foreach (var item in this.RegionPoints.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 

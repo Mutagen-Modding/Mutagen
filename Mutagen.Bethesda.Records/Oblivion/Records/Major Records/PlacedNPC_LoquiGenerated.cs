@@ -461,22 +461,22 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Base)) return false;
                 if (!eval(this.XPCIFluff)) return false;
                 if (!eval(this.FULLFluff)) return false;
                 if (DistantLODData != null)
                 {
                     if (!eval(this.DistantLODData.Overall)) return false;
-                    if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.AllEqual(eval)) return false;
+                    if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.All(eval)) return false;
                 }
                 if (EnableParent != null)
                 {
                     if (!eval(this.EnableParent.Overall)) return false;
-                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.AllEqual(eval)) return false;
+                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.All(eval)) return false;
                 }
                 if (!eval(this.MerchantContainer)) return false;
                 if (!eval(this.Horse)) return false;
@@ -486,6 +486,34 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Rotation)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Base)) return true;
+                if (eval(this.XPCIFluff)) return true;
+                if (eval(this.FULLFluff)) return true;
+                if (DistantLODData != null)
+                {
+                    if (eval(this.DistantLODData.Overall)) return true;
+                    if (this.DistantLODData.Specific != null && this.DistantLODData.Specific.Any(eval)) return true;
+                }
+                if (EnableParent != null)
+                {
+                    if (eval(this.EnableParent.Overall)) return true;
+                    if (this.EnableParent.Specific != null && this.EnableParent.Specific.Any(eval)) return true;
+                }
+                if (eval(this.MerchantContainer)) return true;
+                if (eval(this.Horse)) return true;
+                if (eval(this.RagdollData)) return true;
+                if (eval(this.Scale)) return true;
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -2564,26 +2592,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.DistantLODData != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.DistantLODData) ?? true))
             {
-                var DistantLODDataItem = item.DistantLODData;
-                ((DistantLODDataXmlWriteTranslation)((IXmlItem)DistantLODDataItem).XmlWriteTranslator).Write(
-                    item: DistantLODDataItem,
-                    node: node,
-                    name: nameof(item.DistantLODData),
-                    fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedNPC_FieldIndex.DistantLODData));
+                if (item.DistantLODData.TryGet(out var DistantLODDataItem))
+                {
+                    ((DistantLODDataXmlWriteTranslation)((IXmlItem)DistantLODDataItem).XmlWriteTranslator).Write(
+                        item: DistantLODDataItem,
+                        node: node,
+                        name: nameof(item.DistantLODData),
+                        fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedNPC_FieldIndex.DistantLODData));
+                }
             }
             if ((item.EnableParent != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.EnableParent) ?? true))
             {
-                var EnableParentItem = item.EnableParent;
-                ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
-                    item: EnableParentItem,
-                    node: node,
-                    name: nameof(item.EnableParent),
-                    fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedNPC_FieldIndex.EnableParent));
+                if (item.EnableParent.TryGet(out var EnableParentItem))
+                {
+                    ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
+                        item: EnableParentItem,
+                        node: node,
+                        name: nameof(item.EnableParent),
+                        fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedNPC_FieldIndex.EnableParent));
+                }
             }
             if ((item.MerchantContainer.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.MerchantContainer) ?? true))

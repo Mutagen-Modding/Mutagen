@@ -493,10 +493,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Skill)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.Icon)) return false;
@@ -511,6 +511,27 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.MasterText)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Skill)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Icon)) return true;
+                if (eval(this.Action)) return true;
+                if (eval(this.Attribute)) return true;
+                if (eval(this.Specialization)) return true;
+                if (eval(this.UseValueFirst)) return true;
+                if (eval(this.UseValueSecond)) return true;
+                if (eval(this.ApprenticeText)) return true;
+                if (eval(this.JourneymanText)) return true;
+                if (eval(this.ExpertText)) return true;
+                if (eval(this.MasterText)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 

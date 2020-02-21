@@ -975,16 +975,16 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.TextureLowerLayer)) return false;
                 if (!eval(this.TextureUpperLayer)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
-                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 if (this.WeatherTypes != null)
                 {
@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.WeatherTypes.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Sounds.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -1045,6 +1045,79 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.HNAMDataTypeState)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.TextureLowerLayer)) return true;
+                if (eval(this.TextureUpperLayer)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.WeatherTypes != null)
+                {
+                    if (eval(this.WeatherTypes.Overall)) return true;
+                    if (this.WeatherTypes.Specific != null)
+                    {
+                        foreach (var item in this.WeatherTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.FogDayNear)) return true;
+                if (eval(this.FogDayFar)) return true;
+                if (eval(this.FogNightNear)) return true;
+                if (eval(this.FogNightFar)) return true;
+                if (eval(this.HdrEyeAdaptSpeed)) return true;
+                if (eval(this.HdrBlurRadius)) return true;
+                if (eval(this.HdrBlurPasses)) return true;
+                if (eval(this.HdrEmissiveMult)) return true;
+                if (eval(this.HdrTargetLum)) return true;
+                if (eval(this.HdrUpperLumClamp)) return true;
+                if (eval(this.HdrBrightScale)) return true;
+                if (eval(this.HdrBrightClamp)) return true;
+                if (eval(this.HdrLumRampNoTex)) return true;
+                if (eval(this.HdrLumRampMin)) return true;
+                if (eval(this.HdrLumRampMax)) return true;
+                if (eval(this.HdrSunlightDimmer)) return true;
+                if (eval(this.HdrGrassDimmer)) return true;
+                if (eval(this.HdrTreeDimmer)) return true;
+                if (eval(this.WindSpeed)) return true;
+                if (eval(this.CloudSpeedLower)) return true;
+                if (eval(this.CloudSpeedUpper)) return true;
+                if (eval(this.TransDelta)) return true;
+                if (eval(this.SunGlare)) return true;
+                if (eval(this.SunDamage)) return true;
+                if (eval(this.PrecipitationBeginFadeIn)) return true;
+                if (eval(this.PrecipitationEndFadeOut)) return true;
+                if (eval(this.ThunderLightningBeginFadeIn)) return true;
+                if (eval(this.ThunderLightningEndFadeOut)) return true;
+                if (eval(this.ThunderLightningFrequency)) return true;
+                if (eval(this.Classification)) return true;
+                if (eval(this.LightningColor)) return true;
+                if (this.Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null)
+                    {
+                        foreach (var item in this.Sounds.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.FNAMDataTypeState)) return true;
+                if (eval(this.HNAMDataTypeState)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -4560,14 +4633,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Model) ?? true))
             {
-                var ModelItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                    item: ModelItem,
-                    node: node,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Weather_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Model));
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Weather_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Model));
+                }
             }
             if (item.WeatherTypes.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WeatherTypes) ?? true))
@@ -4890,13 +4965,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Sounds),
                     transl: (XElement subNode, IWeatherSoundGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((WeatherSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((WeatherSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))

@@ -279,12 +279,21 @@ namespace Mutagen.Bethesda
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Master)) return false;
                 if (!eval(this.FileSize)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Master)) return true;
+                if (eval(this.FileSize)) return true;
+                return false;
             }
             #endregion
 

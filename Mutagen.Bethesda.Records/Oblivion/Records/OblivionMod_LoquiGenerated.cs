@@ -1052,295 +1052,587 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (ModHeader != null)
                 {
                     if (!eval(this.ModHeader.Overall)) return false;
-                    if (this.ModHeader.Specific != null && !this.ModHeader.Specific.AllEqual(eval)) return false;
+                    if (this.ModHeader.Specific != null && !this.ModHeader.Specific.All(eval)) return false;
                 }
                 if (GameSettings != null)
                 {
                     if (!eval(this.GameSettings.Overall)) return false;
-                    if (this.GameSettings.Specific != null && !this.GameSettings.Specific.AllEqual(eval)) return false;
+                    if (this.GameSettings.Specific != null && !this.GameSettings.Specific.All(eval)) return false;
                 }
                 if (Globals != null)
                 {
                     if (!eval(this.Globals.Overall)) return false;
-                    if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
+                    if (this.Globals.Specific != null && !this.Globals.Specific.All(eval)) return false;
                 }
                 if (Classes != null)
                 {
                     if (!eval(this.Classes.Overall)) return false;
-                    if (this.Classes.Specific != null && !this.Classes.Specific.AllEqual(eval)) return false;
+                    if (this.Classes.Specific != null && !this.Classes.Specific.All(eval)) return false;
                 }
                 if (Factions != null)
                 {
                     if (!eval(this.Factions.Overall)) return false;
-                    if (this.Factions.Specific != null && !this.Factions.Specific.AllEqual(eval)) return false;
+                    if (this.Factions.Specific != null && !this.Factions.Specific.All(eval)) return false;
                 }
                 if (Hairs != null)
                 {
                     if (!eval(this.Hairs.Overall)) return false;
-                    if (this.Hairs.Specific != null && !this.Hairs.Specific.AllEqual(eval)) return false;
+                    if (this.Hairs.Specific != null && !this.Hairs.Specific.All(eval)) return false;
                 }
                 if (Eyes != null)
                 {
                     if (!eval(this.Eyes.Overall)) return false;
-                    if (this.Eyes.Specific != null && !this.Eyes.Specific.AllEqual(eval)) return false;
+                    if (this.Eyes.Specific != null && !this.Eyes.Specific.All(eval)) return false;
                 }
                 if (Races != null)
                 {
                     if (!eval(this.Races.Overall)) return false;
-                    if (this.Races.Specific != null && !this.Races.Specific.AllEqual(eval)) return false;
+                    if (this.Races.Specific != null && !this.Races.Specific.All(eval)) return false;
                 }
                 if (Sounds != null)
                 {
                     if (!eval(this.Sounds.Overall)) return false;
-                    if (this.Sounds.Specific != null && !this.Sounds.Specific.AllEqual(eval)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
                 }
                 if (Skills != null)
                 {
                     if (!eval(this.Skills.Overall)) return false;
-                    if (this.Skills.Specific != null && !this.Skills.Specific.AllEqual(eval)) return false;
+                    if (this.Skills.Specific != null && !this.Skills.Specific.All(eval)) return false;
                 }
                 if (MagicEffects != null)
                 {
                     if (!eval(this.MagicEffects.Overall)) return false;
-                    if (this.MagicEffects.Specific != null && !this.MagicEffects.Specific.AllEqual(eval)) return false;
+                    if (this.MagicEffects.Specific != null && !this.MagicEffects.Specific.All(eval)) return false;
                 }
                 if (Scripts != null)
                 {
                     if (!eval(this.Scripts.Overall)) return false;
-                    if (this.Scripts.Specific != null && !this.Scripts.Specific.AllEqual(eval)) return false;
+                    if (this.Scripts.Specific != null && !this.Scripts.Specific.All(eval)) return false;
                 }
                 if (LandTextures != null)
                 {
                     if (!eval(this.LandTextures.Overall)) return false;
-                    if (this.LandTextures.Specific != null && !this.LandTextures.Specific.AllEqual(eval)) return false;
+                    if (this.LandTextures.Specific != null && !this.LandTextures.Specific.All(eval)) return false;
                 }
                 if (Enchantments != null)
                 {
                     if (!eval(this.Enchantments.Overall)) return false;
-                    if (this.Enchantments.Specific != null && !this.Enchantments.Specific.AllEqual(eval)) return false;
+                    if (this.Enchantments.Specific != null && !this.Enchantments.Specific.All(eval)) return false;
                 }
                 if (Spells != null)
                 {
                     if (!eval(this.Spells.Overall)) return false;
-                    if (this.Spells.Specific != null && !this.Spells.Specific.AllEqual(eval)) return false;
+                    if (this.Spells.Specific != null && !this.Spells.Specific.All(eval)) return false;
                 }
                 if (Birthsigns != null)
                 {
                     if (!eval(this.Birthsigns.Overall)) return false;
-                    if (this.Birthsigns.Specific != null && !this.Birthsigns.Specific.AllEqual(eval)) return false;
+                    if (this.Birthsigns.Specific != null && !this.Birthsigns.Specific.All(eval)) return false;
                 }
                 if (Activators != null)
                 {
                     if (!eval(this.Activators.Overall)) return false;
-                    if (this.Activators.Specific != null && !this.Activators.Specific.AllEqual(eval)) return false;
+                    if (this.Activators.Specific != null && !this.Activators.Specific.All(eval)) return false;
                 }
                 if (AlchemicalApparatus != null)
                 {
                     if (!eval(this.AlchemicalApparatus.Overall)) return false;
-                    if (this.AlchemicalApparatus.Specific != null && !this.AlchemicalApparatus.Specific.AllEqual(eval)) return false;
+                    if (this.AlchemicalApparatus.Specific != null && !this.AlchemicalApparatus.Specific.All(eval)) return false;
                 }
                 if (Armors != null)
                 {
                     if (!eval(this.Armors.Overall)) return false;
-                    if (this.Armors.Specific != null && !this.Armors.Specific.AllEqual(eval)) return false;
+                    if (this.Armors.Specific != null && !this.Armors.Specific.All(eval)) return false;
                 }
                 if (Books != null)
                 {
                     if (!eval(this.Books.Overall)) return false;
-                    if (this.Books.Specific != null && !this.Books.Specific.AllEqual(eval)) return false;
+                    if (this.Books.Specific != null && !this.Books.Specific.All(eval)) return false;
                 }
                 if (Clothes != null)
                 {
                     if (!eval(this.Clothes.Overall)) return false;
-                    if (this.Clothes.Specific != null && !this.Clothes.Specific.AllEqual(eval)) return false;
+                    if (this.Clothes.Specific != null && !this.Clothes.Specific.All(eval)) return false;
                 }
                 if (Containers != null)
                 {
                     if (!eval(this.Containers.Overall)) return false;
-                    if (this.Containers.Specific != null && !this.Containers.Specific.AllEqual(eval)) return false;
+                    if (this.Containers.Specific != null && !this.Containers.Specific.All(eval)) return false;
                 }
                 if (Doors != null)
                 {
                     if (!eval(this.Doors.Overall)) return false;
-                    if (this.Doors.Specific != null && !this.Doors.Specific.AllEqual(eval)) return false;
+                    if (this.Doors.Specific != null && !this.Doors.Specific.All(eval)) return false;
                 }
                 if (Ingredients != null)
                 {
                     if (!eval(this.Ingredients.Overall)) return false;
-                    if (this.Ingredients.Specific != null && !this.Ingredients.Specific.AllEqual(eval)) return false;
+                    if (this.Ingredients.Specific != null && !this.Ingredients.Specific.All(eval)) return false;
                 }
                 if (Lights != null)
                 {
                     if (!eval(this.Lights.Overall)) return false;
-                    if (this.Lights.Specific != null && !this.Lights.Specific.AllEqual(eval)) return false;
+                    if (this.Lights.Specific != null && !this.Lights.Specific.All(eval)) return false;
                 }
                 if (Miscellaneous != null)
                 {
                     if (!eval(this.Miscellaneous.Overall)) return false;
-                    if (this.Miscellaneous.Specific != null && !this.Miscellaneous.Specific.AllEqual(eval)) return false;
+                    if (this.Miscellaneous.Specific != null && !this.Miscellaneous.Specific.All(eval)) return false;
                 }
                 if (Statics != null)
                 {
                     if (!eval(this.Statics.Overall)) return false;
-                    if (this.Statics.Specific != null && !this.Statics.Specific.AllEqual(eval)) return false;
+                    if (this.Statics.Specific != null && !this.Statics.Specific.All(eval)) return false;
                 }
                 if (Grasses != null)
                 {
                     if (!eval(this.Grasses.Overall)) return false;
-                    if (this.Grasses.Specific != null && !this.Grasses.Specific.AllEqual(eval)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.All(eval)) return false;
                 }
                 if (Trees != null)
                 {
                     if (!eval(this.Trees.Overall)) return false;
-                    if (this.Trees.Specific != null && !this.Trees.Specific.AllEqual(eval)) return false;
+                    if (this.Trees.Specific != null && !this.Trees.Specific.All(eval)) return false;
                 }
                 if (Flora != null)
                 {
                     if (!eval(this.Flora.Overall)) return false;
-                    if (this.Flora.Specific != null && !this.Flora.Specific.AllEqual(eval)) return false;
+                    if (this.Flora.Specific != null && !this.Flora.Specific.All(eval)) return false;
                 }
                 if (Furnature != null)
                 {
                     if (!eval(this.Furnature.Overall)) return false;
-                    if (this.Furnature.Specific != null && !this.Furnature.Specific.AllEqual(eval)) return false;
+                    if (this.Furnature.Specific != null && !this.Furnature.Specific.All(eval)) return false;
                 }
                 if (Weapons != null)
                 {
                     if (!eval(this.Weapons.Overall)) return false;
-                    if (this.Weapons.Specific != null && !this.Weapons.Specific.AllEqual(eval)) return false;
+                    if (this.Weapons.Specific != null && !this.Weapons.Specific.All(eval)) return false;
                 }
                 if (Ammo != null)
                 {
                     if (!eval(this.Ammo.Overall)) return false;
-                    if (this.Ammo.Specific != null && !this.Ammo.Specific.AllEqual(eval)) return false;
+                    if (this.Ammo.Specific != null && !this.Ammo.Specific.All(eval)) return false;
                 }
                 if (NPCs != null)
                 {
                     if (!eval(this.NPCs.Overall)) return false;
-                    if (this.NPCs.Specific != null && !this.NPCs.Specific.AllEqual(eval)) return false;
+                    if (this.NPCs.Specific != null && !this.NPCs.Specific.All(eval)) return false;
                 }
                 if (Creatures != null)
                 {
                     if (!eval(this.Creatures.Overall)) return false;
-                    if (this.Creatures.Specific != null && !this.Creatures.Specific.AllEqual(eval)) return false;
+                    if (this.Creatures.Specific != null && !this.Creatures.Specific.All(eval)) return false;
                 }
                 if (LeveledCreatures != null)
                 {
                     if (!eval(this.LeveledCreatures.Overall)) return false;
-                    if (this.LeveledCreatures.Specific != null && !this.LeveledCreatures.Specific.AllEqual(eval)) return false;
+                    if (this.LeveledCreatures.Specific != null && !this.LeveledCreatures.Specific.All(eval)) return false;
                 }
                 if (SoulGems != null)
                 {
                     if (!eval(this.SoulGems.Overall)) return false;
-                    if (this.SoulGems.Specific != null && !this.SoulGems.Specific.AllEqual(eval)) return false;
+                    if (this.SoulGems.Specific != null && !this.SoulGems.Specific.All(eval)) return false;
                 }
                 if (Keys != null)
                 {
                     if (!eval(this.Keys.Overall)) return false;
-                    if (this.Keys.Specific != null && !this.Keys.Specific.AllEqual(eval)) return false;
+                    if (this.Keys.Specific != null && !this.Keys.Specific.All(eval)) return false;
                 }
                 if (Potions != null)
                 {
                     if (!eval(this.Potions.Overall)) return false;
-                    if (this.Potions.Specific != null && !this.Potions.Specific.AllEqual(eval)) return false;
+                    if (this.Potions.Specific != null && !this.Potions.Specific.All(eval)) return false;
                 }
                 if (Subspaces != null)
                 {
                     if (!eval(this.Subspaces.Overall)) return false;
-                    if (this.Subspaces.Specific != null && !this.Subspaces.Specific.AllEqual(eval)) return false;
+                    if (this.Subspaces.Specific != null && !this.Subspaces.Specific.All(eval)) return false;
                 }
                 if (SigilStones != null)
                 {
                     if (!eval(this.SigilStones.Overall)) return false;
-                    if (this.SigilStones.Specific != null && !this.SigilStones.Specific.AllEqual(eval)) return false;
+                    if (this.SigilStones.Specific != null && !this.SigilStones.Specific.All(eval)) return false;
                 }
                 if (LeveledItems != null)
                 {
                     if (!eval(this.LeveledItems.Overall)) return false;
-                    if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.AllEqual(eval)) return false;
+                    if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.All(eval)) return false;
                 }
                 if (Weathers != null)
                 {
                     if (!eval(this.Weathers.Overall)) return false;
-                    if (this.Weathers.Specific != null && !this.Weathers.Specific.AllEqual(eval)) return false;
+                    if (this.Weathers.Specific != null && !this.Weathers.Specific.All(eval)) return false;
                 }
                 if (Climates != null)
                 {
                     if (!eval(this.Climates.Overall)) return false;
-                    if (this.Climates.Specific != null && !this.Climates.Specific.AllEqual(eval)) return false;
+                    if (this.Climates.Specific != null && !this.Climates.Specific.All(eval)) return false;
                 }
                 if (Regions != null)
                 {
                     if (!eval(this.Regions.Overall)) return false;
-                    if (this.Regions.Specific != null && !this.Regions.Specific.AllEqual(eval)) return false;
+                    if (this.Regions.Specific != null && !this.Regions.Specific.All(eval)) return false;
                 }
                 if (Cells != null)
                 {
                     if (!eval(this.Cells.Overall)) return false;
-                    if (this.Cells.Specific != null && !this.Cells.Specific.AllEqual(eval)) return false;
+                    if (this.Cells.Specific != null && !this.Cells.Specific.All(eval)) return false;
                 }
                 if (Worldspaces != null)
                 {
                     if (!eval(this.Worldspaces.Overall)) return false;
-                    if (this.Worldspaces.Specific != null && !this.Worldspaces.Specific.AllEqual(eval)) return false;
+                    if (this.Worldspaces.Specific != null && !this.Worldspaces.Specific.All(eval)) return false;
                 }
                 if (DialogTopics != null)
                 {
                     if (!eval(this.DialogTopics.Overall)) return false;
-                    if (this.DialogTopics.Specific != null && !this.DialogTopics.Specific.AllEqual(eval)) return false;
+                    if (this.DialogTopics.Specific != null && !this.DialogTopics.Specific.All(eval)) return false;
                 }
                 if (Quests != null)
                 {
                     if (!eval(this.Quests.Overall)) return false;
-                    if (this.Quests.Specific != null && !this.Quests.Specific.AllEqual(eval)) return false;
+                    if (this.Quests.Specific != null && !this.Quests.Specific.All(eval)) return false;
                 }
                 if (IdleAnimations != null)
                 {
                     if (!eval(this.IdleAnimations.Overall)) return false;
-                    if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.AllEqual(eval)) return false;
+                    if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.All(eval)) return false;
                 }
                 if (AIPackages != null)
                 {
                     if (!eval(this.AIPackages.Overall)) return false;
-                    if (this.AIPackages.Specific != null && !this.AIPackages.Specific.AllEqual(eval)) return false;
+                    if (this.AIPackages.Specific != null && !this.AIPackages.Specific.All(eval)) return false;
                 }
                 if (CombatStyles != null)
                 {
                     if (!eval(this.CombatStyles.Overall)) return false;
-                    if (this.CombatStyles.Specific != null && !this.CombatStyles.Specific.AllEqual(eval)) return false;
+                    if (this.CombatStyles.Specific != null && !this.CombatStyles.Specific.All(eval)) return false;
                 }
                 if (LoadScreens != null)
                 {
                     if (!eval(this.LoadScreens.Overall)) return false;
-                    if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.AllEqual(eval)) return false;
+                    if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.All(eval)) return false;
                 }
                 if (LeveledSpells != null)
                 {
                     if (!eval(this.LeveledSpells.Overall)) return false;
-                    if (this.LeveledSpells.Specific != null && !this.LeveledSpells.Specific.AllEqual(eval)) return false;
+                    if (this.LeveledSpells.Specific != null && !this.LeveledSpells.Specific.All(eval)) return false;
                 }
                 if (AnimatedObjects != null)
                 {
                     if (!eval(this.AnimatedObjects.Overall)) return false;
-                    if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.AllEqual(eval)) return false;
+                    if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.All(eval)) return false;
                 }
                 if (Waters != null)
                 {
                     if (!eval(this.Waters.Overall)) return false;
-                    if (this.Waters.Specific != null && !this.Waters.Specific.AllEqual(eval)) return false;
+                    if (this.Waters.Specific != null && !this.Waters.Specific.All(eval)) return false;
                 }
                 if (EffectShaders != null)
                 {
                     if (!eval(this.EffectShaders.Overall)) return false;
-                    if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.AllEqual(eval)) return false;
+                    if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (ModHeader != null)
+                {
+                    if (eval(this.ModHeader.Overall)) return true;
+                    if (this.ModHeader.Specific != null && this.ModHeader.Specific.Any(eval)) return true;
+                }
+                if (GameSettings != null)
+                {
+                    if (eval(this.GameSettings.Overall)) return true;
+                    if (this.GameSettings.Specific != null && this.GameSettings.Specific.Any(eval)) return true;
+                }
+                if (Globals != null)
+                {
+                    if (eval(this.Globals.Overall)) return true;
+                    if (this.Globals.Specific != null && this.Globals.Specific.Any(eval)) return true;
+                }
+                if (Classes != null)
+                {
+                    if (eval(this.Classes.Overall)) return true;
+                    if (this.Classes.Specific != null && this.Classes.Specific.Any(eval)) return true;
+                }
+                if (Factions != null)
+                {
+                    if (eval(this.Factions.Overall)) return true;
+                    if (this.Factions.Specific != null && this.Factions.Specific.Any(eval)) return true;
+                }
+                if (Hairs != null)
+                {
+                    if (eval(this.Hairs.Overall)) return true;
+                    if (this.Hairs.Specific != null && this.Hairs.Specific.Any(eval)) return true;
+                }
+                if (Eyes != null)
+                {
+                    if (eval(this.Eyes.Overall)) return true;
+                    if (this.Eyes.Specific != null && this.Eyes.Specific.Any(eval)) return true;
+                }
+                if (Races != null)
+                {
+                    if (eval(this.Races.Overall)) return true;
+                    if (this.Races.Specific != null && this.Races.Specific.Any(eval)) return true;
+                }
+                if (Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
+                }
+                if (Skills != null)
+                {
+                    if (eval(this.Skills.Overall)) return true;
+                    if (this.Skills.Specific != null && this.Skills.Specific.Any(eval)) return true;
+                }
+                if (MagicEffects != null)
+                {
+                    if (eval(this.MagicEffects.Overall)) return true;
+                    if (this.MagicEffects.Specific != null && this.MagicEffects.Specific.Any(eval)) return true;
+                }
+                if (Scripts != null)
+                {
+                    if (eval(this.Scripts.Overall)) return true;
+                    if (this.Scripts.Specific != null && this.Scripts.Specific.Any(eval)) return true;
+                }
+                if (LandTextures != null)
+                {
+                    if (eval(this.LandTextures.Overall)) return true;
+                    if (this.LandTextures.Specific != null && this.LandTextures.Specific.Any(eval)) return true;
+                }
+                if (Enchantments != null)
+                {
+                    if (eval(this.Enchantments.Overall)) return true;
+                    if (this.Enchantments.Specific != null && this.Enchantments.Specific.Any(eval)) return true;
+                }
+                if (Spells != null)
+                {
+                    if (eval(this.Spells.Overall)) return true;
+                    if (this.Spells.Specific != null && this.Spells.Specific.Any(eval)) return true;
+                }
+                if (Birthsigns != null)
+                {
+                    if (eval(this.Birthsigns.Overall)) return true;
+                    if (this.Birthsigns.Specific != null && this.Birthsigns.Specific.Any(eval)) return true;
+                }
+                if (Activators != null)
+                {
+                    if (eval(this.Activators.Overall)) return true;
+                    if (this.Activators.Specific != null && this.Activators.Specific.Any(eval)) return true;
+                }
+                if (AlchemicalApparatus != null)
+                {
+                    if (eval(this.AlchemicalApparatus.Overall)) return true;
+                    if (this.AlchemicalApparatus.Specific != null && this.AlchemicalApparatus.Specific.Any(eval)) return true;
+                }
+                if (Armors != null)
+                {
+                    if (eval(this.Armors.Overall)) return true;
+                    if (this.Armors.Specific != null && this.Armors.Specific.Any(eval)) return true;
+                }
+                if (Books != null)
+                {
+                    if (eval(this.Books.Overall)) return true;
+                    if (this.Books.Specific != null && this.Books.Specific.Any(eval)) return true;
+                }
+                if (Clothes != null)
+                {
+                    if (eval(this.Clothes.Overall)) return true;
+                    if (this.Clothes.Specific != null && this.Clothes.Specific.Any(eval)) return true;
+                }
+                if (Containers != null)
+                {
+                    if (eval(this.Containers.Overall)) return true;
+                    if (this.Containers.Specific != null && this.Containers.Specific.Any(eval)) return true;
+                }
+                if (Doors != null)
+                {
+                    if (eval(this.Doors.Overall)) return true;
+                    if (this.Doors.Specific != null && this.Doors.Specific.Any(eval)) return true;
+                }
+                if (Ingredients != null)
+                {
+                    if (eval(this.Ingredients.Overall)) return true;
+                    if (this.Ingredients.Specific != null && this.Ingredients.Specific.Any(eval)) return true;
+                }
+                if (Lights != null)
+                {
+                    if (eval(this.Lights.Overall)) return true;
+                    if (this.Lights.Specific != null && this.Lights.Specific.Any(eval)) return true;
+                }
+                if (Miscellaneous != null)
+                {
+                    if (eval(this.Miscellaneous.Overall)) return true;
+                    if (this.Miscellaneous.Specific != null && this.Miscellaneous.Specific.Any(eval)) return true;
+                }
+                if (Statics != null)
+                {
+                    if (eval(this.Statics.Overall)) return true;
+                    if (this.Statics.Specific != null && this.Statics.Specific.Any(eval)) return true;
+                }
+                if (Grasses != null)
+                {
+                    if (eval(this.Grasses.Overall)) return true;
+                    if (this.Grasses.Specific != null && this.Grasses.Specific.Any(eval)) return true;
+                }
+                if (Trees != null)
+                {
+                    if (eval(this.Trees.Overall)) return true;
+                    if (this.Trees.Specific != null && this.Trees.Specific.Any(eval)) return true;
+                }
+                if (Flora != null)
+                {
+                    if (eval(this.Flora.Overall)) return true;
+                    if (this.Flora.Specific != null && this.Flora.Specific.Any(eval)) return true;
+                }
+                if (Furnature != null)
+                {
+                    if (eval(this.Furnature.Overall)) return true;
+                    if (this.Furnature.Specific != null && this.Furnature.Specific.Any(eval)) return true;
+                }
+                if (Weapons != null)
+                {
+                    if (eval(this.Weapons.Overall)) return true;
+                    if (this.Weapons.Specific != null && this.Weapons.Specific.Any(eval)) return true;
+                }
+                if (Ammo != null)
+                {
+                    if (eval(this.Ammo.Overall)) return true;
+                    if (this.Ammo.Specific != null && this.Ammo.Specific.Any(eval)) return true;
+                }
+                if (NPCs != null)
+                {
+                    if (eval(this.NPCs.Overall)) return true;
+                    if (this.NPCs.Specific != null && this.NPCs.Specific.Any(eval)) return true;
+                }
+                if (Creatures != null)
+                {
+                    if (eval(this.Creatures.Overall)) return true;
+                    if (this.Creatures.Specific != null && this.Creatures.Specific.Any(eval)) return true;
+                }
+                if (LeveledCreatures != null)
+                {
+                    if (eval(this.LeveledCreatures.Overall)) return true;
+                    if (this.LeveledCreatures.Specific != null && this.LeveledCreatures.Specific.Any(eval)) return true;
+                }
+                if (SoulGems != null)
+                {
+                    if (eval(this.SoulGems.Overall)) return true;
+                    if (this.SoulGems.Specific != null && this.SoulGems.Specific.Any(eval)) return true;
+                }
+                if (Keys != null)
+                {
+                    if (eval(this.Keys.Overall)) return true;
+                    if (this.Keys.Specific != null && this.Keys.Specific.Any(eval)) return true;
+                }
+                if (Potions != null)
+                {
+                    if (eval(this.Potions.Overall)) return true;
+                    if (this.Potions.Specific != null && this.Potions.Specific.Any(eval)) return true;
+                }
+                if (Subspaces != null)
+                {
+                    if (eval(this.Subspaces.Overall)) return true;
+                    if (this.Subspaces.Specific != null && this.Subspaces.Specific.Any(eval)) return true;
+                }
+                if (SigilStones != null)
+                {
+                    if (eval(this.SigilStones.Overall)) return true;
+                    if (this.SigilStones.Specific != null && this.SigilStones.Specific.Any(eval)) return true;
+                }
+                if (LeveledItems != null)
+                {
+                    if (eval(this.LeveledItems.Overall)) return true;
+                    if (this.LeveledItems.Specific != null && this.LeveledItems.Specific.Any(eval)) return true;
+                }
+                if (Weathers != null)
+                {
+                    if (eval(this.Weathers.Overall)) return true;
+                    if (this.Weathers.Specific != null && this.Weathers.Specific.Any(eval)) return true;
+                }
+                if (Climates != null)
+                {
+                    if (eval(this.Climates.Overall)) return true;
+                    if (this.Climates.Specific != null && this.Climates.Specific.Any(eval)) return true;
+                }
+                if (Regions != null)
+                {
+                    if (eval(this.Regions.Overall)) return true;
+                    if (this.Regions.Specific != null && this.Regions.Specific.Any(eval)) return true;
+                }
+                if (Cells != null)
+                {
+                    if (eval(this.Cells.Overall)) return true;
+                    if (this.Cells.Specific != null && this.Cells.Specific.Any(eval)) return true;
+                }
+                if (Worldspaces != null)
+                {
+                    if (eval(this.Worldspaces.Overall)) return true;
+                    if (this.Worldspaces.Specific != null && this.Worldspaces.Specific.Any(eval)) return true;
+                }
+                if (DialogTopics != null)
+                {
+                    if (eval(this.DialogTopics.Overall)) return true;
+                    if (this.DialogTopics.Specific != null && this.DialogTopics.Specific.Any(eval)) return true;
+                }
+                if (Quests != null)
+                {
+                    if (eval(this.Quests.Overall)) return true;
+                    if (this.Quests.Specific != null && this.Quests.Specific.Any(eval)) return true;
+                }
+                if (IdleAnimations != null)
+                {
+                    if (eval(this.IdleAnimations.Overall)) return true;
+                    if (this.IdleAnimations.Specific != null && this.IdleAnimations.Specific.Any(eval)) return true;
+                }
+                if (AIPackages != null)
+                {
+                    if (eval(this.AIPackages.Overall)) return true;
+                    if (this.AIPackages.Specific != null && this.AIPackages.Specific.Any(eval)) return true;
+                }
+                if (CombatStyles != null)
+                {
+                    if (eval(this.CombatStyles.Overall)) return true;
+                    if (this.CombatStyles.Specific != null && this.CombatStyles.Specific.Any(eval)) return true;
+                }
+                if (LoadScreens != null)
+                {
+                    if (eval(this.LoadScreens.Overall)) return true;
+                    if (this.LoadScreens.Specific != null && this.LoadScreens.Specific.Any(eval)) return true;
+                }
+                if (LeveledSpells != null)
+                {
+                    if (eval(this.LeveledSpells.Overall)) return true;
+                    if (this.LeveledSpells.Specific != null && this.LeveledSpells.Specific.Any(eval)) return true;
+                }
+                if (AnimatedObjects != null)
+                {
+                    if (eval(this.AnimatedObjects.Overall)) return true;
+                    if (this.AnimatedObjects.Specific != null && this.AnimatedObjects.Specific.Any(eval)) return true;
+                }
+                if (Waters != null)
+                {
+                    if (eval(this.Waters.Overall)) return true;
+                    if (this.Waters.Specific != null && this.Waters.Specific.Any(eval)) return true;
+                }
+                if (EffectShaders != null)
+                {
+                    if (eval(this.EffectShaders.Overall)) return true;
+                    if (this.EffectShaders.Specific != null && this.EffectShaders.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 

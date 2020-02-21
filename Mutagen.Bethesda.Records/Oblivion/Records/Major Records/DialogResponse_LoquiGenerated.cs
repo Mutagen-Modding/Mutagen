@@ -388,8 +388,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Emotion)) return false;
                 if (!eval(this.EmotionValue)) return false;
@@ -400,6 +400,21 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.ActorNotes)) return false;
                 if (!eval(this.TRDTDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Emotion)) return true;
+                if (eval(this.EmotionValue)) return true;
+                if (eval(this.Fluff1)) return true;
+                if (eval(this.ResponseNumber)) return true;
+                if (eval(this.Fluff2)) return true;
+                if (eval(this.ResponseText)) return true;
+                if (eval(this.ActorNotes)) return true;
+                if (eval(this.TRDTDataTypeState)) return true;
+                return false;
             }
             #endregion
 

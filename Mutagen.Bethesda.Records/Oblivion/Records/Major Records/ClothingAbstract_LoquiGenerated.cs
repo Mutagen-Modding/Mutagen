@@ -483,10 +483,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Script)) return false;
                 if (!eval(this.Enchantment)) return false;
@@ -496,27 +496,64 @@ namespace Mutagen.Bethesda.Oblivion
                 if (MaleBipedModel != null)
                 {
                     if (!eval(this.MaleBipedModel.Overall)) return false;
-                    if (this.MaleBipedModel.Specific != null && !this.MaleBipedModel.Specific.AllEqual(eval)) return false;
+                    if (this.MaleBipedModel.Specific != null && !this.MaleBipedModel.Specific.All(eval)) return false;
                 }
                 if (MaleWorldModel != null)
                 {
                     if (!eval(this.MaleWorldModel.Overall)) return false;
-                    if (this.MaleWorldModel.Specific != null && !this.MaleWorldModel.Specific.AllEqual(eval)) return false;
+                    if (this.MaleWorldModel.Specific != null && !this.MaleWorldModel.Specific.All(eval)) return false;
                 }
                 if (!eval(this.MaleIcon)) return false;
                 if (FemaleBipedModel != null)
                 {
                     if (!eval(this.FemaleBipedModel.Overall)) return false;
-                    if (this.FemaleBipedModel.Specific != null && !this.FemaleBipedModel.Specific.AllEqual(eval)) return false;
+                    if (this.FemaleBipedModel.Specific != null && !this.FemaleBipedModel.Specific.All(eval)) return false;
                 }
                 if (FemaleWorldModel != null)
                 {
                     if (!eval(this.FemaleWorldModel.Overall)) return false;
-                    if (this.FemaleWorldModel.Specific != null && !this.FemaleWorldModel.Specific.AllEqual(eval)) return false;
+                    if (this.FemaleWorldModel.Specific != null && !this.FemaleWorldModel.Specific.All(eval)) return false;
                 }
                 if (!eval(this.FemaleIcon)) return false;
                 if (!eval(this.BMDTDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Script)) return true;
+                if (eval(this.Enchantment)) return true;
+                if (eval(this.EnchantmentPoints)) return true;
+                if (eval(this.BipedFlags)) return true;
+                if (eval(this.Flags)) return true;
+                if (MaleBipedModel != null)
+                {
+                    if (eval(this.MaleBipedModel.Overall)) return true;
+                    if (this.MaleBipedModel.Specific != null && this.MaleBipedModel.Specific.Any(eval)) return true;
+                }
+                if (MaleWorldModel != null)
+                {
+                    if (eval(this.MaleWorldModel.Overall)) return true;
+                    if (this.MaleWorldModel.Specific != null && this.MaleWorldModel.Specific.Any(eval)) return true;
+                }
+                if (eval(this.MaleIcon)) return true;
+                if (FemaleBipedModel != null)
+                {
+                    if (eval(this.FemaleBipedModel.Overall)) return true;
+                    if (this.FemaleBipedModel.Specific != null && this.FemaleBipedModel.Specific.Any(eval)) return true;
+                }
+                if (FemaleWorldModel != null)
+                {
+                    if (eval(this.FemaleWorldModel.Overall)) return true;
+                    if (this.FemaleWorldModel.Specific != null && this.FemaleWorldModel.Specific.Any(eval)) return true;
+                }
+                if (eval(this.FemaleIcon)) return true;
+                if (eval(this.BMDTDataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -2777,26 +2814,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.MaleBipedModel != null)
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))
             {
-                var MaleBipedModelItem = item.MaleBipedModel;
-                ((ModelXmlWriteTranslation)((IXmlItem)MaleBipedModelItem).XmlWriteTranslator).Write(
-                    item: MaleBipedModelItem,
-                    node: node,
-                    name: nameof(item.MaleBipedModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel));
+                if (item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)MaleBipedModelItem).XmlWriteTranslator).Write(
+                        item: MaleBipedModelItem,
+                        node: node,
+                        name: nameof(item.MaleBipedModel),
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel));
+                }
             }
             if ((item.MaleWorldModel != null)
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
             {
-                var MaleWorldModelItem = item.MaleWorldModel;
-                ((ModelXmlWriteTranslation)((IXmlItem)MaleWorldModelItem).XmlWriteTranslator).Write(
-                    item: MaleWorldModelItem,
-                    node: node,
-                    name: nameof(item.MaleWorldModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel));
+                if (item.MaleWorldModel.TryGet(out var MaleWorldModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)MaleWorldModelItem).XmlWriteTranslator).Write(
+                        item: MaleWorldModelItem,
+                        node: node,
+                        name: nameof(item.MaleWorldModel),
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel));
+                }
             }
             if ((item.MaleIcon != null)
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleIcon) ?? true))
@@ -2811,26 +2852,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.FemaleBipedModel != null)
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleBipedModel) ?? true))
             {
-                var FemaleBipedModelItem = item.FemaleBipedModel;
-                ((ModelXmlWriteTranslation)((IXmlItem)FemaleBipedModelItem).XmlWriteTranslator).Write(
-                    item: FemaleBipedModelItem,
-                    node: node,
-                    name: nameof(item.FemaleBipedModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel));
+                if (item.FemaleBipedModel.TryGet(out var FemaleBipedModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)FemaleBipedModelItem).XmlWriteTranslator).Write(
+                        item: FemaleBipedModelItem,
+                        node: node,
+                        name: nameof(item.FemaleBipedModel),
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel));
+                }
             }
             if ((item.FemaleWorldModel != null)
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
             {
-                var FemaleWorldModelItem = item.FemaleWorldModel;
-                ((ModelXmlWriteTranslation)((IXmlItem)FemaleWorldModelItem).XmlWriteTranslator).Write(
-                    item: FemaleWorldModelItem,
-                    node: node,
-                    name: nameof(item.FemaleWorldModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel));
+                if (item.FemaleWorldModel.TryGet(out var FemaleWorldModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)FemaleWorldModelItem).XmlWriteTranslator).Write(
+                        item: FemaleWorldModelItem,
+                        node: node,
+                        name: nameof(item.FemaleWorldModel),
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel));
+                }
             }
             if ((item.FemaleIcon != null)
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleIcon) ?? true))

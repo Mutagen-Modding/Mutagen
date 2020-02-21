@@ -441,10 +441,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.Icon)) return false;
@@ -476,10 +476,52 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Training != null)
                 {
                     if (!eval(this.Training.Overall)) return false;
-                    if (this.Training.Specific != null && !this.Training.Specific.AllEqual(eval)) return false;
+                    if (this.Training.Specific != null && !this.Training.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Icon)) return true;
+                if (this.PrimaryAttributes != null)
+                {
+                    if (eval(this.PrimaryAttributes.Overall)) return true;
+                    if (this.PrimaryAttributes.Specific != null)
+                    {
+                        foreach (var item in this.PrimaryAttributes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Specialization)) return true;
+                if (this.SecondaryAttributes != null)
+                {
+                    if (eval(this.SecondaryAttributes.Overall)) return true;
+                    if (this.SecondaryAttributes.Specific != null)
+                    {
+                        foreach (var item in this.SecondaryAttributes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Flags)) return true;
+                if (eval(this.ClassServices)) return true;
+                if (Training != null)
+                {
+                    if (eval(this.Training.Overall)) return true;
+                    if (this.Training.Specific != null && this.Training.Specific.Any(eval)) return true;
+                }
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 

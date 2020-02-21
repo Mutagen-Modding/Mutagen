@@ -289,20 +289,37 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (Male != null)
                 {
                     if (!eval(this.Male.Overall)) return false;
-                    if (this.Male.Specific != null && !this.Male.Specific.AllEqual(eval)) return false;
+                    if (this.Male.Specific != null && !this.Male.Specific.All(eval)) return false;
                 }
                 if (Female != null)
                 {
                     if (!eval(this.Female.Overall)) return false;
-                    if (this.Female.Specific != null && !this.Female.Specific.AllEqual(eval)) return false;
+                    if (this.Female.Specific != null && !this.Female.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (Male != null)
+                {
+                    if (eval(this.Male.Overall)) return true;
+                    if (this.Male.Specific != null && this.Male.Specific.Any(eval)) return true;
+                }
+                if (Female != null)
+                {
+                    if (eval(this.Female.Overall)) return true;
+                    if (this.Female.Specific != null && this.Female.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 
@@ -1560,26 +1577,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Male != null)
                 && (translationMask?.GetShouldTranslate((int)BodyDataPair_FieldIndex.Male) ?? true))
             {
-                var MaleItem = item.Male;
-                ((BodyDataXmlWriteTranslation)((IXmlItem)MaleItem).XmlWriteTranslator).Write(
-                    item: MaleItem,
-                    node: node,
-                    name: nameof(item.Male),
-                    fieldIndex: (int)BodyDataPair_FieldIndex.Male,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)BodyDataPair_FieldIndex.Male));
+                if (item.Male.TryGet(out var MaleItem))
+                {
+                    ((BodyDataXmlWriteTranslation)((IXmlItem)MaleItem).XmlWriteTranslator).Write(
+                        item: MaleItem,
+                        node: node,
+                        name: nameof(item.Male),
+                        fieldIndex: (int)BodyDataPair_FieldIndex.Male,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)BodyDataPair_FieldIndex.Male));
+                }
             }
             if ((item.Female != null)
                 && (translationMask?.GetShouldTranslate((int)BodyDataPair_FieldIndex.Female) ?? true))
             {
-                var FemaleItem = item.Female;
-                ((BodyDataXmlWriteTranslation)((IXmlItem)FemaleItem).XmlWriteTranslator).Write(
-                    item: FemaleItem,
-                    node: node,
-                    name: nameof(item.Female),
-                    fieldIndex: (int)BodyDataPair_FieldIndex.Female,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)BodyDataPair_FieldIndex.Female));
+                if (item.Female.TryGet(out var FemaleItem))
+                {
+                    ((BodyDataXmlWriteTranslation)((IXmlItem)FemaleItem).XmlWriteTranslator).Write(
+                        item: FemaleItem,
+                        node: node,
+                        name: nameof(item.Female),
+                        fieldIndex: (int)BodyDataPair_FieldIndex.Female,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)BodyDataPair_FieldIndex.Female));
+                }
             }
         }
 

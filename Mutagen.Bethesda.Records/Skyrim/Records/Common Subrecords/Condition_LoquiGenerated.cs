@@ -292,13 +292,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public virtual bool AllEqual(Func<T, bool> eval)
+            #region All
+            public virtual bool All(Func<T, bool> eval)
             {
                 if (!eval(this.CompareOperator)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Unknown1)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public virtual bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.CompareOperator)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Unknown1)) return true;
+                return false;
             }
             #endregion
 

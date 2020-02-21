@@ -931,10 +931,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Texture)) return false;
                 if (!eval(this.Opacity)) return false;
                 if (!eval(this.Flags)) return false;
@@ -969,10 +969,55 @@ namespace Mutagen.Bethesda.Oblivion
                 if (RelatedWaters != null)
                 {
                     if (!eval(this.RelatedWaters.Overall)) return false;
-                    if (this.RelatedWaters.Specific != null && !this.RelatedWaters.Specific.AllEqual(eval)) return false;
+                    if (this.RelatedWaters.Specific != null && !this.RelatedWaters.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Texture)) return true;
+                if (eval(this.Opacity)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.MaterialID)) return true;
+                if (eval(this.Sound)) return true;
+                if (eval(this.WindVelocity)) return true;
+                if (eval(this.WindDirection)) return true;
+                if (eval(this.WaveAmplitude)) return true;
+                if (eval(this.WaveFrequency)) return true;
+                if (eval(this.SunPower)) return true;
+                if (eval(this.ReflectivityAmount)) return true;
+                if (eval(this.FresnelAmount)) return true;
+                if (eval(this.ScrollXSpeed)) return true;
+                if (eval(this.ScrollYSpeed)) return true;
+                if (eval(this.FogDistanceNearPlane)) return true;
+                if (eval(this.FogDistanceFarPlane)) return true;
+                if (eval(this.ShallowColor)) return true;
+                if (eval(this.DeepColor)) return true;
+                if (eval(this.ReflectionColor)) return true;
+                if (eval(this.TextureBlend)) return true;
+                if (eval(this.RainSimulatorForce)) return true;
+                if (eval(this.RainSimulatorVelocity)) return true;
+                if (eval(this.RainSimulatorFalloff)) return true;
+                if (eval(this.RainSimulatorDampner)) return true;
+                if (eval(this.RainSimulatorStartingSize)) return true;
+                if (eval(this.DisplacementSimulatorForce)) return true;
+                if (eval(this.DisplacementSimulatorVelocity)) return true;
+                if (eval(this.DisplacementSimulatorFalloff)) return true;
+                if (eval(this.DisplacementSimulatorDampner)) return true;
+                if (eval(this.DisplacementSimulatorStartingSize)) return true;
+                if (eval(this.Damage)) return true;
+                if (RelatedWaters != null)
+                {
+                    if (eval(this.RelatedWaters.Overall)) return true;
+                    if (this.RelatedWaters.Specific != null && this.RelatedWaters.Specific.Any(eval)) return true;
+                }
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -4287,14 +4332,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.RelatedWaters != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
-                var RelatedWatersItem = item.RelatedWaters;
-                ((RelatedWatersXmlWriteTranslation)((IXmlItem)RelatedWatersItem).XmlWriteTranslator).Write(
-                    item: RelatedWatersItem,
-                    node: node,
-                    name: nameof(item.RelatedWaters),
-                    fieldIndex: (int)Water_FieldIndex.RelatedWaters,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
+                if (item.RelatedWaters.TryGet(out var RelatedWatersItem))
+                {
+                    ((RelatedWatersXmlWriteTranslation)((IXmlItem)RelatedWatersItem).XmlWriteTranslator).Write(
+                        item: RelatedWatersItem,
+                        node: node,
+                        name: nameof(item.RelatedWaters),
+                        fieldIndex: (int)Water_FieldIndex.RelatedWaters,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
+                }
             }
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DATADataTypeState) ?? true))
             {

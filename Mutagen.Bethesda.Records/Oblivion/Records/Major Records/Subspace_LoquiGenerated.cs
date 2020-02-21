@@ -336,15 +336,27 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.X)) return false;
                 if (!eval(this.Y)) return false;
                 if (!eval(this.Z)) return false;
                 if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.X)) return true;
+                if (eval(this.Y)) return true;
+                if (eval(this.Z)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
+                return false;
             }
             #endregion
 

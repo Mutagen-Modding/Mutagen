@@ -289,16 +289,29 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (AttackData != null)
                 {
                     if (!eval(this.AttackData.Overall)) return false;
-                    if (this.AttackData.Specific != null && !this.AttackData.Specific.AllEqual(eval)) return false;
+                    if (this.AttackData.Specific != null && !this.AttackData.Specific.All(eval)) return false;
                 }
                 if (!eval(this.AttackEvent)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (AttackData != null)
+                {
+                    if (eval(this.AttackData.Overall)) return true;
+                    if (this.AttackData.Specific != null && this.AttackData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.AttackEvent)) return true;
+                return false;
             }
             #endregion
 
@@ -1520,14 +1533,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.AttackData != null)
                 && (translationMask?.GetShouldTranslate((int)Attack_FieldIndex.AttackData) ?? true))
             {
-                var AttackDataItem = item.AttackData;
-                ((AttackDataXmlWriteTranslation)((IXmlItem)AttackDataItem).XmlWriteTranslator).Write(
-                    item: AttackDataItem,
-                    node: node,
-                    name: nameof(item.AttackData),
-                    fieldIndex: (int)Attack_FieldIndex.AttackData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Attack_FieldIndex.AttackData));
+                if (item.AttackData.TryGet(out var AttackDataItem))
+                {
+                    ((AttackDataXmlWriteTranslation)((IXmlItem)AttackDataItem).XmlWriteTranslator).Write(
+                        item: AttackDataItem,
+                        node: node,
+                        name: nameof(item.AttackData),
+                        fieldIndex: (int)Attack_FieldIndex.AttackData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Attack_FieldIndex.AttackData));
+                }
             }
             if ((item.AttackEvent != null)
                 && (translationMask?.GetShouldTranslate((int)Attack_FieldIndex.AttackEvent) ?? true))

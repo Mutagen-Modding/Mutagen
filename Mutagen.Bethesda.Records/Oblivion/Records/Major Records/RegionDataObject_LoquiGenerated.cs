@@ -427,8 +427,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Object)) return false;
                 if (!eval(this.ParentIndex)) return false;
@@ -448,6 +448,30 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.AngleVariance)) return false;
                 if (!eval(this.Unknown2)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Object)) return true;
+                if (eval(this.ParentIndex)) return true;
+                if (eval(this.Unknown1)) return true;
+                if (eval(this.Density)) return true;
+                if (eval(this.Clustering)) return true;
+                if (eval(this.MinSlope)) return true;
+                if (eval(this.MaxSlope)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.RadiusWrtPercent)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.MinHeight)) return true;
+                if (eval(this.MaxHeight)) return true;
+                if (eval(this.Sink)) return true;
+                if (eval(this.SinkVariance)) return true;
+                if (eval(this.SizeVariance)) return true;
+                if (eval(this.AngleVariance)) return true;
+                if (eval(this.Unknown2)) return true;
+                return false;
             }
             #endregion
 

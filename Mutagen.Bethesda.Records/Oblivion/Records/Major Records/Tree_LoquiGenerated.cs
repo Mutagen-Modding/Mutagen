@@ -530,14 +530,14 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
-                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Icon)) return false;
                 if (this.SpeedTreeSeeds != null)
@@ -564,6 +564,43 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.CNAMDataTypeState)) return false;
                 if (!eval(this.BNAMDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Icon)) return true;
+                if (this.SpeedTreeSeeds != null)
+                {
+                    if (eval(this.SpeedTreeSeeds.Overall)) return true;
+                    if (this.SpeedTreeSeeds.Specific != null)
+                    {
+                        foreach (var item in this.SpeedTreeSeeds.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.LeafCurvature)) return true;
+                if (eval(this.MinimumLeafAngle)) return true;
+                if (eval(this.MaximumLeafAngle)) return true;
+                if (eval(this.BranchDimmingValue)) return true;
+                if (eval(this.LeafDimmingValue)) return true;
+                if (eval(this.ShadowRadius)) return true;
+                if (eval(this.RockingSpeed)) return true;
+                if (eval(this.RustleSpeed)) return true;
+                if (eval(this.BillboardWidth)) return true;
+                if (eval(this.BillboardHeight)) return true;
+                if (eval(this.CNAMDataTypeState)) return true;
+                if (eval(this.BNAMDataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -2731,14 +2768,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
-                var ModelItem = item.Model;
-                ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                    item: ModelItem,
-                    node: node,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Tree_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Tree_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
+                }
             }
             if ((item.Icon != null)
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))

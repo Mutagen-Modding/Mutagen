@@ -337,8 +337,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.AmbientColor)) return false;
                 if (!eval(this.DirectionalColor)) return false;
@@ -350,6 +350,22 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.DirectionalFade)) return false;
                 if (!eval(this.FogClipDistance)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.AmbientColor)) return true;
+                if (eval(this.DirectionalColor)) return true;
+                if (eval(this.FogColor)) return true;
+                if (eval(this.FogNear)) return true;
+                if (eval(this.FogFar)) return true;
+                if (eval(this.DirectionalRotationXY)) return true;
+                if (eval(this.DirectionalRotationZ)) return true;
+                if (eval(this.DirectionalFade)) return true;
+                if (eval(this.FogClipDistance)) return true;
+                return false;
             }
             #endregion
 

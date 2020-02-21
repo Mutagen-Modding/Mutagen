@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>65ff2a9177ae68255a0d4812e78ddb591665fefd</Sha>
+         <Sha>ae2ad213d1d9238442a212d96d2ee03bc9aa6aba</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-19-2020 22:46:16</CommitDate>
-         <Description>Mask printmask generation tweaks</Description>
+         <CommitDate>02-20-2020 23:07:12</CommitDate>
+         <Description>Mask AllEqual -&gt; All.   Any as well</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

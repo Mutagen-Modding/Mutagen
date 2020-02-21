@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Tests
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (this.InterestingTypes != null)
                 {
@@ -183,6 +183,35 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (this.InterestingTypes != null)
+                {
+                    if (eval(this.InterestingTypes.Overall)) return true;
+                    if (this.InterestingTypes.Specific != null)
+                    {
+                        foreach (var item in this.InterestingTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.UninterestingTypes != null)
+                {
+                    if (eval(this.UninterestingTypes.Overall)) return true;
+                    if (this.UninterestingTypes.Specific != null)
+                    {
+                        foreach (var item in this.UninterestingTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 

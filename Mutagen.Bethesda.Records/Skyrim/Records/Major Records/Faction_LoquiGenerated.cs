@@ -705,10 +705,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (this.Relations != null)
                 {
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
                         foreach (var item in this.Relations.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
                         foreach (var item in this.Ranks.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -756,12 +756,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (VendorValues != null)
                 {
                     if (!eval(this.VendorValues.Overall)) return false;
-                    if (this.VendorValues.Specific != null && !this.VendorValues.Specific.AllEqual(eval)) return false;
+                    if (this.VendorValues.Specific != null && !this.VendorValues.Specific.All(eval)) return false;
                 }
                 if (VendorLocation != null)
                 {
                     if (!eval(this.VendorLocation.Overall)) return false;
-                    if (this.VendorLocation.Specific != null && !this.VendorLocation.Specific.AllEqual(eval)) return false;
+                    if (this.VendorLocation.Specific != null && !this.VendorLocation.Specific.All(eval)) return false;
                 }
                 if (this.Conditions != null)
                 {
@@ -771,12 +771,87 @@ namespace Mutagen.Bethesda.Skyrim
                         foreach (var item in this.Conditions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 if (!eval(this.CRVADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (this.Relations != null)
+                {
+                    if (eval(this.Relations.Overall)) return true;
+                    if (this.Relations.Specific != null)
+                    {
+                        foreach (var item in this.Relations.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Flags)) return true;
+                if (eval(this.PrisonMarker)) return true;
+                if (eval(this.FollowerWaitMarker)) return true;
+                if (eval(this.EvidenceChest)) return true;
+                if (eval(this.PlayerBelongingsChest)) return true;
+                if (eval(this.CrimeGroup)) return true;
+                if (eval(this.JailOutfit)) return true;
+                if (eval(this.ArrestCrimeValue)) return true;
+                if (eval(this.AttackOnSightCrimeValue)) return true;
+                if (eval(this.MurderCrimeValue)) return true;
+                if (eval(this.AssaultCrimeValue)) return true;
+                if (eval(this.TrespassCrimeValue)) return true;
+                if (eval(this.PickpocketCrimeValue)) return true;
+                if (eval(this.UnknownCrimeValue)) return true;
+                if (eval(this.StealMultCrimeValue)) return true;
+                if (eval(this.EscapeCrimeValue)) return true;
+                if (eval(this.WerewolfCrimeValue)) return true;
+                if (this.Ranks != null)
+                {
+                    if (eval(this.Ranks.Overall)) return true;
+                    if (this.Ranks.Specific != null)
+                    {
+                        foreach (var item in this.Ranks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.VendorList)) return true;
+                if (eval(this.VendorChest)) return true;
+                if (VendorValues != null)
+                {
+                    if (eval(this.VendorValues.Overall)) return true;
+                    if (this.VendorValues.Specific != null && this.VendorValues.Specific.Any(eval)) return true;
+                }
+                if (VendorLocation != null)
+                {
+                    if (eval(this.VendorLocation.Overall)) return true;
+                    if (this.VendorLocation.Specific != null && this.VendorLocation.Specific.Any(eval)) return true;
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.CRVADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -3935,13 +4010,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
                     transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((RelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((RelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((item.Flags != null)
@@ -4129,13 +4206,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
                     transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((RankXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((RankXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((item.VendorList.FormKey != null)
@@ -4161,26 +4240,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.VendorValues != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
-                var VendorValuesItem = item.VendorValues;
-                ((VendorValuesXmlWriteTranslation)((IXmlItem)VendorValuesItem).XmlWriteTranslator).Write(
-                    item: VendorValuesItem,
-                    node: node,
-                    name: nameof(item.VendorValues),
-                    fieldIndex: (int)Faction_FieldIndex.VendorValues,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues));
+                if (item.VendorValues.TryGet(out var VendorValuesItem))
+                {
+                    ((VendorValuesXmlWriteTranslation)((IXmlItem)VendorValuesItem).XmlWriteTranslator).Write(
+                        item: VendorValuesItem,
+                        node: node,
+                        name: nameof(item.VendorValues),
+                        fieldIndex: (int)Faction_FieldIndex.VendorValues,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues));
+                }
             }
             if ((item.VendorLocation != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
             {
-                var VendorLocationItem = item.VendorLocation;
-                ((VendorLocationXmlWriteTranslation)((IXmlItem)VendorLocationItem).XmlWriteTranslator).Write(
-                    item: VendorLocationItem,
-                    node: node,
-                    name: nameof(item.VendorLocation),
-                    fieldIndex: (int)Faction_FieldIndex.VendorLocation,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation));
+                if (item.VendorLocation.TryGet(out var VendorLocationItem))
+                {
+                    ((VendorLocationXmlWriteTranslation)((IXmlItem)VendorLocationItem).XmlWriteTranslator).Write(
+                        item: VendorLocationItem,
+                        node: node,
+                        name: nameof(item.VendorLocation),
+                        fieldIndex: (int)Faction_FieldIndex.VendorLocation,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation));
+                }
             }
             if (item.Conditions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
@@ -4194,13 +4277,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.CRVADataTypeState) ?? true))

@@ -526,10 +526,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Parent)) return false;
                 if (!eval(this.Climate)) return false;
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (MapData != null)
                 {
                     if (!eval(this.MapData.Overall)) return false;
-                    if (this.MapData.Specific != null && !this.MapData.Specific.AllEqual(eval)) return false;
+                    if (this.MapData.Specific != null && !this.MapData.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.ObjectBoundsMin)) return false;
@@ -548,12 +548,12 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Road != null)
                 {
                     if (!eval(this.Road.Overall)) return false;
-                    if (this.Road.Specific != null && !this.Road.Specific.AllEqual(eval)) return false;
+                    if (this.Road.Specific != null && !this.Road.Specific.All(eval)) return false;
                 }
                 if (TopCell != null)
                 {
                     if (!eval(this.TopCell.Overall)) return false;
-                    if (this.TopCell.Specific != null && !this.TopCell.Specific.AllEqual(eval)) return false;
+                    if (this.TopCell.Specific != null && !this.TopCell.Specific.All(eval)) return false;
                 }
                 if (!eval(this.SubCellsTimestamp)) return false;
                 if (this.SubCells != null)
@@ -564,12 +564,59 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.SubCells.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 if (!eval(this.UsingOffsetLength)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Parent)) return true;
+                if (eval(this.Climate)) return true;
+                if (eval(this.Water)) return true;
+                if (eval(this.Icon)) return true;
+                if (MapData != null)
+                {
+                    if (eval(this.MapData.Overall)) return true;
+                    if (this.MapData.Specific != null && this.MapData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Flags)) return true;
+                if (eval(this.ObjectBoundsMin)) return true;
+                if (eval(this.ObjectBoundsMax)) return true;
+                if (eval(this.Music)) return true;
+                if (eval(this.OffsetData)) return true;
+                if (Road != null)
+                {
+                    if (eval(this.Road.Overall)) return true;
+                    if (this.Road.Specific != null && this.Road.Specific.Any(eval)) return true;
+                }
+                if (TopCell != null)
+                {
+                    if (eval(this.TopCell.Overall)) return true;
+                    if (this.TopCell.Specific != null && this.TopCell.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SubCellsTimestamp)) return true;
+                if (this.SubCells != null)
+                {
+                    if (eval(this.SubCells.Overall)) return true;
+                    if (this.SubCells.Specific != null)
+                    {
+                        foreach (var item in this.SubCells.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.UsingOffsetLength)) return true;
+                return false;
             }
             #endregion
 
@@ -3218,14 +3265,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.MapData != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
-                var MapDataItem = item.MapData;
-                ((MapDataXmlWriteTranslation)((IXmlItem)MapDataItem).XmlWriteTranslator).Write(
-                    item: MapDataItem,
-                    node: node,
-                    name: nameof(item.MapData),
-                    fieldIndex: (int)Worldspace_FieldIndex.MapData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData));
+                if (item.MapData.TryGet(out var MapDataItem))
+                {
+                    ((MapDataXmlWriteTranslation)((IXmlItem)MapDataItem).XmlWriteTranslator).Write(
+                        item: MapDataItem,
+                        node: node,
+                        name: nameof(item.MapData),
+                        fieldIndex: (int)Worldspace_FieldIndex.MapData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData));
+                }
             }
             if ((item.Flags != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
@@ -3280,26 +3329,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Road != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
-                var RoadItem = item.Road;
-                ((RoadXmlWriteTranslation)((IXmlItem)RoadItem).XmlWriteTranslator).Write(
-                    item: RoadItem,
-                    node: node,
-                    name: nameof(item.Road),
-                    fieldIndex: (int)Worldspace_FieldIndex.Road,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road));
+                if (item.Road.TryGet(out var RoadItem))
+                {
+                    ((RoadXmlWriteTranslation)((IXmlItem)RoadItem).XmlWriteTranslator).Write(
+                        item: RoadItem,
+                        node: node,
+                        name: nameof(item.Road),
+                        fieldIndex: (int)Worldspace_FieldIndex.Road,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road));
+                }
             }
             if ((item.TopCell != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
-                var TopCellItem = item.TopCell;
-                ((CellXmlWriteTranslation)((IXmlItem)TopCellItem).XmlWriteTranslator).Write(
-                    item: TopCellItem,
-                    node: node,
-                    name: nameof(item.TopCell),
-                    fieldIndex: (int)Worldspace_FieldIndex.TopCell,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell));
+                if (item.TopCell.TryGet(out var TopCellItem))
+                {
+                    ((CellXmlWriteTranslation)((IXmlItem)TopCellItem).XmlWriteTranslator).Write(
+                        item: TopCellItem,
+                        node: node,
+                        name: nameof(item.TopCell),
+                        fieldIndex: (int)Worldspace_FieldIndex.TopCell,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell));
+                }
             }
             if ((translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
             {
@@ -3322,13 +3375,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells),
                     transl: (XElement subNode, IWorldspaceBlockGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((WorldspaceBlockXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((WorldspaceBlockXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.UsingOffsetLength) ?? true))

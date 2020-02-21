@@ -324,8 +324,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Flags)) return false;
                 if (this.Conditions != null)
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var item in this.Conditions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -344,9 +344,35 @@ namespace Mutagen.Bethesda.Oblivion
                 if (ResultScript != null)
                 {
                     if (!eval(this.ResultScript.Overall)) return false;
-                    if (this.ResultScript.Specific != null && !this.ResultScript.Specific.AllEqual(eval)) return false;
+                    if (this.ResultScript.Specific != null && !this.ResultScript.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Flags)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Entry)) return true;
+                if (ResultScript != null)
+                {
+                    if (eval(this.ResultScript.Overall)) return true;
+                    if (this.ResultScript.Specific != null && this.ResultScript.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 
@@ -1828,13 +1854,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
                     });
             }
             if ((item.Entry != null)
@@ -1850,14 +1878,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.ResultScript != null)
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
             {
-                var ResultScriptItem = item.ResultScript;
-                ((ScriptFieldsXmlWriteTranslation)((IXmlItem)ResultScriptItem).XmlWriteTranslator).Write(
-                    item: ResultScriptItem,
-                    node: node,
-                    name: nameof(item.ResultScript),
-                    fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
+                if (item.ResultScript.TryGet(out var ResultScriptItem))
+                {
+                    ((ScriptFieldsXmlWriteTranslation)((IXmlItem)ResultScriptItem).XmlWriteTranslator).Write(
+                        item: ResultScriptItem,
+                        node: node,
+                        name: nameof(item.ResultScript),
+                        fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
+                }
             }
         }
 

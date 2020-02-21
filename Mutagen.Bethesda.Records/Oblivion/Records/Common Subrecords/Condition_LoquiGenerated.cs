@@ -334,8 +334,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.CompareOperator)) return false;
                 if (!eval(this.Flags)) return false;
@@ -346,6 +346,21 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.SecondParameter)) return false;
                 if (!eval(this.ThirdParameter)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.CompareOperator)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Fluff)) return true;
+                if (eval(this.ComparisonValue)) return true;
+                if (eval(this.Function)) return true;
+                if (eval(this.FirstParameter)) return true;
+                if (eval(this.SecondParameter)) return true;
+                if (eval(this.ThirdParameter)) return true;
+                return false;
             }
             #endregion
 

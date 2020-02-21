@@ -300,8 +300,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.File)) return false;
                 if (!eval(this.Data)) return false;
@@ -313,11 +313,32 @@ namespace Mutagen.Bethesda.Skyrim
                         foreach (var item in this.AlternateTextures.Specific)
                         {
                             if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.File)) return true;
+                if (eval(this.Data)) return true;
+                if (this.AlternateTextures != null)
+                {
+                    if (eval(this.AlternateTextures.Overall)) return true;
+                    if (this.AlternateTextures.Specific != null)
+                    {
+                        foreach (var item in this.AlternateTextures.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 

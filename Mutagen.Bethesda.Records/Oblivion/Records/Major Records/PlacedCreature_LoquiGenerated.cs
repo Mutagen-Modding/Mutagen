@@ -425,10 +425,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Base)) return false;
                 if (!eval(this.Owner)) return false;
                 if (!eval(this.FactionRank)) return false;
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (EnableParent != null)
                 {
                     if (!eval(this.EnableParent.Overall)) return false;
-                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.AllEqual(eval)) return false;
+                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.All(eval)) return false;
                 }
                 if (!eval(this.RagdollData)) return false;
                 if (!eval(this.Scale)) return false;
@@ -444,6 +444,28 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Rotation)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Base)) return true;
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
+                if (eval(this.GlobalVariable)) return true;
+                if (EnableParent != null)
+                {
+                    if (eval(this.EnableParent.Overall)) return true;
+                    if (this.EnableParent.Specific != null && this.EnableParent.Specific.Any(eval)) return true;
+                }
+                if (eval(this.RagdollData)) return true;
+                if (eval(this.Scale)) return true;
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
+                if (eval(this.DATADataTypeState)) return true;
+                return false;
             }
             #endregion
 
@@ -2366,14 +2388,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.EnableParent != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.EnableParent) ?? true))
             {
-                var EnableParentItem = item.EnableParent;
-                ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
-                    item: EnableParentItem,
-                    node: node,
-                    name: nameof(item.EnableParent),
-                    fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedCreature_FieldIndex.EnableParent));
+                if (item.EnableParent.TryGet(out var EnableParentItem))
+                {
+                    ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
+                        item: EnableParentItem,
+                        node: node,
+                        name: nameof(item.EnableParent),
+                        fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedCreature_FieldIndex.EnableParent));
+                }
             }
             if (item.RagdollData_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.RagdollData) ?? true))

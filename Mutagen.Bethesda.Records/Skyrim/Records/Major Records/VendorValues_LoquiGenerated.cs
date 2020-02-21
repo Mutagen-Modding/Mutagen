@@ -308,8 +308,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.StartHour)) return false;
                 if (!eval(this.EndHour)) return false;
@@ -318,6 +318,19 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.NotSellBuy)) return false;
                 if (!eval(this.Unknown)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.StartHour)) return true;
+                if (eval(this.EndHour)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.OnlyBuysStolenItems)) return true;
+                if (eval(this.NotSellBuy)) return true;
+                if (eval(this.Unknown)) return true;
+                return false;
             }
             #endregion
 

@@ -326,8 +326,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Strength)) return false;
                 if (!eval(this.Intelligence)) return false;
@@ -338,6 +338,21 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Personality)) return false;
                 if (!eval(this.Luck)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Strength)) return true;
+                if (eval(this.Intelligence)) return true;
+                if (eval(this.Willpower)) return true;
+                if (eval(this.Agility)) return true;
+                if (eval(this.Speed)) return true;
+                if (eval(this.Endurance)) return true;
+                if (eval(this.Personality)) return true;
+                if (eval(this.Luck)) return true;
+                return false;
             }
             #endregion
 

@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {maskStr} {field.Name};");
         }
 
-        public override void GenerateForAllEqual(FileGeneration fg, TypeGeneration field, Accessor accessor, bool nullCheck, bool indexed)
+        public override void GenerateForAll(FileGeneration fg, TypeGeneration field, Accessor accessor, bool nullCheck, bool indexed)
         {
             if (!field.IntegrateField) return;
             GenderedType gendered = field as GenderedType;
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 var isLoqui = gendered.SubTypeGeneration is LoquiType;
                 using (var args = new ArgsWrapper(fg,
-                    $"if (!{nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AllEqualMask) : nameof(GenderedItem.AllEqual))}",
+                    $"if (!{nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AllMask) : nameof(GenderedItem.All))}",
                     suffixLine: ") return false"))
                 {
                     args.Add($"{accessor}");
@@ -54,6 +54,27 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 fg.AppendLine($"if (!eval({accessor}{(indexed ? ".Value" : null)}.Male) || !eval({accessor}{(indexed ? ".Value" : null)}.Female)) return false;");
+            }
+        }
+
+        public override void GenerateForAny(FileGeneration fg, TypeGeneration field, Accessor accessor, bool nullCheck, bool indexed)
+        {
+            if (!field.IntegrateField) return;
+            GenderedType gendered = field as GenderedType;
+            if (field.HasBeenSet)
+            {
+                var isLoqui = gendered.SubTypeGeneration is LoquiType;
+                using (var args = new ArgsWrapper(fg,
+                    $"if ({nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AnyMask) : nameof(GenderedItem.Any))}",
+                    suffixLine: ") return true"))
+                {
+                    args.Add($"{accessor}");
+                    args.AddPassArg("eval");
+                }
+            }
+            else
+            {
+                fg.AppendLine($"if (eval({accessor}{(indexed ? ".Value" : null)}.Male) || eval({accessor}{(indexed ? ".Value" : null)}.Female)) return true;");
             }
         }
 

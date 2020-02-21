@@ -423,70 +423,137 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (ModHeader != null)
                 {
                     if (!eval(this.ModHeader.Overall)) return false;
-                    if (this.ModHeader.Specific != null && !this.ModHeader.Specific.AllEqual(eval)) return false;
+                    if (this.ModHeader.Specific != null && !this.ModHeader.Specific.All(eval)) return false;
                 }
                 if (GameSettings != null)
                 {
                     if (!eval(this.GameSettings.Overall)) return false;
-                    if (this.GameSettings.Specific != null && !this.GameSettings.Specific.AllEqual(eval)) return false;
+                    if (this.GameSettings.Specific != null && !this.GameSettings.Specific.All(eval)) return false;
                 }
                 if (Keywords != null)
                 {
                     if (!eval(this.Keywords.Overall)) return false;
-                    if (this.Keywords.Specific != null && !this.Keywords.Specific.AllEqual(eval)) return false;
+                    if (this.Keywords.Specific != null && !this.Keywords.Specific.All(eval)) return false;
                 }
                 if (LocationReferenceTypes != null)
                 {
                     if (!eval(this.LocationReferenceTypes.Overall)) return false;
-                    if (this.LocationReferenceTypes.Specific != null && !this.LocationReferenceTypes.Specific.AllEqual(eval)) return false;
+                    if (this.LocationReferenceTypes.Specific != null && !this.LocationReferenceTypes.Specific.All(eval)) return false;
                 }
                 if (Actions != null)
                 {
                     if (!eval(this.Actions.Overall)) return false;
-                    if (this.Actions.Specific != null && !this.Actions.Specific.AllEqual(eval)) return false;
+                    if (this.Actions.Specific != null && !this.Actions.Specific.All(eval)) return false;
                 }
                 if (TextureSets != null)
                 {
                     if (!eval(this.TextureSets.Overall)) return false;
-                    if (this.TextureSets.Specific != null && !this.TextureSets.Specific.AllEqual(eval)) return false;
+                    if (this.TextureSets.Specific != null && !this.TextureSets.Specific.All(eval)) return false;
                 }
                 if (Globals != null)
                 {
                     if (!eval(this.Globals.Overall)) return false;
-                    if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
+                    if (this.Globals.Specific != null && !this.Globals.Specific.All(eval)) return false;
                 }
                 if (Classes != null)
                 {
                     if (!eval(this.Classes.Overall)) return false;
-                    if (this.Classes.Specific != null && !this.Classes.Specific.AllEqual(eval)) return false;
+                    if (this.Classes.Specific != null && !this.Classes.Specific.All(eval)) return false;
                 }
                 if (Factions != null)
                 {
                     if (!eval(this.Factions.Overall)) return false;
-                    if (this.Factions.Specific != null && !this.Factions.Specific.AllEqual(eval)) return false;
+                    if (this.Factions.Specific != null && !this.Factions.Specific.All(eval)) return false;
                 }
                 if (HeadParts != null)
                 {
                     if (!eval(this.HeadParts.Overall)) return false;
-                    if (this.HeadParts.Specific != null && !this.HeadParts.Specific.AllEqual(eval)) return false;
+                    if (this.HeadParts.Specific != null && !this.HeadParts.Specific.All(eval)) return false;
                 }
                 if (Hairs != null)
                 {
                     if (!eval(this.Hairs.Overall)) return false;
-                    if (this.Hairs.Specific != null && !this.Hairs.Specific.AllEqual(eval)) return false;
+                    if (this.Hairs.Specific != null && !this.Hairs.Specific.All(eval)) return false;
                 }
                 if (Eyes != null)
                 {
                     if (!eval(this.Eyes.Overall)) return false;
-                    if (this.Eyes.Specific != null && !this.Eyes.Specific.AllEqual(eval)) return false;
+                    if (this.Eyes.Specific != null && !this.Eyes.Specific.All(eval)) return false;
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (ModHeader != null)
+                {
+                    if (eval(this.ModHeader.Overall)) return true;
+                    if (this.ModHeader.Specific != null && this.ModHeader.Specific.Any(eval)) return true;
+                }
+                if (GameSettings != null)
+                {
+                    if (eval(this.GameSettings.Overall)) return true;
+                    if (this.GameSettings.Specific != null && this.GameSettings.Specific.Any(eval)) return true;
+                }
+                if (Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null && this.Keywords.Specific.Any(eval)) return true;
+                }
+                if (LocationReferenceTypes != null)
+                {
+                    if (eval(this.LocationReferenceTypes.Overall)) return true;
+                    if (this.LocationReferenceTypes.Specific != null && this.LocationReferenceTypes.Specific.Any(eval)) return true;
+                }
+                if (Actions != null)
+                {
+                    if (eval(this.Actions.Overall)) return true;
+                    if (this.Actions.Specific != null && this.Actions.Specific.Any(eval)) return true;
+                }
+                if (TextureSets != null)
+                {
+                    if (eval(this.TextureSets.Overall)) return true;
+                    if (this.TextureSets.Specific != null && this.TextureSets.Specific.Any(eval)) return true;
+                }
+                if (Globals != null)
+                {
+                    if (eval(this.Globals.Overall)) return true;
+                    if (this.Globals.Specific != null && this.Globals.Specific.Any(eval)) return true;
+                }
+                if (Classes != null)
+                {
+                    if (eval(this.Classes.Overall)) return true;
+                    if (this.Classes.Specific != null && this.Classes.Specific.Any(eval)) return true;
+                }
+                if (Factions != null)
+                {
+                    if (eval(this.Factions.Overall)) return true;
+                    if (this.Factions.Specific != null && this.Factions.Specific.Any(eval)) return true;
+                }
+                if (HeadParts != null)
+                {
+                    if (eval(this.HeadParts.Overall)) return true;
+                    if (this.HeadParts.Specific != null && this.HeadParts.Specific.Any(eval)) return true;
+                }
+                if (Hairs != null)
+                {
+                    if (eval(this.Hairs.Overall)) return true;
+                    if (this.Hairs.Specific != null && this.Hairs.Specific.Any(eval)) return true;
+                }
+                if (Eyes != null)
+                {
+                    if (eval(this.Eyes.Overall)) return true;
+                    if (this.Eyes.Specific != null && this.Eyes.Specific.Any(eval)) return true;
+                }
+                return false;
             }
             #endregion
 

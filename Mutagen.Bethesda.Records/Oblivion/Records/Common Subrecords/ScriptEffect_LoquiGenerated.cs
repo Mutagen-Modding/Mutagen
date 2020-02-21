@@ -348,8 +348,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.Script)) return false;
                 if (!eval(this.MagicSchool)) return false;
@@ -358,6 +358,19 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Name)) return false;
                 if (!eval(this.SCITDataTypeState)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.Script)) return true;
+                if (eval(this.MagicSchool)) return true;
+                if (eval(this.VisualEffect)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.SCITDataTypeState)) return true;
+                return false;
             }
             #endregion
 

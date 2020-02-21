@@ -355,8 +355,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.MinWidth)) return false;
                 if (!eval(this.MaxWidth)) return false;
@@ -370,6 +370,24 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.Color)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.MinWidth)) return true;
+                if (eval(this.MaxWidth)) return true;
+                if (eval(this.MinHeight)) return true;
+                if (eval(this.MaxHeight)) return true;
+                if (eval(this.Depth)) return true;
+                if (eval(this.Shininess)) return true;
+                if (eval(this.ParallaxScale)) return true;
+                if (eval(this.ParallaxPasses)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.Color)) return true;
+                return false;
             }
             #endregion
 

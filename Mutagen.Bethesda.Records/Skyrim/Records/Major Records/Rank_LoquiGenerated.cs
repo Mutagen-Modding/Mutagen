@@ -305,13 +305,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.RankID)) return false;
                 if (!eval(this.MaleRankTitle)) return false;
                 if (!eval(this.FemaleRankTitle)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (eval(this.RankID)) return true;
+                if (eval(this.MaleRankTitle)) return true;
+                if (eval(this.FemaleRankTitle)) return true;
+                return false;
             }
             #endregion
 

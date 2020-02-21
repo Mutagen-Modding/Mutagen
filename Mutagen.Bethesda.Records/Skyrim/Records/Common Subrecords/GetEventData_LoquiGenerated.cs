@@ -331,10 +331,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Unknown2)) return false;
                 if (!eval(this.EventFunction)) return false;
                 if (!eval(this.EventMember)) return false;
@@ -343,6 +343,21 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Reference)) return false;
                 if (!eval(this.Unknown3)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.EventFunction)) return true;
+                if (eval(this.EventMember)) return true;
+                if (eval(this.Parameter3)) return true;
+                if (eval(this.RunOnType)) return true;
+                if (eval(this.Reference)) return true;
+                if (eval(this.Unknown3)) return true;
+                return false;
             }
             #endregion
 

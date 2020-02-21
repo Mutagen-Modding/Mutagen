@@ -294,14 +294,25 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.SkyrimMajorRecordFlags)) return false;
                 if (!eval(this.FormVersion)) return false;
                 if (!eval(this.Version2)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.SkyrimMajorRecordFlags)) return true;
+                if (eval(this.FormVersion)) return true;
+                if (eval(this.Version2)) return true;
+                return false;
             }
             #endregion
 

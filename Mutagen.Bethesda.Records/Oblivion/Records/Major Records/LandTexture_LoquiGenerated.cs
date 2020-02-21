@@ -339,15 +339,15 @@ namespace Mutagen.Bethesda.Oblivion
 
             #endregion
 
-            #region All Equal
-            public override bool AllEqual(Func<T, bool> eval)
+            #region All
+            public override bool All(Func<T, bool> eval)
             {
-                if (!base.AllEqual(eval)) return false;
+                if (!base.All(eval)) return false;
                 if (!eval(this.Icon)) return false;
                 if (Havok != null)
                 {
                     if (!eval(this.Havok.Overall)) return false;
-                    if (this.Havok.Specific != null && !this.Havok.Specific.AllEqual(eval)) return false;
+                    if (this.Havok.Specific != null && !this.Havok.Specific.All(eval)) return false;
                 }
                 if (!eval(this.TextureSpecularExponent)) return false;
                 if (this.PotentialGrass != null)
@@ -362,6 +362,32 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public override bool Any(Func<T, bool> eval)
+            {
+                if (base.Any(eval)) return true;
+                if (eval(this.Icon)) return true;
+                if (Havok != null)
+                {
+                    if (eval(this.Havok.Overall)) return true;
+                    if (this.Havok.Specific != null && this.Havok.Specific.Any(eval)) return true;
+                }
+                if (eval(this.TextureSpecularExponent)) return true;
+                if (this.PotentialGrass != null)
+                {
+                    if (eval(this.PotentialGrass.Overall)) return true;
+                    if (this.PotentialGrass.Specific != null)
+                    {
+                        foreach (var item in this.PotentialGrass.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return false;
             }
             #endregion
 
@@ -1996,14 +2022,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Havok != null)
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
             {
-                var HavokItem = item.Havok;
-                ((HavokDataXmlWriteTranslation)((IXmlItem)HavokItem).XmlWriteTranslator).Write(
-                    item: HavokItem,
-                    node: node,
-                    name: nameof(item.Havok),
-                    fieldIndex: (int)LandTexture_FieldIndex.Havok,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok));
+                if (item.Havok.TryGet(out var HavokItem))
+                {
+                    ((HavokDataXmlWriteTranslation)((IXmlItem)HavokItem).XmlWriteTranslator).Write(
+                        item: HavokItem,
+                        node: node,
+                        name: nameof(item.Havok),
+                        fieldIndex: (int)LandTexture_FieldIndex.Havok,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok));
+                }
             }
             if ((item.TextureSpecularExponent != null)
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))

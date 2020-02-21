@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda
             {
                 var maleMask = maskGetter(lhs.Male, rhs.Male, include);
                 var femaleMask = maskGetter(lhs.Female, rhs.Female, include);
-                var maleEqual = maleMask.AllEqual((b) => b);
-                var femaleEqual = femaleMask.AllEqual((b) => b);
+                var maleEqual = maleMask.All((b) => b);
+                var femaleEqual = femaleMask.All((b) => b);
                 var overall = maleEqual && femaleEqual;
                 if (!overall || include == Include.All)
                 {
@@ -133,18 +133,18 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static bool AllEqualMask<TItem, TMask>(MaskItem<TItem, GenderedItem<TMask?>?>? item, Func<TItem, bool> eval)
+        public static bool AllMask<TItem, TMask>(MaskItem<TItem, GenderedItem<TMask?>?>? item, Func<TItem, bool> eval)
             where TMask : class, IMask<TItem>
         {
             if (item == null) return true;
             if (!eval(item.Overall)) return false;
             if (item.Specific == null) return true;
-            if (item.Specific.Male != null && !(item.Specific.Male.AllEqual(eval))) return false;
-            if (item.Specific.Female != null && !(item.Specific.Female.AllEqual(eval))) return false;
+            if (item.Specific.Male != null && !item.Specific.Male.All(eval)) return false;
+            if (item.Specific.Female != null && !item.Specific.Female.All(eval)) return false;
             return true;
         }
 
-        public static bool AllEqual<TItem>(MaskItem<TItem, GenderedItem<TItem>?>? item, Func<TItem, bool> eval)
+        public static bool All<TItem>(MaskItem<TItem, GenderedItem<TItem>?>? item, Func<TItem, bool> eval)
         {
             if (item == null) return true;
             if (!eval(item.Overall)) return false;
@@ -152,6 +152,27 @@ namespace Mutagen.Bethesda
             if (!eval(item.Specific.Male)) return false;
             if (!eval(item.Specific.Female)) return false;
             return true;
+        }
+
+        public static bool AnyMask<TItem, TMask>(MaskItem<TItem, GenderedItem<TMask?>?>? item, Func<TItem, bool> eval)
+            where TMask : class, IMask<TItem>
+        {
+            if (item == null) return false;
+            if (eval(item.Overall)) return true;
+            if (item.Specific == null) return false;
+            if (item.Specific.Male != null && item.Specific.Male.Any(eval)) return true;
+            if (item.Specific.Female != null && item.Specific.Female.Any(eval)) return true;
+            return false;
+        }
+
+        public static bool Any<TItem>(MaskItem<TItem, GenderedItem<TItem>?>? item, Func<TItem, bool> eval)
+        {
+            if (item == null) return false;
+            if (eval(item.Overall)) return true;
+            if (item.Specific == null) return true;
+            if (eval(item.Specific.Male)) return true;
+            if (eval(item.Specific.Female)) return true;
+            return false;
         }
     }
 }

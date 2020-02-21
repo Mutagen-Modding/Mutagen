@@ -605,43 +605,43 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
-            #region All Equal
-            public bool AllEqual(Func<T, bool> eval)
+            #region All
+            public bool All(Func<T, bool> eval)
             {
                 if (SkillBoost0 != null)
                 {
                     if (!eval(this.SkillBoost0.Overall)) return false;
-                    if (this.SkillBoost0.Specific != null && !this.SkillBoost0.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost0.Specific != null && !this.SkillBoost0.Specific.All(eval)) return false;
                 }
                 if (SkillBoost1 != null)
                 {
                     if (!eval(this.SkillBoost1.Overall)) return false;
-                    if (this.SkillBoost1.Specific != null && !this.SkillBoost1.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost1.Specific != null && !this.SkillBoost1.Specific.All(eval)) return false;
                 }
                 if (SkillBoost2 != null)
                 {
                     if (!eval(this.SkillBoost2.Overall)) return false;
-                    if (this.SkillBoost2.Specific != null && !this.SkillBoost2.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost2.Specific != null && !this.SkillBoost2.Specific.All(eval)) return false;
                 }
                 if (SkillBoost3 != null)
                 {
                     if (!eval(this.SkillBoost3.Overall)) return false;
-                    if (this.SkillBoost3.Specific != null && !this.SkillBoost3.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost3.Specific != null && !this.SkillBoost3.Specific.All(eval)) return false;
                 }
                 if (SkillBoost4 != null)
                 {
                     if (!eval(this.SkillBoost4.Overall)) return false;
-                    if (this.SkillBoost4.Specific != null && !this.SkillBoost4.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost4.Specific != null && !this.SkillBoost4.Specific.All(eval)) return false;
                 }
                 if (SkillBoost5 != null)
                 {
                     if (!eval(this.SkillBoost5.Overall)) return false;
-                    if (this.SkillBoost5.Specific != null && !this.SkillBoost5.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost5.Specific != null && !this.SkillBoost5.Specific.All(eval)) return false;
                 }
                 if (SkillBoost6 != null)
                 {
                     if (!eval(this.SkillBoost6.Overall)) return false;
-                    if (this.SkillBoost6.Specific != null && !this.SkillBoost6.Specific.AllEqual(eval)) return false;
+                    if (this.SkillBoost6.Specific != null && !this.SkillBoost6.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Fluff)) return false;
                 if (!eval(this.MaleHeight)) return false;
@@ -673,6 +673,77 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.AngularTolerance)) return false;
                 if (!eval(this.Flags2)) return false;
                 return true;
+            }
+            #endregion
+
+            #region Any
+            public bool Any(Func<T, bool> eval)
+            {
+                if (SkillBoost0 != null)
+                {
+                    if (eval(this.SkillBoost0.Overall)) return true;
+                    if (this.SkillBoost0.Specific != null && this.SkillBoost0.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost1 != null)
+                {
+                    if (eval(this.SkillBoost1.Overall)) return true;
+                    if (this.SkillBoost1.Specific != null && this.SkillBoost1.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost2 != null)
+                {
+                    if (eval(this.SkillBoost2.Overall)) return true;
+                    if (this.SkillBoost2.Specific != null && this.SkillBoost2.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost3 != null)
+                {
+                    if (eval(this.SkillBoost3.Overall)) return true;
+                    if (this.SkillBoost3.Specific != null && this.SkillBoost3.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost4 != null)
+                {
+                    if (eval(this.SkillBoost4.Overall)) return true;
+                    if (this.SkillBoost4.Specific != null && this.SkillBoost4.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost5 != null)
+                {
+                    if (eval(this.SkillBoost5.Overall)) return true;
+                    if (this.SkillBoost5.Specific != null && this.SkillBoost5.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost6 != null)
+                {
+                    if (eval(this.SkillBoost6.Overall)) return true;
+                    if (this.SkillBoost6.Specific != null && this.SkillBoost6.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Fluff)) return true;
+                if (eval(this.MaleHeight)) return true;
+                if (eval(this.FemaleHeight)) return true;
+                if (eval(this.MaleWeight)) return true;
+                if (eval(this.FemaleWeight)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.StartingHealth)) return true;
+                if (eval(this.StartingMagicka)) return true;
+                if (eval(this.StartingStamina)) return true;
+                if (eval(this.BaseCarryWeight)) return true;
+                if (eval(this.BaseMass)) return true;
+                if (eval(this.AccelerationRate)) return true;
+                if (eval(this.DecelerationRate)) return true;
+                if (eval(this.Size)) return true;
+                if (eval(this.HeadBipedObject)) return true;
+                if (eval(this.HairBipedObject)) return true;
+                if (eval(this.InjuredHealthPercent)) return true;
+                if (eval(this.ShieldBipedObject)) return true;
+                if (eval(this.HealthRegen)) return true;
+                if (eval(this.MagickaRegen)) return true;
+                if (eval(this.StaminaRegen)) return true;
+                if (eval(this.UnarmedDamage)) return true;
+                if (eval(this.UnarmedReach)) return true;
+                if (eval(this.BodyBipedObject)) return true;
+                if (eval(this.AimAngleTolerance)) return true;
+                if (eval(this.FlightRadius)) return true;
+                if (eval(this.AngularAccelerationRate)) return true;
+                if (eval(this.AngularTolerance)) return true;
+                if (eval(this.Flags2)) return true;
+                return false;
             }
             #endregion
 
