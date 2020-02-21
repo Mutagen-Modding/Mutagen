@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Generation
                                     {
                                         foreach (var trigger in fieldData.TriggeringRecordAccessors)
                                         {
-                                            args.Checks.Add($"nextRecordType.Equals({trigger})");
+                                            args.Add($"nextRecordType.Equals({trigger})");
                                         }
                                     }
                                     first = false;

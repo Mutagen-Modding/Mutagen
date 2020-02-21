@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}");
+            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}{(this.HasBeenSet ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false)}>(default, default);")}");
             fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true)}>{(this.HasBeenSet ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
 
         }
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        args.Add($"male: {this.SubTypeGeneration.GetDuplicate($"rhs{this.Name}item.Male")}");
-                        args.Add($"female: {this.SubTypeGeneration.GetDuplicate($"rhs{this.Name}item.Female")}");
+                        args.Add($"male: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Male")}");
+                        args.Add($"female: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Female")}");
                     }
                 }
             }
@@ -188,9 +188,13 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{retAccessor} = {accessor} == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);");
             }
-            else
+            else if (this.ItemHasBeenSet)
             {
                 throw new NotImplementedException();
+            }
+            else
+            {
+                fg.AppendLine($"{retAccessor} = new GenderedItem<bool>(true, true);");
             }
         }
 

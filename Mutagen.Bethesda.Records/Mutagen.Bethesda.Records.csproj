@@ -1395,12 +1395,6 @@
     <Compile Include="Oblivion\Records\Major Records\SkillBoost_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RaceVoices_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RaceHair_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Major Records\RaceStats_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>

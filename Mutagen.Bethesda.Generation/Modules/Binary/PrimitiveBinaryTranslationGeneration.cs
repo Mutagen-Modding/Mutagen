@@ -258,10 +258,6 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    if (typeGen.HasBeenSet)
-                    {
-                        fg.AppendLine($"public bool {typeGen.HasBeenSetAccessor(getter: true)} => {dataAccessor}.Length >= _{typeGen.Name}Location + {this.ExpectedLength(objGen, typeGen).Value};");
-                    }
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
                     fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})", "_package")} : {typeGen.GetDefault()};");
                 }

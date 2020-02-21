@@ -27,13 +27,13 @@ namespace Mutagen.Bethesda.Generation
             string maskStr;
             if (field.HasBeenSet)
             {
-                maskStr = $"MaskItem<{typeStr}, GenderedItem<{SubMaskString(field, typeStr)}>?>";
+                maskStr = $"MaskItem<{typeStr}, GenderedItem<{SubMaskString(field, typeStr)}>?>?";
             }
             else
             {
                 maskStr = $"GenderedItem<{SubMaskString(field, typeStr)}>";
             }
-            fg.AppendLine($"public {maskStr}? {field.Name};");
+            fg.AppendLine($"public {maskStr} {field.Name};");
         }
 
         public override void GenerateForAllEqual(FileGeneration fg, TypeGeneration field, Accessor accessor, bool nullCheck, bool indexed)
@@ -61,25 +61,45 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!field.IntegrateField) return;
             var gendered = field as GenderedType;
-            fg.AppendLine($"if ({rhsAccessor}{(indexed ? ".Value" : null)} == null)");
-            using (new BraceWrapper(fg))
+            if (field.HasBeenSet)
             {
-                fg.AppendLine($"{retAccessor} = null;");
+                fg.AppendLine($"if ({rhsAccessor}{(indexed ? ".Value" : null)} == null)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"{retAccessor} = null;");
+                }
+                fg.AppendLine("else");
+                using (new BraceWrapper(fg))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{retAccessor} = new MaskItem<R, GenderedItem<{SubMaskString(field, "R")}>?>"))
+                    {
+                        args.Add($"eval({rhsAccessor}{(indexed ? ".Value" : null)}.Overall)");
+                        if (gendered.SubTypeGeneration is LoquiType loqui)
+                        {
+                            args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}.Specific == null ? null : new GenderedItem<{SubMaskString(field, "R")}>({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Male?.Translate(eval), {rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Female?.Translate(eval))");
+                        }
+                        else
+                        {
+                            args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}.Specific == null ? null : new GenderedItem<R>(eval({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Male), eval({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Female))");
+                        }
+                    }
+                }
             }
-            fg.AppendLine("else");
-            using (new BraceWrapper(fg))
+            else
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor} = new MaskItem<R, GenderedItem<{SubMaskString(field, "R")}>?>"))
+                    $"{retAccessor} = new GenderedItem<{SubMaskString(field, "R")}>"))
                 {
-                    args.Add($"eval({rhsAccessor}{(indexed ? ".Value" : null)}.Overall)");
                     if (gendered.SubTypeGeneration is LoquiType loqui)
                     {
-                        args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}.Specific == null ? null : new GenderedItem<{SubMaskString(field, "R")}>({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Male?.Translate(eval), {rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Female?.Translate(eval))");
+                        args.Add($"{rhsAccessor}.Male.Translate(eval)");
+                        args.Add($"{rhsAccessor}.Female.Translate(eval)");
                     }
                     else
                     {
-                        args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}.Specific == null ? null : new GenderedItem<R>(eval({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Male), eval({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Female))");
+                        args.Add($"eval({rhsAccessor}.Male)");
+                        args.Add($"eval({rhsAccessor}.Female)");
                     }
                 }
             }
@@ -115,7 +135,16 @@ namespace Mutagen.Bethesda.Generation
 
         public override string GenerateBoolMaskCheck(TypeGeneration field, string boolMaskAccessor)
         {
-            return $"{boolMaskAccessor}?.{field.Name}?.Overall ?? true";
+            if (field.HasBeenSet)
+            {
+                return $"{boolMaskAccessor}?.{field.Name}?.Overall ?? true";
+            }
+            else
+            {
+                // ToDo
+                // Properly implement
+                return $"true";
+            }
         }
 
         public override string GetErrorMaskTypeStr(TypeGeneration field)

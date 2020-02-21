@@ -185,57 +185,13 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IRaceGetter.Fluff => this.Fluff;
         #endregion
-        #region MaleHeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _MaleHeight;
-        public Single MaleHeight
-        {
-            get => this._MaleHeight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._MaleHeight = value;
-            }
-        }
+        #region Height
+        public GenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        IGenderedItemGetter<Single> IRaceGetter.Height => this.Height;
         #endregion
-        #region FemaleHeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FemaleHeight;
-        public Single FemaleHeight
-        {
-            get => this._FemaleHeight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._FemaleHeight = value;
-            }
-        }
-        #endregion
-        #region MaleWeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _MaleWeight;
-        public Single MaleWeight
-        {
-            get => this._MaleWeight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._MaleWeight = value;
-            }
-        }
-        #endregion
-        #region FemaleWeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FemaleWeight;
-        public Single FemaleWeight
-        {
-            get => this._FemaleWeight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._FemaleWeight = value;
-            }
-        }
+        #region Weight
+        public GenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
+        IGenderedItemGetter<Single> IRaceGetter.Weight => this.Weight;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -251,26 +207,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Voices
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RaceVoices? _Voices;
-        public RaceVoices? Voices
-        {
-            get => _Voices;
-            set => _Voices = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRaceVoicesGetter? IRaceGetter.Voices => this.Voices;
+        public GenderedItem<IFormLink<Race>>? Voices { get; set; }
+        IGenderedItemGetter<IFormLinkGetter<IRaceGetter>>? IRaceGetter.Voices => this.Voices;
         #endregion
         #region DefaultHair
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RaceHair? _DefaultHair;
-        public RaceHair? DefaultHair
-        {
-            get => _DefaultHair;
-            set => _DefaultHair = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRaceHairGetter? IRaceGetter.DefaultHair => this.DefaultHair;
+        public GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
+        IGenderedItemGetter<IFormLinkGetter<IHairGetter>>? IRaceGetter.DefaultHair => this.DefaultHair;
         #endregion
         #region DefaultHairColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -564,13 +506,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.SkillBoost5 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
                 this.SkillBoost6 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
                 this.Fluff = initialValue;
-                this.MaleHeight = initialValue;
-                this.FemaleHeight = initialValue;
-                this.MaleWeight = initialValue;
-                this.FemaleWeight = initialValue;
+                this.Height = new GenderedItem<T>(initialValue, initialValue);
+                this.Weight = new GenderedItem<T>(initialValue, initialValue);
                 this.Flags = initialValue;
-                this.Voices = new MaskItem<T, RaceVoices.Mask<T>?>(initialValue, new RaceVoices.Mask<T>(initialValue));
-                this.DefaultHair = new MaskItem<T, RaceHair.Mask<T>?>(initialValue, new RaceHair.Mask<T>(initialValue));
+                this.Voices = new MaskItem<T, GenderedItem<T>?>(initialValue, default);
+                this.DefaultHair = new MaskItem<T, GenderedItem<T>?>(initialValue, default);
                 this.DefaultHairColor = initialValue;
                 this.FaceGenMainClamp = initialValue;
                 this.FaceGenFaceClamp = initialValue;
@@ -602,10 +542,8 @@ namespace Mutagen.Bethesda.Oblivion
                 T SkillBoost5,
                 T SkillBoost6,
                 T Fluff,
-                T MaleHeight,
-                T FemaleHeight,
-                T MaleWeight,
-                T FemaleWeight,
+                T Height,
+                T Weight,
                 T Flags,
                 T Voices,
                 T DefaultHair,
@@ -639,13 +577,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.SkillBoost5 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost5, new SkillBoost.Mask<T>(SkillBoost5));
                 this.SkillBoost6 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost6, new SkillBoost.Mask<T>(SkillBoost6));
                 this.Fluff = Fluff;
-                this.MaleHeight = MaleHeight;
-                this.FemaleHeight = FemaleHeight;
-                this.MaleWeight = MaleWeight;
-                this.FemaleWeight = FemaleWeight;
+                this.Height = new GenderedItem<T>(Height, Height);
+                this.Weight = new GenderedItem<T>(Weight, Weight);
                 this.Flags = Flags;
-                this.Voices = new MaskItem<T, RaceVoices.Mask<T>?>(Voices, new RaceVoices.Mask<T>(Voices));
-                this.DefaultHair = new MaskItem<T, RaceHair.Mask<T>?>(DefaultHair, new RaceHair.Mask<T>(DefaultHair));
+                this.Voices = new MaskItem<T, GenderedItem<T>?>(Voices, default);
+                this.DefaultHair = new MaskItem<T, GenderedItem<T>?>(DefaultHair, default);
                 this.DefaultHairColor = DefaultHairColor;
                 this.FaceGenMainClamp = FaceGenMainClamp;
                 this.FaceGenFaceClamp = FaceGenFaceClamp;
@@ -680,13 +616,11 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost5 { get; set; }
             public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost6 { get; set; }
             public T Fluff;
-            public T MaleHeight;
-            public T FemaleHeight;
-            public T MaleWeight;
-            public T FemaleWeight;
+            public GenderedItem<T> Height;
+            public GenderedItem<T> Weight;
             public T Flags;
-            public MaskItem<T, RaceVoices.Mask<T>?>? Voices { get; set; }
-            public MaskItem<T, RaceHair.Mask<T>?>? DefaultHair { get; set; }
+            public MaskItem<T, GenderedItem<T>?>? Voices;
+            public MaskItem<T, GenderedItem<T>?>? DefaultHair;
             public T DefaultHairColor;
             public T FaceGenMainClamp;
             public T FaceGenFaceClamp;
@@ -723,10 +657,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.SkillBoost5, rhs.SkillBoost5)) return false;
                 if (!object.Equals(this.SkillBoost6, rhs.SkillBoost6)) return false;
                 if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-                if (!object.Equals(this.MaleHeight, rhs.MaleHeight)) return false;
-                if (!object.Equals(this.FemaleHeight, rhs.FemaleHeight)) return false;
-                if (!object.Equals(this.MaleWeight, rhs.MaleWeight)) return false;
-                if (!object.Equals(this.FemaleWeight, rhs.FemaleWeight)) return false;
+                if (!object.Equals(this.Height, rhs.Height)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Voices, rhs.Voices)) return false;
                 if (!object.Equals(this.DefaultHair, rhs.DefaultHair)) return false;
@@ -758,10 +690,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret = ret.CombineHashCode(this.SkillBoost5?.GetHashCode());
                 ret = ret.CombineHashCode(this.SkillBoost6?.GetHashCode());
                 ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleWeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Height?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
                 ret = ret.CombineHashCode(this.Flags?.GetHashCode());
                 ret = ret.CombineHashCode(this.Voices?.GetHashCode());
                 ret = ret.CombineHashCode(this.DefaultHair?.GetHashCode());
@@ -847,21 +777,15 @@ namespace Mutagen.Bethesda.Oblivion
                     if (this.SkillBoost6.Specific != null && !this.SkillBoost6.Specific.AllEqual(eval)) return false;
                 }
                 if (!eval(this.Fluff)) return false;
-                if (!eval(this.MaleHeight)) return false;
-                if (!eval(this.FemaleHeight)) return false;
-                if (!eval(this.MaleWeight)) return false;
-                if (!eval(this.FemaleWeight)) return false;
+                if (!eval(this.Height.Male) || !eval(this.Height.Female)) return false;
+                if (!eval(this.Weight.Male) || !eval(this.Weight.Female)) return false;
                 if (!eval(this.Flags)) return false;
-                if (Voices != null)
-                {
-                    if (!eval(this.Voices.Overall)) return false;
-                    if (this.Voices.Specific != null && !this.Voices.Specific.AllEqual(eval)) return false;
-                }
-                if (DefaultHair != null)
-                {
-                    if (!eval(this.DefaultHair.Overall)) return false;
-                    if (this.DefaultHair.Specific != null && !this.DefaultHair.Specific.AllEqual(eval)) return false;
-                }
+                if (!GenderedItem.AllEqual(
+                    this.Voices,
+                    eval: eval)) return false;
+                if (!GenderedItem.AllEqual(
+                    this.DefaultHair,
+                    eval: eval)) return false;
                 if (!eval(this.DefaultHairColor)) return false;
                 if (!eval(this.FaceGenMainClamp)) return false;
                 if (!eval(this.FaceGenFaceClamp)) return false;
@@ -968,13 +892,33 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SkillBoost5 = this.SkillBoost5 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost5.Overall), this.SkillBoost5.Specific?.Translate(eval));
                 obj.SkillBoost6 = this.SkillBoost6 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost6.Overall), this.SkillBoost6.Specific?.Translate(eval));
                 obj.Fluff = eval(this.Fluff);
-                obj.MaleHeight = eval(this.MaleHeight);
-                obj.FemaleHeight = eval(this.FemaleHeight);
-                obj.MaleWeight = eval(this.MaleWeight);
-                obj.FemaleWeight = eval(this.FemaleWeight);
+                obj.Height = new GenderedItem<R>(
+                    eval(this.Height.Male),
+                    eval(this.Height.Female));
+                obj.Weight = new GenderedItem<R>(
+                    eval(this.Weight.Male),
+                    eval(this.Weight.Female));
                 obj.Flags = eval(this.Flags);
-                obj.Voices = this.Voices == null ? null : new MaskItem<R, RaceVoices.Mask<R>?>(eval(this.Voices.Overall), this.Voices.Specific?.Translate(eval));
-                obj.DefaultHair = this.DefaultHair == null ? null : new MaskItem<R, RaceHair.Mask<R>?>(eval(this.DefaultHair.Overall), this.DefaultHair.Specific?.Translate(eval));
+                if (this.Voices == null)
+                {
+                    obj.Voices = null;
+                }
+                else
+                {
+                    obj.Voices = new MaskItem<R, GenderedItem<R>?>(
+                        eval(this.Voices.Overall),
+                        this.Voices.Specific == null ? null : new GenderedItem<R>(eval(this.Voices.Specific.Male), eval(this.Voices.Specific.Female)));
+                }
+                if (this.DefaultHair == null)
+                {
+                    obj.DefaultHair = null;
+                }
+                else
+                {
+                    obj.DefaultHair = new MaskItem<R, GenderedItem<R>?>(
+                        eval(this.DefaultHair.Overall),
+                        this.DefaultHair.Specific == null ? null : new GenderedItem<R>(eval(this.DefaultHair.Specific.Male), eval(this.DefaultHair.Specific.Female)));
+                }
                 obj.DefaultHairColor = eval(this.DefaultHairColor);
                 obj.FaceGenMainClamp = eval(this.FaceGenMainClamp);
                 obj.FaceGenFaceClamp = eval(this.FaceGenFaceClamp);
@@ -1153,33 +1097,27 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendLine($"Fluff => {Fluff}");
                     }
-                    if (printMask?.MaleHeight ?? true)
+                    if ((true))
                     {
-                        fg.AppendLine($"MaleHeight => {MaleHeight}");
+                        fg.AppendLine($"Height => {Height}");
                     }
-                    if (printMask?.FemaleHeight ?? true)
+                    if ((true))
                     {
-                        fg.AppendLine($"FemaleHeight => {FemaleHeight}");
-                    }
-                    if (printMask?.MaleWeight ?? true)
-                    {
-                        fg.AppendLine($"MaleWeight => {MaleWeight}");
-                    }
-                    if (printMask?.FemaleWeight ?? true)
-                    {
-                        fg.AppendLine($"FemaleWeight => {FemaleWeight}");
+                        fg.AppendLine($"Weight => {Weight}");
                     }
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendLine($"Flags => {Flags}");
                     }
-                    if (printMask?.Voices?.Overall ?? true)
+                    if (Voices != null
+                        && (printMask?.Voices?.Overall ?? true))
                     {
-                        Voices?.ToString(fg);
+                        fg.AppendLine($"Voices => {Voices}");
                     }
-                    if (printMask?.DefaultHair?.Overall ?? true)
+                    if (DefaultHair != null
+                        && (printMask?.DefaultHair?.Overall ?? true))
                     {
-                        DefaultHair?.ToString(fg);
+                        fg.AppendLine($"DefaultHair => {DefaultHair}");
                     }
                     if (printMask?.DefaultHairColor ?? true)
                     {
@@ -1322,13 +1260,11 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost5;
             public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost6;
             public Exception? Fluff;
-            public Exception? MaleHeight;
-            public Exception? FemaleHeight;
-            public Exception? MaleWeight;
-            public Exception? FemaleWeight;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Height;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Weight;
             public Exception? Flags;
-            public MaskItem<Exception?, RaceVoices.ErrorMask?>? Voices;
-            public MaskItem<Exception?, RaceHair.ErrorMask?>? DefaultHair;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Voices;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? DefaultHair;
             public Exception? DefaultHairColor;
             public Exception? FaceGenMainClamp;
             public Exception? FaceGenFaceClamp;
@@ -1372,14 +1308,10 @@ namespace Mutagen.Bethesda.Oblivion
                         return SkillBoost6;
                     case Race_FieldIndex.Fluff:
                         return Fluff;
-                    case Race_FieldIndex.MaleHeight:
-                        return MaleHeight;
-                    case Race_FieldIndex.FemaleHeight:
-                        return FemaleHeight;
-                    case Race_FieldIndex.MaleWeight:
-                        return MaleWeight;
-                    case Race_FieldIndex.FemaleWeight:
-                        return FemaleWeight;
+                    case Race_FieldIndex.Height:
+                        return Height;
+                    case Race_FieldIndex.Weight:
+                        return Weight;
                     case Race_FieldIndex.Flags:
                         return Flags;
                     case Race_FieldIndex.Voices:
@@ -1454,26 +1386,20 @@ namespace Mutagen.Bethesda.Oblivion
                     case Race_FieldIndex.Fluff:
                         this.Fluff = ex;
                         break;
-                    case Race_FieldIndex.MaleHeight:
-                        this.MaleHeight = ex;
+                    case Race_FieldIndex.Height:
+                        this.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
-                    case Race_FieldIndex.FemaleHeight:
-                        this.FemaleHeight = ex;
-                        break;
-                    case Race_FieldIndex.MaleWeight:
-                        this.MaleWeight = ex;
-                        break;
-                    case Race_FieldIndex.FemaleWeight:
-                        this.FemaleWeight = ex;
+                    case Race_FieldIndex.Weight:
+                        this.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
                     case Race_FieldIndex.Voices:
-                        this.Voices = new MaskItem<Exception?, RaceVoices.ErrorMask?>(ex, null);
+                        this.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.DefaultHair:
-                        this.DefaultHair = new MaskItem<Exception?, RaceHair.ErrorMask?>(ex, null);
+                        this.DefaultHair = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.DefaultHairColor:
                         this.DefaultHairColor = ex;
@@ -1555,26 +1481,20 @@ namespace Mutagen.Bethesda.Oblivion
                     case Race_FieldIndex.Fluff:
                         this.Fluff = (Exception?)obj;
                         break;
-                    case Race_FieldIndex.MaleHeight:
-                        this.MaleHeight = (Exception?)obj;
+                    case Race_FieldIndex.Height:
+                        this.Height = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case Race_FieldIndex.FemaleHeight:
-                        this.FemaleHeight = (Exception?)obj;
-                        break;
-                    case Race_FieldIndex.MaleWeight:
-                        this.MaleWeight = (Exception?)obj;
-                        break;
-                    case Race_FieldIndex.FemaleWeight:
-                        this.FemaleWeight = (Exception?)obj;
+                    case Race_FieldIndex.Weight:
+                        this.Weight = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
                     case Race_FieldIndex.Voices:
-                        this.Voices = (MaskItem<Exception?, RaceVoices.ErrorMask?>?)obj;
+                        this.Voices = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.DefaultHair:
-                        this.DefaultHair = (MaskItem<Exception?, RaceHair.ErrorMask?>?)obj;
+                        this.DefaultHair = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.DefaultHairColor:
                         this.DefaultHairColor = (Exception?)obj;
@@ -1630,10 +1550,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (SkillBoost5 != null) return true;
                 if (SkillBoost6 != null) return true;
                 if (Fluff != null) return true;
-                if (MaleHeight != null) return true;
-                if (FemaleHeight != null) return true;
-                if (MaleWeight != null) return true;
-                if (FemaleWeight != null) return true;
+                if (Height != null) return true;
+                if (Weight != null) return true;
                 if (Flags != null) return true;
                 if (Voices != null) return true;
                 if (DefaultHair != null) return true;
@@ -1743,13 +1661,17 @@ namespace Mutagen.Bethesda.Oblivion
                 SkillBoost5?.ToString(fg);
                 SkillBoost6?.ToString(fg);
                 fg.AppendLine($"Fluff => {Fluff}");
-                fg.AppendLine($"MaleHeight => {MaleHeight}");
-                fg.AppendLine($"FemaleHeight => {FemaleHeight}");
-                fg.AppendLine($"MaleWeight => {MaleWeight}");
-                fg.AppendLine($"FemaleWeight => {FemaleWeight}");
+                fg.AppendLine($"Height => {Height}");
+                fg.AppendLine($"Weight => {Weight}");
                 fg.AppendLine($"Flags => {Flags}");
-                Voices?.ToString(fg);
-                DefaultHair?.ToString(fg);
+                if (Voices != null)
+                {
+                    fg.AppendLine($"Voices => {Voices}");
+                }
+                if (DefaultHair != null)
+                {
+                    fg.AppendLine($"DefaultHair => {DefaultHair}");
+                }
                 fg.AppendLine($"DefaultHairColor => {DefaultHairColor}");
                 fg.AppendLine($"FaceGenMainClamp => {FaceGenMainClamp}");
                 fg.AppendLine($"FaceGenFaceClamp => {FaceGenFaceClamp}");
@@ -1856,13 +1778,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.SkillBoost5 = this.SkillBoost5.Combine(rhs.SkillBoost5, (l, r) => l.Combine(r));
                 ret.SkillBoost6 = this.SkillBoost6.Combine(rhs.SkillBoost6, (l, r) => l.Combine(r));
                 ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-                ret.MaleHeight = this.MaleHeight.Combine(rhs.MaleHeight);
-                ret.FemaleHeight = this.FemaleHeight.Combine(rhs.FemaleHeight);
-                ret.MaleWeight = this.MaleWeight.Combine(rhs.MaleWeight);
-                ret.FemaleWeight = this.FemaleWeight.Combine(rhs.FemaleWeight);
+                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
+                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Voices = this.Voices.Combine(rhs.Voices, (l, r) => l.Combine(r));
-                ret.DefaultHair = this.DefaultHair.Combine(rhs.DefaultHair, (l, r) => l.Combine(r));
+                ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
+                ret.DefaultHair = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DefaultHair?.Overall, rhs.DefaultHair?.Overall), GenderedItem.Combine(this.DefaultHair?.Specific, rhs.DefaultHair?.Specific));
                 ret.DefaultHairColor = this.DefaultHairColor.Combine(rhs.DefaultHairColor);
                 ret.FaceGenMainClamp = this.FaceGenMainClamp.Combine(rhs.FaceGenMainClamp);
                 ret.FaceGenFaceClamp = this.FaceGenFaceClamp.Combine(rhs.FaceGenFaceClamp);
@@ -1908,13 +1828,11 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost5;
             public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost6;
             public bool Fluff;
-            public bool MaleHeight;
-            public bool FemaleHeight;
-            public bool MaleWeight;
-            public bool FemaleWeight;
+            public MaskItem<bool, GenderedItem<bool>?> Height;
+            public MaskItem<bool, GenderedItem<bool>?> Weight;
             public bool Flags;
-            public MaskItem<bool, RaceVoices.TranslationMask?> Voices;
-            public MaskItem<bool, RaceHair.TranslationMask?> DefaultHair;
+            public MaskItem<bool, GenderedItem<bool>?> Voices;
+            public MaskItem<bool, GenderedItem<bool>?> DefaultHair;
             public bool DefaultHairColor;
             public bool FaceGenMainClamp;
             public bool FaceGenFaceClamp;
@@ -1944,13 +1862,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.SkillBoost5 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
                 this.SkillBoost6 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
                 this.Fluff = defaultOn;
-                this.MaleHeight = defaultOn;
-                this.FemaleHeight = defaultOn;
-                this.MaleWeight = defaultOn;
-                this.FemaleWeight = defaultOn;
+                this.Height = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.Weight = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Flags = defaultOn;
-                this.Voices = new MaskItem<bool, RaceVoices.TranslationMask?>(defaultOn, null);
-                this.DefaultHair = new MaskItem<bool, RaceHair.TranslationMask?>(defaultOn, null);
+                this.Voices = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.DefaultHair = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.DefaultHairColor = defaultOn;
                 this.FaceGenMainClamp = defaultOn;
                 this.FaceGenFaceClamp = defaultOn;
@@ -1981,13 +1897,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((SkillBoost5?.Overall ?? true, SkillBoost5?.Specific?.GetCrystal()));
                 ret.Add((SkillBoost6?.Overall ?? true, SkillBoost6?.Specific?.GetCrystal()));
                 ret.Add((Fluff, null));
-                ret.Add((MaleHeight, null));
-                ret.Add((FemaleHeight, null));
-                ret.Add((MaleWeight, null));
-                ret.Add((FemaleWeight, null));
+                ret.Add((Height?.Overall ?? true, null));
+                ret.Add((Weight?.Overall ?? true, null));
                 ret.Add((Flags, null));
-                ret.Add((Voices?.Overall ?? true, Voices?.Specific?.GetCrystal()));
-                ret.Add((DefaultHair?.Overall ?? true, DefaultHair?.Specific?.GetCrystal()));
+                ret.Add((Voices?.Overall ?? true, null));
+                ret.Add((DefaultHair?.Overall ?? true, null));
                 ret.Add((DefaultHairColor, null));
                 ret.Add((FaceGenMainClamp, null));
                 ret.Add((FaceGenFaceClamp, null));
@@ -2104,13 +2018,11 @@ namespace Mutagen.Bethesda.Oblivion
         new SkillBoost SkillBoost5 { get; set; }
         new SkillBoost SkillBoost6 { get; set; }
         new Byte[] Fluff { get; set; }
-        new Single MaleHeight { get; set; }
-        new Single FemaleHeight { get; set; }
-        new Single MaleWeight { get; set; }
-        new Single FemaleWeight { get; set; }
+        new GenderedItem<Single> Height { get; set; }
+        new GenderedItem<Single> Weight { get; set; }
         new Race.Flag Flags { get; set; }
-        new RaceVoices? Voices { get; set; }
-        new RaceHair? DefaultHair { get; set; }
+        new GenderedItem<IFormLink<Race>>? Voices { get; set; }
+        new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
         new Byte? DefaultHairColor { get; set; }
         new Int32? FaceGenMainClamp { get; set; }
         new Int32? FaceGenFaceClamp { get; set; }
@@ -2129,6 +2041,10 @@ namespace Mutagen.Bethesda.Oblivion
         IRace,
         IRaceGetter
     {
+        new GenderedItem<Single> Height { get; set; }
+        new GenderedItem<Single> Weight { get; set; }
+        new GenderedItem<IFormLink<Race>>? Voices { get; set; }
+        new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
     }
 
@@ -2151,13 +2067,11 @@ namespace Mutagen.Bethesda.Oblivion
         ISkillBoostGetter SkillBoost5 { get; }
         ISkillBoostGetter SkillBoost6 { get; }
         ReadOnlySpan<Byte> Fluff { get; }
-        Single MaleHeight { get; }
-        Single FemaleHeight { get; }
-        Single MaleWeight { get; }
-        Single FemaleWeight { get; }
+        IGenderedItemGetter<Single> Height { get; }
+        IGenderedItemGetter<Single> Weight { get; }
         Race.Flag Flags { get; }
-        IRaceVoicesGetter? Voices { get; }
-        IRaceHairGetter? DefaultHair { get; }
+        IGenderedItemGetter<IFormLinkGetter<IRaceGetter>>? Voices { get; }
+        IGenderedItemGetter<IFormLinkGetter<IHairGetter>>? DefaultHair { get; }
         Byte? DefaultHairColor { get; }
         Int32? FaceGenMainClamp { get; }
         Int32? FaceGenFaceClamp { get; }
@@ -2487,24 +2401,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         SkillBoost5 = 14,
         SkillBoost6 = 15,
         Fluff = 16,
-        MaleHeight = 17,
-        FemaleHeight = 18,
-        MaleWeight = 19,
-        FemaleWeight = 20,
-        Flags = 21,
-        Voices = 22,
-        DefaultHair = 23,
-        DefaultHairColor = 24,
-        FaceGenMainClamp = 25,
-        FaceGenFaceClamp = 26,
-        RaceStats = 27,
-        FaceData = 28,
-        BodyData = 29,
-        Hairs = 30,
-        Eyes = 31,
-        FaceGenData = 32,
-        Unknown = 33,
-        DATADataTypeState = 34,
+        Height = 17,
+        Weight = 18,
+        Flags = 19,
+        Voices = 20,
+        DefaultHair = 21,
+        DefaultHairColor = 22,
+        FaceGenMainClamp = 23,
+        FaceGenFaceClamp = 24,
+        RaceStats = 25,
+        FaceData = 26,
+        BodyData = 27,
+        Hairs = 28,
+        Eyes = 29,
+        FaceGenData = 30,
+        Unknown = 31,
+        DATADataTypeState = 32,
     }
     #endregion
 
@@ -2522,9 +2434,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "265136e6-60a6-4ade-a7c4-b31197fb95e5";
 
-        public const ushort AdditionalFieldCount = 30;
+        public const ushort AdditionalFieldCount = 28;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -2578,14 +2490,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Race_FieldIndex.SkillBoost6;
                 case "FLUFF":
                     return (ushort)Race_FieldIndex.Fluff;
-                case "MALEHEIGHT":
-                    return (ushort)Race_FieldIndex.MaleHeight;
-                case "FEMALEHEIGHT":
-                    return (ushort)Race_FieldIndex.FemaleHeight;
-                case "MALEWEIGHT":
-                    return (ushort)Race_FieldIndex.MaleWeight;
-                case "FEMALEWEIGHT":
-                    return (ushort)Race_FieldIndex.FemaleWeight;
+                case "HEIGHT":
+                    return (ushort)Race_FieldIndex.Height;
+                case "WEIGHT":
+                    return (ushort)Race_FieldIndex.Weight;
                 case "FLAGS":
                     return (ushort)Race_FieldIndex.Flags;
                 case "VOICES":
@@ -2640,10 +2548,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.SkillBoost5:
                 case Race_FieldIndex.SkillBoost6:
                 case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.MaleHeight:
-                case Race_FieldIndex.FemaleHeight:
-                case Race_FieldIndex.MaleWeight:
-                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
                 case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
@@ -2674,8 +2580,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.SkillBoost4:
                 case Race_FieldIndex.SkillBoost5:
                 case Race_FieldIndex.SkillBoost6:
-                case Race_FieldIndex.Voices:
-                case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.RaceStats:
                 case Race_FieldIndex.FaceData:
                 case Race_FieldIndex.BodyData:
@@ -2685,11 +2589,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.MaleHeight:
-                case Race_FieldIndex.FemaleHeight:
-                case Race_FieldIndex.MaleWeight:
-                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
                 case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Voices:
+                case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
                 case Race_FieldIndex.FaceGenMainClamp:
                 case Race_FieldIndex.FaceGenFaceClamp:
@@ -2720,10 +2624,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.SkillBoost5:
                 case Race_FieldIndex.SkillBoost6:
                 case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.MaleHeight:
-                case Race_FieldIndex.FemaleHeight:
-                case Race_FieldIndex.MaleWeight:
-                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
                 case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
@@ -2773,14 +2675,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "SkillBoost6";
                 case Race_FieldIndex.Fluff:
                     return "Fluff";
-                case Race_FieldIndex.MaleHeight:
-                    return "MaleHeight";
-                case Race_FieldIndex.FemaleHeight:
-                    return "FemaleHeight";
-                case Race_FieldIndex.MaleWeight:
-                    return "MaleWeight";
-                case Race_FieldIndex.FemaleWeight:
-                    return "FemaleWeight";
+                case Race_FieldIndex.Height:
+                    return "Height";
+                case Race_FieldIndex.Weight:
+                    return "Weight";
                 case Race_FieldIndex.Flags:
                     return "Flags";
                 case Race_FieldIndex.Voices:
@@ -2831,10 +2729,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.SkillBoost5:
                 case Race_FieldIndex.SkillBoost6:
                 case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.MaleHeight:
-                case Race_FieldIndex.FemaleHeight:
-                case Race_FieldIndex.MaleWeight:
-                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
                 case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
@@ -2872,10 +2768,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.SkillBoost5:
                 case Race_FieldIndex.SkillBoost6:
                 case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.MaleHeight:
-                case Race_FieldIndex.FemaleHeight:
-                case Race_FieldIndex.MaleWeight:
-                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
                 case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
@@ -2925,20 +2819,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(SkillBoost);
                 case Race_FieldIndex.Fluff:
                     return typeof(Byte[]);
-                case Race_FieldIndex.MaleHeight:
-                    return typeof(Single);
-                case Race_FieldIndex.FemaleHeight:
-                    return typeof(Single);
-                case Race_FieldIndex.MaleWeight:
-                    return typeof(Single);
-                case Race_FieldIndex.FemaleWeight:
-                    return typeof(Single);
+                case Race_FieldIndex.Height:
+                    return typeof(GenderedItem<Single>);
+                case Race_FieldIndex.Weight:
+                    return typeof(GenderedItem<Single>);
                 case Race_FieldIndex.Flags:
                     return typeof(Race.Flag);
                 case Race_FieldIndex.Voices:
-                    return typeof(RaceVoices);
+                    return typeof(GenderedItem<IFormLink<Race>>);
                 case Race_FieldIndex.DefaultHair:
-                    return typeof(RaceHair);
+                    return typeof(GenderedItem<IFormLink<Hair>>);
                 case Race_FieldIndex.DefaultHairColor:
                     return typeof(Byte);
                 case Race_FieldIndex.FaceGenMainClamp:
@@ -3047,10 +2937,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SkillBoost5 = new SkillBoost();
             item.SkillBoost6 = new SkillBoost();
             item.Fluff = new byte[4];
-            item.MaleHeight = default;
-            item.FemaleHeight = default;
-            item.MaleWeight = default;
-            item.FemaleWeight = default;
+            item.Height.Male = default;
+            item.Height.Female = default;
+            item.Weight.Male = default;
+            item.Weight.Female = default;
             item.Flags = default;
             item.Voices = null;
             item.DefaultHair = null;
@@ -3239,27 +3129,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null,
                         masterReferences: masterReferences);
                     item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.MaleHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FemaleHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.MaleWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FemaleWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation<Single>.Parse(
+                        frame: frame,
+                        transl: FloatBinaryTranslation.Instance.Parse);
+                    item.Weight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation<Single>.Parse(
+                        frame: frame,
+                        transl: FloatBinaryTranslation.Instance.Parse);
                     item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Flags);
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    item.Voices = Mutagen.Bethesda.Oblivion.RaceVoices.CreateFromBinary(
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation<IFormLink<Race>>.Parse(
                         frame: frame,
-                        recordTypeConverter: null,
-                        masterReferences: masterReferences);
+                        masterReferences: masterReferences,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    item.DefaultHair = Mutagen.Bethesda.Oblivion.RaceHair.CreateFromBinary(
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.DefaultHair = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation<IFormLink<Hair>>.Parse(
                         frame: frame,
-                        recordTypeConverter: null,
-                        masterReferences: masterReferences);
+                        masterReferences: masterReferences,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 }
                 case 0x4D414E43: // CNAM
@@ -3424,21 +3318,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SkillBoost5 = MaskItemExt.Factory(item.SkillBoost5.GetEqualsMask(rhs.SkillBoost5, include), include);
             ret.SkillBoost6 = MaskItemExt.Factory(item.SkillBoost6.GetEqualsMask(rhs.SkillBoost6, include), include);
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-            ret.MaleHeight = item.MaleHeight.EqualsWithin(rhs.MaleHeight);
-            ret.FemaleHeight = item.FemaleHeight.EqualsWithin(rhs.FemaleHeight);
-            ret.MaleWeight = item.MaleWeight.EqualsWithin(rhs.MaleWeight);
-            ret.FemaleWeight = item.FemaleWeight.EqualsWithin(rhs.FemaleWeight);
+            ret.Height = new GenderedItem<bool>(
+                male: item.Height.Male.EqualsWithin(rhs.Height.Male),
+                female: item.Height.Female.EqualsWithin(rhs.Height.Female));
+            ret.Weight = new GenderedItem<bool>(
+                male: item.Weight.Male.EqualsWithin(rhs.Weight.Male),
+                female: item.Weight.Female.EqualsWithin(rhs.Weight.Female));
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Voices = EqualsMaskHelper.EqualsHelper(
-                item.Voices,
-                rhs.Voices,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.DefaultHair = EqualsMaskHelper.EqualsHelper(
-                item.DefaultHair,
-                rhs.DefaultHair,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Voices = GenderedItem.EqualityMaskHelper(
+                lhs: item.Voices,
+                rhs: rhs.Voices,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkGetter<IRaceGetter>>.Default.Equals(l, r),
+                include: include);
+            ret.DefaultHair = GenderedItem.EqualityMaskHelper(
+                lhs: item.DefaultHair,
+                rhs: rhs.DefaultHair,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkGetter<IHairGetter>>.Default.Equals(l, r),
+                include: include);
             ret.DefaultHairColor = item.DefaultHairColor == rhs.DefaultHairColor;
             ret.FaceGenMainClamp = item.FaceGenMainClamp == rhs.FaceGenMainClamp;
             ret.FaceGenFaceClamp = item.FaceGenFaceClamp == rhs.FaceGenFaceClamp;
@@ -3598,21 +3494,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
-            if (printMask?.MaleHeight ?? true)
+            if (true)
             {
-                fg.AppendLine($"MaleHeight => {item.MaleHeight}");
+                item.Height.ToString(fg, "Height");
             }
-            if (printMask?.FemaleHeight ?? true)
+            if (true)
             {
-                fg.AppendLine($"FemaleHeight => {item.FemaleHeight}");
-            }
-            if (printMask?.MaleWeight ?? true)
-            {
-                fg.AppendLine($"MaleWeight => {item.MaleWeight}");
-            }
-            if (printMask?.FemaleWeight ?? true)
-            {
-                fg.AppendLine($"FemaleWeight => {item.FemaleWeight}");
+                item.Weight.ToString(fg, "Weight");
             }
             if (printMask?.Flags ?? true)
             {
@@ -3722,10 +3610,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != item.Spells.HasBeenSet) return false;
             if (checkMask.Relations?.Overall.HasValue ?? false && checkMask.Relations!.Overall.Value != item.Relations.HasBeenSet) return false;
-            if (checkMask.Voices?.Overall.HasValue ?? false && checkMask.Voices.Overall.Value != (item.Voices != null)) return false;
-            if (checkMask.Voices?.Specific != null && (item.Voices == null || !item.Voices.HasBeenSet(checkMask.Voices.Specific))) return false;
-            if (checkMask.DefaultHair?.Overall.HasValue ?? false && checkMask.DefaultHair.Overall.Value != (item.DefaultHair != null)) return false;
-            if (checkMask.DefaultHair?.Specific != null && (item.DefaultHair == null || !item.DefaultHair.HasBeenSet(checkMask.DefaultHair.Specific))) return false;
+            if (checkMask.Voices?.Overall ?? false) return false;
+            if (checkMask.DefaultHair?.Overall ?? false) return false;
             if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != (item.DefaultHairColor != null)) return false;
             if (checkMask.FaceGenMainClamp.HasValue && checkMask.FaceGenMainClamp.Value != (item.FaceGenMainClamp != null)) return false;
             if (checkMask.FaceGenFaceClamp.HasValue && checkMask.FaceGenFaceClamp.Value != (item.FaceGenFaceClamp != null)) return false;
@@ -3760,15 +3646,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.SkillBoost5 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost5?.GetHasBeenSetMask());
             mask.SkillBoost6 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost6?.GetHasBeenSetMask());
             mask.Fluff = true;
-            mask.MaleHeight = true;
-            mask.FemaleHeight = true;
-            mask.MaleWeight = true;
-            mask.FemaleWeight = true;
+            mask.Height = new GenderedItem<bool>(true, true);
+            mask.Weight = new GenderedItem<bool>(true, true);
             mask.Flags = true;
-            var itemVoices = item.Voices;
-            mask.Voices = new MaskItem<bool, RaceVoices.Mask<bool>?>(itemVoices != null, itemVoices?.GetHasBeenSetMask());
-            var itemDefaultHair = item.DefaultHair;
-            mask.DefaultHair = new MaskItem<bool, RaceHair.Mask<bool>?>(itemDefaultHair != null, itemDefaultHair?.GetHasBeenSetMask());
+            mask.Voices = item.Voices == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
+            mask.DefaultHair = item.DefaultHair == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
             mask.DefaultHairColor = (item.DefaultHairColor != null);
             mask.FaceGenMainClamp = (item.FaceGenMainClamp != null);
             mask.FaceGenFaceClamp = (item.FaceGenFaceClamp != null);
@@ -3845,13 +3727,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
             if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            if (!lhs.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
-            if (!lhs.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
-            if (!lhs.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
-            if (!lhs.FemaleWeight.EqualsWithin(rhs.FemaleWeight)) return false;
+            if (!Equals(lhs.Height, rhs.Height)) return false;
+            if (!Equals(lhs.Weight, rhs.Weight)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!object.Equals(lhs.Voices, rhs.Voices)) return false;
-            if (!object.Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
+            if (!Equals(lhs.Voices, rhs.Voices)) return false;
+            if (!Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
             if (lhs.DefaultHairColor != rhs.DefaultHairColor) return false;
             if (lhs.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
             if (lhs.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
@@ -3905,18 +3785,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = HashHelper.GetHashCode(item.SkillBoost5).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.SkillBoost6).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaleHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FemaleHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaleWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FemaleWeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Height.Male, item.Height.Female).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight.Male, item.Weight.Female).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
             if (item.Voices.TryGet(out var Voicesitem))
             {
-                ret = HashHelper.GetHashCode(Voicesitem).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Voicesitem.Male, Voicesitem.Female).CombineHashCode(ret);
             }
             if (item.DefaultHair.TryGet(out var DefaultHairitem))
             {
-                ret = HashHelper.GetHashCode(DefaultHairitem).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(DefaultHairitem.Male, DefaultHairitem.Female).CombineHashCode(ret);
             }
             if (item.DefaultHairColor.TryGet(out var DefaultHairColoritem))
             {
@@ -3986,20 +3864,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             foreach (var item in obj.Relations.SelectMany(f => f.Links))
             {
                 yield return item;
-            }
-            if (obj.Voices != null)
-            {
-                foreach (var item in obj.Voices.Links)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DefaultHair != null)
-            {
-                foreach (var item in obj.DefaultHair.Links)
-                {
-                    yield return item;
-                }
             }
             foreach (var item in obj.Hairs)
             {
@@ -4278,21 +4142,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Fluff = rhs.Fluff.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MaleHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
             {
-                item.MaleHeight = rhs.MaleHeight;
+                errorMask?.PushIndex((int)Race_FieldIndex.Height);
+                try
+                {
+                    item.Height = new GenderedItem<Single>(
+                        male: rhs.Height.Male,
+                        female: rhs.Height.Female);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
             {
-                item.FemaleHeight = rhs.FemaleHeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MaleWeight) ?? true))
-            {
-                item.MaleWeight = rhs.MaleWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleWeight) ?? true))
-            {
-                item.FemaleWeight = rhs.FemaleWeight;
+                errorMask?.PushIndex((int)Race_FieldIndex.Weight);
+                try
+                {
+                    item.Weight = new GenderedItem<Single>(
+                        male: rhs.Weight.Male,
+                        female: rhs.Weight.Female);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
@@ -4303,15 +4189,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Voices);
                 try
                 {
-                    if(rhs.Voices.TryGet(out var rhsVoices))
+                    if (!rhs.Voices.TryGet(out var rhsVoicesitem))
                     {
-                        item.Voices = rhsVoices.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Race_FieldIndex.Voices));
+                        item.Voices = null;
                     }
                     else
                     {
-                        item.Voices = default;
+                        item.Voices = new GenderedItem<IFormLink<Race>>(
+                            male: new FormLink<Race>(rhsVoicesitem.Male.FormKey),
+                            female: new FormLink<Race>(rhsVoicesitem.Female.FormKey));
                     }
                 }
                 catch (Exception ex)
@@ -4329,15 +4215,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
                 try
                 {
-                    if(rhs.DefaultHair.TryGet(out var rhsDefaultHair))
+                    if (!rhs.DefaultHair.TryGet(out var rhsDefaultHairitem))
                     {
-                        item.DefaultHair = rhsDefaultHair.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHair));
+                        item.DefaultHair = null;
                     }
                     else
                     {
-                        item.DefaultHair = default;
+                        item.DefaultHair = new GenderedItem<IFormLink<Hair>>(
+                            male: new FormLink<Hair>(rhsDefaultHairitem.Male.FormKey),
+                            female: new FormLink<Hair>(rhsDefaultHairitem.Female.FormKey));
                     }
                 }
                 catch (Exception ex)
@@ -4832,41 +4718,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fieldIndex: (int)Race_FieldIndex.Fluff,
                         errorMask: errorMask);
                 }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleHeight) ?? true))
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
                 {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MaleHeight),
-                        item: item.MaleHeight,
-                        fieldIndex: (int)Race_FieldIndex.MaleHeight,
-                        errorMask: errorMask);
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.Height),
+                            item: item.Height.Male,
+                            errorMask: errorMask);
+                    }
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.Height),
+                            item: item.Height.Female,
+                            errorMask: errorMask);
+                    }
                 }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleHeight) ?? true))
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
                 {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FemaleHeight),
-                        item: item.FemaleHeight,
-                        fieldIndex: (int)Race_FieldIndex.FemaleHeight,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleWeight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MaleWeight),
-                        item: item.MaleWeight,
-                        fieldIndex: (int)Race_FieldIndex.MaleWeight,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleWeight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FemaleWeight),
-                        item: item.FemaleWeight,
-                        fieldIndex: (int)Race_FieldIndex.FemaleWeight,
-                        errorMask: errorMask);
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.Weight),
+                            item: item.Weight.Male,
+                            errorMask: errorMask);
+                    }
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.Weight),
+                            item: item.Weight.Female,
+                            errorMask: errorMask);
+                    }
                 }
                 if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
                 {
@@ -4881,26 +4765,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Voices != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
-                var VoicesItem = item.Voices;
-                ((RaceVoicesXmlWriteTranslation)((IXmlItem)VoicesItem).XmlWriteTranslator).Write(
-                    item: VoicesItem,
-                    node: node,
-                    name: nameof(item.Voices),
-                    fieldIndex: (int)Race_FieldIndex.Voices,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Voices));
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Voices),
+                        item: item.Voices.Male.FormKey,
+                        errorMask: errorMask);
+                }
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Voices),
+                        item: item.Voices.Female.FormKey,
+                        errorMask: errorMask);
+                }
             }
             if ((item.DefaultHair != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHair) ?? true))
             {
-                var DefaultHairItem = item.DefaultHair;
-                ((RaceHairXmlWriteTranslation)((IXmlItem)DefaultHairItem).XmlWriteTranslator).Write(
-                    item: DefaultHairItem,
-                    node: node,
-                    name: nameof(item.DefaultHair),
-                    fieldIndex: (int)Race_FieldIndex.DefaultHair,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHair));
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.DefaultHair),
+                        item: item.DefaultHair.Male.FormKey,
+                        errorMask: errorMask);
+                }
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.DefaultHair),
+                        item: item.DefaultHair.Female.FormKey,
+                        errorMask: errorMask);
+                }
             }
             if ((item.DefaultHairColor != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColor) ?? true))
@@ -5408,13 +5304,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "MaleHeight":
-                    errorMask?.PushIndex((int)Race_FieldIndex.MaleHeight);
+                case "Height":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Height);
                     try
                     {
-                        item.MaleHeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                        item.Height = new GenderedItem<Single>(
+                            male: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5426,49 +5326,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "FemaleHeight":
-                    errorMask?.PushIndex((int)Race_FieldIndex.FemaleHeight);
+                case "Weight":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Weight);
                     try
                     {
-                        item.FemaleHeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaleWeight":
-                    errorMask?.PushIndex((int)Race_FieldIndex.MaleWeight);
-                    try
-                    {
-                        item.MaleWeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleWeight":
-                    errorMask?.PushIndex((int)Race_FieldIndex.FemaleWeight);
-                    try
-                    {
-                        item.FemaleWeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                        item.Weight = new GenderedItem<Single>(
+                            male: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5502,10 +5370,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Race_FieldIndex.Voices);
                     try
                     {
-                        item.Voices = LoquiXmlTranslation<RaceVoices>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Voices));
+                        item.Voices = new GenderedItem<IFormLink<Race>>(
+                            male: new FormLink<Race>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)),
+                            female: new FormLink<Race>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5521,10 +5392,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
                     try
                     {
-                        item.DefaultHair = LoquiXmlTranslation<RaceHair>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHair));
+                        item.DefaultHair = new GenderedItem<IFormLink<Hair>>(
+                            male: new FormLink<Hair>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)),
+                            female: new FormLink<Hair>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5965,39 +5839,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Fluff);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MaleHeight);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FemaleHeight);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MaleWeight);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FemaleWeight);
+                    {
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.Height.Male);
+                    }
+                    {
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.Height.Female);
+                    }
+                    {
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.Weight.Male);
+                    }
+                    {
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.Weight.Female);
+                    }
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                         writer,
                         item.Flags,
                         length: 2);
                 }
             }
-            if (item.Voices.TryGet(out var VoicesItem))
+            if (item.Voices.TryGet(out var Voicesitem))
             {
-                ((RaceVoicesBinaryWriteTranslation)((IBinaryItem)VoicesItem).BinaryWriteTranslator).Write(
-                    item: VoicesItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.VNAM_HEADER)))
+                {
+                    {
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: Voicesitem.Male,
+                            masterReferences: masterReferences);
+                    }
+                    {
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: Voicesitem.Female,
+                            masterReferences: masterReferences);
+                    }
+                }
             }
-            if (item.DefaultHair.TryGet(out var DefaultHairItem))
+            if (item.DefaultHair.TryGet(out var DefaultHairitem))
             {
-                ((RaceHairBinaryWriteTranslation)((IBinaryItem)DefaultHairItem).BinaryWriteTranslator).Write(
-                    item: DefaultHairItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DNAM_HEADER)))
+                {
+                    {
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: DefaultHairitem.Male,
+                            masterReferences: masterReferences);
+                    }
+                    {
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: DefaultHairitem.Female,
+                            masterReferences: masterReferences);
+                    }
+                }
             }
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -6288,25 +6190,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 4).ToArray() : default;
         public bool Fluff_IsSet => _Fluff_IsSet;
         #endregion
-        #region MaleHeight
-        private int _MaleHeightLocation => _DATALocation!.Value + 0x12;
-        private bool _MaleHeight_IsSet => _DATALocation.HasValue;
-        public Single MaleHeight => _MaleHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MaleHeightLocation, 4)) : default;
+        #region Height
+        private int _HeightLocation => _DATALocation!.Value + 0x12;
+        private bool _Height_IsSet => _DATALocation.HasValue;
+        public IGenderedItemGetter<Single> Height
+        {
+            get
+            {
+                if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
+                var data = _data.Span.Slice(_HeightLocation);
+                return new GenderedItem<Single>(
+                    SpanExt.GetFloat(data),
+                    SpanExt.GetFloat(data.Slice(4)));
+            }
+        }
         #endregion
-        #region FemaleHeight
-        private int _FemaleHeightLocation => _DATALocation!.Value + 0x16;
-        private bool _FemaleHeight_IsSet => _DATALocation.HasValue;
-        public Single FemaleHeight => _FemaleHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FemaleHeightLocation, 4)) : default;
-        #endregion
-        #region MaleWeight
-        private int _MaleWeightLocation => _DATALocation!.Value + 0x1A;
-        private bool _MaleWeight_IsSet => _DATALocation.HasValue;
-        public Single MaleWeight => _MaleWeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MaleWeightLocation, 4)) : default;
-        #endregion
-        #region FemaleWeight
-        private int _FemaleWeightLocation => _DATALocation!.Value + 0x1E;
-        private bool _FemaleWeight_IsSet => _DATALocation.HasValue;
-        public Single FemaleWeight => _FemaleWeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FemaleWeightLocation, 4)) : default;
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x1A;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public IGenderedItemGetter<Single> Weight
+        {
+            get
+            {
+                if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
+                var data = _data.Span.Slice(_WeightLocation);
+                return new GenderedItem<Single>(
+                    SpanExt.GetFloat(data),
+                    SpanExt.GetFloat(data.Slice(4)));
+            }
+        }
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x22;
@@ -6314,16 +6226,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
         #endregion
         #region Voices
-        private RangeInt32? _VoicesLocation;
-        private bool _Voices_IsSet => _VoicesLocation.HasValue;
-        public IRaceVoicesGetter? Voices => _Voices_IsSet ? RaceVoicesBinaryOverlay.RaceVoicesFactory(new BinaryMemoryReadStream(_data.Slice(_VoicesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Voices_IsSet => _VoicesLocation.HasValue;
+        private int? _VoicesLocation;
+        public IGenderedItemGetter<IFormLinkGetter<IRaceGetter>>? Voices
+        {
+            get
+            {
+                if (!_VoicesLocation.HasValue) return default;
+                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _VoicesLocation.Value, _package.Meta);
+                return new GenderedItem<IFormLinkGetter<IRaceGetter>>(
+                    new FormLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
+                    new FormLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+            }
+        }
         #endregion
         #region DefaultHair
-        private RangeInt32? _DefaultHairLocation;
-        private bool _DefaultHair_IsSet => _DefaultHairLocation.HasValue;
-        public IRaceHairGetter? DefaultHair => _DefaultHair_IsSet ? RaceHairBinaryOverlay.RaceHairFactory(new BinaryMemoryReadStream(_data.Slice(_DefaultHairLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool DefaultHair_IsSet => _DefaultHairLocation.HasValue;
+        private int? _DefaultHairLocation;
+        public IGenderedItemGetter<IFormLinkGetter<IHairGetter>>? DefaultHair
+        {
+            get
+            {
+                if (!_DefaultHairLocation.HasValue) return default;
+                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultHairLocation.Value, _package.Meta);
+                return new GenderedItem<IFormLinkGetter<IHairGetter>>(
+                    new FormLink<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
+                    new FormLink<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+            }
+        }
         #endregion
         #region DefaultHairColor
         private int? _DefaultHairColorLocation;
@@ -6464,12 +6392,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    _VoicesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VoicesLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _DefaultHairLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DefaultHairLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 }
                 case 0x4D414E43: // CNAM

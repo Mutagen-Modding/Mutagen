@@ -35,6 +35,27 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new MajorRecordEnumerationModule());
         }
 
+        public bool FieldFilter(TypeGeneration field)
+        {
+            var data = field.GetFieldData();
+            if (data.RecordType.HasValue
+                || field is NothingType
+                || field is PrimitiveType
+                || field is FormLinkType
+                || field is ContainerType
+                || field is DictType)
+            {
+                return true;
+            }
+
+            if (field is GenderedType gender)
+            {
+                return FieldFilter(gender.SubTypeGeneration);
+            }
+
+            return false;
+        }
+
         public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
             var data = field.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
@@ -43,13 +64,8 @@ namespace Mutagen.Bethesda.Generation
             ModifyGRUPAttributes(field);
             await base.PostFieldLoad(obj, field, node);
             data.Length = node.GetAttribute<int?>(Constants.ByteLength, null);
-            if (!data.Length.HasValue
-                && !data.RecordType.HasValue
-                && !(field is NothingType)
-                && !(field is PrimitiveType)
-                && !(field is FormLinkType)
-                && !(field is ContainerType)
-                && !(field is DictType))
+            if (data.Length.HasValue) return;
+            if (!FieldFilter(field))
             {
                 throw new ArgumentException($"{obj.Name} {field.Name} have to define either length or record type.");
             }

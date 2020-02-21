@@ -19,15 +19,21 @@
           <RefDirect name="SkillBoost5" refName="SkillBoost" />
           <RefDirect name="SkillBoost6" refName="SkillBoost" />
           <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
-          <Float name="MaleHeight" />
-          <Float name="FemaleHeight" />
-          <Float name="MaleWeight" />
-          <Float name="FemaleWeight" />
+          <Gendered name="Height" >
+            <Float />
+          </Gendered>
+          <Gendered name="Weight" >
+            <Float />
+          </Gendered>
           <Enum name="Flags" enumName="Race.Flag" byteLength="2" />
         </Fields>
       </Data>
-      <RefDirect name="Voices" refName="RaceVoices" />
-      <RefDirect name="DefaultHair" refName="RaceHair" />
+      <Gendered name="Voices" recordType="VNAM">
+        <FormLink refName="Race" />
+      </Gendered>
+      <Gendered name="DefaultHair" recordType="DNAM">
+        <FormLink refName="Hair" />
+      </Gendered>
       <UInt8 name="DefaultHairColor" recordType="CNAM" />
       <Int32 name="FaceGenMainClamp" recordType="PNAM" hasBeenSet="True" />
       <Int32 name="FaceGenFaceClamp" recordType="UNAM" hasBeenSet="True" />
@@ -50,18 +56,6 @@
     <Fields>
       <Enum name="Skill" enumName="ActorValue" byteLength="1" />
       <Int8 name="Boost" />
-    </Fields>
-  </Object>
-  <Object name="RaceVoices" objType="Subrecord" recordType="VNAM" GUID="b13f8f98-6699-43f8-b900-51ecba9fa467" ID="32">
-    <Fields>
-      <FormLink name="Male" refName="Race" />
-      <FormLink name="Female" refName="Race" />
-    </Fields>
-  </Object>
-  <Object name="RaceHair" objType="Subrecord" recordType="DNAM" GUID="9061ff50-b8b8-429c-9b68-4eb0adf42740" ID="33">
-    <Fields>
-      <FormLink name="Male" refName="Hair" />
-      <FormLink name="Female" refName="Hair" />
     </Fields>
   </Object>
   <Object name="RaceStats" objType="Subrecord" GUID="3cbe1b09-d220-47e3-a57d-3d9a4feada8b" ID="31">
