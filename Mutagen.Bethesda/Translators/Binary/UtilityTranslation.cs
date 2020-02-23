@@ -403,27 +403,23 @@ namespace Mutagen.Bethesda
         /// <param name="recordTypes">Record types to locate</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <returns>Array of found record locations</returns>
-        public static int[] FindFirstSubrecords(ReadOnlySpan<byte> data, GameConstants meta, params RecordType[] recordTypes)
+        public static int?[] FindFirstSubrecords(ReadOnlySpan<byte> data, GameConstants meta, params RecordType[] recordTypes)
         {
             int loc = 0;
-            int[] ret = new int[recordTypes.Length];
-            for (int i = 0; i < ret.Length; i++)
-            {
-                ret[i] = -1;
-            }
+            int?[] ret = new int?[recordTypes.Length];
             while (data.Length > loc)
             {
                 var subMeta = meta.SubRecord(data.Slice(loc));
                 var recType = subMeta.RecordType;
                 for (int i = 0; i < recordTypes.Length; i++)
                 {
-                    if (recordTypes[i] == recType && ret[i] == -1)
+                    if (recordTypes[i] == recType && ret[i] == null)
                     {
                         ret[i] = loc;
                         bool breakOut = false;
                         for (int j = 0; j < ret.Length; j++)
                         {
-                            if (ret[j] == -1)
+                            if (ret[j] == null)
                             {
                                 breakOut = true;
                                 break;
@@ -451,7 +447,7 @@ namespace Mutagen.Bethesda
             }
             return -1;
         }
-        
+
         public static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)
         {
             var streams = await Task.WhenAll(inStreams).ConfigureAwait(false);
@@ -498,7 +494,7 @@ namespace Mutagen.Bethesda
             var bytesSpan = bytes.AsSpan();
             BinaryPrimitives.WriteUInt32LittleEndian(bytesSpan.Slice(4), len);
         }
-        
+
         public static async Task<IEnumerable<Stream>> CompileSetGroupLength(
             IEnumerable<Task<Stream>> streams,
             byte[] bytes)

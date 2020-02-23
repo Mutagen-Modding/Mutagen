@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.UnitTests
             var b = new byte[0];
             var ret = UtilityTranslation.FindFirstSubrecords(b.AsSpan(), GameConstants.Oblivion, FirstTypicalType, SecondTypicalType);
             Assert.Equal(2, ret.Length);
-            Assert.Equal(-1, ret[0]);
-            Assert.Equal(-1, ret[1]);
+            Assert.Null(ret[0]);
+            Assert.Null(ret[1]);
         }
 
         [Fact]
