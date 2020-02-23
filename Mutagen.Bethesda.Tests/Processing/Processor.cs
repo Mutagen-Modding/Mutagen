@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 stream.Position = loc;
                 var groupMeta = stream.MetaData.ReadGroup(stream);
-                if (groupMeta.ContentLength != 0) continue;
+                if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
                 this._Instructions.SetRemove(RangeInt64.FactoryFromLength(loc, groupMeta.HeaderLength));
             }
         }

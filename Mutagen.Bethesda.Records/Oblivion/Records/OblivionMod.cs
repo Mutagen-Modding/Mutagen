@@ -309,7 +309,6 @@ namespace Mutagen.Bethesda.Oblivion
                 int targetIndex,
                 Stream[] streamDepositArray)
             {
-                if (block.SubBlocks.Count == 0) return;
                 Stream[] streams = new Stream[block.SubBlocks.Count + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
@@ -338,7 +337,6 @@ namespace Mutagen.Bethesda.Oblivion
                 int targetIndex,
                 Stream[] streamDepositArray)
             {
-                if (subBlock.Cells.Count == 0) return;
                 Stream[] streams = new Stream[subBlock.Cells.Count + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 var groupByteStream = new MemoryStream(groupBytes);
@@ -550,10 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ICellBlockGetter block,
                 MasterReferences masters)
             {
-                if (block.SubBlocks.Count == 0)
-                {
-                    return EnumerableExt<Stream>.Empty;
-                }
                 List<Task<Stream>> streams = new List<Task<Stream>>();
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
@@ -583,10 +577,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ICellSubBlockGetter subBlock,
                 MasterReferences masters)
             {
-                if (subBlock.Cells.Count == 0)
-                {
-                    return EnumerableExt<Stream>.Empty;
-                }
                 List<Task<Stream>> streams = new List<Task<Stream>>();
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
