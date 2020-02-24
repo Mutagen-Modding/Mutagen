@@ -5,11 +5,9 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class GenderedItemBinaryTranslation<TItem>
+    public class GenderedItemBinaryTranslation
     {
-        public readonly static GenderedItemBinaryTranslation<TItem> Instance = new GenderedItemBinaryTranslation<TItem>();
-
-        public static GenderedItem<TItem> Parse(
+        public static GenderedItem<TItem> Parse<TItem>(
             MutagenFrame frame,
             UtilityTranslation.BinarySubParseDelegate<TItem> transl)
         {
@@ -24,7 +22,7 @@ namespace Mutagen.Bethesda.Binary
             return new GenderedItem<TItem>(male, female);
         }
 
-        public static GenderedItem<TItem> Parse(
+        public static GenderedItem<TItem> Parse<TItem>(
             MutagenFrame frame,
             MasterReferences masterReferences,
             UtilityTranslation.BinaryMasterParseDelegate<TItem> transl)
@@ -38,6 +36,43 @@ namespace Mutagen.Bethesda.Binary
                 throw new ArgumentException();
             }
             return new GenderedItem<TItem>(male, female);
+        }
+
+        public static GenderedItem<TItem?> Parse<TItem>(
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl)
+            where TItem : class
+        {
+            TItem? male = default, female = default;
+            for (int i = 0; i < 2; i++)
+            {
+                var subHeader = frame.MetaData.GetSubRecord(frame);
+                RecordType type = subHeader.RecordType;
+                if (type == maleMarker)
+                {
+                    frame.Position += subHeader.TotalLength;
+                    if (!transl(frame, out male, masterReferences))
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                else if (type == femaleMarker)
+                {
+                    frame.Position += subHeader.TotalLength;
+                    if (!transl(frame, out female, masterReferences))
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return new GenderedItem<TItem?>(male, female);
         }
     }
 }

@@ -144,6 +144,14 @@ namespace Mutagen.Bethesda.Generation
                             throw new NotImplementedException();
                     }
                 }
+                else if (field is GenderedType gendered)
+                {
+                    if (gendered.MaleMarker.HasValue)
+                    {
+                        recordTypes.Add(gendered.MaleMarker.Value);
+                        recordTypes.Add(gendered.FemaleMarker.Value);
+                    }
+                }
             }
             foreach (var type in recordTypes)
             {

@@ -43,6 +43,7 @@
     <Compile Include="Translators\Binary\Binary Overlay\EmptySetList.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlaySetList.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayNumberedList.cs" />
+    <Compile Include="Translators\Binary\Binary Overlay\GenderedItemBinaryOverlay.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\ReadOnlySetList.cs" />
     <Compile Include="Records\GroupAbstract.cs" />
     <Compile Include="Translators\Binary\BinaryOverlay.cs" />

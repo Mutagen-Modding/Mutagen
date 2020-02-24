@@ -41,7 +41,9 @@
         <RefDirect refName="RaceStats" />
       </Gendered>
       <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
-      <RefDirect name="BodyData" refName="GenderedBodyData" markerType="NAM1" />
+      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM">
+        <RefDirect refName="BodyData" />
+      </Gendered>
       <List name="Hairs" recordType="HNAM">
         <FormLink refName="Hair" />
       </List>
@@ -75,12 +77,6 @@
       <Enum name="Index" enumName="Race.FaceIndex" recordType="INDX" byteLength="4" />
       <RefDirect name="Model" refName="Model" />
       <String name="Icon" recordType="ICON" />
-    </Fields>
-  </Object>
-  <Object name="GenderedBodyData" objType="Subrecord" GUID="5b885494-7571-4e60-a255-76d26bbfd419" ID="35">
-    <Fields>
-      <RefDirect name="Male" refName="BodyData" markerType="MNAM" />
-      <RefDirect name="Female" refName="BodyData" markerType="FNAM" />
     </Fields>
   </Object>
   <Object name="BodyData" objType="Subrecord" GUID="c54b8db9-9671-471b-8f85-8ee30c93b2ed" ID="36">

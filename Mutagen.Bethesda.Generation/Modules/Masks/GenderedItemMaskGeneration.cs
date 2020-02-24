@@ -13,7 +13,14 @@ namespace Mutagen.Bethesda.Generation
             GenderedType gendered = field as GenderedType;
             if (gendered.SubTypeGeneration is LoquiType loqui)
             {
-                return $"{loqui.GetMaskString(typeStr)}?";
+                if (gendered.ItemHasBeenSet)
+                {
+                    return $"MaskItem<{typeStr}, {loqui.GetMaskString(typeStr)}?>?";
+                }
+                else
+                {
+                    return $"{loqui.GetMaskString(typeStr)}?";
+                }
             }
             else
             {
@@ -84,26 +91,14 @@ namespace Mutagen.Bethesda.Generation
             var gendered = field as GenderedType;
             if (field.HasBeenSet)
             {
-                fg.AppendLine($"if ({rhsAccessor}{(indexed ? ".Value" : null)} == null)");
-                using (new BraceWrapper(fg))
+                using (var args = new ArgsWrapper(fg,
+                    $"{retAccessor} = GenderedItem.TranslateHelper"))
                 {
-                    fg.AppendLine($"{retAccessor} = null;");
-                }
-                fg.AppendLine("else");
-                using (new BraceWrapper(fg))
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"{retAccessor} = new MaskItem<R, GenderedItem<{SubMaskString(field, "R")}>?>"))
+                    args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}");
+                    args.Add($"eval");
+                    if (gendered.SubTypeGeneration is LoquiType loqui)
                     {
-                        args.Add($"eval({rhsAccessor}{(indexed ? ".Value" : null)}.Overall)");
-                        if (gendered.SubTypeGeneration is LoquiType loqui)
-                        {
-                            args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}.Specific == null ? null : new GenderedItem<{SubMaskString(field, "R")}>({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Male?.Translate(eval), {rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Female?.Translate(eval))");
-                        }
-                        else
-                        {
-                            args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}.Specific == null ? null : new GenderedItem<R>(eval({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Male), eval({rhsAccessor}{(indexed ? ".Value" : null)}.Specific.Female))");
-                        }
+                        args.Add($"(m, e) => m?.Translate(e)");
                     }
                 }
             }

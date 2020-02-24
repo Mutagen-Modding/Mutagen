@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -15,7 +16,10 @@ namespace Mutagen.Bethesda.Generation
         public override bool CopyNeedsTryCatch => true;
         public override bool IsEnumerable => true;
         public override bool IsClass => true;
-        public bool ItemHasBeenSet => false;
+        public bool ItemHasBeenSet => MaleMarker.HasValue;
+
+        public RecordType? MaleMarker;
+        public RecordType? FemaleMarker;
 
         public override void GenerateClear(FileGeneration fg, Accessor accessorPrefix)
         {
@@ -32,8 +36,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}{(this.HasBeenSet ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false)}>(default, default);")}");
-            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true)}>{(this.HasBeenSet ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
+            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}{(this.HasBeenSet ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false)}>(default, default);")}");
+            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
 
         }
 
@@ -61,7 +65,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg, doIt: this.HasBeenSet))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false)}>"))
+                    $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false)}{(this.ItemHasBeenSet ? "?" : null)}>"))
                 {
                     if (this.isLoquiSingle)
                     {
@@ -71,7 +75,7 @@ namespace Mutagen.Bethesda.Generation
                             loqui.GenerateTypicalMakeCopy(
                                 subFg,
                                 retAccessor: $"male: ",
-                                rhsAccessor: $"{rhs}.Male",
+                                rhsAccessor: $"{rhs}.Male{(this.ItemHasBeenSet ? "?" : null)}",
                                 copyMaskAccessor: $"{copyMaskAccessor}.Male",
                                 deepCopy: deepCopy,
                                 doTranslationMask: false);
@@ -81,7 +85,7 @@ namespace Mutagen.Bethesda.Generation
                             loqui.GenerateTypicalMakeCopy(
                                 subFg,
                                 retAccessor: $"female: ",
-                                rhsAccessor: $"{rhs}.Female",
+                                rhsAccessor: $"{rhs}.Female{(this.ItemHasBeenSet ? "?" : null)}",
                                 copyMaskAccessor: $"{copyMaskAccessor}.Female",
                                 deepCopy: deepCopy,
                                 doTranslationMask: false);
@@ -103,11 +107,6 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
         {
-            if (this.ItemHasBeenSet)
-            {
-                throw new NotImplementedException();
-            }
-
             string typeStr;
             LoquiType loqui = this.SubTypeGeneration as LoquiType;
             if (loqui != null)
@@ -132,7 +131,14 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        args.Add("maskGetter: (l, r, i) => l.GetEqualsMask(r, i)");
+                        if (this.ItemHasBeenSet)
+                        {
+                            args.Add($"maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i)");
+                        }
+                        else
+                        {
+                            args.Add("maskGetter: (l, r, i) => l.GetEqualsMask(r, i)");
+                        }
                     }
                     args.AddPassArg("include");
                 }
@@ -162,27 +168,27 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForHasBeenSetCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
         {
-            if (this.HasBeenSet && !this.ItemHasBeenSet)
+            if (this.HasBeenSet)
             {
                 fg.AppendLine($"if ({checkMaskAccessor}?.Overall ?? false) return false;");
             }
-            if (this.ItemHasBeenSet)
+            else if (this.ItemHasBeenSet)
             {
-                throw new NotImplementedException();
+                fg.AppendLine($"throw new NotImplementedException();");
             }
         }
 
         public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, Accessor accessor, string retAccessor)
         {
-            if (this.ItemHasBeenSet)
-            {
-                throw new NotImplementedException();
-            }
             if (this.SubTypeGeneration is LoquiType loqui
                 && this.HasBeenSet)
             {
-                fg.AppendLine($"var item{this.Name} = {accessor};");
-                fg.AppendLine($"{retAccessor} = new MaskItem<bool, GenderedItem<{loqui.GetMaskString("bool")}?>?>(item{this.Name} != null, item{this.Name} == null ? null : new GenderedItem<{loqui.GetMaskString("bool")}?>(item{this.Name}.Male.GetHasBeenSetMask(), item{this.Name}.Female.GetHasBeenSetMask()));");
+                using (var args = new ArgsWrapper(fg,
+                    $"{retAccessor} = GenderedItem.HasBeenSet{(this.ItemHasBeenSet ? "Mask" : null)}Helper"))
+                {
+                    args.Add($"{accessor}");
+                    args.Add($"(i) => i{(this.ItemHasBeenSet ? "?" : null)}.GetHasBeenSetMask()");
+                }
             }
             else if (this.HasBeenSet)
             {
@@ -218,11 +224,11 @@ namespace Mutagen.Bethesda.Generation
         {
             if (getter)
             {
-                fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; }}");
+                fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; }}");
             }
             else
             {
-                fg.AppendLine($"new GenderedItem<{SubTypeGeneration.TypeName(getter: false)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}");
+                fg.AppendLine($"new GenderedItem<{SubTypeGeneration.TypeName(getter: false)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}");
             }
         }
 
@@ -260,12 +266,37 @@ namespace Mutagen.Bethesda.Generation
 
         public override string TypeName(bool getter)
         {
-            return $"GenderedItem<{SubTypeGeneration.TypeName(getter)}>";
+            return $"GenderedItem<{SubTypeGeneration.TypeName(getter)}{(this.ItemHasBeenSet ? "?" : null)}>";
         }
 
         public override string GetDuplicate(Accessor accessor)
         {
             throw new NotImplementedException();
+        }
+
+        public override async Task Load(XElement node, bool requireName = true)
+        {
+            await base.Load(node, requireName);
+
+            if (node.TryGetAttribute<string>("maleMarker", out var maleMarker))
+            {
+                MaleMarker = new RecordType(maleMarker);
+            }
+
+            if (node.TryGetAttribute<string>("femaleMarker", out var femaleMarker))
+            {
+                FemaleMarker = new RecordType(femaleMarker);
+            }
+
+            if (MaleMarker.HasValue != FemaleMarker.HasValue)
+            {
+                throw new ArgumentException("Both submarkers must be set at once.");
+            }
+
+            if (MaleMarker.HasValue)
+            {
+                this.SubTypeGeneration.HasBeenSetProperty.OnNext(true);
+            }
         }
     }
 }

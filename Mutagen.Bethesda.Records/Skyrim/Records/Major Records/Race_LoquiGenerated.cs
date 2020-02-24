@@ -922,16 +922,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (this.Voices == null)
-                {
-                    obj.Voices = null;
-                }
-                else
-                {
-                    obj.Voices = new MaskItem<R, GenderedItem<R>?>(
-                        eval(this.Voices.Overall),
-                        this.Voices.Specific == null ? null : new GenderedItem<R>(eval(this.Voices.Specific.Male), eval(this.Voices.Specific.Female)));
-                }
+                obj.Voices = GenderedItem.TranslateHelper(
+                    this.Voices,
+                    eval);
                 obj.DecapitateArmors = this.DecapitateArmors == null ? null : new MaskItem<R, GenderedFormLinks.Mask<R>?>(eval(this.DecapitateArmors.Overall), this.DecapitateArmors.Specific?.Translate(eval));
                 obj.DefaultHairColors = this.DefaultHairColors == null ? null : new MaskItem<R, GenderedFormLinks.Mask<R>?>(eval(this.DefaultHairColors.Overall), this.DefaultHairColors.Specific?.Translate(eval));
                 obj.NumberOfTintsInList = eval(this.NumberOfTintsInList);
@@ -2985,7 +2978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4B435456: // VTCK
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation<IFormLink<VoiceType>>.Parse(
+                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<VoiceType>>(
                         frame: frame,
                         masterReferences: masterReferences,
                         transl: FormLinkBinaryTranslation.Instance.Parse);

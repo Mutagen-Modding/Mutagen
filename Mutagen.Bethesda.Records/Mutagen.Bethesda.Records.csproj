@@ -1401,9 +1401,6 @@
     <Compile Include="Oblivion\Records\Major Records\FacePart_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\GenderedBodyData_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Major Records\BodyData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
