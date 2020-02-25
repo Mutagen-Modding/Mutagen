@@ -417,6 +417,8 @@ namespace Mutagen.Bethesda
                     {
                         ret[i] = loc;
                         bool breakOut = false;
+                        
+                        // Check to see if there's still more to find
                         for (int j = 0; j < ret.Length; j++)
                         {
                             if (ret[j] == null)
@@ -429,9 +431,68 @@ namespace Mutagen.Bethesda
                         {
                             break;
                         }
+
+                        // Found everything
+                        return ret;
                     }
                 }
                 loc += subMeta.TotalLength;
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
+        /// -1 represents a recordtype that was not found.
+        /// 
+        /// If a subrecord is encountered that is not of the target types, it will stop looking for more matches
+        /// 
+        /// </summary>
+        /// <param name="data">Subrecord data to be parsed</param>
+        /// <param name="recordTypes">Record types to locate</param>
+        /// <param name="meta">Metadata to use in subrecord parsing</param>
+        /// <returns>Array of found record locations</returns>
+        public static int?[] FindNextSubrecords(ReadOnlySpan<byte> data, GameConstants meta, out int lenParsed, params RecordType[] recordTypes)
+        {
+            lenParsed = 0;
+            int?[] ret = new int?[recordTypes.Length];
+            while (data.Length > lenParsed)
+            {
+                var subMeta = meta.SubRecord(data.Slice(lenParsed));
+                var recType = subMeta.RecordType;
+                bool matchedSomething = false;
+                for (int i = 0; i < recordTypes.Length; i++)
+                {
+                    if (recordTypes[i] == recType)
+                    {
+                        matchedSomething = true;
+                        if (ret[i] == null)
+                        {
+                            ret[i] = lenParsed;
+                            bool moreToFind = false;
+                            for (int j = 0; j < ret.Length; j++)
+                            {
+                                if (ret[j] == null)
+                                {
+                                    moreToFind = true;
+                                    break;
+                                }
+                            }
+                            if (!moreToFind)
+                            {
+                                lenParsed += subMeta.TotalLength;
+                                // Found everything
+                                return ret;
+                            }
+                        }
+                        break;
+                    }
+                }
+                if (!matchedSomething)
+                {
+                    return ret;
+                }
+                lenParsed += subMeta.TotalLength;
             }
             return ret;
         }

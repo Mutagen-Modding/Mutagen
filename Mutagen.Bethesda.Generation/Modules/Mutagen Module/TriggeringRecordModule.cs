@@ -356,6 +356,17 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+            else if (field is GenderedType gendered)
+            {
+                if (!data.MarkerType.HasValue
+                    && gendered.ItemHasBeenSet)
+                {
+                    data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.MaleMarker.Value));
+                    data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.FemaleMarker.Value));
+                    data.TriggeringRecordTypes.Add(gendered.MaleMarker.Value);
+                    data.TriggeringRecordTypes.Add(gendered.FemaleMarker.Value);
+                }
+            }
 
             SetTriggeringRecordAccessors(obj, field, data);
 

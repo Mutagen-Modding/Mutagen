@@ -58,27 +58,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IRankGetter.RankNumber => this.RankNumber;
         #endregion
-        #region MaleName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _MaleName;
-        public String? MaleName
-        {
-            get => this._MaleName;
-            set => this._MaleName = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRankGetter.MaleName => this.MaleName;
-        #endregion
-        #region FemaleName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _FemaleName;
-        public String? FemaleName
-        {
-            get => this._FemaleName;
-            set => this._FemaleName = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRankGetter.FemaleName => this.FemaleName;
+        #region Name
+        public GenderedItem<String?>? Name { get; set; }
+        IGenderedItemGetter<String?>? IRankGetter.Name => this.Name;
         #endregion
         #region Insignia
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -262,20 +244,17 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(T initialValue)
             {
                 this.RankNumber = initialValue;
-                this.MaleName = initialValue;
-                this.FemaleName = initialValue;
+                this.Name = new MaskItem<T, GenderedItem<T>?>(initialValue, default);
                 this.Insignia = initialValue;
             }
 
             public Mask(
                 T RankNumber,
-                T MaleName,
-                T FemaleName,
+                T Name,
                 T Insignia)
             {
                 this.RankNumber = RankNumber;
-                this.MaleName = MaleName;
-                this.FemaleName = FemaleName;
+                this.Name = new MaskItem<T, GenderedItem<T>?>(Name, default);
                 this.Insignia = Insignia;
             }
 
@@ -289,8 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public T RankNumber;
-            public T MaleName;
-            public T FemaleName;
+            public MaskItem<T, GenderedItem<T>?>? Name;
             public T Insignia;
             #endregion
 
@@ -305,8 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.RankNumber, rhs.RankNumber)) return false;
-                if (!object.Equals(this.MaleName, rhs.MaleName)) return false;
-                if (!object.Equals(this.FemaleName, rhs.FemaleName)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
                 return true;
             }
@@ -314,8 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 int ret = 0;
                 ret = ret.CombineHashCode(this.RankNumber?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleName?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleName?.GetHashCode());
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
                 ret = ret.CombineHashCode(this.Insignia?.GetHashCode());
                 return ret;
             }
@@ -326,8 +302,9 @@ namespace Mutagen.Bethesda.Oblivion
             public bool All(Func<T, bool> eval)
             {
                 if (!eval(this.RankNumber)) return false;
-                if (!eval(this.MaleName)) return false;
-                if (!eval(this.FemaleName)) return false;
+                if (!GenderedItem.All(
+                    this.Name,
+                    eval: eval)) return false;
                 if (!eval(this.Insignia)) return false;
                 return true;
             }
@@ -337,8 +314,9 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Any(Func<T, bool> eval)
             {
                 if (eval(this.RankNumber)) return true;
-                if (eval(this.MaleName)) return true;
-                if (eval(this.FemaleName)) return true;
+                if (GenderedItem.Any(
+                    this.Name,
+                    eval: eval)) return true;
                 if (eval(this.Insignia)) return true;
                 return false;
             }
@@ -355,8 +333,9 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
             {
                 obj.RankNumber = eval(this.RankNumber);
-                obj.MaleName = eval(this.MaleName);
-                obj.FemaleName = eval(this.FemaleName);
+                obj.Name = GenderedItem.TranslateHelper(
+                    this.Name,
+                    eval);
                 obj.Insignia = eval(this.Insignia);
             }
             #endregion
@@ -384,13 +363,10 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendLine($"RankNumber => {RankNumber}");
                     }
-                    if (printMask?.MaleName ?? true)
+                    if (Name != null
+                        && (printMask?.Name?.Overall ?? true))
                     {
-                        fg.AppendLine($"MaleName => {MaleName}");
-                    }
-                    if (printMask?.FemaleName ?? true)
-                    {
-                        fg.AppendLine($"FemaleName => {FemaleName}");
+                        fg.AppendLine($"Name => {Name}");
                     }
                     if (printMask?.Insignia ?? true)
                     {
@@ -422,8 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
             public Exception? RankNumber;
-            public Exception? MaleName;
-            public Exception? FemaleName;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Name;
             public Exception? Insignia;
             #endregion
 
@@ -435,10 +410,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     case Rank_FieldIndex.RankNumber:
                         return RankNumber;
-                    case Rank_FieldIndex.MaleName:
-                        return MaleName;
-                    case Rank_FieldIndex.FemaleName:
-                        return FemaleName;
+                    case Rank_FieldIndex.Name:
+                        return Name;
                     case Rank_FieldIndex.Insignia:
                         return Insignia;
                     default:
@@ -454,11 +427,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Rank_FieldIndex.RankNumber:
                         this.RankNumber = ex;
                         break;
-                    case Rank_FieldIndex.MaleName:
-                        this.MaleName = ex;
-                        break;
-                    case Rank_FieldIndex.FemaleName:
-                        this.FemaleName = ex;
+                    case Rank_FieldIndex.Name:
+                        this.Name = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Rank_FieldIndex.Insignia:
                         this.Insignia = ex;
@@ -476,11 +446,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Rank_FieldIndex.RankNumber:
                         this.RankNumber = (Exception?)obj;
                         break;
-                    case Rank_FieldIndex.MaleName:
-                        this.MaleName = (Exception?)obj;
-                        break;
-                    case Rank_FieldIndex.FemaleName:
-                        this.FemaleName = (Exception?)obj;
+                    case Rank_FieldIndex.Name:
+                        this.Name = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Rank_FieldIndex.Insignia:
                         this.Insignia = (Exception?)obj;
@@ -494,8 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Overall != null) return true;
                 if (RankNumber != null) return true;
-                if (MaleName != null) return true;
-                if (FemaleName != null) return true;
+                if (Name != null) return true;
                 if (Insignia != null) return true;
                 return false;
             }
@@ -532,8 +498,10 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendLine($"RankNumber => {RankNumber}");
-                fg.AppendLine($"MaleName => {MaleName}");
-                fg.AppendLine($"FemaleName => {FemaleName}");
+                if (Name != null)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
                 fg.AppendLine($"Insignia => {Insignia}");
             }
             #endregion
@@ -544,8 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.RankNumber = this.RankNumber.Combine(rhs.RankNumber);
-                ret.MaleName = this.MaleName.Combine(rhs.MaleName);
-                ret.FemaleName = this.FemaleName.Combine(rhs.FemaleName);
+                ret.Name = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Name?.Overall, rhs.Name?.Overall), GenderedItem.Combine(this.Name?.Specific, rhs.Name?.Specific));
                 ret.Insignia = this.Insignia.Combine(rhs.Insignia);
                 return ret;
             }
@@ -569,8 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             private TranslationCrystal? _crystal;
             public bool RankNumber;
-            public bool MaleName;
-            public bool FemaleName;
+            public MaskItem<bool, GenderedItem<bool>?> Name;
             public bool Insignia;
             #endregion
 
@@ -578,8 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TranslationMask(bool defaultOn)
             {
                 this.RankNumber = defaultOn;
-                this.MaleName = defaultOn;
-                this.FemaleName = defaultOn;
+                this.Name = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Insignia = defaultOn;
             }
 
@@ -597,8 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((RankNumber, null));
-                ret.Add((MaleName, null));
-                ret.Add((FemaleName, null));
+                ret.Add((Name?.Overall ?? true, null));
                 ret.Add((Insignia, null));
             }
         }
@@ -673,8 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRank>
     {
         new Int32? RankNumber { get; set; }
-        new String? MaleName { get; set; }
-        new String? FemaleName { get; set; }
+        new GenderedItem<String?>? Name { get; set; }
         new String? Insignia { get; set; }
     }
 
@@ -691,8 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         Int32? RankNumber { get; }
-        String? MaleName { get; }
-        String? FemaleName { get; }
+        IGenderedItemGetter<String?>? Name { get; }
         String? Insignia { get; }
 
     }
@@ -1005,9 +967,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum Rank_FieldIndex
     {
         RankNumber = 0,
-        MaleName = 1,
-        FemaleName = 2,
-        Insignia = 3,
+        Name = 1,
+        Insignia = 2,
     }
     #endregion
 
@@ -1025,9 +986,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "4945b664-16ac-4464-89b0-03534ffd5e18";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(Rank.Mask<>);
 
@@ -1059,10 +1020,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "RANKNUMBER":
                     return (ushort)Rank_FieldIndex.RankNumber;
-                case "MALENAME":
-                    return (ushort)Rank_FieldIndex.MaleName;
-                case "FEMALENAME":
-                    return (ushort)Rank_FieldIndex.FemaleName;
+                case "NAME":
+                    return (ushort)Rank_FieldIndex.Name;
                 case "INSIGNIA":
                     return (ushort)Rank_FieldIndex.Insignia;
                 default:
@@ -1076,8 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                case Rank_FieldIndex.MaleName:
-                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Name:
                 case Rank_FieldIndex.Insignia:
                     return false;
                 default:
@@ -1091,8 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                case Rank_FieldIndex.MaleName:
-                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Name:
                 case Rank_FieldIndex.Insignia:
                     return false;
                 default:
@@ -1106,8 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                case Rank_FieldIndex.MaleName:
-                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Name:
                 case Rank_FieldIndex.Insignia:
                     return false;
                 default:
@@ -1122,10 +1078,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Rank_FieldIndex.RankNumber:
                     return "RankNumber";
-                case Rank_FieldIndex.MaleName:
-                    return "MaleName";
-                case Rank_FieldIndex.FemaleName:
-                    return "FemaleName";
+                case Rank_FieldIndex.Name:
+                    return "Name";
                 case Rank_FieldIndex.Insignia:
                     return "Insignia";
                 default:
@@ -1139,8 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                case Rank_FieldIndex.MaleName:
-                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Name:
                 case Rank_FieldIndex.Insignia:
                     return false;
                 default:
@@ -1154,8 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                case Rank_FieldIndex.MaleName:
-                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Name:
                 case Rank_FieldIndex.Insignia:
                     return false;
                 default:
@@ -1170,10 +1122,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Rank_FieldIndex.RankNumber:
                     return typeof(Int32);
-                case Rank_FieldIndex.MaleName:
-                    return typeof(String);
-                case Rank_FieldIndex.FemaleName:
-                    return typeof(String);
+                case Rank_FieldIndex.Name:
+                    return typeof(GenderedItem<String?>);
                 case Rank_FieldIndex.Insignia:
                     return typeof(String);
                 default:
@@ -1201,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
+        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(RankBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1245,8 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.RankNumber = default;
-            item.MaleName = default;
-            item.FemaleName = default;
+            item.Name = null;
             item.Insignia = default;
         }
         
@@ -1306,22 +1255,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
                 case 0x4D414E4D: // MNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MaleName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
-                }
                 case 0x4D414E46: // FNAM
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.FemaleName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return TryGet<int?>.Failure;
+                    item.Name = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
+                        frame: frame,
+                        maleMarker: Rank_Registration.MNAM_HEADER,
+                        femaleMarker: Rank_Registration.FNAM_HEADER,
+                        transl: StringBinaryTranslation.Instance.Parse,
+                        skipMarker: false);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Name);
                 }
                 case 0x4D414E49: // INAM
                 {
@@ -1382,8 +1325,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.RankNumber = item.RankNumber == rhs.RankNumber;
-            ret.MaleName = string.Equals(item.MaleName, rhs.MaleName);
-            ret.FemaleName = string.Equals(item.FemaleName, rhs.FemaleName);
+            ret.Name = GenderedItem.EqualityMaskHelper(
+                lhs: item.Name,
+                rhs: rhs.Name,
+                maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
+                include: include);
             ret.Insignia = string.Equals(item.Insignia, rhs.Insignia);
         }
         
@@ -1435,13 +1381,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"RankNumber => {item.RankNumber}");
             }
-            if (printMask?.MaleName ?? true)
+            if (printMask?.Name?.Overall ?? true)
             {
-                fg.AppendLine($"MaleName => {item.MaleName}");
-            }
-            if (printMask?.FemaleName ?? true)
-            {
-                fg.AppendLine($"FemaleName => {item.FemaleName}");
+                item.Name?.ToString(fg, "Name");
             }
             if (printMask?.Insignia ?? true)
             {
@@ -1454,8 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Rank.Mask<bool?> checkMask)
         {
             if (checkMask.RankNumber.HasValue && checkMask.RankNumber.Value != (item.RankNumber != null)) return false;
-            if (checkMask.MaleName.HasValue && checkMask.MaleName.Value != (item.MaleName != null)) return false;
-            if (checkMask.FemaleName.HasValue && checkMask.FemaleName.Value != (item.FemaleName != null)) return false;
+            if (checkMask.Name?.Overall ?? false) return false;
             if (checkMask.Insignia.HasValue && checkMask.Insignia.Value != (item.Insignia != null)) return false;
             return true;
         }
@@ -1465,8 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Rank.Mask<bool> mask)
         {
             mask.RankNumber = (item.RankNumber != null);
-            mask.MaleName = (item.MaleName != null);
-            mask.FemaleName = (item.FemaleName != null);
+            mask.Name = item.Name == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
             mask.Insignia = (item.Insignia != null);
         }
         
@@ -1478,8 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.RankNumber != rhs.RankNumber) return false;
-            if (!string.Equals(lhs.MaleName, rhs.MaleName)) return false;
-            if (!string.Equals(lhs.FemaleName, rhs.FemaleName)) return false;
+            if (!Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Insignia, rhs.Insignia)) return false;
             return true;
         }
@@ -1491,13 +1430,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(RankNumberitem).CombineHashCode(ret);
             }
-            if (item.MaleName.TryGet(out var MaleNameitem))
+            if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(MaleNameitem).CombineHashCode(ret);
-            }
-            if (item.FemaleName.TryGet(out var FemaleNameitem))
-            {
-                ret = HashHelper.GetHashCode(FemaleNameitem).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Nameitem.Male, Nameitem.Female).CombineHashCode(ret);
             }
             if (item.Insignia.TryGet(out var Insigniaitem))
             {
@@ -1538,13 +1473,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.RankNumber = rhs.RankNumber;
             }
-            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Name) ?? true))
             {
-                item.MaleName = rhs.MaleName;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleName) ?? true))
-            {
-                item.FemaleName = rhs.FemaleName;
+                errorMask?.PushIndex((int)Rank_FieldIndex.Name);
+                try
+                {
+                    if (!rhs.Name.TryGet(out var rhsNameitem))
+                    {
+                        item.Name = null;
+                    }
+                    else
+                    {
+                        item.Name = new GenderedItem<String?>(
+                            male: rhsNameitem.Male,
+                            female: rhsNameitem.Female);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
@@ -1649,25 +1602,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Rank_FieldIndex.RankNumber,
                     errorMask: errorMask);
             }
-            if ((item.MaleName != null)
-                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleName) ?? true))
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaleName),
-                    item: item.MaleName,
-                    fieldIndex: (int)Rank_FieldIndex.MaleName,
-                    errorMask: errorMask);
-            }
-            if ((item.FemaleName != null)
-                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleName) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FemaleName),
-                    item: item.FemaleName,
-                    fieldIndex: (int)Rank_FieldIndex.FemaleName,
-                    errorMask: errorMask);
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Name),
+                        item: item.Name.Male,
+                        errorMask: errorMask);
+                }
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Name),
+                        item: item.Name.Female,
+                        errorMask: errorMask);
+                }
             }
             if ((item.Insignia != null)
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
@@ -1803,31 +1754,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "MaleName":
-                    errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
+                case "Name":
+                    errorMask?.PushIndex((int)Rank_FieldIndex.Name);
                     try
                     {
-                        item.MaleName = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleName":
-                    errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
-                    try
-                    {
-                        item.FemaleName = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                        item.Name = new GenderedItem<String?>(
+                            male: StringXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: StringXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2038,16 +1975,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.RankNumber,
                 header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.MaleName,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.FemaleName,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                if (Nameitem.Male.TryGet(out var male))
+                {
+                    using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER)))
+                    {
+                        Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                            writer: writer,
+                            item: male,
+                            binaryType: StringBinaryType.NullTerminate);
+                    }
+                }
+                if (Nameitem.Female.TryGet(out var female))
+                {
+                    using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER)))
+                    {
+                        Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                            writer: writer,
+                            item: female,
+                            binaryType: StringBinaryType.NullTerminate);
+                    }
+                }
+            }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Insignia,
@@ -2176,13 +2126,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _RankNumberLocation;
         public Int32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankNumberLocation.Value, _package.Meta)) : default(Int32?);
         #endregion
-        #region MaleName
-        private int? _MaleNameLocation;
-        public String? MaleName => _MaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaleNameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
-        #region FemaleName
-        private int? _FemaleNameLocation;
-        public String? FemaleName => _FemaleNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleNameLocation.Value, _package.Meta)) : default(string?);
+        #region Name
+        private GenderedItemBinaryOverlay<String>? _NameOverlay;
+        public IGenderedItemGetter<String>? Name => _NameOverlay;
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
@@ -2242,16 +2188,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
                 case 0x4D414E4D: // MNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
-                    _MaleNameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
-                }
                 case 0x4D414E46: // FNAM
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
-                    _FemaleNameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return TryGet<int?>.Failure;
+                    _NameOverlay = GenderedItemBinaryOverlay<String>.Factory(
+                        package: _package,
+                        male: Rank_Registration.MNAM_HEADER,
+                        female: Rank_Registration.FNAM_HEADER,
+                        stream: stream,
+                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.Meta)));
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Name);
                 }
                 case 0x4D414E49: // INAM
                 {

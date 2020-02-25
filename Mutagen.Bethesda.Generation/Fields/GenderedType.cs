@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"rhs: {rhsAccessor.DirectAccess}");
                     if (loqui == null)
                     {
-                        args.Add($"maskGetter: (l, r, i) => EqualityComparer<{this.SubTypeGeneration.TypeName(getter: true)}>.Default.Equals(l, r)");
+                        args.Add($"maskGetter: (l, r, i) => EqualityComparer<{this.SubTypeGeneration.TypeName(getter: true)}{(this.ItemHasBeenSet ? "?" : null)}>.Default.Equals(l, r)");
                     }
                     else
                     {

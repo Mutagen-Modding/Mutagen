@@ -6096,30 +6096,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.NAM1_HEADER)))
                 {
                 }
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.MNAM_HEADER)))
+                if (BodyDataitem.Male.TryGet(out var male))
                 {
-                }
-                {
-                    if (BodyDataitem.Male.TryGet(out var Item))
+                    using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.MNAM_HEADER)))
                     {
-                        ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: writer,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                    }
+                    {
+                        if (male.TryGet(out var Item))
+                        {
+                            ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                                item: Item,
+                                writer: writer,
+                                masterReferences: masterReferences,
+                                recordTypeConverter: null);
+                        }
                     }
                 }
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.FNAM_HEADER)))
+                if (BodyDataitem.Female.TryGet(out var female))
                 {
-                }
-                {
-                    if (BodyDataitem.Female.TryGet(out var Item))
+                    using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.FNAM_HEADER)))
                     {
-                        ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: writer,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                    }
+                    {
+                        if (female.TryGet(out var Item))
+                        {
+                            ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                                item: Item,
+                                writer: writer,
+                                masterReferences: masterReferences,
+                                recordTypeConverter: null);
+                        }
                     }
                 }
             }
@@ -6596,11 +6602,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x314D414E: // NAM1
                 {
-                    _BodyDataOverlay = new GenderedItemBinaryOverlay<IBodyDataGetter>(
-                        bytes: _data.Slice(stream.Position - offset),
+                    _BodyDataOverlay = GenderedItemBinaryOverlay<IBodyDataGetter>.FactorySkipMarkers(
                         package: _package,
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
+                        bytes: _data.Slice(stream.Position - offset),
                         creator: (m, p) => BodyDataBinaryOverlay.BodyDataFactory(new BinaryMemoryReadStream(m), p));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }

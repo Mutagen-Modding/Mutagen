@@ -40,6 +40,65 @@ namespace Mutagen.Bethesda.Binary
 
         public static GenderedItem<TItem?> Parse<TItem>(
             MutagenFrame frame,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            UtilityTranslation.BinarySubParseDelegate<TItem> transl,
+            bool skipMarker)
+            where TItem : class
+        {
+            TItem? male = default, female = default;
+            for (int i = 0; i < 2; i++)
+            {
+                var subHeader = frame.MetaData.GetSubRecord(frame);
+                RecordType type = subHeader.RecordType;
+                if (type == maleMarker)
+                {
+                    if (skipMarker)
+                    {
+                        frame.Position += subHeader.TotalLength;
+                        if (!transl(frame, out male))
+                        {
+                            throw new ArgumentException();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += subHeader.HeaderLength;
+                        if (!transl(frame.SpawnWithLength(subHeader.RecordLength), out male))
+                        {
+                            throw new ArgumentException();
+                        }
+                    }
+                }
+                else if (type == femaleMarker)
+                {
+                    if (skipMarker)
+                    {
+                        frame.Position += subHeader.TotalLength;
+                        if (!transl(frame, out female))
+                        {
+                            throw new ArgumentException();
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += subHeader.HeaderLength;
+                        if (!transl(frame.SpawnWithLength(subHeader.RecordLength), out female))
+                        {
+                            throw new ArgumentException();
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return new GenderedItem<TItem?>(male, female);
+        }
+
+        public static GenderedItem<TItem?> Parse<TItem>(
+            MutagenFrame frame,
             MasterReferences masterReferences,
             RecordType maleMarker,
             RecordType femaleMarker,

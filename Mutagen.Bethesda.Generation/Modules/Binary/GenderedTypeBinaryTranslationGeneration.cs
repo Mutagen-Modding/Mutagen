@@ -58,7 +58,8 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"maleMarker: {objGen.RecordTypeHeaderName(gender.MaleMarker.Value)}");
                     args.Add($"femaleMarker: {objGen.RecordTypeHeaderName(gender.FemaleMarker.Value)}");
                 }
-                if (gender.SubTypeGeneration is LoquiType loqui
+                LoquiType loqui = gender.SubTypeGeneration as LoquiType;
+                if (loqui != null
                     && !loqui.CanStronglyType)
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(gender.SubTypeGeneration, getter: false)}.Parse<{loqui.TypeName(getter: false)}>");
@@ -66,6 +67,10 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(gender.SubTypeGeneration, getter: false)}.Parse");
+                    if (gender.ItemHasBeenSet && loqui == null)
+                    {
+                        args.Add($"skipMarker: false");
+                    }
                 }
             }
         }
@@ -80,6 +85,7 @@ namespace Mutagen.Bethesda.Generation
             GenderedType gendered = typeGen as GenderedType;
             var gen = this.Module.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
             var data = typeGen.GetFieldData();
+            bool isLoqui = gendered.SubTypeGeneration is LoquiType;
             if (typeGen.HasBeenSet)
             {
                 fg.AppendLine($"if ({itemAccessor}.TryGet(out var {typeGen.Name}item))");
@@ -100,27 +106,66 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg, doIt: data.RecordType.HasValue))
                 {
+                    var origAccessor = itemAccessor;
                     if (gendered.MaleMarker.HasValue)
                     {
-                        fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.ExportSubRecordHeader)}({writerAccessor}, recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)})))");
-                        using (new BraceWrapper(fg))
-                        {
-                        }
+                        fg.AppendLine($"if ({origAccessor}.Male.TryGet(out var male))");
+                        itemAccessor = "male";
                     }
-                    using (new BraceWrapper(fg))
+                    else
                     {
-                        gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Male", errorMaskAccessor, translationAccessor);
+                        itemAccessor = $"{origAccessor}.Male";
+                    }
+                    using (new BraceWrapper(fg, doIt: gendered.MaleMarker.HasValue))
+                    {
+                        if (gendered.MaleMarker.HasValue)
+                        {
+                            fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.ExportSubRecordHeader)}({writerAccessor}, recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)})))");
+                            using (new BraceWrapper(fg))
+                            {
+                                if (!isLoqui)
+                                {
+                                    gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor);
+                                }
+                            }
+                        }
+                        if (isLoqui || !gendered.MaleMarker.HasValue)
+                        {
+                            using (new BraceWrapper(fg))
+                            {
+                                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor);
+                            }
+                        }
                     }
                     if (gendered.FemaleMarker.HasValue)
                     {
-                        fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.ExportSubRecordHeader)}({writerAccessor}, recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)})))");
-                        using (new BraceWrapper(fg))
-                        {
-                        }
+                        fg.AppendLine($"if ({origAccessor}.Female.TryGet(out var female))");
+                        itemAccessor = "female";
                     }
-                    using (new BraceWrapper(fg))
+                    else
                     {
-                        gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Female", errorMaskAccessor, translationAccessor);
+                        itemAccessor = $"{origAccessor}.Female";
+                    }
+                    using (new BraceWrapper(fg, doIt: gendered.FemaleMarker.HasValue))
+                    {
+                        if (gendered.FemaleMarker.HasValue)
+                        {
+                            fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.ExportSubRecordHeader)}({writerAccessor}, recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)})))");
+                            using (new BraceWrapper(fg))
+                            {
+                                if (!isLoqui)
+                                {
+                                    gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor);
+                                }
+                            }
+                        }
+                        if (isLoqui || !gendered.FemaleMarker.HasValue)
+                        {
+                            using (new BraceWrapper(fg))
+                            {
+                                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor);
+                            }
+                        }
                     }
                 }
             }
@@ -133,10 +178,10 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateWrapperFields(
             FileGeneration fg,
-            ObjectGeneration objGen, 
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int? currentPosition, 
+            int? currentPosition,
             DataType dataType = null)
         {
             var data = typeGen.GetFieldData();
@@ -251,33 +296,36 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override async Task GenerateWrapperRecordTypeParse(
-            FileGeneration fg, 
-            ObjectGeneration objGen, 
+            FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
-            Accessor locationAccessor, 
+            Accessor locationAccessor,
             Accessor packageAccessor,
             Accessor converterAccessor)
         {
             var gendered = typeGen as GenderedType;
+            bool isLoqui = gendered.SubTypeGeneration is LoquiType;
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     if (gendered.ItemHasBeenSet)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"_{typeGen.Name}Overlay = new GenderedItemBinaryOverlay<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
+                            $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay<{gendered.SubTypeGeneration.TypeName(getter: true)}>.{(isLoqui ? "FactorySkipMarkers" : "Factory")}"))
                         {
-                            args.Add("bytes: _data.Slice(stream.Position - offset)");
                             args.Add("package: _package");
                             args.Add($"male: {objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)}");
                             args.Add($"female: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
                             if (gendered.SubTypeGeneration is LoquiType loqui)
                             {
+                                args.Add("bytes: _data.Slice(stream.Position - offset)");
                                 args.Add($"creator: (m, p) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(m), p)");
                             }
                             else
                             {
-                                throw new NotImplementedException();
+                                args.AddPassArg("stream");
+                                this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subGen);
+                                args.Add($"creator: (m, p) => {subGen.GenerateForTypicalWrapper(objGen, typeGen, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.Meta)", "p")}");
                             }
                         }
                     }

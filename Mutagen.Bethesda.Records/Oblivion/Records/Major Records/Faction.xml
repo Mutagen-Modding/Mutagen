@@ -14,8 +14,9 @@
   <Object name="Rank" objType="Subrecord" GUID="4945b664-16ac-4464-89b0-03534ffd5e18" ID="24">
     <Fields>
       <Int32 name="RankNumber" recordType="RNAM" />
-      <String name="MaleName" recordType="MNAM" />
-      <String name="FemaleName" recordType="FNAM" />
+      <Gendered name="Name" maleMarker="MNAM" femaleMarker="FNAM" >
+        <String />
+      </Gendered>
       <String name="Insignia" recordType="INAM" />
     </Fields>
   </Object>

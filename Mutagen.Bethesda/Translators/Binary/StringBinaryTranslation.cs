@@ -125,6 +125,18 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public void WriteNullable(
+            MutagenWriter writer,
+            string? item,
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        {
+            if (item == null) return;
+            this.Write(
+                writer,
+                item,
+                binaryType: binaryType);
+        }
+
         public void Write(MutagenWriter writer, string item, long length)
         {
             if (length != item.Length)
