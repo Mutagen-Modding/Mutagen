@@ -243,26 +243,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Icon = initialValue;
             }
 
             public Mask(
-                T Index,
-                T Model,
-                T Icon)
+                TItem Index,
+                TItem Model,
+                TItem Icon)
             {
                 this.Index = Index;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Icon = Icon;
             }
 
@@ -275,19 +275,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Index;
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public T Icon;
+            public TItem Index;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Icon;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Index)) return false;
                 if (Model != null)
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Index)) return true;
                 if (Model != null)
@@ -335,14 +335,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new FacePart.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Index = eval(this.Index);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, FacePart.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(FacePart.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(FacePart.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

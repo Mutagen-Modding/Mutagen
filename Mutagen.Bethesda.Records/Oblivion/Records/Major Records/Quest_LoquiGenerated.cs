@@ -305,14 +305,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Script = initialValue;
@@ -320,27 +320,27 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.Flags = initialValue;
                 this.Priority = initialValue;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
-                this.Stages = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, QuestStage.Mask<T>?>>());
-                this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, QuestTarget.Mask<T>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
+                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>());
                 this.DATADataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Script,
-                T Name,
-                T Icon,
-                T Flags,
-                T Priority,
-                T Conditions,
-                T Stages,
-                T Targets,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Script,
+                TItem Name,
+                TItem Icon,
+                TItem Flags,
+                TItem Priority,
+                TItem Conditions,
+                TItem Stages,
+                TItem Targets,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -353,9 +353,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.Flags = Flags;
                 this.Priority = Priority;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
-                this.Stages = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>>(Stages, Enumerable.Empty<MaskItemIndexed<T, QuestStage.Mask<T>?>>());
-                this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>>(Targets, Enumerable.Empty<MaskItemIndexed<T, QuestTarget.Mask<T>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
+                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>>(Targets, Enumerable.Empty<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>());
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -368,25 +368,25 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Script;
-            public T Name;
-            public T Icon;
-            public T Flags;
-            public T Priority;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>>? Stages;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>>? Targets;
-            public T DATADataTypeState;
+            public TItem Script;
+            public TItem Name;
+            public TItem Icon;
+            public TItem Flags;
+            public TItem Priority;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>? Conditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>>? Stages;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>>? Targets;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Script)) return false;
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Script)) return true;
@@ -520,14 +520,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Quest.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Script = eval(this.Script);
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Quest.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Quest.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Quest.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

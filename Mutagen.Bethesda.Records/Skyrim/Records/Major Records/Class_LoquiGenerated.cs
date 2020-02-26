@@ -598,14 +598,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            SkyrimMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            SkyrimMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
@@ -642,44 +642,44 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T SkyrimMajorRecordFlags,
-                T FormVersion,
-                T Version2,
-                T Name,
-                T Description,
-                T Icon,
-                T Unknown,
-                T Teaches,
-                T MaxTrainingLevel,
-                T OneHandedWeight,
-                T TwoHandedWeight,
-                T MarksmanWeight,
-                T BlockWeight,
-                T SmithingWeight,
-                T HeavyArmorWeight,
-                T LightArmorWeight,
-                T PickpocketWeight,
-                T LockpickingWeight,
-                T SneakWeight,
-                T AlchemyWeight,
-                T SpeechcraftWeight,
-                T AlterationWeight,
-                T ConjurationWeight,
-                T DestructionWeight,
-                T IllusionWeight,
-                T RestorationWeight,
-                T EnchantingWeight,
-                T BleedoutDefault,
-                T VoicePoints,
-                T HealthWeight,
-                T MagickaWeight,
-                T StaminaWeight,
-                T Unknown2,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem SkyrimMajorRecordFlags,
+                TItem FormVersion,
+                TItem Version2,
+                TItem Name,
+                TItem Description,
+                TItem Icon,
+                TItem Unknown,
+                TItem Teaches,
+                TItem MaxTrainingLevel,
+                TItem OneHandedWeight,
+                TItem TwoHandedWeight,
+                TItem MarksmanWeight,
+                TItem BlockWeight,
+                TItem SmithingWeight,
+                TItem HeavyArmorWeight,
+                TItem LightArmorWeight,
+                TItem PickpocketWeight,
+                TItem LockpickingWeight,
+                TItem SneakWeight,
+                TItem AlchemyWeight,
+                TItem SpeechcraftWeight,
+                TItem AlterationWeight,
+                TItem ConjurationWeight,
+                TItem DestructionWeight,
+                TItem IllusionWeight,
+                TItem RestorationWeight,
+                TItem EnchantingWeight,
+                TItem BleedoutDefault,
+                TItem VoicePoints,
+                TItem HealthWeight,
+                TItem MagickaWeight,
+                TItem StaminaWeight,
+                TItem Unknown2,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -731,47 +731,47 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T Name;
-            public T Description;
-            public T Icon;
-            public T Unknown;
-            public T Teaches;
-            public T MaxTrainingLevel;
-            public T OneHandedWeight;
-            public T TwoHandedWeight;
-            public T MarksmanWeight;
-            public T BlockWeight;
-            public T SmithingWeight;
-            public T HeavyArmorWeight;
-            public T LightArmorWeight;
-            public T PickpocketWeight;
-            public T LockpickingWeight;
-            public T SneakWeight;
-            public T AlchemyWeight;
-            public T SpeechcraftWeight;
-            public T AlterationWeight;
-            public T ConjurationWeight;
-            public T DestructionWeight;
-            public T IllusionWeight;
-            public T RestorationWeight;
-            public T EnchantingWeight;
-            public T BleedoutDefault;
-            public T VoicePoints;
-            public T HealthWeight;
-            public T MagickaWeight;
-            public T StaminaWeight;
-            public T Unknown2;
-            public T DATADataTypeState;
+            public TItem Name;
+            public TItem Description;
+            public TItem Icon;
+            public TItem Unknown;
+            public TItem Teaches;
+            public TItem MaxTrainingLevel;
+            public TItem OneHandedWeight;
+            public TItem TwoHandedWeight;
+            public TItem MarksmanWeight;
+            public TItem BlockWeight;
+            public TItem SmithingWeight;
+            public TItem HeavyArmorWeight;
+            public TItem LightArmorWeight;
+            public TItem PickpocketWeight;
+            public TItem LockpickingWeight;
+            public TItem SneakWeight;
+            public TItem AlchemyWeight;
+            public TItem SpeechcraftWeight;
+            public TItem AlterationWeight;
+            public TItem ConjurationWeight;
+            public TItem DestructionWeight;
+            public TItem IllusionWeight;
+            public TItem RestorationWeight;
+            public TItem EnchantingWeight;
+            public TItem BleedoutDefault;
+            public TItem VoicePoints;
+            public TItem HealthWeight;
+            public TItem MagickaWeight;
+            public TItem StaminaWeight;
+            public TItem Unknown2;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -927,14 +927,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Class.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -986,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, Class.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Class.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Class.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

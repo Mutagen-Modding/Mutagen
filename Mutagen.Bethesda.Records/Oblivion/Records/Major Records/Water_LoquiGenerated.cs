@@ -673,14 +673,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Texture = initialValue;
@@ -714,49 +714,49 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DisplacementSimulatorDampner = initialValue;
                 this.DisplacementSimulatorStartingSize = initialValue;
                 this.Damage = initialValue;
-                this.RelatedWaters = new MaskItem<T, RelatedWaters.Mask<T>?>(initialValue, new RelatedWaters.Mask<T>(initialValue));
+                this.RelatedWaters = new MaskItem<TItem, RelatedWaters.Mask<TItem>?>(initialValue, new RelatedWaters.Mask<TItem>(initialValue));
                 this.DATADataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Texture,
-                T Opacity,
-                T Flags,
-                T MaterialID,
-                T Sound,
-                T WindVelocity,
-                T WindDirection,
-                T WaveAmplitude,
-                T WaveFrequency,
-                T SunPower,
-                T ReflectivityAmount,
-                T FresnelAmount,
-                T ScrollXSpeed,
-                T ScrollYSpeed,
-                T FogDistanceNearPlane,
-                T FogDistanceFarPlane,
-                T ShallowColor,
-                T DeepColor,
-                T ReflectionColor,
-                T TextureBlend,
-                T RainSimulatorForce,
-                T RainSimulatorVelocity,
-                T RainSimulatorFalloff,
-                T RainSimulatorDampner,
-                T RainSimulatorStartingSize,
-                T DisplacementSimulatorForce,
-                T DisplacementSimulatorVelocity,
-                T DisplacementSimulatorFalloff,
-                T DisplacementSimulatorDampner,
-                T DisplacementSimulatorStartingSize,
-                T Damage,
-                T RelatedWaters,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Texture,
+                TItem Opacity,
+                TItem Flags,
+                TItem MaterialID,
+                TItem Sound,
+                TItem WindVelocity,
+                TItem WindDirection,
+                TItem WaveAmplitude,
+                TItem WaveFrequency,
+                TItem SunPower,
+                TItem ReflectivityAmount,
+                TItem FresnelAmount,
+                TItem ScrollXSpeed,
+                TItem ScrollYSpeed,
+                TItem FogDistanceNearPlane,
+                TItem FogDistanceFarPlane,
+                TItem ShallowColor,
+                TItem DeepColor,
+                TItem ReflectionColor,
+                TItem TextureBlend,
+                TItem RainSimulatorForce,
+                TItem RainSimulatorVelocity,
+                TItem RainSimulatorFalloff,
+                TItem RainSimulatorDampner,
+                TItem RainSimulatorStartingSize,
+                TItem DisplacementSimulatorForce,
+                TItem DisplacementSimulatorVelocity,
+                TItem DisplacementSimulatorFalloff,
+                TItem DisplacementSimulatorDampner,
+                TItem DisplacementSimulatorStartingSize,
+                TItem Damage,
+                TItem RelatedWaters,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DisplacementSimulatorDampner = DisplacementSimulatorDampner;
                 this.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSize;
                 this.Damage = Damage;
-                this.RelatedWaters = new MaskItem<T, RelatedWaters.Mask<T>?>(RelatedWaters, new RelatedWaters.Mask<T>(RelatedWaters));
+                this.RelatedWaters = new MaskItem<TItem, RelatedWaters.Mask<TItem>?>(RelatedWaters, new RelatedWaters.Mask<TItem>(RelatedWaters));
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -808,49 +808,49 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Texture;
-            public T Opacity;
-            public T Flags;
-            public T MaterialID;
-            public T Sound;
-            public T WindVelocity;
-            public T WindDirection;
-            public T WaveAmplitude;
-            public T WaveFrequency;
-            public T SunPower;
-            public T ReflectivityAmount;
-            public T FresnelAmount;
-            public T ScrollXSpeed;
-            public T ScrollYSpeed;
-            public T FogDistanceNearPlane;
-            public T FogDistanceFarPlane;
-            public T ShallowColor;
-            public T DeepColor;
-            public T ReflectionColor;
-            public T TextureBlend;
-            public T RainSimulatorForce;
-            public T RainSimulatorVelocity;
-            public T RainSimulatorFalloff;
-            public T RainSimulatorDampner;
-            public T RainSimulatorStartingSize;
-            public T DisplacementSimulatorForce;
-            public T DisplacementSimulatorVelocity;
-            public T DisplacementSimulatorFalloff;
-            public T DisplacementSimulatorDampner;
-            public T DisplacementSimulatorStartingSize;
-            public T Damage;
-            public MaskItem<T, RelatedWaters.Mask<T>?>? RelatedWaters { get; set; }
-            public T DATADataTypeState;
+            public TItem Texture;
+            public TItem Opacity;
+            public TItem Flags;
+            public TItem MaterialID;
+            public TItem Sound;
+            public TItem WindVelocity;
+            public TItem WindDirection;
+            public TItem WaveAmplitude;
+            public TItem WaveFrequency;
+            public TItem SunPower;
+            public TItem ReflectivityAmount;
+            public TItem FresnelAmount;
+            public TItem ScrollXSpeed;
+            public TItem ScrollYSpeed;
+            public TItem FogDistanceNearPlane;
+            public TItem FogDistanceFarPlane;
+            public TItem ShallowColor;
+            public TItem DeepColor;
+            public TItem ReflectionColor;
+            public TItem TextureBlend;
+            public TItem RainSimulatorForce;
+            public TItem RainSimulatorVelocity;
+            public TItem RainSimulatorFalloff;
+            public TItem RainSimulatorDampner;
+            public TItem RainSimulatorStartingSize;
+            public TItem DisplacementSimulatorForce;
+            public TItem DisplacementSimulatorVelocity;
+            public TItem DisplacementSimulatorFalloff;
+            public TItem DisplacementSimulatorDampner;
+            public TItem DisplacementSimulatorStartingSize;
+            public TItem Damage;
+            public MaskItem<TItem, RelatedWaters.Mask<TItem>?>? RelatedWaters { get; set; }
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Texture)) return false;
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Texture)) return true;
@@ -1022,14 +1022,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Water.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Texture = eval(this.Texture);
@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Water.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Water.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

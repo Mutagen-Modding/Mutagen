@@ -289,14 +289,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
@@ -304,23 +304,23 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ChargeAmount = initialValue;
                 this.EnchantCost = initialValue;
                 this.Flags = initialValue;
-                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
                 this.ENITDataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Type,
-                T ChargeAmount,
-                T EnchantCost,
-                T Flags,
-                T Effects,
-                T ENITDataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Type,
+                TItem ChargeAmount,
+                TItem EnchantCost,
+                TItem Flags,
+                TItem Effects,
+                TItem ENITDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ChargeAmount = ChargeAmount;
                 this.EnchantCost = EnchantCost;
                 this.Flags = Flags;
-                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
                 this.ENITDataTypeState = ENITDataTypeState;
             }
 
@@ -346,23 +346,23 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public T Type;
-            public T ChargeAmount;
-            public T EnchantCost;
-            public T Flags;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>? Effects;
-            public T ENITDataTypeState;
+            public TItem Name;
+            public TItem Type;
+            public TItem ChargeAmount;
+            public TItem EnchantCost;
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>? Effects;
+            public TItem ENITDataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -444,14 +444,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Enchantment.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Enchantment.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Enchantment.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Enchantment.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

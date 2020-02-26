@@ -244,13 +244,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.MinWidth = initialValue;
                 this.MaxWidth = initialValue;
@@ -266,17 +266,17 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                T MinWidth,
-                T MaxWidth,
-                T MinHeight,
-                T MaxHeight,
-                T Depth,
-                T Shininess,
-                T ParallaxScale,
-                T ParallaxPasses,
-                T Flags,
-                T Unknown,
-                T Color)
+                TItem MinWidth,
+                TItem MaxWidth,
+                TItem MinHeight,
+                TItem MaxHeight,
+                TItem Depth,
+                TItem Shininess,
+                TItem ParallaxScale,
+                TItem ParallaxPasses,
+                TItem Flags,
+                TItem Unknown,
+                TItem Color)
             {
                 this.MinWidth = MinWidth;
                 this.MaxWidth = MaxWidth;
@@ -300,27 +300,27 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T MinWidth;
-            public T MaxWidth;
-            public T MinHeight;
-            public T MaxHeight;
-            public T Depth;
-            public T Shininess;
-            public T ParallaxScale;
-            public T ParallaxPasses;
-            public T Flags;
-            public T Unknown;
-            public T Color;
+            public TItem MinWidth;
+            public TItem MaxWidth;
+            public TItem MinHeight;
+            public TItem MaxHeight;
+            public TItem Depth;
+            public TItem Shininess;
+            public TItem ParallaxScale;
+            public TItem ParallaxPasses;
+            public TItem Flags;
+            public TItem Unknown;
+            public TItem Color;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.MinWidth, rhs.MinWidth)) return false;
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.MinWidth)) return false;
                 if (!eval(this.MaxWidth)) return false;
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.MinWidth)) return true;
                 if (eval(this.MaxWidth)) return true;
@@ -392,14 +392,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Decal.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.MinWidth = eval(this.MinWidth);
                 obj.MaxWidth = eval(this.MaxWidth);
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, Decal.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Decal.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Decal.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

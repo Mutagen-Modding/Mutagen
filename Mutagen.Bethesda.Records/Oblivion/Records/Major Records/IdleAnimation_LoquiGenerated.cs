@@ -256,32 +256,32 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.AnimationGroupSection = initialValue;
-                this.RelatedIdleAnimations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.RelatedIdleAnimations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Model,
-                T Conditions,
-                T AnimationGroupSection,
-                T RelatedIdleAnimations)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Model,
+                TItem Conditions,
+                TItem AnimationGroupSection,
+                TItem RelatedIdleAnimations)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -289,10 +289,10 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.AnimationGroupSection = AnimationGroupSection;
-                this.RelatedIdleAnimations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(RelatedIdleAnimations, Enumerable.Empty<(int Index, T Value)>());
+                this.RelatedIdleAnimations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(RelatedIdleAnimations, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -304,20 +304,20 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public T AnimationGroupSection;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? RelatedIdleAnimations;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>? Conditions;
+            public TItem AnimationGroupSection;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? RelatedIdleAnimations;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (Model != null)
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (Model != null)
@@ -415,14 +415,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new IdleAnimation.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, IdleAnimation.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(IdleAnimation.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(IdleAnimation.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

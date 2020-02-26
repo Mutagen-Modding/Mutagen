@@ -477,80 +477,80 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RaceRelation.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RaceRelation.Mask<T>?>>());
-                this.SkillBoost0 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost1 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost2 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost3 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost4 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost5 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost6 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
+                this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost3 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost4 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
                 this.Fluff = initialValue;
-                this.Height = new GenderedItem<T>(initialValue, initialValue);
-                this.Weight = new GenderedItem<T>(initialValue, initialValue);
+                this.Height = new GenderedItem<TItem>(initialValue, initialValue);
+                this.Weight = new GenderedItem<TItem>(initialValue, initialValue);
                 this.Flags = initialValue;
-                this.Voices = new MaskItem<T, GenderedItem<T>?>(initialValue, default);
-                this.DefaultHair = new MaskItem<T, GenderedItem<T>?>(initialValue, default);
+                this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.DefaultHair = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.DefaultHairColor = initialValue;
                 this.FaceGenMainClamp = initialValue;
                 this.FaceGenFaceClamp = initialValue;
-                this.RaceStats = new MaskItem<T, GenderedItem<RaceStats.Mask<T>?>?>(initialValue, default);
-                this.FaceData = new MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, FacePart.Mask<T>?>>());
-                this.BodyData = new MaskItem<T, GenderedItem<MaskItem<T, BodyData.Mask<T>?>?>?>(initialValue, default);
-                this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.FaceGenData = new MaskItem<T, FaceGenData.Mask<T>?>(initialValue, new FaceGenData.Mask<T>(initialValue));
+                this.RaceStats = new MaskItem<TItem, GenderedItem<RaceStats.Mask<TItem>?>?>(initialValue, default);
+                this.FaceData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacePart.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FacePart.Mask<TItem>?>>());
+                this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(initialValue, default);
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FaceGenData = new MaskItem<TItem, FaceGenData.Mask<TItem>?>(initialValue, new FaceGenData.Mask<TItem>(initialValue));
                 this.Unknown = initialValue;
                 this.DATADataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Description,
-                T Spells,
-                T Relations,
-                T SkillBoost0,
-                T SkillBoost1,
-                T SkillBoost2,
-                T SkillBoost3,
-                T SkillBoost4,
-                T SkillBoost5,
-                T SkillBoost6,
-                T Fluff,
-                T Height,
-                T Weight,
-                T Flags,
-                T Voices,
-                T DefaultHair,
-                T DefaultHairColor,
-                T FaceGenMainClamp,
-                T FaceGenFaceClamp,
-                T RaceStats,
-                T FaceData,
-                T BodyData,
-                T Hairs,
-                T Eyes,
-                T FaceGenData,
-                T Unknown,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Description,
+                TItem Spells,
+                TItem Relations,
+                TItem SkillBoost0,
+                TItem SkillBoost1,
+                TItem SkillBoost2,
+                TItem SkillBoost3,
+                TItem SkillBoost4,
+                TItem SkillBoost5,
+                TItem SkillBoost6,
+                TItem Fluff,
+                TItem Height,
+                TItem Weight,
+                TItem Flags,
+                TItem Voices,
+                TItem DefaultHair,
+                TItem DefaultHairColor,
+                TItem FaceGenMainClamp,
+                TItem FaceGenFaceClamp,
+                TItem RaceStats,
+                TItem FaceData,
+                TItem BodyData,
+                TItem Hairs,
+                TItem Eyes,
+                TItem FaceGenData,
+                TItem Unknown,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -560,30 +560,30 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = Name;
                 this.Description = Description;
-                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, Enumerable.Empty<(int Index, T Value)>());
-                this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RaceRelation.Mask<T>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<T, RaceRelation.Mask<T>?>>());
-                this.SkillBoost0 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost0, new SkillBoost.Mask<T>(SkillBoost0));
-                this.SkillBoost1 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost1, new SkillBoost.Mask<T>(SkillBoost1));
-                this.SkillBoost2 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost2, new SkillBoost.Mask<T>(SkillBoost2));
-                this.SkillBoost3 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost3, new SkillBoost.Mask<T>(SkillBoost3));
-                this.SkillBoost4 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost4, new SkillBoost.Mask<T>(SkillBoost4));
-                this.SkillBoost5 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost5, new SkillBoost.Mask<T>(SkillBoost5));
-                this.SkillBoost6 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost6, new SkillBoost.Mask<T>(SkillBoost6));
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
+                this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost0, new SkillBoost.Mask<TItem>(SkillBoost0));
+                this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost1, new SkillBoost.Mask<TItem>(SkillBoost1));
+                this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost2, new SkillBoost.Mask<TItem>(SkillBoost2));
+                this.SkillBoost3 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost3, new SkillBoost.Mask<TItem>(SkillBoost3));
+                this.SkillBoost4 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost4, new SkillBoost.Mask<TItem>(SkillBoost4));
+                this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost5, new SkillBoost.Mask<TItem>(SkillBoost5));
+                this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost6, new SkillBoost.Mask<TItem>(SkillBoost6));
                 this.Fluff = Fluff;
-                this.Height = new GenderedItem<T>(Height, Height);
-                this.Weight = new GenderedItem<T>(Weight, Weight);
+                this.Height = new GenderedItem<TItem>(Height, Height);
+                this.Weight = new GenderedItem<TItem>(Weight, Weight);
                 this.Flags = Flags;
-                this.Voices = new MaskItem<T, GenderedItem<T>?>(Voices, default);
-                this.DefaultHair = new MaskItem<T, GenderedItem<T>?>(DefaultHair, default);
+                this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(Voices, default);
+                this.DefaultHair = new MaskItem<TItem, GenderedItem<TItem>?>(DefaultHair, default);
                 this.DefaultHairColor = DefaultHairColor;
                 this.FaceGenMainClamp = FaceGenMainClamp;
                 this.FaceGenFaceClamp = FaceGenFaceClamp;
-                this.RaceStats = new MaskItem<T, GenderedItem<RaceStats.Mask<T>?>?>(RaceStats, default);
-                this.FaceData = new MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart.Mask<T>?>>>(FaceData, Enumerable.Empty<MaskItemIndexed<T, FacePart.Mask<T>?>>());
-                this.BodyData = new MaskItem<T, GenderedItem<MaskItem<T, BodyData.Mask<T>?>?>?>(BodyData, default);
-                this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Hairs, Enumerable.Empty<(int Index, T Value)>());
-                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Eyes, Enumerable.Empty<(int Index, T Value)>());
-                this.FaceGenData = new MaskItem<T, FaceGenData.Mask<T>?>(FaceGenData, new FaceGenData.Mask<T>(FaceGenData));
+                this.RaceStats = new MaskItem<TItem, GenderedItem<RaceStats.Mask<TItem>?>?>(RaceStats, default);
+                this.FaceData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacePart.Mask<TItem>?>>>(FaceData, Enumerable.Empty<MaskItemIndexed<TItem, FacePart.Mask<TItem>?>>());
+                this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(BodyData, default);
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Hairs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FaceGenData = new MaskItem<TItem, FaceGenData.Mask<TItem>?>(FaceGenData, new FaceGenData.Mask<TItem>(FaceGenData));
                 this.Unknown = Unknown;
                 this.DATADataTypeState = DATADataTypeState;
             }
@@ -597,44 +597,44 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public T Description;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Spells;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, RaceRelation.Mask<T>?>>>? Relations;
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost0 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost1 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost2 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost3 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost4 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost5 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost6 { get; set; }
-            public T Fluff;
-            public GenderedItem<T> Height;
-            public GenderedItem<T> Weight;
-            public T Flags;
-            public MaskItem<T, GenderedItem<T>?>? Voices;
-            public MaskItem<T, GenderedItem<T>?>? DefaultHair;
-            public T DefaultHairColor;
-            public T FaceGenMainClamp;
-            public T FaceGenFaceClamp;
-            public MaskItem<T, GenderedItem<RaceStats.Mask<T>?>?>? RaceStats;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart.Mask<T>?>>>? FaceData;
-            public MaskItem<T, GenderedItem<MaskItem<T, BodyData.Mask<T>?>?>?>? BodyData;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Hairs;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Eyes;
-            public MaskItem<T, FaceGenData.Mask<T>?>? FaceGenData { get; set; }
-            public T Unknown;
-            public T DATADataTypeState;
+            public TItem Name;
+            public TItem Description;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Spells;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>>? Relations;
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost0 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost1 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost2 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost3 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost4 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost5 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost6 { get; set; }
+            public TItem Fluff;
+            public GenderedItem<TItem> Height;
+            public GenderedItem<TItem> Weight;
+            public TItem Flags;
+            public MaskItem<TItem, GenderedItem<TItem>?>? Voices;
+            public MaskItem<TItem, GenderedItem<TItem>?>? DefaultHair;
+            public TItem DefaultHairColor;
+            public TItem FaceGenMainClamp;
+            public TItem FaceGenFaceClamp;
+            public MaskItem<TItem, GenderedItem<RaceStats.Mask<TItem>?>?>? RaceStats;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacePart.Mask<TItem>?>>>? FaceData;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>? BodyData;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Hairs;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Eyes;
+            public MaskItem<TItem, FaceGenData.Mask<TItem>?>? FaceGenData { get; set; }
+            public TItem Unknown;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -962,14 +962,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Race.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Race.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Race.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

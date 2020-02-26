@@ -665,189 +665,189 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
-                this.ModHeader = new MaskItem<T, ModHeader.Mask<T>?>(initialValue, new ModHeader.Mask<T>(initialValue));
-                this.GameSettings = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Globals = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Classes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Factions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Hairs = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Eyes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Races = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Sounds = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Skills = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.MagicEffects = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Scripts = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.LandTextures = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Enchantments = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Spells = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Birthsigns = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Activators = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.AlchemicalApparatus = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Armors = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Books = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Clothes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Containers = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Doors = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Ingredients = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Lights = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Miscellaneous = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Statics = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Grasses = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Trees = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Flora = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Furnature = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Weapons = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Ammo = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.NPCs = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Creatures = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.LeveledCreatures = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.SoulGems = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Keys = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Potions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Subspaces = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.SigilStones = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.LeveledItems = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Weathers = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Climates = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Regions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Cells = new MaskItem<T, ListGroup.Mask<T>?>(initialValue, new ListGroup.Mask<T>(initialValue));
-                this.Worldspaces = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.DialogTopics = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Quests = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.IdleAnimations = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.AIPackages = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.CombatStyles = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.LoadScreens = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.LeveledSpells = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.AnimatedObjects = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Waters = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.EffectShaders = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(initialValue, new ModHeader.Mask<TItem>(initialValue));
+                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Sounds = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Skills = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.MagicEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Scripts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LandTextures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Enchantments = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Birthsigns = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.AlchemicalApparatus = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Clothes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Miscellaneous = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Flora = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Furnature = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Ammo = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.NPCs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Creatures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LeveledCreatures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Keys = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Potions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Subspaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.SigilStones = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Cells = new MaskItem<TItem, ListGroup.Mask<TItem>?>(initialValue, new ListGroup.Mask<TItem>(initialValue));
+                this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.AIPackages = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.CombatStyles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                T ModHeader,
-                T GameSettings,
-                T Globals,
-                T Classes,
-                T Factions,
-                T Hairs,
-                T Eyes,
-                T Races,
-                T Sounds,
-                T Skills,
-                T MagicEffects,
-                T Scripts,
-                T LandTextures,
-                T Enchantments,
-                T Spells,
-                T Birthsigns,
-                T Activators,
-                T AlchemicalApparatus,
-                T Armors,
-                T Books,
-                T Clothes,
-                T Containers,
-                T Doors,
-                T Ingredients,
-                T Lights,
-                T Miscellaneous,
-                T Statics,
-                T Grasses,
-                T Trees,
-                T Flora,
-                T Furnature,
-                T Weapons,
-                T Ammo,
-                T NPCs,
-                T Creatures,
-                T LeveledCreatures,
-                T SoulGems,
-                T Keys,
-                T Potions,
-                T Subspaces,
-                T SigilStones,
-                T LeveledItems,
-                T Weathers,
-                T Climates,
-                T Regions,
-                T Cells,
-                T Worldspaces,
-                T DialogTopics,
-                T Quests,
-                T IdleAnimations,
-                T AIPackages,
-                T CombatStyles,
-                T LoadScreens,
-                T LeveledSpells,
-                T AnimatedObjects,
-                T Waters,
-                T EffectShaders)
+                TItem ModHeader,
+                TItem GameSettings,
+                TItem Globals,
+                TItem Classes,
+                TItem Factions,
+                TItem Hairs,
+                TItem Eyes,
+                TItem Races,
+                TItem Sounds,
+                TItem Skills,
+                TItem MagicEffects,
+                TItem Scripts,
+                TItem LandTextures,
+                TItem Enchantments,
+                TItem Spells,
+                TItem Birthsigns,
+                TItem Activators,
+                TItem AlchemicalApparatus,
+                TItem Armors,
+                TItem Books,
+                TItem Clothes,
+                TItem Containers,
+                TItem Doors,
+                TItem Ingredients,
+                TItem Lights,
+                TItem Miscellaneous,
+                TItem Statics,
+                TItem Grasses,
+                TItem Trees,
+                TItem Flora,
+                TItem Furnature,
+                TItem Weapons,
+                TItem Ammo,
+                TItem NPCs,
+                TItem Creatures,
+                TItem LeveledCreatures,
+                TItem SoulGems,
+                TItem Keys,
+                TItem Potions,
+                TItem Subspaces,
+                TItem SigilStones,
+                TItem LeveledItems,
+                TItem Weathers,
+                TItem Climates,
+                TItem Regions,
+                TItem Cells,
+                TItem Worldspaces,
+                TItem DialogTopics,
+                TItem Quests,
+                TItem IdleAnimations,
+                TItem AIPackages,
+                TItem CombatStyles,
+                TItem LoadScreens,
+                TItem LeveledSpells,
+                TItem AnimatedObjects,
+                TItem Waters,
+                TItem EffectShaders)
             {
-                this.ModHeader = new MaskItem<T, ModHeader.Mask<T>?>(ModHeader, new ModHeader.Mask<T>(ModHeader));
-                this.GameSettings = new MaskItem<T, Group.Mask<T>?>(GameSettings, new Group.Mask<T>(GameSettings));
-                this.Globals = new MaskItem<T, Group.Mask<T>?>(Globals, new Group.Mask<T>(Globals));
-                this.Classes = new MaskItem<T, Group.Mask<T>?>(Classes, new Group.Mask<T>(Classes));
-                this.Factions = new MaskItem<T, Group.Mask<T>?>(Factions, new Group.Mask<T>(Factions));
-                this.Hairs = new MaskItem<T, Group.Mask<T>?>(Hairs, new Group.Mask<T>(Hairs));
-                this.Eyes = new MaskItem<T, Group.Mask<T>?>(Eyes, new Group.Mask<T>(Eyes));
-                this.Races = new MaskItem<T, Group.Mask<T>?>(Races, new Group.Mask<T>(Races));
-                this.Sounds = new MaskItem<T, Group.Mask<T>?>(Sounds, new Group.Mask<T>(Sounds));
-                this.Skills = new MaskItem<T, Group.Mask<T>?>(Skills, new Group.Mask<T>(Skills));
-                this.MagicEffects = new MaskItem<T, Group.Mask<T>?>(MagicEffects, new Group.Mask<T>(MagicEffects));
-                this.Scripts = new MaskItem<T, Group.Mask<T>?>(Scripts, new Group.Mask<T>(Scripts));
-                this.LandTextures = new MaskItem<T, Group.Mask<T>?>(LandTextures, new Group.Mask<T>(LandTextures));
-                this.Enchantments = new MaskItem<T, Group.Mask<T>?>(Enchantments, new Group.Mask<T>(Enchantments));
-                this.Spells = new MaskItem<T, Group.Mask<T>?>(Spells, new Group.Mask<T>(Spells));
-                this.Birthsigns = new MaskItem<T, Group.Mask<T>?>(Birthsigns, new Group.Mask<T>(Birthsigns));
-                this.Activators = new MaskItem<T, Group.Mask<T>?>(Activators, new Group.Mask<T>(Activators));
-                this.AlchemicalApparatus = new MaskItem<T, Group.Mask<T>?>(AlchemicalApparatus, new Group.Mask<T>(AlchemicalApparatus));
-                this.Armors = new MaskItem<T, Group.Mask<T>?>(Armors, new Group.Mask<T>(Armors));
-                this.Books = new MaskItem<T, Group.Mask<T>?>(Books, new Group.Mask<T>(Books));
-                this.Clothes = new MaskItem<T, Group.Mask<T>?>(Clothes, new Group.Mask<T>(Clothes));
-                this.Containers = new MaskItem<T, Group.Mask<T>?>(Containers, new Group.Mask<T>(Containers));
-                this.Doors = new MaskItem<T, Group.Mask<T>?>(Doors, new Group.Mask<T>(Doors));
-                this.Ingredients = new MaskItem<T, Group.Mask<T>?>(Ingredients, new Group.Mask<T>(Ingredients));
-                this.Lights = new MaskItem<T, Group.Mask<T>?>(Lights, new Group.Mask<T>(Lights));
-                this.Miscellaneous = new MaskItem<T, Group.Mask<T>?>(Miscellaneous, new Group.Mask<T>(Miscellaneous));
-                this.Statics = new MaskItem<T, Group.Mask<T>?>(Statics, new Group.Mask<T>(Statics));
-                this.Grasses = new MaskItem<T, Group.Mask<T>?>(Grasses, new Group.Mask<T>(Grasses));
-                this.Trees = new MaskItem<T, Group.Mask<T>?>(Trees, new Group.Mask<T>(Trees));
-                this.Flora = new MaskItem<T, Group.Mask<T>?>(Flora, new Group.Mask<T>(Flora));
-                this.Furnature = new MaskItem<T, Group.Mask<T>?>(Furnature, new Group.Mask<T>(Furnature));
-                this.Weapons = new MaskItem<T, Group.Mask<T>?>(Weapons, new Group.Mask<T>(Weapons));
-                this.Ammo = new MaskItem<T, Group.Mask<T>?>(Ammo, new Group.Mask<T>(Ammo));
-                this.NPCs = new MaskItem<T, Group.Mask<T>?>(NPCs, new Group.Mask<T>(NPCs));
-                this.Creatures = new MaskItem<T, Group.Mask<T>?>(Creatures, new Group.Mask<T>(Creatures));
-                this.LeveledCreatures = new MaskItem<T, Group.Mask<T>?>(LeveledCreatures, new Group.Mask<T>(LeveledCreatures));
-                this.SoulGems = new MaskItem<T, Group.Mask<T>?>(SoulGems, new Group.Mask<T>(SoulGems));
-                this.Keys = new MaskItem<T, Group.Mask<T>?>(Keys, new Group.Mask<T>(Keys));
-                this.Potions = new MaskItem<T, Group.Mask<T>?>(Potions, new Group.Mask<T>(Potions));
-                this.Subspaces = new MaskItem<T, Group.Mask<T>?>(Subspaces, new Group.Mask<T>(Subspaces));
-                this.SigilStones = new MaskItem<T, Group.Mask<T>?>(SigilStones, new Group.Mask<T>(SigilStones));
-                this.LeveledItems = new MaskItem<T, Group.Mask<T>?>(LeveledItems, new Group.Mask<T>(LeveledItems));
-                this.Weathers = new MaskItem<T, Group.Mask<T>?>(Weathers, new Group.Mask<T>(Weathers));
-                this.Climates = new MaskItem<T, Group.Mask<T>?>(Climates, new Group.Mask<T>(Climates));
-                this.Regions = new MaskItem<T, Group.Mask<T>?>(Regions, new Group.Mask<T>(Regions));
-                this.Cells = new MaskItem<T, ListGroup.Mask<T>?>(Cells, new ListGroup.Mask<T>(Cells));
-                this.Worldspaces = new MaskItem<T, Group.Mask<T>?>(Worldspaces, new Group.Mask<T>(Worldspaces));
-                this.DialogTopics = new MaskItem<T, Group.Mask<T>?>(DialogTopics, new Group.Mask<T>(DialogTopics));
-                this.Quests = new MaskItem<T, Group.Mask<T>?>(Quests, new Group.Mask<T>(Quests));
-                this.IdleAnimations = new MaskItem<T, Group.Mask<T>?>(IdleAnimations, new Group.Mask<T>(IdleAnimations));
-                this.AIPackages = new MaskItem<T, Group.Mask<T>?>(AIPackages, new Group.Mask<T>(AIPackages));
-                this.CombatStyles = new MaskItem<T, Group.Mask<T>?>(CombatStyles, new Group.Mask<T>(CombatStyles));
-                this.LoadScreens = new MaskItem<T, Group.Mask<T>?>(LoadScreens, new Group.Mask<T>(LoadScreens));
-                this.LeveledSpells = new MaskItem<T, Group.Mask<T>?>(LeveledSpells, new Group.Mask<T>(LeveledSpells));
-                this.AnimatedObjects = new MaskItem<T, Group.Mask<T>?>(AnimatedObjects, new Group.Mask<T>(AnimatedObjects));
-                this.Waters = new MaskItem<T, Group.Mask<T>?>(Waters, new Group.Mask<T>(Waters));
-                this.EffectShaders = new MaskItem<T, Group.Mask<T>?>(EffectShaders, new Group.Mask<T>(EffectShaders));
+                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
+                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
+                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(Globals, new Group.Mask<TItem>(Globals));
+                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(Classes, new Group.Mask<TItem>(Classes));
+                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(Factions, new Group.Mask<TItem>(Factions));
+                this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(Hairs, new Group.Mask<TItem>(Hairs));
+                this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(Eyes, new Group.Mask<TItem>(Eyes));
+                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(Races, new Group.Mask<TItem>(Races));
+                this.Sounds = new MaskItem<TItem, Group.Mask<TItem>?>(Sounds, new Group.Mask<TItem>(Sounds));
+                this.Skills = new MaskItem<TItem, Group.Mask<TItem>?>(Skills, new Group.Mask<TItem>(Skills));
+                this.MagicEffects = new MaskItem<TItem, Group.Mask<TItem>?>(MagicEffects, new Group.Mask<TItem>(MagicEffects));
+                this.Scripts = new MaskItem<TItem, Group.Mask<TItem>?>(Scripts, new Group.Mask<TItem>(Scripts));
+                this.LandTextures = new MaskItem<TItem, Group.Mask<TItem>?>(LandTextures, new Group.Mask<TItem>(LandTextures));
+                this.Enchantments = new MaskItem<TItem, Group.Mask<TItem>?>(Enchantments, new Group.Mask<TItem>(Enchantments));
+                this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(Spells, new Group.Mask<TItem>(Spells));
+                this.Birthsigns = new MaskItem<TItem, Group.Mask<TItem>?>(Birthsigns, new Group.Mask<TItem>(Birthsigns));
+                this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(Activators, new Group.Mask<TItem>(Activators));
+                this.AlchemicalApparatus = new MaskItem<TItem, Group.Mask<TItem>?>(AlchemicalApparatus, new Group.Mask<TItem>(AlchemicalApparatus));
+                this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(Armors, new Group.Mask<TItem>(Armors));
+                this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(Books, new Group.Mask<TItem>(Books));
+                this.Clothes = new MaskItem<TItem, Group.Mask<TItem>?>(Clothes, new Group.Mask<TItem>(Clothes));
+                this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(Containers, new Group.Mask<TItem>(Containers));
+                this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(Doors, new Group.Mask<TItem>(Doors));
+                this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(Ingredients, new Group.Mask<TItem>(Ingredients));
+                this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(Lights, new Group.Mask<TItem>(Lights));
+                this.Miscellaneous = new MaskItem<TItem, Group.Mask<TItem>?>(Miscellaneous, new Group.Mask<TItem>(Miscellaneous));
+                this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(Statics, new Group.Mask<TItem>(Statics));
+                this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(Grasses, new Group.Mask<TItem>(Grasses));
+                this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(Trees, new Group.Mask<TItem>(Trees));
+                this.Flora = new MaskItem<TItem, Group.Mask<TItem>?>(Flora, new Group.Mask<TItem>(Flora));
+                this.Furnature = new MaskItem<TItem, Group.Mask<TItem>?>(Furnature, new Group.Mask<TItem>(Furnature));
+                this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(Weapons, new Group.Mask<TItem>(Weapons));
+                this.Ammo = new MaskItem<TItem, Group.Mask<TItem>?>(Ammo, new Group.Mask<TItem>(Ammo));
+                this.NPCs = new MaskItem<TItem, Group.Mask<TItem>?>(NPCs, new Group.Mask<TItem>(NPCs));
+                this.Creatures = new MaskItem<TItem, Group.Mask<TItem>?>(Creatures, new Group.Mask<TItem>(Creatures));
+                this.LeveledCreatures = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledCreatures, new Group.Mask<TItem>(LeveledCreatures));
+                this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(SoulGems, new Group.Mask<TItem>(SoulGems));
+                this.Keys = new MaskItem<TItem, Group.Mask<TItem>?>(Keys, new Group.Mask<TItem>(Keys));
+                this.Potions = new MaskItem<TItem, Group.Mask<TItem>?>(Potions, new Group.Mask<TItem>(Potions));
+                this.Subspaces = new MaskItem<TItem, Group.Mask<TItem>?>(Subspaces, new Group.Mask<TItem>(Subspaces));
+                this.SigilStones = new MaskItem<TItem, Group.Mask<TItem>?>(SigilStones, new Group.Mask<TItem>(SigilStones));
+                this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledItems, new Group.Mask<TItem>(LeveledItems));
+                this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(Weathers, new Group.Mask<TItem>(Weathers));
+                this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(Climates, new Group.Mask<TItem>(Climates));
+                this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(Regions, new Group.Mask<TItem>(Regions));
+                this.Cells = new MaskItem<TItem, ListGroup.Mask<TItem>?>(Cells, new ListGroup.Mask<TItem>(Cells));
+                this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(Worldspaces, new Group.Mask<TItem>(Worldspaces));
+                this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(DialogTopics, new Group.Mask<TItem>(DialogTopics));
+                this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(Quests, new Group.Mask<TItem>(Quests));
+                this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(IdleAnimations, new Group.Mask<TItem>(IdleAnimations));
+                this.AIPackages = new MaskItem<TItem, Group.Mask<TItem>?>(AIPackages, new Group.Mask<TItem>(AIPackages));
+                this.CombatStyles = new MaskItem<TItem, Group.Mask<TItem>?>(CombatStyles, new Group.Mask<TItem>(CombatStyles));
+                this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(LoadScreens, new Group.Mask<TItem>(LoadScreens));
+                this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledSpells, new Group.Mask<TItem>(LeveledSpells));
+                this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(AnimatedObjects, new Group.Mask<TItem>(AnimatedObjects));
+                this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(Waters, new Group.Mask<TItem>(Waters));
+                this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(EffectShaders, new Group.Mask<TItem>(EffectShaders));
             }
 
             #pragma warning disable CS8618
@@ -859,73 +859,73 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<T, ModHeader.Mask<T>?>? ModHeader { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? GameSettings { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Globals { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Classes { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Factions { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Hairs { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Eyes { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Races { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Sounds { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Skills { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? MagicEffects { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Scripts { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? LandTextures { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Enchantments { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Spells { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Birthsigns { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Activators { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? AlchemicalApparatus { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Armors { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Books { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Clothes { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Containers { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Doors { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Ingredients { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Lights { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Miscellaneous { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Statics { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Grasses { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Trees { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Flora { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Furnature { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Weapons { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Ammo { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? NPCs { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Creatures { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? LeveledCreatures { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? SoulGems { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Keys { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Potions { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Subspaces { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? SigilStones { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? LeveledItems { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Weathers { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Climates { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Regions { get; set; }
-            public MaskItem<T, ListGroup.Mask<T>?>? Cells { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Worldspaces { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? DialogTopics { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Quests { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? IdleAnimations { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? AIPackages { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? CombatStyles { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? LoadScreens { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? LeveledSpells { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? AnimatedObjects { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Waters { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? EffectShaders { get; set; }
+            public MaskItem<TItem, ModHeader.Mask<TItem>?>? ModHeader { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Globals { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Classes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Factions { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Hairs { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Eyes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Races { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Sounds { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Skills { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? MagicEffects { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Scripts { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LandTextures { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Enchantments { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Spells { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Birthsigns { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Activators { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? AlchemicalApparatus { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Armors { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Books { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Clothes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Containers { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Doors { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Ingredients { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Lights { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Miscellaneous { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Statics { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Grasses { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Trees { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Flora { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Furnature { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Weapons { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Ammo { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? NPCs { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Creatures { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledCreatures { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? SoulGems { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Keys { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Potions { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Subspaces { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? SigilStones { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledItems { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Weathers { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Climates { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Regions { get; set; }
+            public MaskItem<TItem, ListGroup.Mask<TItem>?>? Cells { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Worldspaces { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? DialogTopics { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Quests { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? IdleAnimations { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? AIPackages { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? CombatStyles { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LoadScreens { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledSpells { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? AnimatedObjects { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Waters { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? EffectShaders { get; set; }
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (ModHeader != null)
                 {
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (ModHeader != null)
                 {
@@ -1637,14 +1637,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new OblivionMod.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, OblivionMod.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(OblivionMod.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(OblivionMod.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -997,14 +997,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.FillTexture = initialValue;
@@ -1069,70 +1069,70 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T FillTexture,
-                T ParticleShaderTexture,
-                T Flags,
-                T MembraneShaderSourceBlendMode,
-                T MembraneShaderBlendOperation,
-                T MembraneShaderZTestFunction,
-                T FillTextureEffectColor,
-                T FillTextureEffectAlphaFadeInTime,
-                T FillTextureEffectFullAlphaTime,
-                T FillTextureEffectAlphaFadeOutTime,
-                T FillTextureEffectPersistentAlphaRatio,
-                T FillTextureEffectAlphaPulseAmplitude,
-                T FillTextureEffectAlphaPulseFrequency,
-                T FillTextureEffectTextureAnimationSpeedU,
-                T FillTextureEffectTextureAnimationSpeedV,
-                T EdgeEffectFallOff,
-                T EdgeEffectColor,
-                T EdgeEffectAlphaFadeInTime,
-                T EdgeEffectFullAlphaTime,
-                T EdgeEffectAlphaFadeOutTime,
-                T EdgeEffectPersistentAlphaRatio,
-                T EdgeEffectAlphaPulseAmplitude,
-                T EdgeEffectAlphaPulseFrequency,
-                T FillTextureEffectFullAlphaRatio,
-                T EdgeEffectFullAlphaRatio,
-                T MembraneShaderDestBlendMode,
-                T ParticleShaderSourceBlendMode,
-                T ParticleShaderBlendOperation,
-                T ParticleShaderZTestFunction,
-                T ParticleShaderDestBlendMode,
-                T ParticleShaderParticleBirthRampUpTime,
-                T ParticleShaderFullParticleBirthTime,
-                T ParticleShaderParticleBirthRampDownTime,
-                T ParticleShaderFullParticleBirthRatio,
-                T ParticleShaderPersistentParticleBirthRatio,
-                T ParticleShaderParticleLifetime,
-                T ParticleShaderParticleLifetimePlusMinus,
-                T ParticleShaderInitialSpeedAlongNormal,
-                T ParticleShaderAccelerationAlongNormal,
-                T ParticleShaderInitialVelocity1,
-                T ParticleShaderInitialVelocity2,
-                T ParticleShaderInitialVelocity3,
-                T ParticleShaderAcceleration1,
-                T ParticleShaderAcceleration2,
-                T ParticleShaderAcceleration3,
-                T ParticleShaderScaleKey1,
-                T ParticleShaderScaleKey2,
-                T ParticleShaderScaleKey1Time,
-                T ParticleShaderScaleKey2Time,
-                T ColorKey1Color,
-                T ColorKey2Color,
-                T ColorKey3Color,
-                T ColorKey1ColorAlpha,
-                T ColorKey2ColorAlpha,
-                T ColorKey3ColorAlpha,
-                T ColorKey1ColorKeyTime,
-                T ColorKey2ColorKeyTime,
-                T ColorKey3ColorKeyTime,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem FillTexture,
+                TItem ParticleShaderTexture,
+                TItem Flags,
+                TItem MembraneShaderSourceBlendMode,
+                TItem MembraneShaderBlendOperation,
+                TItem MembraneShaderZTestFunction,
+                TItem FillTextureEffectColor,
+                TItem FillTextureEffectAlphaFadeInTime,
+                TItem FillTextureEffectFullAlphaTime,
+                TItem FillTextureEffectAlphaFadeOutTime,
+                TItem FillTextureEffectPersistentAlphaRatio,
+                TItem FillTextureEffectAlphaPulseAmplitude,
+                TItem FillTextureEffectAlphaPulseFrequency,
+                TItem FillTextureEffectTextureAnimationSpeedU,
+                TItem FillTextureEffectTextureAnimationSpeedV,
+                TItem EdgeEffectFallOff,
+                TItem EdgeEffectColor,
+                TItem EdgeEffectAlphaFadeInTime,
+                TItem EdgeEffectFullAlphaTime,
+                TItem EdgeEffectAlphaFadeOutTime,
+                TItem EdgeEffectPersistentAlphaRatio,
+                TItem EdgeEffectAlphaPulseAmplitude,
+                TItem EdgeEffectAlphaPulseFrequency,
+                TItem FillTextureEffectFullAlphaRatio,
+                TItem EdgeEffectFullAlphaRatio,
+                TItem MembraneShaderDestBlendMode,
+                TItem ParticleShaderSourceBlendMode,
+                TItem ParticleShaderBlendOperation,
+                TItem ParticleShaderZTestFunction,
+                TItem ParticleShaderDestBlendMode,
+                TItem ParticleShaderParticleBirthRampUpTime,
+                TItem ParticleShaderFullParticleBirthTime,
+                TItem ParticleShaderParticleBirthRampDownTime,
+                TItem ParticleShaderFullParticleBirthRatio,
+                TItem ParticleShaderPersistentParticleBirthRatio,
+                TItem ParticleShaderParticleLifetime,
+                TItem ParticleShaderParticleLifetimePlusMinus,
+                TItem ParticleShaderInitialSpeedAlongNormal,
+                TItem ParticleShaderAccelerationAlongNormal,
+                TItem ParticleShaderInitialVelocity1,
+                TItem ParticleShaderInitialVelocity2,
+                TItem ParticleShaderInitialVelocity3,
+                TItem ParticleShaderAcceleration1,
+                TItem ParticleShaderAcceleration2,
+                TItem ParticleShaderAcceleration3,
+                TItem ParticleShaderScaleKey1,
+                TItem ParticleShaderScaleKey2,
+                TItem ParticleShaderScaleKey1Time,
+                TItem ParticleShaderScaleKey2Time,
+                TItem ColorKey1Color,
+                TItem ColorKey2Color,
+                TItem ColorKey3Color,
+                TItem ColorKey1ColorAlpha,
+                TItem ColorKey2ColorAlpha,
+                TItem ColorKey3ColorAlpha,
+                TItem ColorKey1ColorKeyTime,
+                TItem ColorKey2ColorKeyTime,
+                TItem ColorKey3ColorKeyTime,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -1210,75 +1210,75 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T FillTexture;
-            public T ParticleShaderTexture;
-            public T Flags;
-            public T MembraneShaderSourceBlendMode;
-            public T MembraneShaderBlendOperation;
-            public T MembraneShaderZTestFunction;
-            public T FillTextureEffectColor;
-            public T FillTextureEffectAlphaFadeInTime;
-            public T FillTextureEffectFullAlphaTime;
-            public T FillTextureEffectAlphaFadeOutTime;
-            public T FillTextureEffectPersistentAlphaRatio;
-            public T FillTextureEffectAlphaPulseAmplitude;
-            public T FillTextureEffectAlphaPulseFrequency;
-            public T FillTextureEffectTextureAnimationSpeedU;
-            public T FillTextureEffectTextureAnimationSpeedV;
-            public T EdgeEffectFallOff;
-            public T EdgeEffectColor;
-            public T EdgeEffectAlphaFadeInTime;
-            public T EdgeEffectFullAlphaTime;
-            public T EdgeEffectAlphaFadeOutTime;
-            public T EdgeEffectPersistentAlphaRatio;
-            public T EdgeEffectAlphaPulseAmplitude;
-            public T EdgeEffectAlphaPulseFrequency;
-            public T FillTextureEffectFullAlphaRatio;
-            public T EdgeEffectFullAlphaRatio;
-            public T MembraneShaderDestBlendMode;
-            public T ParticleShaderSourceBlendMode;
-            public T ParticleShaderBlendOperation;
-            public T ParticleShaderZTestFunction;
-            public T ParticleShaderDestBlendMode;
-            public T ParticleShaderParticleBirthRampUpTime;
-            public T ParticleShaderFullParticleBirthTime;
-            public T ParticleShaderParticleBirthRampDownTime;
-            public T ParticleShaderFullParticleBirthRatio;
-            public T ParticleShaderPersistentParticleBirthRatio;
-            public T ParticleShaderParticleLifetime;
-            public T ParticleShaderParticleLifetimePlusMinus;
-            public T ParticleShaderInitialSpeedAlongNormal;
-            public T ParticleShaderAccelerationAlongNormal;
-            public T ParticleShaderInitialVelocity1;
-            public T ParticleShaderInitialVelocity2;
-            public T ParticleShaderInitialVelocity3;
-            public T ParticleShaderAcceleration1;
-            public T ParticleShaderAcceleration2;
-            public T ParticleShaderAcceleration3;
-            public T ParticleShaderScaleKey1;
-            public T ParticleShaderScaleKey2;
-            public T ParticleShaderScaleKey1Time;
-            public T ParticleShaderScaleKey2Time;
-            public T ColorKey1Color;
-            public T ColorKey2Color;
-            public T ColorKey3Color;
-            public T ColorKey1ColorAlpha;
-            public T ColorKey2ColorAlpha;
-            public T ColorKey3ColorAlpha;
-            public T ColorKey1ColorKeyTime;
-            public T ColorKey2ColorKeyTime;
-            public T ColorKey3ColorKeyTime;
-            public T DATADataTypeState;
+            public TItem FillTexture;
+            public TItem ParticleShaderTexture;
+            public TItem Flags;
+            public TItem MembraneShaderSourceBlendMode;
+            public TItem MembraneShaderBlendOperation;
+            public TItem MembraneShaderZTestFunction;
+            public TItem FillTextureEffectColor;
+            public TItem FillTextureEffectAlphaFadeInTime;
+            public TItem FillTextureEffectFullAlphaTime;
+            public TItem FillTextureEffectAlphaFadeOutTime;
+            public TItem FillTextureEffectPersistentAlphaRatio;
+            public TItem FillTextureEffectAlphaPulseAmplitude;
+            public TItem FillTextureEffectAlphaPulseFrequency;
+            public TItem FillTextureEffectTextureAnimationSpeedU;
+            public TItem FillTextureEffectTextureAnimationSpeedV;
+            public TItem EdgeEffectFallOff;
+            public TItem EdgeEffectColor;
+            public TItem EdgeEffectAlphaFadeInTime;
+            public TItem EdgeEffectFullAlphaTime;
+            public TItem EdgeEffectAlphaFadeOutTime;
+            public TItem EdgeEffectPersistentAlphaRatio;
+            public TItem EdgeEffectAlphaPulseAmplitude;
+            public TItem EdgeEffectAlphaPulseFrequency;
+            public TItem FillTextureEffectFullAlphaRatio;
+            public TItem EdgeEffectFullAlphaRatio;
+            public TItem MembraneShaderDestBlendMode;
+            public TItem ParticleShaderSourceBlendMode;
+            public TItem ParticleShaderBlendOperation;
+            public TItem ParticleShaderZTestFunction;
+            public TItem ParticleShaderDestBlendMode;
+            public TItem ParticleShaderParticleBirthRampUpTime;
+            public TItem ParticleShaderFullParticleBirthTime;
+            public TItem ParticleShaderParticleBirthRampDownTime;
+            public TItem ParticleShaderFullParticleBirthRatio;
+            public TItem ParticleShaderPersistentParticleBirthRatio;
+            public TItem ParticleShaderParticleLifetime;
+            public TItem ParticleShaderParticleLifetimePlusMinus;
+            public TItem ParticleShaderInitialSpeedAlongNormal;
+            public TItem ParticleShaderAccelerationAlongNormal;
+            public TItem ParticleShaderInitialVelocity1;
+            public TItem ParticleShaderInitialVelocity2;
+            public TItem ParticleShaderInitialVelocity3;
+            public TItem ParticleShaderAcceleration1;
+            public TItem ParticleShaderAcceleration2;
+            public TItem ParticleShaderAcceleration3;
+            public TItem ParticleShaderScaleKey1;
+            public TItem ParticleShaderScaleKey2;
+            public TItem ParticleShaderScaleKey1Time;
+            public TItem ParticleShaderScaleKey2Time;
+            public TItem ColorKey1Color;
+            public TItem ColorKey2Color;
+            public TItem ColorKey3Color;
+            public TItem ColorKey1ColorAlpha;
+            public TItem ColorKey2ColorAlpha;
+            public TItem ColorKey3ColorAlpha;
+            public TItem ColorKey1ColorKeyTime;
+            public TItem ColorKey2ColorKeyTime;
+            public TItem ColorKey3ColorKeyTime;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.FillTexture)) return false;
@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.FillTexture)) return true;
@@ -1546,14 +1546,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new EffectShader.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.FillTexture = eval(this.FillTexture);
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, EffectShader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(EffectShader.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(EffectShader.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -105,36 +105,36 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Do = initialValue;
                 this.Path = initialValue;
                 this.NumMasters = initialValue;
                 this.GameMode = initialValue;
                 this.ExpectedBaseGroupCount = initialValue;
-                this.Interest = new MaskItem<T, RecordInterest.Mask<T>?>(initialValue, new RecordInterest.Mask<T>(initialValue));
+                this.Interest = new MaskItem<TItem, RecordInterest.Mask<TItem>?>(initialValue, new RecordInterest.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                T Do,
-                T Path,
-                T NumMasters,
-                T GameMode,
-                T ExpectedBaseGroupCount,
-                T Interest)
+                TItem Do,
+                TItem Path,
+                TItem NumMasters,
+                TItem GameMode,
+                TItem ExpectedBaseGroupCount,
+                TItem Interest)
             {
                 this.Do = Do;
                 this.Path = Path;
                 this.NumMasters = NumMasters;
                 this.GameMode = GameMode;
                 this.ExpectedBaseGroupCount = ExpectedBaseGroupCount;
-                this.Interest = new MaskItem<T, RecordInterest.Mask<T>?>(Interest, new RecordInterest.Mask<T>(Interest));
+                this.Interest = new MaskItem<TItem, RecordInterest.Mask<TItem>?>(Interest, new RecordInterest.Mask<TItem>(Interest));
             }
 
             #pragma warning disable CS8618
@@ -146,22 +146,22 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Members
-            public T Do;
-            public T Path;
-            public T NumMasters;
-            public T GameMode;
-            public T ExpectedBaseGroupCount;
-            public MaskItem<T, RecordInterest.Mask<T>?>? Interest { get; set; }
+            public TItem Do;
+            public TItem Path;
+            public TItem NumMasters;
+            public TItem GameMode;
+            public TItem ExpectedBaseGroupCount;
+            public MaskItem<TItem, RecordInterest.Mask<TItem>?>? Interest { get; set; }
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Do, rhs.Do)) return false;
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Do)) return false;
                 if (!eval(this.Path)) return false;
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Do)) return true;
                 if (eval(this.Path)) return true;
@@ -221,14 +221,14 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Target.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Do = eval(this.Do);
                 obj.Path = eval(this.Path);
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Tests
 
             public void ToString(FileGeneration fg, Target.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Target.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Target.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -297,13 +297,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Diffuse = initialValue;
                 this.NormalOrGloss = initialValue;
@@ -316,14 +316,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                T Diffuse,
-                T NormalOrGloss,
-                T EnvironmentMaskOrSubsurfaceTint,
-                T GlowOrDetailMap,
-                T Height,
-                T Environment,
-                T Multilayer,
-                T BacklightMaskOrSpecular)
+                TItem Diffuse,
+                TItem NormalOrGloss,
+                TItem EnvironmentMaskOrSubsurfaceTint,
+                TItem GlowOrDetailMap,
+                TItem Height,
+                TItem Environment,
+                TItem Multilayer,
+                TItem BacklightMaskOrSpecular)
             {
                 this.Diffuse = Diffuse;
                 this.NormalOrGloss = NormalOrGloss;
@@ -344,24 +344,24 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T Diffuse;
-            public T NormalOrGloss;
-            public T EnvironmentMaskOrSubsurfaceTint;
-            public T GlowOrDetailMap;
-            public T Height;
-            public T Environment;
-            public T Multilayer;
-            public T BacklightMaskOrSpecular;
+            public TItem Diffuse;
+            public TItem NormalOrGloss;
+            public TItem EnvironmentMaskOrSubsurfaceTint;
+            public TItem GlowOrDetailMap;
+            public TItem Height;
+            public TItem Environment;
+            public TItem Multilayer;
+            public TItem BacklightMaskOrSpecular;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Diffuse, rhs.Diffuse)) return false;
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Diffuse)) return false;
                 if (!eval(this.NormalOrGloss)) return false;
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Diffuse)) return true;
                 if (eval(this.NormalOrGloss)) return true;
@@ -421,14 +421,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Textures.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Diffuse = eval(this.Diffuse);
                 obj.NormalOrGloss = eval(this.NormalOrGloss);
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, Textures.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Textures.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Textures.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

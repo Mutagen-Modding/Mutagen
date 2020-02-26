@@ -277,37 +277,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            Spell.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            Spell.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Type = initialValue;
                 this.Cost = initialValue;
                 this.Level = initialValue;
                 this.Flag = initialValue;
-                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
                 this.SPITDataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Type,
-                T Cost,
-                T Level,
-                T Flag,
-                T Effects,
-                T SPITDataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Type,
+                TItem Cost,
+                TItem Level,
+                TItem Flag,
+                TItem Effects,
+                TItem SPITDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Cost = Cost;
                 this.Level = Level;
                 this.Flag = Flag;
-                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
                 this.SPITDataTypeState = SPITDataTypeState;
             }
 
@@ -333,22 +333,22 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Type;
-            public T Cost;
-            public T Level;
-            public T Flag;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>? Effects;
-            public T SPITDataTypeState;
+            public TItem Type;
+            public TItem Cost;
+            public TItem Level;
+            public TItem Flag;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>? Effects;
+            public TItem SPITDataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Type)) return false;
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Type)) return true;
@@ -426,14 +426,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new SpellUnleveled.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Type = eval(this.Type);
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, SpellUnleveled.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SpellUnleveled.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(SpellUnleveled.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

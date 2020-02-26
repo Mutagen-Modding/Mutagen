@@ -384,20 +384,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.Icon = initialValue;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.BaseCost = initialValue;
                 this.Unused = initialValue;
@@ -407,33 +407,33 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Light = initialValue;
                 this.ProjectileSpeed = initialValue;
                 this.EffectShader = initialValue;
-                this.SubData = new MaskItem<T, MagicEffectSubData.Mask<T>?>(initialValue, new MagicEffectSubData.Mask<T>(initialValue));
-                this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.SubData = new MaskItem<TItem, MagicEffectSubData.Mask<TItem>?>(initialValue, new MagicEffectSubData.Mask<TItem>(initialValue));
+                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.DATADataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Description,
-                T Icon,
-                T Model,
-                T Flags,
-                T BaseCost,
-                T Unused,
-                T MagicSchool,
-                T Resistance,
-                T CounterEffectCount,
-                T Light,
-                T ProjectileSpeed,
-                T EffectShader,
-                T SubData,
-                T CounterEffects,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Description,
+                TItem Icon,
+                TItem Model,
+                TItem Flags,
+                TItem BaseCost,
+                TItem Unused,
+                TItem MagicSchool,
+                TItem Resistance,
+                TItem CounterEffectCount,
+                TItem Light,
+                TItem ProjectileSpeed,
+                TItem EffectShader,
+                TItem SubData,
+                TItem CounterEffects,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Description = Description;
                 this.Icon = Icon;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Flags = Flags;
                 this.BaseCost = BaseCost;
                 this.Unused = Unused;
@@ -454,8 +454,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Light = Light;
                 this.ProjectileSpeed = ProjectileSpeed;
                 this.EffectShader = EffectShader;
-                this.SubData = new MaskItem<T, MagicEffectSubData.Mask<T>?>(SubData, new MagicEffectSubData.Mask<T>(SubData));
-                this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(CounterEffects, Enumerable.Empty<(int Index, T Value)>());
+                this.SubData = new MaskItem<TItem, MagicEffectSubData.Mask<TItem>?>(SubData, new MagicEffectSubData.Mask<TItem>(SubData));
+                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(CounterEffects, Enumerable.Empty<(int Index, TItem Value)>());
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -468,32 +468,32 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public T Description;
-            public T Icon;
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public T Flags;
-            public T BaseCost;
-            public T Unused;
-            public T MagicSchool;
-            public T Resistance;
-            public T CounterEffectCount;
-            public T Light;
-            public T ProjectileSpeed;
-            public T EffectShader;
-            public MaskItem<T, MagicEffectSubData.Mask<T>?>? SubData { get; set; }
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? CounterEffects;
-            public T DATADataTypeState;
+            public TItem Name;
+            public TItem Description;
+            public TItem Icon;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Flags;
+            public TItem BaseCost;
+            public TItem Unused;
+            public TItem MagicSchool;
+            public TItem Resistance;
+            public TItem CounterEffectCount;
+            public TItem Light;
+            public TItem ProjectileSpeed;
+            public TItem EffectShader;
+            public MaskItem<TItem, MagicEffectSubData.Mask<TItem>?>? SubData { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? CounterEffects;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -625,14 +625,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new MagicEffect.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, MagicEffect.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MagicEffect.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(MagicEffect.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

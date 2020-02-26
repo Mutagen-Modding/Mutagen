@@ -1012,18 +1012,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            NPCAbstract.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            NPCAbstract.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.BaseSpellPoints = initialValue;
                 this.Fatigue = initialValue;
@@ -1031,12 +1031,12 @@ namespace Mutagen.Bethesda.Oblivion
                 this.LevelOffset = initialValue;
                 this.CalcMin = initialValue;
                 this.CalcMax = initialValue;
-                this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RankPlacement.Mask<T>?>>());
+                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
                 this.DeathItem = initialValue;
                 this.Race = initialValue;
-                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Script = initialValue;
-                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, ItemEntry.Mask<T>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>());
                 this.Aggression = initialValue;
                 this.Confidence = initialValue;
                 this.EnergyLevel = initialValue;
@@ -1045,8 +1045,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Teaches = initialValue;
                 this.MaximumTrainingLevel = initialValue;
                 this.Fluff = initialValue;
-                this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.AIPackages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Class = initialValue;
                 this.Armorer = initialValue;
                 this.Athletics = initialValue;
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Luck = initialValue;
                 this.Hair = initialValue;
                 this.HairLength = initialValue;
-                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.HairColor = initialValue;
                 this.CombatStyle = initialValue;
                 this.FaceGenGeometrySymmetric = initialValue;
@@ -1093,79 +1093,79 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Model,
-                T Flags,
-                T BaseSpellPoints,
-                T Fatigue,
-                T BarterGold,
-                T LevelOffset,
-                T CalcMin,
-                T CalcMax,
-                T Factions,
-                T DeathItem,
-                T Race,
-                T Spells,
-                T Script,
-                T Items,
-                T Aggression,
-                T Confidence,
-                T EnergyLevel,
-                T Responsibility,
-                T BuySellServices,
-                T Teaches,
-                T MaximumTrainingLevel,
-                T Fluff,
-                T AIPackages,
-                T Animations,
-                T Class,
-                T Armorer,
-                T Athletics,
-                T Blade,
-                T Block,
-                T Blunt,
-                T HandToHand,
-                T HeavyArmor,
-                T Alchemy,
-                T Alteration,
-                T Conjuration,
-                T Destruction,
-                T Illusion,
-                T Mysticism,
-                T Restoration,
-                T Acrobatics,
-                T LightArmor,
-                T Marksman,
-                T Mercantile,
-                T Security,
-                T Sneak,
-                T Speechcraft,
-                T Health,
-                T Strength,
-                T Intelligence,
-                T Willpower,
-                T Agility,
-                T Speed,
-                T Endurance,
-                T Personality,
-                T Luck,
-                T Hair,
-                T HairLength,
-                T Eyes,
-                T HairColor,
-                T CombatStyle,
-                T FaceGenGeometrySymmetric,
-                T FaceGenGeometryAsymmetric,
-                T FaceGenTextureSymmetric,
-                T Unknown,
-                T ACBSDataTypeState,
-                T AIDTDataTypeState,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Model,
+                TItem Flags,
+                TItem BaseSpellPoints,
+                TItem Fatigue,
+                TItem BarterGold,
+                TItem LevelOffset,
+                TItem CalcMin,
+                TItem CalcMax,
+                TItem Factions,
+                TItem DeathItem,
+                TItem Race,
+                TItem Spells,
+                TItem Script,
+                TItem Items,
+                TItem Aggression,
+                TItem Confidence,
+                TItem EnergyLevel,
+                TItem Responsibility,
+                TItem BuySellServices,
+                TItem Teaches,
+                TItem MaximumTrainingLevel,
+                TItem Fluff,
+                TItem AIPackages,
+                TItem Animations,
+                TItem Class,
+                TItem Armorer,
+                TItem Athletics,
+                TItem Blade,
+                TItem Block,
+                TItem Blunt,
+                TItem HandToHand,
+                TItem HeavyArmor,
+                TItem Alchemy,
+                TItem Alteration,
+                TItem Conjuration,
+                TItem Destruction,
+                TItem Illusion,
+                TItem Mysticism,
+                TItem Restoration,
+                TItem Acrobatics,
+                TItem LightArmor,
+                TItem Marksman,
+                TItem Mercantile,
+                TItem Security,
+                TItem Sneak,
+                TItem Speechcraft,
+                TItem Health,
+                TItem Strength,
+                TItem Intelligence,
+                TItem Willpower,
+                TItem Agility,
+                TItem Speed,
+                TItem Endurance,
+                TItem Personality,
+                TItem Luck,
+                TItem Hair,
+                TItem HairLength,
+                TItem Eyes,
+                TItem HairColor,
+                TItem CombatStyle,
+                TItem FaceGenGeometrySymmetric,
+                TItem FaceGenGeometryAsymmetric,
+                TItem FaceGenTextureSymmetric,
+                TItem Unknown,
+                TItem ACBSDataTypeState,
+                TItem AIDTDataTypeState,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Flags = Flags;
                 this.BaseSpellPoints = BaseSpellPoints;
                 this.Fatigue = Fatigue;
@@ -1182,12 +1182,12 @@ namespace Mutagen.Bethesda.Oblivion
                 this.LevelOffset = LevelOffset;
                 this.CalcMin = CalcMin;
                 this.CalcMax = CalcMax;
-                this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>(Factions, Enumerable.Empty<MaskItemIndexed<T, RankPlacement.Mask<T>?>>());
+                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>>(Factions, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
                 this.DeathItem = DeathItem;
                 this.Race = Race;
-                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, Enumerable.Empty<(int Index, T Value)>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Script = Script;
-                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, ItemEntry.Mask<T>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>());
                 this.Aggression = Aggression;
                 this.Confidence = Confidence;
                 this.EnergyLevel = EnergyLevel;
@@ -1196,8 +1196,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Teaches = Teaches;
                 this.MaximumTrainingLevel = MaximumTrainingLevel;
                 this.Fluff = Fluff;
-                this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(AIPackages, Enumerable.Empty<(int Index, T Value)>());
-                this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Animations, Enumerable.Empty<(int Index, T Value)>());
+                this.AIPackages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(AIPackages, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Animations, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Class = Class;
                 this.Armorer = Armorer;
                 this.Athletics = Athletics;
@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Luck = Luck;
                 this.Hair = Hair;
                 this.HairLength = HairLength;
-                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Eyes, Enumerable.Empty<(int Index, T Value)>());
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.HairColor = HairColor;
                 this.CombatStyle = CombatStyle;
                 this.FaceGenGeometrySymmetric = FaceGenGeometrySymmetric;
@@ -1252,84 +1252,84 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public T Flags;
-            public T BaseSpellPoints;
-            public T Fatigue;
-            public T BarterGold;
-            public T LevelOffset;
-            public T CalcMin;
-            public T CalcMax;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>? Factions;
-            public T DeathItem;
-            public T Race;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Spells;
-            public T Script;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>? Items;
-            public T Aggression;
-            public T Confidence;
-            public T EnergyLevel;
-            public T Responsibility;
-            public T BuySellServices;
-            public T Teaches;
-            public T MaximumTrainingLevel;
-            public T Fluff;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? AIPackages;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Animations;
-            public T Class;
-            public T Armorer;
-            public T Athletics;
-            public T Blade;
-            public T Block;
-            public T Blunt;
-            public T HandToHand;
-            public T HeavyArmor;
-            public T Alchemy;
-            public T Alteration;
-            public T Conjuration;
-            public T Destruction;
-            public T Illusion;
-            public T Mysticism;
-            public T Restoration;
-            public T Acrobatics;
-            public T LightArmor;
-            public T Marksman;
-            public T Mercantile;
-            public T Security;
-            public T Sneak;
-            public T Speechcraft;
-            public T Health;
-            public T Strength;
-            public T Intelligence;
-            public T Willpower;
-            public T Agility;
-            public T Speed;
-            public T Endurance;
-            public T Personality;
-            public T Luck;
-            public T Hair;
-            public T HairLength;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Eyes;
-            public T HairColor;
-            public T CombatStyle;
-            public T FaceGenGeometrySymmetric;
-            public T FaceGenGeometryAsymmetric;
-            public T FaceGenTextureSymmetric;
-            public T Unknown;
-            public T ACBSDataTypeState;
-            public T AIDTDataTypeState;
-            public T DATADataTypeState;
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Flags;
+            public TItem BaseSpellPoints;
+            public TItem Fatigue;
+            public TItem BarterGold;
+            public TItem LevelOffset;
+            public TItem CalcMin;
+            public TItem CalcMax;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>>? Factions;
+            public TItem DeathItem;
+            public TItem Race;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Spells;
+            public TItem Script;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>>? Items;
+            public TItem Aggression;
+            public TItem Confidence;
+            public TItem EnergyLevel;
+            public TItem Responsibility;
+            public TItem BuySellServices;
+            public TItem Teaches;
+            public TItem MaximumTrainingLevel;
+            public TItem Fluff;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? AIPackages;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Animations;
+            public TItem Class;
+            public TItem Armorer;
+            public TItem Athletics;
+            public TItem Blade;
+            public TItem Block;
+            public TItem Blunt;
+            public TItem HandToHand;
+            public TItem HeavyArmor;
+            public TItem Alchemy;
+            public TItem Alteration;
+            public TItem Conjuration;
+            public TItem Destruction;
+            public TItem Illusion;
+            public TItem Mysticism;
+            public TItem Restoration;
+            public TItem Acrobatics;
+            public TItem LightArmor;
+            public TItem Marksman;
+            public TItem Mercantile;
+            public TItem Security;
+            public TItem Sneak;
+            public TItem Speechcraft;
+            public TItem Health;
+            public TItem Strength;
+            public TItem Intelligence;
+            public TItem Willpower;
+            public TItem Agility;
+            public TItem Speed;
+            public TItem Endurance;
+            public TItem Personality;
+            public TItem Luck;
+            public TItem Hair;
+            public TItem HairLength;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Eyes;
+            public TItem HairColor;
+            public TItem CombatStyle;
+            public TItem FaceGenGeometrySymmetric;
+            public TItem FaceGenGeometryAsymmetric;
+            public TItem FaceGenTextureSymmetric;
+            public TItem Unknown;
+            public TItem ACBSDataTypeState;
+            public TItem AIDTDataTypeState;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -1623,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -1765,14 +1765,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new NPC.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, NPC.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NPC.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(NPC.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

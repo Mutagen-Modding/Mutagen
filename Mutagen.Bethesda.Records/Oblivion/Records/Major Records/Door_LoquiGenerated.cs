@@ -284,40 +284,40 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Script = initialValue;
                 this.OpenSound = initialValue;
                 this.CloseSound = initialValue;
                 this.LoopSound = initialValue;
                 this.Flags = initialValue;
-                this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Model,
-                T Script,
-                T OpenSound,
-                T CloseSound,
-                T LoopSound,
-                T Flags,
-                T RandomTeleportDestinations)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Model,
+                TItem Script,
+                TItem OpenSound,
+                TItem CloseSound,
+                TItem LoopSound,
+                TItem Flags,
+                TItem RandomTeleportDestinations)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -326,13 +326,13 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Script = Script;
                 this.OpenSound = OpenSound;
                 this.CloseSound = CloseSound;
                 this.LoopSound = LoopSound;
                 this.Flags = Flags;
-                this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(RandomTeleportDestinations, Enumerable.Empty<(int Index, T Value)>());
+                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(RandomTeleportDestinations, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -344,24 +344,24 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public T Script;
-            public T OpenSound;
-            public T CloseSound;
-            public T LoopSound;
-            public T Flags;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? RandomTeleportDestinations;
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Script;
+            public TItem OpenSound;
+            public TItem CloseSound;
+            public TItem LoopSound;
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? RandomTeleportDestinations;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -453,14 +453,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Door.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Door.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Door.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Door.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

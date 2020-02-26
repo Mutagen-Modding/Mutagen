@@ -344,21 +344,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
-                this.SkillBoost0 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost1 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost2 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost3 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost4 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost5 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
-                this.SkillBoost6 = new MaskItem<T, SkillBoost.Mask<T>?>(initialValue, new SkillBoost.Mask<T>(initialValue));
+                this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost3 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost4 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
                 this.Fluff = initialValue;
                 this.MaleHeight = initialValue;
                 this.FemaleHeight = initialValue;
@@ -391,50 +391,50 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                T SkillBoost0,
-                T SkillBoost1,
-                T SkillBoost2,
-                T SkillBoost3,
-                T SkillBoost4,
-                T SkillBoost5,
-                T SkillBoost6,
-                T Fluff,
-                T MaleHeight,
-                T FemaleHeight,
-                T MaleWeight,
-                T FemaleWeight,
-                T Flags,
-                T StartingHealth,
-                T StartingMagicka,
-                T StartingStamina,
-                T BaseCarryWeight,
-                T BaseMass,
-                T AccelerationRate,
-                T DecelerationRate,
-                T Size,
-                T HeadBipedObject,
-                T HairBipedObject,
-                T InjuredHealthPercent,
-                T ShieldBipedObject,
-                T HealthRegen,
-                T MagickaRegen,
-                T StaminaRegen,
-                T UnarmedDamage,
-                T UnarmedReach,
-                T BodyBipedObject,
-                T AimAngleTolerance,
-                T FlightRadius,
-                T AngularAccelerationRate,
-                T AngularTolerance,
-                T Flags2)
+                TItem SkillBoost0,
+                TItem SkillBoost1,
+                TItem SkillBoost2,
+                TItem SkillBoost3,
+                TItem SkillBoost4,
+                TItem SkillBoost5,
+                TItem SkillBoost6,
+                TItem Fluff,
+                TItem MaleHeight,
+                TItem FemaleHeight,
+                TItem MaleWeight,
+                TItem FemaleWeight,
+                TItem Flags,
+                TItem StartingHealth,
+                TItem StartingMagicka,
+                TItem StartingStamina,
+                TItem BaseCarryWeight,
+                TItem BaseMass,
+                TItem AccelerationRate,
+                TItem DecelerationRate,
+                TItem Size,
+                TItem HeadBipedObject,
+                TItem HairBipedObject,
+                TItem InjuredHealthPercent,
+                TItem ShieldBipedObject,
+                TItem HealthRegen,
+                TItem MagickaRegen,
+                TItem StaminaRegen,
+                TItem UnarmedDamage,
+                TItem UnarmedReach,
+                TItem BodyBipedObject,
+                TItem AimAngleTolerance,
+                TItem FlightRadius,
+                TItem AngularAccelerationRate,
+                TItem AngularTolerance,
+                TItem Flags2)
             {
-                this.SkillBoost0 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost0, new SkillBoost.Mask<T>(SkillBoost0));
-                this.SkillBoost1 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost1, new SkillBoost.Mask<T>(SkillBoost1));
-                this.SkillBoost2 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost2, new SkillBoost.Mask<T>(SkillBoost2));
-                this.SkillBoost3 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost3, new SkillBoost.Mask<T>(SkillBoost3));
-                this.SkillBoost4 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost4, new SkillBoost.Mask<T>(SkillBoost4));
-                this.SkillBoost5 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost5, new SkillBoost.Mask<T>(SkillBoost5));
-                this.SkillBoost6 = new MaskItem<T, SkillBoost.Mask<T>?>(SkillBoost6, new SkillBoost.Mask<T>(SkillBoost6));
+                this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost0, new SkillBoost.Mask<TItem>(SkillBoost0));
+                this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost1, new SkillBoost.Mask<TItem>(SkillBoost1));
+                this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost2, new SkillBoost.Mask<TItem>(SkillBoost2));
+                this.SkillBoost3 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost3, new SkillBoost.Mask<TItem>(SkillBoost3));
+                this.SkillBoost4 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost4, new SkillBoost.Mask<TItem>(SkillBoost4));
+                this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost5, new SkillBoost.Mask<TItem>(SkillBoost5));
+                this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost6, new SkillBoost.Mask<TItem>(SkillBoost6));
                 this.Fluff = Fluff;
                 this.MaleHeight = MaleHeight;
                 this.FemaleHeight = FemaleHeight;
@@ -475,52 +475,52 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost0 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost1 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost2 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost3 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost4 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost5 { get; set; }
-            public MaskItem<T, SkillBoost.Mask<T>?>? SkillBoost6 { get; set; }
-            public T Fluff;
-            public T MaleHeight;
-            public T FemaleHeight;
-            public T MaleWeight;
-            public T FemaleWeight;
-            public T Flags;
-            public T StartingHealth;
-            public T StartingMagicka;
-            public T StartingStamina;
-            public T BaseCarryWeight;
-            public T BaseMass;
-            public T AccelerationRate;
-            public T DecelerationRate;
-            public T Size;
-            public T HeadBipedObject;
-            public T HairBipedObject;
-            public T InjuredHealthPercent;
-            public T ShieldBipedObject;
-            public T HealthRegen;
-            public T MagickaRegen;
-            public T StaminaRegen;
-            public T UnarmedDamage;
-            public T UnarmedReach;
-            public T BodyBipedObject;
-            public T AimAngleTolerance;
-            public T FlightRadius;
-            public T AngularAccelerationRate;
-            public T AngularTolerance;
-            public T Flags2;
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost0 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost1 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost2 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost3 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost4 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost5 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost6 { get; set; }
+            public TItem Fluff;
+            public TItem MaleHeight;
+            public TItem FemaleHeight;
+            public TItem MaleWeight;
+            public TItem FemaleWeight;
+            public TItem Flags;
+            public TItem StartingHealth;
+            public TItem StartingMagicka;
+            public TItem StartingStamina;
+            public TItem BaseCarryWeight;
+            public TItem BaseMass;
+            public TItem AccelerationRate;
+            public TItem DecelerationRate;
+            public TItem Size;
+            public TItem HeadBipedObject;
+            public TItem HairBipedObject;
+            public TItem InjuredHealthPercent;
+            public TItem ShieldBipedObject;
+            public TItem HealthRegen;
+            public TItem MagickaRegen;
+            public TItem StaminaRegen;
+            public TItem UnarmedDamage;
+            public TItem UnarmedReach;
+            public TItem BodyBipedObject;
+            public TItem AimAngleTolerance;
+            public TItem FlightRadius;
+            public TItem AngularAccelerationRate;
+            public TItem AngularTolerance;
+            public TItem Flags2;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.SkillBoost0, rhs.SkillBoost0)) return false;
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (SkillBoost0 != null)
                 {
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (SkillBoost0 != null)
                 {
@@ -748,14 +748,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new RaceData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.SkillBoost0 = this.SkillBoost0 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost0.Overall), this.SkillBoost0.Specific?.Translate(eval));
                 obj.SkillBoost1 = this.SkillBoost1 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost1.Overall), this.SkillBoost1.Specific?.Translate(eval));
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, RaceData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RaceData.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(RaceData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

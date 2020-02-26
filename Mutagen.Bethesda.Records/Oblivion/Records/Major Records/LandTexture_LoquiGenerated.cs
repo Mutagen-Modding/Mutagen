@@ -255,32 +255,32 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Icon = initialValue;
-                this.Havok = new MaskItem<T, HavokData.Mask<T>?>(initialValue, new HavokData.Mask<T>(initialValue));
+                this.Havok = new MaskItem<TItem, HavokData.Mask<TItem>?>(initialValue, new HavokData.Mask<TItem>(initialValue));
                 this.TextureSpecularExponent = initialValue;
-                this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.PotentialGrass = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Icon,
-                T Havok,
-                T TextureSpecularExponent,
-                T PotentialGrass)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Icon,
+                TItem Havok,
+                TItem TextureSpecularExponent,
+                TItem PotentialGrass)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -289,9 +289,9 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.Icon = Icon;
-                this.Havok = new MaskItem<T, HavokData.Mask<T>?>(Havok, new HavokData.Mask<T>(Havok));
+                this.Havok = new MaskItem<TItem, HavokData.Mask<TItem>?>(Havok, new HavokData.Mask<TItem>(Havok));
                 this.TextureSpecularExponent = TextureSpecularExponent;
-                this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PotentialGrass, Enumerable.Empty<(int Index, T Value)>());
+                this.PotentialGrass = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(PotentialGrass, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -303,20 +303,20 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Icon;
-            public MaskItem<T, HavokData.Mask<T>?>? Havok { get; set; }
-            public T TextureSpecularExponent;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? PotentialGrass;
+            public TItem Icon;
+            public MaskItem<TItem, HavokData.Mask<TItem>?>? Havok { get; set; }
+            public TItem TextureSpecularExponent;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? PotentialGrass;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Icon)) return false;
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Icon)) return true;
@@ -392,14 +392,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new LandTexture.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Icon = eval(this.Icon);
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, LandTexture.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LandTexture.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(LandTexture.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

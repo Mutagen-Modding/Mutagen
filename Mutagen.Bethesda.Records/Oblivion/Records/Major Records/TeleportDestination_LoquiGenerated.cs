@@ -222,13 +222,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Destination = initialValue;
                 this.Position = initialValue;
@@ -236,9 +236,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T Destination,
-                T Position,
-                T Rotation)
+                TItem Destination,
+                TItem Position,
+                TItem Rotation)
             {
                 this.Destination = Destination;
                 this.Position = Position;
@@ -254,19 +254,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Destination;
-            public T Position;
-            public T Rotation;
+            public TItem Destination;
+            public TItem Position;
+            public TItem Rotation;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Destination, rhs.Destination)) return false;
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Destination)) return false;
                 if (!eval(this.Position)) return false;
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Destination)) return true;
                 if (eval(this.Position)) return true;
@@ -306,14 +306,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new TeleportDestination.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Destination = eval(this.Destination);
                 obj.Position = eval(this.Position);
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, TeleportDestination.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TeleportDestination.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(TeleportDestination.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

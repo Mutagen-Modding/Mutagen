@@ -100,24 +100,24 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
-                this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.InterestingTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UninterestingTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
-                T InterestingTypes,
-                T UninterestingTypes)
+                TItem InterestingTypes,
+                TItem UninterestingTypes)
             {
-                this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(InterestingTypes, Enumerable.Empty<(int Index, T Value)>());
-                this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(UninterestingTypes, Enumerable.Empty<(int Index, T Value)>());
+                this.InterestingTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(InterestingTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UninterestingTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(UninterestingTypes, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -129,18 +129,18 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Members
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? InterestingTypes;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? UninterestingTypes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? InterestingTypes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? UninterestingTypes;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.InterestingTypes, rhs.InterestingTypes)) return false;
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (this.InterestingTypes != null)
                 {
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (this.InterestingTypes != null)
                 {
@@ -216,14 +216,14 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new RecordInterest.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 if (InterestingTypes != null)
                 {
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Tests
 
             public void ToString(FileGeneration fg, RecordInterest.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RecordInterest.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(RecordInterest.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

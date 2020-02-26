@@ -245,29 +245,29 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Target = initialValue;
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.QSTADataTypeState = initialValue;
             }
 
             public Mask(
-                T Target,
-                T Flags,
-                T Conditions,
-                T QSTADataTypeState)
+                TItem Target,
+                TItem Flags,
+                TItem Conditions,
+                TItem QSTADataTypeState)
             {
                 this.Target = Target;
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.QSTADataTypeState = QSTADataTypeState;
             }
 
@@ -280,20 +280,20 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Target;
-            public T Flags;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public T QSTADataTypeState;
+            public TItem Target;
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>? Conditions;
+            public TItem QSTADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Target, rhs.Target)) return false;
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Target)) return false;
                 if (!eval(this.Flags)) return false;
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Target)) return true;
                 if (eval(this.Flags)) return true;
@@ -359,14 +359,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new QuestTarget.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Target = eval(this.Target);
                 obj.Flags = eval(this.Flags);
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, QuestTarget.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(QuestTarget.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(QuestTarget.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

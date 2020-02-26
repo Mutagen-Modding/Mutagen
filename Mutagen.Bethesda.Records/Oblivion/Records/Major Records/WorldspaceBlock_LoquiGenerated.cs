@@ -242,33 +242,33 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.BlockNumberY = initialValue;
                 this.BlockNumberX = initialValue;
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
-                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceSubBlock.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WorldspaceSubBlock.Mask<T>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>());
             }
 
             public Mask(
-                T BlockNumberY,
-                T BlockNumberX,
-                T GroupType,
-                T LastModified,
-                T Items)
+                TItem BlockNumberY,
+                TItem BlockNumberX,
+                TItem GroupType,
+                TItem LastModified,
+                TItem Items)
             {
                 this.BlockNumberY = BlockNumberY;
                 this.BlockNumberX = BlockNumberX;
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
-                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceSubBlock.Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, WorldspaceSubBlock.Mask<T>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>>(Items, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -280,21 +280,21 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T BlockNumberY;
-            public T BlockNumberX;
-            public T GroupType;
-            public T LastModified;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceSubBlock.Mask<T>?>>>? Items;
+            public TItem BlockNumberY;
+            public TItem BlockNumberX;
+            public TItem GroupType;
+            public TItem LastModified;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>>? Items;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.BlockNumberY, rhs.BlockNumberY)) return false;
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.BlockNumberY)) return false;
                 if (!eval(this.BlockNumberX)) return false;
@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.BlockNumberY)) return true;
                 if (eval(this.BlockNumberX)) return true;
@@ -364,14 +364,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new WorldspaceBlock.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.BlockNumberY = eval(this.BlockNumberY);
                 obj.BlockNumberX = eval(this.BlockNumberX);
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, WorldspaceBlock.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WorldspaceBlock.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(WorldspaceBlock.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

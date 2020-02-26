@@ -1748,21 +1748,21 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public static class GenderedFormLinks
     {
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Male = initialValue;
                 this.Female = initialValue;
             }
         
             public Mask(
-                T Male,
-                T Female)
+                TItem Male,
+                TItem Female)
             {
                 this.Male = Male;
                 this.Female = Female;
@@ -1777,18 +1777,18 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
         
             #region Members
-            public T Male;
-            public T Female;
+            public TItem Male;
+            public TItem Female;
             #endregion
         
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
         
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Male, rhs.Male)) return false;
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
         
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Male)) return false;
                 if (!eval(this.Female)) return false;
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
         
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Male)) return true;
                 if (eval(this.Female)) return true;
@@ -1824,14 +1824,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
         
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new GenderedFormLinks.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
         
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Male = eval(this.Male);
                 obj.Female = eval(this.Female);
@@ -1853,7 +1853,7 @@ namespace Mutagen.Bethesda.Skyrim
         
             public void ToString(FileGeneration fg, GenderedFormLinks.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(GenderedFormLinks.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(GenderedFormLinks.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

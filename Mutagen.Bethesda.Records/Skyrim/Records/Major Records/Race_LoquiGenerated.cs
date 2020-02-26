@@ -440,70 +440,70 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            SkyrimMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            SkyrimMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.ActorEffect = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Skin = initialValue;
-                this.BodyTemplate = new MaskItem<T, BodyTemplate.Mask<T>?>(initialValue, new BodyTemplate.Mask<T>(initialValue));
-                this.Keywords = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Data = new MaskItem<T, RaceData.Mask<T>?>(initialValue, new RaceData.Mask<T>(initialValue));
+                this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(initialValue, new BodyTemplate.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(initialValue, new RaceData.Mask<TItem>(initialValue));
                 this.MaleSkeletalModel = initialValue;
                 this.FemaleSkeletalModel = initialValue;
-                this.MovementTypeNames = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Voices = new MaskItem<T, GenderedItem<T>?>(initialValue, default);
-                this.DecapitateArmors = new MaskItem<T, GenderedFormLinks.Mask<T>?>(initialValue, new GenderedFormLinks.Mask<T>(initialValue));
-                this.DefaultHairColors = new MaskItem<T, GenderedFormLinks.Mask<T>?>(initialValue, new GenderedFormLinks.Mask<T>(initialValue));
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.DecapitateArmors = new MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>(initialValue, new GenderedFormLinks.Mask<TItem>(initialValue));
+                this.DefaultHairColors = new MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>(initialValue, new GenderedFormLinks.Mask<TItem>(initialValue));
                 this.NumberOfTintsInList = initialValue;
                 this.FacegenMainClamp = initialValue;
                 this.FacegenFaceClamp = initialValue;
                 this.AttackRace = initialValue;
-                this.Attacks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Attack.Mask<T>?>>());
-                this.BodyData = new MaskItem<T, BodyDataPair.Mask<T>?>(initialValue, new BodyDataPair.Mask<T>(initialValue));
-                this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.BodyData = new MaskItem<TItem, BodyDataPair.Mask<TItem>?>(initialValue, new BodyDataPair.Mask<TItem>(initialValue));
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.BodyPartData = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T SkyrimMajorRecordFlags,
-                T FormVersion,
-                T Version2,
-                T Name,
-                T Description,
-                T ActorEffect,
-                T Skin,
-                T BodyTemplate,
-                T Keywords,
-                T Data,
-                T MaleSkeletalModel,
-                T FemaleSkeletalModel,
-                T MovementTypeNames,
-                T Voices,
-                T DecapitateArmors,
-                T DefaultHairColors,
-                T NumberOfTintsInList,
-                T FacegenMainClamp,
-                T FacegenFaceClamp,
-                T AttackRace,
-                T Attacks,
-                T BodyData,
-                T Hairs,
-                T Eyes,
-                T BodyPartData)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem SkyrimMajorRecordFlags,
+                TItem FormVersion,
+                TItem Version2,
+                TItem Name,
+                TItem Description,
+                TItem ActorEffect,
+                TItem Skin,
+                TItem BodyTemplate,
+                TItem Keywords,
+                TItem Data,
+                TItem MaleSkeletalModel,
+                TItem FemaleSkeletalModel,
+                TItem MovementTypeNames,
+                TItem Voices,
+                TItem DecapitateArmors,
+                TItem DefaultHairColors,
+                TItem NumberOfTintsInList,
+                TItem FacegenMainClamp,
+                TItem FacegenFaceClamp,
+                TItem AttackRace,
+                TItem Attacks,
+                TItem BodyData,
+                TItem Hairs,
+                TItem Eyes,
+                TItem BodyPartData)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -515,25 +515,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = Name;
                 this.Description = Description;
-                this.ActorEffect = new MaskItem<T, IEnumerable<(int Index, T Value)>>(ActorEffect, Enumerable.Empty<(int Index, T Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(ActorEffect, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Skin = Skin;
-                this.BodyTemplate = new MaskItem<T, BodyTemplate.Mask<T>?>(BodyTemplate, new BodyTemplate.Mask<T>(BodyTemplate));
-                this.Keywords = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Keywords, Enumerable.Empty<(int Index, T Value)>());
-                this.Data = new MaskItem<T, RaceData.Mask<T>?>(Data, new RaceData.Mask<T>(Data));
+                this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(BodyTemplate, new BodyTemplate.Mask<TItem>(BodyTemplate));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(Data, new RaceData.Mask<TItem>(Data));
                 this.MaleSkeletalModel = MaleSkeletalModel;
                 this.FemaleSkeletalModel = FemaleSkeletalModel;
-                this.MovementTypeNames = new MaskItem<T, IEnumerable<(int Index, T Value)>>(MovementTypeNames, Enumerable.Empty<(int Index, T Value)>());
-                this.Voices = new MaskItem<T, GenderedItem<T>?>(Voices, default);
-                this.DecapitateArmors = new MaskItem<T, GenderedFormLinks.Mask<T>?>(DecapitateArmors, new GenderedFormLinks.Mask<T>(DecapitateArmors));
-                this.DefaultHairColors = new MaskItem<T, GenderedFormLinks.Mask<T>?>(DefaultHairColors, new GenderedFormLinks.Mask<T>(DefaultHairColors));
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(MovementTypeNames, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(Voices, default);
+                this.DecapitateArmors = new MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>(DecapitateArmors, new GenderedFormLinks.Mask<TItem>(DecapitateArmors));
+                this.DefaultHairColors = new MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>(DefaultHairColors, new GenderedFormLinks.Mask<TItem>(DefaultHairColors));
                 this.NumberOfTintsInList = NumberOfTintsInList;
                 this.FacegenMainClamp = FacegenMainClamp;
                 this.FacegenFaceClamp = FacegenFaceClamp;
                 this.AttackRace = AttackRace;
-                this.Attacks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>>(Attacks, Enumerable.Empty<MaskItemIndexed<T, Attack.Mask<T>?>>());
-                this.BodyData = new MaskItem<T, BodyDataPair.Mask<T>?>(BodyData, new BodyDataPair.Mask<T>(BodyData));
-                this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Hairs, Enumerable.Empty<(int Index, T Value)>());
-                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Eyes, Enumerable.Empty<(int Index, T Value)>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>>(Attacks, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.BodyData = new MaskItem<TItem, BodyDataPair.Mask<TItem>?>(BodyData, new BodyDataPair.Mask<TItem>(BodyData));
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Hairs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.BodyPartData = BodyPartData;
             }
 
@@ -546,38 +546,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T Name;
-            public T Description;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? ActorEffect;
-            public T Skin;
-            public MaskItem<T, BodyTemplate.Mask<T>?>? BodyTemplate { get; set; }
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Keywords;
-            public MaskItem<T, RaceData.Mask<T>?>? Data { get; set; }
-            public T MaleSkeletalModel;
-            public T FemaleSkeletalModel;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? MovementTypeNames;
-            public MaskItem<T, GenderedItem<T>?>? Voices;
-            public MaskItem<T, GenderedFormLinks.Mask<T>?>? DecapitateArmors { get; set; }
-            public MaskItem<T, GenderedFormLinks.Mask<T>?>? DefaultHairColors { get; set; }
-            public T NumberOfTintsInList;
-            public T FacegenMainClamp;
-            public T FacegenFaceClamp;
-            public T AttackRace;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>>? Attacks;
-            public MaskItem<T, BodyDataPair.Mask<T>?>? BodyData { get; set; }
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Hairs;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Eyes;
-            public T BodyPartData;
+            public TItem Name;
+            public TItem Description;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? ActorEffect;
+            public TItem Skin;
+            public MaskItem<TItem, BodyTemplate.Mask<TItem>?>? BodyTemplate { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Keywords;
+            public MaskItem<TItem, RaceData.Mask<TItem>?>? Data { get; set; }
+            public TItem MaleSkeletalModel;
+            public TItem FemaleSkeletalModel;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? MovementTypeNames;
+            public MaskItem<TItem, GenderedItem<TItem>?>? Voices;
+            public MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>? DecapitateArmors { get; set; }
+            public MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>? DefaultHairColors { get; set; }
+            public TItem NumberOfTintsInList;
+            public TItem FacegenMainClamp;
+            public TItem FacegenFaceClamp;
+            public TItem AttackRace;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>>? Attacks;
+            public MaskItem<TItem, BodyDataPair.Mask<TItem>?>? BodyData { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Hairs;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Eyes;
+            public TItem BodyPartData;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -863,14 +863,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Race.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, Race.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Race.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

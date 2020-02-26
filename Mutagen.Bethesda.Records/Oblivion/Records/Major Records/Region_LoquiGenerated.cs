@@ -308,42 +308,42 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Icon = initialValue;
                 this.MapColor = initialValue;
                 this.Worldspace = initialValue;
-                this.Areas = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RegionArea.Mask<T>?>>());
-                this.Objects = new MaskItem<T, RegionDataObjects.Mask<T>?>(initialValue, new RegionDataObjects.Mask<T>(initialValue));
-                this.Weather = new MaskItem<T, RegionDataWeather.Mask<T>?>(initialValue, new RegionDataWeather.Mask<T>(initialValue));
-                this.MapName = new MaskItem<T, RegionDataMapName.Mask<T>?>(initialValue, new RegionDataMapName.Mask<T>(initialValue));
-                this.Grasses = new MaskItem<T, RegionDataGrasses.Mask<T>?>(initialValue, new RegionDataGrasses.Mask<T>(initialValue));
-                this.Sounds = new MaskItem<T, RegionDataSounds.Mask<T>?>(initialValue, new RegionDataSounds.Mask<T>(initialValue));
+                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, RegionDataObjects.Mask<TItem>?>(initialValue, new RegionDataObjects.Mask<TItem>(initialValue));
+                this.Weather = new MaskItem<TItem, RegionDataWeather.Mask<TItem>?>(initialValue, new RegionDataWeather.Mask<TItem>(initialValue));
+                this.MapName = new MaskItem<TItem, RegionDataMapName.Mask<TItem>?>(initialValue, new RegionDataMapName.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, RegionDataGrasses.Mask<TItem>?>(initialValue, new RegionDataGrasses.Mask<TItem>(initialValue));
+                this.Sounds = new MaskItem<TItem, RegionDataSounds.Mask<TItem>?>(initialValue, new RegionDataSounds.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Icon,
-                T MapColor,
-                T Worldspace,
-                T Areas,
-                T Objects,
-                T Weather,
-                T MapName,
-                T Grasses,
-                T Sounds)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Icon,
+                TItem MapColor,
+                TItem Worldspace,
+                TItem Areas,
+                TItem Objects,
+                TItem Weather,
+                TItem MapName,
+                TItem Grasses,
+                TItem Sounds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -354,12 +354,12 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.MapColor = MapColor;
                 this.Worldspace = Worldspace;
-                this.Areas = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea.Mask<T>?>>>(Areas, Enumerable.Empty<MaskItemIndexed<T, RegionArea.Mask<T>?>>());
-                this.Objects = new MaskItem<T, RegionDataObjects.Mask<T>?>(Objects, new RegionDataObjects.Mask<T>(Objects));
-                this.Weather = new MaskItem<T, RegionDataWeather.Mask<T>?>(Weather, new RegionDataWeather.Mask<T>(Weather));
-                this.MapName = new MaskItem<T, RegionDataMapName.Mask<T>?>(MapName, new RegionDataMapName.Mask<T>(MapName));
-                this.Grasses = new MaskItem<T, RegionDataGrasses.Mask<T>?>(Grasses, new RegionDataGrasses.Mask<T>(Grasses));
-                this.Sounds = new MaskItem<T, RegionDataSounds.Mask<T>?>(Sounds, new RegionDataSounds.Mask<T>(Sounds));
+                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>>(Areas, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, RegionDataObjects.Mask<TItem>?>(Objects, new RegionDataObjects.Mask<TItem>(Objects));
+                this.Weather = new MaskItem<TItem, RegionDataWeather.Mask<TItem>?>(Weather, new RegionDataWeather.Mask<TItem>(Weather));
+                this.MapName = new MaskItem<TItem, RegionDataMapName.Mask<TItem>?>(MapName, new RegionDataMapName.Mask<TItem>(MapName));
+                this.Grasses = new MaskItem<TItem, RegionDataGrasses.Mask<TItem>?>(Grasses, new RegionDataGrasses.Mask<TItem>(Grasses));
+                this.Sounds = new MaskItem<TItem, RegionDataSounds.Mask<TItem>?>(Sounds, new RegionDataSounds.Mask<TItem>(Sounds));
             }
 
             #pragma warning disable CS8618
@@ -371,25 +371,25 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Icon;
-            public T MapColor;
-            public T Worldspace;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea.Mask<T>?>>>? Areas;
-            public MaskItem<T, RegionDataObjects.Mask<T>?>? Objects { get; set; }
-            public MaskItem<T, RegionDataWeather.Mask<T>?>? Weather { get; set; }
-            public MaskItem<T, RegionDataMapName.Mask<T>?>? MapName { get; set; }
-            public MaskItem<T, RegionDataGrasses.Mask<T>?>? Grasses { get; set; }
-            public MaskItem<T, RegionDataSounds.Mask<T>?>? Sounds { get; set; }
+            public TItem Icon;
+            public TItem MapColor;
+            public TItem Worldspace;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>>? Areas;
+            public MaskItem<TItem, RegionDataObjects.Mask<TItem>?>? Objects { get; set; }
+            public MaskItem<TItem, RegionDataWeather.Mask<TItem>?>? Weather { get; set; }
+            public MaskItem<TItem, RegionDataMapName.Mask<TItem>?>? MapName { get; set; }
+            public MaskItem<TItem, RegionDataGrasses.Mask<TItem>?>? Grasses { get; set; }
+            public MaskItem<TItem, RegionDataSounds.Mask<TItem>?>? Sounds { get; set; }
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Icon)) return false;
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Icon)) return true;
@@ -519,14 +519,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Region.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Icon = eval(this.Icon);
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Region.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Region.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

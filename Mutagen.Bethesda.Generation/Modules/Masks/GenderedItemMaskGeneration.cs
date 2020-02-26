@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateForCtor(FileGeneration fg, TypeGeneration field, string typeStr, string valueStr)
         {
             if (!field.IntegrateField) return;
-            fg.AppendLine($"this.{field.Name} = {(field.HasBeenSet ? $"new MaskItem<T, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default)" : $"new GenderedItem<{SubMaskString(field, typeStr)}>({valueStr}, {valueStr})")};");
+            fg.AppendLine($"this.{field.Name} = {(field.HasBeenSet ? $"new MaskItem<{MaskModule.GenItem}, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default)" : $"new GenderedItem<{SubMaskString(field, typeStr)}>({valueStr}, {valueStr})")};");
         }
 
         public override void GenerateMaskToString(FileGeneration fg, TypeGeneration field, string accessor, bool topLevel, bool printMask)

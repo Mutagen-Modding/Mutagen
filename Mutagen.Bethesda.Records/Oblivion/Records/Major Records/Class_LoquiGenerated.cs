@@ -321,44 +321,44 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.Icon = initialValue;
-                this.PrimaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Specialization = initialValue;
-                this.SecondaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = initialValue;
                 this.ClassServices = initialValue;
-                this.Training = new MaskItem<T, ClassTraining.Mask<T>?>(initialValue, new ClassTraining.Mask<T>(initialValue));
+                this.Training = new MaskItem<TItem, ClassTraining.Mask<TItem>?>(initialValue, new ClassTraining.Mask<TItem>(initialValue));
                 this.DATADataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Description,
-                T Icon,
-                T PrimaryAttributes,
-                T Specialization,
-                T SecondaryAttributes,
-                T Flags,
-                T ClassServices,
-                T Training,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Description,
+                TItem Icon,
+                TItem PrimaryAttributes,
+                TItem Specialization,
+                TItem SecondaryAttributes,
+                TItem Flags,
+                TItem ClassServices,
+                TItem Training,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -369,12 +369,12 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Description = Description;
                 this.Icon = Icon;
-                this.PrimaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PrimaryAttributes, Enumerable.Empty<(int Index, T Value)>());
+                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(PrimaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Specialization = Specialization;
-                this.SecondaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(SecondaryAttributes, Enumerable.Empty<(int Index, T Value)>());
+                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(SecondaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = Flags;
                 this.ClassServices = ClassServices;
-                this.Training = new MaskItem<T, ClassTraining.Mask<T>?>(Training, new ClassTraining.Mask<T>(Training));
+                this.Training = new MaskItem<TItem, ClassTraining.Mask<TItem>?>(Training, new ClassTraining.Mask<TItem>(Training));
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -387,26 +387,26 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public T Description;
-            public T Icon;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? PrimaryAttributes;
-            public T Specialization;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? SecondaryAttributes;
-            public T Flags;
-            public T ClassServices;
-            public MaskItem<T, ClassTraining.Mask<T>?>? Training { get; set; }
-            public T DATADataTypeState;
+            public TItem Name;
+            public TItem Description;
+            public TItem Icon;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? PrimaryAttributes;
+            public TItem Specialization;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? SecondaryAttributes;
+            public TItem Flags;
+            public TItem ClassServices;
+            public MaskItem<TItem, ClassTraining.Mask<TItem>?>? Training { get; set; }
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -526,14 +526,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Class.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Class.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Class.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Class.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

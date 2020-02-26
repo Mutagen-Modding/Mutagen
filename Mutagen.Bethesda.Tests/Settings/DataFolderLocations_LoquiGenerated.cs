@@ -82,21 +82,21 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Oblivion = initialValue;
                 this.Skyrim = initialValue;
             }
 
             public Mask(
-                T Oblivion,
-                T Skyrim)
+                TItem Oblivion,
+                TItem Skyrim)
             {
                 this.Oblivion = Oblivion;
                 this.Skyrim = Skyrim;
@@ -111,18 +111,18 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Members
-            public T Oblivion;
-            public T Skyrim;
+            public TItem Oblivion;
+            public TItem Skyrim;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Oblivion, rhs.Oblivion)) return false;
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Oblivion)) return false;
                 if (!eval(this.Skyrim)) return false;
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Oblivion)) return true;
                 if (eval(this.Skyrim)) return true;
@@ -158,14 +158,14 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new DataFolderLocations.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Oblivion = eval(this.Oblivion);
                 obj.Skyrim = eval(this.Skyrim);
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Tests
 
             public void ToString(FileGeneration fg, DataFolderLocations.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DataFolderLocations.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(DataFolderLocations.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

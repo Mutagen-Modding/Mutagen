@@ -370,14 +370,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            Place.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            Place.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
@@ -385,41 +385,41 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Climate = initialValue;
                 this.Water = initialValue;
                 this.Icon = initialValue;
-                this.MapData = new MaskItem<T, MapData.Mask<T>?>(initialValue, new MapData.Mask<T>(initialValue));
+                this.MapData = new MaskItem<TItem, MapData.Mask<TItem>?>(initialValue, new MapData.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.ObjectBoundsMin = initialValue;
                 this.ObjectBoundsMax = initialValue;
                 this.Music = initialValue;
                 this.OffsetData = initialValue;
-                this.Road = new MaskItem<T, Road.Mask<T>?>(initialValue, new Road.Mask<T>(initialValue));
-                this.TopCell = new MaskItem<T, Cell.Mask<T>?>(initialValue, new Cell.Mask<T>(initialValue));
+                this.Road = new MaskItem<TItem, Road.Mask<TItem>?>(initialValue, new Road.Mask<TItem>(initialValue));
+                this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(initialValue, new Cell.Mask<TItem>(initialValue));
                 this.SubCellsTimestamp = initialValue;
-                this.SubCells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
                 this.UsingOffsetLength = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Parent,
-                T Climate,
-                T Water,
-                T Icon,
-                T MapData,
-                T Flags,
-                T ObjectBoundsMin,
-                T ObjectBoundsMax,
-                T Music,
-                T OffsetData,
-                T Road,
-                T TopCell,
-                T SubCellsTimestamp,
-                T SubCells,
-                T UsingOffsetLength)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Parent,
+                TItem Climate,
+                TItem Water,
+                TItem Icon,
+                TItem MapData,
+                TItem Flags,
+                TItem ObjectBoundsMin,
+                TItem ObjectBoundsMax,
+                TItem Music,
+                TItem OffsetData,
+                TItem Road,
+                TItem TopCell,
+                TItem SubCellsTimestamp,
+                TItem SubCells,
+                TItem UsingOffsetLength)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -432,16 +432,16 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Climate = Climate;
                 this.Water = Water;
                 this.Icon = Icon;
-                this.MapData = new MaskItem<T, MapData.Mask<T>?>(MapData, new MapData.Mask<T>(MapData));
+                this.MapData = new MaskItem<TItem, MapData.Mask<TItem>?>(MapData, new MapData.Mask<TItem>(MapData));
                 this.Flags = Flags;
                 this.ObjectBoundsMin = ObjectBoundsMin;
                 this.ObjectBoundsMax = ObjectBoundsMax;
                 this.Music = Music;
                 this.OffsetData = OffsetData;
-                this.Road = new MaskItem<T, Road.Mask<T>?>(Road, new Road.Mask<T>(Road));
-                this.TopCell = new MaskItem<T, Cell.Mask<T>?>(TopCell, new Cell.Mask<T>(TopCell));
+                this.Road = new MaskItem<TItem, Road.Mask<TItem>?>(Road, new Road.Mask<TItem>(Road));
+                this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(TopCell, new Cell.Mask<TItem>(TopCell));
                 this.SubCellsTimestamp = SubCellsTimestamp;
-                this.SubCells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>>(SubCells, Enumerable.Empty<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
                 this.UsingOffsetLength = UsingOffsetLength;
             }
 
@@ -454,32 +454,32 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public T Parent;
-            public T Climate;
-            public T Water;
-            public T Icon;
-            public MaskItem<T, MapData.Mask<T>?>? MapData { get; set; }
-            public T Flags;
-            public T ObjectBoundsMin;
-            public T ObjectBoundsMax;
-            public T Music;
-            public T OffsetData;
-            public MaskItem<T, Road.Mask<T>?>? Road { get; set; }
-            public MaskItem<T, Cell.Mask<T>?>? TopCell { get; set; }
-            public T SubCellsTimestamp;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>>? SubCells;
-            public T UsingOffsetLength;
+            public TItem Name;
+            public TItem Parent;
+            public TItem Climate;
+            public TItem Water;
+            public TItem Icon;
+            public MaskItem<TItem, MapData.Mask<TItem>?>? MapData { get; set; }
+            public TItem Flags;
+            public TItem ObjectBoundsMin;
+            public TItem ObjectBoundsMax;
+            public TItem Music;
+            public TItem OffsetData;
+            public MaskItem<TItem, Road.Mask<TItem>?>? Road { get; set; }
+            public MaskItem<TItem, Cell.Mask<TItem>?>? TopCell { get; set; }
+            public TItem SubCellsTimestamp;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>>? SubCells;
+            public TItem UsingOffsetLength;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -621,14 +621,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Worldspace.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Worldspace.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Worldspace.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Worldspace.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

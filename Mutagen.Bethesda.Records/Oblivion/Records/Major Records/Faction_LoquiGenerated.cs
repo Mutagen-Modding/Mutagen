@@ -269,34 +269,34 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Relation.Mask<T>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
                 this.Flags = initialValue;
                 this.CrimeGoldMultiplier = initialValue;
-                this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Rank.Mask<T>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Relations,
-                T Flags,
-                T CrimeGoldMultiplier,
-                T Ranks)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Relations,
+                TItem Flags,
+                TItem CrimeGoldMultiplier,
+                TItem Ranks)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -305,10 +305,10 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<T, Relation.Mask<T>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
                 this.Flags = Flags;
                 this.CrimeGoldMultiplier = CrimeGoldMultiplier;
-                this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>(Ranks, Enumerable.Empty<MaskItemIndexed<T, Rank.Mask<T>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -320,21 +320,21 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>? Relations;
-            public T Flags;
-            public T CrimeGoldMultiplier;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>? Ranks;
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>? Relations;
+            public TItem Flags;
+            public TItem CrimeGoldMultiplier;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>? Ranks;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -430,14 +430,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Faction.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Faction.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Faction.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Faction.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

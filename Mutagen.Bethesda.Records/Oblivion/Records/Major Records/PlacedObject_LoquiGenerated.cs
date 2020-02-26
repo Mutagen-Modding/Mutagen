@@ -463,35 +463,35 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Base = initialValue;
                 this.XPCIFluff = initialValue;
                 this.FULLFluff = initialValue;
-                this.TeleportDestination = new MaskItem<T, TeleportDestination.Mask<T>?>(initialValue, new TeleportDestination.Mask<T>(initialValue));
-                this.Lock = new MaskItem<T, LockInformation.Mask<T>?>(initialValue, new LockInformation.Mask<T>(initialValue));
+                this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(initialValue, new TeleportDestination.Mask<TItem>(initialValue));
+                this.Lock = new MaskItem<TItem, LockInformation.Mask<TItem>?>(initialValue, new LockInformation.Mask<TItem>(initialValue));
                 this.Owner = initialValue;
                 this.FactionRank = initialValue;
                 this.GlobalVariable = initialValue;
-                this.EnableParent = new MaskItem<T, EnableParent.Mask<T>?>(initialValue, new EnableParent.Mask<T>(initialValue));
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
                 this.Target = initialValue;
                 this.SpeedTreeSeed = initialValue;
-                this.DistantLODData = new MaskItem<T, DistantLODData.Mask<T>?>(initialValue, new DistantLODData.Mask<T>(initialValue));
+                this.DistantLODData = new MaskItem<TItem, DistantLODData.Mask<TItem>?>(initialValue, new DistantLODData.Mask<TItem>(initialValue));
                 this.Charge = initialValue;
                 this.Health = initialValue;
                 this.LevelModifier = initialValue;
                 this.Unknown = initialValue;
                 this.ActionFlags = initialValue;
                 this.Count = initialValue;
-                this.MapMarker = new MaskItem<T, MapMarker.Mask<T>?>(initialValue, new MapMarker.Mask<T>(initialValue));
+                this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(initialValue, new MapMarker.Mask<TItem>(initialValue));
                 this.OpenByDefault = initialValue;
                 this.RagdollData = initialValue;
                 this.Scale = initialValue;
@@ -502,37 +502,37 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Base,
-                T XPCIFluff,
-                T FULLFluff,
-                T TeleportDestination,
-                T Lock,
-                T Owner,
-                T FactionRank,
-                T GlobalVariable,
-                T EnableParent,
-                T Target,
-                T SpeedTreeSeed,
-                T DistantLODData,
-                T Charge,
-                T Health,
-                T LevelModifier,
-                T Unknown,
-                T ActionFlags,
-                T Count,
-                T MapMarker,
-                T OpenByDefault,
-                T RagdollData,
-                T Scale,
-                T ContainedSoul,
-                T Position,
-                T Rotation,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Base,
+                TItem XPCIFluff,
+                TItem FULLFluff,
+                TItem TeleportDestination,
+                TItem Lock,
+                TItem Owner,
+                TItem FactionRank,
+                TItem GlobalVariable,
+                TItem EnableParent,
+                TItem Target,
+                TItem SpeedTreeSeed,
+                TItem DistantLODData,
+                TItem Charge,
+                TItem Health,
+                TItem LevelModifier,
+                TItem Unknown,
+                TItem ActionFlags,
+                TItem Count,
+                TItem MapMarker,
+                TItem OpenByDefault,
+                TItem RagdollData,
+                TItem Scale,
+                TItem ContainedSoul,
+                TItem Position,
+                TItem Rotation,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -543,22 +543,22 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Base = Base;
                 this.XPCIFluff = XPCIFluff;
                 this.FULLFluff = FULLFluff;
-                this.TeleportDestination = new MaskItem<T, TeleportDestination.Mask<T>?>(TeleportDestination, new TeleportDestination.Mask<T>(TeleportDestination));
-                this.Lock = new MaskItem<T, LockInformation.Mask<T>?>(Lock, new LockInformation.Mask<T>(Lock));
+                this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(TeleportDestination, new TeleportDestination.Mask<TItem>(TeleportDestination));
+                this.Lock = new MaskItem<TItem, LockInformation.Mask<TItem>?>(Lock, new LockInformation.Mask<TItem>(Lock));
                 this.Owner = Owner;
                 this.FactionRank = FactionRank;
                 this.GlobalVariable = GlobalVariable;
-                this.EnableParent = new MaskItem<T, EnableParent.Mask<T>?>(EnableParent, new EnableParent.Mask<T>(EnableParent));
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
                 this.Target = Target;
                 this.SpeedTreeSeed = SpeedTreeSeed;
-                this.DistantLODData = new MaskItem<T, DistantLODData.Mask<T>?>(DistantLODData, new DistantLODData.Mask<T>(DistantLODData));
+                this.DistantLODData = new MaskItem<TItem, DistantLODData.Mask<TItem>?>(DistantLODData, new DistantLODData.Mask<TItem>(DistantLODData));
                 this.Charge = Charge;
                 this.Health = Health;
                 this.LevelModifier = LevelModifier;
                 this.Unknown = Unknown;
                 this.ActionFlags = ActionFlags;
                 this.Count = Count;
-                this.MapMarker = new MaskItem<T, MapMarker.Mask<T>?>(MapMarker, new MapMarker.Mask<T>(MapMarker));
+                this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(MapMarker, new MapMarker.Mask<TItem>(MapMarker));
                 this.OpenByDefault = OpenByDefault;
                 this.RagdollData = RagdollData;
                 this.Scale = Scale;
@@ -577,42 +577,42 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Base;
-            public T XPCIFluff;
-            public T FULLFluff;
-            public MaskItem<T, TeleportDestination.Mask<T>?>? TeleportDestination { get; set; }
-            public MaskItem<T, LockInformation.Mask<T>?>? Lock { get; set; }
-            public T Owner;
-            public T FactionRank;
-            public T GlobalVariable;
-            public MaskItem<T, EnableParent.Mask<T>?>? EnableParent { get; set; }
-            public T Target;
-            public T SpeedTreeSeed;
-            public MaskItem<T, DistantLODData.Mask<T>?>? DistantLODData { get; set; }
-            public T Charge;
-            public T Health;
-            public T LevelModifier;
-            public T Unknown;
-            public T ActionFlags;
-            public T Count;
-            public MaskItem<T, MapMarker.Mask<T>?>? MapMarker { get; set; }
-            public T OpenByDefault;
-            public T RagdollData;
-            public T Scale;
-            public T ContainedSoul;
-            public T Position;
-            public T Rotation;
-            public T DATADataTypeState;
+            public TItem Base;
+            public TItem XPCIFluff;
+            public TItem FULLFluff;
+            public MaskItem<TItem, TeleportDestination.Mask<TItem>?>? TeleportDestination { get; set; }
+            public MaskItem<TItem, LockInformation.Mask<TItem>?>? Lock { get; set; }
+            public TItem Owner;
+            public TItem FactionRank;
+            public TItem GlobalVariable;
+            public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
+            public TItem Target;
+            public TItem SpeedTreeSeed;
+            public MaskItem<TItem, DistantLODData.Mask<TItem>?>? DistantLODData { get; set; }
+            public TItem Charge;
+            public TItem Health;
+            public TItem LevelModifier;
+            public TItem Unknown;
+            public TItem ActionFlags;
+            public TItem Count;
+            public MaskItem<TItem, MapMarker.Mask<TItem>?>? MapMarker { get; set; }
+            public TItem OpenByDefault;
+            public TItem RagdollData;
+            public TItem Scale;
+            public TItem ContainedSoul;
+            public TItem Position;
+            public TItem Rotation;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Base)) return false;
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Base)) return true;
@@ -788,14 +788,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new PlacedObject.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Base = eval(this.Base);
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, PlacedObject.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PlacedObject.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

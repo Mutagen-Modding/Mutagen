@@ -300,47 +300,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Flags = initialValue;
                 this.FormID = initialValue;
                 this.Version = initialValue;
-                this.Stats = new MaskItem<T, ModStats.Mask<T>?>(initialValue, new ModStats.Mask<T>(initialValue));
+                this.Stats = new MaskItem<TItem, ModStats.Mask<TItem>?>(initialValue, new ModStats.Mask<TItem>(initialValue));
                 this.TypeOffsets = initialValue;
                 this.Deleted = initialValue;
                 this.Author = initialValue;
                 this.Description = initialValue;
-                this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, MasterReference.Mask<T>?>>());
+                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
                 this.VestigialData = initialValue;
             }
 
             public Mask(
-                T Flags,
-                T FormID,
-                T Version,
-                T Stats,
-                T TypeOffsets,
-                T Deleted,
-                T Author,
-                T Description,
-                T MasterReferences,
-                T VestigialData)
+                TItem Flags,
+                TItem FormID,
+                TItem Version,
+                TItem Stats,
+                TItem TypeOffsets,
+                TItem Deleted,
+                TItem Author,
+                TItem Description,
+                TItem MasterReferences,
+                TItem VestigialData)
             {
                 this.Flags = Flags;
                 this.FormID = FormID;
                 this.Version = Version;
-                this.Stats = new MaskItem<T, ModStats.Mask<T>?>(Stats, new ModStats.Mask<T>(Stats));
+                this.Stats = new MaskItem<TItem, ModStats.Mask<TItem>?>(Stats, new ModStats.Mask<TItem>(Stats));
                 this.TypeOffsets = TypeOffsets;
                 this.Deleted = Deleted;
                 this.Author = Author;
                 this.Description = Description;
-                this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>(MasterReferences, Enumerable.Empty<MaskItemIndexed<T, MasterReference.Mask<T>?>>());
+                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>>(MasterReferences, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
                 this.VestigialData = VestigialData;
             }
 
@@ -353,26 +353,26 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Flags;
-            public T FormID;
-            public T Version;
-            public MaskItem<T, ModStats.Mask<T>?>? Stats { get; set; }
-            public T TypeOffsets;
-            public T Deleted;
-            public T Author;
-            public T Description;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>? MasterReferences;
-            public T VestigialData;
+            public TItem Flags;
+            public TItem FormID;
+            public TItem Version;
+            public MaskItem<TItem, ModStats.Mask<TItem>?>? Stats { get; set; }
+            public TItem TypeOffsets;
+            public TItem Deleted;
+            public TItem Author;
+            public TItem Description;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>>? MasterReferences;
+            public TItem VestigialData;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.FormID)) return false;
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Flags)) return true;
                 if (eval(this.FormID)) return true;
@@ -470,14 +470,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new ModHeader.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Flags = eval(this.Flags);
                 obj.FormID = eval(this.FormID);
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, ModHeader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ModHeader.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(ModHeader.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

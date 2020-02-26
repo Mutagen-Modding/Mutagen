@@ -321,46 +321,46 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.DialogType = initialValue;
                 this.Flags = initialValue;
                 this.Quest = initialValue;
                 this.PreviousTopic = initialValue;
-                this.Topics = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Responses = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, DialogResponse.Mask<T>?>>());
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
-                this.Choices = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.LinkFrom = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Script = new MaskItem<T, ScriptFields.Mask<T>?>(initialValue, new ScriptFields.Mask<T>(initialValue));
+                this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Choices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Script = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
                 this.DATADataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T DialogType,
-                T Flags,
-                T Quest,
-                T PreviousTopic,
-                T Topics,
-                T Responses,
-                T Conditions,
-                T Choices,
-                T LinkFrom,
-                T Script,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem DialogType,
+                TItem Flags,
+                TItem Quest,
+                TItem PreviousTopic,
+                TItem Topics,
+                TItem Responses,
+                TItem Conditions,
+                TItem Choices,
+                TItem LinkFrom,
+                TItem Script,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -372,12 +372,12 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = Flags;
                 this.Quest = Quest;
                 this.PreviousTopic = PreviousTopic;
-                this.Topics = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Topics, Enumerable.Empty<(int Index, T Value)>());
-                this.Responses = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>>(Responses, Enumerable.Empty<MaskItemIndexed<T, DialogResponse.Mask<T>?>>());
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
-                this.Choices = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Choices, Enumerable.Empty<(int Index, T Value)>());
-                this.LinkFrom = new MaskItem<T, IEnumerable<(int Index, T Value)>>(LinkFrom, Enumerable.Empty<(int Index, T Value)>());
-                this.Script = new MaskItem<T, ScriptFields.Mask<T>?>(Script, new ScriptFields.Mask<T>(Script));
+                this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Topics, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Choices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Choices, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(LinkFrom, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Script = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(Script, new ScriptFields.Mask<TItem>(Script));
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -390,27 +390,27 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T DialogType;
-            public T Flags;
-            public T Quest;
-            public T PreviousTopic;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Topics;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>>? Responses;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Choices;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? LinkFrom;
-            public MaskItem<T, ScriptFields.Mask<T>?>? Script { get; set; }
-            public T DATADataTypeState;
+            public TItem DialogType;
+            public TItem Flags;
+            public TItem Quest;
+            public TItem PreviousTopic;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Topics;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>>? Responses;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>? Conditions;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Choices;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? LinkFrom;
+            public MaskItem<TItem, ScriptFields.Mask<TItem>?>? Script { get; set; }
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.DialogType)) return false;
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.DialogType)) return true;
@@ -598,14 +598,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new DialogItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.DialogType = eval(this.DialogType);
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, DialogItem.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DialogItem.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(DialogItem.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

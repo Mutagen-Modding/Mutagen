@@ -260,13 +260,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.DataType = initialValue;
                 this.Flags = initialValue;
@@ -275,10 +275,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T DataType,
-                T Flags,
-                T Priority,
-                T RDATDataTypeState)
+                TItem DataType,
+                TItem Flags,
+                TItem Priority,
+                TItem RDATDataTypeState)
             {
                 this.DataType = DataType;
                 this.Flags = Flags;
@@ -295,20 +295,20 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T DataType;
-            public T Flags;
-            public T Priority;
-            public T RDATDataTypeState;
+            public TItem DataType;
+            public TItem Flags;
+            public TItem Priority;
+            public TItem RDATDataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.DataType, rhs.DataType)) return false;
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public virtual bool All(Func<T, bool> eval)
+            public virtual bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.DataType)) return false;
                 if (!eval(this.Flags)) return false;
@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public virtual bool Any(Func<T, bool> eval)
+            public virtual bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.DataType)) return true;
                 if (eval(this.Flags)) return true;
@@ -352,14 +352,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new RegionData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.DataType = eval(this.DataType);
                 obj.Flags = eval(this.Flags);
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, RegionData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RegionData.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(RegionData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

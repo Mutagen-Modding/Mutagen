@@ -284,38 +284,38 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Flags = initialValue;
                 this.GeneralType = initialValue;
-                this.Location = new MaskItem<T, AIPackageLocation.Mask<T>?>(initialValue, new AIPackageLocation.Mask<T>(initialValue));
-                this.Schedule = new MaskItem<T, AIPackageSchedule.Mask<T>?>(initialValue, new AIPackageSchedule.Mask<T>(initialValue));
-                this.Target = new MaskItem<T, AIPackageTarget.Mask<T>?>(initialValue, new AIPackageTarget.Mask<T>(initialValue));
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Location = new MaskItem<TItem, AIPackageLocation.Mask<TItem>?>(initialValue, new AIPackageLocation.Mask<TItem>(initialValue));
+                this.Schedule = new MaskItem<TItem, AIPackageSchedule.Mask<TItem>?>(initialValue, new AIPackageSchedule.Mask<TItem>(initialValue));
+                this.Target = new MaskItem<TItem, AIPackageTarget.Mask<TItem>?>(initialValue, new AIPackageTarget.Mask<TItem>(initialValue));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.PKDTDataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Flags,
-                T GeneralType,
-                T Location,
-                T Schedule,
-                T Target,
-                T Conditions,
-                T PKDTDataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Flags,
+                TItem GeneralType,
+                TItem Location,
+                TItem Schedule,
+                TItem Target,
+                TItem Conditions,
+                TItem PKDTDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -325,10 +325,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Flags = Flags;
                 this.GeneralType = GeneralType;
-                this.Location = new MaskItem<T, AIPackageLocation.Mask<T>?>(Location, new AIPackageLocation.Mask<T>(Location));
-                this.Schedule = new MaskItem<T, AIPackageSchedule.Mask<T>?>(Schedule, new AIPackageSchedule.Mask<T>(Schedule));
-                this.Target = new MaskItem<T, AIPackageTarget.Mask<T>?>(Target, new AIPackageTarget.Mask<T>(Target));
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Location = new MaskItem<TItem, AIPackageLocation.Mask<TItem>?>(Location, new AIPackageLocation.Mask<TItem>(Location));
+                this.Schedule = new MaskItem<TItem, AIPackageSchedule.Mask<TItem>?>(Schedule, new AIPackageSchedule.Mask<TItem>(Schedule));
+                this.Target = new MaskItem<TItem, AIPackageTarget.Mask<TItem>?>(Target, new AIPackageTarget.Mask<TItem>(Target));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.PKDTDataTypeState = PKDTDataTypeState;
             }
 
@@ -341,23 +341,23 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Flags;
-            public T GeneralType;
-            public MaskItem<T, AIPackageLocation.Mask<T>?>? Location { get; set; }
-            public MaskItem<T, AIPackageSchedule.Mask<T>?>? Schedule { get; set; }
-            public MaskItem<T, AIPackageTarget.Mask<T>?>? Target { get; set; }
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public T PKDTDataTypeState;
+            public TItem Flags;
+            public TItem GeneralType;
+            public MaskItem<TItem, AIPackageLocation.Mask<TItem>?>? Location { get; set; }
+            public MaskItem<TItem, AIPackageSchedule.Mask<TItem>?>? Schedule { get; set; }
+            public MaskItem<TItem, AIPackageTarget.Mask<TItem>?>? Target { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>? Conditions;
+            public TItem PKDTDataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Flags)) return false;
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Flags)) return true;
@@ -463,14 +463,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new AIPackage.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Flags = eval(this.Flags);
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, AIPackage.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AIPackage.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(AIPackage.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -329,58 +329,58 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Flags = initialValue;
                 this.FormID = initialValue;
                 this.Version = initialValue;
                 this.FormVersion = initialValue;
                 this.Version2 = initialValue;
-                this.Stats = new MaskItem<T, ModStats.Mask<T>?>(initialValue, new ModStats.Mask<T>(initialValue));
+                this.Stats = new MaskItem<TItem, ModStats.Mask<TItem>?>(initialValue, new ModStats.Mask<TItem>(initialValue));
                 this.TypeOffsets = initialValue;
                 this.Deleted = initialValue;
                 this.Author = initialValue;
                 this.Description = initialValue;
-                this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, MasterReference.Mask<T>?>>());
-                this.OverriddenForms = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
+                this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.INTV = initialValue;
                 this.INCC = initialValue;
             }
 
             public Mask(
-                T Flags,
-                T FormID,
-                T Version,
-                T FormVersion,
-                T Version2,
-                T Stats,
-                T TypeOffsets,
-                T Deleted,
-                T Author,
-                T Description,
-                T MasterReferences,
-                T OverriddenForms,
-                T INTV,
-                T INCC)
+                TItem Flags,
+                TItem FormID,
+                TItem Version,
+                TItem FormVersion,
+                TItem Version2,
+                TItem Stats,
+                TItem TypeOffsets,
+                TItem Deleted,
+                TItem Author,
+                TItem Description,
+                TItem MasterReferences,
+                TItem OverriddenForms,
+                TItem INTV,
+                TItem INCC)
             {
                 this.Flags = Flags;
                 this.FormID = FormID;
                 this.Version = Version;
                 this.FormVersion = FormVersion;
                 this.Version2 = Version2;
-                this.Stats = new MaskItem<T, ModStats.Mask<T>?>(Stats, new ModStats.Mask<T>(Stats));
+                this.Stats = new MaskItem<TItem, ModStats.Mask<TItem>?>(Stats, new ModStats.Mask<TItem>(Stats));
                 this.TypeOffsets = TypeOffsets;
                 this.Deleted = Deleted;
                 this.Author = Author;
                 this.Description = Description;
-                this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>(MasterReferences, Enumerable.Empty<MaskItemIndexed<T, MasterReference.Mask<T>?>>());
-                this.OverriddenForms = new MaskItem<T, IEnumerable<(int Index, T Value)>>(OverriddenForms, Enumerable.Empty<(int Index, T Value)>());
+                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>>(MasterReferences, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
+                this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(OverriddenForms, Enumerable.Empty<(int Index, TItem Value)>());
                 this.INTV = INTV;
                 this.INCC = INCC;
             }
@@ -394,30 +394,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T Flags;
-            public T FormID;
-            public T Version;
-            public T FormVersion;
-            public T Version2;
-            public MaskItem<T, ModStats.Mask<T>?>? Stats { get; set; }
-            public T TypeOffsets;
-            public T Deleted;
-            public T Author;
-            public T Description;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>? MasterReferences;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? OverriddenForms;
-            public T INTV;
-            public T INCC;
+            public TItem Flags;
+            public TItem FormID;
+            public TItem Version;
+            public TItem FormVersion;
+            public TItem Version2;
+            public MaskItem<TItem, ModStats.Mask<TItem>?>? Stats { get; set; }
+            public TItem TypeOffsets;
+            public TItem Deleted;
+            public TItem Author;
+            public TItem Description;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>>? MasterReferences;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? OverriddenForms;
+            public TItem INTV;
+            public TItem INCC;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.FormID)) return false;
@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Flags)) return true;
                 if (eval(this.FormID)) return true;
@@ -551,14 +551,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new ModHeader.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Flags = eval(this.Flags);
                 obj.FormID = eval(this.FormID);
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, ModHeader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ModHeader.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(ModHeader.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

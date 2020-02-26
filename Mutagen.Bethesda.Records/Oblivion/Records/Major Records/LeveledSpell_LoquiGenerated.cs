@@ -244,30 +244,30 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            SpellAbstract.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            SpellAbstract.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.ChanceNone = initialValue;
                 this.Flags = initialValue;
-                this.Entries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>());
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T ChanceNone,
-                T Flags,
-                T Entries)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem ChanceNone,
+                TItem Flags,
+                TItem Entries)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.ChanceNone = ChanceNone;
                 this.Flags = Flags;
-                this.Entries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>>(Entries, Enumerable.Empty<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -289,19 +289,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T ChanceNone;
-            public T Flags;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>>? Entries;
+            public TItem ChanceNone;
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>>? Entries;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.ChanceNone)) return false;
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.ChanceNone)) return true;
@@ -367,14 +367,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new LeveledSpell.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ChanceNone = eval(this.ChanceNone);
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, LeveledSpell.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LeveledSpell.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(LeveledSpell.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

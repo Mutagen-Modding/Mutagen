@@ -329,21 +329,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Base = initialValue;
                 this.XPCIFluff = initialValue;
                 this.FULLFluff = initialValue;
-                this.DistantLODData = new MaskItem<T, DistantLODData.Mask<T>?>(initialValue, new DistantLODData.Mask<T>(initialValue));
-                this.EnableParent = new MaskItem<T, EnableParent.Mask<T>?>(initialValue, new EnableParent.Mask<T>(initialValue));
+                this.DistantLODData = new MaskItem<TItem, DistantLODData.Mask<TItem>?>(initialValue, new DistantLODData.Mask<TItem>(initialValue));
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
                 this.MerchantContainer = initialValue;
                 this.Horse = initialValue;
                 this.RagdollData = initialValue;
@@ -354,23 +354,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Base,
-                T XPCIFluff,
-                T FULLFluff,
-                T DistantLODData,
-                T EnableParent,
-                T MerchantContainer,
-                T Horse,
-                T RagdollData,
-                T Scale,
-                T Position,
-                T Rotation,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Base,
+                TItem XPCIFluff,
+                TItem FULLFluff,
+                TItem DistantLODData,
+                TItem EnableParent,
+                TItem MerchantContainer,
+                TItem Horse,
+                TItem RagdollData,
+                TItem Scale,
+                TItem Position,
+                TItem Rotation,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -381,8 +381,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Base = Base;
                 this.XPCIFluff = XPCIFluff;
                 this.FULLFluff = FULLFluff;
-                this.DistantLODData = new MaskItem<T, DistantLODData.Mask<T>?>(DistantLODData, new DistantLODData.Mask<T>(DistantLODData));
-                this.EnableParent = new MaskItem<T, EnableParent.Mask<T>?>(EnableParent, new EnableParent.Mask<T>(EnableParent));
+                this.DistantLODData = new MaskItem<TItem, DistantLODData.Mask<TItem>?>(DistantLODData, new DistantLODData.Mask<TItem>(DistantLODData));
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
                 this.MerchantContainer = MerchantContainer;
                 this.Horse = Horse;
                 this.RagdollData = RagdollData;
@@ -401,28 +401,28 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Base;
-            public T XPCIFluff;
-            public T FULLFluff;
-            public MaskItem<T, DistantLODData.Mask<T>?>? DistantLODData { get; set; }
-            public MaskItem<T, EnableParent.Mask<T>?>? EnableParent { get; set; }
-            public T MerchantContainer;
-            public T Horse;
-            public T RagdollData;
-            public T Scale;
-            public T Position;
-            public T Rotation;
-            public T DATADataTypeState;
+            public TItem Base;
+            public TItem XPCIFluff;
+            public TItem FULLFluff;
+            public MaskItem<TItem, DistantLODData.Mask<TItem>?>? DistantLODData { get; set; }
+            public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
+            public TItem MerchantContainer;
+            public TItem Horse;
+            public TItem RagdollData;
+            public TItem Scale;
+            public TItem Position;
+            public TItem Rotation;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Base)) return false;
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Base)) return true;
@@ -518,14 +518,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new PlacedNPC.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Base = eval(this.Base);
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, PlacedNPC.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PlacedNPC.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(PlacedNPC.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

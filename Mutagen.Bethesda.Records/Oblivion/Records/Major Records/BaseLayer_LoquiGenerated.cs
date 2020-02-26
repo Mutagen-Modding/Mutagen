@@ -251,13 +251,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Texture = initialValue;
                 this.Quadrant = initialValue;
@@ -266,10 +266,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T Texture,
-                T Quadrant,
-                T LayerNumber,
-                T BTXTDataTypeState)
+                TItem Texture,
+                TItem Quadrant,
+                TItem LayerNumber,
+                TItem BTXTDataTypeState)
             {
                 this.Texture = Texture;
                 this.Quadrant = Quadrant;
@@ -286,20 +286,20 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Texture;
-            public T Quadrant;
-            public T LayerNumber;
-            public T BTXTDataTypeState;
+            public TItem Texture;
+            public TItem Quadrant;
+            public TItem LayerNumber;
+            public TItem BTXTDataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Texture, rhs.Texture)) return false;
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public virtual bool All(Func<T, bool> eval)
+            public virtual bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Texture)) return false;
                 if (!eval(this.Quadrant)) return false;
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public virtual bool Any(Func<T, bool> eval)
+            public virtual bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Texture)) return true;
                 if (eval(this.Quadrant)) return true;
@@ -343,14 +343,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new BaseLayer.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Texture = eval(this.Texture);
                 obj.Quadrant = eval(this.Quadrant);
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, BaseLayer.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BaseLayer.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(BaseLayer.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

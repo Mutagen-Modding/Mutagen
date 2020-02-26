@@ -255,30 +255,30 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Entry = initialValue;
-                this.ResultScript = new MaskItem<T, ScriptFields.Mask<T>?>(initialValue, new ScriptFields.Mask<T>(initialValue));
+                this.ResultScript = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                T Flags,
-                T Conditions,
-                T Entry,
-                T ResultScript)
+                TItem Flags,
+                TItem Conditions,
+                TItem Entry,
+                TItem ResultScript)
             {
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Entry = Entry;
-                this.ResultScript = new MaskItem<T, ScriptFields.Mask<T>?>(ResultScript, new ScriptFields.Mask<T>(ResultScript));
+                this.ResultScript = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(ResultScript, new ScriptFields.Mask<TItem>(ResultScript));
             }
 
             #pragma warning disable CS8618
@@ -290,20 +290,20 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Flags;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public T Entry;
-            public MaskItem<T, ScriptFields.Mask<T>?>? ResultScript { get; set; }
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>? Conditions;
+            public TItem Entry;
+            public MaskItem<TItem, ScriptFields.Mask<TItem>?>? ResultScript { get; set; }
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Flags)) return false;
                 if (this.Conditions != null)
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Flags)) return true;
                 if (this.Conditions != null)
@@ -377,14 +377,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new LogEntry.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Flags = eval(this.Flags);
                 if (Conditions != null)
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, LogEntry.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LogEntry.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(LogEntry.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

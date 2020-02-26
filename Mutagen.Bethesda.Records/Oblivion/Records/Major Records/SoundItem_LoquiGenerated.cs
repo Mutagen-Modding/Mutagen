@@ -227,21 +227,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Sound = initialValue;
                 this.Chance = initialValue;
             }
 
             public Mask(
-                T Sound,
-                T Chance)
+                TItem Sound,
+                TItem Chance)
             {
                 this.Sound = Sound;
                 this.Chance = Chance;
@@ -256,18 +256,18 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Sound;
-            public T Chance;
+            public TItem Sound;
+            public TItem Chance;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Sound)) return false;
                 if (!eval(this.Chance)) return false;
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Sound)) return true;
                 if (eval(this.Chance)) return true;
@@ -303,14 +303,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new SoundItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Sound = eval(this.Sound);
                 obj.Chance = eval(this.Chance);
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, SoundItem.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SoundItem.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(SoundItem.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

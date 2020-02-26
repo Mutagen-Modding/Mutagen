@@ -380,17 +380,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Density = initialValue;
                 this.MinSlope = initialValue;
                 this.MaxSlope = initialValue;
@@ -407,25 +407,25 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Model,
-                T Density,
-                T MinSlope,
-                T MaxSlope,
-                T Fluff1,
-                T UnitFromWaterAmount,
-                T Fluff2,
-                T UnitFromWaterMode,
-                T PositionRange,
-                T HeightRange,
-                T ColorRange,
-                T WavePeriod,
-                T Flags,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Model,
+                TItem Density,
+                TItem MinSlope,
+                TItem MaxSlope,
+                TItem Fluff1,
+                TItem UnitFromWaterAmount,
+                TItem Fluff2,
+                TItem UnitFromWaterMode,
+                TItem PositionRange,
+                TItem HeightRange,
+                TItem ColorRange,
+                TItem WavePeriod,
+                TItem Flags,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Density = Density;
                 this.MinSlope = MinSlope;
                 this.MaxSlope = MaxSlope;
@@ -458,30 +458,30 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public T Density;
-            public T MinSlope;
-            public T MaxSlope;
-            public T Fluff1;
-            public T UnitFromWaterAmount;
-            public T Fluff2;
-            public T UnitFromWaterMode;
-            public T PositionRange;
-            public T HeightRange;
-            public T ColorRange;
-            public T WavePeriod;
-            public T Flags;
-            public T DATADataTypeState;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Density;
+            public TItem MinSlope;
+            public TItem MaxSlope;
+            public TItem Fluff1;
+            public TItem UnitFromWaterAmount;
+            public TItem Fluff2;
+            public TItem UnitFromWaterMode;
+            public TItem PositionRange;
+            public TItem HeightRange;
+            public TItem ColorRange;
+            public TItem WavePeriod;
+            public TItem Flags;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (Model != null)
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (Model != null)
@@ -577,14 +577,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Grass.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Grass.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Grass.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Grass.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

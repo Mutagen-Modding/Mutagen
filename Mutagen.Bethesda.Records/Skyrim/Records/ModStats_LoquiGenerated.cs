@@ -218,13 +218,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Version = initialValue;
                 this.NumRecords = initialValue;
@@ -232,9 +232,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                T Version,
-                T NumRecords,
-                T NextObjectID)
+                TItem Version,
+                TItem NumRecords,
+                TItem NextObjectID)
             {
                 this.Version = Version;
                 this.NumRecords = NumRecords;
@@ -250,19 +250,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T Version;
-            public T NumRecords;
-            public T NextObjectID;
+            public TItem Version;
+            public TItem NumRecords;
+            public TItem NextObjectID;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Version, rhs.Version)) return false;
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Version)) return false;
                 if (!eval(this.NumRecords)) return false;
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Version)) return true;
                 if (eval(this.NumRecords)) return true;
@@ -302,14 +302,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new ModStats.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Version = eval(this.Version);
                 obj.NumRecords = eval(this.NumRecords);
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, ModStats.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ModStats.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(ModStats.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

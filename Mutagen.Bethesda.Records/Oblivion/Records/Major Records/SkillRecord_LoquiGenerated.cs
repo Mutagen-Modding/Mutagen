@@ -355,14 +355,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Skill = initialValue;
@@ -381,24 +381,24 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Skill,
-                T Description,
-                T Icon,
-                T Action,
-                T Attribute,
-                T Specialization,
-                T UseValueFirst,
-                T UseValueSecond,
-                T ApprenticeText,
-                T JourneymanText,
-                T ExpertText,
-                T MasterText,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Skill,
+                TItem Description,
+                TItem Icon,
+                TItem Action,
+                TItem Attribute,
+                TItem Specialization,
+                TItem UseValueFirst,
+                TItem UseValueSecond,
+                TItem ApprenticeText,
+                TItem JourneymanText,
+                TItem ExpertText,
+                TItem MasterText,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -430,29 +430,29 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Skill;
-            public T Description;
-            public T Icon;
-            public T Action;
-            public T Attribute;
-            public T Specialization;
-            public T UseValueFirst;
-            public T UseValueSecond;
-            public T ApprenticeText;
-            public T JourneymanText;
-            public T ExpertText;
-            public T MasterText;
-            public T DATADataTypeState;
+            public TItem Skill;
+            public TItem Description;
+            public TItem Icon;
+            public TItem Action;
+            public TItem Attribute;
+            public TItem Specialization;
+            public TItem UseValueFirst;
+            public TItem UseValueSecond;
+            public TItem ApprenticeText;
+            public TItem JourneymanText;
+            public TItem ExpertText;
+            public TItem MasterText;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Skill)) return false;
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Skill)) return true;
@@ -536,14 +536,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new SkillRecord.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Skill = eval(this.Skill);
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, SkillRecord.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SkillRecord.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(SkillRecord.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

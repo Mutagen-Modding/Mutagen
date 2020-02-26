@@ -485,18 +485,18 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            SkyrimMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            SkyrimMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Relation.Mask<T>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
                 this.Flags = initialValue;
                 this.PrisonMarker = initialValue;
                 this.FollowerWaitMarker = initialValue;
@@ -514,49 +514,49 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StealMultCrimeValue = initialValue;
                 this.EscapeCrimeValue = initialValue;
                 this.WerewolfCrimeValue = initialValue;
-                this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Rank.Mask<T>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorList = initialValue;
                 this.VendorChest = initialValue;
-                this.VendorValues = new MaskItem<T, VendorValues.Mask<T>?>(initialValue, new VendorValues.Mask<T>(initialValue));
-                this.VendorLocation = new MaskItem<T, VendorLocation.Mask<T>?>(initialValue, new VendorLocation.Mask<T>(initialValue));
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(initialValue, new VendorValues.Mask<TItem>(initialValue));
+                this.VendorLocation = new MaskItem<TItem, VendorLocation.Mask<TItem>?>(initialValue, new VendorLocation.Mask<TItem>(initialValue));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.CRVADataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T SkyrimMajorRecordFlags,
-                T FormVersion,
-                T Version2,
-                T Name,
-                T Relations,
-                T Flags,
-                T PrisonMarker,
-                T FollowerWaitMarker,
-                T EvidenceChest,
-                T PlayerBelongingsChest,
-                T CrimeGroup,
-                T JailOutfit,
-                T ArrestCrimeValue,
-                T AttackOnSightCrimeValue,
-                T MurderCrimeValue,
-                T AssaultCrimeValue,
-                T TrespassCrimeValue,
-                T PickpocketCrimeValue,
-                T UnknownCrimeValue,
-                T StealMultCrimeValue,
-                T EscapeCrimeValue,
-                T WerewolfCrimeValue,
-                T Ranks,
-                T VendorList,
-                T VendorChest,
-                T VendorValues,
-                T VendorLocation,
-                T Conditions,
-                T CRVADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem SkyrimMajorRecordFlags,
+                TItem FormVersion,
+                TItem Version2,
+                TItem Name,
+                TItem Relations,
+                TItem Flags,
+                TItem PrisonMarker,
+                TItem FollowerWaitMarker,
+                TItem EvidenceChest,
+                TItem PlayerBelongingsChest,
+                TItem CrimeGroup,
+                TItem JailOutfit,
+                TItem ArrestCrimeValue,
+                TItem AttackOnSightCrimeValue,
+                TItem MurderCrimeValue,
+                TItem AssaultCrimeValue,
+                TItem TrespassCrimeValue,
+                TItem PickpocketCrimeValue,
+                TItem UnknownCrimeValue,
+                TItem StealMultCrimeValue,
+                TItem EscapeCrimeValue,
+                TItem WerewolfCrimeValue,
+                TItem Ranks,
+                TItem VendorList,
+                TItem VendorChest,
+                TItem VendorValues,
+                TItem VendorLocation,
+                TItem Conditions,
+                TItem CRVADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2)
             {
                 this.Name = Name;
-                this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<T, Relation.Mask<T>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
                 this.Flags = Flags;
                 this.PrisonMarker = PrisonMarker;
                 this.FollowerWaitMarker = FollowerWaitMarker;
@@ -585,12 +585,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StealMultCrimeValue = StealMultCrimeValue;
                 this.EscapeCrimeValue = EscapeCrimeValue;
                 this.WerewolfCrimeValue = WerewolfCrimeValue;
-                this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>(Ranks, Enumerable.Empty<MaskItemIndexed<T, Rank.Mask<T>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorList = VendorList;
                 this.VendorChest = VendorChest;
-                this.VendorValues = new MaskItem<T, VendorValues.Mask<T>?>(VendorValues, new VendorValues.Mask<T>(VendorValues));
-                this.VendorLocation = new MaskItem<T, VendorLocation.Mask<T>?>(VendorLocation, new VendorLocation.Mask<T>(VendorLocation));
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(VendorValues, new VendorValues.Mask<TItem>(VendorValues));
+                this.VendorLocation = new MaskItem<TItem, VendorLocation.Mask<TItem>?>(VendorLocation, new VendorLocation.Mask<TItem>(VendorLocation));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.CRVADataTypeState = CRVADataTypeState;
             }
 
@@ -603,42 +603,42 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T Name;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>? Relations;
-            public T Flags;
-            public T PrisonMarker;
-            public T FollowerWaitMarker;
-            public T EvidenceChest;
-            public T PlayerBelongingsChest;
-            public T CrimeGroup;
-            public T JailOutfit;
-            public T ArrestCrimeValue;
-            public T AttackOnSightCrimeValue;
-            public T MurderCrimeValue;
-            public T AssaultCrimeValue;
-            public T TrespassCrimeValue;
-            public T PickpocketCrimeValue;
-            public T UnknownCrimeValue;
-            public T StealMultCrimeValue;
-            public T EscapeCrimeValue;
-            public T WerewolfCrimeValue;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>? Ranks;
-            public T VendorList;
-            public T VendorChest;
-            public MaskItem<T, VendorValues.Mask<T>?>? VendorValues { get; set; }
-            public MaskItem<T, VendorLocation.Mask<T>?>? VendorLocation { get; set; }
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public T CRVADataTypeState;
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>? Relations;
+            public TItem Flags;
+            public TItem PrisonMarker;
+            public TItem FollowerWaitMarker;
+            public TItem EvidenceChest;
+            public TItem PlayerBelongingsChest;
+            public TItem CrimeGroup;
+            public TItem JailOutfit;
+            public TItem ArrestCrimeValue;
+            public TItem AttackOnSightCrimeValue;
+            public TItem MurderCrimeValue;
+            public TItem AssaultCrimeValue;
+            public TItem TrespassCrimeValue;
+            public TItem PickpocketCrimeValue;
+            public TItem UnknownCrimeValue;
+            public TItem StealMultCrimeValue;
+            public TItem EscapeCrimeValue;
+            public TItem WerewolfCrimeValue;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>? Ranks;
+            public TItem VendorList;
+            public TItem VendorChest;
+            public MaskItem<TItem, VendorValues.Mask<TItem>?>? VendorValues { get; set; }
+            public MaskItem<TItem, VendorLocation.Mask<TItem>?>? VendorLocation { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>>? Conditions;
+            public TItem CRVADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -856,14 +856,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Faction.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, Faction.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Faction.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Faction.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

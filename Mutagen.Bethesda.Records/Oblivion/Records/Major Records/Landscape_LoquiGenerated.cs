@@ -282,36 +282,36 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Unknown = initialValue;
                 this.VertexNormals = initialValue;
                 this.VertexHeightMap = initialValue;
                 this.VertexColors = initialValue;
-                this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, BaseLayer.Mask<T>?>>());
-                this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>());
+                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Unknown,
-                T VertexNormals,
-                T VertexHeightMap,
-                T VertexColors,
-                T Layers,
-                T Textures)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Unknown,
+                TItem VertexNormals,
+                TItem VertexHeightMap,
+                TItem VertexColors,
+                TItem Layers,
+                TItem Textures)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -323,8 +323,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.VertexNormals = VertexNormals;
                 this.VertexHeightMap = VertexHeightMap;
                 this.VertexColors = VertexColors;
-                this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer.Mask<T>?>>>(Layers, Enumerable.Empty<MaskItemIndexed<T, BaseLayer.Mask<T>?>>());
-                this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Textures, Enumerable.Empty<(int Index, T Value)>());
+                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>>(Layers, Enumerable.Empty<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>());
+                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Textures, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -336,22 +336,22 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Unknown;
-            public T VertexNormals;
-            public T VertexHeightMap;
-            public T VertexColors;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer.Mask<T>?>>>? Layers;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Textures;
+            public TItem Unknown;
+            public TItem VertexNormals;
+            public TItem VertexHeightMap;
+            public TItem VertexColors;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>>? Layers;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Textures;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Unknown)) return false;
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Unknown)) return true;
@@ -449,14 +449,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Landscape.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Unknown = eval(this.Unknown);
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Landscape.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Landscape.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Landscape.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

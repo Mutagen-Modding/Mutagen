@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "Height => {Height}";
+            string testString = "MaskItem<T, GenderedI";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

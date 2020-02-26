@@ -242,13 +242,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.RankID = initialValue;
                 this.MaleRankTitle = initialValue;
@@ -256,9 +256,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                T RankID,
-                T MaleRankTitle,
-                T FemaleRankTitle)
+                TItem RankID,
+                TItem MaleRankTitle,
+                TItem FemaleRankTitle)
             {
                 this.RankID = RankID;
                 this.MaleRankTitle = MaleRankTitle;
@@ -274,19 +274,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T RankID;
-            public T MaleRankTitle;
-            public T FemaleRankTitle;
+            public TItem RankID;
+            public TItem MaleRankTitle;
+            public TItem FemaleRankTitle;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.RankID, rhs.RankID)) return false;
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.RankID)) return false;
                 if (!eval(this.MaleRankTitle)) return false;
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.RankID)) return true;
                 if (eval(this.MaleRankTitle)) return true;
@@ -326,14 +326,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Rank.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.RankID = eval(this.RankID);
                 obj.MaleRankTitle = eval(this.MaleRankTitle);
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, Rank.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Rank.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Rank.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

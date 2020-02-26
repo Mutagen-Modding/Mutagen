@@ -233,24 +233,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
-                this.BodyParts = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BodyPart.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, BodyPart.Mask<T>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.BodyParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
             }
 
             public Mask(
-                T Model,
-                T BodyParts)
+                TItem Model,
+                TItem BodyParts)
             {
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
-                this.BodyParts = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BodyPart.Mask<T>?>>>(BodyParts, Enumerable.Empty<MaskItemIndexed<T, BodyPart.Mask<T>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.BodyParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>>(BodyParts, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -262,18 +262,18 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, BodyPart.Mask<T>?>>>? BodyParts;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>>? BodyParts;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (Model != null)
                 {
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (Model != null)
                 {
@@ -339,14 +339,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new BodyData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (BodyParts != null)
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, BodyData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BodyData.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(BodyData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -216,33 +216,33 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            Condition.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            Condition.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.ComparisonValue = initialValue;
-                this.Data = new MaskItem<T, ConditionData.Mask<T>?>(initialValue, new ConditionData.Mask<T>(initialValue));
+                this.Data = new MaskItem<TItem, ConditionData.Mask<TItem>?>(initialValue, new ConditionData.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                T CompareOperator,
-                T Flags,
-                T Unknown1,
-                T ComparisonValue,
-                T Data)
+                TItem CompareOperator,
+                TItem Flags,
+                TItem Unknown1,
+                TItem ComparisonValue,
+                TItem Data)
             : base(
                 CompareOperator: CompareOperator,
                 Flags: Flags,
                 Unknown1: Unknown1)
             {
                 this.ComparisonValue = ComparisonValue;
-                this.Data = new MaskItem<T, ConditionData.Mask<T>?>(Data, new ConditionData.Mask<T>(Data));
+                this.Data = new MaskItem<TItem, ConditionData.Mask<TItem>?>(Data, new ConditionData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -254,18 +254,18 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T ComparisonValue;
-            public MaskItem<T, ConditionData.Mask<T>?>? Data { get; set; }
+            public TItem ComparisonValue;
+            public MaskItem<TItem, ConditionData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.ComparisonValue)) return false;
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.ComparisonValue)) return true;
@@ -313,14 +313,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new ConditionGlobal.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ComparisonValue = eval(this.ComparisonValue);
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, ConditionGlobal.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ConditionGlobal.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(ConditionGlobal.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

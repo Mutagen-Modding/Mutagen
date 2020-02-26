@@ -226,13 +226,13 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.MajorRecordFlagsRaw = initialValue;
                 this.FormKey = initialValue;
@@ -241,10 +241,10 @@ namespace Mutagen.Bethesda
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID)
             {
                 this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
                 this.FormKey = FormKey;
@@ -261,20 +261,20 @@ namespace Mutagen.Bethesda
             #endregion
 
             #region Members
-            public T MajorRecordFlagsRaw;
-            public T FormKey;
-            public T Version;
-            public T EditorID;
+            public TItem MajorRecordFlagsRaw;
+            public TItem FormKey;
+            public TItem Version;
+            public TItem EditorID;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.MajorRecordFlagsRaw, rhs.MajorRecordFlagsRaw)) return false;
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda
             #endregion
 
             #region All
-            public virtual bool All(Func<T, bool> eval)
+            public virtual bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.MajorRecordFlagsRaw)) return false;
                 if (!eval(this.FormKey)) return false;
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda
             #endregion
 
             #region Any
-            public virtual bool Any(Func<T, bool> eval)
+            public virtual bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.MajorRecordFlagsRaw)) return true;
                 if (eval(this.FormKey)) return true;
@@ -318,14 +318,14 @@ namespace Mutagen.Bethesda
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new MajorRecord.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.MajorRecordFlagsRaw = eval(this.MajorRecordFlagsRaw);
                 obj.FormKey = eval(this.FormKey);
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda
 
             public void ToString(FileGeneration fg, MajorRecord.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MajorRecord.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(MajorRecord.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

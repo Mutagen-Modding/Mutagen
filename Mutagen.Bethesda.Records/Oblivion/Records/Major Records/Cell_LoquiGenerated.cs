@@ -431,21 +431,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            Place.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            Place.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
                 this.Flags = initialValue;
                 this.Grid = initialValue;
-                this.Lighting = new MaskItem<T, CellLighting.Mask<T>?>(initialValue, new CellLighting.Mask<T>(initialValue));
-                this.Regions = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(initialValue, new CellLighting.Mask<TItem>(initialValue));
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.MusicType = initialValue;
                 this.WaterHeight = initialValue;
                 this.Climate = initialValue;
@@ -453,44 +453,44 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = initialValue;
                 this.FactionRank = initialValue;
                 this.GlobalVariable = initialValue;
-                this.PathGrid = new MaskItem<T, PathGrid.Mask<T>?>(initialValue, new PathGrid.Mask<T>(initialValue));
-                this.Landscape = new MaskItem<T, Landscape.Mask<T>?>(initialValue, new Landscape.Mask<T>(initialValue));
+                this.PathGrid = new MaskItem<TItem, PathGrid.Mask<TItem>?>(initialValue, new PathGrid.Mask<TItem>(initialValue));
+                this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
                 this.Timestamp = initialValue;
                 this.PersistentTimestamp = initialValue;
-                this.Persistent = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
                 this.TemporaryTimestamp = initialValue;
-                this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
                 this.VisibleWhenDistantTimestamp = initialValue;
-                this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Flags,
-                T Grid,
-                T Lighting,
-                T Regions,
-                T MusicType,
-                T WaterHeight,
-                T Climate,
-                T Water,
-                T Owner,
-                T FactionRank,
-                T GlobalVariable,
-                T PathGrid,
-                T Landscape,
-                T Timestamp,
-                T PersistentTimestamp,
-                T Persistent,
-                T TemporaryTimestamp,
-                T Temporary,
-                T VisibleWhenDistantTimestamp,
-                T VisibleWhenDistant)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Flags,
+                TItem Grid,
+                TItem Lighting,
+                TItem Regions,
+                TItem MusicType,
+                TItem WaterHeight,
+                TItem Climate,
+                TItem Water,
+                TItem Owner,
+                TItem FactionRank,
+                TItem GlobalVariable,
+                TItem PathGrid,
+                TItem Landscape,
+                TItem Timestamp,
+                TItem PersistentTimestamp,
+                TItem Persistent,
+                TItem TemporaryTimestamp,
+                TItem Temporary,
+                TItem VisibleWhenDistantTimestamp,
+                TItem VisibleWhenDistant)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -501,8 +501,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Flags = Flags;
                 this.Grid = Grid;
-                this.Lighting = new MaskItem<T, CellLighting.Mask<T>?>(Lighting, new CellLighting.Mask<T>(Lighting));
-                this.Regions = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Regions, Enumerable.Empty<(int Index, T Value)>());
+                this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(Lighting, new CellLighting.Mask<TItem>(Lighting));
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Regions, Enumerable.Empty<(int Index, TItem Value)>());
                 this.MusicType = MusicType;
                 this.WaterHeight = WaterHeight;
                 this.Climate = Climate;
@@ -510,15 +510,15 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = Owner;
                 this.FactionRank = FactionRank;
                 this.GlobalVariable = GlobalVariable;
-                this.PathGrid = new MaskItem<T, PathGrid.Mask<T>?>(PathGrid, new PathGrid.Mask<T>(PathGrid));
-                this.Landscape = new MaskItem<T, Landscape.Mask<T>?>(Landscape, new Landscape.Mask<T>(Landscape));
+                this.PathGrid = new MaskItem<TItem, PathGrid.Mask<TItem>?>(PathGrid, new PathGrid.Mask<TItem>(PathGrid));
+                this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
                 this.Timestamp = Timestamp;
                 this.PersistentTimestamp = PersistentTimestamp;
-                this.Persistent = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(Persistent, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(Persistent, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
                 this.TemporaryTimestamp = TemporaryTimestamp;
-                this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(Temporary, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(Temporary, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
                 this.VisibleWhenDistantTimestamp = VisibleWhenDistantTimestamp;
-                this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(VisibleWhenDistant, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(VisibleWhenDistant, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -530,37 +530,37 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public T Flags;
-            public T Grid;
-            public MaskItem<T, CellLighting.Mask<T>?>? Lighting { get; set; }
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Regions;
-            public T MusicType;
-            public T WaterHeight;
-            public T Climate;
-            public T Water;
-            public T Owner;
-            public T FactionRank;
-            public T GlobalVariable;
-            public MaskItem<T, PathGrid.Mask<T>?>? PathGrid { get; set; }
-            public MaskItem<T, Landscape.Mask<T>?>? Landscape { get; set; }
-            public T Timestamp;
-            public T PersistentTimestamp;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? Persistent;
-            public T TemporaryTimestamp;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? Temporary;
-            public T VisibleWhenDistantTimestamp;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? VisibleWhenDistant;
+            public TItem Name;
+            public TItem Flags;
+            public TItem Grid;
+            public MaskItem<TItem, CellLighting.Mask<TItem>?>? Lighting { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Regions;
+            public TItem MusicType;
+            public TItem WaterHeight;
+            public TItem Climate;
+            public TItem Water;
+            public TItem Owner;
+            public TItem FactionRank;
+            public TItem GlobalVariable;
+            public MaskItem<TItem, PathGrid.Mask<TItem>?>? PathGrid { get; set; }
+            public MaskItem<TItem, Landscape.Mask<TItem>?>? Landscape { get; set; }
+            public TItem Timestamp;
+            public TItem PersistentTimestamp;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>? Persistent;
+            public TItem TemporaryTimestamp;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>? Temporary;
+            public TItem VisibleWhenDistantTimestamp;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>? VisibleWhenDistant;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -786,14 +786,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Cell.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Cell.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Cell.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

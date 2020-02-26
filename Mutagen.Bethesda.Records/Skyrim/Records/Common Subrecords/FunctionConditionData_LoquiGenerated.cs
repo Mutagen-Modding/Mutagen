@@ -291,14 +291,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            ConditionData.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            ConditionData.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Function = initialValue;
@@ -315,17 +315,17 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                T Function,
-                T Unknown2,
-                T ParameterOneRecord,
-                T ParameterOneNumber,
-                T ParameterOneString,
-                T ParameterTwoRecord,
-                T ParameterTwoNumber,
-                T ParameterTwoString,
-                T Unknown3,
-                T Unknown4,
-                T Unknown5)
+                TItem Function,
+                TItem Unknown2,
+                TItem ParameterOneRecord,
+                TItem ParameterOneNumber,
+                TItem ParameterOneString,
+                TItem ParameterTwoRecord,
+                TItem ParameterTwoNumber,
+                TItem ParameterTwoString,
+                TItem Unknown3,
+                TItem Unknown4,
+                TItem Unknown5)
             : base()
             {
                 this.Function = Function;
@@ -350,27 +350,27 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T Function;
-            public T Unknown2;
-            public T ParameterOneRecord;
-            public T ParameterOneNumber;
-            public T ParameterOneString;
-            public T ParameterTwoRecord;
-            public T ParameterTwoNumber;
-            public T ParameterTwoString;
-            public T Unknown3;
-            public T Unknown4;
-            public T Unknown5;
+            public TItem Function;
+            public TItem Unknown2;
+            public TItem ParameterOneRecord;
+            public TItem ParameterOneNumber;
+            public TItem ParameterOneString;
+            public TItem ParameterTwoRecord;
+            public TItem ParameterTwoNumber;
+            public TItem ParameterTwoString;
+            public TItem Unknown3;
+            public TItem Unknown4;
+            public TItem Unknown5;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Function)) return false;
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Function)) return true;
@@ -446,14 +446,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new FunctionConditionData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Function = eval(this.Function);
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, FunctionConditionData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(FunctionConditionData.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(FunctionConditionData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

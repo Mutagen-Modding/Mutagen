@@ -296,13 +296,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.MagicEffect = initialValue;
                 this.Magnitude = initialValue;
@@ -310,19 +310,19 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Duration = initialValue;
                 this.Type = initialValue;
                 this.ActorValue = initialValue;
-                this.ScriptEffect = new MaskItem<T, ScriptEffect.Mask<T>?>(initialValue, new ScriptEffect.Mask<T>(initialValue));
+                this.ScriptEffect = new MaskItem<TItem, ScriptEffect.Mask<TItem>?>(initialValue, new ScriptEffect.Mask<TItem>(initialValue));
                 this.EFITDataTypeState = initialValue;
             }
 
             public Mask(
-                T MagicEffect,
-                T Magnitude,
-                T Area,
-                T Duration,
-                T Type,
-                T ActorValue,
-                T ScriptEffect,
-                T EFITDataTypeState)
+                TItem MagicEffect,
+                TItem Magnitude,
+                TItem Area,
+                TItem Duration,
+                TItem Type,
+                TItem ActorValue,
+                TItem ScriptEffect,
+                TItem EFITDataTypeState)
             {
                 this.MagicEffect = MagicEffect;
                 this.Magnitude = Magnitude;
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Duration = Duration;
                 this.Type = Type;
                 this.ActorValue = ActorValue;
-                this.ScriptEffect = new MaskItem<T, ScriptEffect.Mask<T>?>(ScriptEffect, new ScriptEffect.Mask<T>(ScriptEffect));
+                this.ScriptEffect = new MaskItem<TItem, ScriptEffect.Mask<TItem>?>(ScriptEffect, new ScriptEffect.Mask<TItem>(ScriptEffect));
                 this.EFITDataTypeState = EFITDataTypeState;
             }
 
@@ -343,24 +343,24 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T MagicEffect;
-            public T Magnitude;
-            public T Area;
-            public T Duration;
-            public T Type;
-            public T ActorValue;
-            public MaskItem<T, ScriptEffect.Mask<T>?>? ScriptEffect { get; set; }
-            public T EFITDataTypeState;
+            public TItem MagicEffect;
+            public TItem Magnitude;
+            public TItem Area;
+            public TItem Duration;
+            public TItem Type;
+            public TItem ActorValue;
+            public MaskItem<TItem, ScriptEffect.Mask<TItem>?>? ScriptEffect { get; set; }
+            public TItem EFITDataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.MagicEffect, rhs.MagicEffect)) return false;
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.MagicEffect)) return false;
                 if (!eval(this.Magnitude)) return false;
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.MagicEffect)) return true;
                 if (eval(this.Magnitude)) return true;
@@ -428,14 +428,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Effect.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.MagicEffect = eval(this.MagicEffect);
                 obj.Magnitude = eval(this.Magnitude);
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Effect.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Effect.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Effect.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -114,42 +114,42 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.TestGroupMasks = initialValue;
                 this.TestFlattenedMod = initialValue;
                 this.TestBenchmarks = initialValue;
                 this.TestLocators = initialValue;
                 this.TestRecordEnumerables = initialValue;
-                this.DataFolderLocations = new MaskItem<T, DataFolderLocations.Mask<T>?>(initialValue, new DataFolderLocations.Mask<T>(initialValue));
-                this.PassthroughSettings = new MaskItem<T, PassthroughSettings.Mask<T>?>(initialValue, new PassthroughSettings.Mask<T>(initialValue));
-                this.TargetGroups = new MaskItem<T, IEnumerable<MaskItemIndexed<T, TargetGroup.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, TargetGroup.Mask<T>?>>());
+                this.DataFolderLocations = new MaskItem<TItem, DataFolderLocations.Mask<TItem>?>(initialValue, new DataFolderLocations.Mask<TItem>(initialValue));
+                this.PassthroughSettings = new MaskItem<TItem, PassthroughSettings.Mask<TItem>?>(initialValue, new PassthroughSettings.Mask<TItem>(initialValue));
+                this.TargetGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TargetGroup.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TargetGroup.Mask<TItem>?>>());
             }
 
             public Mask(
-                T TestGroupMasks,
-                T TestFlattenedMod,
-                T TestBenchmarks,
-                T TestLocators,
-                T TestRecordEnumerables,
-                T DataFolderLocations,
-                T PassthroughSettings,
-                T TargetGroups)
+                TItem TestGroupMasks,
+                TItem TestFlattenedMod,
+                TItem TestBenchmarks,
+                TItem TestLocators,
+                TItem TestRecordEnumerables,
+                TItem DataFolderLocations,
+                TItem PassthroughSettings,
+                TItem TargetGroups)
             {
                 this.TestGroupMasks = TestGroupMasks;
                 this.TestFlattenedMod = TestFlattenedMod;
                 this.TestBenchmarks = TestBenchmarks;
                 this.TestLocators = TestLocators;
                 this.TestRecordEnumerables = TestRecordEnumerables;
-                this.DataFolderLocations = new MaskItem<T, DataFolderLocations.Mask<T>?>(DataFolderLocations, new DataFolderLocations.Mask<T>(DataFolderLocations));
-                this.PassthroughSettings = new MaskItem<T, PassthroughSettings.Mask<T>?>(PassthroughSettings, new PassthroughSettings.Mask<T>(PassthroughSettings));
-                this.TargetGroups = new MaskItem<T, IEnumerable<MaskItemIndexed<T, TargetGroup.Mask<T>?>>>(TargetGroups, Enumerable.Empty<MaskItemIndexed<T, TargetGroup.Mask<T>?>>());
+                this.DataFolderLocations = new MaskItem<TItem, DataFolderLocations.Mask<TItem>?>(DataFolderLocations, new DataFolderLocations.Mask<TItem>(DataFolderLocations));
+                this.PassthroughSettings = new MaskItem<TItem, PassthroughSettings.Mask<TItem>?>(PassthroughSettings, new PassthroughSettings.Mask<TItem>(PassthroughSettings));
+                this.TargetGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TargetGroup.Mask<TItem>?>>>(TargetGroups, Enumerable.Empty<MaskItemIndexed<TItem, TargetGroup.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -161,24 +161,24 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Members
-            public T TestGroupMasks;
-            public T TestFlattenedMod;
-            public T TestBenchmarks;
-            public T TestLocators;
-            public T TestRecordEnumerables;
-            public MaskItem<T, DataFolderLocations.Mask<T>?>? DataFolderLocations { get; set; }
-            public MaskItem<T, PassthroughSettings.Mask<T>?>? PassthroughSettings { get; set; }
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, TargetGroup.Mask<T>?>>>? TargetGroups;
+            public TItem TestGroupMasks;
+            public TItem TestFlattenedMod;
+            public TItem TestBenchmarks;
+            public TItem TestLocators;
+            public TItem TestRecordEnumerables;
+            public MaskItem<TItem, DataFolderLocations.Mask<TItem>?>? DataFolderLocations { get; set; }
+            public MaskItem<TItem, PassthroughSettings.Mask<TItem>?>? PassthroughSettings { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TargetGroup.Mask<TItem>?>>>? TargetGroups;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.TestGroupMasks, rhs.TestGroupMasks)) return false;
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.TestGroupMasks)) return false;
                 if (!eval(this.TestFlattenedMod)) return false;
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.TestGroupMasks)) return true;
                 if (eval(this.TestFlattenedMod)) return true;
@@ -276,14 +276,14 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new TestingSettings.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.TestGroupMasks = eval(this.TestGroupMasks);
                 obj.TestFlattenedMod = eval(this.TestFlattenedMod);
@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Tests
 
             public void ToString(FileGeneration fg, TestingSettings.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TestingSettings.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(TestingSettings.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

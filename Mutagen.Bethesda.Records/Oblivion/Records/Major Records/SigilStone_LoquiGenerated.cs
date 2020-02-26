@@ -305,21 +305,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            ItemAbstract.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            ItemAbstract.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Icon = initialValue;
                 this.Script = initialValue;
-                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
                 this.Uses = initialValue;
                 this.Value = initialValue;
                 this.Weight = initialValue;
@@ -327,20 +327,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T Name,
-                T Model,
-                T Icon,
-                T Script,
-                T Effects,
-                T Uses,
-                T Value,
-                T Weight,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem Name,
+                TItem Model,
+                TItem Icon,
+                TItem Script,
+                TItem Effects,
+                TItem Uses,
+                TItem Value,
+                TItem Weight,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -349,10 +349,10 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Icon = Icon;
                 this.Script = Script;
-                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
                 this.Uses = Uses;
                 this.Value = Value;
                 this.Weight = Weight;
@@ -368,25 +368,25 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T Name;
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public T Icon;
-            public T Script;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>? Effects;
-            public T Uses;
-            public T Value;
-            public T Weight;
-            public T DATADataTypeState;
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Icon;
+            public TItem Script;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>? Effects;
+            public TItem Uses;
+            public TItem Value;
+            public TItem Weight;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
@@ -484,14 +484,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new SigilStone.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, SigilStone.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SigilStone.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(SigilStone.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -224,24 +224,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.Part = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Part = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                T Index,
-                T Part)
+                TItem Index,
+                TItem Part)
             {
                 this.Index = Index;
-                this.Part = new MaskItem<T, Model.Mask<T>?>(Part, new Model.Mask<T>(Part));
+                this.Part = new MaskItem<TItem, Model.Mask<TItem>?>(Part, new Model.Mask<TItem>(Part));
             }
 
             #pragma warning disable CS8618
@@ -253,18 +253,18 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T Index;
-            public MaskItem<T, Model.Mask<T>?>? Part { get; set; }
+            public TItem Index;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Part { get; set; }
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Index)) return false;
                 if (Part != null)
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Index)) return true;
                 if (Part != null)
@@ -308,14 +308,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new BodyData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Index = eval(this.Index);
                 obj.Part = this.Part == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Part.Overall), this.Part.Specific?.Translate(eval));
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, BodyData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BodyData.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(BodyData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

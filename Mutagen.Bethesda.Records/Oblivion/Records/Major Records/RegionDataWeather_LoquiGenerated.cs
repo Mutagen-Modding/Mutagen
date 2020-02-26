@@ -221,32 +221,32 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            RegionData.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            RegionData.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>());
             }
 
             public Mask(
-                T DataType,
-                T Flags,
-                T Priority,
-                T RDATDataTypeState,
-                T Weathers)
+                TItem DataType,
+                TItem Flags,
+                TItem Priority,
+                TItem RDATDataTypeState,
+                TItem Weathers)
             : base(
                 DataType: DataType,
                 Flags: Flags,
                 Priority: Priority,
                 RDATDataTypeState: RDATDataTypeState)
             {
-                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>(Weathers, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -258,17 +258,17 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>? Weathers;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>>? Weathers;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (this.Weathers != null)
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (this.Weathers != null)
@@ -326,14 +326,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new RegionDataWeather.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 if (Weathers != null)
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, RegionDataWeather.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RegionDataWeather.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(RegionDataWeather.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

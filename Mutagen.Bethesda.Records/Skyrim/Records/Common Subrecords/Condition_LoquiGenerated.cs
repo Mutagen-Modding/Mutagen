@@ -229,13 +229,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.CompareOperator = initialValue;
                 this.Flags = initialValue;
@@ -243,9 +243,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                T CompareOperator,
-                T Flags,
-                T Unknown1)
+                TItem CompareOperator,
+                TItem Flags,
+                TItem Unknown1)
             {
                 this.CompareOperator = CompareOperator;
                 this.Flags = Flags;
@@ -261,19 +261,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public T CompareOperator;
-            public T Flags;
-            public T Unknown1;
+            public TItem CompareOperator;
+            public TItem Flags;
+            public TItem Unknown1;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.CompareOperator, rhs.CompareOperator)) return false;
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public virtual bool All(Func<T, bool> eval)
+            public virtual bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.CompareOperator)) return false;
                 if (!eval(this.Flags)) return false;
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public virtual bool Any(Func<T, bool> eval)
+            public virtual bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.CompareOperator)) return true;
                 if (eval(this.Flags)) return true;
@@ -313,14 +313,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Condition.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.CompareOperator = eval(this.CompareOperator);
                 obj.Flags = eval(this.Flags);
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, Condition.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Condition.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Condition.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

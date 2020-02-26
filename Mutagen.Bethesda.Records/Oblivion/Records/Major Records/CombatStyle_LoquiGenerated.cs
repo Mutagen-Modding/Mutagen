@@ -726,14 +726,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.DodgePercentChance = initialValue;
@@ -772,54 +772,54 @@ namespace Mutagen.Bethesda.Oblivion
                 this.GroupStandoffDistance = initialValue;
                 this.RushingAttackPercentChance = initialValue;
                 this.RushingAttackDistanceMult = initialValue;
-                this.Advanced = new MaskItem<T, CombatStyleAdvanced.Mask<T>?>(initialValue, new CombatStyleAdvanced.Mask<T>(initialValue));
+                this.Advanced = new MaskItem<TItem, CombatStyleAdvanced.Mask<TItem>?>(initialValue, new CombatStyleAdvanced.Mask<TItem>(initialValue));
                 this.CSTDDataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T DodgePercentChance,
-                T LeftRightPercentChance,
-                T DodgeLeftRightTimerMin,
-                T DodgeLeftRightTimerMax,
-                T DodgeForwardTimerMin,
-                T DodgeForwardTimerMax,
-                T DodgeBackTimerMin,
-                T DodgeBackTimerMax,
-                T IdleTimerMin,
-                T IdleTimerMax,
-                T BlockPercentChance,
-                T AttackPercentChance,
-                T RecoilStaggerBonusToAttack,
-                T UnconsciousBonusToAttack,
-                T HandToHandBonusToAttack,
-                T PowerAttackPercentChance,
-                T RecoilStaggerBonusToPowerAttack,
-                T UnconsciousBonusToPowerAttack,
-                T PowerAttackNormal,
-                T PowerAttackForward,
-                T PowerAttackBack,
-                T PowerAttackLeft,
-                T PowerAttackRight,
-                T HoldTimerMin,
-                T HoldTimerMax,
-                T Flags,
-                T AcrobaticDodgePercentChance,
-                T RangeMultOptimal,
-                T RangeMultMax,
-                T SwitchDistanceMelee,
-                T SwitchDistanceRanged,
-                T BuffStandoffDistance,
-                T RangedStandoffDistance,
-                T GroupStandoffDistance,
-                T RushingAttackPercentChance,
-                T RushingAttackDistanceMult,
-                T Advanced,
-                T CSTDDataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem DodgePercentChance,
+                TItem LeftRightPercentChance,
+                TItem DodgeLeftRightTimerMin,
+                TItem DodgeLeftRightTimerMax,
+                TItem DodgeForwardTimerMin,
+                TItem DodgeForwardTimerMax,
+                TItem DodgeBackTimerMin,
+                TItem DodgeBackTimerMax,
+                TItem IdleTimerMin,
+                TItem IdleTimerMax,
+                TItem BlockPercentChance,
+                TItem AttackPercentChance,
+                TItem RecoilStaggerBonusToAttack,
+                TItem UnconsciousBonusToAttack,
+                TItem HandToHandBonusToAttack,
+                TItem PowerAttackPercentChance,
+                TItem RecoilStaggerBonusToPowerAttack,
+                TItem UnconsciousBonusToPowerAttack,
+                TItem PowerAttackNormal,
+                TItem PowerAttackForward,
+                TItem PowerAttackBack,
+                TItem PowerAttackLeft,
+                TItem PowerAttackRight,
+                TItem HoldTimerMin,
+                TItem HoldTimerMax,
+                TItem Flags,
+                TItem AcrobaticDodgePercentChance,
+                TItem RangeMultOptimal,
+                TItem RangeMultMax,
+                TItem SwitchDistanceMelee,
+                TItem SwitchDistanceRanged,
+                TItem BuffStandoffDistance,
+                TItem RangedStandoffDistance,
+                TItem GroupStandoffDistance,
+                TItem RushingAttackPercentChance,
+                TItem RushingAttackDistanceMult,
+                TItem Advanced,
+                TItem CSTDDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.GroupStandoffDistance = GroupStandoffDistance;
                 this.RushingAttackPercentChance = RushingAttackPercentChance;
                 this.RushingAttackDistanceMult = RushingAttackDistanceMult;
-                this.Advanced = new MaskItem<T, CombatStyleAdvanced.Mask<T>?>(Advanced, new CombatStyleAdvanced.Mask<T>(Advanced));
+                this.Advanced = new MaskItem<TItem, CombatStyleAdvanced.Mask<TItem>?>(Advanced, new CombatStyleAdvanced.Mask<TItem>(Advanced));
                 this.CSTDDataTypeState = CSTDDataTypeState;
             }
 
@@ -876,54 +876,54 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T DodgePercentChance;
-            public T LeftRightPercentChance;
-            public T DodgeLeftRightTimerMin;
-            public T DodgeLeftRightTimerMax;
-            public T DodgeForwardTimerMin;
-            public T DodgeForwardTimerMax;
-            public T DodgeBackTimerMin;
-            public T DodgeBackTimerMax;
-            public T IdleTimerMin;
-            public T IdleTimerMax;
-            public T BlockPercentChance;
-            public T AttackPercentChance;
-            public T RecoilStaggerBonusToAttack;
-            public T UnconsciousBonusToAttack;
-            public T HandToHandBonusToAttack;
-            public T PowerAttackPercentChance;
-            public T RecoilStaggerBonusToPowerAttack;
-            public T UnconsciousBonusToPowerAttack;
-            public T PowerAttackNormal;
-            public T PowerAttackForward;
-            public T PowerAttackBack;
-            public T PowerAttackLeft;
-            public T PowerAttackRight;
-            public T HoldTimerMin;
-            public T HoldTimerMax;
-            public T Flags;
-            public T AcrobaticDodgePercentChance;
-            public T RangeMultOptimal;
-            public T RangeMultMax;
-            public T SwitchDistanceMelee;
-            public T SwitchDistanceRanged;
-            public T BuffStandoffDistance;
-            public T RangedStandoffDistance;
-            public T GroupStandoffDistance;
-            public T RushingAttackPercentChance;
-            public T RushingAttackDistanceMult;
-            public MaskItem<T, CombatStyleAdvanced.Mask<T>?>? Advanced { get; set; }
-            public T CSTDDataTypeState;
+            public TItem DodgePercentChance;
+            public TItem LeftRightPercentChance;
+            public TItem DodgeLeftRightTimerMin;
+            public TItem DodgeLeftRightTimerMax;
+            public TItem DodgeForwardTimerMin;
+            public TItem DodgeForwardTimerMax;
+            public TItem DodgeBackTimerMin;
+            public TItem DodgeBackTimerMax;
+            public TItem IdleTimerMin;
+            public TItem IdleTimerMax;
+            public TItem BlockPercentChance;
+            public TItem AttackPercentChance;
+            public TItem RecoilStaggerBonusToAttack;
+            public TItem UnconsciousBonusToAttack;
+            public TItem HandToHandBonusToAttack;
+            public TItem PowerAttackPercentChance;
+            public TItem RecoilStaggerBonusToPowerAttack;
+            public TItem UnconsciousBonusToPowerAttack;
+            public TItem PowerAttackNormal;
+            public TItem PowerAttackForward;
+            public TItem PowerAttackBack;
+            public TItem PowerAttackLeft;
+            public TItem PowerAttackRight;
+            public TItem HoldTimerMin;
+            public TItem HoldTimerMax;
+            public TItem Flags;
+            public TItem AcrobaticDodgePercentChance;
+            public TItem RangeMultOptimal;
+            public TItem RangeMultMax;
+            public TItem SwitchDistanceMelee;
+            public TItem SwitchDistanceRanged;
+            public TItem BuffStandoffDistance;
+            public TItem RangedStandoffDistance;
+            public TItem GroupStandoffDistance;
+            public TItem RushingAttackPercentChance;
+            public TItem RushingAttackDistanceMult;
+            public MaskItem<TItem, CombatStyleAdvanced.Mask<TItem>?>? Advanced { get; set; }
+            public TItem CSTDDataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.DodgePercentChance)) return false;
@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.DodgePercentChance)) return true;
@@ -1115,14 +1115,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new CombatStyle.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.DodgePercentChance = eval(this.DodgePercentChance);
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, CombatStyle.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CombatStyle.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(CombatStyle.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -272,13 +272,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.DodgeFatigueModMult = initialValue;
                 this.DodgeFatigueModBase = initialValue;
@@ -304,27 +304,27 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                T DodgeFatigueModMult,
-                T DodgeFatigueModBase,
-                T EncumbSpeedModBase,
-                T EncumbSpeedModMult,
-                T DodgeWhileUnderAttackMult,
-                T DodgeNotUnderAttackMult,
-                T DodgeBackWhileUnderAttackMult,
-                T DodgeBackNotUnderAttackMult,
-                T DodgeForwardWhileUnderAttackMult,
-                T DodgeForwardNotUnderAttackMult,
-                T BlockSkillModifierMult,
-                T BlockSkillModifierBase,
-                T BlockWhileUnderAttackMult,
-                T BlockNotUnderAttackMult,
-                T AttackSkillModifierMult,
-                T AttackSkillModifierBase,
-                T AttackWhileUnderAttackMult,
-                T AttackNotUnderAttackMult,
-                T AttackDuringBlockMult,
-                T PowerAttackFatigueModBase,
-                T PowerAttackFatigueModMult)
+                TItem DodgeFatigueModMult,
+                TItem DodgeFatigueModBase,
+                TItem EncumbSpeedModBase,
+                TItem EncumbSpeedModMult,
+                TItem DodgeWhileUnderAttackMult,
+                TItem DodgeNotUnderAttackMult,
+                TItem DodgeBackWhileUnderAttackMult,
+                TItem DodgeBackNotUnderAttackMult,
+                TItem DodgeForwardWhileUnderAttackMult,
+                TItem DodgeForwardNotUnderAttackMult,
+                TItem BlockSkillModifierMult,
+                TItem BlockSkillModifierBase,
+                TItem BlockWhileUnderAttackMult,
+                TItem BlockNotUnderAttackMult,
+                TItem AttackSkillModifierMult,
+                TItem AttackSkillModifierBase,
+                TItem AttackWhileUnderAttackMult,
+                TItem AttackNotUnderAttackMult,
+                TItem AttackDuringBlockMult,
+                TItem PowerAttackFatigueModBase,
+                TItem PowerAttackFatigueModMult)
             {
                 this.DodgeFatigueModMult = DodgeFatigueModMult;
                 this.DodgeFatigueModBase = DodgeFatigueModBase;
@@ -358,37 +358,37 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T DodgeFatigueModMult;
-            public T DodgeFatigueModBase;
-            public T EncumbSpeedModBase;
-            public T EncumbSpeedModMult;
-            public T DodgeWhileUnderAttackMult;
-            public T DodgeNotUnderAttackMult;
-            public T DodgeBackWhileUnderAttackMult;
-            public T DodgeBackNotUnderAttackMult;
-            public T DodgeForwardWhileUnderAttackMult;
-            public T DodgeForwardNotUnderAttackMult;
-            public T BlockSkillModifierMult;
-            public T BlockSkillModifierBase;
-            public T BlockWhileUnderAttackMult;
-            public T BlockNotUnderAttackMult;
-            public T AttackSkillModifierMult;
-            public T AttackSkillModifierBase;
-            public T AttackWhileUnderAttackMult;
-            public T AttackNotUnderAttackMult;
-            public T AttackDuringBlockMult;
-            public T PowerAttackFatigueModBase;
-            public T PowerAttackFatigueModMult;
+            public TItem DodgeFatigueModMult;
+            public TItem DodgeFatigueModBase;
+            public TItem EncumbSpeedModBase;
+            public TItem EncumbSpeedModMult;
+            public TItem DodgeWhileUnderAttackMult;
+            public TItem DodgeNotUnderAttackMult;
+            public TItem DodgeBackWhileUnderAttackMult;
+            public TItem DodgeBackNotUnderAttackMult;
+            public TItem DodgeForwardWhileUnderAttackMult;
+            public TItem DodgeForwardNotUnderAttackMult;
+            public TItem BlockSkillModifierMult;
+            public TItem BlockSkillModifierBase;
+            public TItem BlockWhileUnderAttackMult;
+            public TItem BlockNotUnderAttackMult;
+            public TItem AttackSkillModifierMult;
+            public TItem AttackSkillModifierBase;
+            public TItem AttackWhileUnderAttackMult;
+            public TItem AttackNotUnderAttackMult;
+            public TItem AttackDuringBlockMult;
+            public TItem PowerAttackFatigueModBase;
+            public TItem PowerAttackFatigueModMult;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.DodgeFatigueModMult, rhs.DodgeFatigueModMult)) return false;
@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.DodgeFatigueModMult)) return false;
                 if (!eval(this.DodgeFatigueModBase)) return false;
@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.DodgeFatigueModMult)) return true;
                 if (eval(this.DodgeFatigueModBase)) return true;
@@ -500,14 +500,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new CombatStyleAdvanced.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.DodgeFatigueModMult = eval(this.DodgeFatigueModMult);
                 obj.DodgeFatigueModBase = eval(this.DodgeFatigueModBase);
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, CombatStyleAdvanced.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CombatStyleAdvanced.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(CombatStyleAdvanced.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

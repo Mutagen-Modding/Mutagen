@@ -239,30 +239,30 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
                 this.BlockNumber = initialValue;
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
-                this.Cells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Cell.Mask<T>?>>());
+                this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>());
             }
 
             public Mask(
-                T BlockNumber,
-                T GroupType,
-                T LastModified,
-                T Cells)
+                TItem BlockNumber,
+                TItem GroupType,
+                TItem LastModified,
+                TItem Cells)
             {
                 this.BlockNumber = BlockNumber;
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
-                this.Cells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>(Cells, Enumerable.Empty<MaskItemIndexed<T, Cell.Mask<T>?>>());
+                this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>>(Cells, Enumerable.Empty<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -274,20 +274,20 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T BlockNumber;
-            public T GroupType;
-            public T LastModified;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>? Cells;
+            public TItem BlockNumber;
+            public TItem GroupType;
+            public TItem LastModified;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>>? Cells;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.BlockNumber, rhs.BlockNumber)) return false;
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.BlockNumber)) return false;
                 if (!eval(this.GroupType)) return false;
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.BlockNumber)) return true;
                 if (eval(this.GroupType)) return true;
@@ -353,14 +353,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new CellSubBlock.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.BlockNumber = eval(this.BlockNumber);
                 obj.GroupType = eval(this.GroupType);
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, CellSubBlock.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CellSubBlock.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(CellSubBlock.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -254,34 +254,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            SkyrimMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            SkyrimMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.ObjectBounds = new MaskItem<T, ObjectBounds.Mask<T>?>(initialValue, new ObjectBounds.Mask<T>(initialValue));
-                this.Textures = new MaskItem<T, Textures.Mask<T>?>(initialValue, new Textures.Mask<T>(initialValue));
-                this.Decal = new MaskItem<T, Decal.Mask<T>?>(initialValue, new Decal.Mask<T>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Textures = new MaskItem<TItem, Textures.Mask<TItem>?>(initialValue, new Textures.Mask<TItem>(initialValue));
+                this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(initialValue, new Decal.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T SkyrimMajorRecordFlags,
-                T FormVersion,
-                T Version2,
-                T ObjectBounds,
-                T Textures,
-                T Decal,
-                T Flags)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem SkyrimMajorRecordFlags,
+                TItem FormVersion,
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Textures,
+                TItem Decal,
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -291,9 +291,9 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.ObjectBounds = new MaskItem<T, ObjectBounds.Mask<T>?>(ObjectBounds, new ObjectBounds.Mask<T>(ObjectBounds));
-                this.Textures = new MaskItem<T, Textures.Mask<T>?>(Textures, new Textures.Mask<T>(Textures));
-                this.Decal = new MaskItem<T, Decal.Mask<T>?>(Decal, new Decal.Mask<T>(Decal));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Textures = new MaskItem<TItem, Textures.Mask<TItem>?>(Textures, new Textures.Mask<TItem>(Textures));
+                this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(Decal, new Decal.Mask<TItem>(Decal));
                 this.Flags = Flags;
             }
 
@@ -306,20 +306,20 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<T, ObjectBounds.Mask<T>?>? ObjectBounds { get; set; }
-            public MaskItem<T, Textures.Mask<T>?>? Textures { get; set; }
-            public MaskItem<T, Decal.Mask<T>?>? Decal { get; set; }
-            public T Flags;
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public MaskItem<TItem, Textures.Mask<TItem>?>? Textures { get; set; }
+            public MaskItem<TItem, Decal.Mask<TItem>?>? Decal { get; set; }
+            public TItem Flags;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (ObjectBounds != null)
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (ObjectBounds != null)
@@ -391,14 +391,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new TextureSet.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, TextureSet.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TextureSet.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(TextureSet.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

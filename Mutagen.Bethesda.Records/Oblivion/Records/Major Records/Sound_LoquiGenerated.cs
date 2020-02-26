@@ -232,28 +232,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.File = initialValue;
-                this.Data = new MaskItem<T, SoundData.Mask<T>?>(initialValue, new SoundData.Mask<T>(initialValue));
+                this.Data = new MaskItem<TItem, SoundData.Mask<TItem>?>(initialValue, new SoundData.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T File,
-                T Data)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem File,
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.File = File;
-                this.Data = new MaskItem<T, SoundData.Mask<T>?>(Data, new SoundData.Mask<T>(Data));
+                this.Data = new MaskItem<TItem, SoundData.Mask<TItem>?>(Data, new SoundData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -274,18 +274,18 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T File;
-            public MaskItem<T, SoundData.Mask<T>?>? Data { get; set; }
+            public TItem File;
+            public MaskItem<TItem, SoundData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.File)) return false;
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.File)) return true;
@@ -333,14 +333,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Sound.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.File = eval(this.File);
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Sound.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Sound.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Sound.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

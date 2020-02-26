@@ -306,54 +306,54 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
-                this.ModHeader = new MaskItem<T, ModHeader.Mask<T>?>(initialValue, new ModHeader.Mask<T>(initialValue));
-                this.GameSettings = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Keywords = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.LocationReferenceTypes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Actions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.TextureSets = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Globals = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Classes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Factions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.HeadParts = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Hairs = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
-                this.Eyes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(initialValue, new ModHeader.Mask<TItem>(initialValue));
+                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.TextureSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                T ModHeader,
-                T GameSettings,
-                T Keywords,
-                T LocationReferenceTypes,
-                T Actions,
-                T TextureSets,
-                T Globals,
-                T Classes,
-                T Factions,
-                T HeadParts,
-                T Hairs,
-                T Eyes)
+                TItem ModHeader,
+                TItem GameSettings,
+                TItem Keywords,
+                TItem LocationReferenceTypes,
+                TItem Actions,
+                TItem TextureSets,
+                TItem Globals,
+                TItem Classes,
+                TItem Factions,
+                TItem HeadParts,
+                TItem Hairs,
+                TItem Eyes)
             {
-                this.ModHeader = new MaskItem<T, ModHeader.Mask<T>?>(ModHeader, new ModHeader.Mask<T>(ModHeader));
-                this.GameSettings = new MaskItem<T, Group.Mask<T>?>(GameSettings, new Group.Mask<T>(GameSettings));
-                this.Keywords = new MaskItem<T, Group.Mask<T>?>(Keywords, new Group.Mask<T>(Keywords));
-                this.LocationReferenceTypes = new MaskItem<T, Group.Mask<T>?>(LocationReferenceTypes, new Group.Mask<T>(LocationReferenceTypes));
-                this.Actions = new MaskItem<T, Group.Mask<T>?>(Actions, new Group.Mask<T>(Actions));
-                this.TextureSets = new MaskItem<T, Group.Mask<T>?>(TextureSets, new Group.Mask<T>(TextureSets));
-                this.Globals = new MaskItem<T, Group.Mask<T>?>(Globals, new Group.Mask<T>(Globals));
-                this.Classes = new MaskItem<T, Group.Mask<T>?>(Classes, new Group.Mask<T>(Classes));
-                this.Factions = new MaskItem<T, Group.Mask<T>?>(Factions, new Group.Mask<T>(Factions));
-                this.HeadParts = new MaskItem<T, Group.Mask<T>?>(HeadParts, new Group.Mask<T>(HeadParts));
-                this.Hairs = new MaskItem<T, Group.Mask<T>?>(Hairs, new Group.Mask<T>(Hairs));
-                this.Eyes = new MaskItem<T, Group.Mask<T>?>(Eyes, new Group.Mask<T>(Eyes));
+                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
+                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
+                this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(Keywords, new Group.Mask<TItem>(Keywords));
+                this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(LocationReferenceTypes, new Group.Mask<TItem>(LocationReferenceTypes));
+                this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(Actions, new Group.Mask<TItem>(Actions));
+                this.TextureSets = new MaskItem<TItem, Group.Mask<TItem>?>(TextureSets, new Group.Mask<TItem>(TextureSets));
+                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(Globals, new Group.Mask<TItem>(Globals));
+                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(Classes, new Group.Mask<TItem>(Classes));
+                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(Factions, new Group.Mask<TItem>(Factions));
+                this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(HeadParts, new Group.Mask<TItem>(HeadParts));
+                this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(Hairs, new Group.Mask<TItem>(Hairs));
+                this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(Eyes, new Group.Mask<TItem>(Eyes));
             }
 
             #pragma warning disable CS8618
@@ -365,28 +365,28 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<T, ModHeader.Mask<T>?>? ModHeader { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? GameSettings { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Keywords { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? LocationReferenceTypes { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Actions { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? TextureSets { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Globals { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Classes { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Factions { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? HeadParts { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Hairs { get; set; }
-            public MaskItem<T, Group.Mask<T>?>? Eyes { get; set; }
+            public MaskItem<TItem, ModHeader.Mask<TItem>?>? ModHeader { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Keywords { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LocationReferenceTypes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Actions { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? TextureSets { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Globals { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Classes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Factions { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? HeadParts { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Hairs { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Eyes { get; set; }
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (ModHeader != null)
                 {
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (ModHeader != null)
                 {
@@ -558,14 +558,14 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new SkyrimMod.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void ToString(FileGeneration fg, SkyrimMod.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SkyrimMod.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(SkyrimMod.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

@@ -681,20 +681,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public new class Mask<T> :
-            OblivionMajorRecord.Mask<T>,
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public new class Mask<TItem> :
+            OblivionMajorRecord.Mask<TItem>,
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             : base(initialValue)
             {
                 this.TextureLowerLayer = initialValue;
                 this.TextureUpperLayer = initialValue;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
-                this.WeatherTypes = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherType.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherType.Mask<T>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
                 this.FogDayNear = initialValue;
                 this.FogDayFar = initialValue;
                 this.FogNightNear = initialValue;
@@ -726,57 +726,57 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ThunderLightningFrequency = initialValue;
                 this.Classification = initialValue;
                 this.LightningColor = initialValue;
-                this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherSound.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherSound.Mask<T>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.FNAMDataTypeState = initialValue;
                 this.HNAMDataTypeState = initialValue;
                 this.DATADataTypeState = initialValue;
             }
 
             public Mask(
-                T MajorRecordFlagsRaw,
-                T FormKey,
-                T Version,
-                T EditorID,
-                T OblivionMajorRecordFlags,
-                T TextureLowerLayer,
-                T TextureUpperLayer,
-                T Model,
-                T WeatherTypes,
-                T FogDayNear,
-                T FogDayFar,
-                T FogNightNear,
-                T FogNightFar,
-                T HdrEyeAdaptSpeed,
-                T HdrBlurRadius,
-                T HdrBlurPasses,
-                T HdrEmissiveMult,
-                T HdrTargetLum,
-                T HdrUpperLumClamp,
-                T HdrBrightScale,
-                T HdrBrightClamp,
-                T HdrLumRampNoTex,
-                T HdrLumRampMin,
-                T HdrLumRampMax,
-                T HdrSunlightDimmer,
-                T HdrGrassDimmer,
-                T HdrTreeDimmer,
-                T WindSpeed,
-                T CloudSpeedLower,
-                T CloudSpeedUpper,
-                T TransDelta,
-                T SunGlare,
-                T SunDamage,
-                T PrecipitationBeginFadeIn,
-                T PrecipitationEndFadeOut,
-                T ThunderLightningBeginFadeIn,
-                T ThunderLightningEndFadeOut,
-                T ThunderLightningFrequency,
-                T Classification,
-                T LightningColor,
-                T Sounds,
-                T FNAMDataTypeState,
-                T HNAMDataTypeState,
-                T DATADataTypeState)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem OblivionMajorRecordFlags,
+                TItem TextureLowerLayer,
+                TItem TextureUpperLayer,
+                TItem Model,
+                TItem WeatherTypes,
+                TItem FogDayNear,
+                TItem FogDayFar,
+                TItem FogNightNear,
+                TItem FogNightFar,
+                TItem HdrEyeAdaptSpeed,
+                TItem HdrBlurRadius,
+                TItem HdrBlurPasses,
+                TItem HdrEmissiveMult,
+                TItem HdrTargetLum,
+                TItem HdrUpperLumClamp,
+                TItem HdrBrightScale,
+                TItem HdrBrightClamp,
+                TItem HdrLumRampNoTex,
+                TItem HdrLumRampMin,
+                TItem HdrLumRampMax,
+                TItem HdrSunlightDimmer,
+                TItem HdrGrassDimmer,
+                TItem HdrTreeDimmer,
+                TItem WindSpeed,
+                TItem CloudSpeedLower,
+                TItem CloudSpeedUpper,
+                TItem TransDelta,
+                TItem SunGlare,
+                TItem SunDamage,
+                TItem PrecipitationBeginFadeIn,
+                TItem PrecipitationEndFadeOut,
+                TItem ThunderLightningBeginFadeIn,
+                TItem ThunderLightningEndFadeOut,
+                TItem ThunderLightningFrequency,
+                TItem Classification,
+                TItem LightningColor,
+                TItem Sounds,
+                TItem FNAMDataTypeState,
+                TItem HNAMDataTypeState,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -786,8 +786,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.TextureLowerLayer = TextureLowerLayer;
                 this.TextureUpperLayer = TextureUpperLayer;
-                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
-                this.WeatherTypes = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherType.Mask<T>?>>>(WeatherTypes, Enumerable.Empty<MaskItemIndexed<T, WeatherType.Mask<T>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>>(WeatherTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
                 this.FogDayNear = FogDayNear;
                 this.FogDayFar = FogDayFar;
                 this.FogNightNear = FogNightNear;
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ThunderLightningFrequency = ThunderLightningFrequency;
                 this.Classification = Classification;
                 this.LightningColor = LightningColor;
-                this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherSound.Mask<T>?>>>(Sounds, Enumerable.Empty<MaskItemIndexed<T, WeatherSound.Mask<T>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.FNAMDataTypeState = FNAMDataTypeState;
                 this.HNAMDataTypeState = HNAMDataTypeState;
                 this.DATADataTypeState = DATADataTypeState;
@@ -834,55 +834,55 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public T TextureLowerLayer;
-            public T TextureUpperLayer;
-            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherType.Mask<T>?>>>? WeatherTypes;
-            public T FogDayNear;
-            public T FogDayFar;
-            public T FogNightNear;
-            public T FogNightFar;
-            public T HdrEyeAdaptSpeed;
-            public T HdrBlurRadius;
-            public T HdrBlurPasses;
-            public T HdrEmissiveMult;
-            public T HdrTargetLum;
-            public T HdrUpperLumClamp;
-            public T HdrBrightScale;
-            public T HdrBrightClamp;
-            public T HdrLumRampNoTex;
-            public T HdrLumRampMin;
-            public T HdrLumRampMax;
-            public T HdrSunlightDimmer;
-            public T HdrGrassDimmer;
-            public T HdrTreeDimmer;
-            public T WindSpeed;
-            public T CloudSpeedLower;
-            public T CloudSpeedUpper;
-            public T TransDelta;
-            public T SunGlare;
-            public T SunDamage;
-            public T PrecipitationBeginFadeIn;
-            public T PrecipitationEndFadeOut;
-            public T ThunderLightningBeginFadeIn;
-            public T ThunderLightningEndFadeOut;
-            public T ThunderLightningFrequency;
-            public T Classification;
-            public T LightningColor;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherSound.Mask<T>?>>>? Sounds;
-            public T FNAMDataTypeState;
-            public T HNAMDataTypeState;
-            public T DATADataTypeState;
+            public TItem TextureLowerLayer;
+            public TItem TextureUpperLayer;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>>? WeatherTypes;
+            public TItem FogDayNear;
+            public TItem FogDayFar;
+            public TItem FogNightNear;
+            public TItem FogNightFar;
+            public TItem HdrEyeAdaptSpeed;
+            public TItem HdrBlurRadius;
+            public TItem HdrBlurPasses;
+            public TItem HdrEmissiveMult;
+            public TItem HdrTargetLum;
+            public TItem HdrUpperLumClamp;
+            public TItem HdrBrightScale;
+            public TItem HdrBrightClamp;
+            public TItem HdrLumRampNoTex;
+            public TItem HdrLumRampMin;
+            public TItem HdrLumRampMax;
+            public TItem HdrSunlightDimmer;
+            public TItem HdrGrassDimmer;
+            public TItem HdrTreeDimmer;
+            public TItem WindSpeed;
+            public TItem CloudSpeedLower;
+            public TItem CloudSpeedUpper;
+            public TItem TransDelta;
+            public TItem SunGlare;
+            public TItem SunDamage;
+            public TItem PrecipitationBeginFadeIn;
+            public TItem PrecipitationEndFadeOut;
+            public TItem ThunderLightningBeginFadeIn;
+            public TItem ThunderLightningEndFadeOut;
+            public TItem ThunderLightningFrequency;
+            public TItem Classification;
+            public TItem LightningColor;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>>? Sounds;
+            public TItem FNAMDataTypeState;
+            public TItem HNAMDataTypeState;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public override bool All(Func<T, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.TextureLowerLayer)) return false;
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public override bool Any(Func<T, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.TextureLowerLayer)) return true;
@@ -1122,14 +1122,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<T, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Weather.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.TextureLowerLayer = eval(this.TextureLowerLayer);
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, Weather.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Weather.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(Weather.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {

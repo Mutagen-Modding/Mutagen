@@ -252,33 +252,33 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mask
-        public class Mask<T> :
-            IMask<T>,
-            IEquatable<Mask<T>>
-            where T : notnull
+        public class Mask<TItem> :
+            IMask<TItem>,
+            IEquatable<Mask<TItem>>
+            where TItem : notnull
         {
             #region Ctors
-            public Mask(T initialValue)
+            public Mask(TItem initialValue)
             {
-                this.MetadataSummary = new MaskItem<T, ScriptMetaSummary.Mask<T>?>(initialValue, new ScriptMetaSummary.Mask<T>(initialValue));
+                this.MetadataSummary = new MaskItem<TItem, ScriptMetaSummary.Mask<TItem>?>(initialValue, new ScriptMetaSummary.Mask<TItem>(initialValue));
                 this.CompiledScript = initialValue;
                 this.SourceCode = initialValue;
-                this.LocalVariables = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LocalVariable.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, LocalVariable.Mask<T>?>>());
-                this.References = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ScriptReference.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, ScriptReference.Mask<T>?>>());
+                this.LocalVariables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>());
+                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>());
             }
 
             public Mask(
-                T MetadataSummary,
-                T CompiledScript,
-                T SourceCode,
-                T LocalVariables,
-                T References)
+                TItem MetadataSummary,
+                TItem CompiledScript,
+                TItem SourceCode,
+                TItem LocalVariables,
+                TItem References)
             {
-                this.MetadataSummary = new MaskItem<T, ScriptMetaSummary.Mask<T>?>(MetadataSummary, new ScriptMetaSummary.Mask<T>(MetadataSummary));
+                this.MetadataSummary = new MaskItem<TItem, ScriptMetaSummary.Mask<TItem>?>(MetadataSummary, new ScriptMetaSummary.Mask<TItem>(MetadataSummary));
                 this.CompiledScript = CompiledScript;
                 this.SourceCode = SourceCode;
-                this.LocalVariables = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LocalVariable.Mask<T>?>>>(LocalVariables, Enumerable.Empty<MaskItemIndexed<T, LocalVariable.Mask<T>?>>());
-                this.References = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ScriptReference.Mask<T>?>>>(References, Enumerable.Empty<MaskItemIndexed<T, ScriptReference.Mask<T>?>>());
+                this.LocalVariables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>>(LocalVariables, Enumerable.Empty<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>());
+                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>>(References, Enumerable.Empty<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -290,21 +290,21 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<T, ScriptMetaSummary.Mask<T>?>? MetadataSummary { get; set; }
-            public T CompiledScript;
-            public T SourceCode;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, LocalVariable.Mask<T>?>>>? LocalVariables;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, ScriptReference.Mask<T>?>>>? References;
+            public MaskItem<TItem, ScriptMetaSummary.Mask<TItem>?>? MetadataSummary { get; set; }
+            public TItem CompiledScript;
+            public TItem SourceCode;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>>? LocalVariables;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>>? References;
             #endregion
 
             #region Equals
             public override bool Equals(object obj)
             {
-                if (!(obj is Mask<T> rhs)) return false;
+                if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<T> rhs)
+            public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.MetadataSummary, rhs.MetadataSummary)) return false;
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region All
-            public bool All(Func<T, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
                 if (MetadataSummary != null)
                 {
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Any
-            public bool Any(Func<T, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
                 if (MetadataSummary != null)
                 {
@@ -404,14 +404,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<T, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new ScriptFields.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.MetadataSummary = this.MetadataSummary == null ? null : new MaskItem<R, ScriptMetaSummary.Mask<R>?>(eval(this.MetadataSummary.Overall), this.MetadataSummary.Specific?.Translate(eval));
                 obj.CompiledScript = eval(this.CompiledScript);
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void ToString(FileGeneration fg, ScriptFields.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ScriptFields.Mask<T>)} =>");
+                fg.AppendLine($"{nameof(ScriptFields.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
