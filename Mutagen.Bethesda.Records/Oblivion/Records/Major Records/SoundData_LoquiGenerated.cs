@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISoundDataInternalGetter rhs)) return false;
             return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -344,19 +344,19 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.MinimumAttenuationDistance ?? true)
                     {
-                        fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance}");
+                        fg.AppendItem(MinimumAttenuationDistance, "MinimumAttenuationDistance");
                     }
                     if (printMask?.MaximumAttenuationDistance ?? true)
                     {
-                        fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance}");
+                        fg.AppendItem(MaximumAttenuationDistance, "MaximumAttenuationDistance");
                     }
                     if (printMask?.FrequencyAdjustment ?? true)
                     {
-                        fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment}");
+                        fg.AppendItem(FrequencyAdjustment, "FrequencyAdjustment");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                 }
                 fg.AppendLine("]");
@@ -493,10 +493,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected virtual void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance}");
-                fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance}");
-                fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment}");
-                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendItem(MinimumAttenuationDistance, "MinimumAttenuationDistance");
+                fg.AppendItem(MaximumAttenuationDistance, "MaximumAttenuationDistance");
+                fg.AppendItem(FrequencyAdjustment, "FrequencyAdjustment");
+                fg.AppendItem(Flags, "Flags");
             }
             #endregion
 
@@ -1364,19 +1364,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.MinimumAttenuationDistance ?? true)
             {
-                fg.AppendLine($"MinimumAttenuationDistance => {item.MinimumAttenuationDistance}");
+                fg.AppendItem(item.MinimumAttenuationDistance, "MinimumAttenuationDistance");
             }
             if (printMask?.MaximumAttenuationDistance ?? true)
             {
-                fg.AppendLine($"MaximumAttenuationDistance => {item.MaximumAttenuationDistance}");
+                fg.AppendItem(item.MaximumAttenuationDistance, "MaximumAttenuationDistance");
             }
             if (printMask?.FrequencyAdjustment ?? true)
             {
-                fg.AppendLine($"FrequencyAdjustment => {item.FrequencyAdjustment}");
+                fg.AppendItem(item.FrequencyAdjustment, "FrequencyAdjustment");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
         }
         

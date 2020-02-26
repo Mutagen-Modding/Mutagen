@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Unknown1 = value ?? new byte[2];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown1 => this.Unknown1;
+        ReadOnlyMemorySlice<Byte> IRegionDataObjectGetter.Unknown1 => this.Unknown1;
         #endregion
         #region Density
         public Single Density { get; set; } = default;
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Unknown2 = value ?? new byte[6];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown2 => this.Unknown2;
+        ReadOnlyMemorySlice<Byte> IRegionDataObjectGetter.Unknown2 => this.Unknown2;
         #endregion
 
         #region To String
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRegionDataObjectGetter rhs)) return false;
             return ((RegionDataObjectCommon)((IRegionDataObjectGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -526,71 +526,71 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Object ?? true)
                     {
-                        fg.AppendLine($"Object => {Object}");
+                        fg.AppendItem(Object, "Object");
                     }
                     if (printMask?.ParentIndex ?? true)
                     {
-                        fg.AppendLine($"ParentIndex => {ParentIndex}");
+                        fg.AppendItem(ParentIndex, "ParentIndex");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendLine($"Unknown1 => {Unknown1}");
+                        fg.AppendItem(Unknown1, "Unknown1");
                     }
                     if (printMask?.Density ?? true)
                     {
-                        fg.AppendLine($"Density => {Density}");
+                        fg.AppendItem(Density, "Density");
                     }
                     if (printMask?.Clustering ?? true)
                     {
-                        fg.AppendLine($"Clustering => {Clustering}");
+                        fg.AppendItem(Clustering, "Clustering");
                     }
                     if (printMask?.MinSlope ?? true)
                     {
-                        fg.AppendLine($"MinSlope => {MinSlope}");
+                        fg.AppendItem(MinSlope, "MinSlope");
                     }
                     if (printMask?.MaxSlope ?? true)
                     {
-                        fg.AppendLine($"MaxSlope => {MaxSlope}");
+                        fg.AppendItem(MaxSlope, "MaxSlope");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.RadiusWrtPercent ?? true)
                     {
-                        fg.AppendLine($"RadiusWrtPercent => {RadiusWrtPercent}");
+                        fg.AppendItem(RadiusWrtPercent, "RadiusWrtPercent");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendLine($"Radius => {Radius}");
+                        fg.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.MinHeight ?? true)
                     {
-                        fg.AppendLine($"MinHeight => {MinHeight}");
+                        fg.AppendItem(MinHeight, "MinHeight");
                     }
                     if (printMask?.MaxHeight ?? true)
                     {
-                        fg.AppendLine($"MaxHeight => {MaxHeight}");
+                        fg.AppendItem(MaxHeight, "MaxHeight");
                     }
                     if (printMask?.Sink ?? true)
                     {
-                        fg.AppendLine($"Sink => {Sink}");
+                        fg.AppendItem(Sink, "Sink");
                     }
                     if (printMask?.SinkVariance ?? true)
                     {
-                        fg.AppendLine($"SinkVariance => {SinkVariance}");
+                        fg.AppendItem(SinkVariance, "SinkVariance");
                     }
                     if (printMask?.SizeVariance ?? true)
                     {
-                        fg.AppendLine($"SizeVariance => {SizeVariance}");
+                        fg.AppendItem(SizeVariance, "SizeVariance");
                     }
                     if (printMask?.AngleVariance ?? true)
                     {
-                        fg.AppendLine($"AngleVariance => {AngleVariance}");
+                        fg.AppendItem(AngleVariance, "AngleVariance");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                        fg.AppendItem(Unknown2, "Unknown2");
                     }
                 }
                 fg.AppendLine("]");
@@ -857,23 +857,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Object => {Object}");
-                fg.AppendLine($"ParentIndex => {ParentIndex}");
-                fg.AppendLine($"Unknown1 => {Unknown1}");
-                fg.AppendLine($"Density => {Density}");
-                fg.AppendLine($"Clustering => {Clustering}");
-                fg.AppendLine($"MinSlope => {MinSlope}");
-                fg.AppendLine($"MaxSlope => {MaxSlope}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"RadiusWrtPercent => {RadiusWrtPercent}");
-                fg.AppendLine($"Radius => {Radius}");
-                fg.AppendLine($"MinHeight => {MinHeight}");
-                fg.AppendLine($"MaxHeight => {MaxHeight}");
-                fg.AppendLine($"Sink => {Sink}");
-                fg.AppendLine($"SinkVariance => {SinkVariance}");
-                fg.AppendLine($"SizeVariance => {SizeVariance}");
-                fg.AppendLine($"AngleVariance => {AngleVariance}");
-                fg.AppendLine($"Unknown2 => {Unknown2}");
+                fg.AppendItem(Object, "Object");
+                fg.AppendItem(ParentIndex, "ParentIndex");
+                fg.AppendItem(Unknown1, "Unknown1");
+                fg.AppendItem(Density, "Density");
+                fg.AppendItem(Clustering, "Clustering");
+                fg.AppendItem(MinSlope, "MinSlope");
+                fg.AppendItem(MaxSlope, "MaxSlope");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(RadiusWrtPercent, "RadiusWrtPercent");
+                fg.AppendItem(Radius, "Radius");
+                fg.AppendItem(MinHeight, "MinHeight");
+                fg.AppendItem(MaxHeight, "MaxHeight");
+                fg.AppendItem(Sink, "Sink");
+                fg.AppendItem(SinkVariance, "SinkVariance");
+                fg.AppendItem(SizeVariance, "SizeVariance");
+                fg.AppendItem(AngleVariance, "AngleVariance");
+                fg.AppendItem(Unknown2, "Unknown2");
             }
             #endregion
 
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         IFormLinkGetter<IOblivionMajorRecordGetter> Object { get; }
         UInt16 ParentIndex { get; }
-        ReadOnlySpan<Byte> Unknown1 { get; }
+        ReadOnlyMemorySlice<Byte> Unknown1 { get; }
         Single Density { get; }
         Byte Clustering { get; }
         Byte MinSlope { get; }
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
         Single SinkVariance { get; }
         Single SizeVariance { get; }
         P3UInt16 AngleVariance { get; }
-        ReadOnlySpan<Byte> Unknown2 { get; }
+        ReadOnlyMemorySlice<Byte> Unknown2 { get; }
 
     }
 
@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Object = object.Equals(item.Object, rhs.Object);
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
-            ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1, rhs.Unknown1);
+            ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1.Span, rhs.Unknown1.Span);
             ret.Density = item.Density.EqualsWithin(rhs.Density);
             ret.Clustering = item.Clustering == rhs.Clustering;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SinkVariance = item.SinkVariance.EqualsWithin(rhs.SinkVariance);
             ret.SizeVariance = item.SizeVariance.EqualsWithin(rhs.SizeVariance);
             ret.AngleVariance = item.AngleVariance.Equals(rhs.AngleVariance);
-            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2, rhs.Unknown2);
+            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
         }
         
         public string ToString(
@@ -1988,11 +1988,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Object ?? true)
             {
-                fg.AppendLine($"Object => {item.Object}");
+                fg.AppendItem(item.Object, "Object");
             }
             if (printMask?.ParentIndex ?? true)
             {
-                fg.AppendLine($"ParentIndex => {item.ParentIndex}");
+                fg.AppendItem(item.ParentIndex, "ParentIndex");
             }
             if (printMask?.Unknown1 ?? true)
             {
@@ -2000,55 +2000,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Density ?? true)
             {
-                fg.AppendLine($"Density => {item.Density}");
+                fg.AppendItem(item.Density, "Density");
             }
             if (printMask?.Clustering ?? true)
             {
-                fg.AppendLine($"Clustering => {item.Clustering}");
+                fg.AppendItem(item.Clustering, "Clustering");
             }
             if (printMask?.MinSlope ?? true)
             {
-                fg.AppendLine($"MinSlope => {item.MinSlope}");
+                fg.AppendItem(item.MinSlope, "MinSlope");
             }
             if (printMask?.MaxSlope ?? true)
             {
-                fg.AppendLine($"MaxSlope => {item.MaxSlope}");
+                fg.AppendItem(item.MaxSlope, "MaxSlope");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.RadiusWrtPercent ?? true)
             {
-                fg.AppendLine($"RadiusWrtPercent => {item.RadiusWrtPercent}");
+                fg.AppendItem(item.RadiusWrtPercent, "RadiusWrtPercent");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendLine($"Radius => {item.Radius}");
+                fg.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.MinHeight ?? true)
             {
-                fg.AppendLine($"MinHeight => {item.MinHeight}");
+                fg.AppendItem(item.MinHeight, "MinHeight");
             }
             if (printMask?.MaxHeight ?? true)
             {
-                fg.AppendLine($"MaxHeight => {item.MaxHeight}");
+                fg.AppendItem(item.MaxHeight, "MaxHeight");
             }
             if (printMask?.Sink ?? true)
             {
-                fg.AppendLine($"Sink => {item.Sink}");
+                fg.AppendItem(item.Sink, "Sink");
             }
             if (printMask?.SinkVariance ?? true)
             {
-                fg.AppendLine($"SinkVariance => {item.SinkVariance}");
+                fg.AppendItem(item.SinkVariance, "SinkVariance");
             }
             if (printMask?.SizeVariance ?? true)
             {
-                fg.AppendLine($"SizeVariance => {item.SizeVariance}");
+                fg.AppendItem(item.SizeVariance, "SizeVariance");
             }
             if (printMask?.AngleVariance ?? true)
             {
-                fg.AppendLine($"AngleVariance => {item.AngleVariance}");
+                fg.AppendItem(item.AngleVariance, "AngleVariance");
             }
             if (printMask?.Unknown2 ?? true)
             {
@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Object.Equals(rhs.Object)) return false;
             if (lhs.ParentIndex != rhs.ParentIndex) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1, rhs.Unknown1)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1.Span, rhs.Unknown1.Span)) return false;
             if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
             if (lhs.Clustering != rhs.Clustering) return false;
             if (lhs.MinSlope != rhs.MinSlope) return false;
@@ -2109,7 +2109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
             if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
             if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2, rhs.Unknown2)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             return true;
         }
         
@@ -3227,7 +3227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(4, 2));
-        public ReadOnlySpan<Byte> Unknown1 => _data.Span.Slice(6, 2).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(6, 2).ToArray();
         public Single Density => SpanExt.GetFloat(_data.Span.Slice(8, 4));
         public Byte Clustering => _data.Span[12];
         public Byte MinSlope => _data.Span[13];
@@ -3241,7 +3241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single SinkVariance => SpanExt.GetFloat(_data.Span.Slice(32, 4));
         public Single SizeVariance => SpanExt.GetFloat(_data.Span.Slice(36, 4));
         public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Span.Slice(40, 6));
-        public ReadOnlySpan<Byte> Unknown2 => _data.Span.Slice(46, 6).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(46, 6).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

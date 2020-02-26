@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IScriptEffectGetter rhs)) return false;
             return ((ScriptEffectCommon)((IScriptEffectGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -414,27 +414,27 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
                     if (printMask?.MagicSchool ?? true)
                     {
-                        fg.AppendLine($"MagicSchool => {MagicSchool}");
+                        fg.AppendItem(MagicSchool, "MagicSchool");
                     }
                     if (printMask?.VisualEffect ?? true)
                     {
-                        fg.AppendLine($"VisualEffect => {VisualEffect}");
+                        fg.AppendItem(VisualEffect, "VisualEffect");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.SCITDataTypeState ?? true)
                     {
-                        fg.AppendLine($"SCITDataTypeState => {SCITDataTypeState}");
+                        fg.AppendItem(SCITDataTypeState, "SCITDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -591,12 +591,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine($"MagicSchool => {MagicSchool}");
-                fg.AppendLine($"VisualEffect => {VisualEffect}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"SCITDataTypeState => {SCITDataTypeState}");
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(MagicSchool, "MagicSchool");
+                fg.AppendItem(VisualEffect, "VisualEffect");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(SCITDataTypeState, "SCITDataTypeState");
             }
             #endregion
 
@@ -1540,27 +1540,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Script ?? true)
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(item.Script, "Script");
             }
             if (printMask?.MagicSchool ?? true)
             {
-                fg.AppendLine($"MagicSchool => {item.MagicSchool}");
+                fg.AppendItem(item.MagicSchool, "MagicSchool");
             }
             if (printMask?.VisualEffect ?? true)
             {
-                fg.AppendLine($"VisualEffect => {item.VisualEffect}");
+                fg.AppendItem(item.VisualEffect, "VisualEffect");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
             if (printMask?.SCITDataTypeState ?? true)
             {
-                fg.AppendLine($"SCITDataTypeState => {item.SCITDataTypeState}");
+                fg.AppendItem(item.SCITDataTypeState, "SCITDataTypeState");
             }
         }
         

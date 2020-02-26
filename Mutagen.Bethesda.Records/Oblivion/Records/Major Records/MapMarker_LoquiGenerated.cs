@@ -72,13 +72,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<MapMarker.Type> _Types = new SetList<MapMarker.Type>();
-        public ISetList<MapMarker.Type> Types => _Types;
+        private ExtendedList<MapMarker.Type>? _Types;
+        public ExtendedList<MapMarker.Type>? Types
+        {
+            get => this._Types;
+            set => this._Types = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<MapMarker.Type> IMapMarker.Types => _Types;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<MapMarker.Type> IMapMarkerGetter.Types => _Types;
+        IReadOnlyList<MapMarker.Type>? IMapMarkerGetter.Types => _Types;
         #endregion
 
         #endregion
@@ -97,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IMapMarkerGetter rhs)) return false;
             return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -254,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Flags = initialValue;
                 this.Name = initialValue;
-                this.Types = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Types = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
             }
 
             public Mask(
@@ -264,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Flags = Flags;
                 this.Name = Name;
-                this.Types = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Types, Enumerable.Empty<(int Index, T Value)>());
+                this.Types = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(Types, Enumerable.Empty<(int Index, T Value)>());
             }
 
             #pragma warning disable CS8618
@@ -278,11 +280,11 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public T Flags;
             public T Name;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Types;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? Types;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -361,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Name = eval(this.Name);
                 if (Types != null)
                 {
-                    obj.Types = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Types.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Types = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Types.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Types.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -397,35 +399,30 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.Types?.Overall ?? true)
+                    if ((printMask?.Types?.Overall ?? true)
+                        && Types.TryGet(out var TypesItem))
                     {
                         fg.AppendLine("Types =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Types != null)
+                            fg.AppendItem(TypesItem.Overall);
+                            if (TypesItem.Specific != null)
                             {
-                                if (Types.Overall != null)
+                                foreach (var subItem in TypesItem.Specific)
                                 {
-                                    fg.AppendLine(Types.Overall.ToString());
-                                }
-                                if (Types.Specific != null)
-                                {
-                                    foreach (var subItem in Types.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -556,33 +553,30 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine("Types =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Name, "Name");
+                if (Types.TryGet(out var TypesItem))
                 {
-                    if (Types != null)
+                    fg.AppendLine("Types =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Types.Overall != null)
+                        fg.AppendItem(TypesItem.Overall);
+                        if (TypesItem.Specific != null)
                         {
-                            fg.AppendLine(Types.Overall.ToString());
-                        }
-                        if (Types.Specific != null)
-                        {
-                            foreach (var subItem in Types.Specific)
+                            foreach (var subItem in TypesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -718,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new MapMarker.Flag? Flags { get; set; }
         new String? Name { get; set; }
-        new ISetList<MapMarker.Type> Types { get; }
+        new ExtendedList<MapMarker.Type>? Types { get; set; }
     }
 
     public partial interface IMapMarkerGetter :
@@ -735,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         MapMarker.Flag? Flags { get; }
         String? Name { get; }
-        IReadOnlySetList<MapMarker.Type> Types { get; }
+        IReadOnlyList<MapMarker.Type>? Types { get; }
 
     }
 
@@ -1206,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MapMarker_FieldIndex.Name:
                     return typeof(String);
                 case MapMarker_FieldIndex.Types:
-                    return typeof(ISetList<MapMarker.Type>);
+                    return typeof(ExtendedList<MapMarker.Type>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1275,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Flags = default;
             item.Name = default;
-            item.Types.Unset();
+            item.Types = null;
         }
         
         #region Xml Translation
@@ -1346,15 +1340,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.Types,
-                        transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
-                        {
-                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
-                                frame: r.SpawnWithLength(2),
-                                item: out listSubItem);
-                        });
+                    item.Types = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
+                            {
+                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
+                                    frame: r.SpawnWithLength(2),
+                                    item: out listSubItem);
+                            })
+                        .ToExtendedList<MapMarker.Type>();
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Types);
                 }
                 default:
@@ -1458,26 +1453,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             MapMarker.Mask<bool>? printMask = null)
         {
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Types?.Overall ?? true)
+            if ((printMask?.Types?.Overall ?? true)
+                && item.Types.TryGet(out var TypesItem))
             {
                 fg.AppendLine("Types =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Types)
+                    foreach (var subItem in TypesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1492,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Types?.Overall.HasValue ?? false && checkMask.Types!.Overall.Value != item.Types.HasBeenSet) return false;
+            if (checkMask.Types?.Overall.HasValue ?? false && checkMask.Types!.Overall.Value != (item.Types != null)) return false;
             return true;
         }
         
@@ -1502,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Flags = (item.Flags != null);
             mask.Name = (item.Name != null);
-            mask.Types = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Types.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.Types = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Types != null), default);
         }
         
         #region Equals and Hash
@@ -1574,13 +1572,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
                 try
                 {
-                    if (rhs.Types.HasBeenSet)
+                    if ((rhs.Types != null))
                     {
-                        item.Types.SetTo(rhs.Types);
+                        item.Types = 
+                            rhs.Types
+                            .ToExtendedList<MapMarker.Type>();
                     }
                     else
                     {
-                        item.Types.Unset();
+                        item.Types = null;
                     }
                 }
                 catch (Exception ex)
@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)MapMarker_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Types.HasBeenSet
+            if ((item.Types != null)
                 && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Types) ?? true))
             {
                 ListXmlTranslation<MapMarker.Type>.Instance.Write(
@@ -1874,11 +1874,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Types.SetTo(TypesItem);
+                            item.Types = TypesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Types.Unset();
+                            item.Types = null;
                         }
                     }
                     catch (Exception ex)
@@ -2217,7 +2217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlySetList<MapMarker.Type> Types { get; private set; } = EmptySetList<MapMarker.Type>.Instance;
+        public IReadOnlyList<MapMarker.Type>? Types { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

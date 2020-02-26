@@ -21,8 +21,8 @@ namespace Mutagen.Bethesda.Oblivion
             MagicEffect = 0x100
         }
 
-        public IEnumerable<ScriptObjectReference> ObjectReferences => this.References.WhereCastable<ScriptReference, ScriptObjectReference>();
-        public IEnumerable<ScriptVariableReference> VariableReferences => this.References.WhereCastable<ScriptReference, ScriptVariableReference>();
+        public IEnumerable<ScriptObjectReference>? ObjectReferences => this.References?.WhereCastable<ScriptReference, ScriptObjectReference>();
+        public IEnumerable<ScriptVariableReference>? VariableReferences => this.References?.WhereCastable<ScriptReference, ScriptVariableReference>();
 
         #region CompiledScript
         protected Byte[]? _CompiledScript;
@@ -37,9 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<byte> IScriptFieldsGetter.CompiledScript => this.CompiledScript;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IScriptFieldsGetter.CompiledScript_IsSet => _CompiledScript != null;
+        ReadOnlyMemorySlice<byte>? IScriptFieldsGetter.CompiledScript => this.CompiledScript ?? default(ReadOnlyMemorySlice<byte>?);
         #endregion
     }
 

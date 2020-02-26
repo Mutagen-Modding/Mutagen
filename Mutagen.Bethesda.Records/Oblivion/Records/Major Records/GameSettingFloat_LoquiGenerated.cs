@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IGameSettingFloatGetter rhs)) return false;
             return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendLine($"Data => {Data}");
+                        fg.AppendItem(Data, "Data");
                     }
                 }
                 fg.AppendLine("]");
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Data => {Data}");
+                fg.AppendItem(Data, "Data");
             }
             #endregion
 
@@ -1291,9 +1291,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Data ?? true)
+            if ((printMask?.Data ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendLine($"Data => {item.Data}");
+                fg.AppendItem(DataItem, "Data");
             }
         }
         

@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IAIPackageTargetGetter rhs)) return false;
             return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -338,15 +338,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.ObjectType ?? true)
                     {
-                        fg.AppendLine($"ObjectType => {ObjectType}");
+                        fg.AppendItem(ObjectType, "ObjectType");
                     }
                     if (printMask?.Object ?? true)
                     {
-                        fg.AppendLine($"Object => {Object}");
+                        fg.AppendItem(Object, "Object");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendLine($"Count => {Count}");
+                        fg.AppendItem(Count, "Count");
                     }
                 }
                 fg.AppendLine("]");
@@ -473,9 +473,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"ObjectType => {ObjectType}");
-                fg.AppendLine($"Object => {Object}");
-                fg.AppendLine($"Count => {Count}");
+                fg.AppendItem(ObjectType, "ObjectType");
+                fg.AppendItem(Object, "Object");
+                fg.AppendItem(Count, "Count");
             }
             #endregion
 
@@ -1296,15 +1296,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.ObjectType ?? true)
             {
-                fg.AppendLine($"ObjectType => {item.ObjectType}");
+                fg.AppendItem(item.ObjectType, "ObjectType");
             }
             if (printMask?.Object ?? true)
             {
-                fg.AppendLine($"Object => {item.Object}");
+                fg.AppendItem(item.Object, "Object");
             }
             if (printMask?.Count ?? true)
             {
-                fg.AppendLine($"Count => {item.Count}");
+                fg.AppendItem(item.Count, "Count");
             }
         }
         

@@ -70,13 +70,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Condition> _Conditions = new SetList<Condition>();
-        public ISetList<Condition> Conditions => _Conditions;
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
+        {
+            get => this._Conditions;
+            set => this._Conditions = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Condition> IQuestTarget.Conditions => _Conditions;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IConditionGetter> IQuestTargetGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter>? IQuestTargetGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -98,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IQuestTargetGetter rhs)) return false;
             return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -255,7 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Target = initialValue;
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
                 this.QSTADataTypeState = initialValue;
             }
 
@@ -267,7 +269,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Target = Target;
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
                 this.QSTADataTypeState = QSTADataTypeState;
             }
 
@@ -282,12 +284,12 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public T Target;
             public T Flags;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>? Conditions;
             public T QSTADataTypeState;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -372,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Flags = eval(this.Flags);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -410,35 +412,30 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Target ?? true)
                     {
-                        fg.AppendLine($"Target => {Target}");
+                        fg.AppendItem(Target, "Target");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Conditions?.Overall ?? true)
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions.TryGet(out var ConditionsItem))
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Conditions != null)
+                            fg.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
                             {
-                                if (Conditions.Overall != null)
+                                foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine(Conditions.Overall.ToString());
-                                }
-                                if (Conditions.Specific != null)
-                                {
-                                    foreach (var subItem in Conditions.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -446,7 +443,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.QSTADataTypeState ?? true)
                     {
-                        fg.AppendLine($"QSTADataTypeState => {QSTADataTypeState}");
+                        fg.AppendItem(QSTADataTypeState, "QSTADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -583,21 +580,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Target => {Target}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Target, "Target");
+                fg.AppendItem(Flags, "Flags");
+                if (Conditions.TryGet(out var ConditionsItem))
                 {
-                    if (Conditions != null)
+                    fg.AppendLine("Conditions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Conditions.Overall != null)
+                        fg.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
                         {
-                            fg.AppendLine(Conditions.Overall.ToString());
-                        }
-                        if (Conditions.Specific != null)
-                        {
-                            foreach (var subItem in Conditions.Specific)
+                            foreach (var subItem in ConditionsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -608,9 +602,9 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"QSTADataTypeState => {QSTADataTypeState}");
+                fg.AppendItem(QSTADataTypeState, "QSTADataTypeState");
             }
             #endregion
 
@@ -761,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new IFormLink<IPlaced> Target { get; }
         new QuestTarget.Flag Flags { get; set; }
-        new ISetList<Condition> Conditions { get; }
+        new ExtendedList<Condition>? Conditions { get; set; }
         new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
     }
 
@@ -780,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         IFormLinkGetter<IPlacedGetter> Target { get; }
         QuestTarget.Flag Flags { get; }
-        IReadOnlySetList<IConditionGetter> Conditions { get; }
+        IReadOnlyList<IConditionGetter>? Conditions { get; }
         QuestTarget.QSTADataType QSTADataTypeState { get; }
 
     }
@@ -1263,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestTarget_FieldIndex.Flags:
                     return typeof(QuestTarget.Flag);
                 case QuestTarget_FieldIndex.Conditions:
-                    return typeof(ISetList<Condition>);
+                    return typeof(ExtendedList<Condition>);
                 case QuestTarget_FieldIndex.QSTADataTypeState:
                     return typeof(QuestTarget.QSTADataType);
                 default:
@@ -1322,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Target.FormKey = FormKey.Null;
             item.Flags = default;
-            item.Conditions.Unset();
+            item.Conditions = null;
             item.QSTADataTypeState = default;
         }
         
@@ -1393,18 +1387,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                        item: item.Conditions,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out Condition listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Conditions = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out Condition listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Conditions);
                 }
                 default:
@@ -1511,19 +1506,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Target ?? true)
             {
-                fg.AppendLine($"Target => {item.Target}");
+                fg.AppendItem(item.Target, "Target");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Conditions?.Overall ?? true)
+            if ((printMask?.Conditions?.Overall ?? true)
+                && item.Conditions.TryGet(out var ConditionsItem))
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Conditions)
+                    foreach (var subItem in ConditionsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1537,7 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.QSTADataTypeState ?? true)
             {
-                fg.AppendLine($"QSTADataTypeState => {item.QSTADataTypeState}");
+                fg.AppendItem(item.QSTADataTypeState, "QSTADataTypeState");
             }
         }
         
@@ -1545,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTargetGetter item,
             QuestTarget.Mask<bool?> checkMask)
         {
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != item.Conditions.HasBeenSet) return false;
+            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
             return true;
         }
         
@@ -1555,8 +1551,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Target = true;
             mask.Flags = true;
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(ConditionsItem.HasBeenSet, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Conditions.TryGet(out var ConditionsItem))
+            {
+                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.QSTADataTypeState = true;
         }
         
@@ -1626,20 +1624,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)QuestTarget_FieldIndex.Conditions);
                 try
                 {
-                    if (rhs.Conditions.HasBeenSet)
+                    if ((rhs.Conditions != null))
                     {
-                        item.Conditions.SetTo(
-                            items: rhs.Conditions,
-                            converter: (r) =>
+                        item.Conditions = 
+                            rhs.Conditions
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<Condition>();
                     }
                     else
                     {
-                        item.Conditions.Unset();
+                        item.Conditions = null;
                     }
                 }
                 catch (Exception ex)
@@ -1766,7 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (item.Conditions.HasBeenSet
+            if ((item.Conditions != null)
                 && (translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<IConditionGetter>.Instance.Write(
@@ -1952,11 +1951,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Conditions.SetTo(ConditionsItem);
+                            item.Conditions = ConditionsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Conditions.Unset();
+                            item.Conditions = null;
                         }
                     }
                     catch (Exception ex)
@@ -2335,7 +2334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flags_IsSet => _QSTALocation.HasValue;
         public QuestTarget.Flag Flags => _Flags_IsSet ? (QuestTarget.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

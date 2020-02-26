@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff = value ?? new byte[2];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ILeveledEntryGetter<T>.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> ILeveledEntryGetter<T>.Fluff => this.Fluff;
         #endregion
         #region Reference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -89,8 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ILeveledEntryGetter<T>.Fluff2 => this.Fluff2;
-        bool ILeveledEntryGetter<T>.Fluff2_IsSet => this.Fluff2 != null;
+        ReadOnlyMemorySlice<Byte>? ILeveledEntryGetter<T>.Fluff2 => this.Fluff2;
         #endregion
 
         #region To String
@@ -107,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ILeveledEntryGetter<T> rhs)) return false;
             return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, rhs);
@@ -363,13 +362,10 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         Int16 Level { get; }
-        ReadOnlySpan<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Fluff { get; }
         IFormLinkGetter<T> Reference { get; }
         Int16? Count { get; }
-        #region Fluff2
-        ReadOnlySpan<Byte> Fluff2 { get; }
-        bool Fluff2_IsSet { get; }
-        #endregion
+        ReadOnlyMemorySlice<Byte>? Fluff2 { get; }
 
     }
 
@@ -1077,10 +1073,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
             ret.Reference = object.Equals(item.Reference, rhs.Reference);
             ret.Count = item.Count == rhs.Count;
-            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2, rhs.Fluff2);
+            ret.Fluff2 = MemorySliceExt.Equal(item.Fluff2, rhs.Fluff2);
         }
         
         public string ToString(
@@ -1129,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Level ?? true)
             {
-                fg.AppendLine($"Level => {item.Level}");
+                fg.AppendItem(item.Level, "Level");
             }
             if (printMask?.Fluff ?? true)
             {
@@ -1137,15 +1133,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendLine($"Reference => {item.Reference}");
+                fg.AppendItem(item.Reference, "Reference");
             }
-            if (printMask?.Count ?? true)
+            if ((printMask?.Count ?? true)
+                && item.Count.TryGet(out var CountItem))
             {
-                fg.AppendLine($"Count => {item.Count}");
+                fg.AppendItem(CountItem, "Count");
             }
-            if (printMask?.Fluff2 ?? true)
+            if ((printMask?.Fluff2 ?? true)
+                && item.Fluff2.TryGet(out var Fluff2Item))
             {
-                fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(item.Fluff2)}");
+                fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(Fluff2Item)}");
             }
         }
         
@@ -1154,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledEntry.Mask<bool?> checkMask)
         {
             if (checkMask.Count.HasValue && checkMask.Count.Value != (item.Count != null)) return false;
-            if (checkMask.Fluff2.HasValue && checkMask.Fluff2.Value != item.Fluff2_IsSet) return false;
+            if (checkMask.Fluff2.HasValue && checkMask.Fluff2.Value != (item.Fluff2 != null)) return false;
             return true;
         }
         
@@ -1166,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Fluff = true;
             mask.Reference = true;
             mask.Count = (item.Count != null);
-            mask.Fluff2 = item.Fluff2_IsSet;
+            mask.Fluff2 = (item.Fluff2 != null);
         }
         
         #region Equals and Hash
@@ -1177,10 +1175,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Level != rhs.Level) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
             if (!lhs.Reference.Equals(rhs.Reference)) return false;
             if (lhs.Count != rhs.Count) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2, rhs.Fluff2)) return false;
+            if (!MemorySliceExt.Equal(lhs.Fluff2, rhs.Fluff2)) return false;
             return true;
         }
         
@@ -1194,9 +1192,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(Countitem).CombineHashCode(ret);
             }
-            if (item.Fluff2_IsSet)
+            if (item.Fluff2.TryGet(out var Fluff2Item))
             {
-                ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Fluff2Item).CombineHashCode(ret);
             }
             return ret;
         }
@@ -1251,9 +1249,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Fluff2) ?? true))
             {
-                if(rhs.Fluff2_IsSet)
+                if(rhs.Fluff2.TryGet(out var Fluff2rhs))
                 {
-                    item.Fluff2 = rhs.Fluff2.ToArray();
+                    item.Fluff2 = Fluff2rhs.ToArray();
                 }
                 else
                 {
@@ -1396,13 +1394,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LeveledEntry_FieldIndex.Count,
                     errorMask: errorMask);
             }
-            if (item.Fluff2_IsSet
+            if ((item.Fluff2 != null)
                 && (translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Fluff2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Fluff2),
-                    item: item.Fluff2,
+                    item: item.Fluff2.Value,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
                     errorMask: errorMask);
             }
@@ -1807,12 +1805,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Reference,
                 masterReferences: masterReferences);
             writer.Write(item.Count);
-            if (item.Fluff2_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff2);
-            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Fluff2);
         }
 
         public void Write<T>(
@@ -1940,13 +1935,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
-        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
         public IFormLinkGetter<T> Reference => new FormLink<T>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public Int16? Count => _data.Length >= 10 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(8, 2)) : default(Int16?);
-        #region Fluff2
-        public bool Fluff2_IsSet => _data.Length >= 12;
-        public ReadOnlySpan<Byte> Fluff2 => _data.Span.Slice(10, 2).ToArray();
-        #endregion
+        public ReadOnlyMemorySlice<Byte>? Fluff2 => _data.Length >= 12 ? _data.Span.Slice(10, 2).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2036,7 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
         
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -2128,23 +2120,23 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Level ?? true)
                     {
-                        fg.AppendLine($"Level => {Level}");
+                        fg.AppendItem(Level, "Level");
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendLine($"Fluff => {Fluff}");
+                        fg.AppendItem(Fluff, "Fluff");
                     }
                     if (printMask?.Reference ?? true)
                     {
-                        fg.AppendLine($"Reference => {Reference}");
+                        fg.AppendItem(Reference, "Reference");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendLine($"Count => {Count}");
+                        fg.AppendItem(Count, "Count");
                     }
                     if (printMask?.Fluff2 ?? true)
                     {
-                        fg.AppendLine($"Fluff2 => {Fluff2}");
+                        fg.AppendItem(Fluff2, "Fluff2");
                     }
                 }
                 fg.AppendLine("]");
@@ -2292,11 +2284,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Level => {Level}");
-                fg.AppendLine($"Fluff => {Fluff}");
-                fg.AppendLine($"Reference => {Reference}");
-                fg.AppendLine($"Count => {Count}");
-                fg.AppendLine($"Fluff2 => {Fluff2}");
+                fg.AppendItem(Level, "Level");
+                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(Reference, "Reference");
+                fg.AppendItem(Count, "Count");
+                fg.AppendItem(Fluff2, "Fluff2");
             }
             #endregion
         

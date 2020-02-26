@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IAlternateTextureGetter rhs)) return false;
             return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -342,15 +342,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.NexTexture ?? true)
                     {
-                        fg.AppendLine($"NexTexture => {NexTexture}");
+                        fg.AppendItem(NexTexture, "NexTexture");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendLine($"Index => {Index}");
+                        fg.AppendItem(Index, "Index");
                     }
                 }
                 fg.AppendLine("]");
@@ -477,9 +477,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"NexTexture => {NexTexture}");
-                fg.AppendLine($"Index => {Index}");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(NexTexture, "NexTexture");
+                fg.AppendItem(Index, "Index");
             }
             #endregion
 
@@ -1302,15 +1302,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Name ?? true)
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(item.Name, "Name");
             }
             if (printMask?.NexTexture ?? true)
             {
-                fg.AppendLine($"NexTexture => {item.NexTexture}");
+                fg.AppendItem(item.NexTexture, "NexTexture");
             }
             if (printMask?.Index ?? true)
             {
-                fg.AppendLine($"Index => {item.Index}");
+                fg.AppendItem(item.Index, "Index");
             }
         }
         

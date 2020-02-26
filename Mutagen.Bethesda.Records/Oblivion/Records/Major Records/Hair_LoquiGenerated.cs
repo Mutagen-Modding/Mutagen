@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IHairGetter rhs)) return false;
             return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -418,11 +418,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                 }
                 fg.AppendLine("]");
@@ -549,10 +549,10 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
+                fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendItem(Icon, "Icon");
+                fg.AppendItem(Flags, "Flags");
             }
             #endregion
 
@@ -1492,21 +1492,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
         }
         

@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IScriptObjectReferenceGetter rhs)) return false;
             return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Reference ?? true)
                     {
-                        fg.AppendLine($"Reference => {Reference}");
+                        fg.AppendItem(Reference, "Reference");
                     }
                 }
                 fg.AppendLine("]");
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Reference => {Reference}");
+                fg.AppendItem(Reference, "Reference");
             }
             #endregion
 
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Reference ?? true)
             {
-                fg.AppendLine($"Reference => {item.Reference}");
+                fg.AppendItem(item.Reference, "Reference");
             }
         }
         

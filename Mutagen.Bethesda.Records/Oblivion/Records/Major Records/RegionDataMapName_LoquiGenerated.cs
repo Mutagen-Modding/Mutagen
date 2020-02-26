@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRegionDataMapNameGetter rhs)) return false;
             return ((RegionDataMapNameCommon)((IRegionDataMapNameGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.MapName ?? true)
                     {
-                        fg.AppendLine($"MapName => {MapName}");
+                        fg.AppendItem(MapName, "MapName");
                     }
                 }
                 fg.AppendLine("]");
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"MapName => {MapName}");
+                fg.AppendItem(MapName, "MapName");
             }
             #endregion
 
@@ -1268,9 +1268,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.MapName ?? true)
+            if ((printMask?.MapName ?? true)
+                && item.MapName.TryGet(out var MapNameItem))
             {
-                fg.AppendLine($"MapName => {item.MapName}");
+                fg.AppendItem(MapNameItem, "MapName");
             }
         }
         

@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff = value ?? new byte[12];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ILocalVariableGetter.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> ILocalVariableGetter.Fluff => this.Fluff;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff2 = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ILocalVariableGetter.Fluff2 => this.Fluff2;
+        ReadOnlyMemorySlice<Byte> ILocalVariableGetter.Fluff2 => this.Fluff2;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ILocalVariableGetter rhs)) return false;
             return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -418,27 +418,27 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendLine($"Index => {Index}");
+                        fg.AppendItem(Index, "Index");
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendLine($"Fluff => {Fluff}");
+                        fg.AppendItem(Fluff, "Fluff");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Fluff2 ?? true)
                     {
-                        fg.AppendLine($"Fluff2 => {Fluff2}");
+                        fg.AppendItem(Fluff2, "Fluff2");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.SLSDDataTypeState ?? true)
                     {
-                        fg.AppendLine($"SLSDDataTypeState => {SLSDDataTypeState}");
+                        fg.AppendItem(SLSDDataTypeState, "SLSDDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -595,12 +595,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Index => {Index}");
-                fg.AppendLine($"Fluff => {Fluff}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Fluff2 => {Fluff2}");
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"SLSDDataTypeState => {SLSDDataTypeState}");
+                fg.AppendItem(Index, "Index");
+                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Fluff2, "Fluff2");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(SLSDDataTypeState, "SLSDDataTypeState");
             }
             #endregion
 
@@ -776,9 +776,9 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         Int32 Index { get; }
-        ReadOnlySpan<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Fluff { get; }
         Script.LocalVariableFlag Flags { get; }
-        ReadOnlySpan<Byte> Fluff2 { get; }
+        ReadOnlyMemorySlice<Byte> Fluff2 { get; }
         String? Name { get; }
         LocalVariable.SLSDDataType SLSDDataTypeState { get; }
 
@@ -1469,9 +1469,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2, rhs.Fluff2);
+            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2.Span, rhs.Fluff2.Span);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.SLSDDataTypeState = item.SLSDDataTypeState == rhs.SLSDDataTypeState;
         }
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Index ?? true)
             {
-                fg.AppendLine($"Index => {item.Index}");
+                fg.AppendItem(item.Index, "Index");
             }
             if (printMask?.Fluff ?? true)
             {
@@ -1530,19 +1530,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Fluff2 ?? true)
             {
                 fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(item.Fluff2)}");
             }
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
             if (printMask?.SLSDDataTypeState ?? true)
             {
-                fg.AppendLine($"SLSDDataTypeState => {item.SLSDDataTypeState}");
+                fg.AppendItem(item.SLSDDataTypeState, "SLSDDataTypeState");
             }
         }
         
@@ -1574,9 +1575,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Index != rhs.Index) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2, rhs.Fluff2)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2.Span, rhs.Fluff2.Span)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.SLSDDataTypeState != rhs.SLSDDataTypeState) return false;
             return true;
@@ -2352,8 +2353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Fluff
         private int _FluffLocation => _SLSDLocation!.Value + 0x4;
         private bool _Fluff_IsSet => _SLSDLocation.HasValue;
-        public ReadOnlySpan<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 12).ToArray() : default;
-        public bool Fluff_IsSet => _Fluff_IsSet;
+        public ReadOnlyMemorySlice<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 12).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region Flags
         private int _FlagsLocation => _SLSDLocation!.Value + 0x10;
@@ -2363,8 +2363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Fluff2
         private int _Fluff2Location => _SLSDLocation!.Value + 0x14;
         private bool _Fluff2_IsSet => _SLSDLocation.HasValue;
-        public ReadOnlySpan<Byte> Fluff2 => _Fluff2_IsSet ? _data.Span.Slice(_Fluff2Location, 4).ToArray() : default;
-        public bool Fluff2_IsSet => _Fluff2_IsSet;
+        public ReadOnlyMemorySlice<Byte> Fluff2 => _Fluff2_IsSet ? _data.Span.Slice(_Fluff2Location, 4).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region Name
         private int? _NameLocation;

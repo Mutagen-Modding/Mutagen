@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ITextureSetGetter rhs)) return false;
             return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                 }
                 fg.AppendLine("]");
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectBounds?.ToString(fg);
                 Textures?.ToString(fg);
                 Decal?.ToString(fg);
-                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendItem(Flags, "Flags");
             }
             #endregion
 
@@ -1535,21 +1535,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.ObjectBounds?.Overall ?? true)
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds.TryGet(out var ObjectBoundsItem))
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                ObjectBoundsItem?.ToString(fg, "ObjectBounds");
             }
-            if (printMask?.Textures?.Overall ?? true)
+            if ((printMask?.Textures?.Overall ?? true)
+                && item.Textures.TryGet(out var TexturesItem))
             {
-                item.Textures?.ToString(fg, "Textures");
+                TexturesItem?.ToString(fg, "Textures");
             }
-            if (printMask?.Decal?.Overall ?? true)
+            if ((printMask?.Decal?.Overall ?? true)
+                && item.Decal.TryGet(out var DecalItem))
             {
-                item.Decal?.ToString(fg, "Decal");
+                DecalItem?.ToString(fg, "Decal");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
         }
         

@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0a5d14254db9189513a3a6b61a40e6ed878db794</Sha>
+         <Sha>b1cd743e7103b25c93599e8820d777ba7d99bf06</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-16-2020 15:34:07</CommitDate>
-         <Description>ObjectExt.NullSame</Description>
+         <CommitDate>02-27-2020 22:31:13</CommitDate>
+         <Description>Removed HasBeenSet concepts</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ae2ad213d1d9238442a212d96d2ee03bc9aa6aba</Sha>
+         <Sha>0e3a8000dd275c1428da8822727613e8985288e0</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-20-2020 23:07:12</CommitDate>
-         <Description>Mask AllEqual -&gt; All.   Any as well</Description>
+         <CommitDate>02-27-2020 23:54:29</CommitDate>
+         <Description>Object equals parameter now nullable</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

@@ -52,13 +52,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<WeatherChance> _Weathers = new SetList<WeatherChance>();
-        public ISetList<WeatherChance> Weathers => _Weathers;
+        private ExtendedList<WeatherChance>? _Weathers;
+        public ExtendedList<WeatherChance>? Weathers
+        {
+            get => this._Weathers;
+            set => this._Weathers = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<WeatherChance> IClimate.Weathers => _Weathers;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IWeatherChanceGetter> IClimateGetter.Weathers => _Weathers;
+        IReadOnlyList<IWeatherChanceGetter>? IClimateGetter.Weathers => _Weathers;
         #endregion
 
         #endregion
@@ -205,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IClimateGetter rhs)) return false;
             return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -360,7 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(T initialValue)
             : base(initialValue)
             {
-                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
+                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
                 this.SunTexture = initialValue;
                 this.SunGlareTexture = initialValue;
                 this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
@@ -399,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>(Weathers, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
+                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
                 this.SunTexture = SunTexture;
                 this.SunGlareTexture = SunGlareTexture;
                 this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
@@ -422,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>? Weathers;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>?>? Weathers;
             public T SunTexture;
             public T SunGlareTexture;
             public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
@@ -437,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -565,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (Weathers != null)
                 {
-                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance.Mask<R>?>>>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherChance.Mask<R>?>>());
+                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance.Mask<R>?>>?>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherChance.Mask<R>?>>());
                     if (Weathers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherChance.Mask<R>?>>();
@@ -611,29 +613,24 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Weathers?.Overall ?? true)
+                    if ((printMask?.Weathers?.Overall ?? true)
+                        && Weathers.TryGet(out var WeathersItem))
                     {
                         fg.AppendLine("Weathers =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Weathers != null)
+                            fg.AppendItem(WeathersItem.Overall);
+                            if (WeathersItem.Specific != null)
                             {
-                                if (Weathers.Overall != null)
+                                foreach (var subItem in WeathersItem.Specific)
                                 {
-                                    fg.AppendLine(Weathers.Overall.ToString());
-                                }
-                                if (Weathers.Specific != null)
-                                {
-                                    foreach (var subItem in Weathers.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -641,11 +638,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.SunTexture ?? true)
                     {
-                        fg.AppendLine($"SunTexture => {SunTexture}");
+                        fg.AppendItem(SunTexture, "SunTexture");
                     }
                     if (printMask?.SunGlareTexture ?? true)
                     {
-                        fg.AppendLine($"SunGlareTexture => {SunGlareTexture}");
+                        fg.AppendItem(SunGlareTexture, "SunGlareTexture");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -653,35 +650,35 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.SunriseBegin ?? true)
                     {
-                        fg.AppendLine($"SunriseBegin => {SunriseBegin}");
+                        fg.AppendItem(SunriseBegin, "SunriseBegin");
                     }
                     if (printMask?.SunriseEnd ?? true)
                     {
-                        fg.AppendLine($"SunriseEnd => {SunriseEnd}");
+                        fg.AppendItem(SunriseEnd, "SunriseEnd");
                     }
                     if (printMask?.SunsetBegin ?? true)
                     {
-                        fg.AppendLine($"SunsetBegin => {SunsetBegin}");
+                        fg.AppendItem(SunsetBegin, "SunsetBegin");
                     }
                     if (printMask?.SunsetEnd ?? true)
                     {
-                        fg.AppendLine($"SunsetEnd => {SunsetEnd}");
+                        fg.AppendItem(SunsetEnd, "SunsetEnd");
                     }
                     if (printMask?.Volatility ?? true)
                     {
-                        fg.AppendLine($"Volatility => {Volatility}");
+                        fg.AppendItem(Volatility, "Volatility");
                     }
                     if (printMask?.Phase ?? true)
                     {
-                        fg.AppendLine($"Phase => {Phase}");
+                        fg.AppendItem(Phase, "Phase");
                     }
                     if (printMask?.PhaseLength ?? true)
                     {
-                        fg.AppendLine($"PhaseLength => {PhaseLength}");
+                        fg.AppendItem(PhaseLength, "PhaseLength");
                     }
                     if (printMask?.TNAMDataTypeState ?? true)
                     {
-                        fg.AppendLine($"TNAMDataTypeState => {TNAMDataTypeState}");
+                        fg.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -888,19 +885,16 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine("Weathers =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Weathers.TryGet(out var WeathersItem))
                 {
-                    if (Weathers != null)
+                    fg.AppendLine("Weathers =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Weathers.Overall != null)
+                        fg.AppendItem(WeathersItem.Overall);
+                        if (WeathersItem.Specific != null)
                         {
-                            fg.AppendLine(Weathers.Overall.ToString());
-                        }
-                        if (Weathers.Specific != null)
-                        {
-                            foreach (var subItem in Weathers.Specific)
+                            foreach (var subItem in WeathersItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -911,19 +905,19 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"SunTexture => {SunTexture}");
-                fg.AppendLine($"SunGlareTexture => {SunGlareTexture}");
+                fg.AppendItem(SunTexture, "SunTexture");
+                fg.AppendItem(SunGlareTexture, "SunGlareTexture");
                 Model?.ToString(fg);
-                fg.AppendLine($"SunriseBegin => {SunriseBegin}");
-                fg.AppendLine($"SunriseEnd => {SunriseEnd}");
-                fg.AppendLine($"SunsetBegin => {SunsetBegin}");
-                fg.AppendLine($"SunsetEnd => {SunsetEnd}");
-                fg.AppendLine($"Volatility => {Volatility}");
-                fg.AppendLine($"Phase => {Phase}");
-                fg.AppendLine($"PhaseLength => {PhaseLength}");
-                fg.AppendLine($"TNAMDataTypeState => {TNAMDataTypeState}");
+                fg.AppendItem(SunriseBegin, "SunriseBegin");
+                fg.AppendItem(SunriseEnd, "SunriseEnd");
+                fg.AppendItem(SunsetBegin, "SunsetBegin");
+                fg.AppendItem(SunsetEnd, "SunsetEnd");
+                fg.AppendItem(Volatility, "Volatility");
+                fg.AppendItem(Phase, "Phase");
+                fg.AppendItem(PhaseLength, "PhaseLength");
+                fg.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
             }
             #endregion
 
@@ -1108,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IClimateInternal>
     {
-        new ISetList<WeatherChance> Weathers { get; }
+        new ExtendedList<WeatherChance>? Weathers { get; set; }
         new String? SunTexture { get; set; }
         new String? SunGlareTexture { get; set; }
         new Model? Model { get; set; }
@@ -1136,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        IReadOnlySetList<IWeatherChanceGetter> Weathers { get; }
+        IReadOnlyList<IWeatherChanceGetter>? Weathers { get; }
         String? SunTexture { get; }
         String? SunGlareTexture { get; }
         IModelGetter? Model { get; }
@@ -1698,7 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    return typeof(ISetList<WeatherChance>);
+                    return typeof(ExtendedList<WeatherChance>);
                 case Climate_FieldIndex.SunTexture:
                     return typeof(String);
                 case Climate_FieldIndex.SunGlareTexture:
@@ -1778,7 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IClimateInternal item)
         {
             ClearPartial();
-            item.Weathers.Unset();
+            item.Weathers = null;
             item.SunTexture = default;
             item.SunGlareTexture = default;
             item.Model = null;
@@ -1887,16 +1881,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54534C57: // WLST
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.Weathers,
-                        transl: (MutagenFrame r, out WeatherChance listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Weathers = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out WeatherChance listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<WeatherChance>();
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
                 }
                 case 0x4D414E46: // FNAM
@@ -2083,13 +2078,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Weathers?.Overall ?? true)
+            if ((printMask?.Weathers?.Overall ?? true)
+                && item.Weathers.TryGet(out var WeathersItem))
             {
                 fg.AppendLine("Weathers =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Weathers)
+                    foreach (var subItem in WeathersItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2101,49 +2097,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.SunTexture ?? true)
+            if ((printMask?.SunTexture ?? true)
+                && item.SunTexture.TryGet(out var SunTextureItem))
             {
-                fg.AppendLine($"SunTexture => {item.SunTexture}");
+                fg.AppendItem(SunTextureItem, "SunTexture");
             }
-            if (printMask?.SunGlareTexture ?? true)
+            if ((printMask?.SunGlareTexture ?? true)
+                && item.SunGlareTexture.TryGet(out var SunGlareTextureItem))
             {
-                fg.AppendLine($"SunGlareTexture => {item.SunGlareTexture}");
+                fg.AppendItem(SunGlareTextureItem, "SunGlareTexture");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
             if (printMask?.SunriseBegin ?? true)
             {
-                fg.AppendLine($"SunriseBegin => {item.SunriseBegin}");
+                fg.AppendItem(item.SunriseBegin, "SunriseBegin");
             }
             if (printMask?.SunriseEnd ?? true)
             {
-                fg.AppendLine($"SunriseEnd => {item.SunriseEnd}");
+                fg.AppendItem(item.SunriseEnd, "SunriseEnd");
             }
             if (printMask?.SunsetBegin ?? true)
             {
-                fg.AppendLine($"SunsetBegin => {item.SunsetBegin}");
+                fg.AppendItem(item.SunsetBegin, "SunsetBegin");
             }
             if (printMask?.SunsetEnd ?? true)
             {
-                fg.AppendLine($"SunsetEnd => {item.SunsetEnd}");
+                fg.AppendItem(item.SunsetEnd, "SunsetEnd");
             }
             if (printMask?.Volatility ?? true)
             {
-                fg.AppendLine($"Volatility => {item.Volatility}");
+                fg.AppendItem(item.Volatility, "Volatility");
             }
             if (printMask?.Phase ?? true)
             {
-                fg.AppendLine($"Phase => {item.Phase}");
+                fg.AppendItem(item.Phase, "Phase");
             }
             if (printMask?.PhaseLength ?? true)
             {
-                fg.AppendLine($"PhaseLength => {item.PhaseLength}");
+                fg.AppendItem(item.PhaseLength, "PhaseLength");
             }
             if (printMask?.TNAMDataTypeState ?? true)
             {
-                fg.AppendLine($"TNAMDataTypeState => {item.TNAMDataTypeState}");
+                fg.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
             }
         }
         
@@ -2151,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateGetter item,
             Climate.Mask<bool?> checkMask)
         {
-            if (checkMask.Weathers?.Overall.HasValue ?? false && checkMask.Weathers!.Overall.Value != item.Weathers.HasBeenSet) return false;
+            if (checkMask.Weathers?.Overall.HasValue ?? false && checkMask.Weathers!.Overall.Value != (item.Weathers != null)) return false;
             if (checkMask.SunTexture.HasValue && checkMask.SunTexture.Value != (item.SunTexture != null)) return false;
             if (checkMask.SunGlareTexture.HasValue && checkMask.SunGlareTexture.Value != (item.SunGlareTexture != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -2165,8 +2164,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateGetter item,
             Climate.Mask<bool> mask)
         {
-            var WeathersItem = item.Weathers;
-            mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance.Mask<bool>?>>>(WeathersItem.HasBeenSet, WeathersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Weathers.TryGet(out var WeathersItem))
+            {
+                mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance.Mask<bool>?>>?>(true, WeathersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.SunTexture = (item.SunTexture != null);
             mask.SunGlareTexture = (item.SunGlareTexture != null);
             var itemModel = item.Model;
@@ -2314,9 +2315,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Weathers.SelectMany(f => f.Links))
+            if (obj.Weathers != null)
             {
-                yield return item;
+                foreach (var item in obj.Weathers.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2369,20 +2373,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
                 try
                 {
-                    if (rhs.Weathers.HasBeenSet)
+                    if ((rhs.Weathers != null))
                     {
-                        item.Weathers.SetTo(
-                            items: rhs.Weathers,
-                            converter: (r) =>
+                        item.Weathers = 
+                            rhs.Weathers
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<WeatherChance>();
                     }
                     else
                     {
-                        item.Weathers.Unset();
+                        item.Weathers = null;
                     }
                 }
                 catch (Exception ex)
@@ -2603,7 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Weathers.HasBeenSet
+            if ((item.Weathers != null)
                 && (translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
             {
                 ListXmlTranslation<IWeatherChanceGetter>.Instance.Write(
@@ -2851,11 +2856,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Weathers.SetTo(WeathersItem);
+                            item.Weathers = WeathersItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Weathers.Unset();
+                            item.Weathers = null;
                         }
                     }
                     catch (Exception ex)
@@ -3564,7 +3569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IReadOnlySetList<IWeatherChanceGetter> Weathers { get; private set; } = EmptySetList<WeatherChanceBinaryOverlay>.Instance;
+        public IReadOnlyList<IWeatherChanceGetter>? Weathers { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
         public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunTextureLocation.Value, _package.Meta)) : default(string?);

@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IHavokDataGetter rhs)) return false;
             return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -338,15 +338,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Material ?? true)
                     {
-                        fg.AppendLine($"Material => {Material}");
+                        fg.AppendItem(Material, "Material");
                     }
                     if (printMask?.Friction ?? true)
                     {
-                        fg.AppendLine($"Friction => {Friction}");
+                        fg.AppendItem(Friction, "Friction");
                     }
                     if (printMask?.Restitution ?? true)
                     {
-                        fg.AppendLine($"Restitution => {Restitution}");
+                        fg.AppendItem(Restitution, "Restitution");
                     }
                 }
                 fg.AppendLine("]");
@@ -473,9 +473,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Material => {Material}");
-                fg.AppendLine($"Friction => {Friction}");
-                fg.AppendLine($"Restitution => {Restitution}");
+                fg.AppendItem(Material, "Material");
+                fg.AppendItem(Friction, "Friction");
+                fg.AppendItem(Restitution, "Restitution");
             }
             #endregion
 
@@ -1296,15 +1296,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Material ?? true)
             {
-                fg.AppendLine($"Material => {item.Material}");
+                fg.AppendItem(item.Material, "Material");
             }
             if (printMask?.Friction ?? true)
             {
-                fg.AppendLine($"Friction => {item.Friction}");
+                fg.AppendItem(item.Friction, "Friction");
             }
             if (printMask?.Restitution ?? true)
             {
-                fg.AppendLine($"Restitution => {item.Restitution}");
+                fg.AppendItem(item.Restitution, "Restitution");
             }
         }
         

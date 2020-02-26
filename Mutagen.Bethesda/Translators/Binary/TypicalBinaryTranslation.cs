@@ -30,20 +30,6 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            IHasBeenSetItemGetter<T> item,
-            RecordType header,
-            bool nullable)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                nullable);
-        }
-
-        public void Write(
-            MutagenWriter writer,
             T item,
             RecordType header,
             bool nullable)

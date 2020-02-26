@@ -62,8 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Hashes = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IModelGetter.Hashes => this.Hashes;
-        bool IModelGetter.Hashes_IsSet => this.Hashes != null;
+        ReadOnlyMemorySlice<Byte>? IModelGetter.Hashes => this.Hashes;
         #endregion
 
         #region To String
@@ -80,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IModelGetter rhs)) return false;
             return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -265,7 +264,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -347,15 +346,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.File ?? true)
                     {
-                        fg.AppendLine($"File => {File}");
+                        fg.AppendItem(File, "File");
                     }
                     if (printMask?.BoundRadius ?? true)
                     {
-                        fg.AppendLine($"BoundRadius => {BoundRadius}");
+                        fg.AppendItem(BoundRadius, "BoundRadius");
                     }
                     if (printMask?.Hashes ?? true)
                     {
-                        fg.AppendLine($"Hashes => {Hashes}");
+                        fg.AppendItem(Hashes, "Hashes");
                     }
                 }
                 fg.AppendLine("]");
@@ -482,9 +481,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"File => {File}");
-                fg.AppendLine($"BoundRadius => {BoundRadius}");
-                fg.AppendLine($"Hashes => {Hashes}");
+                fg.AppendItem(File, "File");
+                fg.AppendItem(BoundRadius, "BoundRadius");
+                fg.AppendItem(Hashes, "Hashes");
             }
             #endregion
 
@@ -641,10 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         String File { get; }
         Single BoundRadius { get; }
-        #region Hashes
-        ReadOnlySpan<Byte> Hashes { get; }
-        bool Hashes_IsSet { get; }
-        #endregion
+        ReadOnlyMemorySlice<Byte>? Hashes { get; }
 
     }
 
@@ -1294,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
             ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
-            ret.Hashes = MemoryExtensions.SequenceEqual(item.Hashes, rhs.Hashes);
+            ret.Hashes = MemorySliceExt.Equal(item.Hashes, rhs.Hashes);
         }
         
         public string ToString(
@@ -1343,15 +1339,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.File ?? true)
             {
-                fg.AppendLine($"File => {item.File}");
+                fg.AppendItem(item.File, "File");
             }
             if (printMask?.BoundRadius ?? true)
             {
-                fg.AppendLine($"BoundRadius => {item.BoundRadius}");
+                fg.AppendItem(item.BoundRadius, "BoundRadius");
             }
-            if (printMask?.Hashes ?? true)
+            if ((printMask?.Hashes ?? true)
+                && item.Hashes.TryGet(out var HashesItem))
             {
-                fg.AppendLine($"Hashes => {SpanExt.ToHexString(item.Hashes)}");
+                fg.AppendLine($"Hashes => {SpanExt.ToHexString(HashesItem)}");
             }
         }
         
@@ -1359,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModelGetter item,
             Model.Mask<bool?> checkMask)
         {
-            if (checkMask.Hashes.HasValue && checkMask.Hashes.Value != item.Hashes_IsSet) return false;
+            if (checkMask.Hashes.HasValue && checkMask.Hashes.Value != (item.Hashes != null)) return false;
             return true;
         }
         
@@ -1369,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.File = true;
             mask.BoundRadius = true;
-            mask.Hashes = item.Hashes_IsSet;
+            mask.Hashes = (item.Hashes != null);
         }
         
         #region Equals and Hash
@@ -1381,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!string.Equals(lhs.File, rhs.File)) return false;
             if (!lhs.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Hashes, rhs.Hashes)) return false;
+            if (!MemorySliceExt.Equal(lhs.Hashes, rhs.Hashes)) return false;
             return true;
         }
         
@@ -1390,9 +1387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int ret = 0;
             ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.BoundRadius).CombineHashCode(ret);
-            if (item.Hashes_IsSet)
+            if (item.Hashes.TryGet(out var HashesItem))
             {
-                ret = HashHelper.GetHashCode(item.Hashes).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(HashesItem).CombineHashCode(ret);
             }
             return ret;
         }
@@ -1435,9 +1432,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Hashes) ?? true))
             {
-                if(rhs.Hashes_IsSet)
+                if(rhs.Hashes.TryGet(out var Hashesrhs))
                 {
-                    item.Hashes = rhs.Hashes.ToArray();
+                    item.Hashes = Hashesrhs.ToArray();
                 }
                 else
                 {
@@ -1551,13 +1548,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Model_FieldIndex.BoundRadius,
                     errorMask: errorMask);
             }
-            if (item.Hashes_IsSet
+            if ((item.Hashes != null)
                 && (translationMask?.GetShouldTranslate((int)Model_FieldIndex.Hashes) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Hashes),
-                    item: item.Hashes,
+                    item: item.Hashes.Value,
                     fieldIndex: (int)Model_FieldIndex.Hashes,
                     errorMask: errorMask);
             }
@@ -1907,13 +1904,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.BoundRadius,
                 header: recordTypeConverter.ConvertToCustom(Model_Registration.MODB_HEADER));
-            if (item.Hashes_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Hashes,
-                    header: recordTypeConverter.ConvertToCustom(Model_Registration.MODT_HEADER));
-            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Hashes,
+                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODT_HEADER));
         }
 
         public void Write(
@@ -2043,8 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Hashes
         private int? _HashesLocation;
-        public bool Hashes_IsSet => _HashesLocation.HasValue;
-        public ReadOnlySpan<Byte> Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _package.Meta).ToArray() : default;
+        public ReadOnlyMemorySlice<Byte>? Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

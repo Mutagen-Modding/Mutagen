@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IConditionGlobalGetter rhs)) return false;
             return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.ComparisonValue ?? true)
                     {
-                        fg.AppendLine($"ComparisonValue => {ComparisonValue}");
+                        fg.AppendItem(ComparisonValue, "ComparisonValue");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"ComparisonValue => {ComparisonValue}");
+                fg.AppendItem(ComparisonValue, "ComparisonValue");
                 Data?.ToString(fg);
             }
             #endregion
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.ComparisonValue ?? true)
             {
-                fg.AppendLine($"ComparisonValue => {item.ComparisonValue}");
+                fg.AppendItem(item.ComparisonValue, "ComparisonValue");
             }
             if (printMask?.Data?.Overall ?? true)
             {

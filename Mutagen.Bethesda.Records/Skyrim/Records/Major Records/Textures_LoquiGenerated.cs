@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ITexturesGetter rhs)) return false;
             return ((TexturesCommon)((ITexturesGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -462,35 +462,35 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Diffuse ?? true)
                     {
-                        fg.AppendLine($"Diffuse => {Diffuse}");
+                        fg.AppendItem(Diffuse, "Diffuse");
                     }
                     if (printMask?.NormalOrGloss ?? true)
                     {
-                        fg.AppendLine($"NormalOrGloss => {NormalOrGloss}");
+                        fg.AppendItem(NormalOrGloss, "NormalOrGloss");
                     }
                     if (printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
                     {
-                        fg.AppendLine($"EnvironmentMaskOrSubsurfaceTint => {EnvironmentMaskOrSubsurfaceTint}");
+                        fg.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
                     }
                     if (printMask?.GlowOrDetailMap ?? true)
                     {
-                        fg.AppendLine($"GlowOrDetailMap => {GlowOrDetailMap}");
+                        fg.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
                     }
                     if (printMask?.Height ?? true)
                     {
-                        fg.AppendLine($"Height => {Height}");
+                        fg.AppendItem(Height, "Height");
                     }
                     if (printMask?.Environment ?? true)
                     {
-                        fg.AppendLine($"Environment => {Environment}");
+                        fg.AppendItem(Environment, "Environment");
                     }
                     if (printMask?.Multilayer ?? true)
                     {
-                        fg.AppendLine($"Multilayer => {Multilayer}");
+                        fg.AppendItem(Multilayer, "Multilayer");
                     }
                     if (printMask?.BacklightMaskOrSpecular ?? true)
                     {
-                        fg.AppendLine($"BacklightMaskOrSpecular => {BacklightMaskOrSpecular}");
+                        fg.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
                     }
                 }
                 fg.AppendLine("]");
@@ -667,14 +667,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Diffuse => {Diffuse}");
-                fg.AppendLine($"NormalOrGloss => {NormalOrGloss}");
-                fg.AppendLine($"EnvironmentMaskOrSubsurfaceTint => {EnvironmentMaskOrSubsurfaceTint}");
-                fg.AppendLine($"GlowOrDetailMap => {GlowOrDetailMap}");
-                fg.AppendLine($"Height => {Height}");
-                fg.AppendLine($"Environment => {Environment}");
-                fg.AppendLine($"Multilayer => {Multilayer}");
-                fg.AppendLine($"BacklightMaskOrSpecular => {BacklightMaskOrSpecular}");
+                fg.AppendItem(Diffuse, "Diffuse");
+                fg.AppendItem(NormalOrGloss, "NormalOrGloss");
+                fg.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
+                fg.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
+                fg.AppendItem(Height, "Height");
+                fg.AppendItem(Environment, "Environment");
+                fg.AppendItem(Multilayer, "Multilayer");
+                fg.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
             }
             #endregion
 
@@ -1697,37 +1697,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Textures.Mask<bool>? printMask = null)
         {
-            if (printMask?.Diffuse ?? true)
+            if ((printMask?.Diffuse ?? true)
+                && item.Diffuse.TryGet(out var DiffuseItem))
             {
-                fg.AppendLine($"Diffuse => {item.Diffuse}");
+                fg.AppendItem(DiffuseItem, "Diffuse");
             }
-            if (printMask?.NormalOrGloss ?? true)
+            if ((printMask?.NormalOrGloss ?? true)
+                && item.NormalOrGloss.TryGet(out var NormalOrGlossItem))
             {
-                fg.AppendLine($"NormalOrGloss => {item.NormalOrGloss}");
+                fg.AppendItem(NormalOrGlossItem, "NormalOrGloss");
             }
-            if (printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
+            if ((printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
+                && item.EnvironmentMaskOrSubsurfaceTint.TryGet(out var EnvironmentMaskOrSubsurfaceTintItem))
             {
-                fg.AppendLine($"EnvironmentMaskOrSubsurfaceTint => {item.EnvironmentMaskOrSubsurfaceTint}");
+                fg.AppendItem(EnvironmentMaskOrSubsurfaceTintItem, "EnvironmentMaskOrSubsurfaceTint");
             }
-            if (printMask?.GlowOrDetailMap ?? true)
+            if ((printMask?.GlowOrDetailMap ?? true)
+                && item.GlowOrDetailMap.TryGet(out var GlowOrDetailMapItem))
             {
-                fg.AppendLine($"GlowOrDetailMap => {item.GlowOrDetailMap}");
+                fg.AppendItem(GlowOrDetailMapItem, "GlowOrDetailMap");
             }
-            if (printMask?.Height ?? true)
+            if ((printMask?.Height ?? true)
+                && item.Height.TryGet(out var HeightItem))
             {
-                fg.AppendLine($"Height => {item.Height}");
+                fg.AppendItem(HeightItem, "Height");
             }
-            if (printMask?.Environment ?? true)
+            if ((printMask?.Environment ?? true)
+                && item.Environment.TryGet(out var EnvironmentItem))
             {
-                fg.AppendLine($"Environment => {item.Environment}");
+                fg.AppendItem(EnvironmentItem, "Environment");
             }
-            if (printMask?.Multilayer ?? true)
+            if ((printMask?.Multilayer ?? true)
+                && item.Multilayer.TryGet(out var MultilayerItem))
             {
-                fg.AppendLine($"Multilayer => {item.Multilayer}");
+                fg.AppendItem(MultilayerItem, "Multilayer");
             }
-            if (printMask?.BacklightMaskOrSpecular ?? true)
+            if ((printMask?.BacklightMaskOrSpecular ?? true)
+                && item.BacklightMaskOrSpecular.TryGet(out var BacklightMaskOrSpecularItem))
             {
-                fg.AppendLine($"BacklightMaskOrSpecular => {item.BacklightMaskOrSpecular}");
+                fg.AppendItem(BacklightMaskOrSpecularItem, "BacklightMaskOrSpecular");
             }
         }
         

@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IGenderedFormLinksGetter<T> rhs)) return false;
             return ((GenderedFormLinksCommon<T>)((IGenderedFormLinksGetter<T>)this).CommonInstance()!).Equals(this, rhs);
@@ -1040,11 +1040,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Male ?? true)
             {
-                fg.AppendLine($"Male => {item.Male}");
+                fg.AppendItem(item.Male, "Male");
             }
             if (printMask?.Female ?? true)
             {
-                fg.AppendLine($"Female => {item.Female}");
+                fg.AppendItem(item.Female, "Female");
             }
         }
         
@@ -1782,7 +1782,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
         
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -1859,11 +1859,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Male ?? true)
                     {
-                        fg.AppendLine($"Male => {Male}");
+                        fg.AppendItem(Male, "Male");
                     }
                     if (printMask?.Female ?? true)
                     {
-                        fg.AppendLine($"Female => {Female}");
+                        fg.AppendItem(Female, "Female");
                     }
                 }
                 fg.AppendLine("]");
@@ -1981,8 +1981,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Male => {Male}");
-                fg.AppendLine($"Female => {Female}");
+                fg.AppendItem(Male, "Male");
+                fg.AppendItem(Female, "Female");
             }
             #endregion
         

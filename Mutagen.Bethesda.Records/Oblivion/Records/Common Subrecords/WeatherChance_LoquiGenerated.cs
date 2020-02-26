@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IWeatherChanceGetter rhs)) return false;
             return ((WeatherChanceCommon)((IWeatherChanceGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -330,11 +330,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Weather ?? true)
                     {
-                        fg.AppendLine($"Weather => {Weather}");
+                        fg.AppendItem(Weather, "Weather");
                     }
                     if (printMask?.Chance ?? true)
                     {
-                        fg.AppendLine($"Chance => {Chance}");
+                        fg.AppendItem(Chance, "Chance");
                     }
                 }
                 fg.AppendLine("]");
@@ -451,8 +451,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Weather => {Weather}");
-                fg.AppendLine($"Chance => {Chance}");
+                fg.AppendItem(Weather, "Weather");
+                fg.AppendItem(Chance, "Chance");
             }
             #endregion
 
@@ -1252,11 +1252,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Weather ?? true)
             {
-                fg.AppendLine($"Weather => {item.Weather}");
+                fg.AppendItem(item.Weather, "Weather");
             }
             if (printMask?.Chance ?? true)
             {
-                fg.AppendLine($"Chance => {item.Chance}");
+                fg.AppendItem(item.Chance, "Chance");
             }
         }
         

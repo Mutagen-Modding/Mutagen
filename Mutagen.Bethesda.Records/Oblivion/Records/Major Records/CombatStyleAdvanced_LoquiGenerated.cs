@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ICombatStyleAdvancedGetter rhs)) return false;
             return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -554,87 +554,87 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.DodgeFatigueModMult ?? true)
                     {
-                        fg.AppendLine($"DodgeFatigueModMult => {DodgeFatigueModMult}");
+                        fg.AppendItem(DodgeFatigueModMult, "DodgeFatigueModMult");
                     }
                     if (printMask?.DodgeFatigueModBase ?? true)
                     {
-                        fg.AppendLine($"DodgeFatigueModBase => {DodgeFatigueModBase}");
+                        fg.AppendItem(DodgeFatigueModBase, "DodgeFatigueModBase");
                     }
                     if (printMask?.EncumbSpeedModBase ?? true)
                     {
-                        fg.AppendLine($"EncumbSpeedModBase => {EncumbSpeedModBase}");
+                        fg.AppendItem(EncumbSpeedModBase, "EncumbSpeedModBase");
                     }
                     if (printMask?.EncumbSpeedModMult ?? true)
                     {
-                        fg.AppendLine($"EncumbSpeedModMult => {EncumbSpeedModMult}");
+                        fg.AppendItem(EncumbSpeedModMult, "EncumbSpeedModMult");
                     }
                     if (printMask?.DodgeWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"DodgeWhileUnderAttackMult => {DodgeWhileUnderAttackMult}");
+                        fg.AppendItem(DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
                     }
                     if (printMask?.DodgeNotUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"DodgeNotUnderAttackMult => {DodgeNotUnderAttackMult}");
+                        fg.AppendItem(DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
                     }
                     if (printMask?.DodgeBackWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"DodgeBackWhileUnderAttackMult => {DodgeBackWhileUnderAttackMult}");
+                        fg.AppendItem(DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
                     }
                     if (printMask?.DodgeBackNotUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"DodgeBackNotUnderAttackMult => {DodgeBackNotUnderAttackMult}");
+                        fg.AppendItem(DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
                     }
                     if (printMask?.DodgeForwardWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"DodgeForwardWhileUnderAttackMult => {DodgeForwardWhileUnderAttackMult}");
+                        fg.AppendItem(DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
                     }
                     if (printMask?.DodgeForwardNotUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"DodgeForwardNotUnderAttackMult => {DodgeForwardNotUnderAttackMult}");
+                        fg.AppendItem(DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
                     }
                     if (printMask?.BlockSkillModifierMult ?? true)
                     {
-                        fg.AppendLine($"BlockSkillModifierMult => {BlockSkillModifierMult}");
+                        fg.AppendItem(BlockSkillModifierMult, "BlockSkillModifierMult");
                     }
                     if (printMask?.BlockSkillModifierBase ?? true)
                     {
-                        fg.AppendLine($"BlockSkillModifierBase => {BlockSkillModifierBase}");
+                        fg.AppendItem(BlockSkillModifierBase, "BlockSkillModifierBase");
                     }
                     if (printMask?.BlockWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"BlockWhileUnderAttackMult => {BlockWhileUnderAttackMult}");
+                        fg.AppendItem(BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
                     }
                     if (printMask?.BlockNotUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"BlockNotUnderAttackMult => {BlockNotUnderAttackMult}");
+                        fg.AppendItem(BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
                     }
                     if (printMask?.AttackSkillModifierMult ?? true)
                     {
-                        fg.AppendLine($"AttackSkillModifierMult => {AttackSkillModifierMult}");
+                        fg.AppendItem(AttackSkillModifierMult, "AttackSkillModifierMult");
                     }
                     if (printMask?.AttackSkillModifierBase ?? true)
                     {
-                        fg.AppendLine($"AttackSkillModifierBase => {AttackSkillModifierBase}");
+                        fg.AppendItem(AttackSkillModifierBase, "AttackSkillModifierBase");
                     }
                     if (printMask?.AttackWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"AttackWhileUnderAttackMult => {AttackWhileUnderAttackMult}");
+                        fg.AppendItem(AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
                     }
                     if (printMask?.AttackNotUnderAttackMult ?? true)
                     {
-                        fg.AppendLine($"AttackNotUnderAttackMult => {AttackNotUnderAttackMult}");
+                        fg.AppendItem(AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
                     }
                     if (printMask?.AttackDuringBlockMult ?? true)
                     {
-                        fg.AppendLine($"AttackDuringBlockMult => {AttackDuringBlockMult}");
+                        fg.AppendItem(AttackDuringBlockMult, "AttackDuringBlockMult");
                     }
                     if (printMask?.PowerAttackFatigueModBase ?? true)
                     {
-                        fg.AppendLine($"PowerAttackFatigueModBase => {PowerAttackFatigueModBase}");
+                        fg.AppendItem(PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
                     }
                     if (printMask?.PowerAttackFatigueModMult ?? true)
                     {
-                        fg.AppendLine($"PowerAttackFatigueModMult => {PowerAttackFatigueModMult}");
+                        fg.AppendItem(PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
                     }
                 }
                 fg.AppendLine("]");
@@ -941,27 +941,27 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"DodgeFatigueModMult => {DodgeFatigueModMult}");
-                fg.AppendLine($"DodgeFatigueModBase => {DodgeFatigueModBase}");
-                fg.AppendLine($"EncumbSpeedModBase => {EncumbSpeedModBase}");
-                fg.AppendLine($"EncumbSpeedModMult => {EncumbSpeedModMult}");
-                fg.AppendLine($"DodgeWhileUnderAttackMult => {DodgeWhileUnderAttackMult}");
-                fg.AppendLine($"DodgeNotUnderAttackMult => {DodgeNotUnderAttackMult}");
-                fg.AppendLine($"DodgeBackWhileUnderAttackMult => {DodgeBackWhileUnderAttackMult}");
-                fg.AppendLine($"DodgeBackNotUnderAttackMult => {DodgeBackNotUnderAttackMult}");
-                fg.AppendLine($"DodgeForwardWhileUnderAttackMult => {DodgeForwardWhileUnderAttackMult}");
-                fg.AppendLine($"DodgeForwardNotUnderAttackMult => {DodgeForwardNotUnderAttackMult}");
-                fg.AppendLine($"BlockSkillModifierMult => {BlockSkillModifierMult}");
-                fg.AppendLine($"BlockSkillModifierBase => {BlockSkillModifierBase}");
-                fg.AppendLine($"BlockWhileUnderAttackMult => {BlockWhileUnderAttackMult}");
-                fg.AppendLine($"BlockNotUnderAttackMult => {BlockNotUnderAttackMult}");
-                fg.AppendLine($"AttackSkillModifierMult => {AttackSkillModifierMult}");
-                fg.AppendLine($"AttackSkillModifierBase => {AttackSkillModifierBase}");
-                fg.AppendLine($"AttackWhileUnderAttackMult => {AttackWhileUnderAttackMult}");
-                fg.AppendLine($"AttackNotUnderAttackMult => {AttackNotUnderAttackMult}");
-                fg.AppendLine($"AttackDuringBlockMult => {AttackDuringBlockMult}");
-                fg.AppendLine($"PowerAttackFatigueModBase => {PowerAttackFatigueModBase}");
-                fg.AppendLine($"PowerAttackFatigueModMult => {PowerAttackFatigueModMult}");
+                fg.AppendItem(DodgeFatigueModMult, "DodgeFatigueModMult");
+                fg.AppendItem(DodgeFatigueModBase, "DodgeFatigueModBase");
+                fg.AppendItem(EncumbSpeedModBase, "EncumbSpeedModBase");
+                fg.AppendItem(EncumbSpeedModMult, "EncumbSpeedModMult");
+                fg.AppendItem(DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
+                fg.AppendItem(DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
+                fg.AppendItem(DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
+                fg.AppendItem(DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
+                fg.AppendItem(DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
+                fg.AppendItem(DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
+                fg.AppendItem(BlockSkillModifierMult, "BlockSkillModifierMult");
+                fg.AppendItem(BlockSkillModifierBase, "BlockSkillModifierBase");
+                fg.AppendItem(BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
+                fg.AppendItem(BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
+                fg.AppendItem(AttackSkillModifierMult, "AttackSkillModifierMult");
+                fg.AppendItem(AttackSkillModifierBase, "AttackSkillModifierBase");
+                fg.AppendItem(AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
+                fg.AppendItem(AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
+                fg.AppendItem(AttackDuringBlockMult, "AttackDuringBlockMult");
+                fg.AppendItem(PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
+                fg.AppendItem(PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
             }
             #endregion
 
@@ -2160,87 +2160,87 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.DodgeFatigueModMult ?? true)
             {
-                fg.AppendLine($"DodgeFatigueModMult => {item.DodgeFatigueModMult}");
+                fg.AppendItem(item.DodgeFatigueModMult, "DodgeFatigueModMult");
             }
             if (printMask?.DodgeFatigueModBase ?? true)
             {
-                fg.AppendLine($"DodgeFatigueModBase => {item.DodgeFatigueModBase}");
+                fg.AppendItem(item.DodgeFatigueModBase, "DodgeFatigueModBase");
             }
             if (printMask?.EncumbSpeedModBase ?? true)
             {
-                fg.AppendLine($"EncumbSpeedModBase => {item.EncumbSpeedModBase}");
+                fg.AppendItem(item.EncumbSpeedModBase, "EncumbSpeedModBase");
             }
             if (printMask?.EncumbSpeedModMult ?? true)
             {
-                fg.AppendLine($"EncumbSpeedModMult => {item.EncumbSpeedModMult}");
+                fg.AppendItem(item.EncumbSpeedModMult, "EncumbSpeedModMult");
             }
             if (printMask?.DodgeWhileUnderAttackMult ?? true)
             {
-                fg.AppendLine($"DodgeWhileUnderAttackMult => {item.DodgeWhileUnderAttackMult}");
+                fg.AppendItem(item.DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
             }
             if (printMask?.DodgeNotUnderAttackMult ?? true)
             {
-                fg.AppendLine($"DodgeNotUnderAttackMult => {item.DodgeNotUnderAttackMult}");
+                fg.AppendItem(item.DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
             }
             if (printMask?.DodgeBackWhileUnderAttackMult ?? true)
             {
-                fg.AppendLine($"DodgeBackWhileUnderAttackMult => {item.DodgeBackWhileUnderAttackMult}");
+                fg.AppendItem(item.DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
             }
             if (printMask?.DodgeBackNotUnderAttackMult ?? true)
             {
-                fg.AppendLine($"DodgeBackNotUnderAttackMult => {item.DodgeBackNotUnderAttackMult}");
+                fg.AppendItem(item.DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
             }
             if (printMask?.DodgeForwardWhileUnderAttackMult ?? true)
             {
-                fg.AppendLine($"DodgeForwardWhileUnderAttackMult => {item.DodgeForwardWhileUnderAttackMult}");
+                fg.AppendItem(item.DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
             }
             if (printMask?.DodgeForwardNotUnderAttackMult ?? true)
             {
-                fg.AppendLine($"DodgeForwardNotUnderAttackMult => {item.DodgeForwardNotUnderAttackMult}");
+                fg.AppendItem(item.DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
             }
             if (printMask?.BlockSkillModifierMult ?? true)
             {
-                fg.AppendLine($"BlockSkillModifierMult => {item.BlockSkillModifierMult}");
+                fg.AppendItem(item.BlockSkillModifierMult, "BlockSkillModifierMult");
             }
             if (printMask?.BlockSkillModifierBase ?? true)
             {
-                fg.AppendLine($"BlockSkillModifierBase => {item.BlockSkillModifierBase}");
+                fg.AppendItem(item.BlockSkillModifierBase, "BlockSkillModifierBase");
             }
             if (printMask?.BlockWhileUnderAttackMult ?? true)
             {
-                fg.AppendLine($"BlockWhileUnderAttackMult => {item.BlockWhileUnderAttackMult}");
+                fg.AppendItem(item.BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
             }
             if (printMask?.BlockNotUnderAttackMult ?? true)
             {
-                fg.AppendLine($"BlockNotUnderAttackMult => {item.BlockNotUnderAttackMult}");
+                fg.AppendItem(item.BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
             }
             if (printMask?.AttackSkillModifierMult ?? true)
             {
-                fg.AppendLine($"AttackSkillModifierMult => {item.AttackSkillModifierMult}");
+                fg.AppendItem(item.AttackSkillModifierMult, "AttackSkillModifierMult");
             }
             if (printMask?.AttackSkillModifierBase ?? true)
             {
-                fg.AppendLine($"AttackSkillModifierBase => {item.AttackSkillModifierBase}");
+                fg.AppendItem(item.AttackSkillModifierBase, "AttackSkillModifierBase");
             }
             if (printMask?.AttackWhileUnderAttackMult ?? true)
             {
-                fg.AppendLine($"AttackWhileUnderAttackMult => {item.AttackWhileUnderAttackMult}");
+                fg.AppendItem(item.AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
             }
             if (printMask?.AttackNotUnderAttackMult ?? true)
             {
-                fg.AppendLine($"AttackNotUnderAttackMult => {item.AttackNotUnderAttackMult}");
+                fg.AppendItem(item.AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
             }
             if (printMask?.AttackDuringBlockMult ?? true)
             {
-                fg.AppendLine($"AttackDuringBlockMult => {item.AttackDuringBlockMult}");
+                fg.AppendItem(item.AttackDuringBlockMult, "AttackDuringBlockMult");
             }
             if (printMask?.PowerAttackFatigueModBase ?? true)
             {
-                fg.AppendLine($"PowerAttackFatigueModBase => {item.PowerAttackFatigueModBase}");
+                fg.AppendItem(item.PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
             }
             if (printMask?.PowerAttackFatigueModMult ?? true)
             {
-                fg.AppendLine($"PowerAttackFatigueModMult => {item.PowerAttackFatigueModMult}");
+                fg.AppendItem(item.PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
             }
         }
         

@@ -42,11 +42,13 @@ namespace Mutagen.Bethesda.Tests
 
         #region InterestingTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ExtendedList<String> _InterestingTypes = new ExtendedList<String>();
-        public IExtendedList<String> InterestingTypes => _InterestingTypes;
+        private ExtendedList<String> _InterestingTypes = new ExtendedList<String>();
+        public ExtendedList<String> InterestingTypes
+        {
+            get => this._InterestingTypes;
+            protected set => this._InterestingTypes = value;
+        }
         #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IExtendedList<String> IRecordInterest.InterestingTypes => _InterestingTypes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<String> IRecordInterestGetter.InterestingTypes => _InterestingTypes;
         #endregion
@@ -54,11 +56,13 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region UninterestingTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ExtendedList<String> _UninterestingTypes = new ExtendedList<String>();
-        public IExtendedList<String> UninterestingTypes => _UninterestingTypes;
+        private ExtendedList<String> _UninterestingTypes = new ExtendedList<String>();
+        public ExtendedList<String> UninterestingTypes
+        {
+            get => this._UninterestingTypes;
+            protected set => this._UninterestingTypes = value;
+        }
         #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IExtendedList<String> IRecordInterest.UninterestingTypes => _UninterestingTypes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<String> IRecordInterestGetter.UninterestingTypes => _UninterestingTypes;
         #endregion
@@ -84,7 +88,7 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRecordInterestGetter rhs)) return false;
             return ((RecordInterestCommon)((IRecordInterestGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -108,16 +112,16 @@ namespace Mutagen.Bethesda.Tests
             #region Ctors
             public Mask(T initialValue)
             {
-                this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
             }
 
             public Mask(
                 T InterestingTypes,
                 T UninterestingTypes)
             {
-                this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(InterestingTypes, Enumerable.Empty<(int Index, T Value)>());
-                this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(UninterestingTypes, Enumerable.Empty<(int Index, T Value)>());
+                this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(InterestingTypes, Enumerable.Empty<(int Index, T Value)>());
+                this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(UninterestingTypes, Enumerable.Empty<(int Index, T Value)>());
             }
 
             #pragma warning disable CS8618
@@ -129,12 +133,12 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Members
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? InterestingTypes;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? UninterestingTypes;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? InterestingTypes;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? UninterestingTypes;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -227,7 +231,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (InterestingTypes != null)
                 {
-                    obj.InterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.InterestingTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.InterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.InterestingTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (InterestingTypes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -241,7 +245,7 @@ namespace Mutagen.Bethesda.Tests
                 }
                 if (UninterestingTypes != null)
                 {
-                    obj.UninterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.UninterestingTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.UninterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UninterestingTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (UninterestingTypes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -275,57 +279,47 @@ namespace Mutagen.Bethesda.Tests
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.InterestingTypes?.Overall ?? true)
+                    if ((printMask?.InterestingTypes?.Overall ?? true)
+                        && InterestingTypes.TryGet(out var InterestingTypesItem))
                     {
                         fg.AppendLine("InterestingTypes =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (InterestingTypes != null)
+                            fg.AppendItem(InterestingTypesItem.Overall);
+                            if (InterestingTypesItem.Specific != null)
                             {
-                                if (InterestingTypes.Overall != null)
+                                foreach (var subItem in InterestingTypesItem.Specific)
                                 {
-                                    fg.AppendLine(InterestingTypes.Overall.ToString());
-                                }
-                                if (InterestingTypes.Specific != null)
-                                {
-                                    foreach (var subItem in InterestingTypes.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.UninterestingTypes?.Overall ?? true)
+                    if ((printMask?.UninterestingTypes?.Overall ?? true)
+                        && UninterestingTypes.TryGet(out var UninterestingTypesItem))
                     {
                         fg.AppendLine("UninterestingTypes =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (UninterestingTypes != null)
+                            fg.AppendItem(UninterestingTypesItem.Overall);
+                            if (UninterestingTypesItem.Specific != null)
                             {
-                                if (UninterestingTypes.Overall != null)
+                                foreach (var subItem in UninterestingTypesItem.Specific)
                                 {
-                                    fg.AppendLine(UninterestingTypes.Overall.ToString());
-                                }
-                                if (UninterestingTypes.Specific != null)
-                                {
-                                    foreach (var subItem in UninterestingTypes.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -446,56 +440,50 @@ namespace Mutagen.Bethesda.Tests
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine("InterestingTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (InterestingTypes.TryGet(out var InterestingTypesItem))
                 {
-                    if (InterestingTypes != null)
+                    fg.AppendLine("InterestingTypes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (InterestingTypes.Overall != null)
+                        fg.AppendItem(InterestingTypesItem.Overall);
+                        if (InterestingTypesItem.Specific != null)
                         {
-                            fg.AppendLine(InterestingTypes.Overall.ToString());
-                        }
-                        if (InterestingTypes.Specific != null)
-                        {
-                            foreach (var subItem in InterestingTypes.Specific)
+                            foreach (var subItem in InterestingTypesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("UninterestingTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (UninterestingTypes.TryGet(out var UninterestingTypesItem))
                 {
-                    if (UninterestingTypes != null)
+                    fg.AppendLine("UninterestingTypes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (UninterestingTypes.Overall != null)
+                        fg.AppendItem(UninterestingTypesItem.Overall);
+                        if (UninterestingTypesItem.Specific != null)
                         {
-                            fg.AppendLine(UninterestingTypes.Overall.ToString());
-                        }
-                        if (UninterestingTypes.Specific != null)
-                        {
-                            foreach (var subItem in UninterestingTypes.Specific)
+                            foreach (var subItem in UninterestingTypesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -710,8 +698,8 @@ namespace Mutagen.Bethesda.Tests
         IRecordInterestGetter,
         ILoquiObjectSetter<IRecordInterest>
     {
-        new IExtendedList<String> InterestingTypes { get; }
-        new IExtendedList<String> UninterestingTypes { get; }
+        new ExtendedList<String> InterestingTypes { get; }
+        new ExtendedList<String> UninterestingTypes { get; }
     }
 
     public partial interface IRecordInterestGetter :
@@ -1153,9 +1141,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    return typeof(IExtendedList<String>);
+                    return typeof(ExtendedList<String>);
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    return typeof(IExtendedList<String>);
+                    return typeof(ExtendedList<String>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1326,7 +1314,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1344,7 +1332,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1364,8 +1352,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             IRecordInterestGetter item,
             RecordInterest.Mask<bool> mask)
         {
-            mask.InterestingTypes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
-            mask.UninterestingTypes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
+            mask.InterestingTypes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.UninterestingTypes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
         }
         
         #region Equals and Hash

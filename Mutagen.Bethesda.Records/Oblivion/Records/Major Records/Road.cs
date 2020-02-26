@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         pt.Connections.AddRange(conns);
                         points[i] = pt;
                     }
-                    item.Points.AddRange(points);
+                    item.Points = points.ToExtendedList();
                     if (connFloats.Length > 0)
                     {
                         throw new ArgumentException("Connection reader did not complete as expected.");
@@ -59,6 +59,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 default:
                     frame.Reader.Position -= subMeta.HeaderLength;
+                    item.Points = new ExtendedList<RoadPoint>();
                     while (pointBytes.Length > 0)
                     {
                         item.Points.Add(
@@ -89,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool anyConnections = false;
             using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRP))
             {
-                foreach (var pt in item.Points)
+                foreach (var pt in item.Points.TryIterate())
                 {
                     writer.Write(pt.Point.X);
                     writer.Write(pt.Point.Y);
@@ -106,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!anyConnections) return;
             using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRR))
             {
-                foreach (var pt in item.Points)
+                foreach (var pt in item.Points.TryIterate())
                 {
                     foreach (var conn in pt.Connections)
                     {
@@ -121,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RoadBinaryOverlay
     {
-        public IReadOnlySetList<IRoadPointGetter> Points { get; private set; } = EmptySetList<IRoadPointGetter>.Instance;
+        public IReadOnlyList<IRoadPointGetter>? Points { get; private set; }
 
         partial void PointsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {

@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IBodyTemplateGetter rhs)) return false;
             return ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -338,15 +338,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.FirstPersonFlags ?? true)
                     {
-                        fg.AppendLine($"FirstPersonFlags => {FirstPersonFlags}");
+                        fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ArmorType ?? true)
                     {
-                        fg.AppendLine($"ArmorType => {ArmorType}");
+                        fg.AppendItem(ArmorType, "ArmorType");
                     }
                 }
                 fg.AppendLine("]");
@@ -473,9 +473,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"FirstPersonFlags => {FirstPersonFlags}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"ArmorType => {ArmorType}");
+                fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(ArmorType, "ArmorType");
             }
             #endregion
 
@@ -1296,15 +1296,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.FirstPersonFlags ?? true)
             {
-                fg.AppendLine($"FirstPersonFlags => {item.FirstPersonFlags}");
+                fg.AppendItem(item.FirstPersonFlags, "FirstPersonFlags");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.ArmorType ?? true)
             {
-                fg.AppendLine($"ArmorType => {item.ArmorType}");
+                fg.AppendItem(item.ArmorType, "ArmorType");
             }
         }
         

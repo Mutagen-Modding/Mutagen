@@ -87,21 +87,5 @@ namespace Mutagen.Bethesda
                 }
             }
         }
-
-        public void Write(
-            XElement node,
-            string name,
-            IHasBeenSetItem<ModKey> item,
-            int fieldIndex,
-            ErrorMaskBuilder? errorMask)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                node: node,
-                name: name,
-                item: item.Item,
-                errorMask: errorMask,
-                fieldIndex: fieldIndex);
-        }
     }
 }

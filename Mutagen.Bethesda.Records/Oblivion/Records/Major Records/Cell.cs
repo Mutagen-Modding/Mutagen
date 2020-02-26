@@ -41,9 +41,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     obj.Landscape = (Landscape)landscape.Duplicate(getNextFormKey, duplicatedRecords);
                 }
-                obj.Persistent.SetTo(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
-                obj.Temporary.SetTo(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
-                obj.VisibleWhenDistant.SetTo(rhs.VisibleWhenDistant.Select((i) => (IPlaced)i.Duplicate(getNextFormKey)));
+                obj.Persistent = new ExtendedList<IPlaced>(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
+                obj.Temporary = new ExtendedList<IPlaced>(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
+                obj.VisibleWhenDistant = new ExtendedList<IPlaced>(rhs.VisibleWhenDistant.Select((i) => (IPlaced)i.Duplicate(getNextFormKey)));
             }
         }
 
@@ -86,6 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
                     switch (type)
                     {
                         case GroupTypeEnum.CellPersistentChildren:
+                            obj.Persistent = new ExtendedList<IPlaced>();
                             ParseTypical(
                                 frame: itemFrame,
                                 obj: obj,
@@ -100,6 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 masterReferences);
                             break;
                         case GroupTypeEnum.CellVisibleDistantChildren:
+                            obj.VisibleWhenDistant = new ExtendedList<IPlaced>();
                             ParseTypical(
                                 frame: itemFrame,
                                 obj: obj,
@@ -117,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
                 MutagenFrame frame,
                 ICellInternal obj,
                 MasterReferences masterReferences,
-                ISetList<IPlaced> coll,
+                IList<IPlaced> coll,
                 bool persistentParse)
             {
                 var groupMeta = frame.MetaData.ReadGroup(frame);
@@ -134,51 +136,50 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     obj.VisibleWhenDistantTimestamp = groupMeta.LastModifiedSpan.ToArray();
                 }
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
-                    frame: frame,
-                    item: coll,
-                    lengthLength: frame.MetaData.MajorConstants.LengthLength,
-                    transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
-                    {
-                        switch (header.TypeInt)
+                coll.AddRange(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        lengthLength: frame.MetaData.MajorConstants.LengthLength,
+                        transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                         {
-                            case 0x45524341: // "ACRE":
-                                if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
-                                        frame: r,
-                                        item: out var placedCrea,
-                                        masterReferences: masterReferences))
-                                {
-                                    placed = placedCrea;
-                                    return true;
-                                }
-                                break;
-                            case 0x52484341: //"ACHR":
-                                if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
-                                        frame: r,
-                                        item: out var placedNPC,
-                                        masterReferences: masterReferences))
-                                {
-                                    placed = placedNPC;
-                                    return true;
-                                }
-                                break;
-                            case 0x52464552: // "REFR":
-                                if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
-                                        frame: r,
-                                        item: out var placedObj,
-                                        masterReferences: masterReferences))
-                                {
-                                    placed = placedObj;
-                                    return true;
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException();
-                        }
-                        placed = null!;
-                        return false;
-                    }
-                    );
+                            switch (header.TypeInt)
+                            {
+                                case 0x45524341: // "ACRE":
+                                    if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
+                                            frame: r,
+                                            item: out var placedCrea,
+                                            masterReferences: masterReferences))
+                                    {
+                                        placed = placedCrea;
+                                        return true;
+                                    }
+                                    break;
+                                case 0x52484341: //"ACHR":
+                                    if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
+                                            frame: r,
+                                            item: out var placedNPC,
+                                            masterReferences: masterReferences))
+                                    {
+                                        placed = placedNPC;
+                                        return true;
+                                    }
+                                    break;
+                                case 0x52464552: // "REFR":
+                                    if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
+                                            frame: r,
+                                            item: out var placedObj,
+                                            masterReferences: masterReferences))
+                                    {
+                                        placed = placedObj;
+                                        return true;
+                                    }
+                                    break;
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                            placed = null!;
+                            return false;
+                        }));
             }
 
             static bool ParseTemporaryOutliers(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
@@ -213,9 +214,8 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
                 obj.TemporaryTimestamp = groupMeta.LastModifiedSpan.ToArray();
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
+                var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                     frame: frame,
-                    item: obj.Temporary,
                     lengthLength: frame.MetaData.MajorConstants.LengthLength,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
@@ -262,6 +262,7 @@ namespace Mutagen.Bethesda.Oblivion
                         placed = null!;
                         return false;
                     });
+                obj.Temporary = new ExtendedList<IPlaced>(items);
             }
         }
 
@@ -271,9 +272,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var pathGrid = obj.PathGrid;
                 var landscape = obj.Landscape;
-                if (obj.Persistent.Count == 0
-                    && obj.Temporary.Count == 0
-                    && obj.VisibleWhenDistant.Count == 0
+                if ((obj.Persistent?.Count ?? 0) == 0
+                    && (obj.Temporary?.Count ?? 0) == 0
+                    && (obj.VisibleWhenDistant?.Count ?? 0) == 0
                     && pathGrid == null
                     && landscape == null) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
@@ -284,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
                         masterReferences);
                     writer.Write((int)GroupTypeEnum.CellChildren);
                     writer.Write(obj.Timestamp);
-                    if (obj.Persistent.Count > 0)
+                    if (obj.Persistent?.Count > 0)
                     {
                         using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                         {
@@ -305,7 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 });
                         }
                     }
-                    if (obj.Temporary.Count > 0
+                    if (obj.Temporary?.Count > 0
                         || pathGrid != null
                         || landscape != null)
                     {
@@ -329,18 +330,21 @@ namespace Mutagen.Bethesda.Oblivion
                                     writer,
                                     masterReferences: masterReferences);
                             }
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
-                                writer: writer,
-                                items: obj.Temporary,
-                                transl: (r, item) =>
-                                {
-                                    item.WriteToBinary(
-                                        r,
-                                        masterReferences);
-                                });
+                            if (obj.Temporary != null)
+                            {
+                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                    writer: writer,
+                                    items: obj.Temporary,
+                                    transl: (r, item) =>
+                                    {
+                                        item.WriteToBinary(
+                                            r,
+                                            masterReferences);
+                                    });
+                            }
                         }
                     }
-                    if (obj.VisibleWhenDistant.Count > 0)
+                    if (obj.VisibleWhenDistant?.Count > 0)
                     {
                         using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                         {
@@ -382,19 +386,19 @@ namespace Mutagen.Bethesda.Oblivion
             private int? _landscapeLocation;
             public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_landscapeLocation!.Value)), _package) : default;
 
-            public ReadOnlySpan<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public ReadOnlyMemorySlice<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
 
             private int? _persistentLocation;
-            public ReadOnlySpan<byte> PersistentTimestamp => _persistentLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
-            public IReadOnlySetList<IPlacedGetter> Persistent { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
+            public ReadOnlyMemorySlice<byte> PersistentTimestamp => _persistentLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
+            public IReadOnlyList<IPlacedGetter>? Persistent { get; private set; }
 
             private int? _temporaryLocation;
-            public ReadOnlySpan<byte> TemporaryTimestamp => _temporaryLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
-            public IReadOnlySetList<IPlacedGetter> Temporary { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
+            public ReadOnlyMemorySlice<byte> TemporaryTimestamp => _temporaryLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
+            public IReadOnlyList<IPlacedGetter>? Temporary { get; private set; }
 
             private int? _visibleWhenDistantLocation;
-            public ReadOnlySpan<byte> VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
-            public IReadOnlySetList<IPlacedGetter> VisibleWhenDistant { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
+            public ReadOnlyMemorySlice<byte> VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
+            public IReadOnlyList<IPlacedGetter>? VisibleWhenDistant { get; private set; }
 
             public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {

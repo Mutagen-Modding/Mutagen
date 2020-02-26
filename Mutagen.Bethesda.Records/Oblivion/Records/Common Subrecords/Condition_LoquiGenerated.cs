@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff = value ?? new byte[3];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IConditionGetter.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> IConditionGetter.Fluff => this.Fluff;
         #endregion
         #region ComparisonValue
         public Single ComparisonValue { get; set; } = default;
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IConditionGetter rhs)) return false;
             return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -406,35 +406,35 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.CompareOperator ?? true)
                     {
-                        fg.AppendLine($"CompareOperator => {CompareOperator}");
+                        fg.AppendItem(CompareOperator, "CompareOperator");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendLine($"Fluff => {Fluff}");
+                        fg.AppendItem(Fluff, "Fluff");
                     }
                     if (printMask?.ComparisonValue ?? true)
                     {
-                        fg.AppendLine($"ComparisonValue => {ComparisonValue}");
+                        fg.AppendItem(ComparisonValue, "ComparisonValue");
                     }
                     if (printMask?.Function ?? true)
                     {
-                        fg.AppendLine($"Function => {Function}");
+                        fg.AppendItem(Function, "Function");
                     }
                     if (printMask?.FirstParameter ?? true)
                     {
-                        fg.AppendLine($"FirstParameter => {FirstParameter}");
+                        fg.AppendItem(FirstParameter, "FirstParameter");
                     }
                     if (printMask?.SecondParameter ?? true)
                     {
-                        fg.AppendLine($"SecondParameter => {SecondParameter}");
+                        fg.AppendItem(SecondParameter, "SecondParameter");
                     }
                     if (printMask?.ThirdParameter ?? true)
                     {
-                        fg.AppendLine($"ThirdParameter => {ThirdParameter}");
+                        fg.AppendItem(ThirdParameter, "ThirdParameter");
                     }
                 }
                 fg.AppendLine("]");
@@ -611,14 +611,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"CompareOperator => {CompareOperator}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Fluff => {Fluff}");
-                fg.AppendLine($"ComparisonValue => {ComparisonValue}");
-                fg.AppendLine($"Function => {Function}");
-                fg.AppendLine($"FirstParameter => {FirstParameter}");
-                fg.AppendLine($"SecondParameter => {SecondParameter}");
-                fg.AppendLine($"ThirdParameter => {ThirdParameter}");
+                fg.AppendItem(CompareOperator, "CompareOperator");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(ComparisonValue, "ComparisonValue");
+                fg.AppendItem(Function, "Function");
+                fg.AppendItem(FirstParameter, "FirstParameter");
+                fg.AppendItem(SecondParameter, "SecondParameter");
+                fg.AppendItem(ThirdParameter, "ThirdParameter");
             }
             #endregion
 
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         CompareOperator CompareOperator { get; }
         Condition.Flag Flags { get; }
-        ReadOnlySpan<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Fluff { get; }
         Single ComparisonValue { get; }
         Function Function { get; }
         Int32 FirstParameter { get; }
@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
             ret.ComparisonValue = item.ComparisonValue.EqualsWithin(rhs.ComparisonValue);
             ret.Function = item.Function == rhs.Function;
             ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
@@ -1569,11 +1569,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.CompareOperator ?? true)
             {
-                fg.AppendLine($"CompareOperator => {item.CompareOperator}");
+                fg.AppendItem(item.CompareOperator, "CompareOperator");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Fluff ?? true)
             {
@@ -1581,23 +1581,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.ComparisonValue ?? true)
             {
-                fg.AppendLine($"ComparisonValue => {item.ComparisonValue}");
+                fg.AppendItem(item.ComparisonValue, "ComparisonValue");
             }
             if (printMask?.Function ?? true)
             {
-                fg.AppendLine($"Function => {item.Function}");
+                fg.AppendItem(item.Function, "Function");
             }
             if (printMask?.FirstParameter ?? true)
             {
-                fg.AppendLine($"FirstParameter => {item.FirstParameter}");
+                fg.AppendItem(item.FirstParameter, "FirstParameter");
             }
             if (printMask?.SecondParameter ?? true)
             {
-                fg.AppendLine($"SecondParameter => {item.SecondParameter}");
+                fg.AppendItem(item.SecondParameter, "SecondParameter");
             }
             if (printMask?.ThirdParameter ?? true)
             {
-                fg.AppendLine($"ThirdParameter => {item.ThirdParameter}");
+                fg.AppendItem(item.ThirdParameter, "ThirdParameter");
             }
         }
         
@@ -1631,7 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.CompareOperator != rhs.CompareOperator) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
             if (!lhs.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
             if (lhs.Function != rhs.Function) return false;
             if (lhs.FirstParameter != rhs.FirstParameter) return false;
@@ -2480,7 +2480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
         public Single ComparisonValue => SpanExt.GetFloat(_data.Span.Slice(4, 4));
         public Function Function => (Function)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));

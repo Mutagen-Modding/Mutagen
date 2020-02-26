@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IClothingGetter rhs)) return false;
             return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -403,15 +403,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendLine($"Value => {Value}");
+                        fg.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendLine($"Weight => {Weight}");
+                        fg.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -528,9 +528,9 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Value => {Value}");
-                fg.AppendLine($"Weight => {Weight}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1457,15 +1457,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Value ?? true)
             {
-                fg.AppendLine($"Value => {item.Value}");
+                fg.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendLine($"Weight => {item.Weight}");
+                fg.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         

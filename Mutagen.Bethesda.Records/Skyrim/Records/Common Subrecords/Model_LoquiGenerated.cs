@@ -60,18 +60,19 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IModelGetter.Data => this.Data;
-        bool IModelGetter.Data_IsSet => this.Data != null;
+        ReadOnlyMemorySlice<Byte>? IModelGetter.Data => this.Data;
         #endregion
         #region AlternateTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<AlternateTexture> _AlternateTextures = new SetList<AlternateTexture>();
-        public ISetList<AlternateTexture> AlternateTextures => _AlternateTextures;
+        private ExtendedList<AlternateTexture>? _AlternateTextures;
+        public ExtendedList<AlternateTexture>? AlternateTextures
+        {
+            get => this._AlternateTextures;
+            set => this._AlternateTextures = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<AlternateTexture> IModel.AlternateTextures => _AlternateTextures;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IAlternateTextureGetter> IModelGetter.AlternateTextures => _AlternateTextures;
+        IReadOnlyList<IAlternateTextureGetter>? IModelGetter.AlternateTextures => _AlternateTextures;
         #endregion
 
         #endregion
@@ -90,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IModelGetter rhs)) return false;
             return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -247,7 +248,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.File = initialValue;
                 this.Data = initialValue;
-                this.AlternateTextures = new MaskItem<T, IEnumerable<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>());
+                this.AlternateTextures = new MaskItem<T, IEnumerable<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>());
             }
 
             public Mask(
@@ -257,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.File = File;
                 this.Data = Data;
-                this.AlternateTextures = new MaskItem<T, IEnumerable<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>>(AlternateTextures, Enumerable.Empty<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>());
+                this.AlternateTextures = new MaskItem<T, IEnumerable<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>?>(AlternateTextures, Enumerable.Empty<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>());
             }
 
             #pragma warning disable CS8618
@@ -271,11 +272,11 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public T File;
             public T Data;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>>? AlternateTextures;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, AlternateTexture.Mask<T>?>>?>? AlternateTextures;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -356,7 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Data = eval(this.Data);
                 if (AlternateTextures != null)
                 {
-                    obj.AlternateTextures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>>(eval(this.AlternateTextures.Overall), Enumerable.Empty<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>());
+                    obj.AlternateTextures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>?>(eval(this.AlternateTextures.Overall), Enumerable.Empty<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>());
                     if (AlternateTextures.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>();
@@ -393,35 +394,30 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.File ?? true)
                     {
-                        fg.AppendLine($"File => {File}");
+                        fg.AppendItem(File, "File");
                     }
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendLine($"Data => {Data}");
+                        fg.AppendItem(Data, "Data");
                     }
-                    if (printMask?.AlternateTextures?.Overall ?? true)
+                    if ((printMask?.AlternateTextures?.Overall ?? true)
+                        && AlternateTextures.TryGet(out var AlternateTexturesItem))
                     {
                         fg.AppendLine("AlternateTextures =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (AlternateTextures != null)
+                            fg.AppendItem(AlternateTexturesItem.Overall);
+                            if (AlternateTexturesItem.Specific != null)
                             {
-                                if (AlternateTextures.Overall != null)
+                                foreach (var subItem in AlternateTexturesItem.Specific)
                                 {
-                                    fg.AppendLine(AlternateTextures.Overall.ToString());
-                                }
-                                if (AlternateTextures.Specific != null)
-                                {
-                                    foreach (var subItem in AlternateTextures.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -552,21 +548,18 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"File => {File}");
-                fg.AppendLine($"Data => {Data}");
-                fg.AppendLine("AlternateTextures =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(File, "File");
+                fg.AppendItem(Data, "Data");
+                if (AlternateTextures.TryGet(out var AlternateTexturesItem))
                 {
-                    if (AlternateTextures != null)
+                    fg.AppendLine("AlternateTextures =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (AlternateTextures.Overall != null)
+                        fg.AppendItem(AlternateTexturesItem.Overall);
+                        if (AlternateTexturesItem.Specific != null)
                         {
-                            fg.AppendLine(AlternateTextures.Overall.ToString());
-                        }
-                        if (AlternateTextures.Specific != null)
-                        {
-                            foreach (var subItem in AlternateTextures.Specific)
+                            foreach (var subItem in AlternateTexturesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -577,8 +570,8 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -720,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new String File { get; set; }
         new Byte[]? Data { get; set; }
-        new ISetList<AlternateTexture> AlternateTextures { get; }
+        new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
     }
 
     public partial interface IModelGetter :
@@ -737,11 +730,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         String File { get; }
-        #region Data
-        ReadOnlySpan<Byte> Data { get; }
-        bool Data_IsSet { get; }
-        #endregion
-        IReadOnlySetList<IAlternateTextureGetter> AlternateTextures { get; }
+        ReadOnlyMemorySlice<Byte>? Data { get; }
+        IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }
 
     }
 
@@ -1213,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Model_FieldIndex.Data:
                     return typeof(Byte[]);
                 case Model_FieldIndex.AlternateTextures:
-                    return typeof(ISetList<AlternateTexture>);
+                    return typeof(ExtendedList<AlternateTexture>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1270,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.File = string.Empty;
             item.Data = default;
-            item.AlternateTextures.Unset();
+            item.AlternateTextures = null;
         }
         
         #region Xml Translation
@@ -1338,17 +1328,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x53444F4D: // MODS
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.ParseRepeatedItem(
-                        amount: frame.ReadInt32(),
-                        frame: frame,
-                        item: item.AlternateTextures,
-                        transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.AlternateTextures = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.ParseRepeatedItem(
+                            amount: frame.ReadInt32(),
+                            frame: frame,
+                            transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<AlternateTexture>();
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
                 }
                 default:
@@ -1401,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
-            ret.Data = MemoryExtensions.SequenceEqual(item.Data, rhs.Data);
+            ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
             ret.AlternateTextures = item.AlternateTextures.CollectionEqualsHelper(
                 rhs.AlternateTextures,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1454,19 +1445,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.File ?? true)
             {
-                fg.AppendLine($"File => {item.File}");
+                fg.AppendItem(item.File, "File");
             }
-            if (printMask?.Data ?? true)
+            if ((printMask?.Data ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendLine($"Data => {SpanExt.ToHexString(item.Data)}");
+                fg.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
             }
-            if (printMask?.AlternateTextures?.Overall ?? true)
+            if ((printMask?.AlternateTextures?.Overall ?? true)
+                && item.AlternateTextures.TryGet(out var AlternateTexturesItem))
             {
                 fg.AppendLine("AlternateTextures =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.AlternateTextures)
+                    foreach (var subItem in AlternateTexturesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1484,8 +1477,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModelGetter item,
             Model.Mask<bool?> checkMask)
         {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
-            if (checkMask.AlternateTextures?.Overall.HasValue ?? false && checkMask.AlternateTextures!.Overall.Value != item.AlternateTextures.HasBeenSet) return false;
+            if (checkMask.Data.HasValue && checkMask.Data.Value != (item.Data != null)) return false;
+            if (checkMask.AlternateTextures?.Overall.HasValue ?? false && checkMask.AlternateTextures!.Overall.Value != (item.AlternateTextures != null)) return false;
             return true;
         }
         
@@ -1494,9 +1487,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Model.Mask<bool> mask)
         {
             mask.File = true;
-            mask.Data = item.Data_IsSet;
-            var AlternateTexturesItem = item.AlternateTextures;
-            mask.AlternateTextures = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, AlternateTexture.Mask<bool>?>>>(AlternateTexturesItem.HasBeenSet, AlternateTexturesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, AlternateTexture.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Data = (item.Data != null);
+            if (item.AlternateTextures.TryGet(out var AlternateTexturesItem))
+            {
+                mask.AlternateTextures = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, AlternateTexture.Mask<bool>?>>?>(true, AlternateTexturesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, AlternateTexture.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
         }
         
         #region Equals and Hash
@@ -1507,7 +1502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!string.Equals(lhs.File, rhs.File)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Data, rhs.Data)) return false;
+            if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
             if (!lhs.AlternateTextures.SequenceEqual(rhs.AlternateTextures)) return false;
             return true;
         }
@@ -1516,9 +1511,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
-            if (item.Data_IsSet)
+            if (item.Data.TryGet(out var DataItem))
             {
-                ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(DataItem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.AlternateTextures).CombineHashCode(ret);
             return ret;
@@ -1535,9 +1530,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IModelGetter obj)
         {
-            foreach (var item in obj.AlternateTextures.SelectMany(f => f.Links))
+            if (obj.AlternateTextures != null)
             {
-                yield return item;
+                foreach (var item in obj.AlternateTextures.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1562,9 +1560,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Data) ?? true))
             {
-                if(rhs.Data_IsSet)
+                if(rhs.Data.TryGet(out var Datarhs))
                 {
-                    item.Data = rhs.Data.ToArray();
+                    item.Data = Datarhs.ToArray();
                 }
                 else
                 {
@@ -1576,20 +1574,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Model_FieldIndex.AlternateTextures);
                 try
                 {
-                    if (rhs.AlternateTextures.HasBeenSet)
+                    if ((rhs.AlternateTextures != null))
                     {
-                        item.AlternateTextures.SetTo(
-                            items: rhs.AlternateTextures,
-                            converter: (r) =>
+                        item.AlternateTextures = 
+                            rhs.AlternateTextures
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<AlternateTexture>();
                     }
                     else
                     {
-                        item.AlternateTextures.Unset();
+                        item.AlternateTextures = null;
                     }
                 }
                 catch (Exception ex)
@@ -1700,17 +1699,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Model_FieldIndex.File,
                     errorMask: errorMask);
             }
-            if (item.Data_IsSet
+            if ((item.Data != null)
                 && (translationMask?.GetShouldTranslate((int)Model_FieldIndex.Data) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Data),
-                    item: item.Data,
+                    item: item.Data.Value,
                     fieldIndex: (int)Model_FieldIndex.Data,
                     errorMask: errorMask);
             }
-            if (item.AlternateTextures.HasBeenSet
+            if ((item.AlternateTextures != null)
                 && (translationMask?.GetShouldTranslate((int)Model_FieldIndex.AlternateTextures) ?? true))
             {
                 ListXmlTranslation<IAlternateTextureGetter>.Instance.Write(
@@ -1884,11 +1883,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.AlternateTextures.SetTo(AlternateTexturesItem);
+                            item.AlternateTextures = AlternateTexturesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.AlternateTextures.Unset();
+                            item.AlternateTextures = null;
                         }
                     }
                     catch (Exception ex)
@@ -2083,13 +2082,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.File,
                 header: recordTypeConverter.ConvertToCustom(Model_Registration.MODL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Data,
-                    header: recordTypeConverter.ConvertToCustom(Model_Registration.MODT_HEADER));
-            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Data,
+                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODT_HEADER));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IAlternateTextureGetter>.Instance.Write(
                 writer: writer,
                 items: item.AlternateTextures,
@@ -2228,10 +2224,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Data
         private int? _DataLocation;
-        public bool Data_IsSet => _DataLocation.HasValue;
-        public ReadOnlySpan<Byte> Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.Meta).ToArray() : default;
+        public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlySetList<IAlternateTextureGetter> AlternateTextures { get; private set; } = EmptySetList<AlternateTextureBinaryOverlay>.Instance;
+        public IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

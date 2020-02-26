@@ -85,13 +85,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PotentialGrass
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<Grass>> _PotentialGrass = new SetList<IFormLink<Grass>>();
-        public ISetList<IFormLink<Grass>> PotentialGrass => _PotentialGrass;
+        private ExtendedList<IFormLink<Grass>>? _PotentialGrass;
+        public ExtendedList<IFormLink<Grass>>? PotentialGrass
+        {
+            get => this._PotentialGrass;
+            set => this._PotentialGrass = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IGrassGetter>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
+        IReadOnlyList<IFormLinkGetter<IGrassGetter>>? ILandTextureGetter.PotentialGrass => _PotentialGrass;
         #endregion
 
         #endregion
@@ -110,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ILandTextureGetter rhs)) return false;
             return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -268,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.Havok = new MaskItem<T, HavokData.Mask<T>?>(initialValue, new HavokData.Mask<T>(initialValue));
                 this.TextureSpecularExponent = initialValue;
-                this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
             }
 
             public Mask(
@@ -291,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.Havok = new MaskItem<T, HavokData.Mask<T>?>(Havok, new HavokData.Mask<T>(Havok));
                 this.TextureSpecularExponent = TextureSpecularExponent;
-                this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PotentialGrass, Enumerable.Empty<(int Index, T Value)>());
+                this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(PotentialGrass, Enumerable.Empty<(int Index, T Value)>());
             }
 
             #pragma warning disable CS8618
@@ -306,11 +308,11 @@ namespace Mutagen.Bethesda.Oblivion
             public T Icon;
             public MaskItem<T, HavokData.Mask<T>?>? Havok { get; set; }
             public T TextureSpecularExponent;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? PotentialGrass;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? PotentialGrass;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -407,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.TextureSpecularExponent = eval(this.TextureSpecularExponent);
                 if (PotentialGrass != null)
                 {
-                    obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PotentialGrass.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PotentialGrass.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (PotentialGrass.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Havok?.Overall ?? true)
                     {
@@ -451,31 +453,26 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.TextureSpecularExponent ?? true)
                     {
-                        fg.AppendLine($"TextureSpecularExponent => {TextureSpecularExponent}");
+                        fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
                     }
-                    if (printMask?.PotentialGrass?.Overall ?? true)
+                    if ((printMask?.PotentialGrass?.Overall ?? true)
+                        && PotentialGrass.TryGet(out var PotentialGrassItem))
                     {
                         fg.AppendLine("PotentialGrass =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (PotentialGrass != null)
+                            fg.AppendItem(PotentialGrassItem.Overall);
+                            if (PotentialGrassItem.Specific != null)
                             {
-                                if (PotentialGrass.Overall != null)
+                                foreach (var subItem in PotentialGrassItem.Specific)
                                 {
-                                    fg.AppendLine(PotentialGrass.Overall.ToString());
-                                }
-                                if (PotentialGrass.Specific != null)
-                                {
-                                    foreach (var subItem in PotentialGrass.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -606,34 +603,31 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendItem(Icon, "Icon");
                 Havok?.ToString(fg);
-                fg.AppendLine($"TextureSpecularExponent => {TextureSpecularExponent}");
-                fg.AppendLine("PotentialGrass =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
+                if (PotentialGrass.TryGet(out var PotentialGrassItem))
                 {
-                    if (PotentialGrass != null)
+                    fg.AppendLine("PotentialGrass =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (PotentialGrass.Overall != null)
+                        fg.AppendItem(PotentialGrassItem.Overall);
+                        if (PotentialGrassItem.Specific != null)
                         {
-                            fg.AppendLine(PotentialGrass.Overall.ToString());
-                        }
-                        if (PotentialGrass.Specific != null)
-                        {
-                            foreach (var subItem in PotentialGrass.Specific)
+                            foreach (var subItem in PotentialGrassItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -784,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new HavokData? Havok { get; set; }
         new Byte? TextureSpecularExponent { get; set; }
-        new ISetList<IFormLink<Grass>> PotentialGrass { get; }
+        new ExtendedList<IFormLink<Grass>>? PotentialGrass { get; set; }
     }
 
     public partial interface ILandTextureInternal :
@@ -804,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Icon { get; }
         IHavokDataGetter? Havok { get; }
         Byte? TextureSpecularExponent { get; }
-        IReadOnlySetList<IFormLinkGetter<IGrassGetter>> PotentialGrass { get; }
+        IReadOnlyList<IFormLinkGetter<IGrassGetter>>? PotentialGrass { get; }
 
     }
 
@@ -1281,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LandTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandTexture_FieldIndex.PotentialGrass:
-                    return typeof(ISetList<IFormLink<Grass>>);
+                    return typeof(ExtendedList<IFormLink<Grass>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1341,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon = default;
             item.Havok = null;
             item.TextureSpecularExponent = default;
-            item.PotentialGrass.Unset();
+            item.PotentialGrass = null;
             base.Clear(item);
         }
         
@@ -1457,13 +1451,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: LandTexture_Registration.GNAM_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.PotentialGrass,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.PotentialGrass = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: LandTexture_Registration.GNAM_HEADER,
+                            masterReferences: masterReferences,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Grass>>();
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
                 }
                 default:
@@ -1583,30 +1578,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.Havok?.Overall ?? true)
+            if ((printMask?.Havok?.Overall ?? true)
+                && item.Havok.TryGet(out var HavokItem))
             {
-                item.Havok?.ToString(fg, "Havok");
+                HavokItem?.ToString(fg, "Havok");
             }
-            if (printMask?.TextureSpecularExponent ?? true)
+            if ((printMask?.TextureSpecularExponent ?? true)
+                && item.TextureSpecularExponent.TryGet(out var TextureSpecularExponentItem))
             {
-                fg.AppendLine($"TextureSpecularExponent => {item.TextureSpecularExponent}");
+                fg.AppendItem(TextureSpecularExponentItem, "TextureSpecularExponent");
             }
-            if (printMask?.PotentialGrass?.Overall ?? true)
+            if ((printMask?.PotentialGrass?.Overall ?? true)
+                && item.PotentialGrass.TryGet(out var PotentialGrassItem))
             {
                 fg.AppendLine("PotentialGrass =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.PotentialGrass)
+                    foreach (var subItem in PotentialGrassItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1623,7 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Havok?.Overall.HasValue ?? false && checkMask.Havok.Overall.Value != (item.Havok != null)) return false;
             if (checkMask.Havok?.Specific != null && (item.Havok == null || !item.Havok.HasBeenSet(checkMask.Havok.Specific))) return false;
             if (checkMask.TextureSpecularExponent.HasValue && checkMask.TextureSpecularExponent.Value != (item.TextureSpecularExponent != null)) return false;
-            if (checkMask.PotentialGrass?.Overall.HasValue ?? false && checkMask.PotentialGrass!.Overall.Value != item.PotentialGrass.HasBeenSet) return false;
+            if (checkMask.PotentialGrass?.Overall.HasValue ?? false && checkMask.PotentialGrass!.Overall.Value != (item.PotentialGrass != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1637,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemHavok = item.Havok;
             mask.Havok = new MaskItem<bool, HavokData.Mask<bool>?>(itemHavok != null, itemHavok?.GetHasBeenSetMask());
             mask.TextureSpecularExponent = (item.TextureSpecularExponent != null);
-            mask.PotentialGrass = new MaskItem<bool, IEnumerable<(int, bool)>>(item.PotentialGrass.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.PotentialGrass = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.PotentialGrass != null), default);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1757,9 +1756,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.PotentialGrass)
+            if (obj.PotentialGrass != null)
             {
-                yield return item;
+                foreach (var item in obj.PotentialGrass)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1846,15 +1848,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LandTexture_FieldIndex.PotentialGrass);
                 try
                 {
-                    if (rhs.PotentialGrass.HasBeenSet)
+                    if ((rhs.PotentialGrass != null))
                     {
-                        item.PotentialGrass.SetTo(
-                            rhs.PotentialGrass,
-                            (r) => new FormLink<Grass>(r.FormKey));
+                        item.PotentialGrass = 
+                            rhs.PotentialGrass
+                            .Select(r => new FormLink<Grass>(r.FormKey))
+                            .ToExtendedList<IFormLink<Grass>>();
                     }
                     else
                     {
-                        item.PotentialGrass.Unset();
+                        item.PotentialGrass = null;
                     }
                 }
                 catch (Exception ex)
@@ -2043,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
                     errorMask: errorMask);
             }
-            if (item.PotentialGrass.HasBeenSet
+            if ((item.PotentialGrass != null)
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
@@ -2235,11 +2238,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.PotentialGrass.SetTo(PotentialGrassItem);
+                            item.PotentialGrass = PotentialGrassItem.ToExtendedList();
                         }
                         else
                         {
-                            item.PotentialGrass.Unset();
+                            item.PotentialGrass = null;
                         }
                     }
                     catch (Exception ex)
@@ -2525,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _TextureSpecularExponentLocation;
         public Byte? TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSpecularExponentLocation.Value, _package.Meta)[0] : default(Byte?);
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<IGrassGetter>> PotentialGrass { get; private set; } = EmptySetList<IFormLinkGetter<IGrassGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<IGrassGetter>>? PotentialGrass { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

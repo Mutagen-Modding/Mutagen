@@ -62,15 +62,17 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._FluffBytes = value ?? new byte[3];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IPathGridPointGetter.FluffBytes => this.FluffBytes;
+        ReadOnlyMemorySlice<Byte> IPathGridPointGetter.FluffBytes => this.FluffBytes;
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ExtendedList<Int16> _Connections = new ExtendedList<Int16>();
-        public IExtendedList<Int16> Connections => _Connections;
+        private ExtendedList<Int16> _Connections = new ExtendedList<Int16>();
+        public ExtendedList<Int16> Connections
+        {
+            get => this._Connections;
+            protected set => this._Connections = value;
+        }
         #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IExtendedList<Int16> IPathGridPoint.Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<Int16> IPathGridPointGetter.Connections => _Connections;
         #endregion
@@ -91,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IPathGridPointGetter rhs)) return false;
             return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -249,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Point = initialValue;
                 this.NumConnections = initialValue;
                 this.FluffBytes = initialValue;
-                this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
             }
 
             public Mask(
@@ -261,7 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Point = Point;
                 this.NumConnections = NumConnections;
                 this.FluffBytes = FluffBytes;
-                this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Connections, Enumerable.Empty<(int Index, T Value)>());
+                this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(Connections, Enumerable.Empty<(int Index, T Value)>());
             }
 
             #pragma warning disable CS8618
@@ -276,11 +278,11 @@ namespace Mutagen.Bethesda.Oblivion
             public T Point;
             public T NumConnections;
             public T FluffBytes;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Connections;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? Connections;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -364,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.FluffBytes = eval(this.FluffBytes);
                 if (Connections != null)
                 {
-                    obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Connections.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Connections.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Connections.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -400,39 +402,34 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendLine($"Point => {Point}");
+                        fg.AppendItem(Point, "Point");
                     }
                     if (printMask?.NumConnections ?? true)
                     {
-                        fg.AppendLine($"NumConnections => {NumConnections}");
+                        fg.AppendItem(NumConnections, "NumConnections");
                     }
                     if (printMask?.FluffBytes ?? true)
                     {
-                        fg.AppendLine($"FluffBytes => {FluffBytes}");
+                        fg.AppendItem(FluffBytes, "FluffBytes");
                     }
-                    if (printMask?.Connections?.Overall ?? true)
+                    if ((printMask?.Connections?.Overall ?? true)
+                        && Connections.TryGet(out var ConnectionsItem))
                     {
                         fg.AppendLine("Connections =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Connections != null)
+                            fg.AppendItem(ConnectionsItem.Overall);
+                            if (ConnectionsItem.Specific != null)
                             {
-                                if (Connections.Overall != null)
+                                foreach (var subItem in ConnectionsItem.Specific)
                                 {
-                                    fg.AppendLine(Connections.Overall.ToString());
-                                }
-                                if (Connections.Specific != null)
-                                {
-                                    foreach (var subItem in Connections.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -573,34 +570,31 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Point => {Point}");
-                fg.AppendLine($"NumConnections => {NumConnections}");
-                fg.AppendLine($"FluffBytes => {FluffBytes}");
-                fg.AppendLine("Connections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Point, "Point");
+                fg.AppendItem(NumConnections, "NumConnections");
+                fg.AppendItem(FluffBytes, "FluffBytes");
+                if (Connections.TryGet(out var ConnectionsItem))
                 {
-                    if (Connections != null)
+                    fg.AppendLine("Connections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Connections.Overall != null)
+                        fg.AppendItem(ConnectionsItem.Overall);
+                        if (ConnectionsItem.Specific != null)
                         {
-                            fg.AppendLine(Connections.Overall.ToString());
-                        }
-                        if (Connections.Specific != null)
-                        {
-                            foreach (var subItem in Connections.Specific)
+                            foreach (var subItem in ConnectionsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -741,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
         new P3Float Point { get; set; }
         new Byte NumConnections { get; set; }
         new Byte[] FluffBytes { get; set; }
-        new IExtendedList<Int16> Connections { get; }
+        new ExtendedList<Int16> Connections { get; }
     }
 
     public partial interface IPathGridPointGetter :
@@ -758,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         P3Float Point { get; }
         Byte NumConnections { get; }
-        ReadOnlySpan<Byte> FluffBytes { get; }
+        ReadOnlyMemorySlice<Byte> FluffBytes { get; }
         IReadOnlyList<Int16> Connections { get; }
 
     }
@@ -1242,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGridPoint_FieldIndex.FluffBytes:
                     return typeof(Byte[]);
                 case PathGridPoint_FieldIndex.Connections:
-                    return typeof(IExtendedList<Int16>);
+                    return typeof(ExtendedList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1383,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Point = item.Point.Equals(rhs.Point);
             ret.NumConnections = item.NumConnections == rhs.NumConnections;
-            ret.FluffBytes = MemoryExtensions.SequenceEqual(item.FluffBytes, rhs.FluffBytes);
+            ret.FluffBytes = MemoryExtensions.SequenceEqual(item.FluffBytes.Span, rhs.FluffBytes.Span);
             ret.Connections = item.Connections.CollectionEqualsHelper(
                 rhs.Connections,
                 (l, r) => l == r,
@@ -1436,11 +1430,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Point ?? true)
             {
-                fg.AppendLine($"Point => {item.Point}");
+                fg.AppendItem(item.Point, "Point");
             }
             if (printMask?.NumConnections ?? true)
             {
-                fg.AppendLine($"NumConnections => {item.NumConnections}");
+                fg.AppendItem(item.NumConnections, "NumConnections");
             }
             if (printMask?.FluffBytes ?? true)
             {
@@ -1457,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1480,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Point = true;
             mask.NumConnections = true;
             mask.FluffBytes = true;
-            mask.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
+            mask.Connections = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
         }
         
         #region Equals and Hash
@@ -1492,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Point.Equals(rhs.Point)) return false;
             if (lhs.NumConnections != rhs.NumConnections) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.FluffBytes, rhs.FluffBytes)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.FluffBytes.Span, rhs.FluffBytes.Span)) return false;
             if (!lhs.Connections.SequenceEqual(rhs.Connections)) return false;
             return true;
         }
@@ -2190,7 +2184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(0, 12));
         public Byte NumConnections => _data.Span[12];
-        public ReadOnlySpan<Byte> FluffBytes => _data.Span.Slice(13, 3).ToArray();
+        public ReadOnlyMemorySlice<Byte> FluffBytes => _data.Span.Slice(13, 3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

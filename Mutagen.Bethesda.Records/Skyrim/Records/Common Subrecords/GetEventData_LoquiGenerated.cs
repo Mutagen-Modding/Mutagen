@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IGetEventDataGetter rhs)) return false;
             return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -403,31 +403,31 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                        fg.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.EventFunction ?? true)
                     {
-                        fg.AppendLine($"EventFunction => {EventFunction}");
+                        fg.AppendItem(EventFunction, "EventFunction");
                     }
                     if (printMask?.EventMember ?? true)
                     {
-                        fg.AppendLine($"EventMember => {EventMember}");
+                        fg.AppendItem(EventMember, "EventMember");
                     }
                     if (printMask?.Parameter3 ?? true)
                     {
-                        fg.AppendLine($"Parameter3 => {Parameter3}");
+                        fg.AppendItem(Parameter3, "Parameter3");
                     }
                     if (printMask?.RunOnType ?? true)
                     {
-                        fg.AppendLine($"RunOnType => {RunOnType}");
+                        fg.AppendItem(RunOnType, "RunOnType");
                     }
                     if (printMask?.Reference ?? true)
                     {
-                        fg.AppendLine($"Reference => {Reference}");
+                        fg.AppendItem(Reference, "Reference");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendLine($"Unknown3 => {Unknown3}");
+                        fg.AppendItem(Unknown3, "Unknown3");
                     }
                 }
                 fg.AppendLine("]");
@@ -584,13 +584,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Unknown2 => {Unknown2}");
-                fg.AppendLine($"EventFunction => {EventFunction}");
-                fg.AppendLine($"EventMember => {EventMember}");
-                fg.AppendLine($"Parameter3 => {Parameter3}");
-                fg.AppendLine($"RunOnType => {RunOnType}");
-                fg.AppendLine($"Reference => {Reference}");
-                fg.AppendLine($"Unknown3 => {Unknown3}");
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(EventFunction, "EventFunction");
+                fg.AppendItem(EventMember, "EventMember");
+                fg.AppendItem(Parameter3, "Parameter3");
+                fg.AppendItem(RunOnType, "RunOnType");
+                fg.AppendItem(Reference, "Reference");
+                fg.AppendItem(Unknown3, "Unknown3");
             }
             #endregion
 
@@ -1484,31 +1484,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknown2 => {item.Unknown2}");
+                fg.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.EventFunction ?? true)
             {
-                fg.AppendLine($"EventFunction => {item.EventFunction}");
+                fg.AppendItem(item.EventFunction, "EventFunction");
             }
             if (printMask?.EventMember ?? true)
             {
-                fg.AppendLine($"EventMember => {item.EventMember}");
+                fg.AppendItem(item.EventMember, "EventMember");
             }
             if (printMask?.Parameter3 ?? true)
             {
-                fg.AppendLine($"Parameter3 => {item.Parameter3}");
+                fg.AppendItem(item.Parameter3, "Parameter3");
             }
             if (printMask?.RunOnType ?? true)
             {
-                fg.AppendLine($"RunOnType => {item.RunOnType}");
+                fg.AppendItem(item.RunOnType, "RunOnType");
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendLine($"Reference => {item.Reference}");
+                fg.AppendItem(item.Reference, "Reference");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendLine($"Unknown3 => {item.Unknown3}");
+                fg.AppendItem(item.Unknown3, "Unknown3");
             }
         }
         

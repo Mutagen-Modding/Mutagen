@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IVendorValuesGetter rhs)) return false;
             return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -374,27 +374,27 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.StartHour ?? true)
                     {
-                        fg.AppendLine($"StartHour => {StartHour}");
+                        fg.AppendItem(StartHour, "StartHour");
                     }
                     if (printMask?.EndHour ?? true)
                     {
-                        fg.AppendLine($"EndHour => {EndHour}");
+                        fg.AppendItem(EndHour, "EndHour");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendLine($"Radius => {Radius}");
+                        fg.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.OnlyBuysStolenItems ?? true)
                     {
-                        fg.AppendLine($"OnlyBuysStolenItems => {OnlyBuysStolenItems}");
+                        fg.AppendItem(OnlyBuysStolenItems, "OnlyBuysStolenItems");
                     }
                     if (printMask?.NotSellBuy ?? true)
                     {
-                        fg.AppendLine($"NotSellBuy => {NotSellBuy}");
+                        fg.AppendItem(NotSellBuy, "NotSellBuy");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendLine($"Unknown => {Unknown}");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                 }
                 fg.AppendLine("]");
@@ -551,12 +551,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"StartHour => {StartHour}");
-                fg.AppendLine($"EndHour => {EndHour}");
-                fg.AppendLine($"Radius => {Radius}");
-                fg.AppendLine($"OnlyBuysStolenItems => {OnlyBuysStolenItems}");
-                fg.AppendLine($"NotSellBuy => {NotSellBuy}");
-                fg.AppendLine($"Unknown => {Unknown}");
+                fg.AppendItem(StartHour, "StartHour");
+                fg.AppendItem(EndHour, "EndHour");
+                fg.AppendItem(Radius, "Radius");
+                fg.AppendItem(OnlyBuysStolenItems, "OnlyBuysStolenItems");
+                fg.AppendItem(NotSellBuy, "NotSellBuy");
+                fg.AppendItem(Unknown, "Unknown");
             }
             #endregion
 
@@ -1440,27 +1440,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.StartHour ?? true)
             {
-                fg.AppendLine($"StartHour => {item.StartHour}");
+                fg.AppendItem(item.StartHour, "StartHour");
             }
             if (printMask?.EndHour ?? true)
             {
-                fg.AppendLine($"EndHour => {item.EndHour}");
+                fg.AppendItem(item.EndHour, "EndHour");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendLine($"Radius => {item.Radius}");
+                fg.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.OnlyBuysStolenItems ?? true)
             {
-                fg.AppendLine($"OnlyBuysStolenItems => {item.OnlyBuysStolenItems}");
+                fg.AppendItem(item.OnlyBuysStolenItems, "OnlyBuysStolenItems");
             }
             if (printMask?.NotSellBuy ?? true)
             {
-                fg.AppendLine($"NotSellBuy => {item.NotSellBuy}");
+                fg.AppendItem(item.NotSellBuy, "NotSellBuy");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {item.Unknown}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
         }
         

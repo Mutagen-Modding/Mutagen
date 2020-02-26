@@ -213,162 +213,167 @@ namespace Mutagen.Bethesda.Generation
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
                 && (bool)t;
 
-            using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false)}>.Instance.ParseRepeatedItem",
-                suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
+            list.WrapSet(fg, itemAccessor, (wrapFg) =>
             {
-                if (list is ArrayType arr
-                    && arr.FixedSize.HasValue)
+                using (var args = new ArgsWrapper(wrapFg,
+                    $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false)}>.Instance.ParseRepeatedItem",
+                    suffixLine: $"{Loqui.Generation.Utility.ConfigAwait(isAsync)}{(isAsync ? ")" : null)}")
                 {
-                    args.AddPassArg($"frame");
-                    args.Add($"amount: {arr.FixedSize.Value}");
-                }
-                else
+                    SemiColon = false,
+                })
                 {
-                    switch (listBinaryType)
+                    if (list is ArrayType arr
+                        && arr.FixedSize.HasValue)
                     {
-                        case ListBinaryType.SubTrigger:
-                            args.AddPassArg($"frame");
-                            args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
-                            break;
-                        case ListBinaryType.Trigger:
-                            args.Add($"frame: frame.SpawnWithLength(contentLength)");
-                            break;
-                        case ListBinaryType.CounterRecord:
-                            args.AddPassArg($"frame");
-                            args.AddPassArg($"amount");
-                            if (subData.HasTrigger)
-                            {
-                                args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
-                            }
-                            break;
-                        case ListBinaryType.PrependCount:
-                            args.Add("amount: frame.ReadInt32()");
-                            args.AddPassArg($"frame");
-                            break;
-                        case ListBinaryType.Frame:
-                            args.AddPassArg($"frame");
-                            break;
-                        default:
-                            throw new NotImplementedException();
+                        args.AddPassArg($"frame");
+                        args.Add($"amount: {arr.FixedSize.Value}");
                     }
-                }
-                if (threading)
-                {
-                    args.Add($"thread: true");
-                }
-                if (list.SubTypeGeneration is FormLinkType)
-                {
-                    args.Add($"masterReferences: masterReferences");
-                }
-                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                if (list.CustomData.TryGetValue("lengthLength", out object len))
-                {
-                    args.Add($"lengthLength: {len}");
-                }
-                else if (listBinaryType != ListBinaryType.CounterRecord 
-                    && list.SubTypeGeneration.GetFieldData().HasTrigger)
-                {
-                    if (list.SubTypeGeneration is MutagenLoquiType loqui)
+                    else
                     {
-                        switch (loqui.GetObjectType())
+                        switch (listBinaryType)
                         {
-                            case ObjectType.Subrecord:
-                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
+                            case ListBinaryType.SubTrigger:
+                                args.AddPassArg($"frame");
+                                args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
                                 break;
-                            case ObjectType.Group:
-                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.GroupConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
+                            case ListBinaryType.Trigger:
+                                args.Add($"frame: frame.SpawnWithLength(contentLength)");
                                 break;
-                            case ObjectType.Record:
-                                args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.MajorConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
+                            case ListBinaryType.CounterRecord:
+                                args.AddPassArg($"frame");
+                                args.AddPassArg($"amount");
+                                if (subData.HasTrigger)
+                                {
+                                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                }
                                 break;
-                            case ObjectType.Mod:
+                            case ListBinaryType.PrependCount:
+                                args.Add("amount: frame.ReadInt32()");
+                                args.AddPassArg($"frame");
+                                break;
+                            case ListBinaryType.Frame:
+                                args.AddPassArg($"frame");
+                                break;
                             default:
-                                throw new ArgumentException();
+                                throw new NotImplementedException();
+                        }
+                    }
+                    if (threading)
+                    {
+                        args.Add($"thread: true");
+                    }
+                    if (list.SubTypeGeneration is FormLinkType)
+                    {
+                        args.Add($"masterReferences: masterReferences");
+                    }
+                    if (list.CustomData.TryGetValue("lengthLength", out object len))
+                    {
+                        args.Add($"lengthLength: {len}");
+                    }
+                    else if (listBinaryType != ListBinaryType.CounterRecord
+                        && list.SubTypeGeneration.GetFieldData().HasTrigger)
+                    {
+                        if (list.SubTypeGeneration is MutagenLoquiType loqui)
+                        {
+                            switch (loqui.GetObjectType())
+                            {
+                                case ObjectType.Subrecord:
+                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
+                                    break;
+                                case ObjectType.Group:
+                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.GroupConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
+                                    break;
+                                case ObjectType.Record:
+                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.MajorConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
+                                    break;
+                                case ObjectType.Mod:
+                                default:
+                                    throw new ArgumentException();
+                            }
+                        }
+                        else
+                        {
+                            args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
+                        }
+                    }
+                    var subGenTypes = subData.GenerationTypes.ToList();
+                    var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
+                    if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
+                        objGen,
+                        typeGen: typeGen,
+                        squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
+                    {
+                        if (list.SubTypeGeneration is LoquiType loqui
+                            && !loqui.CanStronglyType)
+                        {
+                            args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse<{loqui.TypeName(getter: false)}>");
+                        }
+                        else
+                        {
+                            args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse");
                         }
                     }
                     else
                     {
-                        args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                    }
-                }
-                var subGenTypes = subData.GenerationTypes.ToList();
-                var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
-                    objGen,
-                    typeGen: typeGen,
-                    squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
-                {
-                    if (list.SubTypeGeneration is LoquiType loqui
-                        && !loqui.CanStronglyType)
-                    {
-                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse<{loqui.TypeName(getter: false)}>");
-                    }
-                    else
-                    {
-                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse");
-                    }
-                }
-                else
-                {
-                    args.Add((gen) =>
-                    {
-                        gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}) =>");
-                        using (new BraceWrapper(gen))
+                        args.Add((gen) =>
                         {
-                            if (subGenTypes.Count <= 1)
+                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}) =>");
+                            using (new BraceWrapper(gen))
                             {
-                                subGen.GenerateCopyInRet(
-                                    fg: gen,
-                                    objGen: objGen,
-                                    targetGen: list.SubTypeGeneration,
-                                    typeGen: list.SubTypeGeneration,
-                                    readerAccessor: "r",
-                                    translationAccessor: "listTranslMask",
-                                    retAccessor: "return ",
-                                    outItemAccessor: new Accessor("listSubItem"),
-                                    asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
-                                    errorMaskAccessor: "listErrMask");
-                            }
-                            else
-                            {
-                                gen.AppendLine("switch (header.TypeInt)");
-                                using (new BraceWrapper(gen))
+                                if (subGenTypes.Count <= 1)
                                 {
-                                    foreach (var item in subGenTypes)
+                                    subGen.GenerateCopyInRet(
+                                        fg: gen,
+                                        objGen: objGen,
+                                        targetGen: list.SubTypeGeneration,
+                                        typeGen: list.SubTypeGeneration,
+                                        readerAccessor: "r",
+                                        translationAccessor: "listTranslMask",
+                                        retAccessor: "return ",
+                                        outItemAccessor: new Accessor("listSubItem"),
+                                        asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
+                                        errorMaskAccessor: "listErrMask");
+                                }
+                                else
+                                {
+                                    gen.AppendLine("switch (header.TypeInt)");
+                                    using (new BraceWrapper(gen))
                                     {
-                                        foreach (var trigger in item.Key)
+                                        foreach (var item in subGenTypes)
                                         {
-                                            gen.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                            foreach (var trigger in item.Key)
+                                            {
+                                                gen.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                            }
+                                            LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
+                                            LoquiType specificLoqui = item.Value as LoquiType;
+                                            using (new DepthWrapper(gen))
+                                            {
+                                                subGen.GenerateCopyInRet(
+                                                    fg: gen,
+                                                    objGen: objGen,
+                                                    targetGen: list.SubTypeGeneration,
+                                                    typeGen: item.Value,
+                                                    readerAccessor: "r",
+                                                    translationAccessor: "listTranslMask",
+                                                    retAccessor: "return ",
+                                                    outItemAccessor: new Accessor("listSubItem"),
+                                                    asyncMode: AsyncMode.Async,
+                                                    errorMaskAccessor: $"listErrMask");
+                                            }
                                         }
-                                        LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
-                                        LoquiType specificLoqui = item.Value as LoquiType;
+                                        gen.AppendLine("default:");
                                         using (new DepthWrapper(gen))
                                         {
-                                            subGen.GenerateCopyInRet(
-                                                fg: gen,
-                                                objGen: objGen,
-                                                targetGen: list.SubTypeGeneration,
-                                                typeGen: item.Value,
-                                                readerAccessor: "r",
-                                                translationAccessor: "listTranslMask",
-                                                retAccessor: "return ",
-                                                outItemAccessor: new Accessor("listSubItem"),
-                                                asyncMode: AsyncMode.Async,
-                                                errorMaskAccessor: $"listErrMask");
+                                            gen.AppendLine("throw new NotImplementedException();");
                                         }
-                                    }
-                                    gen.AppendLine("default:");
-                                    using (new DepthWrapper(gen))
-                                    {
-                                        gen.AppendLine("throw new NotImplementedException();");
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
-            }
+            });
         }
 
         public override void GenerateCopyInRet(
@@ -421,15 +426,15 @@ namespace Mutagen.Bethesda.Generation
             if (list.SubTypeGeneration is LoquiType loqui)
             {
                 var typeName = this.Module.BinaryOverlayClassName(loqui);
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} {{ get; private set; }} = EmptySetList<{typeName}>.Instance;");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{typeName}>();")}");
             }
             else if (data.HasTrigger)
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} {{ get; private set; }} = EmptySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.Instance;");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}");
             }
             else
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
             }
         }
 

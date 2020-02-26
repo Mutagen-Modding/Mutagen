@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IAIPackageScheduleGetter rhs)) return false;
             return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Month ?? true)
                     {
-                        fg.AppendLine($"Month => {Month}");
+                        fg.AppendItem(Month, "Month");
                     }
                     if (printMask?.DayOfWeek ?? true)
                     {
-                        fg.AppendLine($"DayOfWeek => {DayOfWeek}");
+                        fg.AppendItem(DayOfWeek, "DayOfWeek");
                     }
                     if (printMask?.Day ?? true)
                     {
-                        fg.AppendLine($"Day => {Day}");
+                        fg.AppendItem(Day, "Day");
                     }
                     if (printMask?.Time ?? true)
                     {
-                        fg.AppendLine($"Time => {Time}");
+                        fg.AppendItem(Time, "Time");
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendLine($"Duration => {Duration}");
+                        fg.AppendItem(Duration, "Duration");
                     }
                 }
                 fg.AppendLine("]");
@@ -525,11 +525,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Month => {Month}");
-                fg.AppendLine($"DayOfWeek => {DayOfWeek}");
-                fg.AppendLine($"Day => {Day}");
-                fg.AppendLine($"Time => {Time}");
-                fg.AppendLine($"Duration => {Duration}");
+                fg.AppendItem(Month, "Month");
+                fg.AppendItem(DayOfWeek, "DayOfWeek");
+                fg.AppendItem(Day, "Day");
+                fg.AppendItem(Time, "Time");
+                fg.AppendItem(Duration, "Duration");
             }
             #endregion
 
@@ -1392,23 +1392,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Month ?? true)
             {
-                fg.AppendLine($"Month => {item.Month}");
+                fg.AppendItem(item.Month, "Month");
             }
             if (printMask?.DayOfWeek ?? true)
             {
-                fg.AppendLine($"DayOfWeek => {item.DayOfWeek}");
+                fg.AppendItem(item.DayOfWeek, "DayOfWeek");
             }
             if (printMask?.Day ?? true)
             {
-                fg.AppendLine($"Day => {item.Day}");
+                fg.AppendItem(item.Day, "Day");
             }
             if (printMask?.Time ?? true)
             {
-                fg.AppendLine($"Time => {item.Time}");
+                fg.AppendItem(item.Time, "Time");
             }
             if (printMask?.Duration ?? true)
             {
-                fg.AppendLine($"Duration => {item.Duration}");
+                fg.AppendItem(item.Duration, "Duration");
             }
         }
         

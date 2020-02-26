@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item, MasterReferences masterReferences)
             {
+                item.Conditions = new ExtendedList<Condition>();
                 ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame, masterReferences);
             }
         }
@@ -50,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FactionBinaryOverlay
         {
-            public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<IConditionGetter>.Instance;
+            public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
 
             partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {

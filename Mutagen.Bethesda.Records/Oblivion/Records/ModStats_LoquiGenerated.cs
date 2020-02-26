@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IModStatsGetter rhs)) return false;
             return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -338,15 +338,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Version ?? true)
                     {
-                        fg.AppendLine($"Version => {Version}");
+                        fg.AppendItem(Version, "Version");
                     }
                     if (printMask?.NumRecords ?? true)
                     {
-                        fg.AppendLine($"NumRecords => {NumRecords}");
+                        fg.AppendItem(NumRecords, "NumRecords");
                     }
                     if (printMask?.NextObjectID ?? true)
                     {
-                        fg.AppendLine($"NextObjectID => {NextObjectID}");
+                        fg.AppendItem(NextObjectID, "NextObjectID");
                     }
                 }
                 fg.AppendLine("]");
@@ -473,9 +473,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Version => {Version}");
-                fg.AppendLine($"NumRecords => {NumRecords}");
-                fg.AppendLine($"NextObjectID => {NextObjectID}");
+                fg.AppendItem(Version, "Version");
+                fg.AppendItem(NumRecords, "NumRecords");
+                fg.AppendItem(NextObjectID, "NextObjectID");
             }
             #endregion
 
@@ -1296,15 +1296,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Version ?? true)
             {
-                fg.AppendLine($"Version => {item.Version}");
+                fg.AppendItem(item.Version, "Version");
             }
             if (printMask?.NumRecords ?? true)
             {
-                fg.AppendLine($"NumRecords => {item.NumRecords}");
+                fg.AppendItem(item.NumRecords, "NumRecords");
             }
             if (printMask?.NextObjectID ?? true)
             {
-                fg.AppendLine($"NextObjectID => {item.NextObjectID}");
+                fg.AppendItem(item.NextObjectID, "NextObjectID");
             }
         }
         

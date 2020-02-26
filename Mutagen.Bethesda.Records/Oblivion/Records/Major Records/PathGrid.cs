@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             pointDataSpan = pointDataSpan.Slice(16);
                             connectionInts = connectionInts.Slice(numConn);
                         }
-                        item.PointToPointConnections.AddRange(pathGridPoints);
+                        item.PointToPointConnections = pathGridPoints.ToExtendedList();
                         readPGRR = true;
                         break;
                     default:
@@ -86,14 +86,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             if (!readPGRR)
             {
-                List<PathGridPoint> list = new List<PathGridPoint>();
+                ExtendedList<PathGridPoint> list = new ExtendedList<PathGridPoint>();
                 while (pointDataSpan.Length > 0)
                 {
                     list.Add(
                         ReadPathGridPoint(pointDataSpan, out var numConn));
                     pointDataSpan = pointDataSpan.Slice(16);
                 }
-                item.PointToPointConnections.AddRange(list);
+                item.PointToPointConnections = list;
             }
         }
 
@@ -114,15 +114,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridGetter item, MasterReferences masterReferences)
         {
+            if (!item.PointToPointConnections.TryGet(out var ptToPt)) return;
+
             using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.DATA_HEADER))
             {
-                writer.Write((ushort)item.PointToPointConnections.Count);
+                writer.Write((ushort)ptToPt.Count);
             }
 
             bool anyConnections = false;
             using (HeaderExport.ExportSubRecordHeader(writer, PathGridBinaryCreateTranslation.PGRP))
             {
-                foreach (var pt in item.PointToPointConnections)
+                foreach (var pt in ptToPt)
                 {
                     writer.Write(pt.Point.X);
                     writer.Write(pt.Point.Y);
@@ -136,18 +138,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
 
-            if (item.Unknown_IsSet)
+            if (item.Unknown.TryGet(out var unknown))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
                 {
-                    writer.Write(item.Unknown);
+                    writer.Write(unknown);
                 }
             }
 
             if (!anyConnections) return;
             using (HeaderExport.ExportSubRecordHeader(writer, PathGridBinaryCreateTranslation.PGRR))
             {
-                foreach (var pt in item.PointToPointConnections)
+                foreach (var pt in ptToPt)
                 {
                     foreach (var conn in pt.Connections)
                     {
@@ -160,11 +162,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PathGridBinaryOverlay
     {
-        public IReadOnlySetList<IPathGridPointGetter> PointToPointConnections { get; private set; } = EmptySetList<IPathGridPointGetter>.Instance;
+        public IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; private set; }
 
         private int? _UnknownLocation;
         public bool Unknown_IsSet => _UnknownLocation.HasValue;
-        public ReadOnlySpan<byte> Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta) : ArrayExt<byte>.Empty.AsSpan();
+        public ReadOnlyMemorySlice<byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.Meta) : default(ReadOnlyMemorySlice<byte>?);
 
         partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {

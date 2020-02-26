@@ -75,13 +75,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<SpellAbstract>> _ActorEffect = new SetList<IFormLink<SpellAbstract>>();
-        public ISetList<IFormLink<SpellAbstract>> ActorEffect => _ActorEffect;
+        private ExtendedList<IFormLink<SpellAbstract>>? _ActorEffect;
+        public ExtendedList<IFormLink<SpellAbstract>>? ActorEffect
+        {
+            get => this._ActorEffect;
+            set => this._ActorEffect = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<SpellAbstract>> IRace.ActorEffect => _ActorEffect;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<ISpellAbstractGetter>> IRaceGetter.ActorEffect => _ActorEffect;
+        IReadOnlyList<IFormLinkGetter<ISpellAbstractGetter>>? IRaceGetter.ActorEffect => _ActorEffect;
         #endregion
 
         #endregion
@@ -105,13 +107,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<Keyword>> _Keywords = new SetList<IFormLink<Keyword>>();
-        public ISetList<IFormLink<Keyword>> Keywords => _Keywords;
+        private ExtendedList<IFormLink<Keyword>>? _Keywords;
+        public ExtendedList<IFormLink<Keyword>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<Keyword>> IRace.Keywords => _Keywords;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IKeywordGetter>> IRaceGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IRaceGetter.Keywords => _Keywords;
         #endregion
 
         #endregion
@@ -150,13 +154,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MovementTypeNames
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<String> _MovementTypeNames = new SetList<String>();
-        public ISetList<String> MovementTypeNames => _MovementTypeNames;
+        private ExtendedList<String>? _MovementTypeNames;
+        public ExtendedList<String>? MovementTypeNames
+        {
+            get => this._MovementTypeNames;
+            set => this._MovementTypeNames = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<String> IRace.MovementTypeNames => _MovementTypeNames;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<String> IRaceGetter.MovementTypeNames => _MovementTypeNames;
+        IReadOnlyList<String>? IRaceGetter.MovementTypeNames => _MovementTypeNames;
         #endregion
 
         #endregion
@@ -228,13 +234,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Attack> _Attacks = new SetList<Attack>();
-        public ISetList<Attack> Attacks => _Attacks;
+        private ExtendedList<Attack>? _Attacks;
+        public ExtendedList<Attack>? Attacks
+        {
+            get => this._Attacks;
+            set => this._Attacks = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Attack> IRace.Attacks => _Attacks;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IAttackGetter> IRaceGetter.Attacks => _Attacks;
+        IReadOnlyList<IAttackGetter>? IRaceGetter.Attacks => _Attacks;
         #endregion
 
         #endregion
@@ -251,25 +259,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<Hair>> _Hairs = new SetList<IFormLink<Hair>>();
-        public ISetList<IFormLink<Hair>> Hairs => _Hairs;
+        private ExtendedList<IFormLink<Hair>>? _Hairs;
+        public ExtendedList<IFormLink<Hair>>? Hairs
+        {
+            get => this._Hairs;
+            set => this._Hairs = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<Hair>> IRace.Hairs => _Hairs;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IHairGetter>> IRaceGetter.Hairs => _Hairs;
+        IReadOnlyList<IFormLinkGetter<IHairGetter>>? IRaceGetter.Hairs => _Hairs;
         #endregion
 
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<Eye>> _Eyes = new SetList<IFormLink<Eye>>();
-        public ISetList<IFormLink<Eye>> Eyes => _Eyes;
+        private ExtendedList<IFormLink<Eye>>? _Eyes;
+        public ExtendedList<IFormLink<Eye>>? Eyes
+        {
+            get => this._Eyes;
+            set => this._Eyes = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<Eye>> IRace.Eyes => _Eyes;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IEyeGetter>> IRaceGetter.Eyes => _Eyes;
+        IReadOnlyList<IFormLinkGetter<IEyeGetter>>? IRaceGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
@@ -295,7 +307,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRaceGetter rhs)) return false;
             return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -452,14 +464,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.ActorEffect = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.ActorEffect = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
                 this.Skin = initialValue;
                 this.BodyTemplate = new MaskItem<T, BodyTemplate.Mask<T>?>(initialValue, new BodyTemplate.Mask<T>(initialValue));
-                this.Keywords = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Keywords = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
                 this.Data = new MaskItem<T, RaceData.Mask<T>?>(initialValue, new RaceData.Mask<T>(initialValue));
                 this.MaleSkeletalModel = initialValue;
                 this.FemaleSkeletalModel = initialValue;
-                this.MovementTypeNames = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.MovementTypeNames = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
                 this.Voices = new MaskItem<T, GenderedItem<T>?>(initialValue, default);
                 this.DecapitateArmors = new MaskItem<T, GenderedFormLinks.Mask<T>?>(initialValue, new GenderedFormLinks.Mask<T>(initialValue));
                 this.DefaultHairColors = new MaskItem<T, GenderedFormLinks.Mask<T>?>(initialValue, new GenderedFormLinks.Mask<T>(initialValue));
@@ -467,10 +479,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FacegenMainClamp = initialValue;
                 this.FacegenFaceClamp = initialValue;
                 this.AttackRace = initialValue;
-                this.Attacks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Attack.Mask<T>?>>());
+                this.Attacks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Attack.Mask<T>?>>());
                 this.BodyData = new MaskItem<T, BodyDataPair.Mask<T>?>(initialValue, new BodyDataPair.Mask<T>(initialValue));
-                this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
                 this.BodyPartData = initialValue;
             }
 
@@ -515,14 +527,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = Name;
                 this.Description = Description;
-                this.ActorEffect = new MaskItem<T, IEnumerable<(int Index, T Value)>>(ActorEffect, Enumerable.Empty<(int Index, T Value)>());
+                this.ActorEffect = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(ActorEffect, Enumerable.Empty<(int Index, T Value)>());
                 this.Skin = Skin;
                 this.BodyTemplate = new MaskItem<T, BodyTemplate.Mask<T>?>(BodyTemplate, new BodyTemplate.Mask<T>(BodyTemplate));
-                this.Keywords = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Keywords, Enumerable.Empty<(int Index, T Value)>());
+                this.Keywords = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(Keywords, Enumerable.Empty<(int Index, T Value)>());
                 this.Data = new MaskItem<T, RaceData.Mask<T>?>(Data, new RaceData.Mask<T>(Data));
                 this.MaleSkeletalModel = MaleSkeletalModel;
                 this.FemaleSkeletalModel = FemaleSkeletalModel;
-                this.MovementTypeNames = new MaskItem<T, IEnumerable<(int Index, T Value)>>(MovementTypeNames, Enumerable.Empty<(int Index, T Value)>());
+                this.MovementTypeNames = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(MovementTypeNames, Enumerable.Empty<(int Index, T Value)>());
                 this.Voices = new MaskItem<T, GenderedItem<T>?>(Voices, default);
                 this.DecapitateArmors = new MaskItem<T, GenderedFormLinks.Mask<T>?>(DecapitateArmors, new GenderedFormLinks.Mask<T>(DecapitateArmors));
                 this.DefaultHairColors = new MaskItem<T, GenderedFormLinks.Mask<T>?>(DefaultHairColors, new GenderedFormLinks.Mask<T>(DefaultHairColors));
@@ -530,10 +542,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FacegenMainClamp = FacegenMainClamp;
                 this.FacegenFaceClamp = FacegenFaceClamp;
                 this.AttackRace = AttackRace;
-                this.Attacks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>>(Attacks, Enumerable.Empty<MaskItemIndexed<T, Attack.Mask<T>?>>());
+                this.Attacks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>?>(Attacks, Enumerable.Empty<MaskItemIndexed<T, Attack.Mask<T>?>>());
                 this.BodyData = new MaskItem<T, BodyDataPair.Mask<T>?>(BodyData, new BodyDataPair.Mask<T>(BodyData));
-                this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Hairs, Enumerable.Empty<(int Index, T Value)>());
-                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Eyes, Enumerable.Empty<(int Index, T Value)>());
+                this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(Hairs, Enumerable.Empty<(int Index, T Value)>());
+                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(Eyes, Enumerable.Empty<(int Index, T Value)>());
                 this.BodyPartData = BodyPartData;
             }
 
@@ -548,14 +560,14 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public T Name;
             public T Description;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? ActorEffect;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? ActorEffect;
             public T Skin;
             public MaskItem<T, BodyTemplate.Mask<T>?>? BodyTemplate { get; set; }
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Keywords;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? Keywords;
             public MaskItem<T, RaceData.Mask<T>?>? Data { get; set; }
             public T MaleSkeletalModel;
             public T FemaleSkeletalModel;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? MovementTypeNames;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? MovementTypeNames;
             public MaskItem<T, GenderedItem<T>?>? Voices;
             public MaskItem<T, GenderedFormLinks.Mask<T>?>? DecapitateArmors { get; set; }
             public MaskItem<T, GenderedFormLinks.Mask<T>?>? DefaultHairColors { get; set; }
@@ -563,15 +575,15 @@ namespace Mutagen.Bethesda.Skyrim
             public T FacegenMainClamp;
             public T FacegenFaceClamp;
             public T AttackRace;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>>? Attacks;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Attack.Mask<T>?>>?>? Attacks;
             public MaskItem<T, BodyDataPair.Mask<T>?>? BodyData { get; set; }
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Hairs;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Eyes;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? Hairs;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? Eyes;
             public T BodyPartData;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -877,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Description = eval(this.Description);
                 if (ActorEffect != null)
                 {
-                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.ActorEffect.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (ActorEffect.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -893,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.BodyTemplate = this.BodyTemplate == null ? null : new MaskItem<R, BodyTemplate.Mask<R>?>(eval(this.BodyTemplate.Overall), this.BodyTemplate.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -910,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FemaleSkeletalModel = eval(this.FemaleSkeletalModel);
                 if (MovementTypeNames != null)
                 {
-                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.MovementTypeNames.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MovementTypeNames.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (MovementTypeNames.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -933,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AttackRace = eval(this.AttackRace);
                 if (Attacks != null)
                 {
-                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>>(eval(this.Attacks.Overall), Enumerable.Empty<MaskItemIndexed<R, Attack.Mask<R>?>>());
+                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), Enumerable.Empty<MaskItemIndexed<R, Attack.Mask<R>?>>());
                     if (Attacks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
@@ -949,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.BodyData = this.BodyData == null ? null : new MaskItem<R, BodyDataPair.Mask<R>?>(eval(this.BodyData.Overall), this.BodyData.Specific?.Translate(eval));
                 if (Hairs != null)
                 {
-                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Hairs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Hairs.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Hairs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -963,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Eyes != null)
                 {
-                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Eyes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Eyes.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Eyes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1000,35 +1012,30 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendLine($"Description => {Description}");
+                        fg.AppendItem(Description, "Description");
                     }
-                    if (printMask?.ActorEffect?.Overall ?? true)
+                    if ((printMask?.ActorEffect?.Overall ?? true)
+                        && ActorEffect.TryGet(out var ActorEffectItem))
                     {
                         fg.AppendLine("ActorEffect =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (ActorEffect != null)
+                            fg.AppendItem(ActorEffectItem.Overall);
+                            if (ActorEffectItem.Specific != null)
                             {
-                                if (ActorEffect.Overall != null)
+                                foreach (var subItem in ActorEffectItem.Specific)
                                 {
-                                    fg.AppendLine(ActorEffect.Overall.ToString());
-                                }
-                                if (ActorEffect.Specific != null)
-                                {
-                                    foreach (var subItem in ActorEffect.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1036,35 +1043,30 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Skin ?? true)
                     {
-                        fg.AppendLine($"Skin => {Skin}");
+                        fg.AppendItem(Skin, "Skin");
                     }
                     if (printMask?.BodyTemplate?.Overall ?? true)
                     {
                         BodyTemplate?.ToString(fg);
                     }
-                    if (printMask?.Keywords?.Overall ?? true)
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords.TryGet(out var KeywordsItem))
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Keywords != null)
+                            fg.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
                             {
-                                if (Keywords.Overall != null)
+                                foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine(Keywords.Overall.ToString());
-                                }
-                                if (Keywords.Specific != null)
-                                {
-                                    foreach (var subItem in Keywords.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1076,35 +1078,30 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.MaleSkeletalModel ?? true)
                     {
-                        fg.AppendLine($"MaleSkeletalModel => {MaleSkeletalModel}");
+                        fg.AppendItem(MaleSkeletalModel, "MaleSkeletalModel");
                     }
                     if (printMask?.FemaleSkeletalModel ?? true)
                     {
-                        fg.AppendLine($"FemaleSkeletalModel => {FemaleSkeletalModel}");
+                        fg.AppendItem(FemaleSkeletalModel, "FemaleSkeletalModel");
                     }
-                    if (printMask?.MovementTypeNames?.Overall ?? true)
+                    if ((printMask?.MovementTypeNames?.Overall ?? true)
+                        && MovementTypeNames.TryGet(out var MovementTypeNamesItem))
                     {
                         fg.AppendLine("MovementTypeNames =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (MovementTypeNames != null)
+                            fg.AppendItem(MovementTypeNamesItem.Overall);
+                            if (MovementTypeNamesItem.Specific != null)
                             {
-                                if (MovementTypeNames.Overall != null)
+                                foreach (var subItem in MovementTypeNamesItem.Specific)
                                 {
-                                    fg.AppendLine(MovementTypeNames.Overall.ToString());
-                                }
-                                if (MovementTypeNames.Specific != null)
-                                {
-                                    foreach (var subItem in MovementTypeNames.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1125,43 +1122,38 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.NumberOfTintsInList ?? true)
                     {
-                        fg.AppendLine($"NumberOfTintsInList => {NumberOfTintsInList}");
+                        fg.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
                     }
                     if (printMask?.FacegenMainClamp ?? true)
                     {
-                        fg.AppendLine($"FacegenMainClamp => {FacegenMainClamp}");
+                        fg.AppendItem(FacegenMainClamp, "FacegenMainClamp");
                     }
                     if (printMask?.FacegenFaceClamp ?? true)
                     {
-                        fg.AppendLine($"FacegenFaceClamp => {FacegenFaceClamp}");
+                        fg.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
                     }
                     if (printMask?.AttackRace ?? true)
                     {
-                        fg.AppendLine($"AttackRace => {AttackRace}");
+                        fg.AppendItem(AttackRace, "AttackRace");
                     }
-                    if (printMask?.Attacks?.Overall ?? true)
+                    if ((printMask?.Attacks?.Overall ?? true)
+                        && Attacks.TryGet(out var AttacksItem))
                     {
                         fg.AppendLine("Attacks =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Attacks != null)
+                            fg.AppendItem(AttacksItem.Overall);
+                            if (AttacksItem.Specific != null)
                             {
-                                if (Attacks.Overall != null)
+                                foreach (var subItem in AttacksItem.Specific)
                                 {
-                                    fg.AppendLine(Attacks.Overall.ToString());
-                                }
-                                if (Attacks.Specific != null)
-                                {
-                                    foreach (var subItem in Attacks.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1171,57 +1163,47 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         BodyData?.ToString(fg);
                     }
-                    if (printMask?.Hairs?.Overall ?? true)
+                    if ((printMask?.Hairs?.Overall ?? true)
+                        && Hairs.TryGet(out var HairsItem))
                     {
                         fg.AppendLine("Hairs =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Hairs != null)
+                            fg.AppendItem(HairsItem.Overall);
+                            if (HairsItem.Specific != null)
                             {
-                                if (Hairs.Overall != null)
+                                foreach (var subItem in HairsItem.Specific)
                                 {
-                                    fg.AppendLine(Hairs.Overall.ToString());
-                                }
-                                if (Hairs.Specific != null)
-                                {
-                                    foreach (var subItem in Hairs.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Eyes?.Overall ?? true)
+                    if ((printMask?.Eyes?.Overall ?? true)
+                        && Eyes.TryGet(out var EyesItem))
                     {
                         fg.AppendLine("Eyes =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Eyes != null)
+                            fg.AppendItem(EyesItem.Overall);
+                            if (EyesItem.Specific != null)
                             {
-                                if (Eyes.Overall != null)
+                                foreach (var subItem in EyesItem.Specific)
                                 {
-                                    fg.AppendLine(Eyes.Overall.ToString());
-                                }
-                                if (Eyes.Specific != null)
-                                {
-                                    foreach (var subItem in Eyes.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1229,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.BodyPartData ?? true)
                     {
-                        fg.AppendLine($"BodyPartData => {BodyPartData}");
+                        fg.AppendItem(BodyPartData, "BodyPartData");
                     }
                 }
                 fg.AppendLine("]");
@@ -1536,111 +1518,99 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Description => {Description}");
-                fg.AppendLine("ActorEffect =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Description, "Description");
+                if (ActorEffect.TryGet(out var ActorEffectItem))
                 {
-                    if (ActorEffect != null)
+                    fg.AppendLine("ActorEffect =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (ActorEffect.Overall != null)
+                        fg.AppendItem(ActorEffectItem.Overall);
+                        if (ActorEffectItem.Specific != null)
                         {
-                            fg.AppendLine(ActorEffect.Overall.ToString());
-                        }
-                        if (ActorEffect.Specific != null)
-                        {
-                            foreach (var subItem in ActorEffect.Specific)
+                            foreach (var subItem in ActorEffectItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"Skin => {Skin}");
+                fg.AppendItem(Skin, "Skin");
                 BodyTemplate?.ToString(fg);
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Keywords.TryGet(out var KeywordsItem))
                 {
-                    if (Keywords != null)
+                    fg.AppendLine("Keywords =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Keywords.Overall != null)
+                        fg.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
                         {
-                            fg.AppendLine(Keywords.Overall.ToString());
-                        }
-                        if (Keywords.Specific != null)
-                        {
-                            foreach (var subItem in Keywords.Specific)
+                            foreach (var subItem in KeywordsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
                 Data?.ToString(fg);
-                fg.AppendLine($"MaleSkeletalModel => {MaleSkeletalModel}");
-                fg.AppendLine($"FemaleSkeletalModel => {FemaleSkeletalModel}");
-                fg.AppendLine("MovementTypeNames =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(MaleSkeletalModel, "MaleSkeletalModel");
+                fg.AppendItem(FemaleSkeletalModel, "FemaleSkeletalModel");
+                if (MovementTypeNames.TryGet(out var MovementTypeNamesItem))
                 {
-                    if (MovementTypeNames != null)
+                    fg.AppendLine("MovementTypeNames =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (MovementTypeNames.Overall != null)
+                        fg.AppendItem(MovementTypeNamesItem.Overall);
+                        if (MovementTypeNamesItem.Specific != null)
                         {
-                            fg.AppendLine(MovementTypeNames.Overall.ToString());
-                        }
-                        if (MovementTypeNames.Specific != null)
-                        {
-                            foreach (var subItem in MovementTypeNames.Specific)
+                            foreach (var subItem in MovementTypeNamesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
                 if (Voices != null)
                 {
                     fg.AppendLine($"Voices => {Voices}");
                 }
                 DecapitateArmors?.ToString(fg);
                 DefaultHairColors?.ToString(fg);
-                fg.AppendLine($"NumberOfTintsInList => {NumberOfTintsInList}");
-                fg.AppendLine($"FacegenMainClamp => {FacegenMainClamp}");
-                fg.AppendLine($"FacegenFaceClamp => {FacegenFaceClamp}");
-                fg.AppendLine($"AttackRace => {AttackRace}");
-                fg.AppendLine("Attacks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
+                fg.AppendItem(FacegenMainClamp, "FacegenMainClamp");
+                fg.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
+                fg.AppendItem(AttackRace, "AttackRace");
+                if (Attacks.TryGet(out var AttacksItem))
                 {
-                    if (Attacks != null)
+                    fg.AppendLine("Attacks =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Attacks.Overall != null)
+                        fg.AppendItem(AttacksItem.Overall);
+                        if (AttacksItem.Specific != null)
                         {
-                            fg.AppendLine(Attacks.Overall.ToString());
-                        }
-                        if (Attacks.Specific != null)
-                        {
-                            foreach (var subItem in Attacks.Specific)
+                            foreach (var subItem in AttacksItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1651,60 +1621,54 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
                 BodyData?.ToString(fg);
-                fg.AppendLine("Hairs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Hairs.TryGet(out var HairsItem))
                 {
-                    if (Hairs != null)
+                    fg.AppendLine("Hairs =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Hairs.Overall != null)
+                        fg.AppendItem(HairsItem.Overall);
+                        if (HairsItem.Specific != null)
                         {
-                            fg.AppendLine(Hairs.Overall.ToString());
-                        }
-                        if (Hairs.Specific != null)
-                        {
-                            foreach (var subItem in Hairs.Specific)
+                            foreach (var subItem in HairsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("Eyes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Eyes.TryGet(out var EyesItem))
                 {
-                    if (Eyes != null)
+                    fg.AppendLine("Eyes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Eyes.Overall != null)
+                        fg.AppendItem(EyesItem.Overall);
+                        if (EyesItem.Specific != null)
                         {
-                            fg.AppendLine(Eyes.Overall.ToString());
-                        }
-                        if (Eyes.Specific != null)
-                        {
-                            foreach (var subItem in Eyes.Specific)
+                            foreach (var subItem in EyesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"BodyPartData => {BodyPartData}");
+                fg.AppendItem(BodyPartData, "BodyPartData");
             }
             #endregion
 
@@ -1926,14 +1890,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
-        new ISetList<IFormLink<SpellAbstract>> ActorEffect { get; }
+        new ExtendedList<IFormLink<SpellAbstract>>? ActorEffect { get; set; }
         new IFormLinkNullable<Armor> Skin { get; }
         new BodyTemplate? BodyTemplate { get; set; }
-        new ISetList<IFormLink<Keyword>> Keywords { get; }
+        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new RaceData? Data { get; set; }
         new String? MaleSkeletalModel { get; set; }
         new String? FemaleSkeletalModel { get; set; }
-        new ISetList<String> MovementTypeNames { get; }
+        new ExtendedList<String>? MovementTypeNames { get; set; }
         new GenderedItem<IFormLink<VoiceType>>? Voices { get; set; }
         new GenderedFormLinks<Armor>? DecapitateArmors { get; set; }
         new GenderedFormLinks<ColorRecord>? DefaultHairColors { get; set; }
@@ -1941,10 +1905,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? FacegenMainClamp { get; set; }
         new Single? FacegenFaceClamp { get; set; }
         new IFormLinkNullable<Race> AttackRace { get; }
-        new ISetList<Attack> Attacks { get; }
+        new ExtendedList<Attack>? Attacks { get; set; }
         new BodyDataPair? BodyData { get; set; }
-        new ISetList<IFormLink<Hair>> Hairs { get; }
-        new ISetList<IFormLink<Eye>> Eyes { get; }
+        new ExtendedList<IFormLink<Hair>>? Hairs { get; set; }
+        new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
         new IFormLinkNullable<BodyPartData> BodyPartData { get; }
     }
 
@@ -1965,14 +1929,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         String? Name { get; }
         String? Description { get; }
-        IReadOnlySetList<IFormLinkGetter<ISpellAbstractGetter>> ActorEffect { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellAbstractGetter>>? ActorEffect { get; }
         IFormLinkNullableGetter<IArmorGetter> Skin { get; }
         IBodyTemplateGetter? BodyTemplate { get; }
-        IReadOnlySetList<IFormLinkGetter<IKeywordGetter>> Keywords { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         IRaceDataGetter? Data { get; }
         String? MaleSkeletalModel { get; }
         String? FemaleSkeletalModel { get; }
-        IReadOnlySetList<String> MovementTypeNames { get; }
+        IReadOnlyList<String>? MovementTypeNames { get; }
         IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>>? Voices { get; }
         IGenderedFormLinksGetter<IArmorGetter>? DecapitateArmors { get; }
         IGenderedFormLinksGetter<IColorRecordGetter>? DefaultHairColors { get; }
@@ -1980,10 +1944,10 @@ namespace Mutagen.Bethesda.Skyrim
         Single? FacegenMainClamp { get; }
         Single? FacegenFaceClamp { get; }
         IFormLinkNullableGetter<IRaceGetter> AttackRace { get; }
-        IReadOnlySetList<IAttackGetter> Attacks { get; }
+        IReadOnlyList<IAttackGetter>? Attacks { get; }
         IBodyDataPairGetter? BodyData { get; }
-        IReadOnlySetList<IFormLinkGetter<IHairGetter>> Hairs { get; }
-        IReadOnlySetList<IFormLinkGetter<IEyeGetter>> Eyes { get; }
+        IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; }
+        IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; }
         IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData { get; }
 
     }
@@ -2641,13 +2605,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.ActorEffect:
-                    return typeof(ISetList<IFormLink<SpellAbstract>>);
+                    return typeof(ExtendedList<IFormLink<SpellAbstract>>);
                 case Race_FieldIndex.Skin:
                     return typeof(IFormLinkNullable<Armor>);
                 case Race_FieldIndex.BodyTemplate:
                     return typeof(BodyTemplate);
                 case Race_FieldIndex.Keywords:
-                    return typeof(ISetList<IFormLink<Keyword>>);
+                    return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Race_FieldIndex.Data:
                     return typeof(RaceData);
                 case Race_FieldIndex.MaleSkeletalModel:
@@ -2655,7 +2619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.FemaleSkeletalModel:
                     return typeof(String);
                 case Race_FieldIndex.MovementTypeNames:
-                    return typeof(ISetList<String>);
+                    return typeof(ExtendedList<String>);
                 case Race_FieldIndex.Voices:
                     return typeof(GenderedItem<IFormLink<VoiceType>>);
                 case Race_FieldIndex.DecapitateArmors:
@@ -2671,13 +2635,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.AttackRace:
                     return typeof(IFormLinkNullable<Race>);
                 case Race_FieldIndex.Attacks:
-                    return typeof(ISetList<Attack>);
+                    return typeof(ExtendedList<Attack>);
                 case Race_FieldIndex.BodyData:
                     return typeof(BodyDataPair);
                 case Race_FieldIndex.Hairs:
-                    return typeof(ISetList<IFormLink<Hair>>);
+                    return typeof(ExtendedList<IFormLink<Hair>>);
                 case Race_FieldIndex.Eyes:
-                    return typeof(ISetList<IFormLink<Eye>>);
+                    return typeof(ExtendedList<IFormLink<Eye>>);
                 case Race_FieldIndex.BodyPartData:
                     return typeof(IFormLinkNullable<BodyPartData>);
                 default:
@@ -2761,14 +2725,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Name = default;
             item.Description = default;
-            item.ActorEffect.Unset();
+            item.ActorEffect = null;
             item.Skin.FormKey = null;
             item.BodyTemplate = null;
-            item.Keywords.Unset();
+            item.Keywords = null;
             item.Data = null;
             item.MaleSkeletalModel = default;
             item.FemaleSkeletalModel = default;
-            item.MovementTypeNames.Unset();
+            item.MovementTypeNames = null;
             item.Voices = null;
             item.DecapitateArmors = null;
             item.DefaultHairColors = null;
@@ -2776,10 +2740,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FacegenMainClamp = default;
             item.FacegenFaceClamp = default;
             item.AttackRace.FormKey = null;
-            item.Attacks.Unset();
+            item.Attacks = null;
             item.BodyData = null;
-            item.Hairs.Unset();
-            item.Eyes.Unset();
+            item.Hairs = null;
+            item.Eyes = null;
             item.BodyPartData.FormKey = null;
             base.Clear(item);
         }
@@ -2895,13 +2859,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x54435053: // SPCT
                 {
                     var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content);
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SpellAbstract>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: amount,
-                        triggeringRecord: Race_Registration.SPLO_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.ActorEffect,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.ActorEffect = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SpellAbstract>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            amount: amount,
+                            triggeringRecord: Race_Registration.SPLO_HEADER,
+                            masterReferences: masterReferences,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<SpellAbstract>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.ActorEffect);
                 }
                 case 0x4D414E57: // WNAM
@@ -2924,13 +2889,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x5A49534B: // KSIZ
                 {
                     var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content);
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: amount,
-                        triggeringRecord: Race_Registration.KWDA_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.Keywords,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.Keywords = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            amount: amount,
+                            triggeringRecord: Race_Registration.KWDA_HEADER,
+                            masterReferences: masterReferences,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Keywords);
                 }
                 case 0x41544144: // DATA
@@ -2967,12 +2933,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D4E544D: // MTNM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Race_Registration.MTNM_HEADER,
-                        item: item.MovementTypeNames,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: StringBinaryTranslation.Instance.Parse);
+                    item.MovementTypeNames = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Race_Registration.MTNM_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: StringBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<String>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypeNames);
                 }
                 case 0x4B435456: // VTCK
@@ -3030,18 +2997,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x444B5441: // ATKD
                 case 0x454B5441: // ATKE
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Attack>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Attack_Registration.TriggeringRecordTypes,
-                        item: item.Attacks,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out Attack listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<Attack>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Attacks = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Attack>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out Attack listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Attack>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<Attack>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Attacks);
                 }
                 case 0x314D414E: // NAM1
@@ -3056,21 +3024,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E48: // HNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Hairs,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.Hairs = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            masterReferences: masterReferences,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Hair>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
                 }
                 case 0x4D414E45: // ENAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Eyes,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.Eyes = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            masterReferences: masterReferences,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Eye>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 }
                 case 0x4D414E47: // GNAM
@@ -3252,123 +3222,141 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Description ?? true)
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
             {
-                fg.AppendLine($"Description => {item.Description}");
+                fg.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.ActorEffect?.Overall ?? true)
+            if ((printMask?.ActorEffect?.Overall ?? true)
+                && item.ActorEffect.TryGet(out var ActorEffectItem))
             {
                 fg.AppendLine("ActorEffect =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.ActorEffect)
+                    foreach (var subItem in ActorEffectItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Skin ?? true)
+            if ((printMask?.Skin ?? true)
+                && item.Skin.TryGet(out var SkinItem))
             {
-                fg.AppendLine($"Skin => {item.Skin}");
+                fg.AppendItem(SkinItem, "Skin");
             }
-            if (printMask?.BodyTemplate?.Overall ?? true)
+            if ((printMask?.BodyTemplate?.Overall ?? true)
+                && item.BodyTemplate.TryGet(out var BodyTemplateItem))
             {
-                item.BodyTemplate?.ToString(fg, "BodyTemplate");
+                BodyTemplateItem?.ToString(fg, "BodyTemplate");
             }
-            if (printMask?.Keywords?.Overall ?? true)
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords.TryGet(out var KeywordsItem))
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Keywords)
+                    foreach (var subItem in KeywordsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                item.Data?.ToString(fg, "Data");
+                DataItem?.ToString(fg, "Data");
             }
-            if (printMask?.MaleSkeletalModel ?? true)
+            if ((printMask?.MaleSkeletalModel ?? true)
+                && item.MaleSkeletalModel.TryGet(out var MaleSkeletalModelItem))
             {
-                fg.AppendLine($"MaleSkeletalModel => {item.MaleSkeletalModel}");
+                fg.AppendItem(MaleSkeletalModelItem, "MaleSkeletalModel");
             }
-            if (printMask?.FemaleSkeletalModel ?? true)
+            if ((printMask?.FemaleSkeletalModel ?? true)
+                && item.FemaleSkeletalModel.TryGet(out var FemaleSkeletalModelItem))
             {
-                fg.AppendLine($"FemaleSkeletalModel => {item.FemaleSkeletalModel}");
+                fg.AppendItem(FemaleSkeletalModelItem, "FemaleSkeletalModel");
             }
-            if (printMask?.MovementTypeNames?.Overall ?? true)
+            if ((printMask?.MovementTypeNames?.Overall ?? true)
+                && item.MovementTypeNames.TryGet(out var MovementTypeNamesItem))
             {
                 fg.AppendLine("MovementTypeNames =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.MovementTypeNames)
+                    foreach (var subItem in MovementTypeNamesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Voices?.Overall ?? true)
+            if ((printMask?.Voices?.Overall ?? true)
+                && item.Voices.TryGet(out var VoicesItem))
             {
-                item.Voices?.ToString(fg, "Voices");
+                VoicesItem?.ToString(fg, "Voices");
             }
-            if (printMask?.DecapitateArmors?.Overall ?? true)
+            if ((printMask?.DecapitateArmors?.Overall ?? true)
+                && item.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
             {
-                item.DecapitateArmors?.ToString(fg, "DecapitateArmors");
+                DecapitateArmorsItem?.ToString(fg, "DecapitateArmors");
             }
-            if (printMask?.DefaultHairColors?.Overall ?? true)
+            if ((printMask?.DefaultHairColors?.Overall ?? true)
+                && item.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
             {
-                item.DefaultHairColors?.ToString(fg, "DefaultHairColors");
+                DefaultHairColorsItem?.ToString(fg, "DefaultHairColors");
             }
-            if (printMask?.NumberOfTintsInList ?? true)
+            if ((printMask?.NumberOfTintsInList ?? true)
+                && item.NumberOfTintsInList.TryGet(out var NumberOfTintsInListItem))
             {
-                fg.AppendLine($"NumberOfTintsInList => {item.NumberOfTintsInList}");
+                fg.AppendItem(NumberOfTintsInListItem, "NumberOfTintsInList");
             }
-            if (printMask?.FacegenMainClamp ?? true)
+            if ((printMask?.FacegenMainClamp ?? true)
+                && item.FacegenMainClamp.TryGet(out var FacegenMainClampItem))
             {
-                fg.AppendLine($"FacegenMainClamp => {item.FacegenMainClamp}");
+                fg.AppendItem(FacegenMainClampItem, "FacegenMainClamp");
             }
-            if (printMask?.FacegenFaceClamp ?? true)
+            if ((printMask?.FacegenFaceClamp ?? true)
+                && item.FacegenFaceClamp.TryGet(out var FacegenFaceClampItem))
             {
-                fg.AppendLine($"FacegenFaceClamp => {item.FacegenFaceClamp}");
+                fg.AppendItem(FacegenFaceClampItem, "FacegenFaceClamp");
             }
-            if (printMask?.AttackRace ?? true)
+            if ((printMask?.AttackRace ?? true)
+                && item.AttackRace.TryGet(out var AttackRaceItem))
             {
-                fg.AppendLine($"AttackRace => {item.AttackRace}");
+                fg.AppendItem(AttackRaceItem, "AttackRace");
             }
-            if (printMask?.Attacks?.Overall ?? true)
+            if ((printMask?.Attacks?.Overall ?? true)
+                && item.Attacks.TryGet(out var AttacksItem))
             {
                 fg.AppendLine("Attacks =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Attacks)
+                    foreach (var subItem in AttacksItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3380,49 +3368,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.BodyData?.Overall ?? true)
+            if ((printMask?.BodyData?.Overall ?? true)
+                && item.BodyData.TryGet(out var BodyDataItem))
             {
-                item.BodyData?.ToString(fg, "BodyData");
+                BodyDataItem?.ToString(fg, "BodyData");
             }
-            if (printMask?.Hairs?.Overall ?? true)
+            if ((printMask?.Hairs?.Overall ?? true)
+                && item.Hairs.TryGet(out var HairsItem))
             {
                 fg.AppendLine("Hairs =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Hairs)
+                    foreach (var subItem in HairsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Eyes?.Overall ?? true)
+            if ((printMask?.Eyes?.Overall ?? true)
+                && item.Eyes.TryGet(out var EyesItem))
             {
                 fg.AppendLine("Eyes =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Eyes)
+                    foreach (var subItem in EyesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.BodyPartData ?? true)
+            if ((printMask?.BodyPartData ?? true)
+                && item.BodyPartData.TryGet(out var BodyPartDataItem))
             {
-                fg.AppendLine($"BodyPartData => {item.BodyPartData}");
+                fg.AppendItem(BodyPartDataItem, "BodyPartData");
             }
         }
         
@@ -3432,16 +3424,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.ActorEffect?.Overall.HasValue ?? false && checkMask.ActorEffect!.Overall.Value != item.ActorEffect.HasBeenSet) return false;
+            if (checkMask.ActorEffect?.Overall.HasValue ?? false && checkMask.ActorEffect!.Overall.Value != (item.ActorEffect != null)) return false;
             if (checkMask.Skin.HasValue && checkMask.Skin.Value != (item.Skin.FormKey != null)) return false;
             if (checkMask.BodyTemplate?.Overall.HasValue ?? false && checkMask.BodyTemplate.Overall.Value != (item.BodyTemplate != null)) return false;
             if (checkMask.BodyTemplate?.Specific != null && (item.BodyTemplate == null || !item.BodyTemplate.HasBeenSet(checkMask.BodyTemplate.Specific))) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != item.Keywords.HasBeenSet) return false;
+            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
             if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
             if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.MaleSkeletalModel.HasValue && checkMask.MaleSkeletalModel.Value != (item.MaleSkeletalModel != null)) return false;
             if (checkMask.FemaleSkeletalModel.HasValue && checkMask.FemaleSkeletalModel.Value != (item.FemaleSkeletalModel != null)) return false;
-            if (checkMask.MovementTypeNames?.Overall.HasValue ?? false && checkMask.MovementTypeNames!.Overall.Value != item.MovementTypeNames.HasBeenSet) return false;
+            if (checkMask.MovementTypeNames?.Overall.HasValue ?? false && checkMask.MovementTypeNames!.Overall.Value != (item.MovementTypeNames != null)) return false;
             if (checkMask.Voices?.Overall ?? false) return false;
             if (checkMask.DecapitateArmors?.Overall.HasValue ?? false && checkMask.DecapitateArmors.Overall.Value != (item.DecapitateArmors != null)) return false;
             if (checkMask.DecapitateArmors?.Specific != null && (item.DecapitateArmors == null || !item.DecapitateArmors.HasBeenSet(checkMask.DecapitateArmors.Specific))) return false;
@@ -3451,11 +3443,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.FacegenMainClamp.HasValue && checkMask.FacegenMainClamp.Value != (item.FacegenMainClamp != null)) return false;
             if (checkMask.FacegenFaceClamp.HasValue && checkMask.FacegenFaceClamp.Value != (item.FacegenFaceClamp != null)) return false;
             if (checkMask.AttackRace.HasValue && checkMask.AttackRace.Value != (item.AttackRace.FormKey != null)) return false;
-            if (checkMask.Attacks?.Overall.HasValue ?? false && checkMask.Attacks!.Overall.Value != item.Attacks.HasBeenSet) return false;
+            if (checkMask.Attacks?.Overall.HasValue ?? false && checkMask.Attacks!.Overall.Value != (item.Attacks != null)) return false;
             if (checkMask.BodyData?.Overall.HasValue ?? false && checkMask.BodyData.Overall.Value != (item.BodyData != null)) return false;
             if (checkMask.BodyData?.Specific != null && (item.BodyData == null || !item.BodyData.HasBeenSet(checkMask.BodyData.Specific))) return false;
-            if (checkMask.Hairs?.Overall.HasValue ?? false && checkMask.Hairs!.Overall.Value != item.Hairs.HasBeenSet) return false;
-            if (checkMask.Eyes?.Overall.HasValue ?? false && checkMask.Eyes!.Overall.Value != item.Eyes.HasBeenSet) return false;
+            if (checkMask.Hairs?.Overall.HasValue ?? false && checkMask.Hairs!.Overall.Value != (item.Hairs != null)) return false;
+            if (checkMask.Eyes?.Overall.HasValue ?? false && checkMask.Eyes!.Overall.Value != (item.Eyes != null)) return false;
             if (checkMask.BodyPartData.HasValue && checkMask.BodyPartData.Value != (item.BodyPartData.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
@@ -3468,16 +3460,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             mask.Name = (item.Name != null);
             mask.Description = (item.Description != null);
-            mask.ActorEffect = new MaskItem<bool, IEnumerable<(int, bool)>>(item.ActorEffect.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.ActorEffect = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ActorEffect != null), default);
             mask.Skin = (item.Skin.FormKey != null);
             var itemBodyTemplate = item.BodyTemplate;
             mask.BodyTemplate = new MaskItem<bool, BodyTemplate.Mask<bool>?>(itemBodyTemplate != null, itemBodyTemplate?.GetHasBeenSetMask());
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Keywords.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
             var itemData = item.Data;
             mask.Data = new MaskItem<bool, RaceData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             mask.MaleSkeletalModel = (item.MaleSkeletalModel != null);
             mask.FemaleSkeletalModel = (item.FemaleSkeletalModel != null);
-            mask.MovementTypeNames = new MaskItem<bool, IEnumerable<(int, bool)>>(item.MovementTypeNames.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.MovementTypeNames = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.MovementTypeNames != null), default);
             mask.Voices = item.Voices == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
             var itemDecapitateArmors = item.DecapitateArmors;
             mask.DecapitateArmors = new MaskItem<bool, GenderedFormLinks.Mask<bool>?>(itemDecapitateArmors != null, itemDecapitateArmors?.GetHasBeenSetMask());
@@ -3487,12 +3479,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.FacegenMainClamp = (item.FacegenMainClamp != null);
             mask.FacegenFaceClamp = (item.FacegenFaceClamp != null);
             mask.AttackRace = (item.AttackRace.FormKey != null);
-            var AttacksItem = item.Attacks;
-            mask.Attacks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Attack.Mask<bool>?>>>(AttacksItem.HasBeenSet, AttacksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Attack.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Attacks.TryGet(out var AttacksItem))
+            {
+                mask.Attacks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Attack.Mask<bool>?>>?>(true, AttacksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Attack.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             var itemBodyData = item.BodyData;
             mask.BodyData = new MaskItem<bool, BodyDataPair.Mask<bool>?>(itemBodyData != null, itemBodyData?.GetHasBeenSetMask());
-            mask.Hairs = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Hairs.HasBeenSet, Enumerable.Empty<(int, bool)>());
-            mask.Eyes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Eyes.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.Hairs = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Hairs != null), default);
+            mask.Eyes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Eyes != null), default);
             mask.BodyPartData = (item.BodyPartData.FormKey != null);
             base.FillHasBeenSetMask(
                 item: item,
@@ -3692,14 +3686,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.ActorEffect)
+            if (obj.ActorEffect != null)
             {
-                yield return item;
+                foreach (var item in obj.ActorEffect)
+                {
+                    yield return item;
+                }
             }
             yield return obj.Skin;
-            foreach (var item in obj.Keywords)
+            if (obj.Keywords != null)
             {
-                yield return item;
+                foreach (var item in obj.Keywords)
+                {
+                    yield return item;
+                }
             }
             if (obj.DecapitateArmors != null)
             {
@@ -3716,9 +3716,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
             }
             yield return obj.AttackRace;
-            foreach (var item in obj.Attacks.SelectMany(f => f.Links))
+            if (obj.Attacks != null)
             {
-                yield return item;
+                foreach (var item in obj.Attacks.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             if (obj.BodyData != null)
             {
@@ -3727,13 +3730,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Hairs)
+            if (obj.Hairs != null)
             {
-                yield return item;
+                foreach (var item in obj.Hairs)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in obj.Eyes)
+            if (obj.Eyes != null)
             {
-                yield return item;
+                foreach (var item in obj.Eyes)
+                {
+                    yield return item;
+                }
             }
             yield return obj.BodyPartData;
             yield break;
@@ -3795,15 +3804,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.ActorEffect);
                 try
                 {
-                    if (rhs.ActorEffect.HasBeenSet)
+                    if ((rhs.ActorEffect != null))
                     {
-                        item.ActorEffect.SetTo(
-                            rhs.ActorEffect,
-                            (r) => new FormLink<SpellAbstract>(r.FormKey));
+                        item.ActorEffect = 
+                            rhs.ActorEffect
+                            .Select(r => new FormLink<SpellAbstract>(r.FormKey))
+                            .ToExtendedList<IFormLink<SpellAbstract>>();
                     }
                     else
                     {
-                        item.ActorEffect.Unset();
+                        item.ActorEffect = null;
                     }
                 }
                 catch (Exception ex)
@@ -3851,15 +3861,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Keywords);
                 try
                 {
-                    if (rhs.Keywords.HasBeenSet)
+                    if ((rhs.Keywords != null))
                     {
-                        item.Keywords.SetTo(
-                            rhs.Keywords,
-                            (r) => new FormLink<Keyword>(r.FormKey));
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => new FormLink<Keyword>(r.FormKey))
+                            .ToExtendedList<IFormLink<Keyword>>();
                     }
                     else
                     {
-                        item.Keywords.Unset();
+                        item.Keywords = null;
                     }
                 }
                 catch (Exception ex)
@@ -3911,13 +3922,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.MovementTypeNames);
                 try
                 {
-                    if (rhs.MovementTypeNames.HasBeenSet)
+                    if ((rhs.MovementTypeNames != null))
                     {
-                        item.MovementTypeNames.SetTo(rhs.MovementTypeNames);
+                        item.MovementTypeNames = 
+                            rhs.MovementTypeNames
+                            .ToExtendedList<String>();
                     }
                     else
                     {
-                        item.MovementTypeNames.Unset();
+                        item.MovementTypeNames = null;
                     }
                 }
                 catch (Exception ex)
@@ -4029,20 +4042,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Attacks);
                 try
                 {
-                    if (rhs.Attacks.HasBeenSet)
+                    if ((rhs.Attacks != null))
                     {
-                        item.Attacks.SetTo(
-                            items: rhs.Attacks,
-                            converter: (r) =>
+                        item.Attacks = 
+                            rhs.Attacks
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<Attack>();
                     }
                     else
                     {
-                        item.Attacks.Unset();
+                        item.Attacks = null;
                     }
                 }
                 catch (Exception ex)
@@ -4086,15 +4100,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
                 try
                 {
-                    if (rhs.Hairs.HasBeenSet)
+                    if ((rhs.Hairs != null))
                     {
-                        item.Hairs.SetTo(
-                            rhs.Hairs,
-                            (r) => new FormLink<Hair>(r.FormKey));
+                        item.Hairs = 
+                            rhs.Hairs
+                            .Select(r => new FormLink<Hair>(r.FormKey))
+                            .ToExtendedList<IFormLink<Hair>>();
                     }
                     else
                     {
-                        item.Hairs.Unset();
+                        item.Hairs = null;
                     }
                 }
                 catch (Exception ex)
@@ -4112,15 +4127,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
                 try
                 {
-                    if (rhs.Eyes.HasBeenSet)
+                    if ((rhs.Eyes != null))
                     {
-                        item.Eyes.SetTo(
-                            rhs.Eyes,
-                            (r) => new FormLink<Eye>(r.FormKey));
+                        item.Eyes = 
+                            rhs.Eyes
+                            .Select(r => new FormLink<Eye>(r.FormKey))
+                            .ToExtendedList<IFormLink<Eye>>();
                     }
                     else
                     {
-                        item.Eyes.Unset();
+                        item.Eyes = null;
                     }
                 }
                 catch (Exception ex)
@@ -4299,7 +4315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Race_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if (item.ActorEffect.HasBeenSet
+            if ((item.ActorEffect != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<ISpellAbstractGetter>>.Instance.Write(
@@ -4342,7 +4358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate));
                 }
             }
-            if (item.Keywords.HasBeenSet
+            if ((item.Keywords != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
@@ -4395,7 +4411,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Race_FieldIndex.FemaleSkeletalModel,
                     errorMask: errorMask);
             }
-            if (item.MovementTypeNames.HasBeenSet
+            if ((item.MovementTypeNames != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
                 ListXmlTranslation<String>.Instance.Write(
@@ -4500,7 +4516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Race_FieldIndex.AttackRace,
                     errorMask: errorMask);
             }
-            if (item.Attacks.HasBeenSet
+            if ((item.Attacks != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
                 ListXmlTranslation<IAttackGetter>.Instance.Write(
@@ -4537,7 +4553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyData));
                 }
             }
-            if (item.Hairs.HasBeenSet
+            if ((item.Hairs != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IHairGetter>>.Instance.Write(
@@ -4556,7 +4572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if (item.Eyes.HasBeenSet
+            if ((item.Eyes != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
@@ -4739,11 +4755,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.ActorEffect.SetTo(ActorEffectItem);
+                            item.ActorEffect = ActorEffectItem.ToExtendedList();
                         }
                         else
                         {
-                            item.ActorEffect.Unset();
+                            item.ActorEffect = null;
                         }
                     }
                     catch (Exception ex)
@@ -4804,11 +4820,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Keywords.SetTo(KeywordsItem);
+                            item.Keywords = KeywordsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Keywords.Unset();
+                            item.Keywords = null;
                         }
                     }
                     catch (Exception ex)
@@ -4887,11 +4903,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.MovementTypeNames.SetTo(MovementTypeNamesItem);
+                            item.MovementTypeNames = MovementTypeNamesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.MovementTypeNames.Unset();
+                            item.MovementTypeNames = null;
                         }
                     }
                     catch (Exception ex)
@@ -5047,11 +5063,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Attacks.SetTo(AttacksItem);
+                            item.Attacks = AttacksItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Attacks.Unset();
+                            item.Attacks = null;
                         }
                     }
                     catch (Exception ex)
@@ -5094,11 +5110,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Hairs.SetTo(HairsItem);
+                            item.Hairs = HairsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Hairs.Unset();
+                            item.Hairs = null;
                         }
                     }
                     catch (Exception ex)
@@ -5122,11 +5138,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Eyes.SetTo(EyesItem);
+                            item.Eyes = EyesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Eyes.Unset();
+                            item.Eyes = null;
                         }
                     }
                     catch (Exception ex)
@@ -5597,7 +5613,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<ISpellAbstractGetter>> ActorEffect { get; private set; } = EmptySetList<IFormLinkGetter<ISpellAbstractGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<ISpellAbstractGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
         public bool Skin_IsSet => _SkinLocation.HasValue;
@@ -5609,7 +5625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IBodyTemplateGetter? BodyTemplate => _BodyTemplate_IsSet ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = EmptySetList<IFormLinkGetter<IKeywordGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
         private bool _Data_IsSet => _DataLocation.HasValue;
@@ -5624,7 +5640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _FemaleSkeletalModelLocation;
         public String? FemaleSkeletalModel => _FemaleSkeletalModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleSkeletalModelLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlySetList<String> MovementTypeNames { get; private set; } = EmptySetList<String>.Instance;
+        public IReadOnlyList<String>? MovementTypeNames { get; private set; }
         #region Voices
         private int? _VoicesLocation;
         public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>>? Voices
@@ -5664,13 +5680,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool AttackRace_IsSet => _AttackRaceLocation.HasValue;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackRaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IAttackGetter> Attacks { get; private set; } = EmptySetList<AttackBinaryOverlay>.Instance;
+        public IReadOnlyList<IAttackGetter>? Attacks { get; private set; }
         #region BodyData
         public IBodyDataPairGetter? BodyData { get; private set; }
         public bool BodyData_IsSet => BodyData != null;
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<IHairGetter>> Hairs { get; private set; } = EmptySetList<IFormLinkGetter<IHairGetter>>.Instance;
-        public IReadOnlySetList<IFormLinkGetter<IEyeGetter>> Eyes { get; private set; } = EmptySetList<IFormLinkGetter<IEyeGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; private set; }
         #region BodyPartData
         private int? _BodyPartDataLocation;
         public bool BodyPartData_IsSet => _BodyPartDataLocation.HasValue;

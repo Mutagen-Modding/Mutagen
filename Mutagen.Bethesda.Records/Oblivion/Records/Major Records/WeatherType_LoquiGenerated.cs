@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IWeatherTypeGetter rhs)) return false;
             return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -352,19 +352,19 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Sunrise ?? true)
                     {
-                        fg.AppendLine($"Sunrise => {Sunrise}");
+                        fg.AppendItem(Sunrise, "Sunrise");
                     }
                     if (printMask?.Day ?? true)
                     {
-                        fg.AppendLine($"Day => {Day}");
+                        fg.AppendItem(Day, "Day");
                     }
                     if (printMask?.Sunset ?? true)
                     {
-                        fg.AppendLine($"Sunset => {Sunset}");
+                        fg.AppendItem(Sunset, "Sunset");
                     }
                     if (printMask?.Night ?? true)
                     {
-                        fg.AppendLine($"Night => {Night}");
+                        fg.AppendItem(Night, "Night");
                     }
                 }
                 fg.AppendLine("]");
@@ -501,10 +501,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Sunrise => {Sunrise}");
-                fg.AppendLine($"Day => {Day}");
-                fg.AppendLine($"Sunset => {Sunset}");
-                fg.AppendLine($"Night => {Night}");
+                fg.AppendItem(Sunrise, "Sunrise");
+                fg.AppendItem(Day, "Day");
+                fg.AppendItem(Sunset, "Sunset");
+                fg.AppendItem(Night, "Night");
             }
             #endregion
 
@@ -1345,19 +1345,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Sunrise ?? true)
             {
-                fg.AppendLine($"Sunrise => {item.Sunrise}");
+                fg.AppendItem(item.Sunrise, "Sunrise");
             }
             if (printMask?.Day ?? true)
             {
-                fg.AppendLine($"Day => {item.Day}");
+                fg.AppendItem(item.Day, "Day");
             }
             if (printMask?.Sunset ?? true)
             {
-                fg.AppendLine($"Sunset => {item.Sunset}");
+                fg.AppendItem(item.Sunset, "Sunset");
             }
             if (printMask?.Night ?? true)
             {
-                fg.AppendLine($"Night => {item.Night}");
+                fg.AppendItem(item.Night, "Night");
             }
         }
         

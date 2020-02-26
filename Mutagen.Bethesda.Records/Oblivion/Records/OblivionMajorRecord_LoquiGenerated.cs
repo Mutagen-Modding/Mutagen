@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IOblivionMajorRecordGetter rhs)) return false;
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.OblivionMajorRecordFlags ?? true)
                     {
-                        fg.AppendLine($"OblivionMajorRecordFlags => {OblivionMajorRecordFlags}");
+                        fg.AppendItem(OblivionMajorRecordFlags, "OblivionMajorRecordFlags");
                     }
                 }
                 fg.AppendLine("]");
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"OblivionMajorRecordFlags => {OblivionMajorRecordFlags}");
+                fg.AppendItem(OblivionMajorRecordFlags, "OblivionMajorRecordFlags");
             }
             #endregion
 
@@ -1411,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.OblivionMajorRecordFlags ?? true)
             {
-                fg.AppendLine($"OblivionMajorRecordFlags => {item.OblivionMajorRecordFlags}");
+                fg.AppendItem(item.OblivionMajorRecordFlags, "OblivionMajorRecordFlags");
             }
         }
         

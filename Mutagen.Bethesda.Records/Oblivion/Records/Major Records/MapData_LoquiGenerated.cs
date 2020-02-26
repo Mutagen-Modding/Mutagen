@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IMapDataGetter rhs)) return false;
             return ((MapDataCommon)((IMapDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -338,15 +338,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.UsableDimensions ?? true)
                     {
-                        fg.AppendLine($"UsableDimensions => {UsableDimensions}");
+                        fg.AppendItem(UsableDimensions, "UsableDimensions");
                     }
                     if (printMask?.CellCoordinatesNWCell ?? true)
                     {
-                        fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
+                        fg.AppendItem(CellCoordinatesNWCell, "CellCoordinatesNWCell");
                     }
                     if (printMask?.CellCoordinatesSECell ?? true)
                     {
-                        fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
+                        fg.AppendItem(CellCoordinatesSECell, "CellCoordinatesSECell");
                     }
                 }
                 fg.AppendLine("]");
@@ -473,9 +473,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"UsableDimensions => {UsableDimensions}");
-                fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
-                fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
+                fg.AppendItem(UsableDimensions, "UsableDimensions");
+                fg.AppendItem(CellCoordinatesNWCell, "CellCoordinatesNWCell");
+                fg.AppendItem(CellCoordinatesSECell, "CellCoordinatesSECell");
             }
             #endregion
 
@@ -1296,15 +1296,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.UsableDimensions ?? true)
             {
-                fg.AppendLine($"UsableDimensions => {item.UsableDimensions}");
+                fg.AppendItem(item.UsableDimensions, "UsableDimensions");
             }
             if (printMask?.CellCoordinatesNWCell ?? true)
             {
-                fg.AppendLine($"CellCoordinatesNWCell => {item.CellCoordinatesNWCell}");
+                fg.AppendItem(item.CellCoordinatesNWCell, "CellCoordinatesNWCell");
             }
             if (printMask?.CellCoordinatesSECell ?? true)
             {
-                fg.AppendLine($"CellCoordinatesSECell => {item.CellCoordinatesSECell}");
+                fg.AppendItem(item.CellCoordinatesSECell, "CellCoordinatesSECell");
             }
         }
         

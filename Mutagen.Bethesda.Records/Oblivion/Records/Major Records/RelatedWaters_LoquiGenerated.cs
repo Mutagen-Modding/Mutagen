@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRelatedWatersGetter rhs)) return false;
             return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -350,15 +350,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.RelatedWaterDaytime ?? true)
                     {
-                        fg.AppendLine($"RelatedWaterDaytime => {RelatedWaterDaytime}");
+                        fg.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
                     }
                     if (printMask?.RelatedWaterNighttime ?? true)
                     {
-                        fg.AppendLine($"RelatedWaterNighttime => {RelatedWaterNighttime}");
+                        fg.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
                     }
                     if (printMask?.RelatedWaterUnderwater ?? true)
                     {
-                        fg.AppendLine($"RelatedWaterUnderwater => {RelatedWaterUnderwater}");
+                        fg.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
                     }
                 }
                 fg.AppendLine("]");
@@ -485,9 +485,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"RelatedWaterDaytime => {RelatedWaterDaytime}");
-                fg.AppendLine($"RelatedWaterNighttime => {RelatedWaterNighttime}");
-                fg.AppendLine($"RelatedWaterUnderwater => {RelatedWaterUnderwater}");
+                fg.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
+                fg.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
+                fg.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
             }
             #endregion
 
@@ -1320,15 +1320,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.RelatedWaterDaytime ?? true)
             {
-                fg.AppendLine($"RelatedWaterDaytime => {item.RelatedWaterDaytime}");
+                fg.AppendItem(item.RelatedWaterDaytime, "RelatedWaterDaytime");
             }
             if (printMask?.RelatedWaterNighttime ?? true)
             {
-                fg.AppendLine($"RelatedWaterNighttime => {item.RelatedWaterNighttime}");
+                fg.AppendItem(item.RelatedWaterNighttime, "RelatedWaterNighttime");
             }
             if (printMask?.RelatedWaterUnderwater ?? true)
             {
-                fg.AppendLine($"RelatedWaterUnderwater => {item.RelatedWaterUnderwater}");
+                fg.AppendItem(item.RelatedWaterUnderwater, "RelatedWaterUnderwater");
             }
         }
         

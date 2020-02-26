@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRaceStatsGetter rhs)) return false;
             return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -398,35 +398,35 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Strength ?? true)
                     {
-                        fg.AppendLine($"Strength => {Strength}");
+                        fg.AppendItem(Strength, "Strength");
                     }
                     if (printMask?.Intelligence ?? true)
                     {
-                        fg.AppendLine($"Intelligence => {Intelligence}");
+                        fg.AppendItem(Intelligence, "Intelligence");
                     }
                     if (printMask?.Willpower ?? true)
                     {
-                        fg.AppendLine($"Willpower => {Willpower}");
+                        fg.AppendItem(Willpower, "Willpower");
                     }
                     if (printMask?.Agility ?? true)
                     {
-                        fg.AppendLine($"Agility => {Agility}");
+                        fg.AppendItem(Agility, "Agility");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendLine($"Speed => {Speed}");
+                        fg.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Endurance ?? true)
                     {
-                        fg.AppendLine($"Endurance => {Endurance}");
+                        fg.AppendItem(Endurance, "Endurance");
                     }
                     if (printMask?.Personality ?? true)
                     {
-                        fg.AppendLine($"Personality => {Personality}");
+                        fg.AppendItem(Personality, "Personality");
                     }
                     if (printMask?.Luck ?? true)
                     {
-                        fg.AppendLine($"Luck => {Luck}");
+                        fg.AppendItem(Luck, "Luck");
                     }
                 }
                 fg.AppendLine("]");
@@ -603,14 +603,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Strength => {Strength}");
-                fg.AppendLine($"Intelligence => {Intelligence}");
-                fg.AppendLine($"Willpower => {Willpower}");
-                fg.AppendLine($"Agility => {Agility}");
-                fg.AppendLine($"Speed => {Speed}");
-                fg.AppendLine($"Endurance => {Endurance}");
-                fg.AppendLine($"Personality => {Personality}");
-                fg.AppendLine($"Luck => {Luck}");
+                fg.AppendItem(Strength, "Strength");
+                fg.AppendItem(Intelligence, "Intelligence");
+                fg.AppendItem(Willpower, "Willpower");
+                fg.AppendItem(Agility, "Agility");
+                fg.AppendItem(Speed, "Speed");
+                fg.AppendItem(Endurance, "Endurance");
+                fg.AppendItem(Personality, "Personality");
+                fg.AppendItem(Luck, "Luck");
             }
             #endregion
 
@@ -1527,35 +1527,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Strength ?? true)
             {
-                fg.AppendLine($"Strength => {item.Strength}");
+                fg.AppendItem(item.Strength, "Strength");
             }
             if (printMask?.Intelligence ?? true)
             {
-                fg.AppendLine($"Intelligence => {item.Intelligence}");
+                fg.AppendItem(item.Intelligence, "Intelligence");
             }
             if (printMask?.Willpower ?? true)
             {
-                fg.AppendLine($"Willpower => {item.Willpower}");
+                fg.AppendItem(item.Willpower, "Willpower");
             }
             if (printMask?.Agility ?? true)
             {
-                fg.AppendLine($"Agility => {item.Agility}");
+                fg.AppendItem(item.Agility, "Agility");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendLine($"Speed => {item.Speed}");
+                fg.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Endurance ?? true)
             {
-                fg.AppendLine($"Endurance => {item.Endurance}");
+                fg.AppendItem(item.Endurance, "Endurance");
             }
             if (printMask?.Personality ?? true)
             {
-                fg.AppendLine($"Personality => {item.Personality}");
+                fg.AppendItem(item.Personality, "Personality");
             }
             if (printMask?.Luck ?? true)
             {
-                fg.AppendLine($"Luck => {item.Luck}");
+                fg.AppendItem(item.Luck, "Luck");
             }
         }
         

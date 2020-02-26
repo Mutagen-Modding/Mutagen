@@ -426,13 +426,13 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter);
 
-        public IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
+        public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             ICollectionGetter<RecordType> trigger,
             StreamTypedFactory<T> factory,
             RecordTypeConverter? recordTypeConverter)
         {
-            var ret = new ReadOnlySetList<T>();
+            var ret = new List<T>();
             while (!stream.Complete)
             {
                 var subMeta = _package.Meta.GetSubRecord(stream);
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
+        public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             ICollectionGetter<RecordType> trigger,
             ConverterFactory<T> factory,
@@ -461,13 +461,13 @@ namespace Mutagen.Bethesda.Binary
                 recordTypeConverter);
         }
 
-        public IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
+        public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             RecordType trigger,
             StreamTypedFactory<T> factory,
             RecordTypeConverter? recordTypeConverter)
         {
-            var ret = new ReadOnlySetList<T>();
+            var ret = new List<T>();
             while (!stream.Complete)
             {
                 var subMeta = _package.Meta.GetSubRecord(stream);
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
+        public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             RecordType trigger,
             ConverterFactory<T> factory,

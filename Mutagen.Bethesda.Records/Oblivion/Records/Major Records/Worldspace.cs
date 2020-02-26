@@ -155,12 +155,12 @@ namespace Mutagen.Bethesda.Oblivion
                         }));
                     }
                     var subBlocks = await Task.WhenAll(subTasks).ConfigureAwait(false);
-                    wb.Items.AddRange(subBlocks);
+                    wb.Items = subBlocks.ToExtendedList();
                     return wb;
                 }));
             }
             var blocks = await Task.WhenAll(tasks).ConfigureAwait(false);
-            ret.SubCells.AddRange(blocks);
+            ret.SubCells = blocks.ToExtendedList();
             return TryGet<Worldspace>.Succeed(ret);
         }
 
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             int blockCount = 0;
             List<Task> blockTasks = new List<Task>();
-            foreach (var block in this.SubCells)
+            foreach (var block in this.SubCells.TryIterate())
             {
                 int blockStamp = blockCount++;
                 blockTasks.Add(Task.Run(async () =>
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Path.Combine(blockDir.Path, "Group.xml"),
                         errorMask: errorMask,
                         translationMask: BlockXmlFolderTranslationCrystal);
-                    foreach (var subBlock in block.Items)
+                    foreach (var subBlock in block.Items.TryIterate())
                     {
                         int subBlockStamp = subBlockCount++;
                         subBlockTasks.Add(Task.Run(() =>
@@ -252,19 +252,21 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     obj.TopCell = (Cell)topCell.Duplicate(getNextFormKey, duplicatedRecords);
                 }
-                obj.SubCells.SetTo(rhs.SubCells.Select((block) =>
+                obj.SubCells = rhs.SubCells.Select((block) =>
                 {
                     var blockRet = new WorldspaceBlock();
                     blockRet.DeepCopyIn(block, duplicateBlockCopyMask);
-                    blockRet.Items.SetTo(block.Items.Select((subBlock) =>
+                    blockRet.Items = block.Items.Select((subBlock) =>
                     {
                         var subBlockRet = new WorldspaceSubBlock();
                         subBlockRet.DeepCopyIn(subBlock, duplicateSubBlockCopyMask);
-                        subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords)));
+                        subBlockRet.Items = subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords))
+                            .ToExtendedList();
                         return subBlockRet;
-                    }));
+                    }).ToExtendedList();
+
                     return blockRet;
-                }));
+                }).ToExtendedList();
             }
         }
 
@@ -272,24 +274,24 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryOffsetLengthCustom(MutagenWriter writer, IWorldspaceGetter item, MasterReferences masterReferences)
             {
-                if (!item.OffsetData_IsSet) return;
+                if (!item.OffsetData.TryGet(out var offset)) return;
                 if (!item.UsingOffsetLength) return;
                 using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
                 {
-                    writer.Write(item.OffsetData.Length);
+                    writer.Write(offset.Length);
                 }
                 writer.Write(Worldspace_Registration.OFST_HEADER.Type);
                 writer.WriteZeros(2);
-                writer.Write(item.OffsetData);
+                writer.Write(offset);
             }
 
             static partial void WriteBinaryOffsetDataCustom(MutagenWriter writer, IWorldspaceGetter item, MasterReferences masterReferences)
             {
                 if (item.UsingOffsetLength) return;
-                if (!item.OffsetData_IsSet) return;
+                if (!item.OffsetData.TryGet(out var offset)) return;
                 using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.OFST_HEADER))
                 {
-                    ByteArrayBinaryTranslation.Instance.Write(writer, item.OffsetData);
+                    ByteArrayBinaryTranslation.Instance.Write(writer, offset);
                 }
             }
 
@@ -297,7 +299,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var road = obj.Road;
                 var topCell = obj.TopCell;
-                if (obj.SubCells.Count == 0
+                var subCells = obj.SubCells;
+                if (subCells?.Count == 0
                     && road != null
                     && topCell != null) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
@@ -323,7 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
                         writer: writer,
-                        items: obj.SubCells,
+                        items: subCells,
                         transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem) =>
                         {
                             subItem.WriteToBinary(
@@ -424,17 +427,17 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             break;
                         case 0x50555247: // "GRUP":
-                            await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
-                                frame: frame,
-                                item: obj.SubCells,
-                                triggeringRecord: Worldspace_Registration.GRUP_HEADER,
-                                lengthLength: frame.MetaData.MajorConstants.LengthLength,
-                                transl: (MutagenFrame r) =>
-                                {
-                                    return LoquiBinaryAsyncTranslation<WorldspaceBlock>.Instance.Parse(
-                                        frame: r,
-                                        masterReferences: masterReferences);
-                                }).ConfigureAwait(false);
+                            obj.SubCells = new ExtendedList<WorldspaceBlock>(
+                                await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
+                                    frame: frame,
+                                    triggeringRecord: Worldspace_Registration.GRUP_HEADER,
+                                    lengthLength: frame.MetaData.MajorConstants.LengthLength,
+                                    transl: (MutagenFrame r) =>
+                                    {
+                                        return LoquiBinaryAsyncTranslation<WorldspaceBlock>.Instance.Parse(
+                                            frame: r,
+                                            masterReferences: masterReferences);
+                                    }).ConfigureAwait(false));
                             break;
                         default:
                             return;
@@ -453,9 +456,9 @@ namespace Mutagen.Bethesda.Oblivion
             private int? _TopCellLocation;
             public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_TopCellLocation!.Value)), _package) : default;
 
-            public ReadOnlySpan<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public ReadOnlyMemorySlice<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
 
-            public IReadOnlySetList<IWorldspaceBlockGetter> SubCells { get; private set; } = EmptySetList<IWorldspaceBlockGetter>.Instance;
+            public IReadOnlyList<IWorldspaceBlockGetter>? SubCells { get; private set; }
 
             private int? _OffsetLengthLocation;
             public bool UsingOffsetLength => this._OffsetLengthLocation.HasValue;
@@ -473,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            ReadOnlySpan<byte> GetOffsetDataCustom()
+            ReadOnlyMemorySlice<byte>? GetOffsetDataCustom()
             {
                 if (this.UsingOffsetLength)
                 {
@@ -484,7 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
                 else
                 {
                     var spanFrame = this._package.Meta.SubRecordFrame(this._data.Slice(_OffsetDataLocation!.Value));
-                    return spanFrame.Content;
+                    return spanFrame.Content.ToArray();
                 }
             }
 

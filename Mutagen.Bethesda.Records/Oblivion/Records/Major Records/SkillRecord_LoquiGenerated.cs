@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISkillRecordGetter rhs)) return false;
             return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -583,55 +583,55 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Skill ?? true)
                     {
-                        fg.AppendLine($"Skill => {Skill}");
+                        fg.AppendItem(Skill, "Skill");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendLine($"Description => {Description}");
+                        fg.AppendItem(Description, "Description");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Action ?? true)
                     {
-                        fg.AppendLine($"Action => {Action}");
+                        fg.AppendItem(Action, "Action");
                     }
                     if (printMask?.Attribute ?? true)
                     {
-                        fg.AppendLine($"Attribute => {Attribute}");
+                        fg.AppendItem(Attribute, "Attribute");
                     }
                     if (printMask?.Specialization ?? true)
                     {
-                        fg.AppendLine($"Specialization => {Specialization}");
+                        fg.AppendItem(Specialization, "Specialization");
                     }
                     if (printMask?.UseValueFirst ?? true)
                     {
-                        fg.AppendLine($"UseValueFirst => {UseValueFirst}");
+                        fg.AppendItem(UseValueFirst, "UseValueFirst");
                     }
                     if (printMask?.UseValueSecond ?? true)
                     {
-                        fg.AppendLine($"UseValueSecond => {UseValueSecond}");
+                        fg.AppendItem(UseValueSecond, "UseValueSecond");
                     }
                     if (printMask?.ApprenticeText ?? true)
                     {
-                        fg.AppendLine($"ApprenticeText => {ApprenticeText}");
+                        fg.AppendItem(ApprenticeText, "ApprenticeText");
                     }
                     if (printMask?.JourneymanText ?? true)
                     {
-                        fg.AppendLine($"JourneymanText => {JourneymanText}");
+                        fg.AppendItem(JourneymanText, "JourneymanText");
                     }
                     if (printMask?.ExpertText ?? true)
                     {
-                        fg.AppendLine($"ExpertText => {ExpertText}");
+                        fg.AppendItem(ExpertText, "ExpertText");
                     }
                     if (printMask?.MasterText ?? true)
                     {
-                        fg.AppendLine($"MasterText => {MasterText}");
+                        fg.AppendItem(MasterText, "MasterText");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -848,19 +848,19 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Skill => {Skill}");
-                fg.AppendLine($"Description => {Description}");
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine($"Action => {Action}");
-                fg.AppendLine($"Attribute => {Attribute}");
-                fg.AppendLine($"Specialization => {Specialization}");
-                fg.AppendLine($"UseValueFirst => {UseValueFirst}");
-                fg.AppendLine($"UseValueSecond => {UseValueSecond}");
-                fg.AppendLine($"ApprenticeText => {ApprenticeText}");
-                fg.AppendLine($"JourneymanText => {JourneymanText}");
-                fg.AppendLine($"ExpertText => {ExpertText}");
-                fg.AppendLine($"MasterText => {MasterText}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(Skill, "Skill");
+                fg.AppendItem(Description, "Description");
+                fg.AppendItem(Icon, "Icon");
+                fg.AppendItem(Action, "Action");
+                fg.AppendItem(Attribute, "Attribute");
+                fg.AppendItem(Specialization, "Specialization");
+                fg.AppendItem(UseValueFirst, "UseValueFirst");
+                fg.AppendItem(UseValueSecond, "UseValueSecond");
+                fg.AppendItem(ApprenticeText, "ApprenticeText");
+                fg.AppendItem(JourneymanText, "JourneymanText");
+                fg.AppendItem(ExpertText, "ExpertText");
+                fg.AppendItem(MasterText, "MasterText");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -2026,57 +2026,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Skill ?? true)
+            if ((printMask?.Skill ?? true)
+                && item.Skill.TryGet(out var SkillItem))
             {
-                fg.AppendLine($"Skill => {item.Skill}");
+                fg.AppendItem(SkillItem, "Skill");
             }
-            if (printMask?.Description ?? true)
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
             {
-                fg.AppendLine($"Description => {item.Description}");
+                fg.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
             if (printMask?.Action ?? true)
             {
-                fg.AppendLine($"Action => {item.Action}");
+                fg.AppendItem(item.Action, "Action");
             }
             if (printMask?.Attribute ?? true)
             {
-                fg.AppendLine($"Attribute => {item.Attribute}");
+                fg.AppendItem(item.Attribute, "Attribute");
             }
             if (printMask?.Specialization ?? true)
             {
-                fg.AppendLine($"Specialization => {item.Specialization}");
+                fg.AppendItem(item.Specialization, "Specialization");
             }
             if (printMask?.UseValueFirst ?? true)
             {
-                fg.AppendLine($"UseValueFirst => {item.UseValueFirst}");
+                fg.AppendItem(item.UseValueFirst, "UseValueFirst");
             }
             if (printMask?.UseValueSecond ?? true)
             {
-                fg.AppendLine($"UseValueSecond => {item.UseValueSecond}");
+                fg.AppendItem(item.UseValueSecond, "UseValueSecond");
             }
-            if (printMask?.ApprenticeText ?? true)
+            if ((printMask?.ApprenticeText ?? true)
+                && item.ApprenticeText.TryGet(out var ApprenticeTextItem))
             {
-                fg.AppendLine($"ApprenticeText => {item.ApprenticeText}");
+                fg.AppendItem(ApprenticeTextItem, "ApprenticeText");
             }
-            if (printMask?.JourneymanText ?? true)
+            if ((printMask?.JourneymanText ?? true)
+                && item.JourneymanText.TryGet(out var JourneymanTextItem))
             {
-                fg.AppendLine($"JourneymanText => {item.JourneymanText}");
+                fg.AppendItem(JourneymanTextItem, "JourneymanText");
             }
-            if (printMask?.ExpertText ?? true)
+            if ((printMask?.ExpertText ?? true)
+                && item.ExpertText.TryGet(out var ExpertTextItem))
             {
-                fg.AppendLine($"ExpertText => {item.ExpertText}");
+                fg.AppendItem(ExpertTextItem, "ExpertText");
             }
-            if (printMask?.MasterText ?? true)
+            if ((printMask?.MasterText ?? true)
+                && item.MasterText.TryGet(out var MasterTextItem))
             {
-                fg.AppendLine($"MasterText => {item.MasterText}");
+                fg.AppendItem(MasterTextItem, "MasterText");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         

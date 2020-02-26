@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff1 = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IDialogResponseGetter.Fluff1 => this.Fluff1;
+        ReadOnlyMemorySlice<Byte> IDialogResponseGetter.Fluff1 => this.Fluff1;
         #endregion
         #region ResponseNumber
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff2 = value ?? new byte[3];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IDialogResponseGetter.Fluff2 => this.Fluff2;
+        ReadOnlyMemorySlice<Byte> IDialogResponseGetter.Fluff2 => this.Fluff2;
         #endregion
         #region ResponseText
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IDialogResponseGetter rhs)) return false;
             return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -460,35 +460,35 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Emotion ?? true)
                     {
-                        fg.AppendLine($"Emotion => {Emotion}");
+                        fg.AppendItem(Emotion, "Emotion");
                     }
                     if (printMask?.EmotionValue ?? true)
                     {
-                        fg.AppendLine($"EmotionValue => {EmotionValue}");
+                        fg.AppendItem(EmotionValue, "EmotionValue");
                     }
                     if (printMask?.Fluff1 ?? true)
                     {
-                        fg.AppendLine($"Fluff1 => {Fluff1}");
+                        fg.AppendItem(Fluff1, "Fluff1");
                     }
                     if (printMask?.ResponseNumber ?? true)
                     {
-                        fg.AppendLine($"ResponseNumber => {ResponseNumber}");
+                        fg.AppendItem(ResponseNumber, "ResponseNumber");
                     }
                     if (printMask?.Fluff2 ?? true)
                     {
-                        fg.AppendLine($"Fluff2 => {Fluff2}");
+                        fg.AppendItem(Fluff2, "Fluff2");
                     }
                     if (printMask?.ResponseText ?? true)
                     {
-                        fg.AppendLine($"ResponseText => {ResponseText}");
+                        fg.AppendItem(ResponseText, "ResponseText");
                     }
                     if (printMask?.ActorNotes ?? true)
                     {
-                        fg.AppendLine($"ActorNotes => {ActorNotes}");
+                        fg.AppendItem(ActorNotes, "ActorNotes");
                     }
                     if (printMask?.TRDTDataTypeState ?? true)
                     {
-                        fg.AppendLine($"TRDTDataTypeState => {TRDTDataTypeState}");
+                        fg.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -665,14 +665,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Emotion => {Emotion}");
-                fg.AppendLine($"EmotionValue => {EmotionValue}");
-                fg.AppendLine($"Fluff1 => {Fluff1}");
-                fg.AppendLine($"ResponseNumber => {ResponseNumber}");
-                fg.AppendLine($"Fluff2 => {Fluff2}");
-                fg.AppendLine($"ResponseText => {ResponseText}");
-                fg.AppendLine($"ActorNotes => {ActorNotes}");
-                fg.AppendLine($"TRDTDataTypeState => {TRDTDataTypeState}");
+                fg.AppendItem(Emotion, "Emotion");
+                fg.AppendItem(EmotionValue, "EmotionValue");
+                fg.AppendItem(Fluff1, "Fluff1");
+                fg.AppendItem(ResponseNumber, "ResponseNumber");
+                fg.AppendItem(Fluff2, "Fluff2");
+                fg.AppendItem(ResponseText, "ResponseText");
+                fg.AppendItem(ActorNotes, "ActorNotes");
+                fg.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
             }
             #endregion
 
@@ -859,9 +859,9 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         EmotionType Emotion { get; }
         Int32 EmotionValue { get; }
-        ReadOnlySpan<Byte> Fluff1 { get; }
+        ReadOnlyMemorySlice<Byte> Fluff1 { get; }
         Byte ResponseNumber { get; }
-        ReadOnlySpan<Byte> Fluff2 { get; }
+        ReadOnlyMemorySlice<Byte> Fluff2 { get; }
         String? ResponseText { get; }
         String? ActorNotes { get; }
         DialogResponse.TRDTDataType TRDTDataTypeState { get; }
@@ -1590,9 +1590,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Emotion = item.Emotion == rhs.Emotion;
             ret.EmotionValue = item.EmotionValue == rhs.EmotionValue;
-            ret.Fluff1 = MemoryExtensions.SequenceEqual(item.Fluff1, rhs.Fluff1);
+            ret.Fluff1 = MemoryExtensions.SequenceEqual(item.Fluff1.Span, rhs.Fluff1.Span);
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
-            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2, rhs.Fluff2);
+            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2.Span, rhs.Fluff2.Span);
             ret.ResponseText = string.Equals(item.ResponseText, rhs.ResponseText);
             ret.ActorNotes = string.Equals(item.ActorNotes, rhs.ActorNotes);
             ret.TRDTDataTypeState = item.TRDTDataTypeState == rhs.TRDTDataTypeState;
@@ -1644,11 +1644,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Emotion ?? true)
             {
-                fg.AppendLine($"Emotion => {item.Emotion}");
+                fg.AppendItem(item.Emotion, "Emotion");
             }
             if (printMask?.EmotionValue ?? true)
             {
-                fg.AppendLine($"EmotionValue => {item.EmotionValue}");
+                fg.AppendItem(item.EmotionValue, "EmotionValue");
             }
             if (printMask?.Fluff1 ?? true)
             {
@@ -1656,23 +1656,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.ResponseNumber ?? true)
             {
-                fg.AppendLine($"ResponseNumber => {item.ResponseNumber}");
+                fg.AppendItem(item.ResponseNumber, "ResponseNumber");
             }
             if (printMask?.Fluff2 ?? true)
             {
                 fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(item.Fluff2)}");
             }
-            if (printMask?.ResponseText ?? true)
+            if ((printMask?.ResponseText ?? true)
+                && item.ResponseText.TryGet(out var ResponseTextItem))
             {
-                fg.AppendLine($"ResponseText => {item.ResponseText}");
+                fg.AppendItem(ResponseTextItem, "ResponseText");
             }
-            if (printMask?.ActorNotes ?? true)
+            if ((printMask?.ActorNotes ?? true)
+                && item.ActorNotes.TryGet(out var ActorNotesItem))
             {
-                fg.AppendLine($"ActorNotes => {item.ActorNotes}");
+                fg.AppendItem(ActorNotesItem, "ActorNotes");
             }
             if (printMask?.TRDTDataTypeState ?? true)
             {
-                fg.AppendLine($"TRDTDataTypeState => {item.TRDTDataTypeState}");
+                fg.AppendItem(item.TRDTDataTypeState, "TRDTDataTypeState");
             }
         }
         
@@ -1708,9 +1710,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Emotion != rhs.Emotion) return false;
             if (lhs.EmotionValue != rhs.EmotionValue) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff1, rhs.Fluff1)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff1.Span, rhs.Fluff1.Span)) return false;
             if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2, rhs.Fluff2)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2.Span, rhs.Fluff2.Span)) return false;
             if (!string.Equals(lhs.ResponseText, rhs.ResponseText)) return false;
             if (!string.Equals(lhs.ActorNotes, rhs.ActorNotes)) return false;
             if (lhs.TRDTDataTypeState != rhs.TRDTDataTypeState) return false;
@@ -2566,8 +2568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Fluff1
         private int _Fluff1Location => _TRDTLocation!.Value + 0x8;
         private bool _Fluff1_IsSet => _TRDTLocation.HasValue;
-        public ReadOnlySpan<Byte> Fluff1 => _Fluff1_IsSet ? _data.Span.Slice(_Fluff1Location, 4).ToArray() : default;
-        public bool Fluff1_IsSet => _Fluff1_IsSet;
+        public ReadOnlyMemorySlice<Byte> Fluff1 => _Fluff1_IsSet ? _data.Span.Slice(_Fluff1Location, 4).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region ResponseNumber
         private int _ResponseNumberLocation => _TRDTLocation!.Value + 0xC;
@@ -2577,8 +2578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Fluff2
         private int _Fluff2Location => _TRDTLocation!.Value + 0xD;
         private bool _Fluff2_IsSet => _TRDTLocation.HasValue;
-        public ReadOnlySpan<Byte> Fluff2 => _Fluff2_IsSet ? _data.Span.Slice(_Fluff2Location, 3).ToArray() : default;
-        public bool Fluff2_IsSet => _Fluff2_IsSet;
+        public ReadOnlyMemorySlice<Byte> Fluff2 => _Fluff2_IsSet ? _data.Span.Slice(_Fluff2Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region ResponseText
         private int? _ResponseTextLocation;

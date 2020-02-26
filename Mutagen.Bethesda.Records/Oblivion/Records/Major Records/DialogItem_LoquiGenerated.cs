@@ -93,61 +93,71 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<DialogTopic>> _Topics = new SetList<IFormLink<DialogTopic>>();
-        public ISetList<IFormLink<DialogTopic>> Topics => _Topics;
+        private ExtendedList<IFormLink<DialogTopic>>? _Topics;
+        public ExtendedList<IFormLink<DialogTopic>>? Topics
+        {
+            get => this._Topics;
+            set => this._Topics = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<DialogTopic>> IDialogItem.Topics => _Topics;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> IDialogItemGetter.Topics => _Topics;
+        IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? IDialogItemGetter.Topics => _Topics;
         #endregion
 
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<DialogResponse> _Responses = new SetList<DialogResponse>();
-        public ISetList<DialogResponse> Responses => _Responses;
+        private ExtendedList<DialogResponse>? _Responses;
+        public ExtendedList<DialogResponse>? Responses
+        {
+            get => this._Responses;
+            set => this._Responses = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<DialogResponse> IDialogItem.Responses => _Responses;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IDialogResponseGetter> IDialogItemGetter.Responses => _Responses;
+        IReadOnlyList<IDialogResponseGetter>? IDialogItemGetter.Responses => _Responses;
         #endregion
 
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Condition> _Conditions = new SetList<Condition>();
-        public ISetList<Condition> Conditions => _Conditions;
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
+        {
+            get => this._Conditions;
+            set => this._Conditions = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Condition> IDialogItem.Conditions => _Conditions;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IConditionGetter> IDialogItemGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter>? IDialogItemGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
         #region Choices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<DialogTopic>> _Choices = new SetList<IFormLink<DialogTopic>>();
-        public ISetList<IFormLink<DialogTopic>> Choices => _Choices;
+        private ExtendedList<IFormLink<DialogTopic>>? _Choices;
+        public ExtendedList<IFormLink<DialogTopic>>? Choices
+        {
+            get => this._Choices;
+            set => this._Choices = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<DialogTopic>> IDialogItem.Choices => _Choices;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> IDialogItemGetter.Choices => _Choices;
+        IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? IDialogItemGetter.Choices => _Choices;
         #endregion
 
         #endregion
         #region LinkFrom
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<DialogTopic>> _LinkFrom = new SetList<IFormLink<DialogTopic>>();
-        public ISetList<IFormLink<DialogTopic>> LinkFrom => _LinkFrom;
+        private ExtendedList<IFormLink<DialogTopic>>? _LinkFrom;
+        public ExtendedList<IFormLink<DialogTopic>>? LinkFrom
+        {
+            get => this._LinkFrom;
+            set => this._LinkFrom = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<DialogTopic>> IDialogItem.LinkFrom => _LinkFrom;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> IDialogItemGetter.LinkFrom => _LinkFrom;
+        IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? IDialogItemGetter.LinkFrom => _LinkFrom;
         #endregion
 
         #endregion
@@ -176,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IDialogItemGetter rhs)) return false;
             return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -335,11 +345,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = initialValue;
                 this.Quest = initialValue;
                 this.PreviousTopic = initialValue;
-                this.Topics = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.Responses = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, DialogResponse.Mask<T>?>>());
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
-                this.Choices = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-                this.LinkFrom = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Topics = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Responses = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, DialogResponse.Mask<T>?>>());
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Choices = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.LinkFrom = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
                 this.Script = new MaskItem<T, ScriptFields.Mask<T>?>(initialValue, new ScriptFields.Mask<T>(initialValue));
                 this.DATADataTypeState = initialValue;
             }
@@ -372,11 +382,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = Flags;
                 this.Quest = Quest;
                 this.PreviousTopic = PreviousTopic;
-                this.Topics = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Topics, Enumerable.Empty<(int Index, T Value)>());
-                this.Responses = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>>(Responses, Enumerable.Empty<MaskItemIndexed<T, DialogResponse.Mask<T>?>>());
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
-                this.Choices = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Choices, Enumerable.Empty<(int Index, T Value)>());
-                this.LinkFrom = new MaskItem<T, IEnumerable<(int Index, T Value)>>(LinkFrom, Enumerable.Empty<(int Index, T Value)>());
+                this.Topics = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(Topics, Enumerable.Empty<(int Index, T Value)>());
+                this.Responses = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<T, DialogResponse.Mask<T>?>>());
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Choices = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(Choices, Enumerable.Empty<(int Index, T Value)>());
+                this.LinkFrom = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(LinkFrom, Enumerable.Empty<(int Index, T Value)>());
                 this.Script = new MaskItem<T, ScriptFields.Mask<T>?>(Script, new ScriptFields.Mask<T>(Script));
                 this.DATADataTypeState = DATADataTypeState;
             }
@@ -394,17 +404,17 @@ namespace Mutagen.Bethesda.Oblivion
             public T Flags;
             public T Quest;
             public T PreviousTopic;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Topics;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>>? Responses;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Choices;
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? LinkFrom;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? Topics;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse.Mask<T>?>>?>? Responses;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>? Conditions;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? Choices;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? LinkFrom;
             public MaskItem<T, ScriptFields.Mask<T>?>? Script { get; set; }
             public T DATADataTypeState;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -614,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.PreviousTopic = eval(this.PreviousTopic);
                 if (Topics != null)
                 {
-                    obj.Topics = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Topics.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Topics = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Topics.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Topics.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -628,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Responses != null)
                 {
-                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponse.Mask<R>?>>());
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponse.Mask<R>?>>());
                     if (Responses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponse.Mask<R>?>>();
@@ -643,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -658,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Choices != null)
                 {
-                    obj.Choices = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Choices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Choices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Choices.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Choices.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -672,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (LinkFrom != null)
                 {
-                    obj.LinkFrom = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.LinkFrom.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LinkFrom = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkFrom.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (LinkFrom.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -710,155 +720,130 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.DialogType ?? true)
                     {
-                        fg.AppendLine($"DialogType => {DialogType}");
+                        fg.AppendItem(DialogType, "DialogType");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Quest ?? true)
                     {
-                        fg.AppendLine($"Quest => {Quest}");
+                        fg.AppendItem(Quest, "Quest");
                     }
                     if (printMask?.PreviousTopic ?? true)
                     {
-                        fg.AppendLine($"PreviousTopic => {PreviousTopic}");
+                        fg.AppendItem(PreviousTopic, "PreviousTopic");
                     }
-                    if (printMask?.Topics?.Overall ?? true)
+                    if ((printMask?.Topics?.Overall ?? true)
+                        && Topics.TryGet(out var TopicsItem))
                     {
                         fg.AppendLine("Topics =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Topics != null)
+                            fg.AppendItem(TopicsItem.Overall);
+                            if (TopicsItem.Specific != null)
                             {
-                                if (Topics.Overall != null)
+                                foreach (var subItem in TopicsItem.Specific)
                                 {
-                                    fg.AppendLine(Topics.Overall.ToString());
-                                }
-                                if (Topics.Specific != null)
-                                {
-                                    foreach (var subItem in Topics.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Responses?.Overall ?? true)
+                    if ((printMask?.Responses?.Overall ?? true)
+                        && Responses.TryGet(out var ResponsesItem))
                     {
                         fg.AppendLine("Responses =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Responses != null)
+                            fg.AppendItem(ResponsesItem.Overall);
+                            if (ResponsesItem.Specific != null)
                             {
-                                if (Responses.Overall != null)
+                                foreach (var subItem in ResponsesItem.Specific)
                                 {
-                                    fg.AppendLine(Responses.Overall.ToString());
-                                }
-                                if (Responses.Specific != null)
-                                {
-                                    foreach (var subItem in Responses.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Conditions?.Overall ?? true)
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions.TryGet(out var ConditionsItem))
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Conditions != null)
+                            fg.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
                             {
-                                if (Conditions.Overall != null)
+                                foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine(Conditions.Overall.ToString());
-                                }
-                                if (Conditions.Specific != null)
-                                {
-                                    foreach (var subItem in Conditions.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Choices?.Overall ?? true)
+                    if ((printMask?.Choices?.Overall ?? true)
+                        && Choices.TryGet(out var ChoicesItem))
                     {
                         fg.AppendLine("Choices =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Choices != null)
+                            fg.AppendItem(ChoicesItem.Overall);
+                            if (ChoicesItem.Specific != null)
                             {
-                                if (Choices.Overall != null)
+                                foreach (var subItem in ChoicesItem.Specific)
                                 {
-                                    fg.AppendLine(Choices.Overall.ToString());
-                                }
-                                if (Choices.Specific != null)
-                                {
-                                    foreach (var subItem in Choices.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.LinkFrom?.Overall ?? true)
+                    if ((printMask?.LinkFrom?.Overall ?? true)
+                        && LinkFrom.TryGet(out var LinkFromItem))
                     {
                         fg.AppendLine("LinkFrom =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (LinkFrom != null)
+                            fg.AppendItem(LinkFromItem.Overall);
+                            if (LinkFromItem.Specific != null)
                             {
-                                if (LinkFrom.Overall != null)
+                                foreach (var subItem in LinkFromItem.Specific)
                                 {
-                                    fg.AppendLine(LinkFrom.Overall.ToString());
-                                }
-                                if (LinkFrom.Specific != null)
-                                {
-                                    foreach (var subItem in LinkFrom.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -870,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -1067,48 +1052,42 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"DialogType => {DialogType}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Quest => {Quest}");
-                fg.AppendLine($"PreviousTopic => {PreviousTopic}");
-                fg.AppendLine("Topics =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(DialogType, "DialogType");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Quest, "Quest");
+                fg.AppendItem(PreviousTopic, "PreviousTopic");
+                if (Topics.TryGet(out var TopicsItem))
                 {
-                    if (Topics != null)
+                    fg.AppendLine("Topics =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Topics.Overall != null)
+                        fg.AppendItem(TopicsItem.Overall);
+                        if (TopicsItem.Specific != null)
                         {
-                            fg.AppendLine(Topics.Overall.ToString());
-                        }
-                        if (Topics.Specific != null)
-                        {
-                            foreach (var subItem in Topics.Specific)
+                            foreach (var subItem in TopicsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("Responses =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Responses.TryGet(out var ResponsesItem))
                 {
-                    if (Responses != null)
+                    fg.AppendLine("Responses =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Responses.Overall != null)
+                        fg.AppendItem(ResponsesItem.Overall);
+                        if (ResponsesItem.Specific != null)
                         {
-                            fg.AppendLine(Responses.Overall.ToString());
-                        }
-                        if (Responses.Specific != null)
-                        {
-                            foreach (var subItem in Responses.Specific)
+                            foreach (var subItem in ResponsesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1119,21 +1098,18 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Conditions.TryGet(out var ConditionsItem))
                 {
-                    if (Conditions != null)
+                    fg.AppendLine("Conditions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Conditions.Overall != null)
+                        fg.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
                         {
-                            fg.AppendLine(Conditions.Overall.ToString());
-                        }
-                        if (Conditions.Specific != null)
-                        {
-                            foreach (var subItem in Conditions.Specific)
+                            foreach (var subItem in ConditionsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1144,60 +1120,54 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("Choices =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Choices.TryGet(out var ChoicesItem))
                 {
-                    if (Choices != null)
+                    fg.AppendLine("Choices =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Choices.Overall != null)
+                        fg.AppendItem(ChoicesItem.Overall);
+                        if (ChoicesItem.Specific != null)
                         {
-                            fg.AppendLine(Choices.Overall.ToString());
-                        }
-                        if (Choices.Specific != null)
-                        {
-                            foreach (var subItem in Choices.Specific)
+                            foreach (var subItem in ChoicesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("LinkFrom =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (LinkFrom.TryGet(out var LinkFromItem))
                 {
-                    if (LinkFrom != null)
+                    fg.AppendLine("LinkFrom =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (LinkFrom.Overall != null)
+                        fg.AppendItem(LinkFromItem.Overall);
+                        if (LinkFromItem.Specific != null)
                         {
-                            fg.AppendLine(LinkFrom.Overall.ToString());
-                        }
-                        if (LinkFrom.Specific != null)
-                        {
-                            foreach (var subItem in LinkFrom.Specific)
+                            foreach (var subItem in LinkFromItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
                 Script?.ToString(fg);
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1383,11 +1353,11 @@ namespace Mutagen.Bethesda.Oblivion
         new DialogItem.Flag Flags { get; set; }
         new IFormLinkNullable<Quest> Quest { get; }
         new IFormLinkNullable<DialogItem> PreviousTopic { get; }
-        new ISetList<IFormLink<DialogTopic>> Topics { get; }
-        new ISetList<DialogResponse> Responses { get; }
-        new ISetList<Condition> Conditions { get; }
-        new ISetList<IFormLink<DialogTopic>> Choices { get; }
-        new ISetList<IFormLink<DialogTopic>> LinkFrom { get; }
+        new ExtendedList<IFormLink<DialogTopic>>? Topics { get; set; }
+        new ExtendedList<DialogResponse>? Responses { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<IFormLink<DialogTopic>>? Choices { get; set; }
+        new ExtendedList<IFormLink<DialogTopic>>? LinkFrom { get; set; }
         new ScriptFields Script { get; }
         new DialogItem.DATADataType DATADataTypeState { get; set; }
     }
@@ -1411,11 +1381,11 @@ namespace Mutagen.Bethesda.Oblivion
         DialogItem.Flag Flags { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic { get; }
-        IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; }
-        IReadOnlySetList<IDialogResponseGetter> Responses { get; }
-        IReadOnlySetList<IConditionGetter> Conditions { get; }
-        IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; }
-        IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; }
+        IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? Topics { get; }
+        IReadOnlyList<IDialogResponseGetter>? Responses { get; }
+        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? Choices { get; }
+        IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? LinkFrom { get; }
         IScriptFieldsGetter Script { get; }
         DialogItem.DATADataType DATADataTypeState { get; }
 
@@ -1968,15 +1938,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.PreviousTopic:
                     return typeof(IFormLinkNullable<DialogItem>);
                 case DialogItem_FieldIndex.Topics:
-                    return typeof(ISetList<IFormLink<DialogTopic>>);
+                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Responses:
-                    return typeof(ISetList<DialogResponse>);
+                    return typeof(ExtendedList<DialogResponse>);
                 case DialogItem_FieldIndex.Conditions:
-                    return typeof(ISetList<Condition>);
+                    return typeof(ExtendedList<Condition>);
                 case DialogItem_FieldIndex.Choices:
-                    return typeof(ISetList<IFormLink<DialogTopic>>);
+                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.LinkFrom:
-                    return typeof(ISetList<IFormLink<DialogTopic>>);
+                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Script:
                     return typeof(ScriptFields);
                 case DialogItem_FieldIndex.DATADataTypeState:
@@ -2048,11 +2018,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default;
             item.Quest.FormKey = null;
             item.PreviousTopic.FormKey = null;
-            item.Topics.Unset();
-            item.Responses.Unset();
-            item.Conditions.Unset();
-            item.Choices.Unset();
-            item.LinkFrom.Unset();
+            item.Topics = null;
+            item.Responses = null;
+            item.Conditions = null;
+            item.Choices = null;
+            item.LinkFrom = null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2205,68 +2175,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x454D414E: // NAME
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: DialogItem_Registration.NAME_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.Topics,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.Topics = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: DialogItem_Registration.NAME_HEADER,
+                            masterReferences: masterReferences,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
                 case 0x54445254: // TRDT
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: DialogItem_Registration.TRDT_HEADER,
-                        item: item.Responses,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out DialogResponse listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Responses = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: DialogItem_Registration.TRDT_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out DialogResponse listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<DialogResponse>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
                 }
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                        item: item.Conditions,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out Condition listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Conditions = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out Condition listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
                 }
                 case 0x544C4354: // TCLT
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: DialogItem_Registration.TCLT_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.Choices,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.Choices = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: DialogItem_Registration.TCLT_HEADER,
+                            masterReferences: masterReferences,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 }
                 case 0x464C4354: // TCLF
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: DialogItem_Registration.TCLF_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.LinkFrom,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.LinkFrom = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: DialogItem_Registration.TCLF_HEADER,
+                            masterReferences: masterReferences,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 }
                 case 0x52484353: // SCHR
@@ -2412,45 +2387,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.DialogType ?? true)
             {
-                fg.AppendLine($"DialogType => {item.DialogType}");
+                fg.AppendItem(item.DialogType, "DialogType");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Quest ?? true)
+            if ((printMask?.Quest ?? true)
+                && item.Quest.TryGet(out var QuestItem))
             {
-                fg.AppendLine($"Quest => {item.Quest}");
+                fg.AppendItem(QuestItem, "Quest");
             }
-            if (printMask?.PreviousTopic ?? true)
+            if ((printMask?.PreviousTopic ?? true)
+                && item.PreviousTopic.TryGet(out var PreviousTopicItem))
             {
-                fg.AppendLine($"PreviousTopic => {item.PreviousTopic}");
+                fg.AppendItem(PreviousTopicItem, "PreviousTopic");
             }
-            if (printMask?.Topics?.Overall ?? true)
+            if ((printMask?.Topics?.Overall ?? true)
+                && item.Topics.TryGet(out var TopicsItem))
             {
                 fg.AppendLine("Topics =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Topics)
+                    foreach (var subItem in TopicsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Responses?.Overall ?? true)
+            if ((printMask?.Responses?.Overall ?? true)
+                && item.Responses.TryGet(out var ResponsesItem))
             {
                 fg.AppendLine("Responses =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Responses)
+                    foreach (var subItem in ResponsesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2462,13 +2441,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Conditions?.Overall ?? true)
+            if ((printMask?.Conditions?.Overall ?? true)
+                && item.Conditions.TryGet(out var ConditionsItem))
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Conditions)
+                    foreach (var subItem in ConditionsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2480,36 +2460,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Choices?.Overall ?? true)
+            if ((printMask?.Choices?.Overall ?? true)
+                && item.Choices.TryGet(out var ChoicesItem))
             {
                 fg.AppendLine("Choices =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Choices)
+                    foreach (var subItem in ChoicesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.LinkFrom?.Overall ?? true)
+            if ((printMask?.LinkFrom?.Overall ?? true)
+                && item.LinkFrom.TryGet(out var LinkFromItem))
             {
                 fg.AppendLine("LinkFrom =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.LinkFrom)
+                    foreach (var subItem in LinkFromItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -2522,7 +2504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2532,11 +2514,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Quest.HasValue && checkMask.Quest.Value != (item.Quest.FormKey != null)) return false;
             if (checkMask.PreviousTopic.HasValue && checkMask.PreviousTopic.Value != (item.PreviousTopic.FormKey != null)) return false;
-            if (checkMask.Topics?.Overall.HasValue ?? false && checkMask.Topics!.Overall.Value != item.Topics.HasBeenSet) return false;
-            if (checkMask.Responses?.Overall.HasValue ?? false && checkMask.Responses!.Overall.Value != item.Responses.HasBeenSet) return false;
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != item.Conditions.HasBeenSet) return false;
-            if (checkMask.Choices?.Overall.HasValue ?? false && checkMask.Choices!.Overall.Value != item.Choices.HasBeenSet) return false;
-            if (checkMask.LinkFrom?.Overall.HasValue ?? false && checkMask.LinkFrom!.Overall.Value != item.LinkFrom.HasBeenSet) return false;
+            if (checkMask.Topics?.Overall.HasValue ?? false && checkMask.Topics!.Overall.Value != (item.Topics != null)) return false;
+            if (checkMask.Responses?.Overall.HasValue ?? false && checkMask.Responses!.Overall.Value != (item.Responses != null)) return false;
+            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
+            if (checkMask.Choices?.Overall.HasValue ?? false && checkMask.Choices!.Overall.Value != (item.Choices != null)) return false;
+            if (checkMask.LinkFrom?.Overall.HasValue ?? false && checkMask.LinkFrom!.Overall.Value != (item.LinkFrom != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2550,13 +2532,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Flags = true;
             mask.Quest = (item.Quest.FormKey != null);
             mask.PreviousTopic = (item.PreviousTopic.FormKey != null);
-            mask.Topics = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Topics.HasBeenSet, Enumerable.Empty<(int, bool)>());
-            var ResponsesItem = item.Responses;
-            mask.Responses = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogResponse.Mask<bool>?>>>(ResponsesItem.HasBeenSet, ResponsesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogResponse.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(ConditionsItem.HasBeenSet, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Choices = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Choices.HasBeenSet, Enumerable.Empty<(int, bool)>());
-            mask.LinkFrom = new MaskItem<bool, IEnumerable<(int, bool)>>(item.LinkFrom.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.Topics = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Topics != null), default);
+            if (item.Responses.TryGet(out var ResponsesItem))
+            {
+                mask.Responses = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogResponse.Mask<bool>?>>?>(true, ResponsesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogResponse.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Conditions.TryGet(out var ConditionsItem))
+            {
+                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            mask.Choices = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Choices != null), default);
+            mask.LinkFrom = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.LinkFrom != null), default);
             mask.Script = new MaskItem<bool, ScriptFields.Mask<bool>?>(true, item.Script?.GetHasBeenSetMask());
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
@@ -2691,17 +2677,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             yield return obj.Quest;
             yield return obj.PreviousTopic;
-            foreach (var item in obj.Topics)
+            if (obj.Topics != null)
             {
-                yield return item;
+                foreach (var item in obj.Topics)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in obj.Choices)
+            if (obj.Choices != null)
             {
-                yield return item;
+                foreach (var item in obj.Choices)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in obj.LinkFrom)
+            if (obj.LinkFrom != null)
             {
-                yield return item;
+                foreach (var item in obj.LinkFrom)
+                {
+                    yield return item;
+                }
             }
             if (obj.Script is ILinkContainer ScriptlinkCont)
             {
@@ -2777,15 +2772,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Topics);
                 try
                 {
-                    if (rhs.Topics.HasBeenSet)
+                    if ((rhs.Topics != null))
                     {
-                        item.Topics.SetTo(
-                            rhs.Topics,
-                            (r) => new FormLink<DialogTopic>(r.FormKey));
+                        item.Topics = 
+                            rhs.Topics
+                            .Select(r => new FormLink<DialogTopic>(r.FormKey))
+                            .ToExtendedList<IFormLink<DialogTopic>>();
                     }
                     else
                     {
-                        item.Topics.Unset();
+                        item.Topics = null;
                     }
                 }
                 catch (Exception ex)
@@ -2803,20 +2799,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Responses);
                 try
                 {
-                    if (rhs.Responses.HasBeenSet)
+                    if ((rhs.Responses != null))
                     {
-                        item.Responses.SetTo(
-                            items: rhs.Responses,
-                            converter: (r) =>
+                        item.Responses = 
+                            rhs.Responses
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<DialogResponse>();
                     }
                     else
                     {
-                        item.Responses.Unset();
+                        item.Responses = null;
                     }
                 }
                 catch (Exception ex)
@@ -2834,20 +2831,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Conditions);
                 try
                 {
-                    if (rhs.Conditions.HasBeenSet)
+                    if ((rhs.Conditions != null))
                     {
-                        item.Conditions.SetTo(
-                            items: rhs.Conditions,
-                            converter: (r) =>
+                        item.Conditions = 
+                            rhs.Conditions
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<Condition>();
                     }
                     else
                     {
-                        item.Conditions.Unset();
+                        item.Conditions = null;
                     }
                 }
                 catch (Exception ex)
@@ -2865,15 +2863,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Choices);
                 try
                 {
-                    if (rhs.Choices.HasBeenSet)
+                    if ((rhs.Choices != null))
                     {
-                        item.Choices.SetTo(
-                            rhs.Choices,
-                            (r) => new FormLink<DialogTopic>(r.FormKey));
+                        item.Choices = 
+                            rhs.Choices
+                            .Select(r => new FormLink<DialogTopic>(r.FormKey))
+                            .ToExtendedList<IFormLink<DialogTopic>>();
                     }
                     else
                     {
-                        item.Choices.Unset();
+                        item.Choices = null;
                     }
                 }
                 catch (Exception ex)
@@ -2891,15 +2890,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.LinkFrom);
                 try
                 {
-                    if (rhs.LinkFrom.HasBeenSet)
+                    if ((rhs.LinkFrom != null))
                     {
-                        item.LinkFrom.SetTo(
-                            rhs.LinkFrom,
-                            (r) => new FormLink<DialogTopic>(r.FormKey));
+                        item.LinkFrom = 
+                            rhs.LinkFrom
+                            .Select(r => new FormLink<DialogTopic>(r.FormKey))
+                            .ToExtendedList<IFormLink<DialogTopic>>();
                     }
                     else
                     {
-                        item.LinkFrom.Unset();
+                        item.LinkFrom = null;
                     }
                 }
                 catch (Exception ex)
@@ -3126,7 +3126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
                     errorMask: errorMask);
             }
-            if (item.Topics.HasBeenSet
+            if ((item.Topics != null)
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
@@ -3145,7 +3145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     });
             }
-            if (item.Responses.HasBeenSet
+            if ((item.Responses != null)
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Responses) ?? true))
             {
                 ListXmlTranslation<IDialogResponseGetter>.Instance.Write(
@@ -3168,7 +3168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     });
             }
-            if (item.Conditions.HasBeenSet
+            if ((item.Conditions != null)
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<IConditionGetter>.Instance.Write(
@@ -3191,7 +3191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     });
             }
-            if (item.Choices.HasBeenSet
+            if ((item.Choices != null)
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Choices) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
@@ -3210,7 +3210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     });
             }
-            if (item.LinkFrom.HasBeenSet
+            if ((item.LinkFrom != null)
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.LinkFrom) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
@@ -3441,11 +3441,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Topics.SetTo(TopicsItem);
+                            item.Topics = TopicsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Topics.Unset();
+                            item.Topics = null;
                         }
                     }
                     catch (Exception ex)
@@ -3469,11 +3469,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Responses.SetTo(ResponsesItem);
+                            item.Responses = ResponsesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Responses.Unset();
+                            item.Responses = null;
                         }
                     }
                     catch (Exception ex)
@@ -3497,11 +3497,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Conditions.SetTo(ConditionsItem);
+                            item.Conditions = ConditionsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Conditions.Unset();
+                            item.Conditions = null;
                         }
                     }
                     catch (Exception ex)
@@ -3525,11 +3525,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Choices.SetTo(ChoicesItem);
+                            item.Choices = ChoicesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Choices.Unset();
+                            item.Choices = null;
                         }
                     }
                     catch (Exception ex)
@@ -3553,11 +3553,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.LinkFrom.SetTo(LinkFromItem);
+                            item.LinkFrom = LinkFromItem.ToExtendedList();
                         }
                         else
                         {
-                            item.LinkFrom.Unset();
+                            item.LinkFrom = null;
                         }
                     }
                     catch (Exception ex)
@@ -3946,11 +3946,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool PreviousTopic_IsSet => _PreviousTopicLocation.HasValue;
         public IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PreviousTopicLocation.Value, _package.Meta)))) : FormLinkNullable<IDialogItemGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = EmptySetList<IFormLinkGetter<IDialogTopicGetter>>.Instance;
-        public IReadOnlySetList<IDialogResponseGetter> Responses { get; private set; } = EmptySetList<DialogResponseBinaryOverlay>.Instance;
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
-        public IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = EmptySetList<IFormLinkGetter<IDialogTopicGetter>>.Instance;
-        public IReadOnlySetList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = EmptySetList<IFormLinkGetter<IDialogTopicGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? Topics { get; private set; }
+        public IReadOnlyList<IDialogResponseGetter>? Responses { get; private set; }
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? Choices { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? LinkFrom { get; private set; }
         #region Script
         private IScriptFieldsGetter? _Script;
         public IScriptFieldsGetter Script => _Script ?? new ScriptFields();

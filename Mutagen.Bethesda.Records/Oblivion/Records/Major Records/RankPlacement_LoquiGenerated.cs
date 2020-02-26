@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff = value ?? new byte[3];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IRankPlacementGetter.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> IRankPlacementGetter.Fluff => this.Fluff;
         #endregion
 
         #region To String
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRankPlacementGetter rhs)) return false;
             return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -350,15 +350,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Faction ?? true)
                     {
-                        fg.AppendLine($"Faction => {Faction}");
+                        fg.AppendItem(Faction, "Faction");
                     }
                     if (printMask?.Rank ?? true)
                     {
-                        fg.AppendLine($"Rank => {Rank}");
+                        fg.AppendItem(Rank, "Rank");
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendLine($"Fluff => {Fluff}");
+                        fg.AppendItem(Fluff, "Fluff");
                     }
                 }
                 fg.AppendLine("]");
@@ -485,9 +485,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Faction => {Faction}");
-                fg.AppendLine($"Rank => {Rank}");
-                fg.AppendLine($"Fluff => {Fluff}");
+                fg.AppendItem(Faction, "Faction");
+                fg.AppendItem(Rank, "Rank");
+                fg.AppendItem(Fluff, "Fluff");
             }
             #endregion
 
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         IFormLinkGetter<IFactionGetter> Faction { get; }
         Byte Rank { get; }
-        ReadOnlySpan<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Fluff { get; }
 
     }
 
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Faction = object.Equals(item.Faction, rhs.Faction);
             ret.Rank = item.Rank == rhs.Rank;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
         }
         
         public string ToString(
@@ -1314,11 +1314,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Faction ?? true)
             {
-                fg.AppendLine($"Faction => {item.Faction}");
+                fg.AppendItem(item.Faction, "Faction");
             }
             if (printMask?.Rank ?? true)
             {
-                fg.AppendLine($"Rank => {item.Rank}");
+                fg.AppendItem(item.Rank, "Rank");
             }
             if (printMask?.Fluff ?? true)
             {
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Faction.Equals(rhs.Faction)) return false;
             if (lhs.Rank != rhs.Rank) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
             return true;
         }
         
@@ -1993,7 +1993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public Byte Rank => _data.Span[4];
-        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(5, 3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(5, 3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

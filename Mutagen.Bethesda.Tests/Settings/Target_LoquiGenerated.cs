@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ITargetGetter rhs)) return false;
             return ((TargetCommon)((ITargetGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -260,23 +260,23 @@ namespace Mutagen.Bethesda.Tests
                 {
                     if (printMask?.Do ?? true)
                     {
-                        fg.AppendLine($"Do => {Do}");
+                        fg.AppendItem(Do, "Do");
                     }
                     if (printMask?.Path ?? true)
                     {
-                        fg.AppendLine($"Path => {Path}");
+                        fg.AppendItem(Path, "Path");
                     }
                     if (printMask?.NumMasters ?? true)
                     {
-                        fg.AppendLine($"NumMasters => {NumMasters}");
+                        fg.AppendItem(NumMasters, "NumMasters");
                     }
                     if (printMask?.GameMode ?? true)
                     {
-                        fg.AppendLine($"GameMode => {GameMode}");
+                        fg.AppendItem(GameMode, "GameMode");
                     }
                     if (printMask?.ExpectedBaseGroupCount ?? true)
                     {
-                        fg.AppendLine($"ExpectedBaseGroupCount => {ExpectedBaseGroupCount}");
+                        fg.AppendItem(ExpectedBaseGroupCount, "ExpectedBaseGroupCount");
                     }
                     if (printMask?.Interest?.Overall ?? true)
                     {
@@ -437,11 +437,11 @@ namespace Mutagen.Bethesda.Tests
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Do => {Do}");
-                fg.AppendLine($"Path => {Path}");
-                fg.AppendLine($"NumMasters => {NumMasters}");
-                fg.AppendLine($"GameMode => {GameMode}");
-                fg.AppendLine($"ExpectedBaseGroupCount => {ExpectedBaseGroupCount}");
+                fg.AppendItem(Do, "Do");
+                fg.AppendItem(Path, "Path");
+                fg.AppendItem(NumMasters, "NumMasters");
+                fg.AppendItem(GameMode, "GameMode");
+                fg.AppendItem(ExpectedBaseGroupCount, "ExpectedBaseGroupCount");
                 Interest?.ToString(fg);
             }
             #endregion
@@ -1339,23 +1339,24 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (printMask?.Do ?? true)
             {
-                fg.AppendLine($"Do => {item.Do}");
+                fg.AppendItem(item.Do, "Do");
             }
             if (printMask?.Path ?? true)
             {
-                fg.AppendLine($"Path => {item.Path}");
+                fg.AppendItem(item.Path, "Path");
             }
             if (printMask?.NumMasters ?? true)
             {
-                fg.AppendLine($"NumMasters => {item.NumMasters}");
+                fg.AppendItem(item.NumMasters, "NumMasters");
             }
             if (printMask?.GameMode ?? true)
             {
-                fg.AppendLine($"GameMode => {item.GameMode}");
+                fg.AppendItem(item.GameMode, "GameMode");
             }
-            if (printMask?.ExpectedBaseGroupCount ?? true)
+            if ((printMask?.ExpectedBaseGroupCount ?? true)
+                && item.ExpectedBaseGroupCount.TryGet(out var ExpectedBaseGroupCountItem))
             {
-                fg.AppendLine($"ExpectedBaseGroupCount => {item.ExpectedBaseGroupCount}");
+                fg.AppendItem(ExpectedBaseGroupCountItem, "ExpectedBaseGroupCount");
             }
             if (printMask?.Interest?.Overall ?? true)
             {

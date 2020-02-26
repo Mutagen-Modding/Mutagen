@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._Unknown1 = value ?? new byte[3];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IConditionGetter.Unknown1 => this.Unknown1;
+        ReadOnlyMemorySlice<Byte> IConditionGetter.Unknown1 => this.Unknown1;
         #endregion
 
         #region To String
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IConditionGetter rhs)) return false;
             return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -349,15 +349,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.CompareOperator ?? true)
                     {
-                        fg.AppendLine($"CompareOperator => {CompareOperator}");
+                        fg.AppendItem(CompareOperator, "CompareOperator");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendLine($"Unknown1 => {Unknown1}");
+                        fg.AppendItem(Unknown1, "Unknown1");
                     }
                 }
                 fg.AppendLine("]");
@@ -484,9 +484,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected virtual void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"CompareOperator => {CompareOperator}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Unknown1 => {Unknown1}");
+                fg.AppendItem(CompareOperator, "CompareOperator");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Unknown1, "Unknown1");
             }
             #endregion
 
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         CompareOperator CompareOperator { get; }
         Condition.Flag Flags { get; }
-        ReadOnlySpan<Byte> Unknown1 { get; }
+        ReadOnlyMemorySlice<Byte> Unknown1 { get; }
 
     }
 
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1, rhs.Unknown1);
+            ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1.Span, rhs.Unknown1.Span);
         }
         
         public string ToString(
@@ -1274,11 +1274,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.CompareOperator ?? true)
             {
-                fg.AppendLine($"CompareOperator => {item.CompareOperator}");
+                fg.AppendItem(item.CompareOperator, "CompareOperator");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unknown1 ?? true)
             {
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.CompareOperator != rhs.CompareOperator) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1, rhs.Unknown1)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1.Span, rhs.Unknown1.Span)) return false;
             return true;
         }
         
@@ -1982,7 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Condition.Flag Flags => GetFlagsCustom(location: 0);
-        public ReadOnlySpan<Byte> Unknown1 => _data.Span.Slice(1, 3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(1, 3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

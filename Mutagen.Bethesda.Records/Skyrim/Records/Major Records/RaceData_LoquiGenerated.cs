@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._Fluff = value ?? new byte[2];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IRaceDataGetter.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> IRaceDataGetter.Fluff => this.Fluff;
         #endregion
         #region MaleHeight
         public Single MaleHeight { get; set; } = default;
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRaceDataGetter rhs)) return false;
             return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -845,119 +845,119 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendLine($"Fluff => {Fluff}");
+                        fg.AppendItem(Fluff, "Fluff");
                     }
                     if (printMask?.MaleHeight ?? true)
                     {
-                        fg.AppendLine($"MaleHeight => {MaleHeight}");
+                        fg.AppendItem(MaleHeight, "MaleHeight");
                     }
                     if (printMask?.FemaleHeight ?? true)
                     {
-                        fg.AppendLine($"FemaleHeight => {FemaleHeight}");
+                        fg.AppendItem(FemaleHeight, "FemaleHeight");
                     }
                     if (printMask?.MaleWeight ?? true)
                     {
-                        fg.AppendLine($"MaleWeight => {MaleWeight}");
+                        fg.AppendItem(MaleWeight, "MaleWeight");
                     }
                     if (printMask?.FemaleWeight ?? true)
                     {
-                        fg.AppendLine($"FemaleWeight => {FemaleWeight}");
+                        fg.AppendItem(FemaleWeight, "FemaleWeight");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.StartingHealth ?? true)
                     {
-                        fg.AppendLine($"StartingHealth => {StartingHealth}");
+                        fg.AppendItem(StartingHealth, "StartingHealth");
                     }
                     if (printMask?.StartingMagicka ?? true)
                     {
-                        fg.AppendLine($"StartingMagicka => {StartingMagicka}");
+                        fg.AppendItem(StartingMagicka, "StartingMagicka");
                     }
                     if (printMask?.StartingStamina ?? true)
                     {
-                        fg.AppendLine($"StartingStamina => {StartingStamina}");
+                        fg.AppendItem(StartingStamina, "StartingStamina");
                     }
                     if (printMask?.BaseCarryWeight ?? true)
                     {
-                        fg.AppendLine($"BaseCarryWeight => {BaseCarryWeight}");
+                        fg.AppendItem(BaseCarryWeight, "BaseCarryWeight");
                     }
                     if (printMask?.BaseMass ?? true)
                     {
-                        fg.AppendLine($"BaseMass => {BaseMass}");
+                        fg.AppendItem(BaseMass, "BaseMass");
                     }
                     if (printMask?.AccelerationRate ?? true)
                     {
-                        fg.AppendLine($"AccelerationRate => {AccelerationRate}");
+                        fg.AppendItem(AccelerationRate, "AccelerationRate");
                     }
                     if (printMask?.DecelerationRate ?? true)
                     {
-                        fg.AppendLine($"DecelerationRate => {DecelerationRate}");
+                        fg.AppendItem(DecelerationRate, "DecelerationRate");
                     }
                     if (printMask?.Size ?? true)
                     {
-                        fg.AppendLine($"Size => {Size}");
+                        fg.AppendItem(Size, "Size");
                     }
                     if (printMask?.HeadBipedObject ?? true)
                     {
-                        fg.AppendLine($"HeadBipedObject => {HeadBipedObject}");
+                        fg.AppendItem(HeadBipedObject, "HeadBipedObject");
                     }
                     if (printMask?.HairBipedObject ?? true)
                     {
-                        fg.AppendLine($"HairBipedObject => {HairBipedObject}");
+                        fg.AppendItem(HairBipedObject, "HairBipedObject");
                     }
                     if (printMask?.InjuredHealthPercent ?? true)
                     {
-                        fg.AppendLine($"InjuredHealthPercent => {InjuredHealthPercent}");
+                        fg.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
                     }
                     if (printMask?.ShieldBipedObject ?? true)
                     {
-                        fg.AppendLine($"ShieldBipedObject => {ShieldBipedObject}");
+                        fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
                     }
                     if (printMask?.HealthRegen ?? true)
                     {
-                        fg.AppendLine($"HealthRegen => {HealthRegen}");
+                        fg.AppendItem(HealthRegen, "HealthRegen");
                     }
                     if (printMask?.MagickaRegen ?? true)
                     {
-                        fg.AppendLine($"MagickaRegen => {MagickaRegen}");
+                        fg.AppendItem(MagickaRegen, "MagickaRegen");
                     }
                     if (printMask?.StaminaRegen ?? true)
                     {
-                        fg.AppendLine($"StaminaRegen => {StaminaRegen}");
+                        fg.AppendItem(StaminaRegen, "StaminaRegen");
                     }
                     if (printMask?.UnarmedDamage ?? true)
                     {
-                        fg.AppendLine($"UnarmedDamage => {UnarmedDamage}");
+                        fg.AppendItem(UnarmedDamage, "UnarmedDamage");
                     }
                     if (printMask?.UnarmedReach ?? true)
                     {
-                        fg.AppendLine($"UnarmedReach => {UnarmedReach}");
+                        fg.AppendItem(UnarmedReach, "UnarmedReach");
                     }
                     if (printMask?.BodyBipedObject ?? true)
                     {
-                        fg.AppendLine($"BodyBipedObject => {BodyBipedObject}");
+                        fg.AppendItem(BodyBipedObject, "BodyBipedObject");
                     }
                     if (printMask?.AimAngleTolerance ?? true)
                     {
-                        fg.AppendLine($"AimAngleTolerance => {AimAngleTolerance}");
+                        fg.AppendItem(AimAngleTolerance, "AimAngleTolerance");
                     }
                     if (printMask?.FlightRadius ?? true)
                     {
-                        fg.AppendLine($"FlightRadius => {FlightRadius}");
+                        fg.AppendItem(FlightRadius, "FlightRadius");
                     }
                     if (printMask?.AngularAccelerationRate ?? true)
                     {
-                        fg.AppendLine($"AngularAccelerationRate => {AngularAccelerationRate}");
+                        fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
                     }
                     if (printMask?.AngularTolerance ?? true)
                     {
-                        fg.AppendLine($"AngularTolerance => {AngularTolerance}");
+                        fg.AppendItem(AngularTolerance, "AngularTolerance");
                     }
                     if (printMask?.Flags2 ?? true)
                     {
-                        fg.AppendLine($"Flags2 => {Flags2}");
+                        fg.AppendItem(Flags2, "Flags2");
                     }
                 }
                 fg.AppendLine("]");
@@ -1421,35 +1421,35 @@ namespace Mutagen.Bethesda.Skyrim
                 SkillBoost4?.ToString(fg);
                 SkillBoost5?.ToString(fg);
                 SkillBoost6?.ToString(fg);
-                fg.AppendLine($"Fluff => {Fluff}");
-                fg.AppendLine($"MaleHeight => {MaleHeight}");
-                fg.AppendLine($"FemaleHeight => {FemaleHeight}");
-                fg.AppendLine($"MaleWeight => {MaleWeight}");
-                fg.AppendLine($"FemaleWeight => {FemaleWeight}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"StartingHealth => {StartingHealth}");
-                fg.AppendLine($"StartingMagicka => {StartingMagicka}");
-                fg.AppendLine($"StartingStamina => {StartingStamina}");
-                fg.AppendLine($"BaseCarryWeight => {BaseCarryWeight}");
-                fg.AppendLine($"BaseMass => {BaseMass}");
-                fg.AppendLine($"AccelerationRate => {AccelerationRate}");
-                fg.AppendLine($"DecelerationRate => {DecelerationRate}");
-                fg.AppendLine($"Size => {Size}");
-                fg.AppendLine($"HeadBipedObject => {HeadBipedObject}");
-                fg.AppendLine($"HairBipedObject => {HairBipedObject}");
-                fg.AppendLine($"InjuredHealthPercent => {InjuredHealthPercent}");
-                fg.AppendLine($"ShieldBipedObject => {ShieldBipedObject}");
-                fg.AppendLine($"HealthRegen => {HealthRegen}");
-                fg.AppendLine($"MagickaRegen => {MagickaRegen}");
-                fg.AppendLine($"StaminaRegen => {StaminaRegen}");
-                fg.AppendLine($"UnarmedDamage => {UnarmedDamage}");
-                fg.AppendLine($"UnarmedReach => {UnarmedReach}");
-                fg.AppendLine($"BodyBipedObject => {BodyBipedObject}");
-                fg.AppendLine($"AimAngleTolerance => {AimAngleTolerance}");
-                fg.AppendLine($"FlightRadius => {FlightRadius}");
-                fg.AppendLine($"AngularAccelerationRate => {AngularAccelerationRate}");
-                fg.AppendLine($"AngularTolerance => {AngularTolerance}");
-                fg.AppendLine($"Flags2 => {Flags2}");
+                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(MaleHeight, "MaleHeight");
+                fg.AppendItem(FemaleHeight, "FemaleHeight");
+                fg.AppendItem(MaleWeight, "MaleWeight");
+                fg.AppendItem(FemaleWeight, "FemaleWeight");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(StartingHealth, "StartingHealth");
+                fg.AppendItem(StartingMagicka, "StartingMagicka");
+                fg.AppendItem(StartingStamina, "StartingStamina");
+                fg.AppendItem(BaseCarryWeight, "BaseCarryWeight");
+                fg.AppendItem(BaseMass, "BaseMass");
+                fg.AppendItem(AccelerationRate, "AccelerationRate");
+                fg.AppendItem(DecelerationRate, "DecelerationRate");
+                fg.AppendItem(Size, "Size");
+                fg.AppendItem(HeadBipedObject, "HeadBipedObject");
+                fg.AppendItem(HairBipedObject, "HairBipedObject");
+                fg.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
+                fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
+                fg.AppendItem(HealthRegen, "HealthRegen");
+                fg.AppendItem(MagickaRegen, "MagickaRegen");
+                fg.AppendItem(StaminaRegen, "StaminaRegen");
+                fg.AppendItem(UnarmedDamage, "UnarmedDamage");
+                fg.AppendItem(UnarmedReach, "UnarmedReach");
+                fg.AppendItem(BodyBipedObject, "BodyBipedObject");
+                fg.AppendItem(AimAngleTolerance, "AimAngleTolerance");
+                fg.AppendItem(FlightRadius, "FlightRadius");
+                fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
+                fg.AppendItem(AngularTolerance, "AngularTolerance");
+                fg.AppendItem(Flags2, "Flags2");
             }
             #endregion
 
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkillBoostGetter SkillBoost4 { get; }
         ISkillBoostGetter SkillBoost5 { get; }
         ISkillBoostGetter SkillBoost6 { get; }
-        ReadOnlySpan<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Fluff { get; }
         Single MaleHeight { get; }
         Single FemaleHeight { get; }
         Single MaleWeight { get; }
@@ -2912,7 +2912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.SkillBoost4 = MaskItemExt.Factory(item.SkillBoost4.GetEqualsMask(rhs.SkillBoost4, include), include);
             ret.SkillBoost5 = MaskItemExt.Factory(item.SkillBoost5.GetEqualsMask(rhs.SkillBoost5, include), include);
             ret.SkillBoost6 = MaskItemExt.Factory(item.SkillBoost6.GetEqualsMask(rhs.SkillBoost6, include), include);
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
             ret.MaleHeight = item.MaleHeight.EqualsWithin(rhs.MaleHeight);
             ret.FemaleHeight = item.FemaleHeight.EqualsWithin(rhs.FemaleHeight);
             ret.MaleWeight = item.MaleWeight.EqualsWithin(rhs.MaleWeight);
@@ -3021,115 +3021,115 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.MaleHeight ?? true)
             {
-                fg.AppendLine($"MaleHeight => {item.MaleHeight}");
+                fg.AppendItem(item.MaleHeight, "MaleHeight");
             }
             if (printMask?.FemaleHeight ?? true)
             {
-                fg.AppendLine($"FemaleHeight => {item.FemaleHeight}");
+                fg.AppendItem(item.FemaleHeight, "FemaleHeight");
             }
             if (printMask?.MaleWeight ?? true)
             {
-                fg.AppendLine($"MaleWeight => {item.MaleWeight}");
+                fg.AppendItem(item.MaleWeight, "MaleWeight");
             }
             if (printMask?.FemaleWeight ?? true)
             {
-                fg.AppendLine($"FemaleWeight => {item.FemaleWeight}");
+                fg.AppendItem(item.FemaleWeight, "FemaleWeight");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.StartingHealth ?? true)
             {
-                fg.AppendLine($"StartingHealth => {item.StartingHealth}");
+                fg.AppendItem(item.StartingHealth, "StartingHealth");
             }
             if (printMask?.StartingMagicka ?? true)
             {
-                fg.AppendLine($"StartingMagicka => {item.StartingMagicka}");
+                fg.AppendItem(item.StartingMagicka, "StartingMagicka");
             }
             if (printMask?.StartingStamina ?? true)
             {
-                fg.AppendLine($"StartingStamina => {item.StartingStamina}");
+                fg.AppendItem(item.StartingStamina, "StartingStamina");
             }
             if (printMask?.BaseCarryWeight ?? true)
             {
-                fg.AppendLine($"BaseCarryWeight => {item.BaseCarryWeight}");
+                fg.AppendItem(item.BaseCarryWeight, "BaseCarryWeight");
             }
             if (printMask?.BaseMass ?? true)
             {
-                fg.AppendLine($"BaseMass => {item.BaseMass}");
+                fg.AppendItem(item.BaseMass, "BaseMass");
             }
             if (printMask?.AccelerationRate ?? true)
             {
-                fg.AppendLine($"AccelerationRate => {item.AccelerationRate}");
+                fg.AppendItem(item.AccelerationRate, "AccelerationRate");
             }
             if (printMask?.DecelerationRate ?? true)
             {
-                fg.AppendLine($"DecelerationRate => {item.DecelerationRate}");
+                fg.AppendItem(item.DecelerationRate, "DecelerationRate");
             }
             if (printMask?.Size ?? true)
             {
-                fg.AppendLine($"Size => {item.Size}");
+                fg.AppendItem(item.Size, "Size");
             }
             if (printMask?.HeadBipedObject ?? true)
             {
-                fg.AppendLine($"HeadBipedObject => {item.HeadBipedObject}");
+                fg.AppendItem(item.HeadBipedObject, "HeadBipedObject");
             }
             if (printMask?.HairBipedObject ?? true)
             {
-                fg.AppendLine($"HairBipedObject => {item.HairBipedObject}");
+                fg.AppendItem(item.HairBipedObject, "HairBipedObject");
             }
             if (printMask?.InjuredHealthPercent ?? true)
             {
-                fg.AppendLine($"InjuredHealthPercent => {item.InjuredHealthPercent}");
+                fg.AppendItem(item.InjuredHealthPercent, "InjuredHealthPercent");
             }
             if (printMask?.ShieldBipedObject ?? true)
             {
-                fg.AppendLine($"ShieldBipedObject => {item.ShieldBipedObject}");
+                fg.AppendItem(item.ShieldBipedObject, "ShieldBipedObject");
             }
             if (printMask?.HealthRegen ?? true)
             {
-                fg.AppendLine($"HealthRegen => {item.HealthRegen}");
+                fg.AppendItem(item.HealthRegen, "HealthRegen");
             }
             if (printMask?.MagickaRegen ?? true)
             {
-                fg.AppendLine($"MagickaRegen => {item.MagickaRegen}");
+                fg.AppendItem(item.MagickaRegen, "MagickaRegen");
             }
             if (printMask?.StaminaRegen ?? true)
             {
-                fg.AppendLine($"StaminaRegen => {item.StaminaRegen}");
+                fg.AppendItem(item.StaminaRegen, "StaminaRegen");
             }
             if (printMask?.UnarmedDamage ?? true)
             {
-                fg.AppendLine($"UnarmedDamage => {item.UnarmedDamage}");
+                fg.AppendItem(item.UnarmedDamage, "UnarmedDamage");
             }
             if (printMask?.UnarmedReach ?? true)
             {
-                fg.AppendLine($"UnarmedReach => {item.UnarmedReach}");
+                fg.AppendItem(item.UnarmedReach, "UnarmedReach");
             }
             if (printMask?.BodyBipedObject ?? true)
             {
-                fg.AppendLine($"BodyBipedObject => {item.BodyBipedObject}");
+                fg.AppendItem(item.BodyBipedObject, "BodyBipedObject");
             }
             if (printMask?.AimAngleTolerance ?? true)
             {
-                fg.AppendLine($"AimAngleTolerance => {item.AimAngleTolerance}");
+                fg.AppendItem(item.AimAngleTolerance, "AimAngleTolerance");
             }
             if (printMask?.FlightRadius ?? true)
             {
-                fg.AppendLine($"FlightRadius => {item.FlightRadius}");
+                fg.AppendItem(item.FlightRadius, "FlightRadius");
             }
             if (printMask?.AngularAccelerationRate ?? true)
             {
-                fg.AppendLine($"AngularAccelerationRate => {item.AngularAccelerationRate}");
+                fg.AppendItem(item.AngularAccelerationRate, "AngularAccelerationRate");
             }
             if (printMask?.AngularTolerance ?? true)
             {
-                fg.AppendLine($"AngularTolerance => {item.AngularTolerance}");
+                fg.AppendItem(item.AngularTolerance, "AngularTolerance");
             }
             if (printMask?.Flags2 ?? true)
             {
-                fg.AppendLine($"Flags2 => {item.Flags2}");
+                fg.AppendItem(item.Flags2, "Flags2");
             }
         }
         
@@ -3196,7 +3196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.SkillBoost4, rhs.SkillBoost4)) return false;
             if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
             if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
             if (!lhs.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
             if (!lhs.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
             if (!lhs.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
@@ -5236,7 +5236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(8)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(10)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(12)), _package, default(RecordTypeConverter));
-        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(14, 2).ToArray();
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(14, 2).ToArray();
         public Single MaleHeight => SpanExt.GetFloat(_data.Span.Slice(16, 4));
         public Single FemaleHeight => SpanExt.GetFloat(_data.Span.Slice(20, 4));
         public Single MaleWeight => SpanExt.GetFloat(_data.Span.Slice(24, 4));

@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Unused = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IMagicEffectGetter.Unused => this.Unused;
+        ReadOnlyMemorySlice<Byte> IMagicEffectGetter.Unused => this.Unused;
         #endregion
         #region MagicSchool
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -211,13 +211,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IEDIDLink<MagicEffect>> _CounterEffects = new SetList<IEDIDLink<MagicEffect>>();
-        public ISetList<IEDIDLink<MagicEffect>> CounterEffects => _CounterEffects;
+        private ExtendedList<IEDIDLink<MagicEffect>>? _CounterEffects;
+        public ExtendedList<IEDIDLink<MagicEffect>>? CounterEffects
+        {
+            get => this._CounterEffects;
+            set => this._CounterEffects = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IEDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IEDIDLinkGetter<IMagicEffectGetter>> IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -239,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IMagicEffectGetter rhs)) return false;
             return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -408,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ProjectileSpeed = initialValue;
                 this.EffectShader = initialValue;
                 this.SubData = new MaskItem<T, MagicEffectSubData.Mask<T>?>(initialValue, new MagicEffectSubData.Mask<T>(initialValue));
-                this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(initialValue, Enumerable.Empty<(int Index, T Value)>());
                 this.DATADataTypeState = initialValue;
             }
 
@@ -455,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ProjectileSpeed = ProjectileSpeed;
                 this.EffectShader = EffectShader;
                 this.SubData = new MaskItem<T, MagicEffectSubData.Mask<T>?>(SubData, new MagicEffectSubData.Mask<T>(SubData));
-                this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(CounterEffects, Enumerable.Empty<(int Index, T Value)>());
+                this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>?>(CounterEffects, Enumerable.Empty<(int Index, T Value)>());
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -482,12 +484,12 @@ namespace Mutagen.Bethesda.Oblivion
             public T ProjectileSpeed;
             public T EffectShader;
             public MaskItem<T, MagicEffectSubData.Mask<T>?>? SubData { get; set; }
-            public MaskItem<T, IEnumerable<(int Index, T Value)>>? CounterEffects;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>?>? CounterEffects;
             public T DATADataTypeState;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -651,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SubData = this.SubData == null ? null : new MaskItem<R, MagicEffectSubData.Mask<R>?>(eval(this.SubData.Overall), this.SubData.Specific?.Translate(eval));
                 if (CounterEffects != null)
                 {
-                    obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.CounterEffects.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (CounterEffects.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -688,15 +690,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendLine($"Description => {Description}");
+                        fg.AppendItem(Description, "Description");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -704,67 +706,62 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.BaseCost ?? true)
                     {
-                        fg.AppendLine($"BaseCost => {BaseCost}");
+                        fg.AppendItem(BaseCost, "BaseCost");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendLine($"Unused => {Unused}");
+                        fg.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.MagicSchool ?? true)
                     {
-                        fg.AppendLine($"MagicSchool => {MagicSchool}");
+                        fg.AppendItem(MagicSchool, "MagicSchool");
                     }
                     if (printMask?.Resistance ?? true)
                     {
-                        fg.AppendLine($"Resistance => {Resistance}");
+                        fg.AppendItem(Resistance, "Resistance");
                     }
                     if (printMask?.CounterEffectCount ?? true)
                     {
-                        fg.AppendLine($"CounterEffectCount => {CounterEffectCount}");
+                        fg.AppendItem(CounterEffectCount, "CounterEffectCount");
                     }
                     if (printMask?.Light ?? true)
                     {
-                        fg.AppendLine($"Light => {Light}");
+                        fg.AppendItem(Light, "Light");
                     }
                     if (printMask?.ProjectileSpeed ?? true)
                     {
-                        fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
+                        fg.AppendItem(ProjectileSpeed, "ProjectileSpeed");
                     }
                     if (printMask?.EffectShader ?? true)
                     {
-                        fg.AppendLine($"EffectShader => {EffectShader}");
+                        fg.AppendItem(EffectShader, "EffectShader");
                     }
                     if (printMask?.SubData?.Overall ?? true)
                     {
                         SubData?.ToString(fg);
                     }
-                    if (printMask?.CounterEffects?.Overall ?? true)
+                    if ((printMask?.CounterEffects?.Overall ?? true)
+                        && CounterEffects.TryGet(out var CounterEffectsItem))
                     {
                         fg.AppendLine("CounterEffects =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (CounterEffects != null)
+                            fg.AppendItem(CounterEffectsItem.Overall);
+                            if (CounterEffectsItem.Specific != null)
                             {
-                                if (CounterEffects.Overall != null)
+                                foreach (var subItem in CounterEffectsItem.Specific)
                                 {
-                                    fg.AppendLine(CounterEffects.Overall.ToString());
-                                }
-                                if (CounterEffects.Specific != null)
-                                {
-                                    foreach (var subItem in CounterEffects.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -772,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -1019,46 +1016,43 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Description => {Description}");
-                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Description, "Description");
+                fg.AppendItem(Icon, "Icon");
                 Model?.ToString(fg);
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"BaseCost => {BaseCost}");
-                fg.AppendLine($"Unused => {Unused}");
-                fg.AppendLine($"MagicSchool => {MagicSchool}");
-                fg.AppendLine($"Resistance => {Resistance}");
-                fg.AppendLine($"CounterEffectCount => {CounterEffectCount}");
-                fg.AppendLine($"Light => {Light}");
-                fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
-                fg.AppendLine($"EffectShader => {EffectShader}");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(BaseCost, "BaseCost");
+                fg.AppendItem(Unused, "Unused");
+                fg.AppendItem(MagicSchool, "MagicSchool");
+                fg.AppendItem(Resistance, "Resistance");
+                fg.AppendItem(CounterEffectCount, "CounterEffectCount");
+                fg.AppendItem(Light, "Light");
+                fg.AppendItem(ProjectileSpeed, "ProjectileSpeed");
+                fg.AppendItem(EffectShader, "EffectShader");
                 SubData?.ToString(fg);
-                fg.AppendLine("CounterEffects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (CounterEffects.TryGet(out var CounterEffectsItem))
                 {
-                    if (CounterEffects != null)
+                    fg.AppendLine("CounterEffects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (CounterEffects.Overall != null)
+                        fg.AppendItem(CounterEffectsItem.Overall);
+                        if (CounterEffectsItem.Specific != null)
                         {
-                            fg.AppendLine(CounterEffects.Overall.ToString());
-                        }
-                        if (CounterEffects.Specific != null)
-                        {
-                            foreach (var subItem in CounterEffects.Specific)
+                            foreach (var subItem in CounterEffectsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1274,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Single ProjectileSpeed { get; set; }
         new IFormLink<EffectShader> EffectShader { get; }
         new MagicEffectSubData SubData { get; set; }
-        new ISetList<IEDIDLink<MagicEffect>> CounterEffects { get; }
+        new ExtendedList<IEDIDLink<MagicEffect>>? CounterEffects { get; set; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1298,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? Model { get; }
         MagicEffect.MagicFlag Flags { get; }
         Single BaseCost { get; }
-        ReadOnlySpan<Byte> Unused { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
         MagicSchool MagicSchool { get; }
         Resistance Resistance { get; }
         UInt32 CounterEffectCount { get; }
@@ -1306,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion
         Single ProjectileSpeed { get; }
         IFormLinkGetter<IEffectShaderGetter> EffectShader { get; }
         IMagicEffectSubDataGetter SubData { get; }
-        IReadOnlySetList<IEDIDLinkGetter<IMagicEffectGetter>> CounterEffects { get; }
+        IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
         MagicEffect.DATADataType DATADataTypeState { get; }
 
     }
@@ -1926,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.SubData:
                     return typeof(MagicEffectSubData);
                 case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(ISetList<IEDIDLink<MagicEffect>>);
+                    return typeof(ExtendedList<IEDIDLink<MagicEffect>>);
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return typeof(MagicEffect.DATADataType);
                 default:
@@ -2001,7 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ProjectileSpeed = default;
             item.EffectShader.FormKey = FormKey.Null;
             item.SubData = new MagicEffectSubData();
-            item.CounterEffects.Unset();
+            item.CounterEffects = null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2167,11 +2161,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x45435345: // ESCE
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<MagicEffect>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.CounterEffects,
-                        transl: RecordTypeBinaryTranslation.Instance.Parse);
+                    item.CounterEffects = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<MagicEffect>>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            masterReferences: masterReferences,
+                            transl: RecordTypeBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IEDIDLink<MagicEffect>>();
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
                 }
                 default:
@@ -2239,7 +2234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused, rhs.Unused);
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.Resistance = item.Resistance == rhs.Resistance;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
@@ -2303,29 +2298,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Description ?? true)
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
             {
-                fg.AppendLine($"Description => {item.Description}");
+                fg.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.BaseCost ?? true)
             {
-                fg.AppendLine($"BaseCost => {item.BaseCost}");
+                fg.AppendItem(item.BaseCost, "BaseCost");
             }
             if (printMask?.Unused ?? true)
             {
@@ -2333,44 +2332,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.MagicSchool ?? true)
             {
-                fg.AppendLine($"MagicSchool => {item.MagicSchool}");
+                fg.AppendItem(item.MagicSchool, "MagicSchool");
             }
             if (printMask?.Resistance ?? true)
             {
-                fg.AppendLine($"Resistance => {item.Resistance}");
+                fg.AppendItem(item.Resistance, "Resistance");
             }
             if (printMask?.CounterEffectCount ?? true)
             {
-                fg.AppendLine($"CounterEffectCount => {item.CounterEffectCount}");
+                fg.AppendItem(item.CounterEffectCount, "CounterEffectCount");
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendLine($"Light => {item.Light}");
+                fg.AppendItem(item.Light, "Light");
             }
             if (printMask?.ProjectileSpeed ?? true)
             {
-                fg.AppendLine($"ProjectileSpeed => {item.ProjectileSpeed}");
+                fg.AppendItem(item.ProjectileSpeed, "ProjectileSpeed");
             }
             if (printMask?.EffectShader ?? true)
             {
-                fg.AppendLine($"EffectShader => {item.EffectShader}");
+                fg.AppendItem(item.EffectShader, "EffectShader");
             }
             if (printMask?.SubData?.Overall ?? true)
             {
                 item.SubData?.ToString(fg, "SubData");
             }
-            if (printMask?.CounterEffects?.Overall ?? true)
+            if ((printMask?.CounterEffects?.Overall ?? true)
+                && item.CounterEffects.TryGet(out var CounterEffectsItem))
             {
                 fg.AppendLine("CounterEffects =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.CounterEffects)
+                    foreach (var subItem in CounterEffectsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -2379,7 +2379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.CounterEffects?.Overall.HasValue ?? false && checkMask.CounterEffects!.Overall.Value != item.CounterEffects.HasBeenSet) return false;
+            if (checkMask.CounterEffects?.Overall.HasValue ?? false && checkMask.CounterEffects!.Overall.Value != (item.CounterEffects != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2417,7 +2417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ProjectileSpeed = true;
             mask.EffectShader = true;
             mask.SubData = new MaskItem<bool, MagicEffectSubData.Mask<bool>?>(true, item.SubData?.GetHasBeenSetMask());
-            mask.CounterEffects = new MaskItem<bool, IEnumerable<(int, bool)>>(item.CounterEffects.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.CounterEffects = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.CounterEffects != null), default);
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2474,7 +2474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             if (lhs.MagicSchool != rhs.MagicSchool) return false;
             if (lhs.Resistance != rhs.Resistance) return false;
             if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
@@ -2571,9 +2571,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.CounterEffects)
+            if (obj.CounterEffects != null)
             {
-                yield return item;
+                foreach (var item in obj.CounterEffects)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2722,15 +2725,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
                 try
                 {
-                    if (rhs.CounterEffects.HasBeenSet)
+                    if ((rhs.CounterEffects != null))
                     {
-                        item.CounterEffects.SetTo(
-                            rhs.CounterEffects,
-                            (r) => new EDIDLink<MagicEffect>(r.EDID));
+                        item.CounterEffects = 
+                            rhs.CounterEffects
+                            .Select(r => new EDIDLink<MagicEffect>(r.EDID))
+                            .ToExtendedList<IEDIDLink<MagicEffect>>();
                     }
                     else
                     {
-                        item.CounterEffects.Unset();
+                        item.CounterEffects = null;
                     }
                 }
                 catch (Exception ex)
@@ -3035,7 +3039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     node.Add(new XElement("HasDATADataType"));
                 }
             }
-            if (item.CounterEffects.HasBeenSet
+            if ((item.CounterEffects != null)
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
                 ListXmlTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Write(
@@ -3438,11 +3442,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.CounterEffects.SetTo(CounterEffectsItem);
+                            item.CounterEffects = CounterEffectsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.CounterEffects.Unset();
+                            item.CounterEffects = null;
                         }
                     }
                     catch (Exception ex)
@@ -3824,8 +3828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Unused
         private int _UnusedLocation => _DATALocation!.Value + 0x8;
         private bool _Unused_IsSet => _DATALocation.HasValue;
-        public ReadOnlySpan<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 4).ToArray() : default;
-        public bool Unused_IsSet => _Unused_IsSet;
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 4).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region MagicSchool
         private int _MagicSchoolLocation => _DATALocation!.Value + 0xC;
@@ -3863,7 +3866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private IMagicEffectSubDataGetter? _SubData => _SubData_IsSet ? MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(new BinaryMemoryReadStream(_data.Slice(_SubDataLocation)), _package) : default;
         public IMagicEffectSubDataGetter SubData => _SubData ?? new MagicEffectSubData();
         #endregion
-        public IReadOnlySetList<IEDIDLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = EmptySetList<IEDIDLinkGetter<IMagicEffectGetter>>.Instance;
+        public IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

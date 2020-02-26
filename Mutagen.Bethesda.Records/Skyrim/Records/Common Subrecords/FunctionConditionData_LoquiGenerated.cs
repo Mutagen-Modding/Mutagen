@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IFunctionConditionDataGetter rhs)) return false;
             return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -491,47 +491,47 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Function ?? true)
                     {
-                        fg.AppendLine($"Function => {Function}");
+                        fg.AppendItem(Function, "Function");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                        fg.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.ParameterOneRecord ?? true)
                     {
-                        fg.AppendLine($"ParameterOneRecord => {ParameterOneRecord}");
+                        fg.AppendItem(ParameterOneRecord, "ParameterOneRecord");
                     }
                     if (printMask?.ParameterOneNumber ?? true)
                     {
-                        fg.AppendLine($"ParameterOneNumber => {ParameterOneNumber}");
+                        fg.AppendItem(ParameterOneNumber, "ParameterOneNumber");
                     }
                     if (printMask?.ParameterOneString ?? true)
                     {
-                        fg.AppendLine($"ParameterOneString => {ParameterOneString}");
+                        fg.AppendItem(ParameterOneString, "ParameterOneString");
                     }
                     if (printMask?.ParameterTwoRecord ?? true)
                     {
-                        fg.AppendLine($"ParameterTwoRecord => {ParameterTwoRecord}");
+                        fg.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
                     }
                     if (printMask?.ParameterTwoNumber ?? true)
                     {
-                        fg.AppendLine($"ParameterTwoNumber => {ParameterTwoNumber}");
+                        fg.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
                     }
                     if (printMask?.ParameterTwoString ?? true)
                     {
-                        fg.AppendLine($"ParameterTwoString => {ParameterTwoString}");
+                        fg.AppendItem(ParameterTwoString, "ParameterTwoString");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendLine($"Unknown3 => {Unknown3}");
+                        fg.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.Unknown4 ?? true)
                     {
-                        fg.AppendLine($"Unknown4 => {Unknown4}");
+                        fg.AppendItem(Unknown4, "Unknown4");
                     }
                     if (printMask?.Unknown5 ?? true)
                     {
-                        fg.AppendLine($"Unknown5 => {Unknown5}");
+                        fg.AppendItem(Unknown5, "Unknown5");
                     }
                 }
                 fg.AppendLine("]");
@@ -728,17 +728,17 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Function => {Function}");
-                fg.AppendLine($"Unknown2 => {Unknown2}");
-                fg.AppendLine($"ParameterOneRecord => {ParameterOneRecord}");
-                fg.AppendLine($"ParameterOneNumber => {ParameterOneNumber}");
-                fg.AppendLine($"ParameterOneString => {ParameterOneString}");
-                fg.AppendLine($"ParameterTwoRecord => {ParameterTwoRecord}");
-                fg.AppendLine($"ParameterTwoNumber => {ParameterTwoNumber}");
-                fg.AppendLine($"ParameterTwoString => {ParameterTwoString}");
-                fg.AppendLine($"Unknown3 => {Unknown3}");
-                fg.AppendLine($"Unknown4 => {Unknown4}");
-                fg.AppendLine($"Unknown5 => {Unknown5}");
+                fg.AppendItem(Function, "Function");
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(ParameterOneRecord, "ParameterOneRecord");
+                fg.AppendItem(ParameterOneNumber, "ParameterOneNumber");
+                fg.AppendItem(ParameterOneString, "ParameterOneString");
+                fg.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
+                fg.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
+                fg.AppendItem(ParameterTwoString, "ParameterTwoString");
+                fg.AppendItem(Unknown3, "Unknown3");
+                fg.AppendItem(Unknown4, "Unknown4");
+                fg.AppendItem(Unknown5, "Unknown5");
             }
             #endregion
 
@@ -1707,47 +1707,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Function ?? true)
             {
-                fg.AppendLine($"Function => {item.Function}");
+                fg.AppendItem(item.Function, "Function");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknown2 => {item.Unknown2}");
+                fg.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.ParameterOneRecord ?? true)
             {
-                fg.AppendLine($"ParameterOneRecord => {item.ParameterOneRecord}");
+                fg.AppendItem(item.ParameterOneRecord, "ParameterOneRecord");
             }
             if (printMask?.ParameterOneNumber ?? true)
             {
-                fg.AppendLine($"ParameterOneNumber => {item.ParameterOneNumber}");
+                fg.AppendItem(item.ParameterOneNumber, "ParameterOneNumber");
             }
-            if (printMask?.ParameterOneString ?? true)
+            if ((printMask?.ParameterOneString ?? true)
+                && item.ParameterOneString.TryGet(out var ParameterOneStringItem))
             {
-                fg.AppendLine($"ParameterOneString => {item.ParameterOneString}");
+                fg.AppendItem(ParameterOneStringItem, "ParameterOneString");
             }
             if (printMask?.ParameterTwoRecord ?? true)
             {
-                fg.AppendLine($"ParameterTwoRecord => {item.ParameterTwoRecord}");
+                fg.AppendItem(item.ParameterTwoRecord, "ParameterTwoRecord");
             }
             if (printMask?.ParameterTwoNumber ?? true)
             {
-                fg.AppendLine($"ParameterTwoNumber => {item.ParameterTwoNumber}");
+                fg.AppendItem(item.ParameterTwoNumber, "ParameterTwoNumber");
             }
-            if (printMask?.ParameterTwoString ?? true)
+            if ((printMask?.ParameterTwoString ?? true)
+                && item.ParameterTwoString.TryGet(out var ParameterTwoStringItem))
             {
-                fg.AppendLine($"ParameterTwoString => {item.ParameterTwoString}");
+                fg.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendLine($"Unknown3 => {item.Unknown3}");
+                fg.AppendItem(item.Unknown3, "Unknown3");
             }
             if (printMask?.Unknown4 ?? true)
             {
-                fg.AppendLine($"Unknown4 => {item.Unknown4}");
+                fg.AppendItem(item.Unknown4, "Unknown4");
             }
             if (printMask?.Unknown5 ?? true)
             {
-                fg.AppendLine($"Unknown5 => {item.Unknown5}");
+                fg.AppendItem(item.Unknown5, "Unknown5");
             }
         }
         

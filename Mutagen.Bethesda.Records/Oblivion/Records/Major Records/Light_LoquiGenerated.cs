@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ILightGetter rhs)) return false;
             return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -641,59 +641,59 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Time ?? true)
                     {
-                        fg.AppendLine($"Time => {Time}");
+                        fg.AppendItem(Time, "Time");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendLine($"Radius => {Radius}");
+                        fg.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendLine($"Color => {Color}");
+                        fg.AppendItem(Color, "Color");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.FalloffExponent ?? true)
                     {
-                        fg.AppendLine($"FalloffExponent => {FalloffExponent}");
+                        fg.AppendItem(FalloffExponent, "FalloffExponent");
                     }
                     if (printMask?.FOV ?? true)
                     {
-                        fg.AppendLine($"FOV => {FOV}");
+                        fg.AppendItem(FOV, "FOV");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendLine($"Value => {Value}");
+                        fg.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendLine($"Weight => {Weight}");
+                        fg.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Fade ?? true)
                     {
-                        fg.AppendLine($"Fade => {Fade}");
+                        fg.AppendItem(Fade, "Fade");
                     }
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendLine($"Sound => {Sound}");
+                        fg.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -931,20 +931,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 Model?.ToString(fg);
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine($"Time => {Time}");
-                fg.AppendLine($"Radius => {Radius}");
-                fg.AppendLine($"Color => {Color}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"FalloffExponent => {FalloffExponent}");
-                fg.AppendLine($"FOV => {FOV}");
-                fg.AppendLine($"Value => {Value}");
-                fg.AppendLine($"Weight => {Weight}");
-                fg.AppendLine($"Fade => {Fade}");
-                fg.AppendLine($"Sound => {Sound}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Icon, "Icon");
+                fg.AppendItem(Time, "Time");
+                fg.AppendItem(Radius, "Radius");
+                fg.AppendItem(Color, "Color");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(FalloffExponent, "FalloffExponent");
+                fg.AppendItem(FOV, "FOV");
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
+                fg.AppendItem(Fade, "Fade");
+                fg.AppendItem(Sound, "Sound");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -2168,65 +2168,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Script ?? true)
+            if ((printMask?.Script ?? true)
+                && item.Script.TryGet(out var ScriptItem))
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(ScriptItem, "Script");
             }
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
             if (printMask?.Time ?? true)
             {
-                fg.AppendLine($"Time => {item.Time}");
+                fg.AppendItem(item.Time, "Time");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendLine($"Radius => {item.Radius}");
+                fg.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendLine($"Color => {item.Color}");
+                fg.AppendItem(item.Color, "Color");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.FalloffExponent ?? true)
             {
-                fg.AppendLine($"FalloffExponent => {item.FalloffExponent}");
+                fg.AppendItem(item.FalloffExponent, "FalloffExponent");
             }
             if (printMask?.FOV ?? true)
             {
-                fg.AppendLine($"FOV => {item.FOV}");
+                fg.AppendItem(item.FOV, "FOV");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendLine($"Value => {item.Value}");
+                fg.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendLine($"Weight => {item.Weight}");
+                fg.AppendItem(item.Weight, "Weight");
             }
-            if (printMask?.Fade ?? true)
+            if ((printMask?.Fade ?? true)
+                && item.Fade.TryGet(out var FadeItem))
             {
-                fg.AppendLine($"Fade => {item.Fade}");
+                fg.AppendItem(FadeItem, "Fade");
             }
-            if (printMask?.Sound ?? true)
+            if ((printMask?.Sound ?? true)
+                && item.Sound.TryGet(out var SoundItem))
             {
-                fg.AppendLine($"Sound => {item.Sound}");
+                fg.AppendItem(SoundItem, "Sound");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         

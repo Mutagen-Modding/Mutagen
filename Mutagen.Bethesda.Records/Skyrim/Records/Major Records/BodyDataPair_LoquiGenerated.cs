@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IBodyDataPairGetter rhs)) return false;
             return ((BodyDataPairCommon)((IBodyDataPairGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -1334,13 +1334,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             BodyDataPair.Mask<bool>? printMask = null)
         {
-            if (printMask?.Male?.Overall ?? true)
+            if ((printMask?.Male?.Overall ?? true)
+                && item.Male.TryGet(out var MaleItem))
             {
-                item.Male?.ToString(fg, "Male");
+                MaleItem?.ToString(fg, "Male");
             }
-            if (printMask?.Female?.Overall ?? true)
+            if ((printMask?.Female?.Overall ?? true)
+                && item.Female.TryGet(out var FemaleItem))
             {
-                item.Female?.ToString(fg, "Female");
+                FemaleItem?.ToString(fg, "Female");
             }
         }
         

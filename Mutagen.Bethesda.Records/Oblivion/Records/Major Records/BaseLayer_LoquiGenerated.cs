@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IBaseLayerGetter rhs)) return false;
             return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -380,19 +380,19 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Texture ?? true)
                     {
-                        fg.AppendLine($"Texture => {Texture}");
+                        fg.AppendItem(Texture, "Texture");
                     }
                     if (printMask?.Quadrant ?? true)
                     {
-                        fg.AppendLine($"Quadrant => {Quadrant}");
+                        fg.AppendItem(Quadrant, "Quadrant");
                     }
                     if (printMask?.LayerNumber ?? true)
                     {
-                        fg.AppendLine($"LayerNumber => {LayerNumber}");
+                        fg.AppendItem(LayerNumber, "LayerNumber");
                     }
                     if (printMask?.BTXTDataTypeState ?? true)
                     {
-                        fg.AppendLine($"BTXTDataTypeState => {BTXTDataTypeState}");
+                        fg.AppendItem(BTXTDataTypeState, "BTXTDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -529,10 +529,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected virtual void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Texture => {Texture}");
-                fg.AppendLine($"Quadrant => {Quadrant}");
-                fg.AppendLine($"LayerNumber => {LayerNumber}");
-                fg.AppendLine($"BTXTDataTypeState => {BTXTDataTypeState}");
+                fg.AppendItem(Texture, "Texture");
+                fg.AppendItem(Quadrant, "Quadrant");
+                fg.AppendItem(LayerNumber, "LayerNumber");
+                fg.AppendItem(BTXTDataTypeState, "BTXTDataTypeState");
             }
             #endregion
 
@@ -1468,19 +1468,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Texture ?? true)
             {
-                fg.AppendLine($"Texture => {item.Texture}");
+                fg.AppendItem(item.Texture, "Texture");
             }
             if (printMask?.Quadrant ?? true)
             {
-                fg.AppendLine($"Quadrant => {item.Quadrant}");
+                fg.AppendItem(item.Quadrant, "Quadrant");
             }
             if (printMask?.LayerNumber ?? true)
             {
-                fg.AppendLine($"LayerNumber => {item.LayerNumber}");
+                fg.AppendItem(item.LayerNumber, "LayerNumber");
             }
             if (printMask?.BTXTDataTypeState ?? true)
             {
-                fg.AppendLine($"BTXTDataTypeState => {item.BTXTDataTypeState}");
+                fg.AppendItem(item.BTXTDataTypeState, "BTXTDataTypeState");
             }
         }
         

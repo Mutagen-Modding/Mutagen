@@ -135,9 +135,9 @@ namespace Mutagen.Bethesda.Skyrim
                 return (byte)(b & b2);
             }
 
-            public static void WriteConditionsList(IReadOnlySetList<IConditionGetter> condList, MutagenWriter writer, MasterReferences masterReferences)
+            public static void WriteConditionsList(IReadOnlyList<IConditionGetter>? condList, MutagenWriter writer, MasterReferences masterReferences)
             {
-                if (!condList.HasBeenSet) return;
+                if (condList == null) return;
                 using (HeaderExport.ExportSubRecordHeader(writer, Faction_Registration.CITC_HEADER))
                 {
                     writer.Write(condList.Count);
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static IReadOnlySetList<ConditionBinaryOverlay> ConstructBinayOverlayList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
+            public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
                 var counterMeta = package.Meta.ReadSubRecordFrame(stream);
                 if (counterMeta.Header.RecordType != Faction_Registration.CITC_HEADER

@@ -61,13 +61,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<SoundItem> _Sounds = new SetList<SoundItem>();
-        public ISetList<SoundItem> Sounds => _Sounds;
+        private ExtendedList<SoundItem>? _Sounds;
+        public ExtendedList<SoundItem>? Sounds
+        {
+            get => this._Sounds;
+            set => this._Sounds = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<SoundItem> ICreatureSound.Sounds => _Sounds;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<ISoundItemGetter> ICreatureSoundGetter.Sounds => _Sounds;
+        IReadOnlyList<ISoundItemGetter>? ICreatureSoundGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -86,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ICreatureSoundGetter rhs)) return false;
             return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -242,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(T initialValue)
             {
                 this.SoundType = initialValue;
-                this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, SoundItem.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, SoundItem.Mask<T>?>>());
+                this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, SoundItem.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, SoundItem.Mask<T>?>>());
             }
 
             public Mask(
@@ -250,7 +252,7 @@ namespace Mutagen.Bethesda.Oblivion
                 T Sounds)
             {
                 this.SoundType = SoundType;
-                this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, SoundItem.Mask<T>?>>>(Sounds, Enumerable.Empty<MaskItemIndexed<T, SoundItem.Mask<T>?>>());
+                this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, SoundItem.Mask<T>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<T, SoundItem.Mask<T>?>>());
             }
 
             #pragma warning disable CS8618
@@ -263,11 +265,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public T SoundType;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, SoundItem.Mask<T>?>>>? Sounds;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, SoundItem.Mask<T>?>>?>? Sounds;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -343,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SoundType = eval(this.SoundType);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundItem.Mask<R>?>>>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, SoundItem.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundItem.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, SoundItem.Mask<R>?>>());
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SoundItem.Mask<R>?>>();
@@ -380,31 +382,26 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.SoundType ?? true)
                     {
-                        fg.AppendLine($"SoundType => {SoundType}");
+                        fg.AppendItem(SoundType, "SoundType");
                     }
-                    if (printMask?.Sounds?.Overall ?? true)
+                    if ((printMask?.Sounds?.Overall ?? true)
+                        && Sounds.TryGet(out var SoundsItem))
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Sounds != null)
+                            fg.AppendItem(SoundsItem.Overall);
+                            if (SoundsItem.Specific != null)
                             {
-                                if (Sounds.Overall != null)
+                                foreach (var subItem in SoundsItem.Specific)
                                 {
-                                    fg.AppendLine(Sounds.Overall.ToString());
-                                }
-                                if (Sounds.Specific != null)
-                                {
-                                    foreach (var subItem in Sounds.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -525,20 +522,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"SoundType => {SoundType}");
-                fg.AppendLine("Sounds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(SoundType, "SoundType");
+                if (Sounds.TryGet(out var SoundsItem))
                 {
-                    if (Sounds != null)
+                    fg.AppendLine("Sounds =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Sounds.Overall != null)
+                        fg.AppendItem(SoundsItem.Overall);
+                        if (SoundsItem.Specific != null)
                         {
-                            fg.AppendLine(Sounds.Overall.ToString());
-                        }
-                        if (Sounds.Specific != null)
-                        {
-                            foreach (var subItem in Sounds.Specific)
+                            foreach (var subItem in SoundsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -549,8 +543,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -686,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ICreatureSound>
     {
         new CreatureSound.CreatureSoundType? SoundType { get; set; }
-        new ISetList<SoundItem> Sounds { get; }
+        new ExtendedList<SoundItem>? Sounds { get; set; }
     }
 
     public partial interface ICreatureSoundGetter :
@@ -703,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         CreatureSound.CreatureSoundType? SoundType { get; }
-        IReadOnlySetList<ISoundItemGetter> Sounds { get; }
+        IReadOnlyList<ISoundItemGetter>? Sounds { get; }
 
     }
 
@@ -1163,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CreatureSound_FieldIndex.SoundType:
                     return typeof(CreatureSound.CreatureSoundType);
                 case CreatureSound_FieldIndex.Sounds:
-                    return typeof(ISetList<SoundItem>);
+                    return typeof(ExtendedList<SoundItem>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1231,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.SoundType = default;
-            item.Sounds.Unset();
+            item.Sounds = null;
         }
         
         #region Xml Translation
@@ -1293,18 +1287,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x43445343: // CSDC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
-                        item: item.Sounds,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out SoundItem listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<SoundItem>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Sounds = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out SoundItem listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<SoundItem>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<SoundItem>();
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);
                 }
                 default:
@@ -1407,17 +1402,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             CreatureSound.Mask<bool>? printMask = null)
         {
-            if (printMask?.SoundType ?? true)
+            if ((printMask?.SoundType ?? true)
+                && item.SoundType.TryGet(out var SoundTypeItem))
             {
-                fg.AppendLine($"SoundType => {item.SoundType}");
+                fg.AppendItem(SoundTypeItem, "SoundType");
             }
-            if (printMask?.Sounds?.Overall ?? true)
+            if ((printMask?.Sounds?.Overall ?? true)
+                && item.Sounds.TryGet(out var SoundsItem))
             {
                 fg.AppendLine("Sounds =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Sounds)
+                    foreach (var subItem in SoundsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1436,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureSound.Mask<bool?> checkMask)
         {
             if (checkMask.SoundType.HasValue && checkMask.SoundType.Value != (item.SoundType != null)) return false;
-            if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != item.Sounds.HasBeenSet) return false;
+            if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != (item.Sounds != null)) return false;
             return true;
         }
         
@@ -1445,8 +1442,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureSound.Mask<bool> mask)
         {
             mask.SoundType = (item.SoundType != null);
-            var SoundsItem = item.Sounds;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SoundItem.Mask<bool>?>>>(SoundsItem.HasBeenSet, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, SoundItem.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Sounds.TryGet(out var SoundsItem))
+            {
+                mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SoundItem.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, SoundItem.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
         }
         
         #region Equals and Hash
@@ -1483,9 +1482,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(ICreatureSoundGetter obj)
         {
-            foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+            if (obj.Sounds != null)
             {
-                yield return item;
+                foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1513,20 +1515,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CreatureSound_FieldIndex.Sounds);
                 try
                 {
-                    if (rhs.Sounds.HasBeenSet)
+                    if ((rhs.Sounds != null))
                     {
-                        item.Sounds.SetTo(
-                            items: rhs.Sounds,
-                            converter: (r) =>
+                        item.Sounds = 
+                            rhs.Sounds
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<SoundItem>();
                     }
                     else
                     {
-                        item.Sounds.Unset();
+                        item.Sounds = null;
                     }
                 }
                 catch (Exception ex)
@@ -1638,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
                     errorMask: errorMask);
             }
-            if (item.Sounds.HasBeenSet
+            if ((item.Sounds != null)
                 && (translationMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.Sounds) ?? true))
             {
                 ListXmlTranslation<ISoundItemGetter>.Instance.Write(
@@ -1796,11 +1799,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Sounds.SetTo(SoundsItem);
+                            item.Sounds = SoundsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Sounds.Unset();
+                            item.Sounds = null;
                         }
                     }
                     catch (Exception ex)
@@ -2134,7 +2137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool SoundType_IsSet => _SoundTypeLocation.HasValue;
         public CreatureSound.CreatureSoundType? SoundType => SoundType_IsSet ? (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundTypeLocation!.Value, _package.Meta)) : default(CreatureSound.CreatureSoundType?);
         #endregion
-        public IReadOnlySetList<ISoundItemGetter> Sounds { get; private set; } = EmptySetList<SoundItemBinaryOverlay>.Instance;
+        public IReadOnlyList<ISoundItemGetter>? Sounds { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

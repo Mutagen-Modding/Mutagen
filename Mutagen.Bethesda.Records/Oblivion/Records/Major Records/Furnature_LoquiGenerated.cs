@@ -89,8 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._MarkerFlags = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IFurnatureGetter.MarkerFlags => this.MarkerFlags;
-        bool IFurnatureGetter.MarkerFlags_IsSet => this.MarkerFlags != null;
+        ReadOnlyMemorySlice<Byte>? IFurnatureGetter.MarkerFlags => this.MarkerFlags;
         #endregion
 
         #region To String
@@ -107,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IFurnatureGetter rhs)) return false;
             return ((FurnatureCommon)((IFurnatureGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -307,7 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -407,7 +406,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -415,11 +414,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
                     if (printMask?.MarkerFlags ?? true)
                     {
-                        fg.AppendLine($"MarkerFlags => {MarkerFlags}");
+                        fg.AppendItem(MarkerFlags, "MarkerFlags");
                     }
                 }
                 fg.AppendLine("]");
@@ -546,10 +545,10 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
+                fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine($"MarkerFlags => {MarkerFlags}");
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(MarkerFlags, "MarkerFlags");
             }
             #endregion
 
@@ -720,10 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        #region MarkerFlags
-        ReadOnlySpan<Byte> MarkerFlags { get; }
-        bool MarkerFlags_IsSet { get; }
-        #endregion
+        ReadOnlyMemorySlice<Byte>? MarkerFlags { get; }
 
     }
 
@@ -1444,7 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.MarkerFlags = MemoryExtensions.SequenceEqual(item.MarkerFlags, rhs.MarkerFlags);
+            ret.MarkerFlags = MemorySliceExt.Equal(item.MarkerFlags, rhs.MarkerFlags);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1496,21 +1492,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Script ?? true)
+            if ((printMask?.Script ?? true)
+                && item.Script.TryGet(out var ScriptItem))
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(ScriptItem, "Script");
             }
-            if (printMask?.MarkerFlags ?? true)
+            if ((printMask?.MarkerFlags ?? true)
+                && item.MarkerFlags.TryGet(out var MarkerFlagsItem))
             {
-                fg.AppendLine($"MarkerFlags => {SpanExt.ToHexString(item.MarkerFlags)}");
+                fg.AppendLine($"MarkerFlags => {SpanExt.ToHexString(MarkerFlagsItem)}");
             }
         }
         
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
-            if (checkMask.MarkerFlags.HasValue && checkMask.MarkerFlags.Value != item.MarkerFlags_IsSet) return false;
+            if (checkMask.MarkerFlags.HasValue && checkMask.MarkerFlags.Value != (item.MarkerFlags != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1536,7 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = (item.Script.FormKey != null);
-            mask.MarkerFlags = item.MarkerFlags_IsSet;
+            mask.MarkerFlags = (item.MarkerFlags != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1589,7 +1589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.MarkerFlags, rhs.MarkerFlags)) return false;
+            if (!MemorySliceExt.Equal(lhs.MarkerFlags, rhs.MarkerFlags)) return false;
             return true;
         }
         
@@ -1626,9 +1626,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(Scriptitem).CombineHashCode(ret);
             }
-            if (item.MarkerFlags_IsSet)
+            if (item.MarkerFlags.TryGet(out var MarkerFlagsItem))
             {
-                ret = HashHelper.GetHashCode(item.MarkerFlags).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(MarkerFlagsItem).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -1742,9 +1742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furnature_FieldIndex.MarkerFlags) ?? true))
             {
-                if(rhs.MarkerFlags_IsSet)
+                if(rhs.MarkerFlags.TryGet(out var MarkerFlagsrhs))
                 {
-                    item.MarkerFlags = rhs.MarkerFlags.ToArray();
+                    item.MarkerFlags = MarkerFlagsrhs.ToArray();
                 }
                 else
                 {
@@ -1927,13 +1927,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Furnature_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if (item.MarkerFlags_IsSet
+            if ((item.MarkerFlags != null)
                 && (translationMask?.GetShouldTranslate((int)Furnature_FieldIndex.MarkerFlags) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MarkerFlags),
-                    item: item.MarkerFlags,
+                    item: item.MarkerFlags.Value,
                     fieldIndex: (int)Furnature_FieldIndex.MarkerFlags,
                     errorMask: errorMask);
             }
@@ -2233,13 +2233,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Script,
                 header: recordTypeConverter.ConvertToCustom(Furnature_Registration.SCRI_HEADER),
                 masterReferences: masterReferences);
-            if (item.MarkerFlags_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MarkerFlags,
-                    header: recordTypeConverter.ConvertToCustom(Furnature_Registration.MNAM_HEADER));
-            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MarkerFlags,
+                header: recordTypeConverter.ConvertToCustom(Furnature_Registration.MNAM_HEADER));
         }
 
         public void Write(
@@ -2389,8 +2386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MarkerFlags
         private int? _MarkerFlagsLocation;
-        public bool MarkerFlags_IsSet => _MarkerFlagsLocation.HasValue;
-        public ReadOnlySpan<Byte> MarkerFlags => _MarkerFlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _MarkerFlagsLocation.Value, _package.Meta).ToArray() : default;
+        public ReadOnlyMemorySlice<Byte>? MarkerFlags => _MarkerFlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _MarkerFlagsLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

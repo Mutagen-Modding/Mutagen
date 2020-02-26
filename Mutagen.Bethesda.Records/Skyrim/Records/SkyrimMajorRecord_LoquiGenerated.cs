@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISkyrimMajorRecordGetter rhs)) return false;
             return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -354,15 +354,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.SkyrimMajorRecordFlags ?? true)
                     {
-                        fg.AppendLine($"SkyrimMajorRecordFlags => {SkyrimMajorRecordFlags}");
+                        fg.AppendItem(SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
                     }
                     if (printMask?.FormVersion ?? true)
                     {
-                        fg.AppendLine($"FormVersion => {FormVersion}");
+                        fg.AppendItem(FormVersion, "FormVersion");
                     }
                     if (printMask?.Version2 ?? true)
                     {
-                        fg.AppendLine($"Version2 => {Version2}");
+                        fg.AppendItem(Version2, "Version2");
                     }
                 }
                 fg.AppendLine("]");
@@ -479,9 +479,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"SkyrimMajorRecordFlags => {SkyrimMajorRecordFlags}");
-                fg.AppendLine($"FormVersion => {FormVersion}");
-                fg.AppendLine($"Version2 => {Version2}");
+                fg.AppendItem(SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
+                fg.AppendItem(FormVersion, "FormVersion");
+                fg.AppendItem(Version2, "Version2");
             }
             #endregion
 
@@ -1352,15 +1352,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.SkyrimMajorRecordFlags ?? true)
             {
-                fg.AppendLine($"SkyrimMajorRecordFlags => {item.SkyrimMajorRecordFlags}");
+                fg.AppendItem(item.SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
             }
             if (printMask?.FormVersion ?? true)
             {
-                fg.AppendLine($"FormVersion => {item.FormVersion}");
+                fg.AppendItem(item.FormVersion, "FormVersion");
             }
             if (printMask?.Version2 ?? true)
             {
-                fg.AppendLine($"Version2 => {item.Version2}");
+                fg.AppendItem(item.Version2, "Version2");
             }
         }
         

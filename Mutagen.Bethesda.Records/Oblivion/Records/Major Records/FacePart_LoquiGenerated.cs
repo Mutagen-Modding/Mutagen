@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IFacePartGetter rhs)) return false;
             return ((FacePartCommon)((IFacePartGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendLine($"Index => {Index}");
+                        fg.AppendItem(Index, "Index");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                 }
                 fg.AppendLine("]");
@@ -506,9 +506,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Index => {Index}");
+                fg.AppendItem(Index, "Index");
                 Model?.ToString(fg);
-                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendItem(Icon, "Icon");
             }
             #endregion
 
@@ -1379,17 +1379,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             FacePart.Mask<bool>? printMask = null)
         {
-            if (printMask?.Index ?? true)
+            if ((printMask?.Index ?? true)
+                && item.Index.TryGet(out var IndexItem))
             {
-                fg.AppendLine($"Index => {item.Index}");
+                fg.AppendItem(IndexItem, "Index");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
         }
         

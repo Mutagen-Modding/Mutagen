@@ -66,17 +66,19 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._LastModified = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IWorldspaceSubBlockGetter.LastModified => this.LastModified;
+        ReadOnlyMemorySlice<Byte> IWorldspaceSubBlockGetter.LastModified => this.LastModified;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Cell> _Items = new SetList<Cell>();
-        public ISetList<Cell> Items => _Items;
+        private ExtendedList<Cell>? _Items;
+        public ExtendedList<Cell>? Items
+        {
+            get => this._Items;
+            set => this._Items = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Cell> IWorldspaceSubBlock.Items => _Items;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<ICellGetter> IWorldspaceSubBlockGetter.Items => _Items;
+        IReadOnlyList<ICellGetter>? IWorldspaceSubBlockGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -95,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IWorldspaceSubBlockGetter rhs)) return false;
             return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -254,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BlockNumberX = initialValue;
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
-                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Cell.Mask<T>?>>());
+                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Cell.Mask<T>?>>());
             }
 
             public Mask(
@@ -268,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BlockNumberX = BlockNumberX;
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
-                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, Cell.Mask<T>?>>());
+                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<T, Cell.Mask<T>?>>());
             }
 
             #pragma warning disable CS8618
@@ -284,11 +286,11 @@ namespace Mutagen.Bethesda.Oblivion
             public T BlockNumberX;
             public T GroupType;
             public T LastModified;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>? Items;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>?>? Items;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -379,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.LastModified = eval(this.LastModified);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, Cell.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, Cell.Mask<R>?>>());
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Cell.Mask<R>?>>();
@@ -416,43 +418,38 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.BlockNumberY ?? true)
                     {
-                        fg.AppendLine($"BlockNumberY => {BlockNumberY}");
+                        fg.AppendItem(BlockNumberY, "BlockNumberY");
                     }
                     if (printMask?.BlockNumberX ?? true)
                     {
-                        fg.AppendLine($"BlockNumberX => {BlockNumberX}");
+                        fg.AppendItem(BlockNumberX, "BlockNumberX");
                     }
                     if (printMask?.GroupType ?? true)
                     {
-                        fg.AppendLine($"GroupType => {GroupType}");
+                        fg.AppendItem(GroupType, "GroupType");
                     }
                     if (printMask?.LastModified ?? true)
                     {
-                        fg.AppendLine($"LastModified => {LastModified}");
+                        fg.AppendItem(LastModified, "LastModified");
                     }
-                    if (printMask?.Items?.Overall ?? true)
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items.TryGet(out var ItemsItem))
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Items != null)
+                            fg.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
                             {
-                                if (Items.Overall != null)
+                                foreach (var subItem in ItemsItem.Specific)
                                 {
-                                    fg.AppendLine(Items.Overall.ToString());
-                                }
-                                if (Items.Specific != null)
-                                {
-                                    foreach (var subItem in Items.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -603,23 +600,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"BlockNumberY => {BlockNumberY}");
-                fg.AppendLine($"BlockNumberX => {BlockNumberX}");
-                fg.AppendLine($"GroupType => {GroupType}");
-                fg.AppendLine($"LastModified => {LastModified}");
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(BlockNumberY, "BlockNumberY");
+                fg.AppendItem(BlockNumberX, "BlockNumberX");
+                fg.AppendItem(GroupType, "GroupType");
+                fg.AppendItem(LastModified, "LastModified");
+                if (Items.TryGet(out var ItemsItem))
                 {
-                    if (Items != null)
+                    fg.AppendLine("Items =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Items.Overall != null)
+                        fg.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
                         {
-                            fg.AppendLine(Items.Overall.ToString());
-                        }
-                        if (Items.Specific != null)
-                        {
-                            foreach (var subItem in Items.Specific)
+                            foreach (var subItem in ItemsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -630,8 +624,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -792,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Int16 BlockNumberX { get; set; }
         new GroupTypeEnum GroupType { get; set; }
         new Byte[] LastModified { get; set; }
-        new ISetList<Cell> Items { get; }
+        new ExtendedList<Cell>? Items { get; set; }
     }
 
     public partial interface IWorldspaceSubBlockGetter :
@@ -812,8 +806,8 @@ namespace Mutagen.Bethesda.Oblivion
         Int16 BlockNumberY { get; }
         Int16 BlockNumberX { get; }
         GroupTypeEnum GroupType { get; }
-        ReadOnlySpan<Byte> LastModified { get; }
-        IReadOnlySetList<ICellGetter> Items { get; }
+        ReadOnlyMemorySlice<Byte> LastModified { get; }
+        IReadOnlyList<ICellGetter>? Items { get; }
 
     }
 
@@ -1338,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case WorldspaceSubBlock_FieldIndex.Items:
-                    return typeof(ISetList<Cell>);
+                    return typeof(ExtendedList<Cell>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1396,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BlockNumberX = default;
             item.GroupType = default;
             item.LastModified = new byte[4];
-            item.Items.Unset();
+            item.Items = null;
         }
         
         #region Xml Translation
@@ -1472,17 +1466,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C4543: // CELL
                 {
-                    await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<Cell>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: WorldspaceSubBlock_Registration.CELL_HEADER,
-                        item: item.Items,
-                        lengthLength: frame.MetaData.MajorConstants.LengthLength,
-                        transl: async (MutagenFrame r) =>
-                        {
-                            return await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
-                                frame: r,
-                                masterReferences: masterReferences).ConfigureAwait(false);
-                        }).ConfigureAwait(false);
+                    item.Items = 
+                        (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<Cell>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: WorldspaceSubBlock_Registration.CELL_HEADER,
+                            lengthLength: frame.MetaData.MajorConstants.LengthLength,
+                            transl: async (MutagenFrame r) =>
+                            {
+                                return await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
+                                    frame: r,
+                                    masterReferences: masterReferences).ConfigureAwait(false);
+                            }).ConfigureAwait(false))
+                        .ToExtendedList<Cell>();
                     return TryGet<int?>.Succeed((int)WorldspaceSubBlock_FieldIndex.Items);
                 }
                 default:
@@ -1537,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BlockNumberY = item.BlockNumberY == rhs.BlockNumberY;
             ret.BlockNumberX = item.BlockNumberX == rhs.BlockNumberX;
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified, rhs.LastModified);
+            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified.Span, rhs.LastModified.Span);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1590,27 +1585,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.BlockNumberY ?? true)
             {
-                fg.AppendLine($"BlockNumberY => {item.BlockNumberY}");
+                fg.AppendItem(item.BlockNumberY, "BlockNumberY");
             }
             if (printMask?.BlockNumberX ?? true)
             {
-                fg.AppendLine($"BlockNumberX => {item.BlockNumberX}");
+                fg.AppendItem(item.BlockNumberX, "BlockNumberX");
             }
             if (printMask?.GroupType ?? true)
             {
-                fg.AppendLine($"GroupType => {item.GroupType}");
+                fg.AppendItem(item.GroupType, "GroupType");
             }
             if (printMask?.LastModified ?? true)
             {
                 fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
             }
-            if (printMask?.Items?.Overall ?? true)
+            if ((printMask?.Items?.Overall ?? true)
+                && item.Items.TryGet(out var ItemsItem))
             {
                 fg.AppendLine("Items =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Items)
+                    foreach (var subItem in ItemsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1628,7 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceSubBlockGetter item,
             WorldspaceSubBlock.Mask<bool?> checkMask)
         {
-            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != item.Items.HasBeenSet) return false;
+            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
             return true;
         }
         
@@ -1640,8 +1636,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.BlockNumberX = true;
             mask.GroupType = true;
             mask.LastModified = true;
-            var ItemsItem = item.Items;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell.Mask<bool>?>>>(ItemsItem.HasBeenSet, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Items.TryGet(out var ItemsItem))
+            {
+                mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
         }
         
         #region Equals and Hash
@@ -1654,7 +1652,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
             if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
             if (lhs.GroupType != rhs.GroupType) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.LastModified, rhs.LastModified)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.LastModified.Span, rhs.LastModified.Span)) return false;
             if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
             return true;
         }
@@ -1681,21 +1679,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IWorldspaceSubBlockGetter obj)
         {
-            foreach (var item in obj.Items.SelectMany(f => f.Links))
+            if (obj.Items != null)
             {
-                yield return item;
+                foreach (var item in obj.Items.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceSubBlockGetter obj)
         {
-            foreach (var subItem in obj.Items)
+            if ((obj.Items != null))
             {
-                yield return subItem;
-                foreach (var item in subItem.EnumerateMajorRecords())
+                foreach (var subItem in obj.Items.TryIterate())
                 {
-                    yield return item;
+                    yield return subItem;
+                    foreach (var item in subItem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
         }
@@ -1720,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    foreach (var subItem in obj.Items)
+                    foreach (var subItem in obj.Items.TryIterate())
                     {
                         yield return (subItem as TMajor)!;
                         foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
@@ -1769,11 +1773,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.Items);
                 try
                 {
-                    if (rhs.Items.HasBeenSet)
+                    if ((rhs.Items != null))
                     {
-                        item.Items.SetTo(
-                            items: rhs.Items,
-                            converter: (r) =>
+                        item.Items = 
+                            rhs.Items
+                            .Select(r =>
                             {
                                 var copyRet = new Cell(r.FormKey);
                                 copyRet.DeepCopyIn(
@@ -1781,11 +1785,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     copyMask: default(TranslationCrystal),
                                     errorMask: errorMask);
                                 return copyRet;
-                            });
+                            })
+                            .ToExtendedList<Cell>();
                     }
                     else
                     {
-                        item.Items.Unset();
+                        item.Items = null;
                     }
                 }
                 catch (Exception ex)
@@ -1923,7 +1928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)WorldspaceSubBlock_FieldIndex.LastModified,
                     errorMask: errorMask);
             }
-            if (item.Items.HasBeenSet
+            if ((item.Items != null)
                 && (translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<ICellGetter>.Instance.Write(
@@ -2136,11 +2141,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Items.SetTo(ItemsItem);
+                            item.Items = ItemsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Items.Unset();
+                            item.Items = null;
                         }
                     }
                     catch (Exception ex)
@@ -2497,7 +2502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
         public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(2, 2));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
+        public ReadOnlyMemorySlice<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
         #region Items
         partial void ItemsCustomParse(
             BinaryMemoryReadStream stream,

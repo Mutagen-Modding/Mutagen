@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IPartGetter rhs)) return false;
             return ((PartCommon)((IPartGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -342,11 +342,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.PartType ?? true)
                     {
-                        fg.AppendLine($"PartType => {PartType}");
+                        fg.AppendItem(PartType, "PartType");
                     }
                     if (printMask?.FileName ?? true)
                     {
-                        fg.AppendLine($"FileName => {FileName}");
+                        fg.AppendItem(FileName, "FileName");
                     }
                 }
                 fg.AppendLine("]");
@@ -463,8 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"PartType => {PartType}");
-                fg.AppendLine($"FileName => {FileName}");
+                fg.AppendItem(PartType, "PartType");
+                fg.AppendItem(FileName, "FileName");
             }
             #endregion
 
@@ -1299,13 +1299,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Part.Mask<bool>? printMask = null)
         {
-            if (printMask?.PartType ?? true)
+            if ((printMask?.PartType ?? true)
+                && item.PartType.TryGet(out var PartTypeItem))
             {
-                fg.AppendLine($"PartType => {item.PartType}");
+                fg.AppendItem(PartTypeItem, "PartType");
             }
-            if (printMask?.FileName ?? true)
+            if ((printMask?.FileName ?? true)
+                && item.FileName.TryGet(out var FileNameItem))
             {
-                fg.AppendLine($"FileName => {item.FileName}");
+                fg.AppendItem(FileNameItem, "FileName");
             }
         }
         

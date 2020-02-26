@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IEffectGetter rhs)) return false;
             return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -469,27 +469,27 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.MagicEffect ?? true)
                     {
-                        fg.AppendLine($"MagicEffect => {MagicEffect}");
+                        fg.AppendItem(MagicEffect, "MagicEffect");
                     }
                     if (printMask?.Magnitude ?? true)
                     {
-                        fg.AppendLine($"Magnitude => {Magnitude}");
+                        fg.AppendItem(Magnitude, "Magnitude");
                     }
                     if (printMask?.Area ?? true)
                     {
-                        fg.AppendLine($"Area => {Area}");
+                        fg.AppendItem(Area, "Area");
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendLine($"Duration => {Duration}");
+                        fg.AppendItem(Duration, "Duration");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendLine($"Type => {Type}");
+                        fg.AppendItem(Type, "Type");
                     }
                     if (printMask?.ActorValue ?? true)
                     {
-                        fg.AppendLine($"ActorValue => {ActorValue}");
+                        fg.AppendItem(ActorValue, "ActorValue");
                     }
                     if (printMask?.ScriptEffect?.Overall ?? true)
                     {
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.EFITDataTypeState ?? true)
                     {
-                        fg.AppendLine($"EFITDataTypeState => {EFITDataTypeState}");
+                        fg.AppendItem(EFITDataTypeState, "EFITDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -674,14 +674,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"MagicEffect => {MagicEffect}");
-                fg.AppendLine($"Magnitude => {Magnitude}");
-                fg.AppendLine($"Area => {Area}");
-                fg.AppendLine($"Duration => {Duration}");
-                fg.AppendLine($"Type => {Type}");
-                fg.AppendLine($"ActorValue => {ActorValue}");
+                fg.AppendItem(MagicEffect, "MagicEffect");
+                fg.AppendItem(Magnitude, "Magnitude");
+                fg.AppendItem(Area, "Area");
+                fg.AppendItem(Duration, "Duration");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(ActorValue, "ActorValue");
                 ScriptEffect?.ToString(fg);
-                fg.AppendLine($"EFITDataTypeState => {EFITDataTypeState}");
+                fg.AppendItem(EFITDataTypeState, "EFITDataTypeState");
             }
             #endregion
 
@@ -1664,35 +1664,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.MagicEffect ?? true)
             {
-                fg.AppendLine($"MagicEffect => {item.MagicEffect}");
+                fg.AppendItem(item.MagicEffect, "MagicEffect");
             }
             if (printMask?.Magnitude ?? true)
             {
-                fg.AppendLine($"Magnitude => {item.Magnitude}");
+                fg.AppendItem(item.Magnitude, "Magnitude");
             }
             if (printMask?.Area ?? true)
             {
-                fg.AppendLine($"Area => {item.Area}");
+                fg.AppendItem(item.Area, "Area");
             }
             if (printMask?.Duration ?? true)
             {
-                fg.AppendLine($"Duration => {item.Duration}");
+                fg.AppendItem(item.Duration, "Duration");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendLine($"Type => {item.Type}");
+                fg.AppendItem(item.Type, "Type");
             }
             if (printMask?.ActorValue ?? true)
             {
-                fg.AppendLine($"ActorValue => {item.ActorValue}");
+                fg.AppendItem(item.ActorValue, "ActorValue");
             }
-            if (printMask?.ScriptEffect?.Overall ?? true)
+            if ((printMask?.ScriptEffect?.Overall ?? true)
+                && item.ScriptEffect.TryGet(out var ScriptEffectItem))
             {
-                item.ScriptEffect?.ToString(fg, "ScriptEffect");
+                ScriptEffectItem?.ToString(fg, "ScriptEffect");
             }
             if (printMask?.EFITDataTypeState ?? true)
             {
-                fg.AppendLine($"EFITDataTypeState => {item.EFITDataTypeState}");
+                fg.AppendItem(item.EFITDataTypeState, "EFITDataTypeState");
             }
         }
         

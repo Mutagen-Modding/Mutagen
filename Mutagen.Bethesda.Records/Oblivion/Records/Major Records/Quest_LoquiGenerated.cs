@@ -108,37 +108,43 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Condition> _Conditions = new SetList<Condition>();
-        public ISetList<Condition> Conditions => _Conditions;
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
+        {
+            get => this._Conditions;
+            set => this._Conditions = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Condition> IQuest.Conditions => _Conditions;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IConditionGetter> IQuestGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter>? IQuestGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<QuestStage> _Stages = new SetList<QuestStage>();
-        public ISetList<QuestStage> Stages => _Stages;
+        private ExtendedList<QuestStage>? _Stages;
+        public ExtendedList<QuestStage>? Stages
+        {
+            get => this._Stages;
+            set => this._Stages = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<QuestStage> IQuest.Stages => _Stages;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IQuestStageGetter> IQuestGetter.Stages => _Stages;
+        IReadOnlyList<IQuestStageGetter>? IQuestGetter.Stages => _Stages;
         #endregion
 
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<QuestTarget> _Targets = new SetList<QuestTarget>();
-        public ISetList<QuestTarget> Targets => _Targets;
+        private ExtendedList<QuestTarget>? _Targets;
+        public ExtendedList<QuestTarget>? Targets
+        {
+            get => this._Targets;
+            set => this._Targets = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<QuestTarget> IQuest.Targets => _Targets;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IQuestTargetGetter> IQuestGetter.Targets => _Targets;
+        IReadOnlyList<IQuestTargetGetter>? IQuestGetter.Targets => _Targets;
         #endregion
 
         #endregion
@@ -160,7 +166,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IQuestGetter rhs)) return false;
             return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -320,9 +326,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.Flags = initialValue;
                 this.Priority = initialValue;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
-                this.Stages = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, QuestStage.Mask<T>?>>());
-                this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, QuestTarget.Mask<T>?>>());
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Stages = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, QuestStage.Mask<T>?>>());
+                this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<T, QuestTarget.Mask<T>?>>());
                 this.DATADataTypeState = initialValue;
             }
 
@@ -353,9 +359,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.Flags = Flags;
                 this.Priority = Priority;
-                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
-                this.Stages = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>>(Stages, Enumerable.Empty<MaskItemIndexed<T, QuestStage.Mask<T>?>>());
-                this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>>(Targets, Enumerable.Empty<MaskItemIndexed<T, QuestTarget.Mask<T>?>>());
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Stages = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<T, QuestStage.Mask<T>?>>());
+                this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>?>(Targets, Enumerable.Empty<MaskItemIndexed<T, QuestTarget.Mask<T>?>>());
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -373,14 +379,14 @@ namespace Mutagen.Bethesda.Oblivion
             public T Icon;
             public T Flags;
             public T Priority;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>>? Stages;
-            public MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>>? Targets;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>?>? Conditions;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestStage.Mask<T>?>>?>? Stages;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, QuestTarget.Mask<T>?>>?>? Targets;
             public T DATADataTypeState;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -537,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Priority = eval(this.Priority);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -552,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Stages != null)
                 {
-                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStage.Mask<R>?>>());
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStage.Mask<R>?>>());
                     if (Stages.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
@@ -567,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Targets != null)
                 {
-                    obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestTarget.Mask<R>?>>>(eval(this.Targets.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestTarget.Mask<R>?>>());
+                    obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestTarget.Mask<R>?>>?>(eval(this.Targets.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestTarget.Mask<R>?>>());
                     if (Targets.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestTarget.Mask<R>?>>();
@@ -605,103 +611,88 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Priority ?? true)
                     {
-                        fg.AppendLine($"Priority => {Priority}");
+                        fg.AppendItem(Priority, "Priority");
                     }
-                    if (printMask?.Conditions?.Overall ?? true)
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions.TryGet(out var ConditionsItem))
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Conditions != null)
+                            fg.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
                             {
-                                if (Conditions.Overall != null)
+                                foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine(Conditions.Overall.ToString());
-                                }
-                                if (Conditions.Specific != null)
-                                {
-                                    foreach (var subItem in Conditions.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Stages?.Overall ?? true)
+                    if ((printMask?.Stages?.Overall ?? true)
+                        && Stages.TryGet(out var StagesItem))
                     {
                         fg.AppendLine("Stages =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Stages != null)
+                            fg.AppendItem(StagesItem.Overall);
+                            if (StagesItem.Specific != null)
                             {
-                                if (Stages.Overall != null)
+                                foreach (var subItem in StagesItem.Specific)
                                 {
-                                    fg.AppendLine(Stages.Overall.ToString());
-                                }
-                                if (Stages.Specific != null)
-                                {
-                                    foreach (var subItem in Stages.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Targets?.Overall ?? true)
+                    if ((printMask?.Targets?.Overall ?? true)
+                        && Targets.TryGet(out var TargetsItem))
                     {
                         fg.AppendLine("Targets =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Targets != null)
+                            fg.AppendItem(TargetsItem.Overall);
+                            if (TargetsItem.Specific != null)
                             {
-                                if (Targets.Overall != null)
+                                foreach (var subItem in TargetsItem.Specific)
                                 {
-                                    fg.AppendLine(Targets.Overall.ToString());
-                                }
-                                if (Targets.Specific != null)
-                                {
-                                    foreach (var subItem in Targets.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -709,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -886,24 +877,21 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Priority => {Priority}");
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Icon, "Icon");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Priority, "Priority");
+                if (Conditions.TryGet(out var ConditionsItem))
                 {
-                    if (Conditions != null)
+                    fg.AppendLine("Conditions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Conditions.Overall != null)
+                        fg.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
                         {
-                            fg.AppendLine(Conditions.Overall.ToString());
-                        }
-                        if (Conditions.Specific != null)
-                        {
-                            foreach (var subItem in Conditions.Specific)
+                            foreach (var subItem in ConditionsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -914,21 +902,18 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("Stages =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Stages.TryGet(out var StagesItem))
                 {
-                    if (Stages != null)
+                    fg.AppendLine("Stages =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Stages.Overall != null)
+                        fg.AppendItem(StagesItem.Overall);
+                        if (StagesItem.Specific != null)
                         {
-                            fg.AppendLine(Stages.Overall.ToString());
-                        }
-                        if (Stages.Specific != null)
-                        {
-                            foreach (var subItem in Stages.Specific)
+                            foreach (var subItem in StagesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -939,21 +924,18 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("Targets =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Targets.TryGet(out var TargetsItem))
                 {
-                    if (Targets != null)
+                    fg.AppendLine("Targets =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Targets.Overall != null)
+                        fg.AppendItem(TargetsItem.Overall);
+                        if (TargetsItem.Specific != null)
                         {
-                            fg.AppendLine(Targets.Overall.ToString());
-                        }
-                        if (Targets.Specific != null)
-                        {
-                            foreach (var subItem in Targets.Specific)
+                            foreach (var subItem in TargetsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -964,9 +946,9 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1144,9 +1126,9 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Quest.Flag Flags { get; set; }
         new Byte Priority { get; set; }
-        new ISetList<Condition> Conditions { get; }
-        new ISetList<QuestStage> Stages { get; }
-        new ISetList<QuestTarget> Targets { get; }
+        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<QuestStage>? Stages { get; set; }
+        new ExtendedList<QuestTarget>? Targets { get; set; }
         new Quest.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1169,9 +1151,9 @@ namespace Mutagen.Bethesda.Oblivion
         String? Icon { get; }
         Quest.Flag Flags { get; }
         Byte Priority { get; }
-        IReadOnlySetList<IConditionGetter> Conditions { get; }
-        IReadOnlySetList<IQuestStageGetter> Stages { get; }
-        IReadOnlySetList<IQuestTargetGetter> Targets { get; }
+        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<IQuestStageGetter>? Stages { get; }
+        IReadOnlyList<IQuestTargetGetter>? Targets { get; }
         Quest.DATADataType DATADataTypeState { get; }
 
     }
@@ -1703,11 +1685,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Quest_FieldIndex.Priority:
                     return typeof(Byte);
                 case Quest_FieldIndex.Conditions:
-                    return typeof(ISetList<Condition>);
+                    return typeof(ExtendedList<Condition>);
                 case Quest_FieldIndex.Stages:
-                    return typeof(ISetList<QuestStage>);
+                    return typeof(ExtendedList<QuestStage>);
                 case Quest_FieldIndex.Targets:
-                    return typeof(ISetList<QuestTarget>);
+                    return typeof(ExtendedList<QuestTarget>);
                 case Quest_FieldIndex.DATADataTypeState:
                     return typeof(Quest.DATADataType);
                 default:
@@ -1775,9 +1757,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon = default;
             item.Flags = default;
             item.Priority = default;
-            item.Conditions.Unset();
-            item.Stages.Unset();
-            item.Targets.Unset();
+            item.Conditions = null;
+            item.Stages = null;
+            item.Targets = null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1913,50 +1895,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                        item: item.Conditions,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out Condition listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Conditions = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out Condition listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
                 }
                 case 0x58444E49: // INDX
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Quest_Registration.INDX_HEADER,
-                        item: item.Stages,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out QuestStage listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<QuestStage>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Stages = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Quest_Registration.INDX_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out QuestStage listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<QuestStage>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<QuestStage>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
                 }
                 case 0x41545351: // QSTA
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Quest_Registration.QSTA_HEADER,
-                        item: item.Targets,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out QuestTarget listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<QuestTarget>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Targets = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Quest_Registration.QSTA_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out QuestTarget listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<QuestTarget>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<QuestTarget>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);
                 }
                 default:
@@ -2083,33 +2068,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Script ?? true)
+            if ((printMask?.Script ?? true)
+                && item.Script.TryGet(out var ScriptItem))
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(ScriptItem, "Script");
             }
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Priority ?? true)
             {
-                fg.AppendLine($"Priority => {item.Priority}");
+                fg.AppendItem(item.Priority, "Priority");
             }
-            if (printMask?.Conditions?.Overall ?? true)
+            if ((printMask?.Conditions?.Overall ?? true)
+                && item.Conditions.TryGet(out var ConditionsItem))
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Conditions)
+                    foreach (var subItem in ConditionsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2121,13 +2110,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Stages?.Overall ?? true)
+            if ((printMask?.Stages?.Overall ?? true)
+                && item.Stages.TryGet(out var StagesItem))
             {
                 fg.AppendLine("Stages =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Stages)
+                    foreach (var subItem in StagesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2139,13 +2129,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Targets?.Overall ?? true)
+            if ((printMask?.Targets?.Overall ?? true)
+                && item.Targets.TryGet(out var TargetsItem))
             {
                 fg.AppendLine("Targets =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Targets)
+                    foreach (var subItem in TargetsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2159,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2170,9 +2161,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != item.Conditions.HasBeenSet) return false;
-            if (checkMask.Stages?.Overall.HasValue ?? false && checkMask.Stages!.Overall.Value != item.Stages.HasBeenSet) return false;
-            if (checkMask.Targets?.Overall.HasValue ?? false && checkMask.Targets!.Overall.Value != item.Targets.HasBeenSet) return false;
+            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
+            if (checkMask.Stages?.Overall.HasValue ?? false && checkMask.Stages!.Overall.Value != (item.Stages != null)) return false;
+            if (checkMask.Targets?.Overall.HasValue ?? false && checkMask.Targets!.Overall.Value != (item.Targets != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2187,12 +2178,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Icon = (item.Icon != null);
             mask.Flags = true;
             mask.Priority = true;
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(ConditionsItem.HasBeenSet, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var StagesItem = item.Stages;
-            mask.Stages = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestStage.Mask<bool>?>>>(StagesItem.HasBeenSet, StagesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestStage.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var TargetsItem = item.Targets;
-            mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestTarget.Mask<bool>?>>>(TargetsItem.HasBeenSet, TargetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestTarget.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Conditions.TryGet(out var ConditionsItem))
+            {
+                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Stages.TryGet(out var StagesItem))
+            {
+                mask.Stages = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestStage.Mask<bool>?>>?>(true, StagesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestStage.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Targets.TryGet(out var TargetsItem))
+            {
+                mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestTarget.Mask<bool>?>>?>(true, TargetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestTarget.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2324,14 +2321,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 yield return item;
             }
             yield return obj.Script;
-            foreach (var item in obj.Stages.WhereCastable<IQuestStageGetter, ILinkContainer>()
-                .SelectMany((f) => f.Links))
+            if (obj.Stages != null)
             {
-                yield return item;
+                foreach (var item in obj.Stages.WhereCastable<IQuestStageGetter, ILinkContainer>()
+                    .SelectMany((f) => f.Links))
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in obj.Targets.SelectMany(f => f.Links))
+            if (obj.Targets != null)
             {
-                yield return item;
+                foreach (var item in obj.Targets.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2404,20 +2407,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Conditions);
                 try
                 {
-                    if (rhs.Conditions.HasBeenSet)
+                    if ((rhs.Conditions != null))
                     {
-                        item.Conditions.SetTo(
-                            items: rhs.Conditions,
-                            converter: (r) =>
+                        item.Conditions = 
+                            rhs.Conditions
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<Condition>();
                     }
                     else
                     {
-                        item.Conditions.Unset();
+                        item.Conditions = null;
                     }
                 }
                 catch (Exception ex)
@@ -2435,20 +2439,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
                 try
                 {
-                    if (rhs.Stages.HasBeenSet)
+                    if ((rhs.Stages != null))
                     {
-                        item.Stages.SetTo(
-                            items: rhs.Stages,
-                            converter: (r) =>
+                        item.Stages = 
+                            rhs.Stages
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<QuestStage>();
                     }
                     else
                     {
-                        item.Stages.Unset();
+                        item.Stages = null;
                     }
                 }
                 catch (Exception ex)
@@ -2466,20 +2471,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Targets);
                 try
                 {
-                    if (rhs.Targets.HasBeenSet)
+                    if ((rhs.Targets != null))
                     {
-                        item.Targets.SetTo(
-                            items: rhs.Targets,
-                            converter: (r) =>
+                        item.Targets = 
+                            rhs.Targets
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<QuestTarget>();
                     }
                     else
                     {
-                        item.Targets.Unset();
+                        item.Targets = null;
                     }
                 }
                 catch (Exception ex)
@@ -2689,7 +2695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (item.Conditions.HasBeenSet
+            if ((item.Conditions != null)
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<IConditionGetter>.Instance.Write(
@@ -2712,7 +2718,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     });
             }
-            if (item.Stages.HasBeenSet
+            if ((item.Stages != null)
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
                 ListXmlTranslation<IQuestStageGetter>.Instance.Write(
@@ -2735,7 +2741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     });
             }
-            if (item.Targets.HasBeenSet
+            if ((item.Targets != null)
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Targets) ?? true))
             {
                 ListXmlTranslation<IQuestTargetGetter>.Instance.Write(
@@ -2976,11 +2982,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Conditions.SetTo(ConditionsItem);
+                            item.Conditions = ConditionsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Conditions.Unset();
+                            item.Conditions = null;
                         }
                     }
                     catch (Exception ex)
@@ -3004,11 +3010,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Stages.SetTo(StagesItem);
+                            item.Stages = StagesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Stages.Unset();
+                            item.Stages = null;
                         }
                     }
                     catch (Exception ex)
@@ -3032,11 +3038,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Targets.SetTo(TargetsItem);
+                            item.Targets = TargetsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Targets.Unset();
+                            item.Targets = null;
                         }
                     }
                     catch (Exception ex)
@@ -3402,9 +3408,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Priority_IsSet => _DATALocation.HasValue;
         public Byte Priority => _Priority_IsSet ? _data.Span[_PriorityLocation] : default;
         #endregion
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
-        public IReadOnlySetList<IQuestStageGetter> Stages { get; private set; } = EmptySetList<QuestStageBinaryOverlay>.Instance;
-        public IReadOnlySetList<IQuestTargetGetter> Targets { get; private set; } = EmptySetList<QuestTargetBinaryOverlay>.Instance;
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
+        public IReadOnlyList<IQuestStageGetter>? Stages { get; private set; }
+        public IReadOnlyList<IQuestTargetGetter>? Targets { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

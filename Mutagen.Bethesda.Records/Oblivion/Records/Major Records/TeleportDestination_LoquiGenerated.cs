@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ITeleportDestinationGetter rhs)) return false;
             return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<T> rhs)) return false;
                 return Equals(rhs);
@@ -342,15 +342,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Destination ?? true)
                     {
-                        fg.AppendLine($"Destination => {Destination}");
+                        fg.AppendItem(Destination, "Destination");
                     }
                     if (printMask?.Position ?? true)
                     {
-                        fg.AppendLine($"Position => {Position}");
+                        fg.AppendItem(Position, "Position");
                     }
                     if (printMask?.Rotation ?? true)
                     {
-                        fg.AppendLine($"Rotation => {Rotation}");
+                        fg.AppendItem(Rotation, "Rotation");
                     }
                 }
                 fg.AppendLine("]");
@@ -477,9 +477,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Destination => {Destination}");
-                fg.AppendLine($"Position => {Position}");
-                fg.AppendLine($"Rotation => {Rotation}");
+                fg.AppendItem(Destination, "Destination");
+                fg.AppendItem(Position, "Position");
+                fg.AppendItem(Rotation, "Rotation");
             }
             #endregion
 
@@ -1306,15 +1306,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Destination ?? true)
             {
-                fg.AppendLine($"Destination => {item.Destination}");
+                fg.AppendItem(item.Destination, "Destination");
             }
             if (printMask?.Position ?? true)
             {
-                fg.AppendLine($"Position => {item.Position}");
+                fg.AppendItem(item.Position, "Position");
             }
             if (printMask?.Rotation ?? true)
             {
-                fg.AppendLine($"Rotation => {item.Rotation}");
+                fg.AppendItem(item.Rotation, "Rotation");
             }
         }
         
