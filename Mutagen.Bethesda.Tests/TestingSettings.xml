@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TestingSettings xmlns="Tests">
+  <PassthroughSettings>
+    <DeleteCachesAfter value="False" />
+    <ReuseCaches value="True" />
+    <TestNormal value="True" />
+    <TestBinaryOverlay value="True"/>
+    <TestImport value="True" />
+    <TestCopyIn value="True" />
+    <TestFolder value="False" />
+  </PassthroughSettings>
+  <DataFolderLocations>
+    <Oblivion value="C:\Games\Steam\steamapps\common\Oblivion\Data\" />
+    <Skyrim value="C:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\" />
+  </DataFolderLocations>
+  <TestGroupMasks value="True" />
+  <TestLoadOrder value="True" />
+  <TestBenchmarks value="False" />
+  <TestFlattenedMod value="True" />
+  <TestLocators value="True" />
+  <TestRecordEnumerables value="True" />
+  <TargetGroups>
+    <Item>
+      <Do value="True" />
+      <Targets>
+        <Item>
+          <Path value="Oblivion.esm" />
+          <Do value="True" />
+          <NumMasters value="0" />
+          <GameMode value="Oblivion" />
+          <ExpectedBaseGroupCount value="56" />
+        </Item>
+        <Item>
+          <Path value="Knights.esp" />
+          <Do value="False" />
+          <NumMasters value="1" />
+          <GameMode value="Oblivion" />
+        </Item>
+        <Item>
+          <Path value="DynamicLeveledLists_Creator.esp" />
+          <Do value="False" />
+          <NumMasters value="1" />
+          <GameMode value="Oblivion" />
+        </Item>
+      </Targets>
+    </Item>
+    <Item>
+      <Do value="False" />
+      <Targets>
+        <Item>
+          <Path value="Skyrim.esm" />
+          <Do value="True" />
+          <NumMasters value="1" />
+          <GameMode value="Skyrim" />
+        </Item>
+      </Targets>
+    </Item>
+  </TargetGroups>
+</TestingSettings>

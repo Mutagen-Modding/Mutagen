@@ -15,7 +15,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Tester
+namespace Mutagen.Bethesda.Tests
 {
     class Program
     {
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Tester
                 }
                 else
                 {
-                    settingsFile = new FilePath("TestingSettings.xml");
+                    settingsFile = new FilePath("../../../TestingSettings.xml");
                 }
                 if (!settingsFile.Exists)
                 {
