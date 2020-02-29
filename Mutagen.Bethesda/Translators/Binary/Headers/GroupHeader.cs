@@ -29,6 +29,7 @@ namespace Mutagen.Bethesda.Binary
         public bool IsGroup => this.RecordType == Constants.GRUP;
         public uint ContentLength => checked((uint)(this.TotalLength - this.HeaderLength));
         public int TypeAndLengthLength => Meta.GroupConstants.TypeAndLengthLength;
+        public bool IsTopLevel => this.GroupType == 0;
     }
 
     public ref struct GroupFrame
