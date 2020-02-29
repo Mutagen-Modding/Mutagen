@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>0e3a8000dd275c1428da8822727613e8985288e0</Sha>
+         <Sha>a2ff9aeff74dfd5d6b6c3a8786911c083e863690</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-27-2020 23:54:29</CommitDate>
-         <Description>Object equals parameter now nullable</Description>
+         <CommitDate>02-29-2020 16:47:44</CommitDate>
+         <Description>Removed Presentation projects</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

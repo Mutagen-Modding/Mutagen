@@ -2,6 +2,7 @@ using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "override bool Equals(object obj)";
+            string testString = "using Loqui.Presentation;";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -53,6 +54,7 @@ namespace Mutagen.Bethesda.Generation
             xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
             xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
             xmlGen.AddTypeAssociation<GenderedType>(new GenderedTypeXmlTranslationGeneration());
+            xmlGen.AddTypeAssociation<ColorType>(new PrimitiveXmlTranslationGeneration<Color>());
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
             gen.GenerationModules.Add(new MutagenModule());
@@ -72,7 +74,7 @@ namespace Mutagen.Bethesda.Generation
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();
-            Loqui.Generation.Presentation.Utility.AddToLoquiGenerator(gen, xmlGen);
+            gen.AddTypeAssociation<ColorType>("Color");
 
             var bethesdaProto = gen.AddProtocol(
                 new ProtocolGeneration(

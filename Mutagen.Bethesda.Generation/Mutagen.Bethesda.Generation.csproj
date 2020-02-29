@@ -7,9 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
-    <ProjectReference Include="..\..\Loqui\Loqui.Generation.Presentation\Loqui.Generation.Presentation.csproj" />
     <ProjectReference Include="..\..\Loqui\Loqui.Generation\Loqui.Generation.csproj" />
-    <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj" />
     <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
