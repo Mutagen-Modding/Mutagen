@@ -1,14 +1,16 @@
 ``` ini
 
-BenchmarkDotNet=v0.11.5, OS=Windows 10.0.17134.829 (1803/April2018Update/Redstone4)
+BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
 Intel Core i7-4790K CPU 4.00GHz (Haswell), 1 CPU, 8 logical and 4 physical cores
-Frequency=3984642 Hz, Resolution=250.9636 ns, Timer=TSC
-.NET Core SDK=2.1.800-preview-009696
-  [Host]     : .NET Core 2.1.11 (CoreCLR 4.6.27617.04, CoreFX 4.6.27617.02), 64bit RyuJIT
-  DefaultJob : .NET Core 2.1.11 (CoreCLR 4.6.27617.04, CoreFX 4.6.27617.02), 64bit RyuJIT
+.NET Core SDK=3.1.101
+  [Host]     : .NET Core 3.1.1 (CoreCLR 4.700.19.60701, CoreFX 4.700.19.60801), X64 RyuJIT
+  DefaultJob : .NET Core 3.1.1 (CoreCLR 4.700.19.60701, CoreFX 4.700.19.60801), X64 RyuJIT
 
 
 ```
-|             Method |     Mean |     Error |    StdDev |
-|------------------- |---------:|----------:|----------:|
-| ReadNextRecordType | 17.16 ns | 0.3565 ns | 0.3501 ns |
+|                     Method |     Mean |    Error |   StdDev |
+|--------------------------- |---------:|---------:|---------:|
+|      MajorRecordHeaderSpan | 23.75 ns | 0.145 ns | 0.128 ns |
+| MajorRecordHeaderGetStream | 28.30 ns | 0.147 ns | 0.137 ns |
+|           MajorRecordFrame | 33.72 ns | 0.208 ns | 0.185 ns |
+|     MajorRecordMemoryFrame | 35.98 ns | 0.266 ns | 0.249 ns |
