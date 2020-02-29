@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
+    <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj" />
     <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -36,14 +37,271 @@
     <Compile Include="Enums\StringBinaryType.cs" />
     <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
-    <Compile Include="Records\GenderedItem.cs" />
-    <Compile Include="Records\ListGroupAbstract.cs" />
+    <Compile Include="Records\Common\GenderedItem.cs" />
+    <Compile Include="Records\Common\ListGroupAbstract.cs" />
+    <Compile Include="Records\Common\ProtocolDefinition_Bethesda.cs" />
+    <Compile Include="Records\Skyrim\ProtocolDefinition_Skyrim.cs" />
+    <Compile Include="Records\Skyrim\Records\Common Enums\ActorValueExtended.cs" />
+    <Compile Include="Records\Skyrim\Records\Common Enums\ArmorType.cs" />
+    <Compile Include="Records\Skyrim\Records\Common Enums\BipedObject.cs" />
+    <Compile Include="Records\Skyrim\Records\Common Enums\Combat.cs" />
+    <Compile Include="Records\Skyrim\Records\Common Enums\Skill.cs" />
+    <Compile Include="Records\Skyrim\Records\Common Enums\VendorLocation.cs" />
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\AlternateTexture.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\AlternateTexture_LoquiGenerated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\AttackData.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\AttackData_LoquiGenerated.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\Attack_LoquiGenerated.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\Condition.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\ConditionData_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\ConditionFloat.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\ConditionFloat_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\ConditionGlobal.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\ConditionGlobal_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\Condition_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\FunctionConditionData_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\GenderedFormLinks_LoquiGenerated.cs">
+      <DependentUpon>GenderedFormLinks.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\GetEventData_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\Model_LoquiGenerated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\ObjectBounds_LoquiGenerated.cs">
+      <DependentUpon>ObjectBounds.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Common Subrecords\Relation_LoquiGenerated.cs">
+      <DependentUpon>Relation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Group.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Group_LoquiGenerated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\ActionRecord_LoquiGenerated.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Armor_LoquiGenerated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\BodyData.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\BodyDataPair_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\BodyData_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\BodyPartData_LoquiGenerated.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\BodyTemplate.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\BodyTemplate_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Class_LoquiGenerated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\ColorRecord_LoquiGenerated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Decal.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Decal_LoquiGenerated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Eye.cs">
+      <DependentUpon>Eye.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Eye_LoquiGenerated.cs">
+      <DependentUpon>Eye.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Faction.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Faction_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\FormList_LoquiGenerated.cs">
+      <DependentUpon>FormList.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSetting.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSettingBool.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSettingBool_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSettingFloat.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSettingFloat_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSettingInt.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSettingInt_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSettingString.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSettingString_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GameSetting_LoquiGenerated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Global.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GlobalFloat.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GlobalFloat_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GlobalInt.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GlobalInt_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GlobalShort.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\GlobalShort_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Global_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Hair_LoquiGenerated.cs">
+      <DependentUpon>Hair.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\HeadPart.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\HeadPart_LoquiGenerated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Keyword_LoquiGenerated.cs">
+      <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\LocationReferenceType_LoquiGenerated.cs">
+      <DependentUpon>LocationReferenceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Outfit_LoquiGenerated.cs">
+      <DependentUpon>Outfit.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Part.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Part_LoquiGenerated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\PlacedObject_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Race.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\RaceData_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Race_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Rank_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\SkillBoost_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\SpellAbstract_LoquiGenerated.cs">
+      <DependentUpon>SpellAbstract.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\TextureSet.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\TextureSet_LoquiGenerated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\Textures_LoquiGenerated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\VendorLocation_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\VendorValues_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\Major Records\VoiceType_LoquiGenerated.cs">
+      <DependentUpon>VoiceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\ModHeader.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\ModHeader_LoquiGenerated.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\ModStats_LoquiGenerated.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\SkyrimMajorRecord.cs">
+      <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\SkyrimMajorRecord_LoquiGenerated.cs">
+      <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\SkyrimMod.cs">
+      <DependentUpon>SkyrimMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Skyrim\Records\SkyrimMod_LoquiGenerated.cs">
+      <DependentUpon>SkyrimMod.xml</DependentUpon>
+    </Compile>
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayArrayHelper.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayFactoryPackage.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlaySetList.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayNumberedList.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\GenderedItemBinaryOverlay.cs" />
-    <Compile Include="Records\GroupAbstract.cs" />
+    <Compile Include="Records\Common\GroupAbstract.cs" />
     <Compile Include="Translators\Binary\BinaryOverlay.cs" />
     <Compile Include="Translators\Binary\CompositeReadStream.cs" />
     <Compile Include="Translators\Binary\GlobalCustomParsing.cs" />
@@ -91,13 +349,12 @@
     <Compile Include="Patching\Pipeline.cs" />
     <Compile Include="Locators\RecordInterest.cs" />
     <Compile Include="Locators\RecordLocator.cs" />
-    <Compile Include="Records\MajorRecord.cs">
+    <Compile Include="Records\Common\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\MasterReference_LoquiGenerated.cs">
+    <Compile Include="Records\Common\MasterReference_LoquiGenerated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
-    <Compile Include="ProtocolDefinition_Bethesda.cs" />
     <Compile Include="Core\Structs\RecordType.cs" />
     <Compile Include="Core\RecordTypeConverter.cs" />
     <Compile Include="Streams\MutagenBinaryReadStream.cs" />
@@ -146,7 +403,7 @@
     <Compile Include="Translators\XML\FormKeyXmlTranslation.cs" />
     <Compile Include="Translators\Folder\IXmlFolderItem.cs" />
     <Compile Include="Translators\Folder\LoquiXmlFolderTranslation.cs" />
-    <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
+    <Compile Include="Records\Common\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Translators\XML\ModKeyXmlTranslation.cs" />

@@ -958,10 +958,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 3,
+            msgID: 64,
             version: 0);
 
-        public const string GUID = "df74bd92-cdb3-4e89-a90f-1aabd4f27c05";
+        public const string GUID = "14fe521a-e32e-433c-9915-71a5f7ca5c5b";
 
         public const ushort AdditionalFieldCount = 3;
 

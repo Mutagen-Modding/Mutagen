@@ -9,10 +9,6 @@ namespace Loqui
         void IProtocolRegistration.Register() => Register();
         public static void Register()
         {
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.SkyrimMod_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ModHeader_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ModStats_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.SkyrimMajorRecord_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.GameSetting_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.GameSettingInt_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.GameSettingFloat_Registration.Instance);
@@ -21,7 +17,6 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.GlobalInt_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.GlobalShort_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.GlobalFloat_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Group_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.GameSettingBool_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Keyword_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.LocationReferenceType_Registration.Instance);
@@ -65,6 +60,11 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.BodyDataPair_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.BodyData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.BodyPartData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Group_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ModHeader_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ModStats_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.SkyrimMajorRecord_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.SkyrimMod_Registration.Instance);
         }
     }
 }
