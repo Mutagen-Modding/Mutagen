@@ -86,13 +86,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<Spell>> _Spells = new SetList<IFormLink<Spell>>();
-        public ISetList<IFormLink<Spell>> Spells => _Spells;
+        private ExtendedList<IFormLink<Spell>>? _Spells;
+        public ExtendedList<IFormLink<Spell>>? Spells
+        {
+            get => this._Spells;
+            set => this._Spells = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<Spell>> IBirthsign.Spells => _Spells;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<ISpellGetter>> IBirthsignGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<ISpellGetter>>? IBirthsignGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -111,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IBirthsignGetter rhs)) return false;
             return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -269,7 +271,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = initialValue;
                 this.Icon = initialValue;
                 this.Description = initialValue;
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -292,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Icon = Icon;
                 this.Description = Description;
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -307,11 +309,11 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Name;
             public TItem Icon;
             public TItem Description;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Spells;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Spells;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -400,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Description = eval(this.Description);
                 if (Spells != null)
                 {
-                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Spells.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -436,39 +438,34 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendLine($"Description => {Description}");
+                        fg.AppendItem(Description, "Description");
                     }
-                    if (printMask?.Spells?.Overall ?? true)
+                    if ((printMask?.Spells?.Overall ?? true)
+                        && Spells.TryGet(out var SpellsItem))
                     {
                         fg.AppendLine("Spells =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Spells != null)
+                            fg.AppendItem(SpellsItem.Overall);
+                            if (SpellsItem.Specific != null)
                             {
-                                if (Spells.Overall != null)
+                                foreach (var subItem in SpellsItem.Specific)
                                 {
-                                    fg.AppendLine(Spells.Overall.ToString());
-                                }
-                                if (Spells.Specific != null)
-                                {
-                                    foreach (var subItem in Spells.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -599,34 +596,31 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine($"Description => {Description}");
-                fg.AppendLine("Spells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Icon, "Icon");
+                fg.AppendItem(Description, "Description");
+                if (Spells.TryGet(out var SpellsItem))
                 {
-                    if (Spells != null)
+                    fg.AppendLine("Spells =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Spells.Overall != null)
+                        fg.AppendItem(SpellsItem.Overall);
+                        if (SpellsItem.Specific != null)
                         {
-                            fg.AppendLine(Spells.Overall.ToString());
-                        }
-                        if (Spells.Specific != null)
-                        {
-                            foreach (var subItem in Spells.Specific)
+                            foreach (var subItem in SpellsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -777,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new ISetList<IFormLink<Spell>> Spells { get; }
+        new ExtendedList<IFormLink<Spell>>? Spells { get; set; }
     }
 
     public partial interface IBirthsignInternal :
@@ -797,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         String? Icon { get; }
         String? Description { get; }
-        IReadOnlySetList<IFormLinkGetter<ISpellGetter>> Spells { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellGetter>>? Spells { get; }
 
     }
 
@@ -1273,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Description:
                     return typeof(String);
                 case Birthsign_FieldIndex.Spells:
-                    return typeof(ISetList<IFormLink<Spell>>);
+                    return typeof(ExtendedList<IFormLink<Spell>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1333,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Icon = default;
             item.Description = default;
-            item.Spells.Unset();
+            item.Spells = null;
             base.Clear(item);
         }
         
@@ -1451,13 +1445,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Birthsign_Registration.SPLO_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.Spells,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.Spells = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Birthsign_Registration.SPLO_HEADER,
+                            masterReferences: masterReferences,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Spell>>();
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Spells);
                 }
                 default:
@@ -1573,30 +1568,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.Description ?? true)
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
             {
-                fg.AppendLine($"Description => {item.Description}");
+                fg.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.Spells?.Overall ?? true)
+            if ((printMask?.Spells?.Overall ?? true)
+                && item.Spells.TryGet(out var SpellsItem))
             {
                 fg.AppendLine("Spells =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Spells)
+                    foreach (var subItem in SpellsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1612,7 +1611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != item.Spells.HasBeenSet) return false;
+            if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != (item.Spells != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1625,7 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = (item.Name != null);
             mask.Icon = (item.Icon != null);
             mask.Description = (item.Description != null);
-            mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Spells != null), default);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1745,9 +1744,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Spells)
+            if (obj.Spells != null)
             {
-                yield return item;
+                foreach (var item in obj.Spells)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1812,15 +1814,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Spells);
                 try
                 {
-                    if (rhs.Spells.HasBeenSet)
+                    if ((rhs.Spells != null))
                     {
-                        item.Spells.SetTo(
-                            rhs.Spells,
-                            (r) => new FormLink<Spell>(r.FormKey));
+                        item.Spells = 
+                            rhs.Spells
+                            .Select(r => new FormLink<Spell>(r.FormKey))
+                            .ToExtendedList<IFormLink<Spell>>();
                     }
                     else
                     {
-                        item.Spells.Unset();
+                        item.Spells = null;
                     }
                 }
                 catch (Exception ex)
@@ -2005,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Birthsign_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if (item.Spells.HasBeenSet
+            if ((item.Spells != null)
                 && (translationMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Spells) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
@@ -2196,11 +2199,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Spells.SetTo(SpellsItem);
+                            item.Spells = SpellsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Spells.Unset();
+                            item.Spells = null;
                         }
                     }
                     catch (Exception ex)
@@ -2482,7 +2485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = EmptySetList<IFormLinkGetter<ISpellGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<ISpellGetter>>? Spells { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

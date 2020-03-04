@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff = value ?? new byte[3];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ILockInformationGetter.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> ILockInformationGetter.Fluff => this.Fluff;
         #endregion
         #region Key
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ILockInformationGetter rhs)) return false;
             return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -362,19 +362,19 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.LockLevel ?? true)
                     {
-                        fg.AppendLine($"LockLevel => {LockLevel}");
+                        fg.AppendItem(LockLevel, "LockLevel");
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendLine($"Fluff => {Fluff}");
+                        fg.AppendItem(Fluff, "Fluff");
                     }
                     if (printMask?.Key ?? true)
                     {
-                        fg.AppendLine($"Key => {Key}");
+                        fg.AppendItem(Key, "Key");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                 }
                 fg.AppendLine("]");
@@ -511,10 +511,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"LockLevel => {LockLevel}");
-                fg.AppendLine($"Fluff => {Fluff}");
-                fg.AppendLine($"Key => {Key}");
-                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendItem(LockLevel, "LockLevel");
+                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(Key, "Key");
+                fg.AppendItem(Flags, "Flags");
             }
             #endregion
 
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         Byte LockLevel { get; }
-        ReadOnlySpan<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Fluff { get; }
         IFormLinkGetter<IKeyGetter> Key { get; }
         LockInformation.Flag Flags { get; }
 
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
             ret.Key = object.Equals(item.Key, rhs.Key);
             ret.Flags = item.Flags == rhs.Flags;
         }
@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.LockLevel ?? true)
             {
-                fg.AppendLine($"LockLevel => {item.LockLevel}");
+                fg.AppendItem(item.LockLevel, "LockLevel");
             }
             if (printMask?.Fluff ?? true)
             {
@@ -1370,11 +1370,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Key ?? true)
             {
-                fg.AppendLine($"Key => {item.Key}");
+                fg.AppendItem(item.Key, "Key");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1403,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.LockLevel != rhs.LockLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
             if (!lhs.Key.Equals(rhs.Key)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             return true;
@@ -2082,7 +2082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Byte LockLevel => _data.Span[0];
-        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
         public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(

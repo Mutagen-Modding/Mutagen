@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Generation
                         data.TriggeringRecordTypes.Add(subData.RecordType.Value);
                         data.RecordType = subData.RecordType;
                         // Don't actually want it to be marked has been set
-                        listType.SubTypeGeneration.HasBeenSetProperty.OnNext(false);
+                        listType.SubTypeGeneration.HasBeenSetProperty.OnNext((false, true));
                     }
                 }
             }
@@ -370,7 +370,10 @@ namespace Mutagen.Bethesda.Generation
 
             SetTriggeringRecordAccessors(obj, field, data);
 
-            field.HasBeenSetProperty.SetIfNotSet(data.HasTrigger);
+            if (!field.HasBeenSetProperty.Value.HasBeenSet)
+            {
+                field.HasBeenSetProperty.OnNext((data.HasTrigger, true));
+            }
         }
         
         private async Task AddLoquiSubTypes(LoquiType loqui)

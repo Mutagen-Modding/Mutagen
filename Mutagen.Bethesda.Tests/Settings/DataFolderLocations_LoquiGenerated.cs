@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IDataFolderLocationsGetter rhs)) return false;
             return ((DataFolderLocationsCommon)((IDataFolderLocationsGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -193,11 +193,11 @@ namespace Mutagen.Bethesda.Tests
                 {
                     if (printMask?.Oblivion ?? true)
                     {
-                        fg.AppendLine($"Oblivion => {Oblivion}");
+                        fg.AppendItem(Oblivion, "Oblivion");
                     }
                     if (printMask?.Skyrim ?? true)
                     {
-                        fg.AppendLine($"Skyrim => {Skyrim}");
+                        fg.AppendItem(Skyrim, "Skyrim");
                     }
                 }
                 fg.AppendLine("]");
@@ -314,8 +314,8 @@ namespace Mutagen.Bethesda.Tests
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Oblivion => {Oblivion}");
-                fg.AppendLine($"Skyrim => {Skyrim}");
+                fg.AppendItem(Oblivion, "Oblivion");
+                fg.AppendItem(Skyrim, "Skyrim");
             }
             #endregion
 
@@ -1131,11 +1131,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (printMask?.Oblivion ?? true)
             {
-                fg.AppendLine($"Oblivion => {item.Oblivion}");
+                fg.AppendItem(item.Oblivion, "Oblivion");
             }
             if (printMask?.Skyrim ?? true)
             {
-                fg.AppendLine($"Skyrim => {item.Skyrim}");
+                fg.AppendItem(item.Skyrim, "Skyrim");
             }
         }
         

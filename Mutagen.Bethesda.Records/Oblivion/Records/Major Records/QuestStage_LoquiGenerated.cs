@@ -53,13 +53,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<LogEntry> _LogEntries = new SetList<LogEntry>();
-        public ISetList<LogEntry> LogEntries => _LogEntries;
+        private ExtendedList<LogEntry>? _LogEntries;
+        public ExtendedList<LogEntry>? LogEntries
+        {
+            get => this._LogEntries;
+            set => this._LogEntries = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<LogEntry> IQuestStage.LogEntries => _LogEntries;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<ILogEntryGetter> IQuestStageGetter.LogEntries => _LogEntries;
+        IReadOnlyList<ILogEntryGetter>? IQuestStageGetter.LogEntries => _LogEntries;
         #endregion
 
         #endregion
@@ -78,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IQuestStageGetter rhs)) return false;
             return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -234,7 +236,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.Stage = initialValue;
-                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>());
+                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -242,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem LogEntries)
             {
                 this.Stage = Stage;
-                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>>(LogEntries, Enumerable.Empty<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>());
+                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>?>(LogEntries, Enumerable.Empty<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -255,11 +257,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public TItem Stage;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>>? LogEntries;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>?>? LogEntries;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -335,7 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Stage = eval(this.Stage);
                 if (LogEntries != null)
                 {
-                    obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LogEntry.Mask<R>?>>>(eval(this.LogEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, LogEntry.Mask<R>?>>());
+                    obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LogEntry.Mask<R>?>>?>(eval(this.LogEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, LogEntry.Mask<R>?>>());
                     if (LogEntries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LogEntry.Mask<R>?>>();
@@ -372,31 +374,26 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Stage ?? true)
                     {
-                        fg.AppendLine($"Stage => {Stage}");
+                        fg.AppendItem(Stage, "Stage");
                     }
-                    if (printMask?.LogEntries?.Overall ?? true)
+                    if ((printMask?.LogEntries?.Overall ?? true)
+                        && LogEntries.TryGet(out var LogEntriesItem))
                     {
                         fg.AppendLine("LogEntries =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (LogEntries != null)
+                            fg.AppendItem(LogEntriesItem.Overall);
+                            if (LogEntriesItem.Specific != null)
                             {
-                                if (LogEntries.Overall != null)
+                                foreach (var subItem in LogEntriesItem.Specific)
                                 {
-                                    fg.AppendLine(LogEntries.Overall.ToString());
-                                }
-                                if (LogEntries.Specific != null)
-                                {
-                                    foreach (var subItem in LogEntries.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -517,20 +514,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Stage => {Stage}");
-                fg.AppendLine("LogEntries =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Stage, "Stage");
+                if (LogEntries.TryGet(out var LogEntriesItem))
                 {
-                    if (LogEntries != null)
+                    fg.AppendLine("LogEntries =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (LogEntries.Overall != null)
+                        fg.AppendItem(LogEntriesItem.Overall);
+                        if (LogEntriesItem.Specific != null)
                         {
-                            fg.AppendLine(LogEntries.Overall.ToString());
-                        }
-                        if (LogEntries.Specific != null)
-                        {
-                            foreach (var subItem in LogEntries.Specific)
+                            foreach (var subItem in LogEntriesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -541,8 +535,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -679,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestStage>
     {
         new UInt16 Stage { get; set; }
-        new ISetList<LogEntry> LogEntries { get; }
+        new ExtendedList<LogEntry>? LogEntries { get; set; }
     }
 
     public partial interface IQuestStageGetter :
@@ -696,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         UInt16 Stage { get; }
-        IReadOnlySetList<ILogEntryGetter> LogEntries { get; }
+        IReadOnlyList<ILogEntryGetter>? LogEntries { get; }
 
     }
 
@@ -1156,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestStage_FieldIndex.Stage:
                     return typeof(UInt16);
                 case QuestStage_FieldIndex.LogEntries:
-                    return typeof(ISetList<LogEntry>);
+                    return typeof(ExtendedList<LogEntry>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1216,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Stage = default;
-            item.LogEntries.Unset();
+            item.LogEntries = null;
         }
         
         #region Xml Translation
@@ -1281,18 +1275,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52484353: // SCHR
                 case 0x44484353: // SCHD
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
-                        item: item.LogEntries,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out LogEntry listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<LogEntry>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.LogEntries = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out LogEntry listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<LogEntry>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<LogEntry>();
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
                 }
                 default:
@@ -1397,15 +1392,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Stage ?? true)
             {
-                fg.AppendLine($"Stage => {item.Stage}");
+                fg.AppendItem(item.Stage, "Stage");
             }
-            if (printMask?.LogEntries?.Overall ?? true)
+            if ((printMask?.LogEntries?.Overall ?? true)
+                && item.LogEntries.TryGet(out var LogEntriesItem))
             {
                 fg.AppendLine("LogEntries =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.LogEntries)
+                    foreach (var subItem in LogEntriesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1423,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestStageGetter item,
             QuestStage.Mask<bool?> checkMask)
         {
-            if (checkMask.LogEntries?.Overall.HasValue ?? false && checkMask.LogEntries!.Overall.Value != item.LogEntries.HasBeenSet) return false;
+            if (checkMask.LogEntries?.Overall.HasValue ?? false && checkMask.LogEntries!.Overall.Value != (item.LogEntries != null)) return false;
             return true;
         }
         
@@ -1432,8 +1428,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             QuestStage.Mask<bool> mask)
         {
             mask.Stage = true;
-            var LogEntriesItem = item.LogEntries;
-            mask.LogEntries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LogEntry.Mask<bool>?>>>(LogEntriesItem.HasBeenSet, LogEntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LogEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.LogEntries.TryGet(out var LogEntriesItem))
+            {
+                mask.LogEntries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LogEntry.Mask<bool>?>>?>(true, LogEntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LogEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
         }
         
         #region Equals and Hash
@@ -1467,10 +1465,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IQuestStageGetter obj)
         {
-            foreach (var item in obj.LogEntries.WhereCastable<ILogEntryGetter, ILinkContainer>()
-                .SelectMany((f) => f.Links))
+            if (obj.LogEntries != null)
             {
-                yield return item;
+                foreach (var item in obj.LogEntries.WhereCastable<ILogEntryGetter, ILinkContainer>()
+                    .SelectMany((f) => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1498,20 +1499,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)QuestStage_FieldIndex.LogEntries);
                 try
                 {
-                    if (rhs.LogEntries.HasBeenSet)
+                    if ((rhs.LogEntries != null))
                     {
-                        item.LogEntries.SetTo(
-                            items: rhs.LogEntries,
-                            converter: (r) =>
+                        item.LogEntries = 
+                            rhs.LogEntries
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<LogEntry>();
                     }
                     else
                     {
-                        item.LogEntries.Unset();
+                        item.LogEntries = null;
                     }
                 }
                 catch (Exception ex)
@@ -1622,7 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)QuestStage_FieldIndex.Stage,
                     errorMask: errorMask);
             }
-            if (item.LogEntries.HasBeenSet
+            if ((item.LogEntries != null)
                 && (translationMask?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
             {
                 ListXmlTranslation<ILogEntryGetter>.Instance.Write(
@@ -1780,11 +1782,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.LogEntries.SetTo(LogEntriesItem);
+                            item.LogEntries = LogEntriesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.LogEntries.Unset();
+                            item.LogEntries = null;
                         }
                     }
                     catch (Exception ex)
@@ -2116,7 +2118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _StageLocation;
         public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StageLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<ILogEntryGetter> LogEntries { get; private set; } = EmptySetList<LogEntryBinaryOverlay>.Instance;
+        public IReadOnlyList<ILogEntryGetter>? LogEntries { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

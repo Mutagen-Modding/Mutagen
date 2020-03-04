@@ -114,13 +114,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<Place>> _RandomTeleportDestinations = new SetList<IFormLink<Place>>();
-        public ISetList<IFormLink<Place>> RandomTeleportDestinations => _RandomTeleportDestinations;
+        private ExtendedList<IFormLink<Place>>? _RandomTeleportDestinations;
+        public ExtendedList<IFormLink<Place>>? RandomTeleportDestinations
+        {
+            get => this._RandomTeleportDestinations;
+            set => this._RandomTeleportDestinations = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IPlaceGetter>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        IReadOnlyList<IFormLinkGetter<IPlaceGetter>>? IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -139,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IDoorGetter rhs)) return false;
             return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -301,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CloseSound = initialValue;
                 this.LoopSound = initialValue;
                 this.Flags = initialValue;
-                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -332,7 +334,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CloseSound = CloseSound;
                 this.LoopSound = LoopSound;
                 this.Flags = Flags;
-                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(RandomTeleportDestinations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RandomTeleportDestinations, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -351,11 +353,11 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem CloseSound;
             public TItem LoopSound;
             public TItem Flags;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? RandomTeleportDestinations;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RandomTeleportDestinations;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -472,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Flags = eval(this.Flags);
                 if (RandomTeleportDestinations != null)
                 {
-                    obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.RandomTeleportDestinations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RandomTeleportDestinations.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (RandomTeleportDestinations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -508,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -516,47 +518,42 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
                     if (printMask?.OpenSound ?? true)
                     {
-                        fg.AppendLine($"OpenSound => {OpenSound}");
+                        fg.AppendItem(OpenSound, "OpenSound");
                     }
                     if (printMask?.CloseSound ?? true)
                     {
-                        fg.AppendLine($"CloseSound => {CloseSound}");
+                        fg.AppendItem(CloseSound, "CloseSound");
                     }
                     if (printMask?.LoopSound ?? true)
                     {
-                        fg.AppendLine($"LoopSound => {LoopSound}");
+                        fg.AppendItem(LoopSound, "LoopSound");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.RandomTeleportDestinations?.Overall ?? true)
+                    if ((printMask?.RandomTeleportDestinations?.Overall ?? true)
+                        && RandomTeleportDestinations.TryGet(out var RandomTeleportDestinationsItem))
                     {
                         fg.AppendLine("RandomTeleportDestinations =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (RandomTeleportDestinations != null)
+                            fg.AppendItem(RandomTeleportDestinationsItem.Overall);
+                            if (RandomTeleportDestinationsItem.Specific != null)
                             {
-                                if (RandomTeleportDestinations.Overall != null)
+                                foreach (var subItem in RandomTeleportDestinationsItem.Specific)
                                 {
-                                    fg.AppendLine(RandomTeleportDestinations.Overall.ToString());
-                                }
-                                if (RandomTeleportDestinations.Specific != null)
-                                {
-                                    foreach (var subItem in RandomTeleportDestinations.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -727,38 +724,35 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
+                fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine($"OpenSound => {OpenSound}");
-                fg.AppendLine($"CloseSound => {CloseSound}");
-                fg.AppendLine($"LoopSound => {LoopSound}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine("RandomTeleportDestinations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(OpenSound, "OpenSound");
+                fg.AppendItem(CloseSound, "CloseSound");
+                fg.AppendItem(LoopSound, "LoopSound");
+                fg.AppendItem(Flags, "Flags");
+                if (RandomTeleportDestinations.TryGet(out var RandomTeleportDestinationsItem))
                 {
-                    if (RandomTeleportDestinations != null)
+                    fg.AppendLine("RandomTeleportDestinations =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (RandomTeleportDestinations.Overall != null)
+                        fg.AppendItem(RandomTeleportDestinationsItem.Overall);
+                        if (RandomTeleportDestinationsItem.Specific != null)
                         {
-                            fg.AppendLine(RandomTeleportDestinations.Overall.ToString());
-                        }
-                        if (RandomTeleportDestinations.Specific != null)
-                        {
-                            foreach (var subItem in RandomTeleportDestinations.Specific)
+                            foreach (var subItem in RandomTeleportDestinationsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -929,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormLinkNullable<Sound> CloseSound { get; }
         new IFormLinkNullable<Sound> LoopSound { get; }
         new Door.DoorFlag? Flags { get; set; }
-        new ISetList<IFormLink<Place>> RandomTeleportDestinations { get; }
+        new ExtendedList<IFormLink<Place>>? RandomTeleportDestinations { get; set; }
     }
 
     public partial interface IDoorInternal :
@@ -953,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<ISoundGetter> CloseSound { get; }
         IFormLinkNullableGetter<ISoundGetter> LoopSound { get; }
         Door.DoorFlag? Flags { get; }
-        IReadOnlySetList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; }
+        IReadOnlyList<IFormLinkGetter<IPlaceGetter>>? RandomTeleportDestinations { get; }
 
     }
 
@@ -1478,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.Flags:
                     return typeof(Door.DoorFlag);
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    return typeof(ISetList<IFormLink<Place>>);
+                    return typeof(ExtendedList<IFormLink<Place>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1546,7 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CloseSound.FormKey = null;
             item.LoopSound.FormKey = null;
             item.Flags = default;
-            item.RandomTeleportDestinations.Unset();
+            item.RandomTeleportDestinations = null;
             base.Clear(item);
         }
         
@@ -1698,13 +1692,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Place>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Door_Registration.TNAM_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.RandomTeleportDestinations,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.RandomTeleportDestinations = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Place>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Door_Registration.TNAM_HEADER,
+                            masterReferences: masterReferences,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Place>>();
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
                 }
                 default:
@@ -1828,46 +1823,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Script ?? true)
+            if ((printMask?.Script ?? true)
+                && item.Script.TryGet(out var ScriptItem))
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(ScriptItem, "Script");
             }
-            if (printMask?.OpenSound ?? true)
+            if ((printMask?.OpenSound ?? true)
+                && item.OpenSound.TryGet(out var OpenSoundItem))
             {
-                fg.AppendLine($"OpenSound => {item.OpenSound}");
+                fg.AppendItem(OpenSoundItem, "OpenSound");
             }
-            if (printMask?.CloseSound ?? true)
+            if ((printMask?.CloseSound ?? true)
+                && item.CloseSound.TryGet(out var CloseSoundItem))
             {
-                fg.AppendLine($"CloseSound => {item.CloseSound}");
+                fg.AppendItem(CloseSoundItem, "CloseSound");
             }
-            if (printMask?.LoopSound ?? true)
+            if ((printMask?.LoopSound ?? true)
+                && item.LoopSound.TryGet(out var LoopSoundItem))
             {
-                fg.AppendLine($"LoopSound => {item.LoopSound}");
+                fg.AppendItem(LoopSoundItem, "LoopSound");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.RandomTeleportDestinations?.Overall ?? true)
+            if ((printMask?.RandomTeleportDestinations?.Overall ?? true)
+                && item.RandomTeleportDestinations.TryGet(out var RandomTeleportDestinationsItem))
             {
                 fg.AppendLine("RandomTeleportDestinations =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.RandomTeleportDestinations)
+                    foreach (var subItem in RandomTeleportDestinationsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1888,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.CloseSound.HasValue && checkMask.CloseSound.Value != (item.CloseSound.FormKey != null)) return false;
             if (checkMask.LoopSound.HasValue && checkMask.LoopSound.Value != (item.LoopSound.FormKey != null)) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.RandomTeleportDestinations?.Overall.HasValue ?? false && checkMask.RandomTeleportDestinations!.Overall.Value != item.RandomTeleportDestinations.HasBeenSet) return false;
+            if (checkMask.RandomTeleportDestinations?.Overall.HasValue ?? false && checkMask.RandomTeleportDestinations!.Overall.Value != (item.RandomTeleportDestinations != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1906,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.CloseSound = (item.CloseSound.FormKey != null);
             mask.LoopSound = (item.LoopSound.FormKey != null);
             mask.Flags = (item.Flags != null);
-            mask.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RandomTeleportDestinations.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.RandomTeleportDestinations != null), default);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2050,9 +2053,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield return obj.OpenSound;
             yield return obj.CloseSound;
             yield return obj.LoopSound;
-            foreach (var item in obj.RandomTeleportDestinations)
+            if (obj.RandomTeleportDestinations != null)
             {
-                yield return item;
+                foreach (var item in obj.RandomTeleportDestinations)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2155,15 +2161,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
                 try
                 {
-                    if (rhs.RandomTeleportDestinations.HasBeenSet)
+                    if ((rhs.RandomTeleportDestinations != null))
                     {
-                        item.RandomTeleportDestinations.SetTo(
-                            rhs.RandomTeleportDestinations,
-                            (r) => new FormLink<Place>(r.FormKey));
+                        item.RandomTeleportDestinations = 
+                            rhs.RandomTeleportDestinations
+                            .Select(r => new FormLink<Place>(r.FormKey))
+                            .ToExtendedList<IFormLink<Place>>();
                     }
                     else
                     {
-                        item.RandomTeleportDestinations.Unset();
+                        item.RandomTeleportDestinations = null;
                     }
                 }
                 catch (Exception ex)
@@ -2392,7 +2399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Door_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.RandomTeleportDestinations.HasBeenSet
+            if ((item.RandomTeleportDestinations != null)
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IPlaceGetter>>.Instance.Write(
@@ -2656,11 +2663,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.RandomTeleportDestinations.SetTo(RandomTeleportDestinationsItem);
+                            item.RandomTeleportDestinations = RandomTeleportDestinationsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.RandomTeleportDestinations.Unset();
+                            item.RandomTeleportDestinations = null;
                         }
                     }
                     catch (Exception ex)
@@ -2986,7 +2993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool Flags_IsSet => _FlagsLocation.HasValue;
         public Door.DoorFlag? Flags => Flags_IsSet ? (Door.DoorFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Door.DoorFlag?);
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = EmptySetList<IFormLinkGetter<IPlaceGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<IPlaceGetter>>? RandomTeleportDestinations { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -98,13 +98,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<Region>> _Regions = new SetList<IFormLink<Region>>();
-        public ISetList<IFormLink<Region>> Regions => _Regions;
+        private ExtendedList<IFormLink<Region>>? _Regions;
+        public ExtendedList<IFormLink<Region>>? Regions
+        {
+            get => this._Regions;
+            set => this._Regions = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<Region>> ICell.Regions => _Regions;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IRegionGetter>> ICellGetter.Regions => _Regions;
+        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? ICellGetter.Regions => _Regions;
         #endregion
 
         #endregion
@@ -200,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Timestamp = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ICellGetter.Timestamp => this.Timestamp;
+        ReadOnlyMemorySlice<Byte> ICellGetter.Timestamp => this.Timestamp;
         #endregion
         #region PersistentTimestamp
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -211,17 +213,19 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._PersistentTimestamp = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ICellGetter.PersistentTimestamp => this.PersistentTimestamp;
+        ReadOnlyMemorySlice<Byte> ICellGetter.PersistentTimestamp => this.PersistentTimestamp;
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IPlaced> _Persistent = new SetList<IPlaced>();
-        public ISetList<IPlaced> Persistent => _Persistent;
+        private ExtendedList<IPlaced>? _Persistent;
+        public ExtendedList<IPlaced>? Persistent
+        {
+            get => this._Persistent;
+            set => this._Persistent = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IPlaced> ICell.Persistent => _Persistent;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPlacedGetter> ICellGetter.Persistent => _Persistent;
+        IReadOnlyList<IPlacedGetter>? ICellGetter.Persistent => _Persistent;
         #endregion
 
         #endregion
@@ -234,17 +238,19 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._TemporaryTimestamp = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ICellGetter.TemporaryTimestamp => this.TemporaryTimestamp;
+        ReadOnlyMemorySlice<Byte> ICellGetter.TemporaryTimestamp => this.TemporaryTimestamp;
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IPlaced> _Temporary = new SetList<IPlaced>();
-        public ISetList<IPlaced> Temporary => _Temporary;
+        private ExtendedList<IPlaced>? _Temporary;
+        public ExtendedList<IPlaced>? Temporary
+        {
+            get => this._Temporary;
+            set => this._Temporary = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IPlaced> ICell.Temporary => _Temporary;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPlacedGetter> ICellGetter.Temporary => _Temporary;
+        IReadOnlyList<IPlacedGetter>? ICellGetter.Temporary => _Temporary;
         #endregion
 
         #endregion
@@ -257,17 +263,19 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._VisibleWhenDistantTimestamp = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> ICellGetter.VisibleWhenDistantTimestamp => this.VisibleWhenDistantTimestamp;
+        ReadOnlyMemorySlice<Byte> ICellGetter.VisibleWhenDistantTimestamp => this.VisibleWhenDistantTimestamp;
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IPlaced> _VisibleWhenDistant = new SetList<IPlaced>();
-        public ISetList<IPlaced> VisibleWhenDistant => _VisibleWhenDistant;
+        private ExtendedList<IPlaced>? _VisibleWhenDistant;
+        public ExtendedList<IPlaced>? VisibleWhenDistant
+        {
+            get => this._VisibleWhenDistant;
+            set => this._VisibleWhenDistant = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IPlaced> ICell.VisibleWhenDistant => _VisibleWhenDistant;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPlacedGetter> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
+        IReadOnlyList<IPlacedGetter>? ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
         #endregion
 
         #endregion
@@ -286,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ICellGetter rhs)) return false;
             return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -445,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = initialValue;
                 this.Grid = initialValue;
                 this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(initialValue, new CellLighting.Mask<TItem>(initialValue));
-                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.MusicType = initialValue;
                 this.WaterHeight = initialValue;
                 this.Climate = initialValue;
@@ -457,11 +465,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
                 this.Timestamp = initialValue;
                 this.PersistentTimestamp = initialValue;
-                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
                 this.TemporaryTimestamp = initialValue;
-                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
                 this.VisibleWhenDistantTimestamp = initialValue;
-                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
             }
 
             public Mask(
@@ -502,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = Flags;
                 this.Grid = Grid;
                 this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(Lighting, new CellLighting.Mask<TItem>(Lighting));
-                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Regions, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Regions, Enumerable.Empty<(int Index, TItem Value)>());
                 this.MusicType = MusicType;
                 this.WaterHeight = WaterHeight;
                 this.Climate = Climate;
@@ -514,11 +522,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
                 this.Timestamp = Timestamp;
                 this.PersistentTimestamp = PersistentTimestamp;
-                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(Persistent, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Persistent, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
                 this.TemporaryTimestamp = TemporaryTimestamp;
-                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(Temporary, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Temporary, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
                 this.VisibleWhenDistantTimestamp = VisibleWhenDistantTimestamp;
-                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>(VisibleWhenDistant, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(VisibleWhenDistant, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -534,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Flags;
             public TItem Grid;
             public MaskItem<TItem, CellLighting.Mask<TItem>?>? Lighting { get; set; }
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Regions;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Regions;
             public TItem MusicType;
             public TItem WaterHeight;
             public TItem Climate;
@@ -546,15 +554,15 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<TItem, Landscape.Mask<TItem>?>? Landscape { get; set; }
             public TItem Timestamp;
             public TItem PersistentTimestamp;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>? Persistent;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>? Persistent;
             public TItem TemporaryTimestamp;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>? Temporary;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>? Temporary;
             public TItem VisibleWhenDistantTimestamp;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>>? VisibleWhenDistant;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>? VisibleWhenDistant;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -802,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Lighting = this.Lighting == null ? null : new MaskItem<R, CellLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
                 if (Regions != null)
                 {
-                    obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Regions.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Regions.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Regions.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -827,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.PersistentTimestamp = eval(this.PersistentTimestamp);
                 if (Persistent != null)
                 {
-                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.Persistent.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Persistent.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
                     if (Persistent.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
@@ -844,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.TemporaryTimestamp = eval(this.TemporaryTimestamp);
                 if (Temporary != null)
                 {
-                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.Temporary.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Temporary.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
                     if (Temporary.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
@@ -861,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.VisibleWhenDistantTimestamp = eval(this.VisibleWhenDistantTimestamp);
                 if (VisibleWhenDistant != null)
                 {
-                    obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.VisibleWhenDistant.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.VisibleWhenDistant.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
                     if (VisibleWhenDistant.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
@@ -899,43 +907,38 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Grid ?? true)
                     {
-                        fg.AppendLine($"Grid => {Grid}");
+                        fg.AppendItem(Grid, "Grid");
                     }
                     if (printMask?.Lighting?.Overall ?? true)
                     {
                         Lighting?.ToString(fg);
                     }
-                    if (printMask?.Regions?.Overall ?? true)
+                    if ((printMask?.Regions?.Overall ?? true)
+                        && Regions.TryGet(out var RegionsItem))
                     {
                         fg.AppendLine("Regions =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Regions != null)
+                            fg.AppendItem(RegionsItem.Overall);
+                            if (RegionsItem.Specific != null)
                             {
-                                if (Regions.Overall != null)
+                                foreach (var subItem in RegionsItem.Specific)
                                 {
-                                    fg.AppendLine(Regions.Overall.ToString());
-                                }
-                                if (Regions.Specific != null)
-                                {
-                                    foreach (var subItem in Regions.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -943,31 +946,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.MusicType ?? true)
                     {
-                        fg.AppendLine($"MusicType => {MusicType}");
+                        fg.AppendItem(MusicType, "MusicType");
                     }
                     if (printMask?.WaterHeight ?? true)
                     {
-                        fg.AppendLine($"WaterHeight => {WaterHeight}");
+                        fg.AppendItem(WaterHeight, "WaterHeight");
                     }
                     if (printMask?.Climate ?? true)
                     {
-                        fg.AppendLine($"Climate => {Climate}");
+                        fg.AppendItem(Climate, "Climate");
                     }
                     if (printMask?.Water ?? true)
                     {
-                        fg.AppendLine($"Water => {Water}");
+                        fg.AppendItem(Water, "Water");
                     }
                     if (printMask?.Owner ?? true)
                     {
-                        fg.AppendLine($"Owner => {Owner}");
+                        fg.AppendItem(Owner, "Owner");
                     }
                     if (printMask?.FactionRank ?? true)
                     {
-                        fg.AppendLine($"FactionRank => {FactionRank}");
+                        fg.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.GlobalVariable ?? true)
                     {
-                        fg.AppendLine($"GlobalVariable => {GlobalVariable}");
+                        fg.AppendItem(GlobalVariable, "GlobalVariable");
                     }
                     if (printMask?.PathGrid?.Overall ?? true)
                     {
@@ -979,35 +982,30 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Timestamp ?? true)
                     {
-                        fg.AppendLine($"Timestamp => {Timestamp}");
+                        fg.AppendItem(Timestamp, "Timestamp");
                     }
                     if (printMask?.PersistentTimestamp ?? true)
                     {
-                        fg.AppendLine($"PersistentTimestamp => {PersistentTimestamp}");
+                        fg.AppendItem(PersistentTimestamp, "PersistentTimestamp");
                     }
-                    if (printMask?.Persistent?.Overall ?? true)
+                    if ((printMask?.Persistent?.Overall ?? true)
+                        && Persistent.TryGet(out var PersistentItem))
                     {
                         fg.AppendLine("Persistent =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Persistent != null)
+                            fg.AppendItem(PersistentItem.Overall);
+                            if (PersistentItem.Specific != null)
                             {
-                                if (Persistent.Overall != null)
+                                foreach (var subItem in PersistentItem.Specific)
                                 {
-                                    fg.AppendLine(Persistent.Overall.ToString());
-                                }
-                                if (Persistent.Specific != null)
-                                {
-                                    foreach (var subItem in Persistent.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1015,31 +1013,26 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.TemporaryTimestamp ?? true)
                     {
-                        fg.AppendLine($"TemporaryTimestamp => {TemporaryTimestamp}");
+                        fg.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
                     }
-                    if (printMask?.Temporary?.Overall ?? true)
+                    if ((printMask?.Temporary?.Overall ?? true)
+                        && Temporary.TryGet(out var TemporaryItem))
                     {
                         fg.AppendLine("Temporary =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Temporary != null)
+                            fg.AppendItem(TemporaryItem.Overall);
+                            if (TemporaryItem.Specific != null)
                             {
-                                if (Temporary.Overall != null)
+                                foreach (var subItem in TemporaryItem.Specific)
                                 {
-                                    fg.AppendLine(Temporary.Overall.ToString());
-                                }
-                                if (Temporary.Specific != null)
-                                {
-                                    foreach (var subItem in Temporary.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1047,31 +1040,26 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.VisibleWhenDistantTimestamp ?? true)
                     {
-                        fg.AppendLine($"VisibleWhenDistantTimestamp => {VisibleWhenDistantTimestamp}");
+                        fg.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
                     }
-                    if (printMask?.VisibleWhenDistant?.Overall ?? true)
+                    if ((printMask?.VisibleWhenDistant?.Overall ?? true)
+                        && VisibleWhenDistant.TryGet(out var VisibleWhenDistantItem))
                     {
                         fg.AppendLine("VisibleWhenDistant =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (VisibleWhenDistant != null)
+                            fg.AppendItem(VisibleWhenDistantItem.Overall);
+                            if (VisibleWhenDistantItem.Specific != null)
                             {
-                                if (VisibleWhenDistant.Overall != null)
+                                foreach (var subItem in VisibleWhenDistantItem.Specific)
                                 {
-                                    fg.AppendLine(VisibleWhenDistant.Overall.ToString());
-                                }
-                                if (VisibleWhenDistant.Specific != null)
-                                {
-                                    foreach (var subItem in VisibleWhenDistant.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1372,59 +1360,53 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Grid => {Grid}");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Grid, "Grid");
                 Lighting?.ToString(fg);
-                fg.AppendLine("Regions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Regions.TryGet(out var RegionsItem))
                 {
-                    if (Regions != null)
+                    fg.AppendLine("Regions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Regions.Overall != null)
+                        fg.AppendItem(RegionsItem.Overall);
+                        if (RegionsItem.Specific != null)
                         {
-                            fg.AppendLine(Regions.Overall.ToString());
-                        }
-                        if (Regions.Specific != null)
-                        {
-                            foreach (var subItem in Regions.Specific)
+                            foreach (var subItem in RegionsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"MusicType => {MusicType}");
-                fg.AppendLine($"WaterHeight => {WaterHeight}");
-                fg.AppendLine($"Climate => {Climate}");
-                fg.AppendLine($"Water => {Water}");
-                fg.AppendLine($"Owner => {Owner}");
-                fg.AppendLine($"FactionRank => {FactionRank}");
-                fg.AppendLine($"GlobalVariable => {GlobalVariable}");
+                fg.AppendItem(MusicType, "MusicType");
+                fg.AppendItem(WaterHeight, "WaterHeight");
+                fg.AppendItem(Climate, "Climate");
+                fg.AppendItem(Water, "Water");
+                fg.AppendItem(Owner, "Owner");
+                fg.AppendItem(FactionRank, "FactionRank");
+                fg.AppendItem(GlobalVariable, "GlobalVariable");
                 PathGrid?.ToString(fg);
                 Landscape?.ToString(fg);
-                fg.AppendLine($"Timestamp => {Timestamp}");
-                fg.AppendLine($"PersistentTimestamp => {PersistentTimestamp}");
-                fg.AppendLine("Persistent =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Timestamp, "Timestamp");
+                fg.AppendItem(PersistentTimestamp, "PersistentTimestamp");
+                if (Persistent.TryGet(out var PersistentItem))
                 {
-                    if (Persistent != null)
+                    fg.AppendLine("Persistent =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Persistent.Overall != null)
+                        fg.AppendItem(PersistentItem.Overall);
+                        if (PersistentItem.Specific != null)
                         {
-                            fg.AppendLine(Persistent.Overall.ToString());
-                        }
-                        if (Persistent.Specific != null)
-                        {
-                            foreach (var subItem in Persistent.Specific)
+                            foreach (var subItem in PersistentItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1435,22 +1417,19 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"TemporaryTimestamp => {TemporaryTimestamp}");
-                fg.AppendLine("Temporary =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
+                if (Temporary.TryGet(out var TemporaryItem))
                 {
-                    if (Temporary != null)
+                    fg.AppendLine("Temporary =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Temporary.Overall != null)
+                        fg.AppendItem(TemporaryItem.Overall);
+                        if (TemporaryItem.Specific != null)
                         {
-                            fg.AppendLine(Temporary.Overall.ToString());
-                        }
-                        if (Temporary.Specific != null)
-                        {
-                            foreach (var subItem in Temporary.Specific)
+                            foreach (var subItem in TemporaryItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1461,22 +1440,19 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"VisibleWhenDistantTimestamp => {VisibleWhenDistantTimestamp}");
-                fg.AppendLine("VisibleWhenDistant =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
+                if (VisibleWhenDistant.TryGet(out var VisibleWhenDistantItem))
                 {
-                    if (VisibleWhenDistant != null)
+                    fg.AppendLine("VisibleWhenDistant =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (VisibleWhenDistant.Overall != null)
+                        fg.AppendItem(VisibleWhenDistantItem.Overall);
+                        if (VisibleWhenDistantItem.Specific != null)
                         {
-                            fg.AppendLine(VisibleWhenDistant.Overall.ToString());
-                        }
-                        if (VisibleWhenDistant.Specific != null)
-                        {
-                            foreach (var subItem in VisibleWhenDistant.Specific)
+                            foreach (var subItem in VisibleWhenDistantItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1487,8 +1463,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1717,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Cell.Flag? Flags { get; set; }
         new P2Int? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
-        new ISetList<IFormLink<Region>> Regions { get; }
+        new ExtendedList<IFormLink<Region>>? Regions { get; set; }
         new MusicType? MusicType { get; set; }
         new Single? WaterHeight { get; set; }
         new IFormLinkNullable<Climate> Climate { get; }
@@ -1729,11 +1705,11 @@ namespace Mutagen.Bethesda.Oblivion
         new Landscape? Landscape { get; set; }
         new Byte[] Timestamp { get; set; }
         new Byte[] PersistentTimestamp { get; set; }
-        new ISetList<IPlaced> Persistent { get; }
+        new ExtendedList<IPlaced>? Persistent { get; set; }
         new Byte[] TemporaryTimestamp { get; set; }
-        new ISetList<IPlaced> Temporary { get; }
+        new ExtendedList<IPlaced>? Temporary { get; set; }
         new Byte[] VisibleWhenDistantTimestamp { get; set; }
-        new ISetList<IPlaced> VisibleWhenDistant { get; }
+        new ExtendedList<IPlaced>? VisibleWhenDistant { get; set; }
     }
 
     public partial interface ICellInternal :
@@ -1755,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion
         Cell.Flag? Flags { get; }
         P2Int? Grid { get; }
         ICellLightingGetter? Lighting { get; }
-        IReadOnlySetList<IFormLinkGetter<IRegionGetter>> Regions { get; }
+        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; }
         MusicType? MusicType { get; }
         Single? WaterHeight { get; }
         IFormLinkNullableGetter<IClimateGetter> Climate { get; }
@@ -1765,13 +1741,13 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IGlobalGetter> GlobalVariable { get; }
         IPathGridGetter? PathGrid { get; }
         ILandscapeGetter? Landscape { get; }
-        ReadOnlySpan<Byte> Timestamp { get; }
-        ReadOnlySpan<Byte> PersistentTimestamp { get; }
-        IReadOnlySetList<IPlacedGetter> Persistent { get; }
-        ReadOnlySpan<Byte> TemporaryTimestamp { get; }
-        IReadOnlySetList<IPlacedGetter> Temporary { get; }
-        ReadOnlySpan<Byte> VisibleWhenDistantTimestamp { get; }
-        IReadOnlySetList<IPlacedGetter> VisibleWhenDistant { get; }
+        ReadOnlyMemorySlice<Byte> Timestamp { get; }
+        ReadOnlyMemorySlice<Byte> PersistentTimestamp { get; }
+        IReadOnlyList<IPlacedGetter>? Persistent { get; }
+        ReadOnlyMemorySlice<Byte> TemporaryTimestamp { get; }
+        IReadOnlyList<IPlacedGetter>? Temporary { get; }
+        ReadOnlyMemorySlice<Byte> VisibleWhenDistantTimestamp { get; }
+        IReadOnlyList<IPlacedGetter>? VisibleWhenDistant { get; }
 
     }
 
@@ -2449,7 +2425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Lighting:
                     return typeof(CellLighting);
                 case Cell_FieldIndex.Regions:
-                    return typeof(ISetList<IFormLink<Region>>);
+                    return typeof(ExtendedList<IFormLink<Region>>);
                 case Cell_FieldIndex.MusicType:
                     return typeof(MusicType);
                 case Cell_FieldIndex.WaterHeight:
@@ -2473,15 +2449,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PersistentTimestamp:
                     return typeof(Byte[]);
                 case Cell_FieldIndex.Persistent:
-                    return typeof(ISetList<IPlaced>);
+                    return typeof(ExtendedList<IPlaced>);
                 case Cell_FieldIndex.TemporaryTimestamp:
                     return typeof(Byte[]);
                 case Cell_FieldIndex.Temporary:
-                    return typeof(ISetList<IPlaced>);
+                    return typeof(ExtendedList<IPlaced>);
                 case Cell_FieldIndex.VisibleWhenDistantTimestamp:
                     return typeof(Byte[]);
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    return typeof(ISetList<IPlaced>);
+                    return typeof(ExtendedList<IPlaced>);
                 default:
                     return Place_Registration.GetNthType(index);
             }
@@ -2555,7 +2531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default;
             item.Grid = default;
             item.Lighting = null;
-            item.Regions.Unset();
+            item.Regions = null;
             item.MusicType = default;
             item.WaterHeight = default;
             item.Climate.FormKey = null;
@@ -2567,11 +2543,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Landscape = null;
             item.Timestamp = new byte[4];
             item.PersistentTimestamp = new byte[4];
-            item.Persistent.Unset();
+            item.Persistent = null;
             item.TemporaryTimestamp = new byte[4];
-            item.Temporary.Unset();
+            item.Temporary = null;
             item.VisibleWhenDistantTimestamp = new byte[4];
-            item.VisibleWhenDistant.Unset();
+            item.VisibleWhenDistant = null;
             base.Clear(item);
         }
         
@@ -2719,11 +2695,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x524C4358: // XCLR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Region>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Regions,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.Regions = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Region>>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            masterReferences: masterReferences,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Region>>();
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
                 }
                 case 0x544D4358: // XCMT
@@ -2868,18 +2845,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Landscape,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp, rhs.Timestamp);
-            ret.PersistentTimestamp = MemoryExtensions.SequenceEqual(item.PersistentTimestamp, rhs.PersistentTimestamp);
+            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp.Span, rhs.Timestamp.Span);
+            ret.PersistentTimestamp = MemoryExtensions.SequenceEqual(item.PersistentTimestamp.Span, rhs.PersistentTimestamp.Span);
             ret.Persistent = item.Persistent.CollectionEqualsHelper(
                 rhs.Persistent,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
                 include);
-            ret.TemporaryTimestamp = MemoryExtensions.SequenceEqual(item.TemporaryTimestamp, rhs.TemporaryTimestamp);
+            ret.TemporaryTimestamp = MemoryExtensions.SequenceEqual(item.TemporaryTimestamp.Span, rhs.TemporaryTimestamp.Span);
             ret.Temporary = item.Temporary.CollectionEqualsHelper(
                 rhs.Temporary,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
                 include);
-            ret.VisibleWhenDistantTimestamp = MemoryExtensions.SequenceEqual(item.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp);
+            ret.VisibleWhenDistantTimestamp = MemoryExtensions.SequenceEqual(item.VisibleWhenDistantTimestamp.Span, rhs.VisibleWhenDistantTimestamp.Span);
             ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
                 rhs.VisibleWhenDistant,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
@@ -2935,75 +2912,89 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.Grid ?? true)
+            if ((printMask?.Grid ?? true)
+                && item.Grid.TryGet(out var GridItem))
             {
-                fg.AppendLine($"Grid => {item.Grid}");
+                fg.AppendItem(GridItem, "Grid");
             }
-            if (printMask?.Lighting?.Overall ?? true)
+            if ((printMask?.Lighting?.Overall ?? true)
+                && item.Lighting.TryGet(out var LightingItem))
             {
-                item.Lighting?.ToString(fg, "Lighting");
+                LightingItem?.ToString(fg, "Lighting");
             }
-            if (printMask?.Regions?.Overall ?? true)
+            if ((printMask?.Regions?.Overall ?? true)
+                && item.Regions.TryGet(out var RegionsItem))
             {
                 fg.AppendLine("Regions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Regions)
+                    foreach (var subItem in RegionsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.MusicType ?? true)
+            if ((printMask?.MusicType ?? true)
+                && item.MusicType.TryGet(out var MusicTypeItem))
             {
-                fg.AppendLine($"MusicType => {item.MusicType}");
+                fg.AppendItem(MusicTypeItem, "MusicType");
             }
-            if (printMask?.WaterHeight ?? true)
+            if ((printMask?.WaterHeight ?? true)
+                && item.WaterHeight.TryGet(out var WaterHeightItem))
             {
-                fg.AppendLine($"WaterHeight => {item.WaterHeight}");
+                fg.AppendItem(WaterHeightItem, "WaterHeight");
             }
-            if (printMask?.Climate ?? true)
+            if ((printMask?.Climate ?? true)
+                && item.Climate.TryGet(out var ClimateItem))
             {
-                fg.AppendLine($"Climate => {item.Climate}");
+                fg.AppendItem(ClimateItem, "Climate");
             }
-            if (printMask?.Water ?? true)
+            if ((printMask?.Water ?? true)
+                && item.Water.TryGet(out var WaterItem))
             {
-                fg.AppendLine($"Water => {item.Water}");
+                fg.AppendItem(WaterItem, "Water");
             }
-            if (printMask?.Owner ?? true)
+            if ((printMask?.Owner ?? true)
+                && item.Owner.TryGet(out var OwnerItem))
             {
-                fg.AppendLine($"Owner => {item.Owner}");
+                fg.AppendItem(OwnerItem, "Owner");
             }
-            if (printMask?.FactionRank ?? true)
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank.TryGet(out var FactionRankItem))
             {
-                fg.AppendLine($"FactionRank => {item.FactionRank}");
+                fg.AppendItem(FactionRankItem, "FactionRank");
             }
-            if (printMask?.GlobalVariable ?? true)
+            if ((printMask?.GlobalVariable ?? true)
+                && item.GlobalVariable.TryGet(out var GlobalVariableItem))
             {
-                fg.AppendLine($"GlobalVariable => {item.GlobalVariable}");
+                fg.AppendItem(GlobalVariableItem, "GlobalVariable");
             }
-            if (printMask?.PathGrid?.Overall ?? true)
+            if ((printMask?.PathGrid?.Overall ?? true)
+                && item.PathGrid.TryGet(out var PathGridItem))
             {
-                item.PathGrid?.ToString(fg, "PathGrid");
+                PathGridItem?.ToString(fg, "PathGrid");
             }
-            if (printMask?.Landscape?.Overall ?? true)
+            if ((printMask?.Landscape?.Overall ?? true)
+                && item.Landscape.TryGet(out var LandscapeItem))
             {
-                item.Landscape?.ToString(fg, "Landscape");
+                LandscapeItem?.ToString(fg, "Landscape");
             }
             if (printMask?.Timestamp ?? true)
             {
@@ -3013,13 +3004,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"PersistentTimestamp => {SpanExt.ToHexString(item.PersistentTimestamp)}");
             }
-            if (printMask?.Persistent?.Overall ?? true)
+            if ((printMask?.Persistent?.Overall ?? true)
+                && item.Persistent.TryGet(out var PersistentItem))
             {
                 fg.AppendLine("Persistent =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Persistent)
+                    foreach (var subItem in PersistentItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3035,13 +3027,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"TemporaryTimestamp => {SpanExt.ToHexString(item.TemporaryTimestamp)}");
             }
-            if (printMask?.Temporary?.Overall ?? true)
+            if ((printMask?.Temporary?.Overall ?? true)
+                && item.Temporary.TryGet(out var TemporaryItem))
             {
                 fg.AppendLine("Temporary =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Temporary)
+                    foreach (var subItem in TemporaryItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3057,13 +3050,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"VisibleWhenDistantTimestamp => {SpanExt.ToHexString(item.VisibleWhenDistantTimestamp)}");
             }
-            if (printMask?.VisibleWhenDistant?.Overall ?? true)
+            if ((printMask?.VisibleWhenDistant?.Overall ?? true)
+                && item.VisibleWhenDistant.TryGet(out var VisibleWhenDistantItem))
             {
                 fg.AppendLine("VisibleWhenDistant =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.VisibleWhenDistant)
+                    foreach (var subItem in VisibleWhenDistantItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3086,7 +3080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Grid.HasValue && checkMask.Grid.Value != (item.Grid != null)) return false;
             if (checkMask.Lighting?.Overall.HasValue ?? false && checkMask.Lighting.Overall.Value != (item.Lighting != null)) return false;
             if (checkMask.Lighting?.Specific != null && (item.Lighting == null || !item.Lighting.HasBeenSet(checkMask.Lighting.Specific))) return false;
-            if (checkMask.Regions?.Overall.HasValue ?? false && checkMask.Regions!.Overall.Value != item.Regions.HasBeenSet) return false;
+            if (checkMask.Regions?.Overall.HasValue ?? false && checkMask.Regions!.Overall.Value != (item.Regions != null)) return false;
             if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != (item.MusicType != null)) return false;
             if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != (item.WaterHeight != null)) return false;
             if (checkMask.Climate.HasValue && checkMask.Climate.Value != (item.Climate.FormKey != null)) return false;
@@ -3098,9 +3092,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.PathGrid?.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
             if (checkMask.Landscape?.Overall.HasValue ?? false && checkMask.Landscape.Overall.Value != (item.Landscape != null)) return false;
             if (checkMask.Landscape?.Specific != null && (item.Landscape == null || !item.Landscape.HasBeenSet(checkMask.Landscape.Specific))) return false;
-            if (checkMask.Persistent?.Overall.HasValue ?? false && checkMask.Persistent!.Overall.Value != item.Persistent.HasBeenSet) return false;
-            if (checkMask.Temporary?.Overall.HasValue ?? false && checkMask.Temporary!.Overall.Value != item.Temporary.HasBeenSet) return false;
-            if (checkMask.VisibleWhenDistant?.Overall.HasValue ?? false && checkMask.VisibleWhenDistant!.Overall.Value != item.VisibleWhenDistant.HasBeenSet) return false;
+            if (checkMask.Persistent?.Overall.HasValue ?? false && checkMask.Persistent!.Overall.Value != (item.Persistent != null)) return false;
+            if (checkMask.Temporary?.Overall.HasValue ?? false && checkMask.Temporary!.Overall.Value != (item.Temporary != null)) return false;
+            if (checkMask.VisibleWhenDistant?.Overall.HasValue ?? false && checkMask.VisibleWhenDistant!.Overall.Value != (item.VisibleWhenDistant != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -3115,7 +3109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Grid = (item.Grid != null);
             var itemLighting = item.Lighting;
             mask.Lighting = new MaskItem<bool, CellLighting.Mask<bool>?>(itemLighting != null, itemLighting?.GetHasBeenSetMask());
-            mask.Regions = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Regions.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.Regions = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Regions != null), default);
             mask.MusicType = (item.MusicType != null);
             mask.WaterHeight = (item.WaterHeight != null);
             mask.Climate = (item.Climate.FormKey != null);
@@ -3129,14 +3123,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Landscape = new MaskItem<bool, Landscape.Mask<bool>?>(itemLandscape != null, itemLandscape?.GetHasBeenSetMask());
             mask.Timestamp = true;
             mask.PersistentTimestamp = true;
-            var PersistentItem = item.Persistent;
-            mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(PersistentItem.HasBeenSet, PersistentItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            if (item.Persistent.TryGet(out var PersistentItem))
+            {
+                mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>?>(true, PersistentItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            }
             mask.TemporaryTimestamp = true;
-            var TemporaryItem = item.Temporary;
-            mask.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(TemporaryItem.HasBeenSet, TemporaryItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            if (item.Temporary.TryGet(out var TemporaryItem))
+            {
+                mask.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>?>(true, TemporaryItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            }
             mask.VisibleWhenDistantTimestamp = true;
-            var VisibleWhenDistantItem = item.VisibleWhenDistant;
-            mask.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(VisibleWhenDistantItem.HasBeenSet, VisibleWhenDistantItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            if (item.VisibleWhenDistant.TryGet(out var VisibleWhenDistantItem))
+            {
+                mask.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>?>(true, VisibleWhenDistantItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
+            }
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3219,12 +3219,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
             if (!object.Equals(lhs.PathGrid, rhs.PathGrid)) return false;
             if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp, rhs.Timestamp)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp.Span, rhs.Timestamp.Span)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.PersistentTimestamp.Span, rhs.PersistentTimestamp.Span)) return false;
             if (!lhs.Persistent.SequenceEqual(rhs.Persistent)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.TemporaryTimestamp.Span, rhs.TemporaryTimestamp.Span)) return false;
             if (!lhs.Temporary.SequenceEqual(rhs.Temporary)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.VisibleWhenDistantTimestamp.Span, rhs.VisibleWhenDistantTimestamp.Span)) return false;
             if (!lhs.VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
             return true;
         }
@@ -3353,9 +3353,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Regions)
+            if (obj.Regions != null)
             {
-                yield return item;
+                foreach (var item in obj.Regions)
+                {
+                    yield return item;
+                }
             }
             yield return obj.Climate;
             yield return obj.Water;
@@ -3375,20 +3378,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkContainer>()
-                .SelectMany((f) => f.Links))
+            if (obj.Persistent != null)
             {
-                yield return item;
+                foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkContainer>()
+                    .SelectMany((f) => f.Links))
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkContainer>()
-                .SelectMany((f) => f.Links))
+            if (obj.Temporary != null)
             {
-                yield return item;
+                foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkContainer>()
+                    .SelectMany((f) => f.Links))
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, ILinkContainer>()
-                .SelectMany((f) => f.Links))
+            if (obj.VisibleWhenDistant != null)
             {
-                yield return item;
+                foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, ILinkContainer>()
+                    .SelectMany((f) => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -3406,33 +3418,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellGetter obj)
         {
-            if (obj.PathGrid.TryGet(out var PathGriditem))
+            if ((obj.Lighting != null))
             {
-                yield return PathGriditem;
-                foreach (var item in PathGriditem.EnumerateMajorRecords())
+            }
+            if ((obj.Regions != null))
+            {
+            }
+            if ((obj.PathGrid != null))
+            {
+                if (obj.PathGrid.TryGet(out var PathGriditem))
                 {
-                    yield return item;
+                    yield return PathGriditem;
+                    foreach (var item in PathGriditem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
-            if (obj.Landscape.TryGet(out var Landscapeitem))
+            if ((obj.Landscape != null))
             {
-                yield return Landscapeitem;
-                foreach (var item in Landscapeitem.EnumerateMajorRecords())
+                if (obj.Landscape.TryGet(out var Landscapeitem))
                 {
-                    yield return item;
+                    yield return Landscapeitem;
+                    foreach (var item in Landscapeitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
-            foreach (var subItem in obj.Persistent)
+            if ((obj.Persistent != null))
             {
-                yield return subItem;
+                foreach (var subItem in obj.Persistent.TryIterate())
+                {
+                    yield return subItem;
+                }
             }
-            foreach (var subItem in obj.Temporary)
+            if ((obj.Temporary != null))
             {
-                yield return subItem;
+                foreach (var subItem in obj.Temporary.TryIterate())
+                {
+                    yield return subItem;
+                }
             }
-            foreach (var subItem in obj.VisibleWhenDistant)
+            if ((obj.VisibleWhenDistant != null))
             {
-                yield return subItem;
+                foreach (var subItem in obj.VisibleWhenDistant.TryIterate())
+                {
+                    yield return subItem;
+                }
             }
         }
         
@@ -3480,15 +3513,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield break;
                 case "IPlacedGetter":
                 case "IPlaced":
-                    foreach (var subItem in obj.Persistent)
+                    foreach (var subItem in obj.Persistent.TryIterate())
                     {
                         yield return (subItem as TMajor)!;
                     }
-                    foreach (var subItem in obj.Temporary)
+                    foreach (var subItem in obj.Temporary.TryIterate())
                     {
                         yield return (subItem as TMajor)!;
                     }
-                    foreach (var subItem in obj.VisibleWhenDistant)
+                    foreach (var subItem in obj.VisibleWhenDistant.TryIterate())
                     {
                         yield return (subItem as TMajor)!;
                     }
@@ -3573,15 +3606,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
                 try
                 {
-                    if (rhs.Regions.HasBeenSet)
+                    if ((rhs.Regions != null))
                     {
-                        item.Regions.SetTo(
-                            rhs.Regions,
-                            (r) => new FormLink<Region>(r.FormKey));
+                        item.Regions = 
+                            rhs.Regions
+                            .Select(r => new FormLink<Region>(r.FormKey))
+                            .ToExtendedList<IFormLink<Region>>();
                     }
                     else
                     {
-                        item.Regions.Unset();
+                        item.Regions = null;
                     }
                 }
                 catch (Exception ex)
@@ -3693,18 +3727,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
                 try
                 {
-                    if (rhs.Persistent.HasBeenSet)
+                    if ((rhs.Persistent != null))
                     {
-                        item.Persistent.SetTo(
-                            items: rhs.Persistent,
-                            converter: (r) =>
+                        item.Persistent = 
+                            rhs.Persistent
+                            .Select(r =>
                             {
                                 return (r.DeepCopy() as IPlaced)!;
-                            });
+                            })
+                            .ToExtendedList<IPlaced>();
                     }
                     else
                     {
-                        item.Persistent.Unset();
+                        item.Persistent = null;
                     }
                 }
                 catch (Exception ex)
@@ -3726,18 +3761,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
                 try
                 {
-                    if (rhs.Temporary.HasBeenSet)
+                    if ((rhs.Temporary != null))
                     {
-                        item.Temporary.SetTo(
-                            items: rhs.Temporary,
-                            converter: (r) =>
+                        item.Temporary = 
+                            rhs.Temporary
+                            .Select(r =>
                             {
                                 return (r.DeepCopy() as IPlaced)!;
-                            });
+                            })
+                            .ToExtendedList<IPlaced>();
                     }
                     else
                     {
-                        item.Temporary.Unset();
+                        item.Temporary = null;
                     }
                 }
                 catch (Exception ex)
@@ -3759,18 +3795,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
                 try
                 {
-                    if (rhs.VisibleWhenDistant.HasBeenSet)
+                    if ((rhs.VisibleWhenDistant != null))
                     {
-                        item.VisibleWhenDistant.SetTo(
-                            items: rhs.VisibleWhenDistant,
-                            converter: (r) =>
+                        item.VisibleWhenDistant = 
+                            rhs.VisibleWhenDistant
+                            .Select(r =>
                             {
                                 return (r.DeepCopy() as IPlaced)!;
-                            });
+                            })
+                            .ToExtendedList<IPlaced>();
                     }
                     else
                     {
-                        item.VisibleWhenDistant.Unset();
+                        item.VisibleWhenDistant = null;
                     }
                 }
                 catch (Exception ex)
@@ -3995,7 +4032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
                 }
             }
-            if (item.Regions.HasBeenSet
+            if ((item.Regions != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
@@ -4130,7 +4167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.PersistentTimestamp,
                     errorMask: errorMask);
             }
-            if (item.Persistent.HasBeenSet
+            if ((item.Persistent != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
             {
                 ListXmlTranslation<IPlacedGetter>.Instance.Write(
@@ -4162,7 +4199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.TemporaryTimestamp,
                     errorMask: errorMask);
             }
-            if (item.Temporary.HasBeenSet
+            if ((item.Temporary != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
             {
                 ListXmlTranslation<IPlacedGetter>.Instance.Write(
@@ -4194,7 +4231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistantTimestamp,
                     errorMask: errorMask);
             }
-            if (item.VisibleWhenDistant.HasBeenSet
+            if ((item.VisibleWhenDistant != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
             {
                 ListXmlTranslation<IPlacedGetter>.Instance.Write(
@@ -4423,11 +4460,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Regions.SetTo(RegionsItem);
+                            item.Regions = RegionsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Regions.Unset();
+                            item.Regions = null;
                         }
                     }
                     catch (Exception ex)
@@ -4653,11 +4690,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Persistent.SetTo(PersistentItem);
+                            item.Persistent = PersistentItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Persistent.Unset();
+                            item.Persistent = null;
                         }
                     }
                     catch (Exception ex)
@@ -4700,11 +4737,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Temporary.SetTo(TemporaryItem);
+                            item.Temporary = TemporaryItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Temporary.Unset();
+                            item.Temporary = null;
                         }
                     }
                     catch (Exception ex)
@@ -4747,11 +4784,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.VisibleWhenDistant.SetTo(VisibleWhenDistantItem);
+                            item.VisibleWhenDistant = VisibleWhenDistantItem.ToExtendedList();
                         }
                         else
                         {
-                            item.VisibleWhenDistant.Unset();
+                            item.VisibleWhenDistant = null;
                         }
                     }
                     catch (Exception ex)
@@ -5126,7 +5163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ICellLightingGetter? Lighting => _Lighting_IsSet ? CellLightingBinaryOverlay.CellLightingFactory(new BinaryMemoryReadStream(_data.Slice(_LightingLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Lighting_IsSet => _LightingLocation.HasValue;
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<IRegionGetter>> Regions { get; private set; } = EmptySetList<IFormLinkGetter<IRegionGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
         #region MusicType
         private int? _MusicTypeLocation;
         private bool MusicType_IsSet => _MusicTypeLocation.HasValue;

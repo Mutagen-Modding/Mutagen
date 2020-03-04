@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IWeatherSoundGetter rhs)) return false;
             return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -330,11 +330,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendLine($"Sound => {Sound}");
+                        fg.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendLine($"Type => {Type}");
+                        fg.AppendItem(Type, "Type");
                     }
                 }
                 fg.AppendLine("]");
@@ -451,8 +451,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Sound => {Sound}");
-                fg.AppendLine($"Type => {Type}");
+                fg.AppendItem(Sound, "Sound");
+                fg.AppendItem(Type, "Type");
             }
             #endregion
 
@@ -1258,11 +1258,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Sound ?? true)
             {
-                fg.AppendLine($"Sound => {item.Sound}");
+                fg.AppendItem(item.Sound, "Sound");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendLine($"Type => {item.Type}");
+                fg.AppendItem(item.Type, "Type");
             }
         }
         

@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRegionSoundGetter rhs)) return false;
             return ((RegionSoundCommon)((IRegionSoundGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -343,15 +343,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendLine($"Sound => {Sound}");
+                        fg.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Chance ?? true)
                     {
-                        fg.AppendLine($"Chance => {Chance}");
+                        fg.AppendItem(Chance, "Chance");
                     }
                 }
                 fg.AppendLine("]");
@@ -478,9 +478,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Sound => {Sound}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Chance => {Chance}");
+                fg.AppendItem(Sound, "Sound");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Chance, "Chance");
             }
             #endregion
 
@@ -1301,15 +1301,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Sound ?? true)
             {
-                fg.AppendLine($"Sound => {item.Sound}");
+                fg.AppendItem(item.Sound, "Sound");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Chance ?? true)
             {
-                fg.AppendLine($"Chance => {item.Chance}");
+                fg.AppendItem(item.Chance, "Chance");
             }
         }
         

@@ -86,11 +86,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PrimaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ActorValue[] _PrimaryAttributes = new ActorValue[2];
-        public ActorValue[] PrimaryAttributes => _PrimaryAttributes;
+        private ActorValue[] _PrimaryAttributes = new ActorValue[2];
+        public ActorValue[] PrimaryAttributes
+        {
+            get => this._PrimaryAttributes;
+            protected set => this._PrimaryAttributes = value;
+        }
         #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ActorValue[] IClass.PrimaryAttributes => _PrimaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
         #endregion
@@ -111,11 +113,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SecondaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ActorValue[] _SecondaryAttributes = new ActorValue[7];
-        public ActorValue[] SecondaryAttributes => _SecondaryAttributes;
+        private ActorValue[] _SecondaryAttributes = new ActorValue[7];
+        public ActorValue[] SecondaryAttributes
+        {
+            get => this._SecondaryAttributes;
+            protected set => this._SecondaryAttributes = value;
+        }
         #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ActorValue[] IClass.SecondaryAttributes => _SecondaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
         #endregion
@@ -176,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IClassGetter rhs)) return false;
             return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -334,9 +338,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.Icon = initialValue;
-                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Specialization = initialValue;
-                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = initialValue;
                 this.ClassServices = initialValue;
                 this.Training = new MaskItem<TItem, ClassTraining.Mask<TItem>?>(initialValue, new ClassTraining.Mask<TItem>(initialValue));
@@ -369,9 +373,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Description = Description;
                 this.Icon = Icon;
-                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(PrimaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PrimaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Specialization = Specialization;
-                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(SecondaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SecondaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = Flags;
                 this.ClassServices = ClassServices;
                 this.Training = new MaskItem<TItem, ClassTraining.Mask<TItem>?>(Training, new ClassTraining.Mask<TItem>(Training));
@@ -390,9 +394,9 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Name;
             public TItem Description;
             public TItem Icon;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? PrimaryAttributes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PrimaryAttributes;
             public TItem Specialization;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? SecondaryAttributes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SecondaryAttributes;
             public TItem Flags;
             public TItem ClassServices;
             public MaskItem<TItem, ClassTraining.Mask<TItem>?>? Training { get; set; }
@@ -400,7 +404,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -541,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Icon = eval(this.Icon);
                 if (PrimaryAttributes != null)
                 {
-                    obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PrimaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PrimaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (PrimaryAttributes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -556,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Specialization = eval(this.Specialization);
                 if (SecondaryAttributes != null)
                 {
-                    obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.SecondaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SecondaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (SecondaryAttributes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -596,39 +600,34 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendLine($"Description => {Description}");
+                        fg.AppendItem(Description, "Description");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
-                    if (printMask?.PrimaryAttributes?.Overall ?? true)
+                    if ((printMask?.PrimaryAttributes?.Overall ?? true)
+                        && PrimaryAttributes.TryGet(out var PrimaryAttributesItem))
                     {
                         fg.AppendLine("PrimaryAttributes =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (PrimaryAttributes != null)
+                            fg.AppendItem(PrimaryAttributesItem.Overall);
+                            if (PrimaryAttributesItem.Specific != null)
                             {
-                                if (PrimaryAttributes.Overall != null)
+                                foreach (var subItem in PrimaryAttributesItem.Specific)
                                 {
-                                    fg.AppendLine(PrimaryAttributes.Overall.ToString());
-                                }
-                                if (PrimaryAttributes.Specific != null)
-                                {
-                                    foreach (var subItem in PrimaryAttributes.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -636,31 +635,26 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Specialization ?? true)
                     {
-                        fg.AppendLine($"Specialization => {Specialization}");
+                        fg.AppendItem(Specialization, "Specialization");
                     }
-                    if (printMask?.SecondaryAttributes?.Overall ?? true)
+                    if ((printMask?.SecondaryAttributes?.Overall ?? true)
+                        && SecondaryAttributes.TryGet(out var SecondaryAttributesItem))
                     {
                         fg.AppendLine("SecondaryAttributes =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (SecondaryAttributes != null)
+                            fg.AppendItem(SecondaryAttributesItem.Overall);
+                            if (SecondaryAttributesItem.Specific != null)
                             {
-                                if (SecondaryAttributes.Overall != null)
+                                foreach (var subItem in SecondaryAttributesItem.Specific)
                                 {
-                                    fg.AppendLine(SecondaryAttributes.Overall.ToString());
-                                }
-                                if (SecondaryAttributes.Specific != null)
-                                {
-                                    foreach (var subItem in SecondaryAttributes.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -668,11 +662,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ClassServices ?? true)
                     {
-                        fg.AppendLine($"ClassServices => {ClassServices}");
+                        fg.AppendItem(ClassServices, "ClassServices");
                     }
                     if (printMask?.Training?.Overall ?? true)
                     {
@@ -680,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -867,64 +861,58 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Description => {Description}");
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine("PrimaryAttributes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Description, "Description");
+                fg.AppendItem(Icon, "Icon");
+                if (PrimaryAttributes.TryGet(out var PrimaryAttributesItem))
                 {
-                    if (PrimaryAttributes != null)
+                    fg.AppendLine("PrimaryAttributes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (PrimaryAttributes.Overall != null)
+                        fg.AppendItem(PrimaryAttributesItem.Overall);
+                        if (PrimaryAttributesItem.Specific != null)
                         {
-                            fg.AppendLine(PrimaryAttributes.Overall.ToString());
-                        }
-                        if (PrimaryAttributes.Specific != null)
-                        {
-                            foreach (var subItem in PrimaryAttributes.Specific)
+                            foreach (var subItem in PrimaryAttributesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"Specialization => {Specialization}");
-                fg.AppendLine("SecondaryAttributes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Specialization, "Specialization");
+                if (SecondaryAttributes.TryGet(out var SecondaryAttributesItem))
                 {
-                    if (SecondaryAttributes != null)
+                    fg.AppendLine("SecondaryAttributes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (SecondaryAttributes.Overall != null)
+                        fg.AppendItem(SecondaryAttributesItem.Overall);
+                        if (SecondaryAttributesItem.Specific != null)
                         {
-                            fg.AppendLine(SecondaryAttributes.Overall.ToString());
-                        }
-                        if (SecondaryAttributes.Specific != null)
-                        {
-                            foreach (var subItem in SecondaryAttributes.Specific)
+                            foreach (var subItem in SecondaryAttributesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"ClassServices => {ClassServices}");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(ClassServices, "ClassServices");
                 Training?.ToString(fg);
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1877,27 +1865,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.DATADataTypeState = Class.DATADataType.Has;
                     }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: 2,
-                        item: item.PrimaryAttributes,
-                        transl: (MutagenFrame r, out ActorValue listSubItem) =>
-                        {
-                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                frame: r.SpawnWithLength(4),
-                                item: out listSubItem);
-                        });
+                    item.PrimaryAttributes.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            amount: 2,
+                            transl: (MutagenFrame r, out ActorValue listSubItem) =>
+                            {
+                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                    frame: r.SpawnWithLength(4),
+                                    item: out listSubItem);
+                            }));
                     item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: 7,
-                        item: item.SecondaryAttributes,
-                        transl: (MutagenFrame r, out ActorValue listSubItem) =>
-                        {
-                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                frame: r.SpawnWithLength(4),
-                                item: out listSubItem);
-                        });
+                    item.SecondaryAttributes.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            amount: 7,
+                            transl: (MutagenFrame r, out ActorValue listSubItem) =>
+                            {
+                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                    frame: r.SpawnWithLength(4),
+                                    item: out listSubItem);
+                            }));
                     item.Flags = EnumBinaryTranslation<ClassFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.ClassServices = EnumBinaryTranslation<ClassService>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     if (dataFrame.Complete)
@@ -2033,17 +2021,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Description ?? true)
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
             {
-                fg.AppendLine($"Description => {item.Description}");
+                fg.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
             if (printMask?.PrimaryAttributes?.Overall ?? true)
             {
@@ -2056,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -2065,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Specialization ?? true)
             {
-                fg.AppendLine($"Specialization => {item.Specialization}");
+                fg.AppendItem(item.Specialization, "Specialization");
             }
             if (printMask?.SecondaryAttributes?.Overall ?? true)
             {
@@ -2078,7 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -2087,11 +2078,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.ClassServices ?? true)
             {
-                fg.AppendLine($"ClassServices => {item.ClassServices}");
+                fg.AppendItem(item.ClassServices, "ClassServices");
             }
             if (printMask?.Training?.Overall ?? true)
             {
@@ -2099,7 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2122,9 +2113,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = (item.Name != null);
             mask.Description = (item.Description != null);
             mask.Icon = (item.Icon != null);
-            mask.PrimaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
+            mask.PrimaryAttributes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Specialization = true;
-            mask.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
+            mask.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Flags = true;
             mask.ClassServices = true;
             mask.Training = new MaskItem<bool, ClassTraining.Mask<bool>?>(true, item.Training?.GetHasBeenSetMask());

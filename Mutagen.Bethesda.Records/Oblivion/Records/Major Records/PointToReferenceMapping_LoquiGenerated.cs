@@ -56,11 +56,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ExtendedList<Int16> _Points = new ExtendedList<Int16>();
-        public IExtendedList<Int16> Points => _Points;
+        private ExtendedList<Int16> _Points = new ExtendedList<Int16>();
+        public ExtendedList<Int16> Points
+        {
+            get => this._Points;
+            protected set => this._Points = value;
+        }
         #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IExtendedList<Int16> IPointToReferenceMapping.Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<Int16> IPointToReferenceMappingGetter.Points => _Points;
         #endregion
@@ -81,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -237,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.Reference = initialValue;
-                this.Points = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Points = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -245,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Points)
             {
                 this.Reference = Reference;
-                this.Points = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Points, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Points = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Points, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -258,11 +260,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public TItem Reference;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Points;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Points;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -336,7 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Reference = eval(this.Reference);
                 if (Points != null)
                 {
-                    obj.Points = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Points.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Points = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Points.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Points.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -372,31 +374,26 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Reference ?? true)
                     {
-                        fg.AppendLine($"Reference => {Reference}");
+                        fg.AppendItem(Reference, "Reference");
                     }
-                    if (printMask?.Points?.Overall ?? true)
+                    if ((printMask?.Points?.Overall ?? true)
+                        && Points.TryGet(out var PointsItem))
                     {
                         fg.AppendLine("Points =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Points != null)
+                            fg.AppendItem(PointsItem.Overall);
+                            if (PointsItem.Specific != null)
                             {
-                                if (Points.Overall != null)
+                                foreach (var subItem in PointsItem.Specific)
                                 {
-                                    fg.AppendLine(Points.Overall.ToString());
-                                }
-                                if (Points.Specific != null)
-                                {
-                                    foreach (var subItem in Points.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -517,32 +514,29 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Reference => {Reference}");
-                fg.AppendLine("Points =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Reference, "Reference");
+                if (Points.TryGet(out var PointsItem))
                 {
-                    if (Points != null)
+                    fg.AppendLine("Points =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Points.Overall != null)
+                        fg.AppendItem(PointsItem.Overall);
+                        if (PointsItem.Specific != null)
                         {
-                            fg.AppendLine(Points.Overall.ToString());
-                        }
-                        if (Points.Specific != null)
-                        {
-                            foreach (var subItem in Points.Specific)
+                            foreach (var subItem in PointsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -679,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPointToReferenceMapping>
     {
         new IFormLink<IPlaced> Reference { get; }
-        new IExtendedList<Int16> Points { get; }
+        new ExtendedList<Int16> Points { get; }
     }
 
     public partial interface IPointToReferenceMappingGetter :
@@ -1155,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PointToReferenceMapping_FieldIndex.Reference:
                     return typeof(IFormLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
-                    return typeof(IExtendedList<Int16>);
+                    return typeof(ExtendedList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1250,10 +1244,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 masterReferences: masterReferences,
                 defaultVal: FormKey.Null);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
-                frame: frame,
-                item: item.Points,
-                transl: Int16BinaryTranslation.Instance.Parse);
+            item.Points.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
+                    frame: frame,
+                    transl: Int16BinaryTranslation.Instance.Parse));
         }
         
         public void CopyInFromBinary(
@@ -1355,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Reference ?? true)
             {
-                fg.AppendLine($"Reference => {item.Reference}");
+                fg.AppendItem(item.Reference, "Reference");
             }
             if (printMask?.Points?.Overall ?? true)
             {
@@ -1368,7 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1389,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PointToReferenceMapping.Mask<bool> mask)
         {
             mask.Reference = true;
-            mask.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
+            mask.Points = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
         }
         
         #region Equals and Hash

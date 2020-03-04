@@ -29,11 +29,6 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-            if (typeGen.HasBeenSet)
-            {
-                fg.AppendLine($"if ({itemAccessor.DirectAccess}_IsSet)");
-            }
-            using (new BraceWrapper(fg, doIt: typeGen.HasBeenSet))
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
             {
@@ -148,7 +143,6 @@ namespace Mutagen.Bethesda.Generation
             if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
             }
             if (data.RecordType.HasValue)
             {
@@ -156,7 +150,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     throw new ArgumentException();
                 }
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}(_data, _{typeGen.Name}Location.Value, _package.Meta).ToArray() : default;");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}(_data, _{typeGen.Name}Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
             }
             else
             {
@@ -164,19 +158,17 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (typeGen.HasBeenSet)
                     {
-                        fg.AppendLine($"public bool {typeGen.HasBeenSetAccessor(getter: true)} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)};");
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)} ? {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
                     }
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray();");
+                    else
+                    {
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray();");
+                    }
                 }
                 else
                 {
-                    if (typeGen.HasBeenSet)
-                    {
-                        fg.AppendLine($"public bool {typeGen.HasBeenSetAccessor(getter: true)} => {dataAccessor}.Length >= _{typeGen.Name}Location + {this.ExpectedLength(objGen, typeGen).Value};");
-                    }
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value}).ToArray() : default;");
-                    fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}_IsSet;");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value}).ToArray() : default(ReadOnlyMemorySlice<byte>{(typeGen.HasBeenSet ? "?" : null)});");
                 }
             }
         }

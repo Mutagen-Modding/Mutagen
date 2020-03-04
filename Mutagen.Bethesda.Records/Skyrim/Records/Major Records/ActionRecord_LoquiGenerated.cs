@@ -16,7 +16,6 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
-using Loqui.Presentation;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -78,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IActionRecordGetter rhs)) return false;
             return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -270,7 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -347,7 +346,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendLine($"Color => {Color}");
+                        fg.AppendItem(Color, "Color");
                     }
                 }
                 fg.AppendLine("]");
@@ -444,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Color => {Color}");
+                fg.AppendItem(Color, "Color");
             }
             #endregion
 
@@ -1296,9 +1295,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Color ?? true)
+            if ((printMask?.Color ?? true)
+                && item.Color.TryGet(out var ColorItem))
             {
-                fg.AppendLine($"Color => {item.Color}");
+                fg.AppendItem(ColorItem, "Color");
             }
         }
         

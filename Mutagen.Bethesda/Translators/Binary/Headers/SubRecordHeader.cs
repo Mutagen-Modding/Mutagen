@@ -28,36 +28,38 @@ namespace Mutagen.Bethesda.Binary
     public ref struct SubRecordFrame
     {
         public SubRecordHeader Header { get; }
-        public ReadOnlySpan<byte> Content { get; }
+        public ReadOnlySpan<byte> AllData { get; }
+        public ReadOnlySpan<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
 
         public SubRecordFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta.SubRecord(span);
-            this.Content = span.Slice(this.Header.HeaderLength, this.Header.RecordLength);
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         public SubRecordFrame(SubRecordHeader meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta;
-            this.Content = span;
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 
     public ref struct SubRecordMemoryFrame
     {
         public SubRecordHeader Header { get; }
-        public ReadOnlyMemorySlice<byte> Content { get; }
+        public ReadOnlyMemorySlice<byte> AllData { get; }
+        public ReadOnlyMemorySlice<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
 
         public SubRecordMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta.SubRecord(span);
-            this.Content = span.Slice(this.Header.HeaderLength, this.Header.RecordLength);
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         public SubRecordMemoryFrame(SubRecordHeader meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta;
-            this.Content = span;
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 }

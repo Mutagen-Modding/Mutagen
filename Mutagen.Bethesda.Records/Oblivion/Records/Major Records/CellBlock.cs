@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: XmlFolderTranslationCrystal);
             int blockCounter = 0;
             List<Task> tasks = new List<Task>();
-            foreach (var item in this.SubBlocks)
+            foreach (var item in this.SubBlocks.TryIterate())
             {
                 int stampedCounter = blockCounter++;
                 tasks.Add(Task.Run(() =>
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = new CellBlock();
             ret.DeepCopyIn(this, duplicateMask);
-            ret.SubBlocks.SetTo(this.SubBlocks.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
+            ret.SubBlocks = this.SubBlocks.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)).ToExtendedList();
             return ret;
         }
 
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
                 tasks.Add(Task.Run(() => CellSubBlock.CreateFromXmlFolder(f.File, f.Index)));
             }
             var subBlocks = await Task.WhenAll(tasks).ConfigureAwait(false);
-            ret.SubBlocks.AddRange(subBlocks);
+            ret.SubBlocks = subBlocks.ToExtendedList();
             return ret;
         }
     }

@@ -16,7 +16,6 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
-using Loqui.Presentation;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -97,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IDecalGetter rhs)) return false;
             return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -314,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -436,47 +435,47 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.MinWidth ?? true)
                     {
-                        fg.AppendLine($"MinWidth => {MinWidth}");
+                        fg.AppendItem(MinWidth, "MinWidth");
                     }
                     if (printMask?.MaxWidth ?? true)
                     {
-                        fg.AppendLine($"MaxWidth => {MaxWidth}");
+                        fg.AppendItem(MaxWidth, "MaxWidth");
                     }
                     if (printMask?.MinHeight ?? true)
                     {
-                        fg.AppendLine($"MinHeight => {MinHeight}");
+                        fg.AppendItem(MinHeight, "MinHeight");
                     }
                     if (printMask?.MaxHeight ?? true)
                     {
-                        fg.AppendLine($"MaxHeight => {MaxHeight}");
+                        fg.AppendItem(MaxHeight, "MaxHeight");
                     }
                     if (printMask?.Depth ?? true)
                     {
-                        fg.AppendLine($"Depth => {Depth}");
+                        fg.AppendItem(Depth, "Depth");
                     }
                     if (printMask?.Shininess ?? true)
                     {
-                        fg.AppendLine($"Shininess => {Shininess}");
+                        fg.AppendItem(Shininess, "Shininess");
                     }
                     if (printMask?.ParallaxScale ?? true)
                     {
-                        fg.AppendLine($"ParallaxScale => {ParallaxScale}");
+                        fg.AppendItem(ParallaxScale, "ParallaxScale");
                     }
                     if (printMask?.ParallaxPasses ?? true)
                     {
-                        fg.AppendLine($"ParallaxPasses => {ParallaxPasses}");
+                        fg.AppendItem(ParallaxPasses, "ParallaxPasses");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendLine($"Unknown => {Unknown}");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendLine($"Color => {Color}");
+                        fg.AppendItem(Color, "Color");
                     }
                 }
                 fg.AppendLine("]");
@@ -683,17 +682,17 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"MinWidth => {MinWidth}");
-                fg.AppendLine($"MaxWidth => {MaxWidth}");
-                fg.AppendLine($"MinHeight => {MinHeight}");
-                fg.AppendLine($"MaxHeight => {MaxHeight}");
-                fg.AppendLine($"Depth => {Depth}");
-                fg.AppendLine($"Shininess => {Shininess}");
-                fg.AppendLine($"ParallaxScale => {ParallaxScale}");
-                fg.AppendLine($"ParallaxPasses => {ParallaxPasses}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Unknown => {Unknown}");
-                fg.AppendLine($"Color => {Color}");
+                fg.AppendItem(MinWidth, "MinWidth");
+                fg.AppendItem(MaxWidth, "MaxWidth");
+                fg.AppendItem(MinHeight, "MinHeight");
+                fg.AppendItem(MaxHeight, "MaxHeight");
+                fg.AppendItem(Depth, "Depth");
+                fg.AppendItem(Shininess, "Shininess");
+                fg.AppendItem(ParallaxScale, "ParallaxScale");
+                fg.AppendItem(ParallaxPasses, "ParallaxPasses");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(Color, "Color");
             }
             #endregion
 
@@ -1684,47 +1683,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.MinWidth ?? true)
             {
-                fg.AppendLine($"MinWidth => {item.MinWidth}");
+                fg.AppendItem(item.MinWidth, "MinWidth");
             }
             if (printMask?.MaxWidth ?? true)
             {
-                fg.AppendLine($"MaxWidth => {item.MaxWidth}");
+                fg.AppendItem(item.MaxWidth, "MaxWidth");
             }
             if (printMask?.MinHeight ?? true)
             {
-                fg.AppendLine($"MinHeight => {item.MinHeight}");
+                fg.AppendItem(item.MinHeight, "MinHeight");
             }
             if (printMask?.MaxHeight ?? true)
             {
-                fg.AppendLine($"MaxHeight => {item.MaxHeight}");
+                fg.AppendItem(item.MaxHeight, "MaxHeight");
             }
             if (printMask?.Depth ?? true)
             {
-                fg.AppendLine($"Depth => {item.Depth}");
+                fg.AppendItem(item.Depth, "Depth");
             }
             if (printMask?.Shininess ?? true)
             {
-                fg.AppendLine($"Shininess => {item.Shininess}");
+                fg.AppendItem(item.Shininess, "Shininess");
             }
             if (printMask?.ParallaxScale ?? true)
             {
-                fg.AppendLine($"ParallaxScale => {item.ParallaxScale}");
+                fg.AppendItem(item.ParallaxScale, "ParallaxScale");
             }
             if (printMask?.ParallaxPasses ?? true)
             {
-                fg.AppendLine($"ParallaxPasses => {item.ParallaxPasses}");
+                fg.AppendItem(item.ParallaxPasses, "ParallaxPasses");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {item.Unknown}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendLine($"Color => {item.Color}");
+                fg.AppendItem(item.Color, "Color");
             }
         }
         

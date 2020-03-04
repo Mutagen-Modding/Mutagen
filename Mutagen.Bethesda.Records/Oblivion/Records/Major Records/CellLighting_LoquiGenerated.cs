@@ -16,7 +16,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
-using Loqui.Presentation;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -91,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ICellLightingGetter rhs)) return false;
             return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -300,7 +299,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -412,39 +411,39 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.AmbientColor ?? true)
                     {
-                        fg.AppendLine($"AmbientColor => {AmbientColor}");
+                        fg.AppendItem(AmbientColor, "AmbientColor");
                     }
                     if (printMask?.DirectionalColor ?? true)
                     {
-                        fg.AppendLine($"DirectionalColor => {DirectionalColor}");
+                        fg.AppendItem(DirectionalColor, "DirectionalColor");
                     }
                     if (printMask?.FogColor ?? true)
                     {
-                        fg.AppendLine($"FogColor => {FogColor}");
+                        fg.AppendItem(FogColor, "FogColor");
                     }
                     if (printMask?.FogNear ?? true)
                     {
-                        fg.AppendLine($"FogNear => {FogNear}");
+                        fg.AppendItem(FogNear, "FogNear");
                     }
                     if (printMask?.FogFar ?? true)
                     {
-                        fg.AppendLine($"FogFar => {FogFar}");
+                        fg.AppendItem(FogFar, "FogFar");
                     }
                     if (printMask?.DirectionalRotationXY ?? true)
                     {
-                        fg.AppendLine($"DirectionalRotationXY => {DirectionalRotationXY}");
+                        fg.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
                     }
                     if (printMask?.DirectionalRotationZ ?? true)
                     {
-                        fg.AppendLine($"DirectionalRotationZ => {DirectionalRotationZ}");
+                        fg.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
                     }
                     if (printMask?.DirectionalFade ?? true)
                     {
-                        fg.AppendLine($"DirectionalFade => {DirectionalFade}");
+                        fg.AppendItem(DirectionalFade, "DirectionalFade");
                     }
                     if (printMask?.FogClipDistance ?? true)
                     {
-                        fg.AppendLine($"FogClipDistance => {FogClipDistance}");
+                        fg.AppendItem(FogClipDistance, "FogClipDistance");
                     }
                 }
                 fg.AppendLine("]");
@@ -631,15 +630,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"AmbientColor => {AmbientColor}");
-                fg.AppendLine($"DirectionalColor => {DirectionalColor}");
-                fg.AppendLine($"FogColor => {FogColor}");
-                fg.AppendLine($"FogNear => {FogNear}");
-                fg.AppendLine($"FogFar => {FogFar}");
-                fg.AppendLine($"DirectionalRotationXY => {DirectionalRotationXY}");
-                fg.AppendLine($"DirectionalRotationZ => {DirectionalRotationZ}");
-                fg.AppendLine($"DirectionalFade => {DirectionalFade}");
-                fg.AppendLine($"FogClipDistance => {FogClipDistance}");
+                fg.AppendItem(AmbientColor, "AmbientColor");
+                fg.AppendItem(DirectionalColor, "DirectionalColor");
+                fg.AppendItem(FogColor, "FogColor");
+                fg.AppendItem(FogNear, "FogNear");
+                fg.AppendItem(FogFar, "FogFar");
+                fg.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                fg.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                fg.AppendItem(DirectionalFade, "DirectionalFade");
+                fg.AppendItem(FogClipDistance, "FogClipDistance");
             }
             #endregion
 
@@ -1592,39 +1591,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.AmbientColor ?? true)
             {
-                fg.AppendLine($"AmbientColor => {item.AmbientColor}");
+                fg.AppendItem(item.AmbientColor, "AmbientColor");
             }
             if (printMask?.DirectionalColor ?? true)
             {
-                fg.AppendLine($"DirectionalColor => {item.DirectionalColor}");
+                fg.AppendItem(item.DirectionalColor, "DirectionalColor");
             }
             if (printMask?.FogColor ?? true)
             {
-                fg.AppendLine($"FogColor => {item.FogColor}");
+                fg.AppendItem(item.FogColor, "FogColor");
             }
             if (printMask?.FogNear ?? true)
             {
-                fg.AppendLine($"FogNear => {item.FogNear}");
+                fg.AppendItem(item.FogNear, "FogNear");
             }
             if (printMask?.FogFar ?? true)
             {
-                fg.AppendLine($"FogFar => {item.FogFar}");
+                fg.AppendItem(item.FogFar, "FogFar");
             }
             if (printMask?.DirectionalRotationXY ?? true)
             {
-                fg.AppendLine($"DirectionalRotationXY => {item.DirectionalRotationXY}");
+                fg.AppendItem(item.DirectionalRotationXY, "DirectionalRotationXY");
             }
             if (printMask?.DirectionalRotationZ ?? true)
             {
-                fg.AppendLine($"DirectionalRotationZ => {item.DirectionalRotationZ}");
+                fg.AppendItem(item.DirectionalRotationZ, "DirectionalRotationZ");
             }
             if (printMask?.DirectionalFade ?? true)
             {
-                fg.AppendLine($"DirectionalFade => {item.DirectionalFade}");
+                fg.AppendItem(item.DirectionalFade, "DirectionalFade");
             }
             if (printMask?.FogClipDistance ?? true)
             {
-                fg.AppendLine($"FogClipDistance => {item.FogClipDistance}");
+                fg.AppendItem(item.FogClipDistance, "FogClipDistance");
             }
         }
         

@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IAnimatedObjectGetter rhs)) return false;
             return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.IdleAnimation ?? true)
                     {
-                        fg.AppendLine($"IdleAnimation => {IdleAnimation}");
+                        fg.AppendItem(IdleAnimation, "IdleAnimation");
                     }
                 }
                 fg.AppendLine("]");
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 Model?.ToString(fg);
-                fg.AppendLine($"IdleAnimation => {IdleAnimation}");
+                fg.AppendItem(IdleAnimation, "IdleAnimation");
             }
             #endregion
 
@@ -1365,13 +1365,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.IdleAnimation ?? true)
+            if ((printMask?.IdleAnimation ?? true)
+                && item.IdleAnimation.TryGet(out var IdleAnimationItem))
             {
-                fg.AppendLine($"IdleAnimation => {item.IdleAnimation}");
+                fg.AppendItem(IdleAnimationItem, "IdleAnimation");
             }
         }
         

@@ -46,11 +46,13 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ExtendedList<Target> _Targets = new ExtendedList<Target>();
-        public IExtendedList<Target> Targets => _Targets;
+        private ExtendedList<Target> _Targets = new ExtendedList<Target>();
+        public ExtendedList<Target> Targets
+        {
+            get => this._Targets;
+            protected set => this._Targets = value;
+        }
         #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IExtendedList<Target> ITargetGroup.Targets => _Targets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<ITargetGetter> ITargetGroupGetter.Targets => _Targets;
         #endregion
@@ -76,7 +78,7 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ITargetGroupGetter rhs)) return false;
             return ((TargetGroupCommon)((ITargetGroupGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -101,7 +103,7 @@ namespace Mutagen.Bethesda.Tests
             public Mask(TItem initialValue)
             {
                 this.Do = initialValue;
-                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Target.Mask<TItem>?>>());
+                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Target.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -109,7 +111,7 @@ namespace Mutagen.Bethesda.Tests
                 TItem Targets)
             {
                 this.Do = Do;
-                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>>(Targets, Enumerable.Empty<MaskItemIndexed<TItem, Target.Mask<TItem>?>>());
+                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>?>(Targets, Enumerable.Empty<MaskItemIndexed<TItem, Target.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -122,11 +124,11 @@ namespace Mutagen.Bethesda.Tests
 
             #region Members
             public TItem Do;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>>? Targets;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>?>? Targets;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -202,7 +204,7 @@ namespace Mutagen.Bethesda.Tests
                 obj.Do = eval(this.Do);
                 if (Targets != null)
                 {
-                    obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Target.Mask<R>?>>>(eval(this.Targets.Overall), Enumerable.Empty<MaskItemIndexed<R, Target.Mask<R>?>>());
+                    obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Target.Mask<R>?>>?>(eval(this.Targets.Overall), Enumerable.Empty<MaskItemIndexed<R, Target.Mask<R>?>>());
                     if (Targets.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Target.Mask<R>?>>();
@@ -239,31 +241,26 @@ namespace Mutagen.Bethesda.Tests
                 {
                     if (printMask?.Do ?? true)
                     {
-                        fg.AppendLine($"Do => {Do}");
+                        fg.AppendItem(Do, "Do");
                     }
-                    if (printMask?.Targets?.Overall ?? true)
+                    if ((printMask?.Targets?.Overall ?? true)
+                        && Targets.TryGet(out var TargetsItem))
                     {
                         fg.AppendLine("Targets =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Targets != null)
+                            fg.AppendItem(TargetsItem.Overall);
+                            if (TargetsItem.Specific != null)
                             {
-                                if (Targets.Overall != null)
+                                foreach (var subItem in TargetsItem.Specific)
                                 {
-                                    fg.AppendLine(Targets.Overall.ToString());
-                                }
-                                if (Targets.Specific != null)
-                                {
-                                    foreach (var subItem in Targets.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -384,20 +381,17 @@ namespace Mutagen.Bethesda.Tests
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Do => {Do}");
-                fg.AppendLine("Targets =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Do, "Do");
+                if (Targets.TryGet(out var TargetsItem))
                 {
-                    if (Targets != null)
+                    fg.AppendLine("Targets =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Targets.Overall != null)
+                        fg.AppendItem(TargetsItem.Overall);
+                        if (TargetsItem.Specific != null)
                         {
-                            fg.AppendLine(Targets.Overall.ToString());
-                        }
-                        if (Targets.Specific != null)
-                        {
-                            foreach (var subItem in Targets.Specific)
+                            foreach (var subItem in TargetsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -408,8 +402,8 @@ namespace Mutagen.Bethesda.Tests
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -625,7 +619,7 @@ namespace Mutagen.Bethesda.Tests
         ILoquiObjectSetter<ITargetGroup>
     {
         new Boolean Do { get; set; }
-        new IExtendedList<Target> Targets { get; }
+        new ExtendedList<Target> Targets { get; }
     }
 
     public partial interface ITargetGroupGetter :
@@ -1071,7 +1065,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TargetGroup_FieldIndex.Do:
                     return typeof(Boolean);
                 case TargetGroup_FieldIndex.Targets:
-                    return typeof(IExtendedList<Target>);
+                    return typeof(ExtendedList<Target>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1230,7 +1224,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (printMask?.Do ?? true)
             {
-                fg.AppendLine($"Do => {item.Do}");
+                fg.AppendItem(item.Do, "Do");
             }
             if (printMask?.Targets?.Overall ?? true)
             {
@@ -1265,7 +1259,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             mask.Do = true;
             var TargetsItem = item.Targets;
-            mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target.Mask<bool>?>>>(true, TargetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Target.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target.Mask<bool>?>>?>(true, TargetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Target.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1318,13 +1312,13 @@ namespace Mutagen.Bethesda.Tests.Internals
                 try
                 {
                     item.Targets.SetTo(
-                        items: rhs.Targets,
-                        converter: (r) =>
+                        rhs.Targets
+                        .Select(r =>
                         {
                             return r.DeepCopy(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
-                        });
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

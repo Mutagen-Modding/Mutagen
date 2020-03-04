@@ -97,25 +97,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ExtraParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<HeadPart>> _ExtraParts = new SetList<IFormLink<HeadPart>>();
-        public ISetList<IFormLink<HeadPart>> ExtraParts => _ExtraParts;
+        private ExtendedList<IFormLink<HeadPart>>? _ExtraParts;
+        public ExtendedList<IFormLink<HeadPart>>? ExtraParts
+        {
+            get => this._ExtraParts;
+            set => this._ExtraParts = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<HeadPart>> IHeadPart.ExtraParts => _ExtraParts;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IHeadPartGetter>> IHeadPartGetter.ExtraParts => _ExtraParts;
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? IHeadPartGetter.ExtraParts => _ExtraParts;
         #endregion
 
         #endregion
         #region Parts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Part> _Parts = new SetList<Part>();
-        public ISetList<Part> Parts => _Parts;
+        private ExtendedList<Part>? _Parts;
+        public ExtendedList<Part>? Parts
+        {
+            get => this._Parts;
+            set => this._Parts = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Part> IHeadPart.Parts => _Parts;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPartGetter> IHeadPartGetter.Parts => _Parts;
+        IReadOnlyList<IPartGetter>? IHeadPartGetter.Parts => _Parts;
         #endregion
 
         #endregion
@@ -148,7 +152,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IHeadPartGetter rhs)) return false;
             return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -307,8 +311,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.Type = initialValue;
-                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Part.Mask<TItem>?>>());
+                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Part.Mask<TItem>?>>());
                 this.TextureSet = initialValue;
                 this.ValidRaces = initialValue;
             }
@@ -342,8 +346,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Flags = Flags;
                 this.Type = Type;
-                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(ExtraParts, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, Part.Mask<TItem>?>>());
+                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, Part.Mask<TItem>?>>());
                 this.TextureSet = TextureSet;
                 this.ValidRaces = ValidRaces;
             }
@@ -361,14 +365,14 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Flags;
             public TItem Type;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? ExtraParts;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>>? Parts;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ExtraParts;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>? Parts;
             public TItem TextureSet;
             public TItem ValidRaces;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -504,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Type = eval(this.Type);
                 if (ExtraParts != null)
                 {
-                    obj.ExtraParts = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.ExtraParts.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ExtraParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraParts.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (ExtraParts.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -518,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Parts != null)
                 {
-                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Part.Mask<R>?>>>(eval(this.Parts.Overall), Enumerable.Empty<MaskItemIndexed<R, Part.Mask<R>?>>());
+                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Part.Mask<R>?>>?>(eval(this.Parts.Overall), Enumerable.Empty<MaskItemIndexed<R, Part.Mask<R>?>>());
                     if (Parts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Part.Mask<R>?>>();
@@ -557,7 +561,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -565,63 +569,53 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendLine($"Type => {Type}");
+                        fg.AppendItem(Type, "Type");
                     }
-                    if (printMask?.ExtraParts?.Overall ?? true)
+                    if ((printMask?.ExtraParts?.Overall ?? true)
+                        && ExtraParts.TryGet(out var ExtraPartsItem))
                     {
                         fg.AppendLine("ExtraParts =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (ExtraParts != null)
+                            fg.AppendItem(ExtraPartsItem.Overall);
+                            if (ExtraPartsItem.Specific != null)
                             {
-                                if (ExtraParts.Overall != null)
+                                foreach (var subItem in ExtraPartsItem.Specific)
                                 {
-                                    fg.AppendLine(ExtraParts.Overall.ToString());
-                                }
-                                if (ExtraParts.Specific != null)
-                                {
-                                    foreach (var subItem in ExtraParts.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Parts?.Overall ?? true)
+                    if ((printMask?.Parts?.Overall ?? true)
+                        && Parts.TryGet(out var PartsItem))
                     {
                         fg.AppendLine("Parts =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Parts != null)
+                            fg.AppendItem(PartsItem.Overall);
+                            if (PartsItem.Specific != null)
                             {
-                                if (Parts.Overall != null)
+                                foreach (var subItem in PartsItem.Specific)
                                 {
-                                    fg.AppendLine(Parts.Overall.ToString());
-                                }
-                                if (Parts.Specific != null)
-                                {
-                                    foreach (var subItem in Parts.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -629,11 +623,11 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.TextureSet ?? true)
                     {
-                        fg.AppendLine($"TextureSet => {TextureSet}");
+                        fg.AppendItem(TextureSet, "TextureSet");
                     }
                     if (printMask?.ValidRaces ?? true)
                     {
-                        fg.AppendLine($"ValidRaces => {ValidRaces}");
+                        fg.AppendItem(ValidRaces, "ValidRaces");
                     }
                 }
                 fg.AppendLine("]");
@@ -800,48 +794,42 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
+                fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Type => {Type}");
-                fg.AppendLine("ExtraParts =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Type, "Type");
+                if (ExtraParts.TryGet(out var ExtraPartsItem))
                 {
-                    if (ExtraParts != null)
+                    fg.AppendLine("ExtraParts =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (ExtraParts.Overall != null)
+                        fg.AppendItem(ExtraPartsItem.Overall);
+                        if (ExtraPartsItem.Specific != null)
                         {
-                            fg.AppendLine(ExtraParts.Overall.ToString());
-                        }
-                        if (ExtraParts.Specific != null)
-                        {
-                            foreach (var subItem in ExtraParts.Specific)
+                            foreach (var subItem in ExtraPartsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("Parts =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Parts.TryGet(out var PartsItem))
                 {
-                    if (Parts != null)
+                    fg.AppendLine("Parts =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Parts.Overall != null)
+                        fg.AppendItem(PartsItem.Overall);
+                        if (PartsItem.Specific != null)
                         {
-                            fg.AppendLine(Parts.Overall.ToString());
-                        }
-                        if (Parts.Specific != null)
-                        {
-                            foreach (var subItem in Parts.Specific)
+                            foreach (var subItem in PartsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -852,10 +840,10 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"TextureSet => {TextureSet}");
-                fg.AppendLine($"ValidRaces => {ValidRaces}");
+                fg.AppendItem(TextureSet, "TextureSet");
+                fg.AppendItem(ValidRaces, "ValidRaces");
             }
             #endregion
 
@@ -1023,8 +1011,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new HeadPart.Flag? Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
-        new ISetList<IFormLink<HeadPart>> ExtraParts { get; }
-        new ISetList<Part> Parts { get; }
+        new ExtendedList<IFormLink<HeadPart>>? ExtraParts { get; set; }
+        new ExtendedList<Part>? Parts { get; set; }
         new IFormLinkNullable<TextureSet> TextureSet { get; }
         new IFormLinkNullable<FormList> ValidRaces { get; }
     }
@@ -1047,8 +1035,8 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         HeadPart.Flag? Flags { get; }
         HeadPart.TypeEnum? Type { get; }
-        IReadOnlySetList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
-        IReadOnlySetList<IPartGetter> Parts { get; }
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? ExtraParts { get; }
+        IReadOnlyList<IPartGetter>? Parts { get; }
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkNullableGetter<IFormListGetter> ValidRaces { get; }
 
@@ -1571,9 +1559,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPart_FieldIndex.Type:
                     return typeof(HeadPart.TypeEnum);
                 case HeadPart_FieldIndex.ExtraParts:
-                    return typeof(ISetList<IFormLink<HeadPart>>);
+                    return typeof(ExtendedList<IFormLink<HeadPart>>);
                 case HeadPart_FieldIndex.Parts:
-                    return typeof(ISetList<Part>);
+                    return typeof(ExtendedList<Part>);
                 case HeadPart_FieldIndex.TextureSet:
                     return typeof(IFormLinkNullable<TextureSet>);
                 case HeadPart_FieldIndex.ValidRaces:
@@ -1643,8 +1631,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Flags = default;
             item.Type = default;
-            item.ExtraParts.Unset();
-            item.Parts.Unset();
+            item.ExtraParts = null;
+            item.Parts = null;
             item.TextureSet.FormKey = null;
             item.ValidRaces.FormKey = null;
             base.Clear(item);
@@ -1768,30 +1756,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: HeadPart_Registration.HNAM_HEADER,
-                        masterReferences: masterReferences,
-                        item: item.ExtraParts,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.ExtraParts = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: HeadPart_Registration.HNAM_HEADER,
+                            masterReferences: masterReferences,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<HeadPart>>();
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
                 }
                 case 0x304D414E: // NAM0
                 case 0x314D414E: // NAM1
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Part>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Part_Registration.TriggeringRecordTypes,
-                        item: item.Parts,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out Part listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<Part>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Parts = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Part>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Part_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out Part listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Part>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<Part>();
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);
                 }
                 case 0x4D414E54: // TNAM
@@ -1936,47 +1926,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.Type ?? true)
+            if ((printMask?.Type ?? true)
+                && item.Type.TryGet(out var TypeItem))
             {
-                fg.AppendLine($"Type => {item.Type}");
+                fg.AppendItem(TypeItem, "Type");
             }
-            if (printMask?.ExtraParts?.Overall ?? true)
+            if ((printMask?.ExtraParts?.Overall ?? true)
+                && item.ExtraParts.TryGet(out var ExtraPartsItem))
             {
                 fg.AppendLine("ExtraParts =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.ExtraParts)
+                    foreach (var subItem in ExtraPartsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Parts?.Overall ?? true)
+            if ((printMask?.Parts?.Overall ?? true)
+                && item.Parts.TryGet(out var PartsItem))
             {
                 fg.AppendLine("Parts =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Parts)
+                    foreach (var subItem in PartsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1988,13 +1984,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.TextureSet ?? true)
+            if ((printMask?.TextureSet ?? true)
+                && item.TextureSet.TryGet(out var TextureSetItem))
             {
-                fg.AppendLine($"TextureSet => {item.TextureSet}");
+                fg.AppendItem(TextureSetItem, "TextureSet");
             }
-            if (printMask?.ValidRaces ?? true)
+            if ((printMask?.ValidRaces ?? true)
+                && item.ValidRaces.TryGet(out var ValidRacesItem))
             {
-                fg.AppendLine($"ValidRaces => {item.ValidRaces}");
+                fg.AppendItem(ValidRacesItem, "ValidRaces");
             }
         }
         
@@ -2007,8 +2005,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.Type.HasValue && checkMask.Type.Value != (item.Type != null)) return false;
-            if (checkMask.ExtraParts?.Overall.HasValue ?? false && checkMask.ExtraParts!.Overall.Value != item.ExtraParts.HasBeenSet) return false;
-            if (checkMask.Parts?.Overall.HasValue ?? false && checkMask.Parts!.Overall.Value != item.Parts.HasBeenSet) return false;
+            if (checkMask.ExtraParts?.Overall.HasValue ?? false && checkMask.ExtraParts!.Overall.Value != (item.ExtraParts != null)) return false;
+            if (checkMask.Parts?.Overall.HasValue ?? false && checkMask.Parts!.Overall.Value != (item.Parts != null)) return false;
             if (checkMask.TextureSet.HasValue && checkMask.TextureSet.Value != (item.TextureSet.FormKey != null)) return false;
             if (checkMask.ValidRaces.HasValue && checkMask.ValidRaces.Value != (item.ValidRaces.FormKey != null)) return false;
             return base.HasBeenSet(
@@ -2025,9 +2023,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Flags = (item.Flags != null);
             mask.Type = (item.Type != null);
-            mask.ExtraParts = new MaskItem<bool, IEnumerable<(int, bool)>>(item.ExtraParts.HasBeenSet, Enumerable.Empty<(int, bool)>());
-            var PartsItem = item.Parts;
-            mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Part.Mask<bool>?>>>(PartsItem.HasBeenSet, PartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Part.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.ExtraParts = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ExtraParts != null), default);
+            if (item.Parts.TryGet(out var PartsItem))
+            {
+                mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Part.Mask<bool>?>>?>(true, PartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Part.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.TextureSet = (item.TextureSet.FormKey != null);
             mask.ValidRaces = (item.ValidRaces.FormKey != null);
             base.FillHasBeenSetMask(
@@ -2177,9 +2177,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.ExtraParts)
+            if (obj.ExtraParts != null)
             {
-                yield return item;
+                foreach (var item in obj.ExtraParts)
+                {
+                    yield return item;
+                }
             }
             yield return obj.TextureSet;
             yield return obj.ValidRaces;
@@ -2272,15 +2275,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadPart_FieldIndex.ExtraParts);
                 try
                 {
-                    if (rhs.ExtraParts.HasBeenSet)
+                    if ((rhs.ExtraParts != null))
                     {
-                        item.ExtraParts.SetTo(
-                            rhs.ExtraParts,
-                            (r) => new FormLink<HeadPart>(r.FormKey));
+                        item.ExtraParts = 
+                            rhs.ExtraParts
+                            .Select(r => new FormLink<HeadPart>(r.FormKey))
+                            .ToExtendedList<IFormLink<HeadPart>>();
                     }
                     else
                     {
-                        item.ExtraParts.Unset();
+                        item.ExtraParts = null;
                     }
                 }
                 catch (Exception ex)
@@ -2298,20 +2302,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadPart_FieldIndex.Parts);
                 try
                 {
-                    if (rhs.Parts.HasBeenSet)
+                    if ((rhs.Parts != null))
                     {
-                        item.Parts.SetTo(
-                            items: rhs.Parts,
-                            converter: (r) =>
+                        item.Parts = 
+                            rhs.Parts
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<Part>();
                     }
                     else
                     {
-                        item.Parts.Unset();
+                        item.Parts = null;
                     }
                 }
                 catch (Exception ex)
@@ -2518,7 +2523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)HeadPart_FieldIndex.Type,
                     errorMask: errorMask);
             }
-            if (item.ExtraParts.HasBeenSet
+            if ((item.ExtraParts != null)
                 && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ExtraParts) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
@@ -2537,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if (item.Parts.HasBeenSet
+            if ((item.Parts != null)
                 && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Parts) ?? true))
             {
                 ListXmlTranslation<IPartGetter>.Instance.Write(
@@ -2771,11 +2776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.ExtraParts.SetTo(ExtraPartsItem);
+                            item.ExtraParts = ExtraPartsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.ExtraParts.Unset();
+                            item.ExtraParts = null;
                         }
                     }
                     catch (Exception ex)
@@ -2799,11 +2804,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Parts.SetTo(PartsItem);
+                            item.Parts = PartsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Parts.Unset();
+                            item.Parts = null;
                         }
                     }
                     catch (Exception ex)
@@ -3159,8 +3164,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool Type_IsSet => _TypeLocation.HasValue;
         public HeadPart.TypeEnum? Type => Type_IsSet ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.Meta)) : default(HeadPart.TypeEnum?);
         #endregion
-        public IReadOnlySetList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = EmptySetList<IFormLinkGetter<IHeadPartGetter>>.Instance;
-        public IReadOnlySetList<IPartGetter> Parts { get; private set; } = EmptySetList<PartBinaryOverlay>.Instance;
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? ExtraParts { get; private set; }
+        public IReadOnlyList<IPartGetter>? Parts { get; private set; }
         #region TextureSet
         private int? _TextureSetLocation;
         public bool TextureSet_IsSet => _TextureSetLocation.HasValue;

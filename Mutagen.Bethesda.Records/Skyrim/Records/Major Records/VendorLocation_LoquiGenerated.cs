@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IVendorLocationGetter rhs)) return false;
             return ((VendorLocationCommon)((IVendorLocationGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -342,15 +342,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendLine($"Type => {Type}");
+                        fg.AppendItem(Type, "Type");
                     }
                     if (printMask?.Reference ?? true)
                     {
-                        fg.AppendLine($"Reference => {Reference}");
+                        fg.AppendItem(Reference, "Reference");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendLine($"Radius => {Radius}");
+                        fg.AppendItem(Radius, "Radius");
                     }
                 }
                 fg.AppendLine("]");
@@ -477,9 +477,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Type => {Type}");
-                fg.AppendLine($"Reference => {Reference}");
-                fg.AppendLine($"Radius => {Radius}");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(Reference, "Reference");
+                fg.AppendItem(Radius, "Radius");
             }
             #endregion
 
@@ -1306,15 +1306,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendLine($"Type => {item.Type}");
+                fg.AppendItem(item.Type, "Type");
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendLine($"Reference => {item.Reference}");
+                fg.AppendItem(item.Reference, "Reference");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendLine($"Radius => {item.Radius}");
+                fg.AppendItem(item.Radius, "Radius");
             }
         }
         

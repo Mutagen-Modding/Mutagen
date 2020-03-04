@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRegionDataGetter rhs)) return false;
             return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -389,19 +389,19 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.DataType ?? true)
                     {
-                        fg.AppendLine($"DataType => {DataType}");
+                        fg.AppendItem(DataType, "DataType");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Priority ?? true)
                     {
-                        fg.AppendLine($"Priority => {Priority}");
+                        fg.AppendItem(Priority, "Priority");
                     }
                     if (printMask?.RDATDataTypeState ?? true)
                     {
-                        fg.AppendLine($"RDATDataTypeState => {RDATDataTypeState}");
+                        fg.AppendItem(RDATDataTypeState, "RDATDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -538,10 +538,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected virtual void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"DataType => {DataType}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Priority => {Priority}");
-                fg.AppendLine($"RDATDataTypeState => {RDATDataTypeState}");
+                fg.AppendItem(DataType, "DataType");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Priority, "Priority");
+                fg.AppendItem(RDATDataTypeState, "RDATDataTypeState");
             }
             #endregion
 
@@ -1427,19 +1427,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.DataType ?? true)
             {
-                fg.AppendLine($"DataType => {item.DataType}");
+                fg.AppendItem(item.DataType, "DataType");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Priority ?? true)
             {
-                fg.AppendLine($"Priority => {item.Priority}");
+                fg.AppendItem(item.Priority, "Priority");
             }
             if (printMask?.RDATDataTypeState ?? true)
             {
-                fg.AppendLine($"RDATDataTypeState => {item.RDATDataTypeState}");
+                fg.AppendItem(item.RDATDataTypeState, "RDATDataTypeState");
             }
         }
         

@@ -51,13 +51,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<RegionDataObject> _Objects = new SetList<RegionDataObject>();
-        public ISetList<RegionDataObject> Objects => _Objects;
+        private ExtendedList<RegionDataObject>? _Objects;
+        public ExtendedList<RegionDataObject>? Objects
+        {
+            get => this._Objects;
+            set => this._Objects = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<RegionDataObject> IRegionDataObjects.Objects => _Objects;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRegionDataObjectGetter> IRegionDataObjectsGetter.Objects => _Objects;
+        IReadOnlyList<IRegionDataObjectGetter>? IRegionDataObjectsGetter.Objects => _Objects;
         #endregion
 
         #endregion
@@ -76,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRegionDataObjectsGetter rhs)) return false;
             return ((RegionDataObjectsCommon)((IRegionDataObjectsGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -231,7 +233,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -246,7 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Priority: Priority,
                 RDATDataTypeState: RDATDataTypeState)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -258,11 +260,11 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>>? Objects;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>?>? Objects;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -338,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (Objects != null)
                 {
-                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionDataObject.Mask<R>?>>>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionDataObject.Mask<R>?>>());
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionDataObject.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionDataObject.Mask<R>?>>());
                     if (Objects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionDataObject.Mask<R>?>>();
@@ -373,29 +375,24 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Objects?.Overall ?? true)
+                    if ((printMask?.Objects?.Overall ?? true)
+                        && Objects.TryGet(out var ObjectsItem))
                     {
                         fg.AppendLine("Objects =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Objects != null)
+                            fg.AppendItem(ObjectsItem.Overall);
+                            if (ObjectsItem.Specific != null)
                             {
-                                if (Objects.Overall != null)
+                                foreach (var subItem in ObjectsItem.Specific)
                                 {
-                                    fg.AppendLine(Objects.Overall.ToString());
-                                }
-                                if (Objects.Specific != null)
-                                {
-                                    foreach (var subItem in Objects.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -496,19 +493,16 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine("Objects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Objects.TryGet(out var ObjectsItem))
                 {
-                    if (Objects != null)
+                    fg.AppendLine("Objects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Objects.Overall != null)
+                        fg.AppendItem(ObjectsItem.Overall);
+                        if (ObjectsItem.Specific != null)
                         {
-                            fg.AppendLine(Objects.Overall.ToString());
-                        }
-                        if (Objects.Specific != null)
-                        {
-                            foreach (var subItem in Objects.Specific)
+                            foreach (var subItem in ObjectsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -519,8 +513,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -645,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionData,
         ILoquiObjectSetter<IRegionDataObjectsInternal>
     {
-        new ISetList<RegionDataObject> Objects { get; }
+        new ExtendedList<RegionDataObject>? Objects { get; set; }
     }
 
     public partial interface IRegionDataObjectsInternal :
@@ -662,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        IReadOnlySetList<IRegionDataObjectGetter> Objects { get; }
+        IReadOnlyList<IRegionDataObjectGetter>? Objects { get; }
 
     }
 
@@ -1100,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    return typeof(ISetList<RegionDataObject>);
+                    return typeof(ExtendedList<RegionDataObject>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
@@ -1154,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionDataObjectsInternal item)
         {
             ClearPartial();
-            item.Objects.Unset();
+            item.Objects = null;
             base.Clear(item);
         }
         
@@ -1244,16 +1238,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x544F4452: // RDOT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.Objects,
-                        transl: (MutagenFrame r, out RegionDataObject listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<RegionDataObject>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Objects = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out RegionDataObject listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<RegionDataObject>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<RegionDataObject>();
                     return TryGet<int?>.Succeed((int)RegionDataObjects_FieldIndex.Objects);
                 }
                 default:
@@ -1366,13 +1361,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Objects?.Overall ?? true)
+            if ((printMask?.Objects?.Overall ?? true)
+                && item.Objects.TryGet(out var ObjectsItem))
             {
                 fg.AppendLine("Objects =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Objects)
+                    foreach (var subItem in ObjectsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1390,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObjectsGetter item,
             RegionDataObjects.Mask<bool?> checkMask)
         {
-            if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects!.Overall.Value != item.Objects.HasBeenSet) return false;
+            if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects!.Overall.Value != (item.Objects != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1400,8 +1396,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObjectsGetter item,
             RegionDataObjects.Mask<bool> mask)
         {
-            var ObjectsItem = item.Objects;
-            mask.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionDataObject.Mask<bool>?>>>(ObjectsItem.HasBeenSet, ObjectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionDataObject.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Objects.TryGet(out var ObjectsItem))
+            {
+                mask.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionDataObject.Mask<bool>?>>?>(true, ObjectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionDataObject.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1473,9 +1471,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Objects.SelectMany(f => f.Links))
+            if (obj.Objects != null)
             {
-                yield return item;
+                foreach (var item in obj.Objects.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1517,20 +1518,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObjects_FieldIndex.Objects);
                 try
                 {
-                    if (rhs.Objects.HasBeenSet)
+                    if ((rhs.Objects != null))
                     {
-                        item.Objects.SetTo(
-                            items: rhs.Objects,
-                            converter: (r) =>
+                        item.Objects = 
+                            rhs.Objects
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<RegionDataObject>();
                     }
                     else
                     {
-                        item.Objects.Unset();
+                        item.Objects = null;
                     }
                 }
                 catch (Exception ex)
@@ -1659,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Objects.HasBeenSet
+            if ((item.Objects != null)
                 && (translationMask?.GetShouldTranslate((int)RegionDataObjects_FieldIndex.Objects) ?? true))
             {
                 ListXmlTranslation<IRegionDataObjectGetter>.Instance.Write(
@@ -1783,11 +1785,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Objects.SetTo(ObjectsItem);
+                            item.Objects = ObjectsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Objects.Unset();
+                            item.Objects = null;
                         }
                     }
                     catch (Exception ex)
@@ -2025,7 +2027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IReadOnlySetList<IRegionDataObjectGetter> Objects { get; private set; } = EmptySetList<RegionDataObjectBinaryOverlay>.Instance;
+        public IReadOnlyList<IRegionDataObjectGetter>? Objects { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IMagicEffectSubDataGetter rhs)) return false;
             return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -406,31 +406,31 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.EnchantEffect ?? true)
                     {
-                        fg.AppendLine($"EnchantEffect => {EnchantEffect}");
+                        fg.AppendItem(EnchantEffect, "EnchantEffect");
                     }
                     if (printMask?.CastingSound ?? true)
                     {
-                        fg.AppendLine($"CastingSound => {CastingSound}");
+                        fg.AppendItem(CastingSound, "CastingSound");
                     }
                     if (printMask?.BoltSound ?? true)
                     {
-                        fg.AppendLine($"BoltSound => {BoltSound}");
+                        fg.AppendItem(BoltSound, "BoltSound");
                     }
                     if (printMask?.HitSound ?? true)
                     {
-                        fg.AppendLine($"HitSound => {HitSound}");
+                        fg.AppendItem(HitSound, "HitSound");
                     }
                     if (printMask?.AreaSound ?? true)
                     {
-                        fg.AppendLine($"AreaSound => {AreaSound}");
+                        fg.AppendItem(AreaSound, "AreaSound");
                     }
                     if (printMask?.ConstantEffectEnchantmentFactor ?? true)
                     {
-                        fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
+                        fg.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
                     }
                     if (printMask?.ConstantEffectBarterFactor ?? true)
                     {
-                        fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
+                        fg.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
                     }
                 }
                 fg.AppendLine("]");
@@ -597,13 +597,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"EnchantEffect => {EnchantEffect}");
-                fg.AppendLine($"CastingSound => {CastingSound}");
-                fg.AppendLine($"BoltSound => {BoltSound}");
-                fg.AppendLine($"HitSound => {HitSound}");
-                fg.AppendLine($"AreaSound => {AreaSound}");
-                fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
-                fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
+                fg.AppendItem(EnchantEffect, "EnchantEffect");
+                fg.AppendItem(CastingSound, "CastingSound");
+                fg.AppendItem(BoltSound, "BoltSound");
+                fg.AppendItem(HitSound, "HitSound");
+                fg.AppendItem(AreaSound, "AreaSound");
+                fg.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                fg.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
             }
             #endregion
 
@@ -1520,31 +1520,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.EnchantEffect ?? true)
             {
-                fg.AppendLine($"EnchantEffect => {item.EnchantEffect}");
+                fg.AppendItem(item.EnchantEffect, "EnchantEffect");
             }
             if (printMask?.CastingSound ?? true)
             {
-                fg.AppendLine($"CastingSound => {item.CastingSound}");
+                fg.AppendItem(item.CastingSound, "CastingSound");
             }
             if (printMask?.BoltSound ?? true)
             {
-                fg.AppendLine($"BoltSound => {item.BoltSound}");
+                fg.AppendItem(item.BoltSound, "BoltSound");
             }
             if (printMask?.HitSound ?? true)
             {
-                fg.AppendLine($"HitSound => {item.HitSound}");
+                fg.AppendItem(item.HitSound, "HitSound");
             }
             if (printMask?.AreaSound ?? true)
             {
-                fg.AppendLine($"AreaSound => {item.AreaSound}");
+                fg.AppendItem(item.AreaSound, "AreaSound");
             }
             if (printMask?.ConstantEffectEnchantmentFactor ?? true)
             {
-                fg.AppendLine($"ConstantEffectEnchantmentFactor => {item.ConstantEffectEnchantmentFactor}");
+                fg.AppendItem(item.ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
             }
             if (printMask?.ConstantEffectBarterFactor ?? true)
             {
-                fg.AppendLine($"ConstantEffectBarterFactor => {item.ConstantEffectBarterFactor}");
+                fg.AppendItem(item.ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
             }
         }
         

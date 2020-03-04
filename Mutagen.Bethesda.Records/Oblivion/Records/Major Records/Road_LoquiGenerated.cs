@@ -52,13 +52,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<RoadPoint> _Points = new SetList<RoadPoint>();
-        public ISetList<RoadPoint> Points => _Points;
+        private ExtendedList<RoadPoint>? _Points;
+        public ExtendedList<RoadPoint>? Points
+        {
+            get => this._Points;
+            set => this._Points = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<RoadPoint> IRoad.Points => _Points;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRoadPointGetter> IRoadGetter.Points => _Points;
+        IReadOnlyList<IRoadPointGetter>? IRoadGetter.Points => _Points;
         #endregion
 
         #endregion
@@ -77,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRoadGetter rhs)) return false;
             return ((RoadCommon)((IRoadGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -232,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Points = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>());
+                this.Points = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -249,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.Points = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>>(Points, Enumerable.Empty<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>());
+                this.Points = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>?>(Points, Enumerable.Empty<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -261,11 +263,11 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>>? Points;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>?>? Points;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -341,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (Points != null)
                 {
-                    obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint.Mask<R>?>>>(eval(this.Points.Overall), Enumerable.Empty<MaskItemIndexed<R, RoadPoint.Mask<R>?>>());
+                    obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint.Mask<R>?>>?>(eval(this.Points.Overall), Enumerable.Empty<MaskItemIndexed<R, RoadPoint.Mask<R>?>>());
                     if (Points.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RoadPoint.Mask<R>?>>();
@@ -376,29 +378,24 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Points?.Overall ?? true)
+                    if ((printMask?.Points?.Overall ?? true)
+                        && Points.TryGet(out var PointsItem))
                     {
                         fg.AppendLine("Points =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Points != null)
+                            fg.AppendItem(PointsItem.Overall);
+                            if (PointsItem.Specific != null)
                             {
-                                if (Points.Overall != null)
+                                foreach (var subItem in PointsItem.Specific)
                                 {
-                                    fg.AppendLine(Points.Overall.ToString());
-                                }
-                                if (Points.Specific != null)
-                                {
-                                    foreach (var subItem in Points.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -499,19 +496,16 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine("Points =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Points.TryGet(out var PointsItem))
                 {
-                    if (Points != null)
+                    fg.AppendLine("Points =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Points.Overall != null)
+                        fg.AppendItem(PointsItem.Overall);
+                        if (PointsItem.Specific != null)
                         {
-                            fg.AppendLine(Points.Overall.ToString());
-                        }
-                        if (Points.Specific != null)
-                        {
-                            foreach (var subItem in Points.Specific)
+                            foreach (var subItem in PointsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -522,8 +516,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -657,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IRoadInternal>
     {
-        new ISetList<RoadPoint> Points { get; }
+        new ExtendedList<RoadPoint>? Points { get; set; }
     }
 
     public partial interface IRoadInternal :
@@ -673,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        IReadOnlySetList<IRoadPointGetter> Points { get; }
+        IReadOnlyList<IRoadPointGetter>? Points { get; }
 
     }
 
@@ -1112,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    return typeof(ISetList<RoadPoint>);
+                    return typeof(ExtendedList<RoadPoint>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1166,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRoadInternal item)
         {
             ClearPartial();
-            item.Points.Unset();
+            item.Points = null;
             base.Clear(item);
         }
         
@@ -1376,13 +1370,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Points?.Overall ?? true)
+            if ((printMask?.Points?.Overall ?? true)
+                && item.Points.TryGet(out var PointsItem))
             {
                 fg.AppendLine("Points =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Points)
+                    foreach (var subItem in PointsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1400,7 +1395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadGetter item,
             Road.Mask<bool?> checkMask)
         {
-            if (checkMask.Points?.Overall.HasValue ?? false && checkMask.Points!.Overall.Value != item.Points.HasBeenSet) return false;
+            if (checkMask.Points?.Overall.HasValue ?? false && checkMask.Points!.Overall.Value != (item.Points != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1410,8 +1405,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadGetter item,
             Road.Mask<bool> mask)
         {
-            var PointsItem = item.Points;
-            mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint.Mask<bool>?>>>(PointsItem.HasBeenSet, PointsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Points.TryGet(out var PointsItem))
+            {
+                mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint.Mask<bool>?>>?>(true, PointsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1567,20 +1564,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Road_FieldIndex.Points);
                 try
                 {
-                    if (rhs.Points.HasBeenSet)
+                    if ((rhs.Points != null))
                     {
-                        item.Points.SetTo(
-                            items: rhs.Points,
-                            converter: (r) =>
+                        item.Points = 
+                            rhs.Points
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<RoadPoint>();
                     }
                     else
                     {
-                        item.Points.Unset();
+                        item.Points = null;
                     }
                 }
                 catch (Exception ex)
@@ -1735,7 +1733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Points.HasBeenSet
+            if ((item.Points != null)
                 && (translationMask?.GetShouldTranslate((int)Road_FieldIndex.Points) ?? true))
             {
                 ListXmlTranslation<IRoadPointGetter>.Instance.Write(
@@ -1874,11 +1872,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Points.SetTo(PointsItem);
+                            item.Points = PointsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Points.Unset();
+                            item.Points = null;
                         }
                     }
                     catch (Exception ex)

@@ -159,8 +159,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._OffsetData = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IWorldspaceGetter.OffsetData => this.OffsetData;
-        bool IWorldspaceGetter.OffsetData_IsSet => this.OffsetData != null;
+        ReadOnlyMemorySlice<Byte>? IWorldspaceGetter.OffsetData => this.OffsetData;
         #endregion
         #region Road
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -193,17 +192,19 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._SubCellsTimestamp = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IWorldspaceGetter.SubCellsTimestamp => this.SubCellsTimestamp;
+        ReadOnlyMemorySlice<Byte> IWorldspaceGetter.SubCellsTimestamp => this.SubCellsTimestamp;
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<WorldspaceBlock> _SubCells = new SetList<WorldspaceBlock>();
-        public ISetList<WorldspaceBlock> SubCells => _SubCells;
+        private ExtendedList<WorldspaceBlock>? _SubCells;
+        public ExtendedList<WorldspaceBlock>? SubCells
+        {
+            get => this._SubCells;
+            set => this._SubCells = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IWorldspaceBlockGetter> IWorldspaceGetter.SubCells => _SubCells;
+        IReadOnlyList<IWorldspaceBlockGetter>? IWorldspaceGetter.SubCells => _SubCells;
         #endregion
 
         #endregion
@@ -225,7 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IWorldspaceGetter rhs)) return false;
             return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -394,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Road = new MaskItem<TItem, Road.Mask<TItem>?>(initialValue, new Road.Mask<TItem>(initialValue));
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(initialValue, new Cell.Mask<TItem>(initialValue));
                 this.SubCellsTimestamp = initialValue;
-                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
                 this.UsingOffsetLength = initialValue;
             }
 
@@ -441,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Road = new MaskItem<TItem, Road.Mask<TItem>?>(Road, new Road.Mask<TItem>(Road));
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(TopCell, new Cell.Mask<TItem>(TopCell));
                 this.SubCellsTimestamp = SubCellsTimestamp;
-                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
                 this.UsingOffsetLength = UsingOffsetLength;
             }
 
@@ -468,12 +469,12 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<TItem, Road.Mask<TItem>?>? Road { get; set; }
             public MaskItem<TItem, Cell.Mask<TItem>?>? TopCell { get; set; }
             public TItem SubCellsTimestamp;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>>? SubCells;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>? SubCells;
             public TItem UsingOffsetLength;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -647,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SubCellsTimestamp = eval(this.SubCellsTimestamp);
                 if (SubCells != null)
                 {
-                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>>(eval(this.SubCells.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>());
+                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>?>(eval(this.SubCells.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>());
                     if (SubCells.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>();
@@ -685,23 +686,23 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Parent ?? true)
                     {
-                        fg.AppendLine($"Parent => {Parent}");
+                        fg.AppendItem(Parent, "Parent");
                     }
                     if (printMask?.Climate ?? true)
                     {
-                        fg.AppendLine($"Climate => {Climate}");
+                        fg.AppendItem(Climate, "Climate");
                     }
                     if (printMask?.Water ?? true)
                     {
-                        fg.AppendLine($"Water => {Water}");
+                        fg.AppendItem(Water, "Water");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.MapData?.Overall ?? true)
                     {
@@ -709,23 +710,23 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ObjectBoundsMin ?? true)
                     {
-                        fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
+                        fg.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
                     }
                     if (printMask?.ObjectBoundsMax ?? true)
                     {
-                        fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
+                        fg.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
                     }
                     if (printMask?.Music ?? true)
                     {
-                        fg.AppendLine($"Music => {Music}");
+                        fg.AppendItem(Music, "Music");
                     }
                     if (printMask?.OffsetData ?? true)
                     {
-                        fg.AppendLine($"OffsetData => {OffsetData}");
+                        fg.AppendItem(OffsetData, "OffsetData");
                     }
                     if (printMask?.Road?.Overall ?? true)
                     {
@@ -737,31 +738,26 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.SubCellsTimestamp ?? true)
                     {
-                        fg.AppendLine($"SubCellsTimestamp => {SubCellsTimestamp}");
+                        fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
                     }
-                    if (printMask?.SubCells?.Overall ?? true)
+                    if ((printMask?.SubCells?.Overall ?? true)
+                        && SubCells.TryGet(out var SubCellsItem))
                     {
                         fg.AppendLine("SubCells =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (SubCells != null)
+                            fg.AppendItem(SubCellsItem.Overall);
+                            if (SubCellsItem.Specific != null)
                             {
-                                if (SubCells.Overall != null)
+                                foreach (var subItem in SubCellsItem.Specific)
                                 {
-                                    fg.AppendLine(SubCells.Overall.ToString());
-                                }
-                                if (SubCells.Specific != null)
-                                {
-                                    foreach (var subItem in SubCells.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -769,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.UsingOffsetLength ?? true)
                     {
-                        fg.AppendLine($"UsingOffsetLength => {UsingOffsetLength}");
+                        fg.AppendItem(UsingOffsetLength, "UsingOffsetLength");
                     }
                 }
                 fg.AppendLine("]");
@@ -1016,33 +1012,30 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Parent => {Parent}");
-                fg.AppendLine($"Climate => {Climate}");
-                fg.AppendLine($"Water => {Water}");
-                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Parent, "Parent");
+                fg.AppendItem(Climate, "Climate");
+                fg.AppendItem(Water, "Water");
+                fg.AppendItem(Icon, "Icon");
                 MapData?.ToString(fg);
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
-                fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
-                fg.AppendLine($"Music => {Music}");
-                fg.AppendLine($"OffsetData => {OffsetData}");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
+                fg.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
+                fg.AppendItem(Music, "Music");
+                fg.AppendItem(OffsetData, "OffsetData");
                 Road?.ToString(fg);
                 TopCell?.ToString(fg);
-                fg.AppendLine($"SubCellsTimestamp => {SubCellsTimestamp}");
-                fg.AppendLine("SubCells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
+                if (SubCells.TryGet(out var SubCellsItem))
                 {
-                    if (SubCells != null)
+                    fg.AppendLine("SubCells =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (SubCells.Overall != null)
+                        fg.AppendItem(SubCellsItem.Overall);
+                        if (SubCellsItem.Specific != null)
                         {
-                            fg.AppendLine(SubCells.Overall.ToString());
-                        }
-                        if (SubCells.Specific != null)
-                        {
-                            foreach (var subItem in SubCells.Specific)
+                            foreach (var subItem in SubCellsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1053,9 +1046,9 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"UsingOffsetLength => {UsingOffsetLength}");
+                fg.AppendItem(UsingOffsetLength, "UsingOffsetLength");
             }
             #endregion
 
@@ -1274,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Road? Road { get; set; }
         new Cell? TopCell { get; set; }
         new Byte[] SubCellsTimestamp { get; set; }
-        new ISetList<WorldspaceBlock> SubCells { get; }
+        new ExtendedList<WorldspaceBlock>? SubCells { get; set; }
         new Boolean UsingOffsetLength { get; set; }
     }
 
@@ -1303,14 +1296,11 @@ namespace Mutagen.Bethesda.Oblivion
         P2Float? ObjectBoundsMin { get; }
         P2Float? ObjectBoundsMax { get; }
         MusicType? Music { get; }
-        #region OffsetData
-        ReadOnlySpan<Byte> OffsetData { get; }
-        bool OffsetData_IsSet { get; }
-        #endregion
+        ReadOnlyMemorySlice<Byte>? OffsetData { get; }
         IRoadGetter? Road { get; }
         ICellGetter? TopCell { get; }
-        ReadOnlySpan<Byte> SubCellsTimestamp { get; }
-        IReadOnlySetList<IWorldspaceBlockGetter> SubCells { get; }
+        ReadOnlyMemorySlice<Byte> SubCellsTimestamp { get; }
+        IReadOnlyList<IWorldspaceBlockGetter>? SubCells { get; }
         Boolean UsingOffsetLength { get; }
 
     }
@@ -1959,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCellsTimestamp:
                     return typeof(Byte[]);
                 case Worldspace_FieldIndex.SubCells:
-                    return typeof(ISetList<WorldspaceBlock>);
+                    return typeof(ExtendedList<WorldspaceBlock>);
                 case Worldspace_FieldIndex.UsingOffsetLength:
                     return typeof(Boolean);
                 default:
@@ -2043,7 +2033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Road = null;
             item.TopCell = null;
             item.SubCellsTimestamp = new byte[4];
-            item.SubCells.Unset();
+            item.SubCells = null;
             item.UsingOffsetLength = default;
             base.Clear(item);
         }
@@ -2325,7 +2315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ObjectBoundsMin = item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
             ret.ObjectBoundsMax = item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
             ret.Music = item.Music == rhs.Music;
-            ret.OffsetData = MemoryExtensions.SequenceEqual(item.OffsetData, rhs.OffsetData);
+            ret.OffsetData = MemorySliceExt.Equal(item.OffsetData, rhs.OffsetData);
             ret.Road = EqualsMaskHelper.EqualsHelper(
                 item.Road,
                 rhs.Road,
@@ -2336,7 +2326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.TopCell,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.SubCellsTimestamp = MemoryExtensions.SequenceEqual(item.SubCellsTimestamp, rhs.SubCellsTimestamp);
+            ret.SubCellsTimestamp = MemoryExtensions.SequenceEqual(item.SubCellsTimestamp.Span, rhs.SubCellsTimestamp.Span);
             ret.SubCells = item.SubCells.CollectionEqualsHelper(
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2393,69 +2383,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Parent ?? true)
+            if ((printMask?.Parent ?? true)
+                && item.Parent.TryGet(out var ParentItem))
             {
-                fg.AppendLine($"Parent => {item.Parent}");
+                fg.AppendItem(ParentItem, "Parent");
             }
-            if (printMask?.Climate ?? true)
+            if ((printMask?.Climate ?? true)
+                && item.Climate.TryGet(out var ClimateItem))
             {
-                fg.AppendLine($"Climate => {item.Climate}");
+                fg.AppendItem(ClimateItem, "Climate");
             }
-            if (printMask?.Water ?? true)
+            if ((printMask?.Water ?? true)
+                && item.Water.TryGet(out var WaterItem))
             {
-                fg.AppendLine($"Water => {item.Water}");
+                fg.AppendItem(WaterItem, "Water");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.MapData?.Overall ?? true)
+            if ((printMask?.MapData?.Overall ?? true)
+                && item.MapData.TryGet(out var MapDataItem))
             {
-                item.MapData?.ToString(fg, "MapData");
+                MapDataItem?.ToString(fg, "MapData");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.ObjectBoundsMin ?? true)
+            if ((printMask?.ObjectBoundsMin ?? true)
+                && item.ObjectBoundsMin.TryGet(out var ObjectBoundsMinItem))
             {
-                fg.AppendLine($"ObjectBoundsMin => {item.ObjectBoundsMin}");
+                fg.AppendItem(ObjectBoundsMinItem, "ObjectBoundsMin");
             }
-            if (printMask?.ObjectBoundsMax ?? true)
+            if ((printMask?.ObjectBoundsMax ?? true)
+                && item.ObjectBoundsMax.TryGet(out var ObjectBoundsMaxItem))
             {
-                fg.AppendLine($"ObjectBoundsMax => {item.ObjectBoundsMax}");
+                fg.AppendItem(ObjectBoundsMaxItem, "ObjectBoundsMax");
             }
-            if (printMask?.Music ?? true)
+            if ((printMask?.Music ?? true)
+                && item.Music.TryGet(out var MusicItem))
             {
-                fg.AppendLine($"Music => {item.Music}");
+                fg.AppendItem(MusicItem, "Music");
             }
-            if (printMask?.OffsetData ?? true)
+            if ((printMask?.OffsetData ?? true)
+                && item.OffsetData.TryGet(out var OffsetDataItem))
             {
-                fg.AppendLine($"OffsetData => {SpanExt.ToHexString(item.OffsetData)}");
+                fg.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
             }
-            if (printMask?.Road?.Overall ?? true)
+            if ((printMask?.Road?.Overall ?? true)
+                && item.Road.TryGet(out var RoadItem))
             {
-                item.Road?.ToString(fg, "Road");
+                RoadItem?.ToString(fg, "Road");
             }
-            if (printMask?.TopCell?.Overall ?? true)
+            if ((printMask?.TopCell?.Overall ?? true)
+                && item.TopCell.TryGet(out var TopCellItem))
             {
-                item.TopCell?.ToString(fg, "TopCell");
+                TopCellItem?.ToString(fg, "TopCell");
             }
             if (printMask?.SubCellsTimestamp ?? true)
             {
                 fg.AppendLine($"SubCellsTimestamp => {SpanExt.ToHexString(item.SubCellsTimestamp)}");
             }
-            if (printMask?.SubCells?.Overall ?? true)
+            if ((printMask?.SubCells?.Overall ?? true)
+                && item.SubCells.TryGet(out var SubCellsItem))
             {
                 fg.AppendLine("SubCells =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.SubCells)
+                    foreach (var subItem in SubCellsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2469,7 +2473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.UsingOffsetLength ?? true)
             {
-                fg.AppendLine($"UsingOffsetLength => {item.UsingOffsetLength}");
+                fg.AppendItem(item.UsingOffsetLength, "UsingOffsetLength");
             }
         }
         
@@ -2488,12 +2492,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.ObjectBoundsMin.HasValue && checkMask.ObjectBoundsMin.Value != (item.ObjectBoundsMin != null)) return false;
             if (checkMask.ObjectBoundsMax.HasValue && checkMask.ObjectBoundsMax.Value != (item.ObjectBoundsMax != null)) return false;
             if (checkMask.Music.HasValue && checkMask.Music.Value != (item.Music != null)) return false;
-            if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != item.OffsetData_IsSet) return false;
+            if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != (item.OffsetData != null)) return false;
             if (checkMask.Road?.Overall.HasValue ?? false && checkMask.Road.Overall.Value != (item.Road != null)) return false;
             if (checkMask.Road?.Specific != null && (item.Road == null || !item.Road.HasBeenSet(checkMask.Road.Specific))) return false;
             if (checkMask.TopCell?.Overall.HasValue ?? false && checkMask.TopCell.Overall.Value != (item.TopCell != null)) return false;
             if (checkMask.TopCell?.Specific != null && (item.TopCell == null || !item.TopCell.HasBeenSet(checkMask.TopCell.Specific))) return false;
-            if (checkMask.SubCells?.Overall.HasValue ?? false && checkMask.SubCells!.Overall.Value != item.SubCells.HasBeenSet) return false;
+            if (checkMask.SubCells?.Overall.HasValue ?? false && checkMask.SubCells!.Overall.Value != (item.SubCells != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2514,14 +2518,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ObjectBoundsMin = (item.ObjectBoundsMin != null);
             mask.ObjectBoundsMax = (item.ObjectBoundsMax != null);
             mask.Music = (item.Music != null);
-            mask.OffsetData = item.OffsetData_IsSet;
+            mask.OffsetData = (item.OffsetData != null);
             var itemRoad = item.Road;
             mask.Road = new MaskItem<bool, Road.Mask<bool>?>(itemRoad != null, itemRoad?.GetHasBeenSetMask());
             var itemTopCell = item.TopCell;
             mask.TopCell = new MaskItem<bool, Cell.Mask<bool>?>(itemTopCell != null, itemTopCell?.GetHasBeenSetMask());
             mask.SubCellsTimestamp = true;
-            var SubCellsItem = item.SubCells;
-            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>>>(SubCellsItem.HasBeenSet, SubCellsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.SubCells.TryGet(out var SubCellsItem))
+            {
+                mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>>?>(true, SubCellsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.UsingOffsetLength = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2601,10 +2607,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
             if (!lhs.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
             if (lhs.Music != rhs.Music) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
+            if (!MemorySliceExt.Equal(lhs.OffsetData, rhs.OffsetData)) return false;
             if (!object.Equals(lhs.Road, rhs.Road)) return false;
             if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.SubCellsTimestamp.Span, rhs.SubCellsTimestamp.Span)) return false;
             if (!lhs.SubCells.SequenceEqual(rhs.SubCells)) return false;
             if (lhs.UsingOffsetLength != rhs.UsingOffsetLength) return false;
             return true;
@@ -2680,9 +2686,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(Musicitem).CombineHashCode(ret);
             }
-            if (item.OffsetData_IsSet)
+            if (item.OffsetData.TryGet(out var OffsetDataItem))
             {
-                ret = HashHelper.GetHashCode(item.OffsetData).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(OffsetDataItem).CombineHashCode(ret);
             }
             if (item.Road.TryGet(out var Roaditem))
             {
@@ -2739,9 +2745,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.SubCells.SelectMany(f => f.Links))
+            if (obj.SubCells != null)
             {
-                yield return item;
+                foreach (var item in obj.SubCells.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2759,27 +2768,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceGetter obj)
         {
-            if (obj.Road.TryGet(out var Roaditem))
+            if ((obj.MapData != null))
             {
-                yield return Roaditem;
-                foreach (var item in Roaditem.EnumerateMajorRecords())
+            }
+            if ((obj.Road != null))
+            {
+                if (obj.Road.TryGet(out var Roaditem))
                 {
-                    yield return item;
+                    yield return Roaditem;
+                    foreach (var item in Roaditem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
-            if (obj.TopCell.TryGet(out var TopCellitem))
+            if ((obj.TopCell != null))
             {
-                yield return TopCellitem;
-                foreach (var item in TopCellitem.EnumerateMajorRecords())
+                if (obj.TopCell.TryGet(out var TopCellitem))
                 {
-                    yield return item;
+                    yield return TopCellitem;
+                    foreach (var item in TopCellitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
-            foreach (var subItem in obj.SubCells)
+            if ((obj.SubCells != null))
             {
-                foreach (var item in subItem.EnumerateMajorRecords())
+                foreach (var subItem in obj.SubCells.TryIterate())
                 {
-                    yield return item;
+                    foreach (var item in subItem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
         }
@@ -2829,7 +2850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "WorldspaceBlock":
                 case "IWorldspaceBlockGetter":
                 case "IWorldspaceBlock":
-                    foreach (var subItem in obj.SubCells)
+                    foreach (var subItem in obj.SubCells.TryIterate())
                     {
                         foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
                         {
@@ -2938,9 +2959,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if(rhs.OffsetData_IsSet)
+                if(rhs.OffsetData.TryGet(out var OffsetDatarhs))
                 {
-                    item.OffsetData = rhs.OffsetData.ToArray();
+                    item.OffsetData = OffsetDatarhs.ToArray();
                 }
                 else
                 {
@@ -3014,20 +3035,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
                 try
                 {
-                    if (rhs.SubCells.HasBeenSet)
+                    if ((rhs.SubCells != null))
                     {
-                        item.SubCells.SetTo(
-                            items: rhs.SubCells,
-                            converter: (r) =>
+                        item.SubCells = 
+                            rhs.SubCells
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<WorldspaceBlock>();
                     }
                     else
                     {
-                        item.SubCells.Unset();
+                        item.SubCells = null;
                     }
                 }
                 catch (Exception ex)
@@ -3316,13 +3338,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Worldspace_FieldIndex.Music,
                     errorMask: errorMask);
             }
-            if (item.OffsetData_IsSet
+            if ((item.OffsetData != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.OffsetData),
-                    item: item.OffsetData,
+                    item: item.OffsetData.Value,
                     fieldIndex: (int)Worldspace_FieldIndex.OffsetData,
                     errorMask: errorMask);
             }
@@ -3363,7 +3385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Worldspace_FieldIndex.SubCellsTimestamp,
                     errorMask: errorMask);
             }
-            if (item.SubCells.HasBeenSet
+            if ((item.SubCells != null)
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
                 ListXmlTranslation<IWorldspaceBlockGetter>.Instance.Write(
@@ -3784,11 +3806,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.SubCells.SetTo(SubCellsItem);
+                            item.SubCells = SubCellsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.SubCells.Unset();
+                            item.SubCells = null;
                         }
                     }
                     catch (Exception ex)
@@ -4276,8 +4298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryMemoryReadStream stream,
             long finalPos,
             int offset);
-        public bool OffsetData_IsSet => GetOffsetDataIsSetCustom();
-        public ReadOnlySpan<Byte> OffsetData => GetOffsetDataCustom();
+        public ReadOnlyMemorySlice<Byte>? OffsetData => GetOffsetDataCustom();
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

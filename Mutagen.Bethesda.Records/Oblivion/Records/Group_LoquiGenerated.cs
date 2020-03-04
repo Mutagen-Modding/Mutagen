@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IGroupGetter<T> rhs)) return false;
             return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance()!).Equals(this, rhs);
@@ -1165,11 +1165,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.GroupType ?? true)
             {
-                fg.AppendLine($"GroupType => {item.GroupType}");
+                fg.AppendItem(item.GroupType, "GroupType");
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendLine($"LastModified => {item.LastModified}");
+                fg.AppendItem(item.LastModified, "LastModified");
             }
             if (printMask?.RecordCache?.Overall ?? true)
             {
@@ -2141,7 +2141,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
         
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -2257,11 +2257,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.GroupType ?? true)
                     {
-                        fg.AppendLine($"GroupType => {GroupType}");
+                        fg.AppendItem(GroupType, "GroupType");
                     }
                     if (printMask?.LastModified ?? true)
                     {
-                        fg.AppendLine($"LastModified => {LastModified}");
+                        fg.AppendItem(LastModified, "LastModified");
                     }
                     if (printMask?.RecordCache?.Overall ?? true)
                     {
@@ -2282,7 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         fg.AppendLine("[");
                                         using (new DepthWrapper(fg))
                                         {
-                                            fg.AppendLine($" => {subItem}");
+                                            fg.AppendItem(subItem);
                                         }
                                         fg.AppendLine("]");
                                     }
@@ -2417,8 +2417,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"GroupType => {GroupType}");
-                fg.AppendLine($"LastModified => {LastModified}");
+                fg.AppendItem(GroupType, "GroupType");
+                fg.AppendItem(LastModified, "LastModified");
                 fg.AppendLine("RecordCache =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
@@ -2436,7 +2436,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }

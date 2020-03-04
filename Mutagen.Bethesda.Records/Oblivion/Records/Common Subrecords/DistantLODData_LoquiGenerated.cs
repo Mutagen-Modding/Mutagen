@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IDistantLODDataGetter rhs)) return false;
             return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -338,15 +338,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Unknown0 ?? true)
                     {
-                        fg.AppendLine($"Unknown0 => {Unknown0}");
+                        fg.AppendItem(Unknown0, "Unknown0");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendLine($"Unknown1 => {Unknown1}");
+                        fg.AppendItem(Unknown1, "Unknown1");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                        fg.AppendItem(Unknown2, "Unknown2");
                     }
                 }
                 fg.AppendLine("]");
@@ -473,9 +473,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Unknown0 => {Unknown0}");
-                fg.AppendLine($"Unknown1 => {Unknown1}");
-                fg.AppendLine($"Unknown2 => {Unknown2}");
+                fg.AppendItem(Unknown0, "Unknown0");
+                fg.AppendItem(Unknown1, "Unknown1");
+                fg.AppendItem(Unknown2, "Unknown2");
             }
             #endregion
 
@@ -1296,15 +1296,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Unknown0 ?? true)
             {
-                fg.AppendLine($"Unknown0 => {item.Unknown0}");
+                fg.AppendItem(item.Unknown0, "Unknown0");
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendLine($"Unknown1 => {item.Unknown1}");
+                fg.AppendItem(item.Unknown1, "Unknown1");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknown2 => {item.Unknown2}");
+                fg.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         

@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISoundGetter rhs)) return false;
             return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.File ?? true)
                     {
-                        fg.AppendLine($"File => {File}");
+                        fg.AppendItem(File, "File");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"File => {File}");
+                fg.AppendItem(File, "File");
                 Data?.ToString(fg);
             }
             #endregion
@@ -1374,13 +1374,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.File ?? true)
+            if ((printMask?.File ?? true)
+                && item.File.TryGet(out var FileItem))
             {
-                fg.AppendLine($"File => {item.File}");
+                fg.AppendItem(FileItem, "File");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                item.Data?.ToString(fg, "Data");
+                DataItem?.ToString(fg, "Data");
             }
         }
         

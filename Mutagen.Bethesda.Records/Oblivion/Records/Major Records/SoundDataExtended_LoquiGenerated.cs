@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISoundDataExtendedInternalGetter rhs)) return false;
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -357,15 +357,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.StaticAttenuation ?? true)
                     {
-                        fg.AppendLine($"StaticAttenuation => {StaticAttenuation}");
+                        fg.AppendItem(StaticAttenuation, "StaticAttenuation");
                     }
                     if (printMask?.StopTime ?? true)
                     {
-                        fg.AppendLine($"StopTime => {StopTime}");
+                        fg.AppendItem(StopTime, "StopTime");
                     }
                     if (printMask?.StartTime ?? true)
                     {
-                        fg.AppendLine($"StartTime => {StartTime}");
+                        fg.AppendItem(StartTime, "StartTime");
                     }
                 }
                 fg.AppendLine("]");
@@ -482,9 +482,9 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"StaticAttenuation => {StaticAttenuation}");
-                fg.AppendLine($"StopTime => {StopTime}");
-                fg.AppendLine($"StartTime => {StartTime}");
+                fg.AppendItem(StaticAttenuation, "StaticAttenuation");
+                fg.AppendItem(StopTime, "StopTime");
+                fg.AppendItem(StartTime, "StartTime");
             }
             #endregion
 
@@ -1322,15 +1322,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.StaticAttenuation ?? true)
             {
-                fg.AppendLine($"StaticAttenuation => {item.StaticAttenuation}");
+                fg.AppendItem(item.StaticAttenuation, "StaticAttenuation");
             }
             if (printMask?.StopTime ?? true)
             {
-                fg.AppendLine($"StopTime => {item.StopTime}");
+                fg.AppendItem(item.StopTime, "StopTime");
             }
             if (printMask?.StartTime ?? true)
             {
-                fg.AppendLine($"StartTime => {item.StartTime}");
+                fg.AppendItem(item.StartTime, "StartTime");
             }
         }
         

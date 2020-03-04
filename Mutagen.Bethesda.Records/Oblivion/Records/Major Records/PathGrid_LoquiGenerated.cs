@@ -52,13 +52,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region PointToPointConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<PathGridPoint> _PointToPointConnections = new SetList<PathGridPoint>();
-        public ISetList<PathGridPoint> PointToPointConnections => _PointToPointConnections;
+        private ExtendedList<PathGridPoint>? _PointToPointConnections;
+        public ExtendedList<PathGridPoint>? PointToPointConnections
+        {
+            get => this._PointToPointConnections;
+            set => this._PointToPointConnections = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<PathGridPoint> IPathGrid.PointToPointConnections => _PointToPointConnections;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPathGridPointGetter> IPathGridGetter.PointToPointConnections => _PointToPointConnections;
+        IReadOnlyList<IPathGridPointGetter>? IPathGridGetter.PointToPointConnections => _PointToPointConnections;
         #endregion
 
         #endregion
@@ -71,30 +73,33 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Unknown = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IPathGridGetter.Unknown => this.Unknown;
-        bool IPathGridGetter.Unknown_IsSet => this.Unknown != null;
+        ReadOnlyMemorySlice<Byte>? IPathGridGetter.Unknown => this.Unknown;
         #endregion
         #region InterCellConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<InterCellPoint> _InterCellConnections = new SetList<InterCellPoint>();
-        public ISetList<InterCellPoint> InterCellConnections => _InterCellConnections;
+        private ExtendedList<InterCellPoint>? _InterCellConnections;
+        public ExtendedList<InterCellPoint>? InterCellConnections
+        {
+            get => this._InterCellConnections;
+            set => this._InterCellConnections = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<InterCellPoint> IPathGrid.InterCellConnections => _InterCellConnections;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IInterCellPointGetter> IPathGridGetter.InterCellConnections => _InterCellConnections;
+        IReadOnlyList<IInterCellPointGetter>? IPathGridGetter.InterCellConnections => _InterCellConnections;
         #endregion
 
         #endregion
         #region PointToReferenceMappings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<PointToReferenceMapping> _PointToReferenceMappings = new SetList<PointToReferenceMapping>();
-        public ISetList<PointToReferenceMapping> PointToReferenceMappings => _PointToReferenceMappings;
+        private ExtendedList<PointToReferenceMapping>? _PointToReferenceMappings;
+        public ExtendedList<PointToReferenceMapping>? PointToReferenceMappings
+        {
+            get => this._PointToReferenceMappings;
+            set => this._PointToReferenceMappings = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<PointToReferenceMapping> IPathGrid.PointToReferenceMappings => _PointToReferenceMappings;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IPointToReferenceMappingGetter> IPathGridGetter.PointToReferenceMappings => _PointToReferenceMappings;
+        IReadOnlyList<IPointToReferenceMappingGetter>? IPathGridGetter.PointToReferenceMappings => _PointToReferenceMappings;
         #endregion
 
         #endregion
@@ -113,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IPathGridGetter rhs)) return false;
             return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -268,10 +273,10 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.PointToPointConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>());
+                this.PointToPointConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>());
                 this.Unknown = initialValue;
-                this.InterCellConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>());
-                this.PointToReferenceMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>());
+                this.InterCellConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>());
+                this.PointToReferenceMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -291,10 +296,10 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.PointToPointConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>>(PointToPointConnections, Enumerable.Empty<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>());
+                this.PointToPointConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>?>(PointToPointConnections, Enumerable.Empty<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>());
                 this.Unknown = Unknown;
-                this.InterCellConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>>(InterCellConnections, Enumerable.Empty<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>());
-                this.PointToReferenceMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>>(PointToReferenceMappings, Enumerable.Empty<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>());
+                this.InterCellConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>?>(InterCellConnections, Enumerable.Empty<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>());
+                this.PointToReferenceMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>?>(PointToReferenceMappings, Enumerable.Empty<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -306,14 +311,14 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>>? PointToPointConnections;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>?>? PointToPointConnections;
             public TItem Unknown;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>>? InterCellConnections;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>>? PointToReferenceMappings;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>?>? InterCellConnections;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>?>? PointToReferenceMappings;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -445,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (PointToPointConnections != null)
                 {
-                    obj.PointToPointConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>>(eval(this.PointToPointConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>());
+                    obj.PointToPointConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>?>(eval(this.PointToPointConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>());
                     if (PointToPointConnections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>();
@@ -461,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Unknown = eval(this.Unknown);
                 if (InterCellConnections != null)
                 {
-                    obj.InterCellConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>>(eval(this.InterCellConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>());
+                    obj.InterCellConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>?>(eval(this.InterCellConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>());
                     if (InterCellConnections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>();
@@ -476,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (PointToReferenceMappings != null)
                 {
-                    obj.PointToReferenceMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>>(eval(this.PointToReferenceMappings.Overall), Enumerable.Empty<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>());
+                    obj.PointToReferenceMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>?>(eval(this.PointToReferenceMappings.Overall), Enumerable.Empty<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>());
                     if (PointToReferenceMappings.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>();
@@ -511,29 +516,24 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.PointToPointConnections?.Overall ?? true)
+                    if ((printMask?.PointToPointConnections?.Overall ?? true)
+                        && PointToPointConnections.TryGet(out var PointToPointConnectionsItem))
                     {
                         fg.AppendLine("PointToPointConnections =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (PointToPointConnections != null)
+                            fg.AppendItem(PointToPointConnectionsItem.Overall);
+                            if (PointToPointConnectionsItem.Specific != null)
                             {
-                                if (PointToPointConnections.Overall != null)
+                                foreach (var subItem in PointToPointConnectionsItem.Specific)
                                 {
-                                    fg.AppendLine(PointToPointConnections.Overall.ToString());
-                                }
-                                if (PointToPointConnections.Specific != null)
-                                {
-                                    foreach (var subItem in PointToPointConnections.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -541,59 +541,49 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendLine($"Unknown => {Unknown}");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.InterCellConnections?.Overall ?? true)
+                    if ((printMask?.InterCellConnections?.Overall ?? true)
+                        && InterCellConnections.TryGet(out var InterCellConnectionsItem))
                     {
                         fg.AppendLine("InterCellConnections =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (InterCellConnections != null)
+                            fg.AppendItem(InterCellConnectionsItem.Overall);
+                            if (InterCellConnectionsItem.Specific != null)
                             {
-                                if (InterCellConnections.Overall != null)
+                                foreach (var subItem in InterCellConnectionsItem.Specific)
                                 {
-                                    fg.AppendLine(InterCellConnections.Overall.ToString());
-                                }
-                                if (InterCellConnections.Specific != null)
-                                {
-                                    foreach (var subItem in InterCellConnections.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.PointToReferenceMappings?.Overall ?? true)
+                    if ((printMask?.PointToReferenceMappings?.Overall ?? true)
+                        && PointToReferenceMappings.TryGet(out var PointToReferenceMappingsItem))
                     {
                         fg.AppendLine("PointToReferenceMappings =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (PointToReferenceMappings != null)
+                            fg.AppendItem(PointToReferenceMappingsItem.Overall);
+                            if (PointToReferenceMappingsItem.Specific != null)
                             {
-                                if (PointToReferenceMappings.Overall != null)
+                                foreach (var subItem in PointToReferenceMappingsItem.Specific)
                                 {
-                                    fg.AppendLine(PointToReferenceMappings.Overall.ToString());
-                                }
-                                if (PointToReferenceMappings.Specific != null)
-                                {
-                                    foreach (var subItem in PointToReferenceMappings.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -724,19 +714,16 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine("PointToPointConnections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (PointToPointConnections.TryGet(out var PointToPointConnectionsItem))
                 {
-                    if (PointToPointConnections != null)
+                    fg.AppendLine("PointToPointConnections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (PointToPointConnections.Overall != null)
+                        fg.AppendItem(PointToPointConnectionsItem.Overall);
+                        if (PointToPointConnectionsItem.Specific != null)
                         {
-                            fg.AppendLine(PointToPointConnections.Overall.ToString());
-                        }
-                        if (PointToPointConnections.Specific != null)
-                        {
-                            foreach (var subItem in PointToPointConnections.Specific)
+                            foreach (var subItem in PointToPointConnectionsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -747,22 +734,19 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"Unknown => {Unknown}");
-                fg.AppendLine("InterCellConnections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Unknown, "Unknown");
+                if (InterCellConnections.TryGet(out var InterCellConnectionsItem))
                 {
-                    if (InterCellConnections != null)
+                    fg.AppendLine("InterCellConnections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (InterCellConnections.Overall != null)
+                        fg.AppendItem(InterCellConnectionsItem.Overall);
+                        if (InterCellConnectionsItem.Specific != null)
                         {
-                            fg.AppendLine(InterCellConnections.Overall.ToString());
-                        }
-                        if (InterCellConnections.Specific != null)
-                        {
-                            foreach (var subItem in InterCellConnections.Specific)
+                            foreach (var subItem in InterCellConnectionsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -773,21 +757,18 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine("PointToReferenceMappings =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (PointToReferenceMappings.TryGet(out var PointToReferenceMappingsItem))
                 {
-                    if (PointToReferenceMappings != null)
+                    fg.AppendLine("PointToReferenceMappings =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (PointToReferenceMappings.Overall != null)
+                        fg.AppendItem(PointToReferenceMappingsItem.Overall);
+                        if (PointToReferenceMappingsItem.Specific != null)
                         {
-                            fg.AppendLine(PointToReferenceMappings.Overall.ToString());
-                        }
-                        if (PointToReferenceMappings.Specific != null)
-                        {
-                            foreach (var subItem in PointToReferenceMappings.Specific)
+                            foreach (var subItem in PointToReferenceMappingsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -798,8 +779,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -947,10 +928,10 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IPathGridInternal>
     {
-        new ISetList<PathGridPoint> PointToPointConnections { get; }
+        new ExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
         new Byte[]? Unknown { get; set; }
-        new ISetList<InterCellPoint> InterCellConnections { get; }
-        new ISetList<PointToReferenceMapping> PointToReferenceMappings { get; }
+        new ExtendedList<InterCellPoint>? InterCellConnections { get; set; }
+        new ExtendedList<PointToReferenceMapping>? PointToReferenceMappings { get; set; }
     }
 
     public partial interface IPathGridInternal :
@@ -967,13 +948,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        IReadOnlySetList<IPathGridPointGetter> PointToPointConnections { get; }
-        #region Unknown
-        ReadOnlySpan<Byte> Unknown { get; }
-        bool Unknown_IsSet { get; }
-        #endregion
-        IReadOnlySetList<IInterCellPointGetter> InterCellConnections { get; }
-        IReadOnlySetList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; }
+        IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; }
+        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; }
+        IReadOnlyList<IPointToReferenceMappingGetter>? PointToReferenceMappings { get; }
 
     }
 
@@ -1444,13 +1422,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    return typeof(ISetList<PathGridPoint>);
+                    return typeof(ExtendedList<PathGridPoint>);
                 case PathGrid_FieldIndex.Unknown:
                     return typeof(Byte[]);
                 case PathGrid_FieldIndex.InterCellConnections:
-                    return typeof(ISetList<InterCellPoint>);
+                    return typeof(ExtendedList<InterCellPoint>);
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return typeof(ISetList<PointToReferenceMapping>);
+                    return typeof(ExtendedList<PointToReferenceMapping>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1507,10 +1485,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPathGridInternal item)
         {
             ClearPartial();
-            item.PointToPointConnections.Unset();
+            item.PointToPointConnections = null;
             item.Unknown = default;
-            item.InterCellConnections.Unset();
-            item.PointToReferenceMappings.Unset();
+            item.InterCellConnections = null;
+            item.PointToReferenceMappings = null;
             base.Clear(item);
         }
         
@@ -1617,32 +1595,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524750: // PGRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.InterCellConnections,
-                        transl: (MutagenFrame r, out InterCellPoint listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<InterCellPoint>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.InterCellConnections = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out InterCellPoint listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<InterCellPoint>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<InterCellPoint>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
                 }
                 case 0x4C524750: // PGRL
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: PathGrid_Registration.PGRL_HEADER,
-                        item: item.PointToReferenceMappings,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out PointToReferenceMapping listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.PointToReferenceMappings = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: PathGrid_Registration.PGRL_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out PointToReferenceMapping listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<PointToReferenceMapping>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
                 }
                 default:
@@ -1704,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.PointToPointConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown, rhs.Unknown);
+            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
             ret.InterCellConnections = item.InterCellConnections.CollectionEqualsHelper(
                 rhs.InterCellConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1764,13 +1744,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.PointToPointConnections?.Overall ?? true)
+            if ((printMask?.PointToPointConnections?.Overall ?? true)
+                && item.PointToPointConnections.TryGet(out var PointToPointConnectionsItem))
             {
                 fg.AppendLine("PointToPointConnections =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.PointToPointConnections)
+                    foreach (var subItem in PointToPointConnectionsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1782,17 +1763,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Unknown ?? true)
+            if ((printMask?.Unknown ?? true)
+                && item.Unknown.TryGet(out var UnknownItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
             }
-            if (printMask?.InterCellConnections?.Overall ?? true)
+            if ((printMask?.InterCellConnections?.Overall ?? true)
+                && item.InterCellConnections.TryGet(out var InterCellConnectionsItem))
             {
                 fg.AppendLine("InterCellConnections =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.InterCellConnections)
+                    foreach (var subItem in InterCellConnectionsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1804,13 +1787,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.PointToReferenceMappings?.Overall ?? true)
+            if ((printMask?.PointToReferenceMappings?.Overall ?? true)
+                && item.PointToReferenceMappings.TryGet(out var PointToReferenceMappingsItem))
             {
                 fg.AppendLine("PointToReferenceMappings =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.PointToReferenceMappings)
+                    foreach (var subItem in PointToReferenceMappingsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1828,10 +1812,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridGetter item,
             PathGrid.Mask<bool?> checkMask)
         {
-            if (checkMask.PointToPointConnections?.Overall.HasValue ?? false && checkMask.PointToPointConnections!.Overall.Value != item.PointToPointConnections.HasBeenSet) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
-            if (checkMask.InterCellConnections?.Overall.HasValue ?? false && checkMask.InterCellConnections!.Overall.Value != item.InterCellConnections.HasBeenSet) return false;
-            if (checkMask.PointToReferenceMappings?.Overall.HasValue ?? false && checkMask.PointToReferenceMappings!.Overall.Value != item.PointToReferenceMappings.HasBeenSet) return false;
+            if (checkMask.PointToPointConnections?.Overall.HasValue ?? false && checkMask.PointToPointConnections!.Overall.Value != (item.PointToPointConnections != null)) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.InterCellConnections?.Overall.HasValue ?? false && checkMask.InterCellConnections!.Overall.Value != (item.InterCellConnections != null)) return false;
+            if (checkMask.PointToReferenceMappings?.Overall.HasValue ?? false && checkMask.PointToReferenceMappings!.Overall.Value != (item.PointToReferenceMappings != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1841,13 +1825,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridGetter item,
             PathGrid.Mask<bool> mask)
         {
-            var PointToPointConnectionsItem = item.PointToPointConnections;
-            mask.PointToPointConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PathGridPoint.Mask<bool>?>>>(PointToPointConnectionsItem.HasBeenSet, PointToPointConnectionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PathGridPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Unknown = item.Unknown_IsSet;
-            var InterCellConnectionsItem = item.InterCellConnections;
-            mask.InterCellConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, InterCellPoint.Mask<bool>?>>>(InterCellConnectionsItem.HasBeenSet, InterCellConnectionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, InterCellPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var PointToReferenceMappingsItem = item.PointToReferenceMappings;
-            mask.PointToReferenceMappings = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PointToReferenceMapping.Mask<bool>?>>>(PointToReferenceMappingsItem.HasBeenSet, PointToReferenceMappingsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PointToReferenceMapping.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.PointToPointConnections.TryGet(out var PointToPointConnectionsItem))
+            {
+                mask.PointToPointConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PathGridPoint.Mask<bool>?>>?>(true, PointToPointConnectionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PathGridPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            mask.Unknown = (item.Unknown != null);
+            if (item.InterCellConnections.TryGet(out var InterCellConnectionsItem))
+            {
+                mask.InterCellConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, InterCellPoint.Mask<bool>?>>?>(true, InterCellConnectionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, InterCellPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.PointToReferenceMappings.TryGet(out var PointToReferenceMappingsItem))
+            {
+                mask.PointToReferenceMappings = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PointToReferenceMapping.Mask<bool>?>>?>(true, PointToReferenceMappingsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PointToReferenceMapping.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1898,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!lhs.PointToPointConnections.SequenceEqual(rhs.PointToPointConnections)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
+            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
             if (!lhs.InterCellConnections.SequenceEqual(rhs.InterCellConnections)) return false;
             if (!lhs.PointToReferenceMappings.SequenceEqual(rhs.PointToReferenceMappings)) return false;
             return true;
@@ -1926,9 +1916,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(item.PointToPointConnections).CombineHashCode(ret);
-            if (item.Unknown_IsSet)
+            if (item.Unknown.TryGet(out var UnknownItem))
             {
-                ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(UnknownItem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.InterCellConnections).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.PointToReferenceMappings).CombineHashCode(ret);
@@ -1961,9 +1951,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.PointToReferenceMappings.SelectMany(f => f.Links))
+            if (obj.PointToReferenceMappings != null)
             {
-                yield return item;
+                foreach (var item in obj.PointToReferenceMappings.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2016,20 +2009,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToPointConnections);
                 try
                 {
-                    if (rhs.PointToPointConnections.HasBeenSet)
+                    if ((rhs.PointToPointConnections != null))
                     {
-                        item.PointToPointConnections.SetTo(
-                            items: rhs.PointToPointConnections,
-                            converter: (r) =>
+                        item.PointToPointConnections = 
+                            rhs.PointToPointConnections
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<PathGridPoint>();
                     }
                     else
                     {
-                        item.PointToPointConnections.Unset();
+                        item.PointToPointConnections = null;
                     }
                 }
                 catch (Exception ex)
@@ -2044,9 +2038,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PathGrid_FieldIndex.Unknown) ?? true))
             {
-                if(rhs.Unknown_IsSet)
+                if(rhs.Unknown.TryGet(out var Unknownrhs))
                 {
-                    item.Unknown = rhs.Unknown.ToArray();
+                    item.Unknown = Unknownrhs.ToArray();
                 }
                 else
                 {
@@ -2058,20 +2052,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.InterCellConnections);
                 try
                 {
-                    if (rhs.InterCellConnections.HasBeenSet)
+                    if ((rhs.InterCellConnections != null))
                     {
-                        item.InterCellConnections.SetTo(
-                            items: rhs.InterCellConnections,
-                            converter: (r) =>
+                        item.InterCellConnections = 
+                            rhs.InterCellConnections
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<InterCellPoint>();
                     }
                     else
                     {
-                        item.InterCellConnections.Unset();
+                        item.InterCellConnections = null;
                     }
                 }
                 catch (Exception ex)
@@ -2089,20 +2084,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToReferenceMappings);
                 try
                 {
-                    if (rhs.PointToReferenceMappings.HasBeenSet)
+                    if ((rhs.PointToReferenceMappings != null))
                     {
-                        item.PointToReferenceMappings.SetTo(
-                            items: rhs.PointToReferenceMappings,
-                            converter: (r) =>
+                        item.PointToReferenceMappings = 
+                            rhs.PointToReferenceMappings
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<PointToReferenceMapping>();
                     }
                     else
                     {
-                        item.PointToReferenceMappings.Unset();
+                        item.PointToReferenceMappings = null;
                     }
                 }
                 catch (Exception ex)
@@ -2257,7 +2253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.PointToPointConnections.HasBeenSet
+            if ((item.PointToPointConnections != null)
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
             {
                 ListXmlTranslation<IPathGridPointGetter>.Instance.Write(
@@ -2278,17 +2274,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if (item.Unknown_IsSet
+            if ((item.Unknown != null)
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown),
-                    item: item.Unknown,
+                    item: item.Unknown.Value,
                     fieldIndex: (int)PathGrid_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if (item.InterCellConnections.HasBeenSet
+            if ((item.InterCellConnections != null)
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
             {
                 ListXmlTranslation<IInterCellPointGetter>.Instance.Write(
@@ -2309,7 +2305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if (item.PointToReferenceMappings.HasBeenSet
+            if ((item.PointToReferenceMappings != null)
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
             {
                 ListXmlTranslation<IPointToReferenceMappingGetter>.Instance.Write(
@@ -2450,11 +2446,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.PointToPointConnections.SetTo(PointToPointConnectionsItem);
+                            item.PointToPointConnections = PointToPointConnectionsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.PointToPointConnections.Unset();
+                            item.PointToPointConnections = null;
                         }
                     }
                     catch (Exception ex)
@@ -2496,11 +2492,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.InterCellConnections.SetTo(InterCellConnectionsItem);
+                            item.InterCellConnections = InterCellConnectionsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.InterCellConnections.Unset();
+                            item.InterCellConnections = null;
                         }
                     }
                     catch (Exception ex)
@@ -2524,11 +2520,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.PointToReferenceMappings.SetTo(PointToReferenceMappingsItem);
+                            item.PointToReferenceMappings = PointToReferenceMappingsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.PointToReferenceMappings.Unset();
+                            item.PointToReferenceMappings = null;
                         }
                     }
                     catch (Exception ex)
@@ -2843,8 +2839,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             int? lastParsed);
         #endregion
-        public IReadOnlySetList<IInterCellPointGetter> InterCellConnections { get; private set; } = EmptySetList<InterCellPointBinaryOverlay>.Instance;
-        public IReadOnlySetList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = EmptySetList<PointToReferenceMappingBinaryOverlay>.Instance;
+        public IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; private set; }
+        public IReadOnlyList<IPointToReferenceMappingGetter>? PointToReferenceMappings { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

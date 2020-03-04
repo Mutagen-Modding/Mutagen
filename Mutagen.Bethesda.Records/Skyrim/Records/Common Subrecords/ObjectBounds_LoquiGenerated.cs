@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IObjectBoundsGetter rhs)) return false;
             return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -326,11 +326,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.First ?? true)
                     {
-                        fg.AppendLine($"First => {First}");
+                        fg.AppendItem(First, "First");
                     }
                     if (printMask?.Second ?? true)
                     {
-                        fg.AppendLine($"Second => {Second}");
+                        fg.AppendItem(Second, "Second");
                     }
                 }
                 fg.AppendLine("]");
@@ -447,8 +447,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"First => {First}");
-                fg.AppendLine($"Second => {Second}");
+                fg.AppendItem(First, "First");
+                fg.AppendItem(Second, "Second");
             }
             #endregion
 
@@ -1248,11 +1248,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.First ?? true)
             {
-                fg.AppendLine($"First => {item.First}");
+                fg.AppendItem(item.First, "First");
             }
             if (printMask?.Second ?? true)
             {
-                fg.AppendLine($"Second => {item.Second}");
+                fg.AppendItem(item.Second, "Second");
             }
         }
         

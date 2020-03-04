@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IClothingAbstractGetter rhs)) return false;
             return ((ClothingAbstractCommon)((IClothingAbstractGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -605,27 +605,27 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
                     if (printMask?.Enchantment ?? true)
                     {
-                        fg.AppendLine($"Enchantment => {Enchantment}");
+                        fg.AppendItem(Enchantment, "Enchantment");
                     }
                     if (printMask?.EnchantmentPoints ?? true)
                     {
-                        fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
+                        fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
                     }
                     if (printMask?.BipedFlags ?? true)
                     {
-                        fg.AppendLine($"BipedFlags => {BipedFlags}");
+                        fg.AppendItem(BipedFlags, "BipedFlags");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.MaleBipedModel?.Overall ?? true)
                     {
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.MaleIcon ?? true)
                     {
-                        fg.AppendLine($"MaleIcon => {MaleIcon}");
+                        fg.AppendItem(MaleIcon, "MaleIcon");
                     }
                     if (printMask?.FemaleBipedModel?.Overall ?? true)
                     {
@@ -649,11 +649,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.FemaleIcon ?? true)
                     {
-                        fg.AppendLine($"FemaleIcon => {FemaleIcon}");
+                        fg.AppendItem(FemaleIcon, "FemaleIcon");
                     }
                     if (printMask?.BMDTDataTypeState ?? true)
                     {
-                        fg.AppendLine($"BMDTDataTypeState => {BMDTDataTypeState}");
+                        fg.AppendItem(BMDTDataTypeState, "BMDTDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -870,19 +870,19 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine($"Enchantment => {Enchantment}");
-                fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
-                fg.AppendLine($"BipedFlags => {BipedFlags}");
-                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(Enchantment, "Enchantment");
+                fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
+                fg.AppendItem(BipedFlags, "BipedFlags");
+                fg.AppendItem(Flags, "Flags");
                 MaleBipedModel?.ToString(fg);
                 MaleWorldModel?.ToString(fg);
-                fg.AppendLine($"MaleIcon => {MaleIcon}");
+                fg.AppendItem(MaleIcon, "MaleIcon");
                 FemaleBipedModel?.ToString(fg);
                 FemaleWorldModel?.ToString(fg);
-                fg.AppendLine($"FemaleIcon => {FemaleIcon}");
-                fg.AppendLine($"BMDTDataTypeState => {BMDTDataTypeState}");
+                fg.AppendItem(FemaleIcon, "FemaleIcon");
+                fg.AppendItem(BMDTDataTypeState, "BMDTDataTypeState");
             }
             #endregion
 
@@ -2109,57 +2109,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Script ?? true)
+            if ((printMask?.Script ?? true)
+                && item.Script.TryGet(out var ScriptItem))
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(ScriptItem, "Script");
             }
-            if (printMask?.Enchantment ?? true)
+            if ((printMask?.Enchantment ?? true)
+                && item.Enchantment.TryGet(out var EnchantmentItem))
             {
-                fg.AppendLine($"Enchantment => {item.Enchantment}");
+                fg.AppendItem(EnchantmentItem, "Enchantment");
             }
-            if (printMask?.EnchantmentPoints ?? true)
+            if ((printMask?.EnchantmentPoints ?? true)
+                && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
             {
-                fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
+                fg.AppendItem(EnchantmentPointsItem, "EnchantmentPoints");
             }
             if (printMask?.BipedFlags ?? true)
             {
-                fg.AppendLine($"BipedFlags => {item.BipedFlags}");
+                fg.AppendItem(item.BipedFlags, "BipedFlags");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.MaleBipedModel?.Overall ?? true)
+            if ((printMask?.MaleBipedModel?.Overall ?? true)
+                && item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
             {
-                item.MaleBipedModel?.ToString(fg, "MaleBipedModel");
+                MaleBipedModelItem?.ToString(fg, "MaleBipedModel");
             }
-            if (printMask?.MaleWorldModel?.Overall ?? true)
+            if ((printMask?.MaleWorldModel?.Overall ?? true)
+                && item.MaleWorldModel.TryGet(out var MaleWorldModelItem))
             {
-                item.MaleWorldModel?.ToString(fg, "MaleWorldModel");
+                MaleWorldModelItem?.ToString(fg, "MaleWorldModel");
             }
-            if (printMask?.MaleIcon ?? true)
+            if ((printMask?.MaleIcon ?? true)
+                && item.MaleIcon.TryGet(out var MaleIconItem))
             {
-                fg.AppendLine($"MaleIcon => {item.MaleIcon}");
+                fg.AppendItem(MaleIconItem, "MaleIcon");
             }
-            if (printMask?.FemaleBipedModel?.Overall ?? true)
+            if ((printMask?.FemaleBipedModel?.Overall ?? true)
+                && item.FemaleBipedModel.TryGet(out var FemaleBipedModelItem))
             {
-                item.FemaleBipedModel?.ToString(fg, "FemaleBipedModel");
+                FemaleBipedModelItem?.ToString(fg, "FemaleBipedModel");
             }
-            if (printMask?.FemaleWorldModel?.Overall ?? true)
+            if ((printMask?.FemaleWorldModel?.Overall ?? true)
+                && item.FemaleWorldModel.TryGet(out var FemaleWorldModelItem))
             {
-                item.FemaleWorldModel?.ToString(fg, "FemaleWorldModel");
+                FemaleWorldModelItem?.ToString(fg, "FemaleWorldModel");
             }
-            if (printMask?.FemaleIcon ?? true)
+            if ((printMask?.FemaleIcon ?? true)
+                && item.FemaleIcon.TryGet(out var FemaleIconItem))
             {
-                fg.AppendLine($"FemaleIcon => {item.FemaleIcon}");
+                fg.AppendItem(FemaleIconItem, "FemaleIcon");
             }
             if (printMask?.BMDTDataTypeState ?? true)
             {
-                fg.AppendLine($"BMDTDataTypeState => {item.BMDTDataTypeState}");
+                fg.AppendItem(item.BMDTDataTypeState, "BMDTDataTypeState");
             }
         }
         

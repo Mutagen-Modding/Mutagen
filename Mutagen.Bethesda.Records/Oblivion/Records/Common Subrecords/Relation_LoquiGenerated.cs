@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRelationGetter rhs)) return false;
             return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -330,11 +330,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Faction ?? true)
                     {
-                        fg.AppendLine($"Faction => {Faction}");
+                        fg.AppendItem(Faction, "Faction");
                     }
                     if (printMask?.Modifier ?? true)
                     {
-                        fg.AppendLine($"Modifier => {Modifier}");
+                        fg.AppendItem(Modifier, "Modifier");
                     }
                 }
                 fg.AppendLine("]");
@@ -451,8 +451,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Faction => {Faction}");
-                fg.AppendLine($"Modifier => {Modifier}");
+                fg.AppendItem(Faction, "Faction");
+                fg.AppendItem(Modifier, "Modifier");
             }
             #endregion
 
@@ -1258,11 +1258,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Faction ?? true)
             {
-                fg.AppendLine($"Faction => {item.Faction}");
+                fg.AppendItem(item.Faction, "Faction");
             }
             if (printMask?.Modifier ?? true)
             {
-                fg.AppendLine($"Modifier => {item.Modifier}");
+                fg.AppendItem(item.Modifier, "Modifier");
             }
         }
         

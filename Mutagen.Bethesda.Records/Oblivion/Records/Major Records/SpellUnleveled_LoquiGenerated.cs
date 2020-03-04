@@ -104,13 +104,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Effect> _Effects = new SetList<Effect>();
-        public ISetList<Effect> Effects => _Effects;
+        private ExtendedList<Effect>? _Effects;
+        public ExtendedList<Effect>? Effects
+        {
+            get => this._Effects;
+            set => this._Effects = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Effect> ISpellUnleveled.Effects => _Effects;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IEffectGetter> ISpellUnleveledGetter.Effects => _Effects;
+        IReadOnlyList<IEffectGetter>? ISpellUnleveledGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -132,7 +134,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISpellUnleveledGetter rhs)) return false;
             return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -291,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Cost = initialValue;
                 this.Level = initialValue;
                 this.Flag = initialValue;
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
                 this.SPITDataTypeState = initialValue;
             }
 
@@ -320,7 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Cost = Cost;
                 this.Level = Level;
                 this.Flag = Flag;
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
                 this.SPITDataTypeState = SPITDataTypeState;
             }
 
@@ -337,12 +339,12 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Cost;
             public TItem Level;
             public TItem Flag;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>>? Effects;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
             public TItem SPITDataTypeState;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -442,7 +444,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Flag = eval(this.Flag);
                 if (Effects != null)
                 {
-                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
                     if (Effects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();
@@ -480,43 +482,38 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendLine($"Type => {Type}");
+                        fg.AppendItem(Type, "Type");
                     }
                     if (printMask?.Cost ?? true)
                     {
-                        fg.AppendLine($"Cost => {Cost}");
+                        fg.AppendItem(Cost, "Cost");
                     }
                     if (printMask?.Level ?? true)
                     {
-                        fg.AppendLine($"Level => {Level}");
+                        fg.AppendItem(Level, "Level");
                     }
                     if (printMask?.Flag ?? true)
                     {
-                        fg.AppendLine($"Flag => {Flag}");
+                        fg.AppendItem(Flag, "Flag");
                     }
-                    if (printMask?.Effects?.Overall ?? true)
+                    if ((printMask?.Effects?.Overall ?? true)
+                        && Effects.TryGet(out var EffectsItem))
                     {
                         fg.AppendLine("Effects =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Effects != null)
+                            fg.AppendItem(EffectsItem.Overall);
+                            if (EffectsItem.Specific != null)
                             {
-                                if (Effects.Overall != null)
+                                foreach (var subItem in EffectsItem.Specific)
                                 {
-                                    fg.AppendLine(Effects.Overall.ToString());
-                                }
-                                if (Effects.Specific != null)
-                                {
-                                    foreach (var subItem in Effects.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -524,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.SPITDataTypeState ?? true)
                     {
-                        fg.AppendLine($"SPITDataTypeState => {SPITDataTypeState}");
+                        fg.AppendItem(SPITDataTypeState, "SPITDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -671,23 +668,20 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Type => {Type}");
-                fg.AppendLine($"Cost => {Cost}");
-                fg.AppendLine($"Level => {Level}");
-                fg.AppendLine($"Flag => {Flag}");
-                fg.AppendLine("Effects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(Cost, "Cost");
+                fg.AppendItem(Level, "Level");
+                fg.AppendItem(Flag, "Flag");
+                if (Effects.TryGet(out var EffectsItem))
                 {
-                    if (Effects != null)
+                    fg.AppendLine("Effects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Effects.Overall != null)
+                        fg.AppendItem(EffectsItem.Overall);
+                        if (EffectsItem.Specific != null)
                         {
-                            fg.AppendLine(Effects.Overall.ToString());
-                        }
-                        if (Effects.Specific != null)
-                        {
-                            foreach (var subItem in Effects.Specific)
+                            foreach (var subItem in EffectsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -698,9 +692,9 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"SPITDataTypeState => {SPITDataTypeState}");
+                fg.AppendItem(SPITDataTypeState, "SPITDataTypeState");
             }
             #endregion
 
@@ -865,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt32 Cost { get; set; }
         new Spell.SpellLevel Level { get; set; }
         new Spell.SpellFlag Flag { get; set; }
-        new ISetList<Effect> Effects { get; }
+        new ExtendedList<Effect>? Effects { get; set; }
         new SpellUnleveled.SPITDataType SPITDataTypeState { get; set; }
     }
 
@@ -887,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
         UInt32 Cost { get; }
         Spell.SpellLevel Level { get; }
         Spell.SpellFlag Flag { get; }
-        IReadOnlySetList<IEffectGetter> Effects { get; }
+        IReadOnlyList<IEffectGetter>? Effects { get; }
         SpellUnleveled.SPITDataType SPITDataTypeState { get; }
 
     }
@@ -1388,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SpellUnleveled_FieldIndex.Flag:
                     return typeof(Spell.SpellFlag);
                 case SpellUnleveled_FieldIndex.Effects:
-                    return typeof(ISetList<Effect>);
+                    return typeof(ExtendedList<Effect>);
                 case SpellUnleveled_FieldIndex.SPITDataTypeState:
                     return typeof(SpellUnleveled.SPITDataType);
                 default:
@@ -1449,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Cost = default;
             item.Level = default;
             item.Flag = default;
-            item.Effects.Unset();
+            item.Effects = null;
             item.SPITDataTypeState = default;
             base.Clear(item);
         }
@@ -1571,18 +1565,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494645: // EFID
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: SpellUnleveled_Registration.EFID_HEADER,
-                        item: item.Effects,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out Effect listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<Effect>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Effects = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: SpellUnleveled_Registration.EFID_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out Effect listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<Effect>();
                     return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
                 }
                 default:
@@ -1702,27 +1697,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Type ?? true)
             {
-                fg.AppendLine($"Type => {item.Type}");
+                fg.AppendItem(item.Type, "Type");
             }
             if (printMask?.Cost ?? true)
             {
-                fg.AppendLine($"Cost => {item.Cost}");
+                fg.AppendItem(item.Cost, "Cost");
             }
             if (printMask?.Level ?? true)
             {
-                fg.AppendLine($"Level => {item.Level}");
+                fg.AppendItem(item.Level, "Level");
             }
             if (printMask?.Flag ?? true)
             {
-                fg.AppendLine($"Flag => {item.Flag}");
+                fg.AppendItem(item.Flag, "Flag");
             }
-            if (printMask?.Effects?.Overall ?? true)
+            if ((printMask?.Effects?.Overall ?? true)
+                && item.Effects.TryGet(out var EffectsItem))
             {
                 fg.AppendLine("Effects =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Effects)
+                    foreach (var subItem in EffectsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1736,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.SPITDataTypeState ?? true)
             {
-                fg.AppendLine($"SPITDataTypeState => {item.SPITDataTypeState}");
+                fg.AppendItem(item.SPITDataTypeState, "SPITDataTypeState");
             }
         }
         
@@ -1744,7 +1740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveledGetter item,
             SpellUnleveled.Mask<bool?> checkMask)
         {
-            if (checkMask.Effects?.Overall.HasValue ?? false && checkMask.Effects!.Overall.Value != item.Effects.HasBeenSet) return false;
+            if (checkMask.Effects?.Overall.HasValue ?? false && checkMask.Effects!.Overall.Value != (item.Effects != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1758,8 +1754,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Cost = true;
             mask.Level = true;
             mask.Flag = true;
-            var EffectsItem = item.Effects;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(EffectsItem.HasBeenSet, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Effects.TryGet(out var EffectsItem))
+            {
+                mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.SPITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1943,9 +1941,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Effects.SelectMany(f => f.Links))
+            if (obj.Effects != null)
             {
-                yield return item;
+                foreach (var item in obj.Effects.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2014,20 +2015,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
                 try
                 {
-                    if (rhs.Effects.HasBeenSet)
+                    if ((rhs.Effects != null))
                     {
-                        item.Effects.SetTo(
-                            items: rhs.Effects,
-                            converter: (r) =>
+                        item.Effects = 
+                            rhs.Effects
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<Effect>();
                     }
                     else
                     {
-                        item.Effects.Unset();
+                        item.Effects = null;
                     }
                 }
                 catch (Exception ex)
@@ -2277,7 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (item.Effects.HasBeenSet
+            if ((item.Effects != null)
                 && (translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Effects) ?? true))
             {
                 ListXmlTranslation<IEffectGetter>.Instance.Write(
@@ -2530,11 +2532,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Effects.SetTo(EffectsItem);
+                            item.Effects = EffectsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Effects.Unset();
+                            item.Effects = null;
                         }
                     }
                     catch (Exception ex)
@@ -2888,7 +2890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flag_IsSet => _SPITLocation.HasValue;
         public Spell.SpellFlag Flag => _Flag_IsSet ? (Spell.SpellFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagLocation, 4)) : default;
         #endregion
-        public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryOverlay>.Instance;
+        public IReadOnlyList<IEffectGetter>? Effects { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

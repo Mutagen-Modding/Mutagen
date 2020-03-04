@@ -127,26 +127,6 @@ namespace Mutagen.Bethesda.Binary
                 recordTypeConverter: null);
         }
 
-        public async Task ParseInto(
-            MutagenFrame frame,
-            IHasItem<T> item,
-            MasterReferences masterReferences,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            var result = await Parse(
-                frame,
-                masterReferences: masterReferences,
-                recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
-            if (result.Succeeded)
-            {
-                item.Item = result.Value;
-            }
-            else
-            {
-                item.Unset();
-            }
-        }
-
         [DebuggerStepThrough]
         public async Task<TryGet<T>> Parse(
             MutagenFrame frame,

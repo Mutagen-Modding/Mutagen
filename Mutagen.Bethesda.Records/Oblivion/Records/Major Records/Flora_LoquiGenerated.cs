@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IFloraGetter rhs)) return false;
             return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -510,31 +510,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
                     if (printMask?.Ingredient ?? true)
                     {
-                        fg.AppendLine($"Ingredient => {Ingredient}");
+                        fg.AppendItem(Ingredient, "Ingredient");
                     }
                     if (printMask?.Spring ?? true)
                     {
-                        fg.AppendLine($"Spring => {Spring}");
+                        fg.AppendItem(Spring, "Spring");
                     }
                     if (printMask?.Summer ?? true)
                     {
-                        fg.AppendLine($"Summer => {Summer}");
+                        fg.AppendItem(Summer, "Summer");
                     }
                     if (printMask?.Fall ?? true)
                     {
-                        fg.AppendLine($"Fall => {Fall}");
+                        fg.AppendItem(Fall, "Fall");
                     }
                     if (printMask?.Winter ?? true)
                     {
-                        fg.AppendLine($"Winter => {Winter}");
+                        fg.AppendItem(Winter, "Winter");
                     }
                     if (printMask?.PFPCDataTypeState ?? true)
                     {
-                        fg.AppendLine($"PFPCDataTypeState => {PFPCDataTypeState}");
+                        fg.AppendItem(PFPCDataTypeState, "PFPCDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -711,15 +711,15 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
+                fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine($"Ingredient => {Ingredient}");
-                fg.AppendLine($"Spring => {Spring}");
-                fg.AppendLine($"Summer => {Summer}");
-                fg.AppendLine($"Fall => {Fall}");
-                fg.AppendLine($"Winter => {Winter}");
-                fg.AppendLine($"PFPCDataTypeState => {PFPCDataTypeState}");
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(Ingredient, "Ingredient");
+                fg.AppendItem(Spring, "Spring");
+                fg.AppendItem(Summer, "Summer");
+                fg.AppendItem(Fall, "Fall");
+                fg.AppendItem(Winter, "Winter");
+                fg.AppendItem(PFPCDataTypeState, "PFPCDataTypeState");
             }
             #endregion
 
@@ -1789,41 +1789,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Script ?? true)
+            if ((printMask?.Script ?? true)
+                && item.Script.TryGet(out var ScriptItem))
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(ScriptItem, "Script");
             }
-            if (printMask?.Ingredient ?? true)
+            if ((printMask?.Ingredient ?? true)
+                && item.Ingredient.TryGet(out var IngredientItem))
             {
-                fg.AppendLine($"Ingredient => {item.Ingredient}");
+                fg.AppendItem(IngredientItem, "Ingredient");
             }
             if (printMask?.Spring ?? true)
             {
-                fg.AppendLine($"Spring => {item.Spring}");
+                fg.AppendItem(item.Spring, "Spring");
             }
             if (printMask?.Summer ?? true)
             {
-                fg.AppendLine($"Summer => {item.Summer}");
+                fg.AppendItem(item.Summer, "Summer");
             }
             if (printMask?.Fall ?? true)
             {
-                fg.AppendLine($"Fall => {item.Fall}");
+                fg.AppendItem(item.Fall, "Fall");
             }
             if (printMask?.Winter ?? true)
             {
-                fg.AppendLine($"Winter => {item.Winter}");
+                fg.AppendItem(item.Winter, "Winter");
             }
             if (printMask?.PFPCDataTypeState ?? true)
             {
-                fg.AppendLine($"PFPCDataTypeState => {item.PFPCDataTypeState}");
+                fg.AppendItem(item.PFPCDataTypeState, "PFPCDataTypeState");
             }
         }
         

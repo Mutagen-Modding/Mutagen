@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IAIPackageLocationGetter rhs)) return false;
             return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -342,15 +342,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendLine($"Type => {Type}");
+                        fg.AppendItem(Type, "Type");
                     }
                     if (printMask?.LocationReference ?? true)
                     {
-                        fg.AppendLine($"LocationReference => {LocationReference}");
+                        fg.AppendItem(LocationReference, "LocationReference");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendLine($"Radius => {Radius}");
+                        fg.AppendItem(Radius, "Radius");
                     }
                 }
                 fg.AppendLine("]");
@@ -477,9 +477,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Type => {Type}");
-                fg.AppendLine($"LocationReference => {LocationReference}");
-                fg.AppendLine($"Radius => {Radius}");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(LocationReference, "LocationReference");
+                fg.AppendItem(Radius, "Radius");
             }
             #endregion
 
@@ -1306,15 +1306,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendLine($"Type => {item.Type}");
+                fg.AppendItem(item.Type, "Type");
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendLine($"LocationReference => {item.LocationReference}");
+                fg.AppendItem(item.LocationReference, "LocationReference");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendLine($"Radius => {item.Radius}");
+                fg.AppendItem(item.Radius, "Radius");
             }
         }
         

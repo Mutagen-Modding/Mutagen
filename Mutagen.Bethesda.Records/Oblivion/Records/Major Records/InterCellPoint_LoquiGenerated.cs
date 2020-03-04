@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IInterCellPointGetter rhs)) return false;
             return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -326,11 +326,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.PointID ?? true)
                     {
-                        fg.AppendLine($"PointID => {PointID}");
+                        fg.AppendItem(PointID, "PointID");
                     }
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendLine($"Point => {Point}");
+                        fg.AppendItem(Point, "Point");
                     }
                 }
                 fg.AppendLine("]");
@@ -447,8 +447,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"PointID => {PointID}");
-                fg.AppendLine($"Point => {Point}");
+                fg.AppendItem(PointID, "PointID");
+                fg.AppendItem(Point, "Point");
             }
             #endregion
 
@@ -1239,11 +1239,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.PointID ?? true)
             {
-                fg.AppendLine($"PointID => {item.PointID}");
+                fg.AppendItem(item.PointID, "PointID");
             }
             if (printMask?.Point ?? true)
             {
-                fg.AppendLine($"Point => {item.Point}");
+                fg.AppendItem(item.Point, "Point");
             }
         }
         

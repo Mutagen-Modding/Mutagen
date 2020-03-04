@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IPassthroughSettingsGetter rhs)) return false;
             return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -266,35 +266,35 @@ namespace Mutagen.Bethesda.Tests
                 {
                     if (printMask?.ReuseCaches ?? true)
                     {
-                        fg.AppendLine($"ReuseCaches => {ReuseCaches}");
+                        fg.AppendItem(ReuseCaches, "ReuseCaches");
                     }
                     if (printMask?.ReorderRecords ?? true)
                     {
-                        fg.AppendLine($"ReorderRecords => {ReorderRecords}");
+                        fg.AppendItem(ReorderRecords, "ReorderRecords");
                     }
                     if (printMask?.DeleteCachesAfter ?? true)
                     {
-                        fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
+                        fg.AppendItem(DeleteCachesAfter, "DeleteCachesAfter");
                     }
                     if (printMask?.TestNormal ?? true)
                     {
-                        fg.AppendLine($"TestNormal => {TestNormal}");
+                        fg.AppendItem(TestNormal, "TestNormal");
                     }
                     if (printMask?.TestBinaryOverlay ?? true)
                     {
-                        fg.AppendLine($"TestBinaryOverlay => {TestBinaryOverlay}");
+                        fg.AppendItem(TestBinaryOverlay, "TestBinaryOverlay");
                     }
                     if (printMask?.TestImport ?? true)
                     {
-                        fg.AppendLine($"TestImport => {TestImport}");
+                        fg.AppendItem(TestImport, "TestImport");
                     }
                     if (printMask?.TestFolder ?? true)
                     {
-                        fg.AppendLine($"TestFolder => {TestFolder}");
+                        fg.AppendItem(TestFolder, "TestFolder");
                     }
                     if (printMask?.TestCopyIn ?? true)
                     {
-                        fg.AppendLine($"TestCopyIn => {TestCopyIn}");
+                        fg.AppendItem(TestCopyIn, "TestCopyIn");
                     }
                 }
                 fg.AppendLine("]");
@@ -471,14 +471,14 @@ namespace Mutagen.Bethesda.Tests
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"ReuseCaches => {ReuseCaches}");
-                fg.AppendLine($"ReorderRecords => {ReorderRecords}");
-                fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
-                fg.AppendLine($"TestNormal => {TestNormal}");
-                fg.AppendLine($"TestBinaryOverlay => {TestBinaryOverlay}");
-                fg.AppendLine($"TestImport => {TestImport}");
-                fg.AppendLine($"TestFolder => {TestFolder}");
-                fg.AppendLine($"TestCopyIn => {TestCopyIn}");
+                fg.AppendItem(ReuseCaches, "ReuseCaches");
+                fg.AppendItem(ReorderRecords, "ReorderRecords");
+                fg.AppendItem(DeleteCachesAfter, "DeleteCachesAfter");
+                fg.AppendItem(TestNormal, "TestNormal");
+                fg.AppendItem(TestBinaryOverlay, "TestBinaryOverlay");
+                fg.AppendItem(TestImport, "TestImport");
+                fg.AppendItem(TestFolder, "TestFolder");
+                fg.AppendItem(TestCopyIn, "TestCopyIn");
             }
             #endregion
 
@@ -1414,35 +1414,35 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (printMask?.ReuseCaches ?? true)
             {
-                fg.AppendLine($"ReuseCaches => {item.ReuseCaches}");
+                fg.AppendItem(item.ReuseCaches, "ReuseCaches");
             }
             if (printMask?.ReorderRecords ?? true)
             {
-                fg.AppendLine($"ReorderRecords => {item.ReorderRecords}");
+                fg.AppendItem(item.ReorderRecords, "ReorderRecords");
             }
             if (printMask?.DeleteCachesAfter ?? true)
             {
-                fg.AppendLine($"DeleteCachesAfter => {item.DeleteCachesAfter}");
+                fg.AppendItem(item.DeleteCachesAfter, "DeleteCachesAfter");
             }
             if (printMask?.TestNormal ?? true)
             {
-                fg.AppendLine($"TestNormal => {item.TestNormal}");
+                fg.AppendItem(item.TestNormal, "TestNormal");
             }
             if (printMask?.TestBinaryOverlay ?? true)
             {
-                fg.AppendLine($"TestBinaryOverlay => {item.TestBinaryOverlay}");
+                fg.AppendItem(item.TestBinaryOverlay, "TestBinaryOverlay");
             }
             if (printMask?.TestImport ?? true)
             {
-                fg.AppendLine($"TestImport => {item.TestImport}");
+                fg.AppendItem(item.TestImport, "TestImport");
             }
             if (printMask?.TestFolder ?? true)
             {
-                fg.AppendLine($"TestFolder => {item.TestFolder}");
+                fg.AppendItem(item.TestFolder, "TestFolder");
             }
             if (printMask?.TestCopyIn ?? true)
             {
-                fg.AppendLine($"TestCopyIn => {item.TestCopyIn}");
+                fg.AppendItem(item.TestCopyIn, "TestCopyIn");
             }
         }
         

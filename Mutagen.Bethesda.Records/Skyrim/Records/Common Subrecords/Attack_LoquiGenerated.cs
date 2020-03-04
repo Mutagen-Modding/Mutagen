@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IAttackGetter rhs)) return false;
             return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.AttackEvent ?? true)
                     {
-                        fg.AppendLine($"AttackEvent => {AttackEvent}");
+                        fg.AppendItem(AttackEvent, "AttackEvent");
                     }
                 }
                 fg.AppendLine("]");
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 AttackData?.ToString(fg);
-                fg.AppendLine($"AttackEvent => {AttackEvent}");
+                fg.AppendItem(AttackEvent, "AttackEvent");
             }
             #endregion
 
@@ -1321,13 +1321,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Attack.Mask<bool>? printMask = null)
         {
-            if (printMask?.AttackData?.Overall ?? true)
+            if ((printMask?.AttackData?.Overall ?? true)
+                && item.AttackData.TryGet(out var AttackDataItem))
             {
-                item.AttackData?.ToString(fg, "AttackData");
+                AttackDataItem?.ToString(fg, "AttackData");
             }
-            if (printMask?.AttackEvent ?? true)
+            if ((printMask?.AttackEvent ?? true)
+                && item.AttackEvent.TryGet(out var AttackEventItem))
             {
-                fg.AppendLine($"AttackEvent => {item.AttackEvent}");
+                fg.AppendItem(AttackEventItem, "AttackEvent");
             }
         }
         

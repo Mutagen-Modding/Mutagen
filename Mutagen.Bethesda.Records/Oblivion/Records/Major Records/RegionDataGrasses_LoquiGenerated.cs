@@ -51,13 +51,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<IFormLink<Grass>> _Grasses = new SetList<IFormLink<Grass>>();
-        public ISetList<IFormLink<Grass>> Grasses => _Grasses;
+        private ExtendedList<IFormLink<Grass>>? _Grasses;
+        public ExtendedList<IFormLink<Grass>>? Grasses
+        {
+            get => this._Grasses;
+            set => this._Grasses = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<IFormLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IFormLinkGetter<IGrassGetter>> IRegionDataGrassesGetter.Grasses => _Grasses;
+        IReadOnlyList<IFormLinkGetter<IGrassGetter>>? IRegionDataGrassesGetter.Grasses => _Grasses;
         #endregion
 
         #endregion
@@ -76,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRegionDataGrassesGetter rhs)) return false;
             return ((RegionDataGrassesCommon)((IRegionDataGrassesGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -231,7 +233,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -246,7 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Priority: Priority,
                 RDATDataTypeState: RDATDataTypeState)
             {
-                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -258,11 +260,11 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? Grasses;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Grasses;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -336,7 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (Grasses != null)
                 {
-                    obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Grasses.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Grasses.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (Grasses.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -370,29 +372,24 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Grasses?.Overall ?? true)
+                    if ((printMask?.Grasses?.Overall ?? true)
+                        && Grasses.TryGet(out var GrassesItem))
                     {
                         fg.AppendLine("Grasses =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Grasses != null)
+                            fg.AppendItem(GrassesItem.Overall);
+                            if (GrassesItem.Specific != null)
                             {
-                                if (Grasses.Overall != null)
+                                foreach (var subItem in GrassesItem.Specific)
                                 {
-                                    fg.AppendLine(Grasses.Overall.ToString());
-                                }
-                                if (Grasses.Specific != null)
-                                {
-                                    foreach (var subItem in Grasses.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -493,31 +490,28 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine("Grasses =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Grasses.TryGet(out var GrassesItem))
                 {
-                    if (Grasses != null)
+                    fg.AppendLine("Grasses =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Grasses.Overall != null)
+                        fg.AppendItem(GrassesItem.Overall);
+                        if (GrassesItem.Specific != null)
                         {
-                            fg.AppendLine(Grasses.Overall.ToString());
-                        }
-                        if (Grasses.Specific != null)
-                        {
-                            foreach (var subItem in Grasses.Specific)
+                            foreach (var subItem in GrassesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -642,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionData,
         ILoquiObjectSetter<IRegionDataGrassesInternal>
     {
-        new ISetList<IFormLink<Grass>> Grasses { get; }
+        new ExtendedList<IFormLink<Grass>>? Grasses { get; set; }
     }
 
     public partial interface IRegionDataGrassesInternal :
@@ -659,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        IReadOnlySetList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
+        IReadOnlyList<IFormLinkGetter<IGrassGetter>>? Grasses { get; }
 
     }
 
@@ -1097,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    return typeof(ISetList<IFormLink<Grass>>);
+                    return typeof(ExtendedList<IFormLink<Grass>>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
@@ -1151,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionDataGrassesInternal item)
         {
             ClearPartial();
-            item.Grasses.Unset();
+            item.Grasses = null;
             base.Clear(item);
         }
         
@@ -1241,11 +1235,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x53474452: // RDGS
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
-                        item: item.Grasses,
-                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    item.Grasses = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            masterReferences: masterReferences,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Grass>>();
                     return TryGet<int?>.Succeed((int)RegionDataGrasses_FieldIndex.Grasses);
                 }
                 default:
@@ -1358,18 +1353,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Grasses?.Overall ?? true)
+            if ((printMask?.Grasses?.Overall ?? true)
+                && item.Grasses.TryGet(out var GrassesItem))
             {
                 fg.AppendLine("Grasses =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Grasses)
+                    foreach (var subItem in GrassesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -1382,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGrassesGetter item,
             RegionDataGrasses.Mask<bool?> checkMask)
         {
-            if (checkMask.Grasses?.Overall.HasValue ?? false && checkMask.Grasses!.Overall.Value != item.Grasses.HasBeenSet) return false;
+            if (checkMask.Grasses?.Overall.HasValue ?? false && checkMask.Grasses!.Overall.Value != (item.Grasses != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1392,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGrassesGetter item,
             RegionDataGrasses.Mask<bool> mask)
         {
-            mask.Grasses = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Grasses.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.Grasses = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Grasses != null), default);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1464,9 +1460,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Grasses)
+            if (obj.Grasses != null)
             {
-                yield return item;
+                foreach (var item in obj.Grasses)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1508,15 +1507,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
                 try
                 {
-                    if (rhs.Grasses.HasBeenSet)
+                    if ((rhs.Grasses != null))
                     {
-                        item.Grasses.SetTo(
-                            rhs.Grasses,
-                            (r) => new FormLink<Grass>(r.FormKey));
+                        item.Grasses = 
+                            rhs.Grasses
+                            .Select(r => new FormLink<Grass>(r.FormKey))
+                            .ToExtendedList<IFormLink<Grass>>();
                     }
                     else
                     {
-                        item.Grasses.Unset();
+                        item.Grasses = null;
                     }
                 }
                 catch (Exception ex)
@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Grasses.HasBeenSet
+            if ((item.Grasses != null)
                 && (translationMask?.GetShouldTranslate((int)RegionDataGrasses_FieldIndex.Grasses) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
@@ -1767,11 +1767,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Grasses.SetTo(GrassesItem);
+                            item.Grasses = GrassesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Grasses.Unset();
+                            item.Grasses = null;
                         }
                     }
                     catch (Exception ex)
@@ -2007,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IReadOnlySetList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = EmptySetList<IFormLinkGetter<IGrassGetter>>.Instance;
+        public IReadOnlyList<IFormLinkGetter<IGrassGetter>>? Grasses { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

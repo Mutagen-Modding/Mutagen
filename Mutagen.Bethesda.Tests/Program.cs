@@ -15,7 +15,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Tester
+namespace Mutagen.Bethesda.Tests
 {
     class Program
     {
@@ -30,13 +30,14 @@ namespace Mutagen.Bethesda.Tester
                 }
                 else
                 {
-                    settingsFile = new FilePath("TestingSettings.xml");
+                    settingsFile = new FilePath("../../../TestingSettings.xml");
                 }
                 if (!settingsFile.Exists)
                 {
                     throw new ArgumentException($"Coult not find settings file at: {settingsFile}");
                 }
-                
+
+                System.Console.WriteLine($"Using settings: {settingsFile.Path}");
                 var settings = TestingSettings.CreateFromXml(settingsFile.Path);
 
                 Stopwatch sw = new Stopwatch();

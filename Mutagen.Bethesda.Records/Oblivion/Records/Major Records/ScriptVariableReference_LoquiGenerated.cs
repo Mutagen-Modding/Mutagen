@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IScriptVariableReferenceGetter rhs)) return false;
             return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.VariableIndex ?? true)
                     {
-                        fg.AppendLine($"VariableIndex => {VariableIndex}");
+                        fg.AppendItem(VariableIndex, "VariableIndex");
                     }
                 }
                 fg.AppendLine("]");
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"VariableIndex => {VariableIndex}");
+                fg.AppendItem(VariableIndex, "VariableIndex");
             }
             #endregion
 
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.VariableIndex ?? true)
             {
-                fg.AppendLine($"VariableIndex => {item.VariableIndex}");
+                fg.AppendItem(item.VariableIndex, "VariableIndex");
             }
         }
         

@@ -56,8 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._SymmetricGeometry = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IFaceGenDataGetter.SymmetricGeometry => this.SymmetricGeometry;
-        bool IFaceGenDataGetter.SymmetricGeometry_IsSet => this.SymmetricGeometry != null;
+        ReadOnlyMemorySlice<Byte>? IFaceGenDataGetter.SymmetricGeometry => this.SymmetricGeometry;
         #endregion
         #region AsymmetricGeometry
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -68,8 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._AsymmetricGeometry = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IFaceGenDataGetter.AsymmetricGeometry => this.AsymmetricGeometry;
-        bool IFaceGenDataGetter.AsymmetricGeometry_IsSet => this.AsymmetricGeometry != null;
+        ReadOnlyMemorySlice<Byte>? IFaceGenDataGetter.AsymmetricGeometry => this.AsymmetricGeometry;
         #endregion
         #region SymmetricTexture
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -80,8 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._SymmetricTexture = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IFaceGenDataGetter.SymmetricTexture => this.SymmetricTexture;
-        bool IFaceGenDataGetter.SymmetricTexture_IsSet => this.SymmetricTexture != null;
+        ReadOnlyMemorySlice<Byte>? IFaceGenDataGetter.SymmetricTexture => this.SymmetricTexture;
         #endregion
 
         #region To String
@@ -98,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IFaceGenDataGetter rhs)) return false;
             return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -283,7 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -365,15 +362,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.SymmetricGeometry ?? true)
                     {
-                        fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry}");
+                        fg.AppendItem(SymmetricGeometry, "SymmetricGeometry");
                     }
                     if (printMask?.AsymmetricGeometry ?? true)
                     {
-                        fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry}");
+                        fg.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
                     }
                     if (printMask?.SymmetricTexture ?? true)
                     {
-                        fg.AppendLine($"SymmetricTexture => {SymmetricTexture}");
+                        fg.AppendItem(SymmetricTexture, "SymmetricTexture");
                     }
                 }
                 fg.AppendLine("]");
@@ -500,9 +497,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry}");
-                fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry}");
-                fg.AppendLine($"SymmetricTexture => {SymmetricTexture}");
+                fg.AppendItem(SymmetricGeometry, "SymmetricGeometry");
+                fg.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
+                fg.AppendItem(SymmetricTexture, "SymmetricTexture");
             }
             #endregion
 
@@ -653,18 +650,9 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region SymmetricGeometry
-        ReadOnlySpan<Byte> SymmetricGeometry { get; }
-        bool SymmetricGeometry_IsSet { get; }
-        #endregion
-        #region AsymmetricGeometry
-        ReadOnlySpan<Byte> AsymmetricGeometry { get; }
-        bool AsymmetricGeometry_IsSet { get; }
-        #endregion
-        #region SymmetricTexture
-        ReadOnlySpan<Byte> SymmetricTexture { get; }
-        bool SymmetricTexture_IsSet { get; }
-        #endregion
+        ReadOnlyMemorySlice<Byte>? SymmetricGeometry { get; }
+        ReadOnlyMemorySlice<Byte>? AsymmetricGeometry { get; }
+        ReadOnlyMemorySlice<Byte>? SymmetricTexture { get; }
 
     }
 
@@ -1324,9 +1312,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.SymmetricGeometry = MemoryExtensions.SequenceEqual(item.SymmetricGeometry, rhs.SymmetricGeometry);
-            ret.AsymmetricGeometry = MemoryExtensions.SequenceEqual(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
-            ret.SymmetricTexture = MemoryExtensions.SequenceEqual(item.SymmetricTexture, rhs.SymmetricTexture);
+            ret.SymmetricGeometry = MemorySliceExt.Equal(item.SymmetricGeometry, rhs.SymmetricGeometry);
+            ret.AsymmetricGeometry = MemorySliceExt.Equal(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
+            ret.SymmetricTexture = MemorySliceExt.Equal(item.SymmetricTexture, rhs.SymmetricTexture);
         }
         
         public string ToString(
@@ -1373,17 +1361,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             FaceGenData.Mask<bool>? printMask = null)
         {
-            if (printMask?.SymmetricGeometry ?? true)
+            if ((printMask?.SymmetricGeometry ?? true)
+                && item.SymmetricGeometry.TryGet(out var SymmetricGeometryItem))
             {
-                fg.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(item.SymmetricGeometry)}");
+                fg.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(SymmetricGeometryItem)}");
             }
-            if (printMask?.AsymmetricGeometry ?? true)
+            if ((printMask?.AsymmetricGeometry ?? true)
+                && item.AsymmetricGeometry.TryGet(out var AsymmetricGeometryItem))
             {
-                fg.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(item.AsymmetricGeometry)}");
+                fg.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(AsymmetricGeometryItem)}");
             }
-            if (printMask?.SymmetricTexture ?? true)
+            if ((printMask?.SymmetricTexture ?? true)
+                && item.SymmetricTexture.TryGet(out var SymmetricTextureItem))
             {
-                fg.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(item.SymmetricTexture)}");
+                fg.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(SymmetricTextureItem)}");
             }
         }
         
@@ -1391,9 +1382,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFaceGenDataGetter item,
             FaceGenData.Mask<bool?> checkMask)
         {
-            if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != item.SymmetricGeometry_IsSet) return false;
-            if (checkMask.AsymmetricGeometry.HasValue && checkMask.AsymmetricGeometry.Value != item.AsymmetricGeometry_IsSet) return false;
-            if (checkMask.SymmetricTexture.HasValue && checkMask.SymmetricTexture.Value != item.SymmetricTexture_IsSet) return false;
+            if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != (item.SymmetricGeometry != null)) return false;
+            if (checkMask.AsymmetricGeometry.HasValue && checkMask.AsymmetricGeometry.Value != (item.AsymmetricGeometry != null)) return false;
+            if (checkMask.SymmetricTexture.HasValue && checkMask.SymmetricTexture.Value != (item.SymmetricTexture != null)) return false;
             return true;
         }
         
@@ -1401,9 +1392,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFaceGenDataGetter item,
             FaceGenData.Mask<bool> mask)
         {
-            mask.SymmetricGeometry = item.SymmetricGeometry_IsSet;
-            mask.AsymmetricGeometry = item.AsymmetricGeometry_IsSet;
-            mask.SymmetricTexture = item.SymmetricTexture_IsSet;
+            mask.SymmetricGeometry = (item.SymmetricGeometry != null);
+            mask.AsymmetricGeometry = (item.AsymmetricGeometry != null);
+            mask.SymmetricTexture = (item.SymmetricTexture != null);
         }
         
         #region Equals and Hash
@@ -1413,26 +1404,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.SymmetricTexture, rhs.SymmetricTexture)) return false;
+            if (!MemorySliceExt.Equal(lhs.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
+            if (!MemorySliceExt.Equal(lhs.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
+            if (!MemorySliceExt.Equal(lhs.SymmetricTexture, rhs.SymmetricTexture)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IFaceGenDataGetter item)
         {
             int ret = 0;
-            if (item.SymmetricGeometry_IsSet)
+            if (item.SymmetricGeometry.TryGet(out var SymmetricGeometryItem))
             {
-                ret = HashHelper.GetHashCode(item.SymmetricGeometry).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(SymmetricGeometryItem).CombineHashCode(ret);
             }
-            if (item.AsymmetricGeometry_IsSet)
+            if (item.AsymmetricGeometry.TryGet(out var AsymmetricGeometryItem))
             {
-                ret = HashHelper.GetHashCode(item.AsymmetricGeometry).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(AsymmetricGeometryItem).CombineHashCode(ret);
             }
-            if (item.SymmetricTexture_IsSet)
+            if (item.SymmetricTexture.TryGet(out var SymmetricTextureItem))
             {
-                ret = HashHelper.GetHashCode(item.SymmetricTexture).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(SymmetricTextureItem).CombineHashCode(ret);
             }
             return ret;
         }
@@ -1467,9 +1458,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
             {
-                if(rhs.SymmetricGeometry_IsSet)
+                if(rhs.SymmetricGeometry.TryGet(out var SymmetricGeometryrhs))
                 {
-                    item.SymmetricGeometry = rhs.SymmetricGeometry.ToArray();
+                    item.SymmetricGeometry = SymmetricGeometryrhs.ToArray();
                 }
                 else
                 {
@@ -1478,9 +1469,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
             {
-                if(rhs.AsymmetricGeometry_IsSet)
+                if(rhs.AsymmetricGeometry.TryGet(out var AsymmetricGeometryrhs))
                 {
-                    item.AsymmetricGeometry = rhs.AsymmetricGeometry.ToArray();
+                    item.AsymmetricGeometry = AsymmetricGeometryrhs.ToArray();
                 }
                 else
                 {
@@ -1489,9 +1480,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
             {
-                if(rhs.SymmetricTexture_IsSet)
+                if(rhs.SymmetricTexture.TryGet(out var SymmetricTexturerhs))
                 {
-                    item.SymmetricTexture = rhs.SymmetricTexture.ToArray();
+                    item.SymmetricTexture = SymmetricTexturerhs.ToArray();
                 }
                 else
                 {
@@ -1587,33 +1578,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (item.SymmetricGeometry_IsSet
+            if ((item.SymmetricGeometry != null)
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SymmetricGeometry),
-                    item: item.SymmetricGeometry,
+                    item: item.SymmetricGeometry.Value,
                     fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                     errorMask: errorMask);
             }
-            if (item.AsymmetricGeometry_IsSet
+            if ((item.AsymmetricGeometry != null)
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AsymmetricGeometry),
-                    item: item.AsymmetricGeometry,
+                    item: item.AsymmetricGeometry.Value,
                     fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                     errorMask: errorMask);
             }
-            if (item.SymmetricTexture_IsSet
+            if ((item.SymmetricTexture != null)
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SymmetricTexture),
-                    item: item.SymmetricTexture,
+                    item: item.SymmetricTexture.Value,
                     fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                     errorMask: errorMask);
             }
@@ -1954,27 +1945,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            if (item.SymmetricGeometry_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.SymmetricGeometry,
-                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER));
-            }
-            if (item.AsymmetricGeometry_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AsymmetricGeometry,
-                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER));
-            }
-            if (item.SymmetricTexture_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.SymmetricTexture,
-                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER));
-            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.SymmetricGeometry,
+                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.AsymmetricGeometry,
+                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.SymmetricTexture,
+                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER));
         }
 
         public void Write(
@@ -2096,18 +2078,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region SymmetricGeometry
         private int? _SymmetricGeometryLocation;
-        public bool SymmetricGeometry_IsSet => _SymmetricGeometryLocation.HasValue;
-        public ReadOnlySpan<Byte> SymmetricGeometry => _SymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SymmetricGeometryLocation.Value, _package.Meta).ToArray() : default;
+        public ReadOnlyMemorySlice<Byte>? SymmetricGeometry => _SymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SymmetricGeometryLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region AsymmetricGeometry
         private int? _AsymmetricGeometryLocation;
-        public bool AsymmetricGeometry_IsSet => _AsymmetricGeometryLocation.HasValue;
-        public ReadOnlySpan<Byte> AsymmetricGeometry => _AsymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AsymmetricGeometryLocation.Value, _package.Meta).ToArray() : default;
+        public ReadOnlyMemorySlice<Byte>? AsymmetricGeometry => _AsymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AsymmetricGeometryLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SymmetricTexture
         private int? _SymmetricTextureLocation;
-        public bool SymmetricTexture_IsSet => _SymmetricTextureLocation.HasValue;
-        public ReadOnlySpan<Byte> SymmetricTexture => _SymmetricTextureLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SymmetricTextureLocation.Value, _package.Meta).ToArray() : default;
+        public ReadOnlyMemorySlice<Byte>? SymmetricTexture => _SymmetricTextureLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SymmetricTextureLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IGroupGetter<T> rhs)) return false;
             return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance()!).Equals(this, rhs);
@@ -1185,15 +1185,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.GroupType ?? true)
             {
-                fg.AppendLine($"GroupType => {item.GroupType}");
+                fg.AppendItem(item.GroupType, "GroupType");
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendLine($"LastModified => {item.LastModified}");
+                fg.AppendItem(item.LastModified, "LastModified");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {item.Unknown}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.RecordCache?.Overall ?? true)
             {
@@ -2205,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
         
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -2326,15 +2326,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.GroupType ?? true)
                     {
-                        fg.AppendLine($"GroupType => {GroupType}");
+                        fg.AppendItem(GroupType, "GroupType");
                     }
                     if (printMask?.LastModified ?? true)
                     {
-                        fg.AppendLine($"LastModified => {LastModified}");
+                        fg.AppendItem(LastModified, "LastModified");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendLine($"Unknown => {Unknown}");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.RecordCache?.Overall ?? true)
                     {
@@ -2355,7 +2355,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         fg.AppendLine("[");
                                         using (new DepthWrapper(fg))
                                         {
-                                            fg.AppendLine($" => {subItem}");
+                                            fg.AppendItem(subItem);
                                         }
                                         fg.AppendLine("]");
                                     }
@@ -2500,9 +2500,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"GroupType => {GroupType}");
-                fg.AppendLine($"LastModified => {LastModified}");
-                fg.AppendLine($"Unknown => {Unknown}");
+                fg.AppendItem(GroupType, "GroupType");
+                fg.AppendItem(LastModified, "LastModified");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendLine("RecordCache =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
@@ -2520,7 +2520,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }

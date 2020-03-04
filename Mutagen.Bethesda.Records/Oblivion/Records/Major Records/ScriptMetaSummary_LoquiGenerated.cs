@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Fluff = value ?? new byte[4];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IScriptMetaSummaryGetter.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> IScriptMetaSummaryGetter.Fluff => this.Fluff;
         #endregion
         #region RefCount
         public UInt32 RefCount { get; set; } = default;
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IScriptMetaSummaryGetter rhs)) return false;
             return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -370,23 +370,23 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendLine($"Fluff => {Fluff}");
+                        fg.AppendItem(Fluff, "Fluff");
                     }
                     if (printMask?.RefCount ?? true)
                     {
-                        fg.AppendLine($"RefCount => {RefCount}");
+                        fg.AppendItem(RefCount, "RefCount");
                     }
                     if (printMask?.CompiledSize ?? true)
                     {
-                        fg.AppendLine($"CompiledSize => {CompiledSize}");
+                        fg.AppendItem(CompiledSize, "CompiledSize");
                     }
                     if (printMask?.VariableCount ?? true)
                     {
-                        fg.AppendLine($"VariableCount => {VariableCount}");
+                        fg.AppendItem(VariableCount, "VariableCount");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendLine($"Type => {Type}");
+                        fg.AppendItem(Type, "Type");
                     }
                 }
                 fg.AppendLine("]");
@@ -533,11 +533,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Fluff => {Fluff}");
-                fg.AppendLine($"RefCount => {RefCount}");
-                fg.AppendLine($"CompiledSize => {CompiledSize}");
-                fg.AppendLine($"VariableCount => {VariableCount}");
-                fg.AppendLine($"Type => {Type}");
+                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(RefCount, "RefCount");
+                fg.AppendItem(CompiledSize, "CompiledSize");
+                fg.AppendItem(VariableCount, "VariableCount");
+                fg.AppendItem(Type, "Type");
             }
             #endregion
 
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        ReadOnlySpan<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Fluff { get; }
         UInt32 RefCount { get; }
         Int32 CompiledSize { get; }
         UInt32 VariableCount { get; }
@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
+            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
             ret.RefCount = item.RefCount == rhs.RefCount;
             ret.CompiledSize = item.CompiledSize == rhs.CompiledSize;
             ret.VariableCount = item.VariableCount == rhs.VariableCount;
@@ -1427,19 +1427,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.RefCount ?? true)
             {
-                fg.AppendLine($"RefCount => {item.RefCount}");
+                fg.AppendItem(item.RefCount, "RefCount");
             }
             if (printMask?.CompiledSize ?? true)
             {
-                fg.AppendLine($"CompiledSize => {item.CompiledSize}");
+                fg.AppendItem(item.CompiledSize, "CompiledSize");
             }
             if (printMask?.VariableCount ?? true)
             {
-                fg.AppendLine($"VariableCount => {item.VariableCount}");
+                fg.AppendItem(item.VariableCount, "VariableCount");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendLine($"Type => {item.Type}");
+                fg.AppendItem(item.Type, "Type");
             }
         }
         
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
             if (lhs.RefCount != rhs.RefCount) return false;
             if (lhs.CompiledSize != rhs.CompiledSize) return false;
             if (lhs.VariableCount != rhs.VariableCount) return false;
@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(0, 4).ToArray();
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0, 4).ToArray();
         public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
         public Int32 CompiledSize => GetCompiledSizeCustom(location: 8);
         public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(12, 4));

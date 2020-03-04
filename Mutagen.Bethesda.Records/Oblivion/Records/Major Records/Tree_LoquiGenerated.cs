@@ -74,13 +74,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SpeedTreeSeeds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<UInt32> _SpeedTreeSeeds = new SetList<UInt32>();
-        public ISetList<UInt32> SpeedTreeSeeds => _SpeedTreeSeeds;
+        private ExtendedList<UInt32>? _SpeedTreeSeeds;
+        public ExtendedList<UInt32>? SpeedTreeSeeds
+        {
+            get => this._SpeedTreeSeeds;
+            set => this._SpeedTreeSeeds = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<UInt32> ITreeGetter.SpeedTreeSeeds => _SpeedTreeSeeds;
+        IReadOnlyList<UInt32>? ITreeGetter.SpeedTreeSeeds => _SpeedTreeSeeds;
         #endregion
 
         #endregion
@@ -235,7 +237,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ITreeGetter rhs)) return false;
             return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -392,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Icon = initialValue;
-                this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LeafCurvature = initialValue;
                 this.MinimumLeafAngle = initialValue;
                 this.MaximumLeafAngle = initialValue;
@@ -437,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Icon = Icon;
-                this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>(SpeedTreeSeeds, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SpeedTreeSeeds, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LeafCurvature = LeafCurvature;
                 this.MinimumLeafAngle = MinimumLeafAngle;
                 this.MaximumLeafAngle = MaximumLeafAngle;
@@ -463,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Icon;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>>? SpeedTreeSeeds;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SpeedTreeSeeds;
             public TItem LeafCurvature;
             public TItem MinimumLeafAngle;
             public TItem MaximumLeafAngle;
@@ -479,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -619,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Icon = eval(this.Icon);
                 if (SpeedTreeSeeds != null)
                 {
-                    obj.SpeedTreeSeeds = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.SpeedTreeSeeds.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SpeedTreeSeeds = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SpeedTreeSeeds.Overall), Enumerable.Empty<(int Index, R Value)>());
                     if (SpeedTreeSeeds.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -671,31 +673,26 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
-                    if (printMask?.SpeedTreeSeeds?.Overall ?? true)
+                    if ((printMask?.SpeedTreeSeeds?.Overall ?? true)
+                        && SpeedTreeSeeds.TryGet(out var SpeedTreeSeedsItem))
                     {
                         fg.AppendLine("SpeedTreeSeeds =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (SpeedTreeSeeds != null)
+                            fg.AppendItem(SpeedTreeSeedsItem.Overall);
+                            if (SpeedTreeSeedsItem.Specific != null)
                             {
-                                if (SpeedTreeSeeds.Overall != null)
+                                foreach (var subItem in SpeedTreeSeedsItem.Specific)
                                 {
-                                    fg.AppendLine(SpeedTreeSeeds.Overall.ToString());
-                                }
-                                if (SpeedTreeSeeds.Specific != null)
-                                {
-                                    foreach (var subItem in SpeedTreeSeeds.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($" => {subItem}");
-                                        }
-                                        fg.AppendLine("]");
+                                        fg.AppendItem(subItem);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -703,51 +700,51 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.LeafCurvature ?? true)
                     {
-                        fg.AppendLine($"LeafCurvature => {LeafCurvature}");
+                        fg.AppendItem(LeafCurvature, "LeafCurvature");
                     }
                     if (printMask?.MinimumLeafAngle ?? true)
                     {
-                        fg.AppendLine($"MinimumLeafAngle => {MinimumLeafAngle}");
+                        fg.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
                     }
                     if (printMask?.MaximumLeafAngle ?? true)
                     {
-                        fg.AppendLine($"MaximumLeafAngle => {MaximumLeafAngle}");
+                        fg.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
                     }
                     if (printMask?.BranchDimmingValue ?? true)
                     {
-                        fg.AppendLine($"BranchDimmingValue => {BranchDimmingValue}");
+                        fg.AppendItem(BranchDimmingValue, "BranchDimmingValue");
                     }
                     if (printMask?.LeafDimmingValue ?? true)
                     {
-                        fg.AppendLine($"LeafDimmingValue => {LeafDimmingValue}");
+                        fg.AppendItem(LeafDimmingValue, "LeafDimmingValue");
                     }
                     if (printMask?.ShadowRadius ?? true)
                     {
-                        fg.AppendLine($"ShadowRadius => {ShadowRadius}");
+                        fg.AppendItem(ShadowRadius, "ShadowRadius");
                     }
                     if (printMask?.RockingSpeed ?? true)
                     {
-                        fg.AppendLine($"RockingSpeed => {RockingSpeed}");
+                        fg.AppendItem(RockingSpeed, "RockingSpeed");
                     }
                     if (printMask?.RustleSpeed ?? true)
                     {
-                        fg.AppendLine($"RustleSpeed => {RustleSpeed}");
+                        fg.AppendItem(RustleSpeed, "RustleSpeed");
                     }
                     if (printMask?.BillboardWidth ?? true)
                     {
-                        fg.AppendLine($"BillboardWidth => {BillboardWidth}");
+                        fg.AppendItem(BillboardWidth, "BillboardWidth");
                     }
                     if (printMask?.BillboardHeight ?? true)
                     {
-                        fg.AppendLine($"BillboardHeight => {BillboardHeight}");
+                        fg.AppendItem(BillboardHeight, "BillboardHeight");
                     }
                     if (printMask?.CNAMDataTypeState ?? true)
                     {
-                        fg.AppendLine($"CNAMDataTypeState => {CNAMDataTypeState}");
+                        fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
                     }
                     if (printMask?.BNAMDataTypeState ?? true)
                     {
-                        fg.AppendLine($"BNAMDataTypeState => {BNAMDataTypeState}");
+                        fg.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -985,44 +982,41 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 Model?.ToString(fg);
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine("SpeedTreeSeeds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Icon, "Icon");
+                if (SpeedTreeSeeds.TryGet(out var SpeedTreeSeedsItem))
                 {
-                    if (SpeedTreeSeeds != null)
+                    fg.AppendLine("SpeedTreeSeeds =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (SpeedTreeSeeds.Overall != null)
+                        fg.AppendItem(SpeedTreeSeedsItem.Overall);
+                        if (SpeedTreeSeedsItem.Specific != null)
                         {
-                            fg.AppendLine(SpeedTreeSeeds.Overall.ToString());
-                        }
-                        if (SpeedTreeSeeds.Specific != null)
-                        {
-                            foreach (var subItem in SpeedTreeSeeds.Specific)
+                            foreach (var subItem in SpeedTreeSeedsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendItem(subItem);
                                 }
                                 fg.AppendLine("]");
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"LeafCurvature => {LeafCurvature}");
-                fg.AppendLine($"MinimumLeafAngle => {MinimumLeafAngle}");
-                fg.AppendLine($"MaximumLeafAngle => {MaximumLeafAngle}");
-                fg.AppendLine($"BranchDimmingValue => {BranchDimmingValue}");
-                fg.AppendLine($"LeafDimmingValue => {LeafDimmingValue}");
-                fg.AppendLine($"ShadowRadius => {ShadowRadius}");
-                fg.AppendLine($"RockingSpeed => {RockingSpeed}");
-                fg.AppendLine($"RustleSpeed => {RustleSpeed}");
-                fg.AppendLine($"BillboardWidth => {BillboardWidth}");
-                fg.AppendLine($"BillboardHeight => {BillboardHeight}");
-                fg.AppendLine($"CNAMDataTypeState => {CNAMDataTypeState}");
-                fg.AppendLine($"BNAMDataTypeState => {BNAMDataTypeState}");
+                fg.AppendItem(LeafCurvature, "LeafCurvature");
+                fg.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
+                fg.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
+                fg.AppendItem(BranchDimmingValue, "BranchDimmingValue");
+                fg.AppendItem(LeafDimmingValue, "LeafDimmingValue");
+                fg.AppendItem(ShadowRadius, "ShadowRadius");
+                fg.AppendItem(RockingSpeed, "RockingSpeed");
+                fg.AppendItem(RustleSpeed, "RustleSpeed");
+                fg.AppendItem(BillboardWidth, "BillboardWidth");
+                fg.AppendItem(BillboardHeight, "BillboardHeight");
+                fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                fg.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
             }
             #endregion
 
@@ -1224,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new ISetList<UInt32> SpeedTreeSeeds { get; }
+        new ExtendedList<UInt32>? SpeedTreeSeeds { get; set; }
         new Single LeafCurvature { get; set; }
         new Single MinimumLeafAngle { get; set; }
         new Single MaximumLeafAngle { get; set; }
@@ -1254,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IReadOnlySetList<UInt32> SpeedTreeSeeds { get; }
+        IReadOnlyList<UInt32>? SpeedTreeSeeds { get; }
         Single LeafCurvature { get; }
         Single MinimumLeafAngle { get; }
         Single MaximumLeafAngle { get; }
@@ -1851,7 +1845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.Icon:
                     return typeof(String);
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    return typeof(ISetList<UInt32>);
+                    return typeof(ExtendedList<UInt32>);
                 case Tree_FieldIndex.LeafCurvature:
                     return typeof(Single);
                 case Tree_FieldIndex.MinimumLeafAngle:
@@ -1935,7 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Model = null;
             item.Icon = default;
-            item.SpeedTreeSeeds.Unset();
+            item.SpeedTreeSeeds = null;
             item.LeafCurvature = default;
             item.MinimumLeafAngle = default;
             item.MaximumLeafAngle = default;
@@ -2064,10 +2058,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.SpeedTreeSeeds,
-                        transl: UInt32BinaryTranslation.Instance.Parse);
+                    item.SpeedTreeSeeds = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: UInt32BinaryTranslation.Instance.Parse)
+                        .ToExtendedList<UInt32>();
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
                 }
                 case 0x4D414E43: // CNAM
@@ -2228,26 +2223,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.SpeedTreeSeeds?.Overall ?? true)
+            if ((printMask?.SpeedTreeSeeds?.Overall ?? true)
+                && item.SpeedTreeSeeds.TryGet(out var SpeedTreeSeedsItem))
             {
                 fg.AppendLine("SpeedTreeSeeds =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.SpeedTreeSeeds)
+                    foreach (var subItem in SpeedTreeSeedsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"Item => {subItem}");
+                            fg.AppendItem(subItem);
                         }
                         fg.AppendLine("]");
                     }
@@ -2256,51 +2254,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.LeafCurvature ?? true)
             {
-                fg.AppendLine($"LeafCurvature => {item.LeafCurvature}");
+                fg.AppendItem(item.LeafCurvature, "LeafCurvature");
             }
             if (printMask?.MinimumLeafAngle ?? true)
             {
-                fg.AppendLine($"MinimumLeafAngle => {item.MinimumLeafAngle}");
+                fg.AppendItem(item.MinimumLeafAngle, "MinimumLeafAngle");
             }
             if (printMask?.MaximumLeafAngle ?? true)
             {
-                fg.AppendLine($"MaximumLeafAngle => {item.MaximumLeafAngle}");
+                fg.AppendItem(item.MaximumLeafAngle, "MaximumLeafAngle");
             }
             if (printMask?.BranchDimmingValue ?? true)
             {
-                fg.AppendLine($"BranchDimmingValue => {item.BranchDimmingValue}");
+                fg.AppendItem(item.BranchDimmingValue, "BranchDimmingValue");
             }
             if (printMask?.LeafDimmingValue ?? true)
             {
-                fg.AppendLine($"LeafDimmingValue => {item.LeafDimmingValue}");
+                fg.AppendItem(item.LeafDimmingValue, "LeafDimmingValue");
             }
             if (printMask?.ShadowRadius ?? true)
             {
-                fg.AppendLine($"ShadowRadius => {item.ShadowRadius}");
+                fg.AppendItem(item.ShadowRadius, "ShadowRadius");
             }
             if (printMask?.RockingSpeed ?? true)
             {
-                fg.AppendLine($"RockingSpeed => {item.RockingSpeed}");
+                fg.AppendItem(item.RockingSpeed, "RockingSpeed");
             }
             if (printMask?.RustleSpeed ?? true)
             {
-                fg.AppendLine($"RustleSpeed => {item.RustleSpeed}");
+                fg.AppendItem(item.RustleSpeed, "RustleSpeed");
             }
             if (printMask?.BillboardWidth ?? true)
             {
-                fg.AppendLine($"BillboardWidth => {item.BillboardWidth}");
+                fg.AppendItem(item.BillboardWidth, "BillboardWidth");
             }
             if (printMask?.BillboardHeight ?? true)
             {
-                fg.AppendLine($"BillboardHeight => {item.BillboardHeight}");
+                fg.AppendItem(item.BillboardHeight, "BillboardHeight");
             }
             if (printMask?.CNAMDataTypeState ?? true)
             {
-                fg.AppendLine($"CNAMDataTypeState => {item.CNAMDataTypeState}");
+                fg.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
             }
             if (printMask?.BNAMDataTypeState ?? true)
             {
-                fg.AppendLine($"BNAMDataTypeState => {item.BNAMDataTypeState}");
+                fg.AppendItem(item.BNAMDataTypeState, "BNAMDataTypeState");
             }
         }
         
@@ -2311,7 +2309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.SpeedTreeSeeds?.Overall.HasValue ?? false && checkMask.SpeedTreeSeeds!.Overall.Value != item.SpeedTreeSeeds.HasBeenSet) return false;
+            if (checkMask.SpeedTreeSeeds?.Overall.HasValue ?? false && checkMask.SpeedTreeSeeds!.Overall.Value != (item.SpeedTreeSeeds != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2324,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
-            mask.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int, bool)>>(item.SpeedTreeSeeds.HasBeenSet, Enumerable.Empty<(int, bool)>());
+            mask.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.SpeedTreeSeeds != null), default);
             mask.LeafCurvature = true;
             mask.MinimumLeafAngle = true;
             mask.MaximumLeafAngle = true;
@@ -2556,13 +2554,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
                 try
                 {
-                    if (rhs.SpeedTreeSeeds.HasBeenSet)
+                    if ((rhs.SpeedTreeSeeds != null))
                     {
-                        item.SpeedTreeSeeds.SetTo(rhs.SpeedTreeSeeds);
+                        item.SpeedTreeSeeds = 
+                            rhs.SpeedTreeSeeds
+                            .ToExtendedList<UInt32>();
                     }
                     else
                     {
-                        item.SpeedTreeSeeds.Unset();
+                        item.SpeedTreeSeeds = null;
                     }
                 }
                 catch (Exception ex)
@@ -2789,7 +2789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Tree_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.SpeedTreeSeeds.HasBeenSet
+            if ((item.SpeedTreeSeeds != null)
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
             {
                 ListXmlTranslation<UInt32>.Instance.Write(
@@ -3077,11 +3077,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.SpeedTreeSeeds.SetTo(SpeedTreeSeedsItem);
+                            item.SpeedTreeSeeds = SpeedTreeSeedsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.SpeedTreeSeeds.Unset();
+                            item.SpeedTreeSeeds = null;
                         }
                     }
                     catch (Exception ex)
@@ -3619,7 +3619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlySetList<UInt32> SpeedTreeSeeds { get; private set; } = EmptySetList<UInt32>.Instance;
+        public IReadOnlyList<UInt32>? SpeedTreeSeeds { get; private set; }
         private int? _CNAMLocation;
         public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region LeafCurvature

@@ -82,36 +82,38 @@ namespace Mutagen.Bethesda.Binary
     public ref struct MajorRecordFrame
     {
         public MajorRecordHeader Header { get; }
-        public ReadOnlySpan<byte> Content { get; }
+        public ReadOnlySpan<byte> AllData { get; }
+        public ReadOnlySpan<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
 
         public MajorRecordFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta.MajorRecord(span);
-            this.Content = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         public MajorRecordFrame(MajorRecordHeader meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta;
-            this.Content = span;
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 
     public ref struct MajorRecordMemoryFrame
     {
         public MajorRecordHeader Header { get; }
-        public ReadOnlyMemorySlice<byte> Content { get; }
+        public ReadOnlyMemorySlice<byte> AllData { get; }
+        public ReadOnlyMemorySlice<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
 
         public MajorRecordMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta.MajorRecord(span);
-            this.Content = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         public MajorRecordMemoryFrame(MajorRecordHeader meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta;
-            this.Content = span;
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool IsEnumerable => true;
         public override bool IsClass => true;
         public bool ItemHasBeenSet => MaleMarker.HasValue;
+        public override bool CanBeNullable(bool getter) => true;
 
         public RecordType? MaleMarker;
         public RecordType? FemaleMarker;
@@ -295,7 +296,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (MaleMarker.HasValue)
             {
-                this.SubTypeGeneration.HasBeenSetProperty.OnNext(true);
+                this.SubTypeGeneration.HasBeenSetProperty.OnNext((true, true));
             }
         }
     }

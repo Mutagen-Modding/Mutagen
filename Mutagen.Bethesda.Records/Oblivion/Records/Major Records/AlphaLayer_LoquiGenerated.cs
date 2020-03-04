@@ -58,8 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._AlphaLayerData = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IAlphaLayerGetter.AlphaLayerData => this.AlphaLayerData;
-        bool IAlphaLayerGetter.AlphaLayerData_IsSet => this.AlphaLayerData != null;
+        ReadOnlyMemorySlice<Byte>? IAlphaLayerGetter.AlphaLayerData => this.AlphaLayerData;
         #endregion
 
         #region To String
@@ -76,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IAlphaLayerGetter rhs)) return false;
             return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -262,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -339,7 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.AlphaLayerData ?? true)
                     {
-                        fg.AppendLine($"AlphaLayerData => {AlphaLayerData}");
+                        fg.AppendItem(AlphaLayerData, "AlphaLayerData");
                     }
                 }
                 fg.AppendLine("]");
@@ -436,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"AlphaLayerData => {AlphaLayerData}");
+                fg.AppendItem(AlphaLayerData, "AlphaLayerData");
             }
             #endregion
 
@@ -575,10 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        #region AlphaLayerData
-        ReadOnlySpan<Byte> AlphaLayerData { get; }
-        bool AlphaLayerData_IsSet { get; }
-        #endregion
+        ReadOnlyMemorySlice<Byte>? AlphaLayerData { get; }
 
     }
 
@@ -1212,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.AlphaLayerData = MemoryExtensions.SequenceEqual(item.AlphaLayerData, rhs.AlphaLayerData);
+            ret.AlphaLayerData = MemorySliceExt.Equal(item.AlphaLayerData, rhs.AlphaLayerData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1264,9 +1260,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.AlphaLayerData ?? true)
+            if ((printMask?.AlphaLayerData ?? true)
+                && item.AlphaLayerData.TryGet(out var AlphaLayerDataItem))
             {
-                fg.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(item.AlphaLayerData)}");
+                fg.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(AlphaLayerDataItem)}");
             }
         }
         
@@ -1274,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayerGetter item,
             AlphaLayer.Mask<bool?> checkMask)
         {
-            if (checkMask.AlphaLayerData.HasValue && checkMask.AlphaLayerData.Value != item.AlphaLayerData_IsSet) return false;
+            if (checkMask.AlphaLayerData.HasValue && checkMask.AlphaLayerData.Value != (item.AlphaLayerData != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1284,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayerGetter item,
             AlphaLayer.Mask<bool> mask)
         {
-            mask.AlphaLayerData = item.AlphaLayerData_IsSet;
+            mask.AlphaLayerData = (item.AlphaLayerData != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1315,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
+            if (!MemorySliceExt.Equal(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
             return true;
         }
         
@@ -1331,9 +1328,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IAlphaLayerGetter item)
         {
             int ret = 0;
-            if (item.AlphaLayerData_IsSet)
+            if (item.AlphaLayerData.TryGet(out var AlphaLayerDataItem))
             {
-                ret = HashHelper.GetHashCode(item.AlphaLayerData).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(AlphaLayerDataItem).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -1396,9 +1393,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
-                if(rhs.AlphaLayerData_IsSet)
+                if(rhs.AlphaLayerData.TryGet(out var AlphaLayerDatarhs))
                 {
-                    item.AlphaLayerData = rhs.AlphaLayerData.ToArray();
+                    item.AlphaLayerData = AlphaLayerDatarhs.ToArray();
                 }
                 else
                 {
@@ -1521,13 +1518,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.AlphaLayerData_IsSet
+            if ((item.AlphaLayerData != null)
                 && (translationMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AlphaLayerData),
-                    item: item.AlphaLayerData,
+                    item: item.AlphaLayerData.Value,
                     fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
                     errorMask: errorMask);
             }
@@ -1738,13 +1735,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter.Combine(AlphaLayer_Registration.BaseConverter),
                 masterReferences: masterReferences);
-            if (item.AlphaLayerData_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AlphaLayerData,
-                    header: recordTypeConverter.ConvertToCustom(AlphaLayer_Registration.VTXT_HEADER));
-            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.AlphaLayerData,
+                header: recordTypeConverter.ConvertToCustom(AlphaLayer_Registration.VTXT_HEADER));
         }
 
         public void Write(
@@ -1861,8 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region AlphaLayerData
         private int? _AlphaLayerDataLocation;
-        public bool AlphaLayerData_IsSet => _AlphaLayerDataLocation.HasValue;
-        public ReadOnlySpan<Byte> AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AlphaLayerDataLocation.Value, _package.Meta).ToArray() : default;
+        public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AlphaLayerDataLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

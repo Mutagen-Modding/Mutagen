@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRankGetter rhs)) return false;
             return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.RankNumber ?? true)
                     {
-                        fg.AppendLine($"RankNumber => {RankNumber}");
+                        fg.AppendItem(RankNumber, "RankNumber");
                     }
                     if (Name != null
                         && (printMask?.Name?.Overall ?? true))
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Insignia ?? true)
                     {
-                        fg.AppendLine($"Insignia => {Insignia}");
+                        fg.AppendItem(Insignia, "Insignia");
                     }
                 }
                 fg.AppendLine("]");
@@ -497,12 +497,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"RankNumber => {RankNumber}");
+                fg.AppendItem(RankNumber, "RankNumber");
                 if (Name != null)
                 {
                     fg.AppendLine($"Name => {Name}");
                 }
-                fg.AppendLine($"Insignia => {Insignia}");
+                fg.AppendItem(Insignia, "Insignia");
             }
             #endregion
 
@@ -1377,17 +1377,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Rank.Mask<bool>? printMask = null)
         {
-            if (printMask?.RankNumber ?? true)
+            if ((printMask?.RankNumber ?? true)
+                && item.RankNumber.TryGet(out var RankNumberItem))
             {
-                fg.AppendLine($"RankNumber => {item.RankNumber}");
+                fg.AppendItem(RankNumberItem, "RankNumber");
             }
-            if (printMask?.Name?.Overall ?? true)
+            if ((printMask?.Name?.Overall ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                item.Name?.ToString(fg, "Name");
+                NameItem?.ToString(fg, "Name");
             }
-            if (printMask?.Insignia ?? true)
+            if ((printMask?.Insignia ?? true)
+                && item.Insignia.TryGet(out var InsigniaItem))
             {
-                fg.AppendLine($"Insignia => {item.Insignia}");
+                fg.AppendItem(InsigniaItem, "Insignia");
             }
         }
         

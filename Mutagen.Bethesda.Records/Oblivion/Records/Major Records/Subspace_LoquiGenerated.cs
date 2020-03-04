@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISubspaceGetter rhs)) return false;
             return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -399,19 +399,19 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.X ?? true)
                     {
-                        fg.AppendLine($"X => {X}");
+                        fg.AppendItem(X, "X");
                     }
                     if (printMask?.Y ?? true)
                     {
-                        fg.AppendLine($"Y => {Y}");
+                        fg.AppendItem(Y, "Y");
                     }
                     if (printMask?.Z ?? true)
                     {
-                        fg.AppendLine($"Z => {Z}");
+                        fg.AppendItem(Z, "Z");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendLine($"DNAMDataTypeState => {DNAMDataTypeState}");
+                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -538,10 +538,10 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"X => {X}");
-                fg.AppendLine($"Y => {Y}");
-                fg.AppendLine($"Z => {Z}");
-                fg.AppendLine($"DNAMDataTypeState => {DNAMDataTypeState}");
+                fg.AppendItem(X, "X");
+                fg.AppendItem(Y, "Y");
+                fg.AppendItem(Z, "Z");
+                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
 
@@ -1466,19 +1466,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.X ?? true)
             {
-                fg.AppendLine($"X => {item.X}");
+                fg.AppendItem(item.X, "X");
             }
             if (printMask?.Y ?? true)
             {
-                fg.AppendLine($"Y => {item.Y}");
+                fg.AppendItem(item.Y, "Y");
             }
             if (printMask?.Z ?? true)
             {
-                fg.AppendLine($"Z => {item.Z}");
+                fg.AppendItem(item.Z, "Z");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendLine($"DNAMDataTypeState => {item.DNAMDataTypeState}");
+                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         

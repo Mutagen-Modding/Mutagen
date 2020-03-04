@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISoundItemGetter rhs)) return false;
             return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -338,11 +338,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendLine($"Sound => {Sound}");
+                        fg.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.Chance ?? true)
                     {
-                        fg.AppendLine($"Chance => {Chance}");
+                        fg.AppendItem(Chance, "Chance");
                     }
                 }
                 fg.AppendLine("]");
@@ -459,8 +459,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Sound => {Sound}");
-                fg.AppendLine($"Chance => {Chance}");
+                fg.AppendItem(Sound, "Sound");
+                fg.AppendItem(Chance, "Chance");
             }
             #endregion
 
@@ -1302,13 +1302,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             SoundItem.Mask<bool>? printMask = null)
         {
-            if (printMask?.Sound ?? true)
+            if ((printMask?.Sound ?? true)
+                && item.Sound.TryGet(out var SoundItem))
             {
-                fg.AppendLine($"Sound => {item.Sound}");
+                fg.AppendItem(SoundItem, "Sound");
             }
-            if (printMask?.Chance ?? true)
+            if ((printMask?.Chance ?? true)
+                && item.Chance.TryGet(out var ChanceItem))
             {
-                fg.AppendLine($"Chance => {item.Chance}");
+                fg.AppendItem(ChanceItem, "Chance");
             }
         }
         

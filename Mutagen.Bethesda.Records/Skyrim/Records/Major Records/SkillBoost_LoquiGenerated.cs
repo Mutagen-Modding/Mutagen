@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ISkillBoostGetter rhs)) return false;
             return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -326,11 +326,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Skill ?? true)
                     {
-                        fg.AppendLine($"Skill => {Skill}");
+                        fg.AppendItem(Skill, "Skill");
                     }
                     if (printMask?.Boost ?? true)
                     {
-                        fg.AppendLine($"Boost => {Boost}");
+                        fg.AppendItem(Boost, "Boost");
                     }
                 }
                 fg.AppendLine("]");
@@ -447,8 +447,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Skill => {Skill}");
-                fg.AppendLine($"Boost => {Boost}");
+                fg.AppendItem(Skill, "Skill");
+                fg.AppendItem(Boost, "Boost");
             }
             #endregion
 
@@ -1239,11 +1239,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Skill ?? true)
             {
-                fg.AppendLine($"Skill => {item.Skill}");
+                fg.AppendItem(item.Skill, "Skill");
             }
             if (printMask?.Boost ?? true)
             {
-                fg.AppendLine($"Boost => {item.Boost}");
+                fg.AppendItem(item.Boost, "Boost");
             }
         }
         

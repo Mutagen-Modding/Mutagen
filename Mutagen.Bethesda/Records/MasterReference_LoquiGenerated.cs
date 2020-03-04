@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IMasterReferenceGetter rhs)) return false;
             return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -333,11 +333,11 @@ namespace Mutagen.Bethesda
                 {
                     if (printMask?.Master ?? true)
                     {
-                        fg.AppendLine($"Master => {Master}");
+                        fg.AppendItem(Master, "Master");
                     }
                     if (printMask?.FileSize ?? true)
                     {
-                        fg.AppendLine($"FileSize => {FileSize}");
+                        fg.AppendItem(FileSize, "FileSize");
                     }
                 }
                 fg.AppendLine("]");
@@ -454,8 +454,8 @@ namespace Mutagen.Bethesda
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Master => {Master}");
-                fg.AppendLine($"FileSize => {FileSize}");
+                fg.AppendItem(Master, "Master");
+                fg.AppendItem(FileSize, "FileSize");
             }
             #endregion
 
@@ -1282,11 +1282,12 @@ namespace Mutagen.Bethesda.Internals
         {
             if (printMask?.Master ?? true)
             {
-                fg.AppendLine($"Master => {item.Master}");
+                fg.AppendItem(item.Master, "Master");
             }
-            if (printMask?.FileSize ?? true)
+            if ((printMask?.FileSize ?? true)
+                && item.FileSize.TryGet(out var FileSizeItem))
             {
-                fg.AppendLine($"FileSize => {item.FileSize}");
+                fg.AppendItem(FileSizeItem, "FileSize");
             }
         }
         

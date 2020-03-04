@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IClassGetter rhs)) return false;
             return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -992,127 +992,127 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendLine($"Description => {Description}");
+                        fg.AppendItem(Description, "Description");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendLine($"Unknown => {Unknown}");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Teaches ?? true)
                     {
-                        fg.AppendLine($"Teaches => {Teaches}");
+                        fg.AppendItem(Teaches, "Teaches");
                     }
                     if (printMask?.MaxTrainingLevel ?? true)
                     {
-                        fg.AppendLine($"MaxTrainingLevel => {MaxTrainingLevel}");
+                        fg.AppendItem(MaxTrainingLevel, "MaxTrainingLevel");
                     }
                     if (printMask?.OneHandedWeight ?? true)
                     {
-                        fg.AppendLine($"OneHandedWeight => {OneHandedWeight}");
+                        fg.AppendItem(OneHandedWeight, "OneHandedWeight");
                     }
                     if (printMask?.TwoHandedWeight ?? true)
                     {
-                        fg.AppendLine($"TwoHandedWeight => {TwoHandedWeight}");
+                        fg.AppendItem(TwoHandedWeight, "TwoHandedWeight");
                     }
                     if (printMask?.MarksmanWeight ?? true)
                     {
-                        fg.AppendLine($"MarksmanWeight => {MarksmanWeight}");
+                        fg.AppendItem(MarksmanWeight, "MarksmanWeight");
                     }
                     if (printMask?.BlockWeight ?? true)
                     {
-                        fg.AppendLine($"BlockWeight => {BlockWeight}");
+                        fg.AppendItem(BlockWeight, "BlockWeight");
                     }
                     if (printMask?.SmithingWeight ?? true)
                     {
-                        fg.AppendLine($"SmithingWeight => {SmithingWeight}");
+                        fg.AppendItem(SmithingWeight, "SmithingWeight");
                     }
                     if (printMask?.HeavyArmorWeight ?? true)
                     {
-                        fg.AppendLine($"HeavyArmorWeight => {HeavyArmorWeight}");
+                        fg.AppendItem(HeavyArmorWeight, "HeavyArmorWeight");
                     }
                     if (printMask?.LightArmorWeight ?? true)
                     {
-                        fg.AppendLine($"LightArmorWeight => {LightArmorWeight}");
+                        fg.AppendItem(LightArmorWeight, "LightArmorWeight");
                     }
                     if (printMask?.PickpocketWeight ?? true)
                     {
-                        fg.AppendLine($"PickpocketWeight => {PickpocketWeight}");
+                        fg.AppendItem(PickpocketWeight, "PickpocketWeight");
                     }
                     if (printMask?.LockpickingWeight ?? true)
                     {
-                        fg.AppendLine($"LockpickingWeight => {LockpickingWeight}");
+                        fg.AppendItem(LockpickingWeight, "LockpickingWeight");
                     }
                     if (printMask?.SneakWeight ?? true)
                     {
-                        fg.AppendLine($"SneakWeight => {SneakWeight}");
+                        fg.AppendItem(SneakWeight, "SneakWeight");
                     }
                     if (printMask?.AlchemyWeight ?? true)
                     {
-                        fg.AppendLine($"AlchemyWeight => {AlchemyWeight}");
+                        fg.AppendItem(AlchemyWeight, "AlchemyWeight");
                     }
                     if (printMask?.SpeechcraftWeight ?? true)
                     {
-                        fg.AppendLine($"SpeechcraftWeight => {SpeechcraftWeight}");
+                        fg.AppendItem(SpeechcraftWeight, "SpeechcraftWeight");
                     }
                     if (printMask?.AlterationWeight ?? true)
                     {
-                        fg.AppendLine($"AlterationWeight => {AlterationWeight}");
+                        fg.AppendItem(AlterationWeight, "AlterationWeight");
                     }
                     if (printMask?.ConjurationWeight ?? true)
                     {
-                        fg.AppendLine($"ConjurationWeight => {ConjurationWeight}");
+                        fg.AppendItem(ConjurationWeight, "ConjurationWeight");
                     }
                     if (printMask?.DestructionWeight ?? true)
                     {
-                        fg.AppendLine($"DestructionWeight => {DestructionWeight}");
+                        fg.AppendItem(DestructionWeight, "DestructionWeight");
                     }
                     if (printMask?.IllusionWeight ?? true)
                     {
-                        fg.AppendLine($"IllusionWeight => {IllusionWeight}");
+                        fg.AppendItem(IllusionWeight, "IllusionWeight");
                     }
                     if (printMask?.RestorationWeight ?? true)
                     {
-                        fg.AppendLine($"RestorationWeight => {RestorationWeight}");
+                        fg.AppendItem(RestorationWeight, "RestorationWeight");
                     }
                     if (printMask?.EnchantingWeight ?? true)
                     {
-                        fg.AppendLine($"EnchantingWeight => {EnchantingWeight}");
+                        fg.AppendItem(EnchantingWeight, "EnchantingWeight");
                     }
                     if (printMask?.BleedoutDefault ?? true)
                     {
-                        fg.AppendLine($"BleedoutDefault => {BleedoutDefault}");
+                        fg.AppendItem(BleedoutDefault, "BleedoutDefault");
                     }
                     if (printMask?.VoicePoints ?? true)
                     {
-                        fg.AppendLine($"VoicePoints => {VoicePoints}");
+                        fg.AppendItem(VoicePoints, "VoicePoints");
                     }
                     if (printMask?.HealthWeight ?? true)
                     {
-                        fg.AppendLine($"HealthWeight => {HealthWeight}");
+                        fg.AppendItem(HealthWeight, "HealthWeight");
                     }
                     if (printMask?.MagickaWeight ?? true)
                     {
-                        fg.AppendLine($"MagickaWeight => {MagickaWeight}");
+                        fg.AppendItem(MagickaWeight, "MagickaWeight");
                     }
                     if (printMask?.StaminaWeight ?? true)
                     {
-                        fg.AppendLine($"StaminaWeight => {StaminaWeight}");
+                        fg.AppendItem(StaminaWeight, "StaminaWeight");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                        fg.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -1509,37 +1509,37 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine($"Description => {Description}");
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine($"Unknown => {Unknown}");
-                fg.AppendLine($"Teaches => {Teaches}");
-                fg.AppendLine($"MaxTrainingLevel => {MaxTrainingLevel}");
-                fg.AppendLine($"OneHandedWeight => {OneHandedWeight}");
-                fg.AppendLine($"TwoHandedWeight => {TwoHandedWeight}");
-                fg.AppendLine($"MarksmanWeight => {MarksmanWeight}");
-                fg.AppendLine($"BlockWeight => {BlockWeight}");
-                fg.AppendLine($"SmithingWeight => {SmithingWeight}");
-                fg.AppendLine($"HeavyArmorWeight => {HeavyArmorWeight}");
-                fg.AppendLine($"LightArmorWeight => {LightArmorWeight}");
-                fg.AppendLine($"PickpocketWeight => {PickpocketWeight}");
-                fg.AppendLine($"LockpickingWeight => {LockpickingWeight}");
-                fg.AppendLine($"SneakWeight => {SneakWeight}");
-                fg.AppendLine($"AlchemyWeight => {AlchemyWeight}");
-                fg.AppendLine($"SpeechcraftWeight => {SpeechcraftWeight}");
-                fg.AppendLine($"AlterationWeight => {AlterationWeight}");
-                fg.AppendLine($"ConjurationWeight => {ConjurationWeight}");
-                fg.AppendLine($"DestructionWeight => {DestructionWeight}");
-                fg.AppendLine($"IllusionWeight => {IllusionWeight}");
-                fg.AppendLine($"RestorationWeight => {RestorationWeight}");
-                fg.AppendLine($"EnchantingWeight => {EnchantingWeight}");
-                fg.AppendLine($"BleedoutDefault => {BleedoutDefault}");
-                fg.AppendLine($"VoicePoints => {VoicePoints}");
-                fg.AppendLine($"HealthWeight => {HealthWeight}");
-                fg.AppendLine($"MagickaWeight => {MagickaWeight}");
-                fg.AppendLine($"StaminaWeight => {StaminaWeight}");
-                fg.AppendLine($"Unknown2 => {Unknown2}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Description, "Description");
+                fg.AppendItem(Icon, "Icon");
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(Teaches, "Teaches");
+                fg.AppendItem(MaxTrainingLevel, "MaxTrainingLevel");
+                fg.AppendItem(OneHandedWeight, "OneHandedWeight");
+                fg.AppendItem(TwoHandedWeight, "TwoHandedWeight");
+                fg.AppendItem(MarksmanWeight, "MarksmanWeight");
+                fg.AppendItem(BlockWeight, "BlockWeight");
+                fg.AppendItem(SmithingWeight, "SmithingWeight");
+                fg.AppendItem(HeavyArmorWeight, "HeavyArmorWeight");
+                fg.AppendItem(LightArmorWeight, "LightArmorWeight");
+                fg.AppendItem(PickpocketWeight, "PickpocketWeight");
+                fg.AppendItem(LockpickingWeight, "LockpickingWeight");
+                fg.AppendItem(SneakWeight, "SneakWeight");
+                fg.AppendItem(AlchemyWeight, "AlchemyWeight");
+                fg.AppendItem(SpeechcraftWeight, "SpeechcraftWeight");
+                fg.AppendItem(AlterationWeight, "AlterationWeight");
+                fg.AppendItem(ConjurationWeight, "ConjurationWeight");
+                fg.AppendItem(DestructionWeight, "DestructionWeight");
+                fg.AppendItem(IllusionWeight, "IllusionWeight");
+                fg.AppendItem(RestorationWeight, "RestorationWeight");
+                fg.AppendItem(EnchantingWeight, "EnchantingWeight");
+                fg.AppendItem(BleedoutDefault, "BleedoutDefault");
+                fg.AppendItem(VoicePoints, "VoicePoints");
+                fg.AppendItem(HealthWeight, "HealthWeight");
+                fg.AppendItem(MagickaWeight, "MagickaWeight");
+                fg.AppendItem(StaminaWeight, "StaminaWeight");
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -3055,129 +3055,132 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Description ?? true)
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
             {
-                fg.AppendLine($"Description => {item.Description}");
+                fg.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {item.Unknown}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Teaches ?? true)
             {
-                fg.AppendLine($"Teaches => {item.Teaches}");
+                fg.AppendItem(item.Teaches, "Teaches");
             }
             if (printMask?.MaxTrainingLevel ?? true)
             {
-                fg.AppendLine($"MaxTrainingLevel => {item.MaxTrainingLevel}");
+                fg.AppendItem(item.MaxTrainingLevel, "MaxTrainingLevel");
             }
             if (printMask?.OneHandedWeight ?? true)
             {
-                fg.AppendLine($"OneHandedWeight => {item.OneHandedWeight}");
+                fg.AppendItem(item.OneHandedWeight, "OneHandedWeight");
             }
             if (printMask?.TwoHandedWeight ?? true)
             {
-                fg.AppendLine($"TwoHandedWeight => {item.TwoHandedWeight}");
+                fg.AppendItem(item.TwoHandedWeight, "TwoHandedWeight");
             }
             if (printMask?.MarksmanWeight ?? true)
             {
-                fg.AppendLine($"MarksmanWeight => {item.MarksmanWeight}");
+                fg.AppendItem(item.MarksmanWeight, "MarksmanWeight");
             }
             if (printMask?.BlockWeight ?? true)
             {
-                fg.AppendLine($"BlockWeight => {item.BlockWeight}");
+                fg.AppendItem(item.BlockWeight, "BlockWeight");
             }
             if (printMask?.SmithingWeight ?? true)
             {
-                fg.AppendLine($"SmithingWeight => {item.SmithingWeight}");
+                fg.AppendItem(item.SmithingWeight, "SmithingWeight");
             }
             if (printMask?.HeavyArmorWeight ?? true)
             {
-                fg.AppendLine($"HeavyArmorWeight => {item.HeavyArmorWeight}");
+                fg.AppendItem(item.HeavyArmorWeight, "HeavyArmorWeight");
             }
             if (printMask?.LightArmorWeight ?? true)
             {
-                fg.AppendLine($"LightArmorWeight => {item.LightArmorWeight}");
+                fg.AppendItem(item.LightArmorWeight, "LightArmorWeight");
             }
             if (printMask?.PickpocketWeight ?? true)
             {
-                fg.AppendLine($"PickpocketWeight => {item.PickpocketWeight}");
+                fg.AppendItem(item.PickpocketWeight, "PickpocketWeight");
             }
             if (printMask?.LockpickingWeight ?? true)
             {
-                fg.AppendLine($"LockpickingWeight => {item.LockpickingWeight}");
+                fg.AppendItem(item.LockpickingWeight, "LockpickingWeight");
             }
             if (printMask?.SneakWeight ?? true)
             {
-                fg.AppendLine($"SneakWeight => {item.SneakWeight}");
+                fg.AppendItem(item.SneakWeight, "SneakWeight");
             }
             if (printMask?.AlchemyWeight ?? true)
             {
-                fg.AppendLine($"AlchemyWeight => {item.AlchemyWeight}");
+                fg.AppendItem(item.AlchemyWeight, "AlchemyWeight");
             }
             if (printMask?.SpeechcraftWeight ?? true)
             {
-                fg.AppendLine($"SpeechcraftWeight => {item.SpeechcraftWeight}");
+                fg.AppendItem(item.SpeechcraftWeight, "SpeechcraftWeight");
             }
             if (printMask?.AlterationWeight ?? true)
             {
-                fg.AppendLine($"AlterationWeight => {item.AlterationWeight}");
+                fg.AppendItem(item.AlterationWeight, "AlterationWeight");
             }
             if (printMask?.ConjurationWeight ?? true)
             {
-                fg.AppendLine($"ConjurationWeight => {item.ConjurationWeight}");
+                fg.AppendItem(item.ConjurationWeight, "ConjurationWeight");
             }
             if (printMask?.DestructionWeight ?? true)
             {
-                fg.AppendLine($"DestructionWeight => {item.DestructionWeight}");
+                fg.AppendItem(item.DestructionWeight, "DestructionWeight");
             }
             if (printMask?.IllusionWeight ?? true)
             {
-                fg.AppendLine($"IllusionWeight => {item.IllusionWeight}");
+                fg.AppendItem(item.IllusionWeight, "IllusionWeight");
             }
             if (printMask?.RestorationWeight ?? true)
             {
-                fg.AppendLine($"RestorationWeight => {item.RestorationWeight}");
+                fg.AppendItem(item.RestorationWeight, "RestorationWeight");
             }
             if (printMask?.EnchantingWeight ?? true)
             {
-                fg.AppendLine($"EnchantingWeight => {item.EnchantingWeight}");
+                fg.AppendItem(item.EnchantingWeight, "EnchantingWeight");
             }
             if (printMask?.BleedoutDefault ?? true)
             {
-                fg.AppendLine($"BleedoutDefault => {item.BleedoutDefault}");
+                fg.AppendItem(item.BleedoutDefault, "BleedoutDefault");
             }
             if (printMask?.VoicePoints ?? true)
             {
-                fg.AppendLine($"VoicePoints => {item.VoicePoints}");
+                fg.AppendItem(item.VoicePoints, "VoicePoints");
             }
             if (printMask?.HealthWeight ?? true)
             {
-                fg.AppendLine($"HealthWeight => {item.HealthWeight}");
+                fg.AppendItem(item.HealthWeight, "HealthWeight");
             }
             if (printMask?.MagickaWeight ?? true)
             {
-                fg.AppendLine($"MagickaWeight => {item.MagickaWeight}");
+                fg.AppendItem(item.MagickaWeight, "MagickaWeight");
             }
             if (printMask?.StaminaWeight ?? true)
             {
-                fg.AppendLine($"StaminaWeight => {item.StaminaWeight}");
+                fg.AppendItem(item.StaminaWeight, "StaminaWeight");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknown2 => {item.Unknown2}");
+                fg.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         

@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IAttackDataGetter rhs)) return false;
             return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -442,47 +442,47 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.DamageMult ?? true)
                     {
-                        fg.AppendLine($"DamageMult => {DamageMult}");
+                        fg.AppendItem(DamageMult, "DamageMult");
                     }
                     if (printMask?.Chance ?? true)
                     {
-                        fg.AppendLine($"Chance => {Chance}");
+                        fg.AppendItem(Chance, "Chance");
                     }
                     if (printMask?.Spell ?? true)
                     {
-                        fg.AppendLine($"Spell => {Spell}");
+                        fg.AppendItem(Spell, "Spell");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AttackAngle ?? true)
                     {
-                        fg.AppendLine($"AttackAngle => {AttackAngle}");
+                        fg.AppendItem(AttackAngle, "AttackAngle");
                     }
                     if (printMask?.StrikeAngle ?? true)
                     {
-                        fg.AppendLine($"StrikeAngle => {StrikeAngle}");
+                        fg.AppendItem(StrikeAngle, "StrikeAngle");
                     }
                     if (printMask?.Stagger ?? true)
                     {
-                        fg.AppendLine($"Stagger => {Stagger}");
+                        fg.AppendItem(Stagger, "Stagger");
                     }
                     if (printMask?.AttackType ?? true)
                     {
-                        fg.AppendLine($"AttackType => {AttackType}");
+                        fg.AppendItem(AttackType, "AttackType");
                     }
                     if (printMask?.Knockdown ?? true)
                     {
-                        fg.AppendLine($"Knockdown => {Knockdown}");
+                        fg.AppendItem(Knockdown, "Knockdown");
                     }
                     if (printMask?.RecoveryTime ?? true)
                     {
-                        fg.AppendLine($"RecoveryTime => {RecoveryTime}");
+                        fg.AppendItem(RecoveryTime, "RecoveryTime");
                     }
                     if (printMask?.StaminaMult ?? true)
                     {
-                        fg.AppendLine($"StaminaMult => {StaminaMult}");
+                        fg.AppendItem(StaminaMult, "StaminaMult");
                     }
                 }
                 fg.AppendLine("]");
@@ -689,17 +689,17 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"DamageMult => {DamageMult}");
-                fg.AppendLine($"Chance => {Chance}");
-                fg.AppendLine($"Spell => {Spell}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"AttackAngle => {AttackAngle}");
-                fg.AppendLine($"StrikeAngle => {StrikeAngle}");
-                fg.AppendLine($"Stagger => {Stagger}");
-                fg.AppendLine($"AttackType => {AttackType}");
-                fg.AppendLine($"Knockdown => {Knockdown}");
-                fg.AppendLine($"RecoveryTime => {RecoveryTime}");
-                fg.AppendLine($"StaminaMult => {StaminaMult}");
+                fg.AppendItem(DamageMult, "DamageMult");
+                fg.AppendItem(Chance, "Chance");
+                fg.AppendItem(Spell, "Spell");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(AttackAngle, "AttackAngle");
+                fg.AppendItem(StrikeAngle, "StrikeAngle");
+                fg.AppendItem(Stagger, "Stagger");
+                fg.AppendItem(AttackType, "AttackType");
+                fg.AppendItem(Knockdown, "Knockdown");
+                fg.AppendItem(RecoveryTime, "RecoveryTime");
+                fg.AppendItem(StaminaMult, "StaminaMult");
             }
             #endregion
 
@@ -1697,47 +1697,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.DamageMult ?? true)
             {
-                fg.AppendLine($"DamageMult => {item.DamageMult}");
+                fg.AppendItem(item.DamageMult, "DamageMult");
             }
             if (printMask?.Chance ?? true)
             {
-                fg.AppendLine($"Chance => {item.Chance}");
+                fg.AppendItem(item.Chance, "Chance");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendLine($"Spell => {item.Spell}");
+                fg.AppendItem(item.Spell, "Spell");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.AttackAngle ?? true)
             {
-                fg.AppendLine($"AttackAngle => {item.AttackAngle}");
+                fg.AppendItem(item.AttackAngle, "AttackAngle");
             }
             if (printMask?.StrikeAngle ?? true)
             {
-                fg.AppendLine($"StrikeAngle => {item.StrikeAngle}");
+                fg.AppendItem(item.StrikeAngle, "StrikeAngle");
             }
             if (printMask?.Stagger ?? true)
             {
-                fg.AppendLine($"Stagger => {item.Stagger}");
+                fg.AppendItem(item.Stagger, "Stagger");
             }
             if (printMask?.AttackType ?? true)
             {
-                fg.AppendLine($"AttackType => {item.AttackType}");
+                fg.AppendItem(item.AttackType, "AttackType");
             }
             if (printMask?.Knockdown ?? true)
             {
-                fg.AppendLine($"Knockdown => {item.Knockdown}");
+                fg.AppendItem(item.Knockdown, "Knockdown");
             }
             if (printMask?.RecoveryTime ?? true)
             {
-                fg.AppendLine($"RecoveryTime => {item.RecoveryTime}");
+                fg.AppendItem(item.RecoveryTime, "RecoveryTime");
             }
             if (printMask?.StaminaMult ?? true)
             {
-                fg.AppendLine($"StaminaMult => {item.StaminaMult}");
+                fg.AppendItem(item.StaminaMult, "StaminaMult");
             }
         }
         

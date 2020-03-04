@@ -29,41 +29,44 @@ namespace Mutagen.Bethesda.Binary
         public bool IsGroup => this.RecordType == Constants.GRUP;
         public uint ContentLength => checked((uint)(this.TotalLength - this.HeaderLength));
         public int TypeAndLengthLength => Meta.GroupConstants.TypeAndLengthLength;
+        public bool IsTopLevel => this.GroupType == 0;
     }
 
     public ref struct GroupFrame
     {
         public GroupHeader Header { get; }
-        public ReadOnlySpan<byte> Content { get; }
+        public ReadOnlySpan<byte> AllData { get; }
+        public ReadOnlySpan<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
 
         public GroupFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta.Group(span);
-            this.Content = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         public GroupFrame(GroupHeader meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta;
-            this.Content = span;
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 
     public ref struct GroupMemoryFrame
     {
         public GroupHeader Header { get; }
-        public ReadOnlyMemorySlice<byte> Content { get; }
+        public ReadOnlyMemorySlice<byte> AllData { get; }
+        public ReadOnlySpan<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
 
         public GroupMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta.Group(span);
-            this.Content = span.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         public GroupMemoryFrame(GroupHeader meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta;
-            this.Content = span;
+            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 }

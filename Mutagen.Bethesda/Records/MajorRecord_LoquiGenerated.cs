@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IMajorRecordGetter rhs)) return false;
             return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -355,19 +355,19 @@ namespace Mutagen.Bethesda
                 {
                     if (printMask?.MajorRecordFlagsRaw ?? true)
                     {
-                        fg.AppendLine($"MajorRecordFlagsRaw => {MajorRecordFlagsRaw}");
+                        fg.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
                     }
                     if (printMask?.FormKey ?? true)
                     {
-                        fg.AppendLine($"FormKey => {FormKey}");
+                        fg.AppendItem(FormKey, "FormKey");
                     }
                     if (printMask?.Version ?? true)
                     {
-                        fg.AppendLine($"Version => {Version}");
+                        fg.AppendItem(Version, "Version");
                     }
                     if (printMask?.EditorID ?? true)
                     {
-                        fg.AppendLine($"EditorID => {EditorID}");
+                        fg.AppendItem(EditorID, "EditorID");
                     }
                 }
                 fg.AppendLine("]");
@@ -504,10 +504,10 @@ namespace Mutagen.Bethesda
             }
             protected virtual void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"MajorRecordFlagsRaw => {MajorRecordFlagsRaw}");
-                fg.AppendLine($"FormKey => {FormKey}");
-                fg.AppendLine($"Version => {Version}");
-                fg.AppendLine($"EditorID => {EditorID}");
+                fg.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
+                fg.AppendItem(FormKey, "FormKey");
+                fg.AppendItem(Version, "Version");
+                fg.AppendItem(EditorID, "EditorID");
             }
             #endregion
 
@@ -1641,19 +1641,20 @@ namespace Mutagen.Bethesda.Internals
         {
             if (printMask?.MajorRecordFlagsRaw ?? true)
             {
-                fg.AppendLine($"MajorRecordFlagsRaw => {item.MajorRecordFlagsRaw}");
+                fg.AppendItem(item.MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
             }
             if (printMask?.FormKey ?? true)
             {
-                fg.AppendLine($"FormKey => {item.FormKey}");
+                fg.AppendItem(item.FormKey, "FormKey");
             }
             if (printMask?.Version ?? true)
             {
-                fg.AppendLine($"Version => {item.Version}");
+                fg.AppendItem(item.Version, "Version");
             }
-            if (printMask?.EditorID ?? true)
+            if ((printMask?.EditorID ?? true)
+                && item.EditorID.TryGet(out var EditorIDItem))
             {
-                fg.AppendLine($"EditorID => {item.EditorID}");
+                fg.AppendItem(EditorIDItem, "EditorID");
             }
         }
         

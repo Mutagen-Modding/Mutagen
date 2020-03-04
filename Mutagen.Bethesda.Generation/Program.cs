@@ -72,7 +72,6 @@ namespace Mutagen.Bethesda.Generation
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();
-            Loqui.Generation.Presentation.Utility.AddToLoquiGenerator(gen, xmlGen);
 
             var bethesdaProto = gen.AddProtocol(
                 new ProtocolGeneration(

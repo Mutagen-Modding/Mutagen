@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"this.{field.Name} = {(field.HasBeenSet ? $"new MaskItem<{MaskModule.GenItem}, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default)" : $"new GenderedItem<{SubMaskString(field, typeStr)}>({valueStr}, {valueStr})")};");
         }
 
-        public override void GenerateMaskToString(FileGeneration fg, TypeGeneration field, string accessor, bool topLevel, bool printMask)
+        public override void GenerateMaskToString(FileGeneration fg, TypeGeneration field, Accessor accessor, bool topLevel, bool printMask)
         {
             if (!field.IntegrateField) return;
             bool doIf;

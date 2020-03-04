@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IGlobalFloatGetter rhs)) return false;
             return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendLine($"Data => {Data}");
+                        fg.AppendItem(Data, "Data");
                     }
                 }
                 fg.AppendLine("]");
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Data => {Data}");
+                fg.AppendItem(Data, "Data");
             }
             #endregion
 
@@ -1297,9 +1297,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Data ?? true)
+            if ((printMask?.Data ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendLine($"Data => {item.Data}");
+                fg.AppendItem(DataItem, "Data");
             }
         }
         

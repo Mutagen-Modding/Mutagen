@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IWeaponGetter rhs)) return false;
             return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -638,55 +638,55 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
                     if (printMask?.Enchantment ?? true)
                     {
-                        fg.AppendLine($"Enchantment => {Enchantment}");
+                        fg.AppendItem(Enchantment, "Enchantment");
                     }
                     if (printMask?.EnchantmentPoints ?? true)
                     {
-                        fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
+                        fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendLine($"Type => {Type}");
+                        fg.AppendItem(Type, "Type");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendLine($"Speed => {Speed}");
+                        fg.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Reach ?? true)
                     {
-                        fg.AppendLine($"Reach => {Reach}");
+                        fg.AppendItem(Reach, "Reach");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendLine($"Value => {Value}");
+                        fg.AppendItem(Value, "Value");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendLine($"Health => {Health}");
+                        fg.AppendItem(Health, "Health");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendLine($"Weight => {Weight}");
+                        fg.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendLine($"Damage => {Damage}");
+                        fg.AppendItem(Damage, "Damage");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -923,21 +923,21 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
+                fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine($"Enchantment => {Enchantment}");
-                fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
-                fg.AppendLine($"Type => {Type}");
-                fg.AppendLine($"Speed => {Speed}");
-                fg.AppendLine($"Reach => {Reach}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Value => {Value}");
-                fg.AppendLine($"Health => {Health}");
-                fg.AppendLine($"Weight => {Weight}");
-                fg.AppendLine($"Damage => {Damage}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(Icon, "Icon");
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(Enchantment, "Enchantment");
+                fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(Speed, "Speed");
+                fg.AppendItem(Reach, "Reach");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Health, "Health");
+                fg.AppendItem(Weight, "Weight");
+                fg.AppendItem(Damage, "Damage");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -2152,65 +2152,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.Script ?? true)
+            if ((printMask?.Script ?? true)
+                && item.Script.TryGet(out var ScriptItem))
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(ScriptItem, "Script");
             }
-            if (printMask?.Enchantment ?? true)
+            if ((printMask?.Enchantment ?? true)
+                && item.Enchantment.TryGet(out var EnchantmentItem))
             {
-                fg.AppendLine($"Enchantment => {item.Enchantment}");
+                fg.AppendItem(EnchantmentItem, "Enchantment");
             }
-            if (printMask?.EnchantmentPoints ?? true)
+            if ((printMask?.EnchantmentPoints ?? true)
+                && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
             {
-                fg.AppendLine($"EnchantmentPoints => {item.EnchantmentPoints}");
+                fg.AppendItem(EnchantmentPointsItem, "EnchantmentPoints");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendLine($"Type => {item.Type}");
+                fg.AppendItem(item.Type, "Type");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendLine($"Speed => {item.Speed}");
+                fg.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Reach ?? true)
             {
-                fg.AppendLine($"Reach => {item.Reach}");
+                fg.AppendItem(item.Reach, "Reach");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendLine($"Value => {item.Value}");
+                fg.AppendItem(item.Value, "Value");
             }
             if (printMask?.Health ?? true)
             {
-                fg.AppendLine($"Health => {item.Health}");
+                fg.AppendItem(item.Health, "Health");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendLine($"Weight => {item.Weight}");
+                fg.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendLine($"Damage => {item.Damage}");
+                fg.AppendItem(item.Damage, "Damage");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         

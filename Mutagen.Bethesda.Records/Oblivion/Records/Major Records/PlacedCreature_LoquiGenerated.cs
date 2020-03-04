@@ -102,8 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._RagdollData = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlySpan<Byte> IPlacedCreatureGetter.RagdollData => this.RagdollData;
-        bool IPlacedCreatureGetter.RagdollData_IsSet => this.RagdollData != null;
+        ReadOnlyMemorySlice<Byte>? IPlacedCreatureGetter.RagdollData => this.RagdollData;
         #endregion
         #region Scale
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,7 +159,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IPlacedCreatureGetter rhs)) return false;
             return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -384,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -514,19 +513,19 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Base ?? true)
                     {
-                        fg.AppendLine($"Base => {Base}");
+                        fg.AppendItem(Base, "Base");
                     }
                     if (printMask?.Owner ?? true)
                     {
-                        fg.AppendLine($"Owner => {Owner}");
+                        fg.AppendItem(Owner, "Owner");
                     }
                     if (printMask?.FactionRank ?? true)
                     {
-                        fg.AppendLine($"FactionRank => {FactionRank}");
+                        fg.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.GlobalVariable ?? true)
                     {
-                        fg.AppendLine($"GlobalVariable => {GlobalVariable}");
+                        fg.AppendItem(GlobalVariable, "GlobalVariable");
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
@@ -534,23 +533,23 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.RagdollData ?? true)
                     {
-                        fg.AppendLine($"RagdollData => {RagdollData}");
+                        fg.AppendItem(RagdollData, "RagdollData");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendLine($"Scale => {Scale}");
+                        fg.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.Position ?? true)
                     {
-                        fg.AppendLine($"Position => {Position}");
+                        fg.AppendItem(Position, "Position");
                     }
                     if (printMask?.Rotation ?? true)
                     {
-                        fg.AppendLine($"Rotation => {Rotation}");
+                        fg.AppendItem(Rotation, "Rotation");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -737,16 +736,16 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Base => {Base}");
-                fg.AppendLine($"Owner => {Owner}");
-                fg.AppendLine($"FactionRank => {FactionRank}");
-                fg.AppendLine($"GlobalVariable => {GlobalVariable}");
+                fg.AppendItem(Base, "Base");
+                fg.AppendItem(Owner, "Owner");
+                fg.AppendItem(FactionRank, "FactionRank");
+                fg.AppendItem(GlobalVariable, "GlobalVariable");
                 EnableParent?.ToString(fg);
-                fg.AppendLine($"RagdollData => {RagdollData}");
-                fg.AppendLine($"Scale => {Scale}");
-                fg.AppendLine($"Position => {Position}");
-                fg.AppendLine($"Rotation => {Rotation}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(RagdollData, "RagdollData");
+                fg.AppendItem(Scale, "Scale");
+                fg.AppendItem(Position, "Position");
+                fg.AppendItem(Rotation, "Rotation");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -956,10 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? FactionRank { get; }
         IFormLinkNullableGetter<IGlobalGetter> GlobalVariable { get; }
         IEnableParentGetter? EnableParent { get; }
-        #region RagdollData
-        ReadOnlySpan<Byte> RagdollData { get; }
-        bool RagdollData_IsSet { get; }
-        #endregion
+        ReadOnlyMemorySlice<Byte>? RagdollData { get; }
         Single? Scale { get; }
         P3Float Position { get; }
         P3Float Rotation { get; }
@@ -1805,7 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.RagdollData = MemoryExtensions.SequenceEqual(item.RagdollData, rhs.RagdollData);
+            ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
@@ -1861,45 +1857,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Base ?? true)
+            if ((printMask?.Base ?? true)
+                && item.Base.TryGet(out var BaseItem))
             {
-                fg.AppendLine($"Base => {item.Base}");
+                fg.AppendItem(BaseItem, "Base");
             }
-            if (printMask?.Owner ?? true)
+            if ((printMask?.Owner ?? true)
+                && item.Owner.TryGet(out var OwnerItem))
             {
-                fg.AppendLine($"Owner => {item.Owner}");
+                fg.AppendItem(OwnerItem, "Owner");
             }
-            if (printMask?.FactionRank ?? true)
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank.TryGet(out var FactionRankItem))
             {
-                fg.AppendLine($"FactionRank => {item.FactionRank}");
+                fg.AppendItem(FactionRankItem, "FactionRank");
             }
-            if (printMask?.GlobalVariable ?? true)
+            if ((printMask?.GlobalVariable ?? true)
+                && item.GlobalVariable.TryGet(out var GlobalVariableItem))
             {
-                fg.AppendLine($"GlobalVariable => {item.GlobalVariable}");
+                fg.AppendItem(GlobalVariableItem, "GlobalVariable");
             }
-            if (printMask?.EnableParent?.Overall ?? true)
+            if ((printMask?.EnableParent?.Overall ?? true)
+                && item.EnableParent.TryGet(out var EnableParentItem))
             {
-                item.EnableParent?.ToString(fg, "EnableParent");
+                EnableParentItem?.ToString(fg, "EnableParent");
             }
-            if (printMask?.RagdollData ?? true)
+            if ((printMask?.RagdollData ?? true)
+                && item.RagdollData.TryGet(out var RagdollDataItem))
             {
-                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(item.RagdollData)}");
+                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
-            if (printMask?.Scale ?? true)
+            if ((printMask?.Scale ?? true)
+                && item.Scale.TryGet(out var ScaleItem))
             {
-                fg.AppendLine($"Scale => {item.Scale}");
+                fg.AppendItem(ScaleItem, "Scale");
             }
             if (printMask?.Position ?? true)
             {
-                fg.AppendLine($"Position => {item.Position}");
+                fg.AppendItem(item.Position, "Position");
             }
             if (printMask?.Rotation ?? true)
             {
-                fg.AppendLine($"Rotation => {item.Rotation}");
+                fg.AppendItem(item.Rotation, "Rotation");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1913,7 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != (item.GlobalVariable.FormKey != null)) return false;
             if (checkMask.EnableParent?.Overall.HasValue ?? false && checkMask.EnableParent.Overall.Value != (item.EnableParent != null)) return false;
             if (checkMask.EnableParent?.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
-            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
+            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != (item.RagdollData != null)) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != (item.Scale != null)) return false;
             return base.HasBeenSet(
                 item: item,
@@ -1930,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.GlobalVariable = (item.GlobalVariable.FormKey != null);
             var itemEnableParent = item.EnableParent;
             mask.EnableParent = new MaskItem<bool, EnableParent.Mask<bool>?>(itemEnableParent != null, itemEnableParent?.GetHasBeenSetMask());
-            mask.RagdollData = item.RagdollData_IsSet;
+            mask.RagdollData = (item.RagdollData != null);
             mask.Scale = (item.Scale != null);
             mask.Position = true;
             mask.Rotation = true;
@@ -1989,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.FactionRank != rhs.FactionRank) return false;
             if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
             if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
+            if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
             if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             if (!lhs.Position.Equals(rhs.Position)) return false;
             if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
@@ -2038,9 +2041,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(EnableParentitem).CombineHashCode(ret);
             }
-            if (item.RagdollData_IsSet)
+            if (item.RagdollData.TryGet(out var RagdollDataItem))
             {
-                ret = HashHelper.GetHashCode(item.RagdollData).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(RagdollDataItem).CombineHashCode(ret);
             }
             if (item.Scale.TryGet(out var Scaleitem))
             {
@@ -2178,9 +2181,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.RagdollData) ?? true))
             {
-                if(rhs.RagdollData_IsSet)
+                if(rhs.RagdollData.TryGet(out var RagdollDatarhs))
                 {
-                    item.RagdollData = rhs.RagdollData.ToArray();
+                    item.RagdollData = RagdollDatarhs.ToArray();
                 }
                 else
                 {
@@ -2399,13 +2402,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)PlacedCreature_FieldIndex.EnableParent));
                 }
             }
-            if (item.RagdollData_IsSet
+            if ((item.RagdollData != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.RagdollData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RagdollData),
-                    item: item.RagdollData,
+                    item: item.RagdollData.Value,
                     fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
                     errorMask: errorMask);
             }
@@ -2873,13 +2876,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
-            if (item.RagdollData_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.RagdollData,
-                    header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XRGD_HEADER));
-            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.RagdollData,
+                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XRGD_HEADER));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Scale,
@@ -3057,8 +3057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
-        public bool RagdollData_IsSet => _RagdollDataLocation.HasValue;
-        public ReadOnlySpan<Byte> RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollDataLocation.Value, _package.Meta).ToArray() : default;
+        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollDataLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Scale
         private int? _ScaleLocation;

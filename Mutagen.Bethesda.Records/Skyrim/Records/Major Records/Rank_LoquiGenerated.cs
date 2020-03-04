@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRankGetter rhs)) return false;
             return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -362,15 +362,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (printMask?.RankID ?? true)
                     {
-                        fg.AppendLine($"RankID => {RankID}");
+                        fg.AppendItem(RankID, "RankID");
                     }
                     if (printMask?.MaleRankTitle ?? true)
                     {
-                        fg.AppendLine($"MaleRankTitle => {MaleRankTitle}");
+                        fg.AppendItem(MaleRankTitle, "MaleRankTitle");
                     }
                     if (printMask?.FemaleRankTitle ?? true)
                     {
-                        fg.AppendLine($"FemaleRankTitle => {FemaleRankTitle}");
+                        fg.AppendItem(FemaleRankTitle, "FemaleRankTitle");
                     }
                 }
                 fg.AppendLine("]");
@@ -497,9 +497,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"RankID => {RankID}");
-                fg.AppendLine($"MaleRankTitle => {MaleRankTitle}");
-                fg.AppendLine($"FemaleRankTitle => {FemaleRankTitle}");
+                fg.AppendItem(RankID, "RankID");
+                fg.AppendItem(MaleRankTitle, "MaleRankTitle");
+                fg.AppendItem(FemaleRankTitle, "FemaleRankTitle");
             }
             #endregion
 
@@ -1365,17 +1365,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Rank.Mask<bool>? printMask = null)
         {
-            if (printMask?.RankID ?? true)
+            if ((printMask?.RankID ?? true)
+                && item.RankID.TryGet(out var RankIDItem))
             {
-                fg.AppendLine($"RankID => {item.RankID}");
+                fg.AppendItem(RankIDItem, "RankID");
             }
-            if (printMask?.MaleRankTitle ?? true)
+            if ((printMask?.MaleRankTitle ?? true)
+                && item.MaleRankTitle.TryGet(out var MaleRankTitleItem))
             {
-                fg.AppendLine($"MaleRankTitle => {item.MaleRankTitle}");
+                fg.AppendItem(MaleRankTitleItem, "MaleRankTitle");
             }
-            if (printMask?.FemaleRankTitle ?? true)
+            if ((printMask?.FemaleRankTitle ?? true)
+                && item.FemaleRankTitle.TryGet(out var FemaleRankTitleItem))
             {
-                fg.AppendLine($"FemaleRankTitle => {item.FemaleRankTitle}");
+                fg.AppendItem(FemaleRankTitleItem, "FemaleRankTitle");
             }
         }
         

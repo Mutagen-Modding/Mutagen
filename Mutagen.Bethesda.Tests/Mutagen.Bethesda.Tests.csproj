@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup>
@@ -42,6 +43,7 @@
     <Compile Include="Processing\OblivionProcessor.cs" />
     <Compile Include="Processing\Processor.cs" />
     <Compile Include="Processing\SkyrimProcessor.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Settings\DataFolderLocations.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>

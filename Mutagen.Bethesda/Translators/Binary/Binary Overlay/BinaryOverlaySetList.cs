@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Binary
 {
     public abstract class BinaryOverlaySetList<T>
     {
-        public static IReadOnlySetList<T> FactoryByArray(
+        public static IReadOnlyList<T> FactoryByArray(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             BinaryOverlay.SpanFactory<T> getter,
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Binary
                 locs);
         }
 
-        public static IReadOnlySetList<T> FactoryByArray(
+        public static IReadOnlyList<T> FactoryByArray(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter,
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Binary
                 locs);
         }
 
-        public static IReadOnlySetList<T> FactoryByStartIndex(
+        public static IReadOnlyList<T> FactoryByStartIndex(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             int itemLength,
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Binary
                 itemLength);
         }
 
-        public static IReadOnlySetList<T> FactoryByLazyParse(
+        public static IReadOnlyList<T> FactoryByLazyParse(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             BinaryOverlay.Factory<T> getter)
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Binary
                 });
         }
 
-        public static IReadOnlySetList<T> FactoryByLazyParse(
+        public static IReadOnlyList<T> FactoryByLazyParse(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, IReadOnlyList<T>> getter)
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Binary
                 getter);
         }
 
-        private class BinaryOverlayListByLocationArray : IReadOnlySetList<T>
+        private class BinaryOverlayListByLocationArray : IReadOnlyList<T>
         {
             private int[] _locations;
             BinaryOverlayFactoryPackage _package;
@@ -105,8 +105,6 @@ namespace Mutagen.Bethesda.Binary
 
             public int Count => _locations.Length;
 
-            public bool HasBeenSet => true;
-
             public IEnumerator<T> GetEnumerator()
             {
                 for (int i = 0; i < _locations.Length; i++)
@@ -118,7 +116,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        private class BinaryOverlayRecordListByLocationArray : IReadOnlySetList<T>
+        private class BinaryOverlayRecordListByLocationArray : IReadOnlyList<T>
         {
             private int[] _locations;
             private BinaryOverlayFactoryPackage _package;
@@ -144,8 +142,6 @@ namespace Mutagen.Bethesda.Binary
 
             public int Count => _locations.Length;
 
-            public bool HasBeenSet => true;
-
             public IEnumerator<T> GetEnumerator()
             {
                 for (int i = 0; i < _locations.Length; i++)
@@ -157,7 +153,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        public class BinaryOverlayListByStartIndex : IReadOnlySetList<T>
+        public class BinaryOverlayListByStartIndex : IReadOnlyList<T>
         {
             private int _itemLength;
             BinaryOverlayFactoryPackage _package;
@@ -187,8 +183,6 @@ namespace Mutagen.Bethesda.Binary
 
             public int Count => this._mem.Length / _itemLength;
 
-            public bool HasBeenSet => true;
-
             public IEnumerator<T> GetEnumerator()
             {
                 for (int i = 0; i < this.Count; i++)
@@ -200,7 +194,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        public class BinaryOverlayLazyList : IReadOnlySetList<T>
+        public class BinaryOverlayLazyList : IReadOnlyList<T>
         {
             private readonly Lazy<IReadOnlyList<T>> _list;
             private readonly ReadOnlyMemorySlice<byte> _mem;
@@ -226,8 +220,6 @@ namespace Mutagen.Bethesda.Binary
             public T this[int index] => this._list.Value[index];
 
             public int Count => this._list.Value.Count;
-
-            public bool HasBeenSet => true;
 
             public IEnumerator<T> GetEnumerator() => this._list.Value.GetEnumerator();
 

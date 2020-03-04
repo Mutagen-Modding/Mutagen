@@ -16,7 +16,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
-using Loqui.Presentation;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -528,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IWaterGetter rhs)) return false;
             return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -844,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -1089,127 +1088,127 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Texture ?? true)
                     {
-                        fg.AppendLine($"Texture => {Texture}");
+                        fg.AppendItem(Texture, "Texture");
                     }
                     if (printMask?.Opacity ?? true)
                     {
-                        fg.AppendLine($"Opacity => {Opacity}");
+                        fg.AppendItem(Opacity, "Opacity");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.MaterialID ?? true)
                     {
-                        fg.AppendLine($"MaterialID => {MaterialID}");
+                        fg.AppendItem(MaterialID, "MaterialID");
                     }
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendLine($"Sound => {Sound}");
+                        fg.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.WindVelocity ?? true)
                     {
-                        fg.AppendLine($"WindVelocity => {WindVelocity}");
+                        fg.AppendItem(WindVelocity, "WindVelocity");
                     }
                     if (printMask?.WindDirection ?? true)
                     {
-                        fg.AppendLine($"WindDirection => {WindDirection}");
+                        fg.AppendItem(WindDirection, "WindDirection");
                     }
                     if (printMask?.WaveAmplitude ?? true)
                     {
-                        fg.AppendLine($"WaveAmplitude => {WaveAmplitude}");
+                        fg.AppendItem(WaveAmplitude, "WaveAmplitude");
                     }
                     if (printMask?.WaveFrequency ?? true)
                     {
-                        fg.AppendLine($"WaveFrequency => {WaveFrequency}");
+                        fg.AppendItem(WaveFrequency, "WaveFrequency");
                     }
                     if (printMask?.SunPower ?? true)
                     {
-                        fg.AppendLine($"SunPower => {SunPower}");
+                        fg.AppendItem(SunPower, "SunPower");
                     }
                     if (printMask?.ReflectivityAmount ?? true)
                     {
-                        fg.AppendLine($"ReflectivityAmount => {ReflectivityAmount}");
+                        fg.AppendItem(ReflectivityAmount, "ReflectivityAmount");
                     }
                     if (printMask?.FresnelAmount ?? true)
                     {
-                        fg.AppendLine($"FresnelAmount => {FresnelAmount}");
+                        fg.AppendItem(FresnelAmount, "FresnelAmount");
                     }
                     if (printMask?.ScrollXSpeed ?? true)
                     {
-                        fg.AppendLine($"ScrollXSpeed => {ScrollXSpeed}");
+                        fg.AppendItem(ScrollXSpeed, "ScrollXSpeed");
                     }
                     if (printMask?.ScrollYSpeed ?? true)
                     {
-                        fg.AppendLine($"ScrollYSpeed => {ScrollYSpeed}");
+                        fg.AppendItem(ScrollYSpeed, "ScrollYSpeed");
                     }
                     if (printMask?.FogDistanceNearPlane ?? true)
                     {
-                        fg.AppendLine($"FogDistanceNearPlane => {FogDistanceNearPlane}");
+                        fg.AppendItem(FogDistanceNearPlane, "FogDistanceNearPlane");
                     }
                     if (printMask?.FogDistanceFarPlane ?? true)
                     {
-                        fg.AppendLine($"FogDistanceFarPlane => {FogDistanceFarPlane}");
+                        fg.AppendItem(FogDistanceFarPlane, "FogDistanceFarPlane");
                     }
                     if (printMask?.ShallowColor ?? true)
                     {
-                        fg.AppendLine($"ShallowColor => {ShallowColor}");
+                        fg.AppendItem(ShallowColor, "ShallowColor");
                     }
                     if (printMask?.DeepColor ?? true)
                     {
-                        fg.AppendLine($"DeepColor => {DeepColor}");
+                        fg.AppendItem(DeepColor, "DeepColor");
                     }
                     if (printMask?.ReflectionColor ?? true)
                     {
-                        fg.AppendLine($"ReflectionColor => {ReflectionColor}");
+                        fg.AppendItem(ReflectionColor, "ReflectionColor");
                     }
                     if (printMask?.TextureBlend ?? true)
                     {
-                        fg.AppendLine($"TextureBlend => {TextureBlend}");
+                        fg.AppendItem(TextureBlend, "TextureBlend");
                     }
                     if (printMask?.RainSimulatorForce ?? true)
                     {
-                        fg.AppendLine($"RainSimulatorForce => {RainSimulatorForce}");
+                        fg.AppendItem(RainSimulatorForce, "RainSimulatorForce");
                     }
                     if (printMask?.RainSimulatorVelocity ?? true)
                     {
-                        fg.AppendLine($"RainSimulatorVelocity => {RainSimulatorVelocity}");
+                        fg.AppendItem(RainSimulatorVelocity, "RainSimulatorVelocity");
                     }
                     if (printMask?.RainSimulatorFalloff ?? true)
                     {
-                        fg.AppendLine($"RainSimulatorFalloff => {RainSimulatorFalloff}");
+                        fg.AppendItem(RainSimulatorFalloff, "RainSimulatorFalloff");
                     }
                     if (printMask?.RainSimulatorDampner ?? true)
                     {
-                        fg.AppendLine($"RainSimulatorDampner => {RainSimulatorDampner}");
+                        fg.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
                     }
                     if (printMask?.RainSimulatorStartingSize ?? true)
                     {
-                        fg.AppendLine($"RainSimulatorStartingSize => {RainSimulatorStartingSize}");
+                        fg.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
                     }
                     if (printMask?.DisplacementSimulatorForce ?? true)
                     {
-                        fg.AppendLine($"DisplacementSimulatorForce => {DisplacementSimulatorForce}");
+                        fg.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
                     }
                     if (printMask?.DisplacementSimulatorVelocity ?? true)
                     {
-                        fg.AppendLine($"DisplacementSimulatorVelocity => {DisplacementSimulatorVelocity}");
+                        fg.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
                     }
                     if (printMask?.DisplacementSimulatorFalloff ?? true)
                     {
-                        fg.AppendLine($"DisplacementSimulatorFalloff => {DisplacementSimulatorFalloff}");
+                        fg.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
                     }
                     if (printMask?.DisplacementSimulatorDampner ?? true)
                     {
-                        fg.AppendLine($"DisplacementSimulatorDampner => {DisplacementSimulatorDampner}");
+                        fg.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
                     }
                     if (printMask?.DisplacementSimulatorStartingSize ?? true)
                     {
-                        fg.AppendLine($"DisplacementSimulatorStartingSize => {DisplacementSimulatorStartingSize}");
+                        fg.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendLine($"Damage => {Damage}");
+                        fg.AppendItem(Damage, "Damage");
                     }
                     if (printMask?.RelatedWaters?.Overall ?? true)
                     {
@@ -1217,7 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -1634,39 +1633,39 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Texture => {Texture}");
-                fg.AppendLine($"Opacity => {Opacity}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"MaterialID => {MaterialID}");
-                fg.AppendLine($"Sound => {Sound}");
-                fg.AppendLine($"WindVelocity => {WindVelocity}");
-                fg.AppendLine($"WindDirection => {WindDirection}");
-                fg.AppendLine($"WaveAmplitude => {WaveAmplitude}");
-                fg.AppendLine($"WaveFrequency => {WaveFrequency}");
-                fg.AppendLine($"SunPower => {SunPower}");
-                fg.AppendLine($"ReflectivityAmount => {ReflectivityAmount}");
-                fg.AppendLine($"FresnelAmount => {FresnelAmount}");
-                fg.AppendLine($"ScrollXSpeed => {ScrollXSpeed}");
-                fg.AppendLine($"ScrollYSpeed => {ScrollYSpeed}");
-                fg.AppendLine($"FogDistanceNearPlane => {FogDistanceNearPlane}");
-                fg.AppendLine($"FogDistanceFarPlane => {FogDistanceFarPlane}");
-                fg.AppendLine($"ShallowColor => {ShallowColor}");
-                fg.AppendLine($"DeepColor => {DeepColor}");
-                fg.AppendLine($"ReflectionColor => {ReflectionColor}");
-                fg.AppendLine($"TextureBlend => {TextureBlend}");
-                fg.AppendLine($"RainSimulatorForce => {RainSimulatorForce}");
-                fg.AppendLine($"RainSimulatorVelocity => {RainSimulatorVelocity}");
-                fg.AppendLine($"RainSimulatorFalloff => {RainSimulatorFalloff}");
-                fg.AppendLine($"RainSimulatorDampner => {RainSimulatorDampner}");
-                fg.AppendLine($"RainSimulatorStartingSize => {RainSimulatorStartingSize}");
-                fg.AppendLine($"DisplacementSimulatorForce => {DisplacementSimulatorForce}");
-                fg.AppendLine($"DisplacementSimulatorVelocity => {DisplacementSimulatorVelocity}");
-                fg.AppendLine($"DisplacementSimulatorFalloff => {DisplacementSimulatorFalloff}");
-                fg.AppendLine($"DisplacementSimulatorDampner => {DisplacementSimulatorDampner}");
-                fg.AppendLine($"DisplacementSimulatorStartingSize => {DisplacementSimulatorStartingSize}");
-                fg.AppendLine($"Damage => {Damage}");
+                fg.AppendItem(Texture, "Texture");
+                fg.AppendItem(Opacity, "Opacity");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(MaterialID, "MaterialID");
+                fg.AppendItem(Sound, "Sound");
+                fg.AppendItem(WindVelocity, "WindVelocity");
+                fg.AppendItem(WindDirection, "WindDirection");
+                fg.AppendItem(WaveAmplitude, "WaveAmplitude");
+                fg.AppendItem(WaveFrequency, "WaveFrequency");
+                fg.AppendItem(SunPower, "SunPower");
+                fg.AppendItem(ReflectivityAmount, "ReflectivityAmount");
+                fg.AppendItem(FresnelAmount, "FresnelAmount");
+                fg.AppendItem(ScrollXSpeed, "ScrollXSpeed");
+                fg.AppendItem(ScrollYSpeed, "ScrollYSpeed");
+                fg.AppendItem(FogDistanceNearPlane, "FogDistanceNearPlane");
+                fg.AppendItem(FogDistanceFarPlane, "FogDistanceFarPlane");
+                fg.AppendItem(ShallowColor, "ShallowColor");
+                fg.AppendItem(DeepColor, "DeepColor");
+                fg.AppendItem(ReflectionColor, "ReflectionColor");
+                fg.AppendItem(TextureBlend, "TextureBlend");
+                fg.AppendItem(RainSimulatorForce, "RainSimulatorForce");
+                fg.AppendItem(RainSimulatorVelocity, "RainSimulatorVelocity");
+                fg.AppendItem(RainSimulatorFalloff, "RainSimulatorFalloff");
+                fg.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
+                fg.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
+                fg.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
+                fg.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
+                fg.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
+                fg.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
+                fg.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
+                fg.AppendItem(Damage, "Damage");
                 RelatedWaters?.ToString(fg);
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -3302,137 +3301,143 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Texture ?? true)
+            if ((printMask?.Texture ?? true)
+                && item.Texture.TryGet(out var TextureItem))
             {
-                fg.AppendLine($"Texture => {item.Texture}");
+                fg.AppendItem(TextureItem, "Texture");
             }
-            if (printMask?.Opacity ?? true)
+            if ((printMask?.Opacity ?? true)
+                && item.Opacity.TryGet(out var OpacityItem))
             {
-                fg.AppendLine($"Opacity => {item.Opacity}");
+                fg.AppendItem(OpacityItem, "Opacity");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.MaterialID ?? true)
+            if ((printMask?.MaterialID ?? true)
+                && item.MaterialID.TryGet(out var MaterialIDItem))
             {
-                fg.AppendLine($"MaterialID => {item.MaterialID}");
+                fg.AppendItem(MaterialIDItem, "MaterialID");
             }
-            if (printMask?.Sound ?? true)
+            if ((printMask?.Sound ?? true)
+                && item.Sound.TryGet(out var SoundItem))
             {
-                fg.AppendLine($"Sound => {item.Sound}");
+                fg.AppendItem(SoundItem, "Sound");
             }
             if (printMask?.WindVelocity ?? true)
             {
-                fg.AppendLine($"WindVelocity => {item.WindVelocity}");
+                fg.AppendItem(item.WindVelocity, "WindVelocity");
             }
             if (printMask?.WindDirection ?? true)
             {
-                fg.AppendLine($"WindDirection => {item.WindDirection}");
+                fg.AppendItem(item.WindDirection, "WindDirection");
             }
             if (printMask?.WaveAmplitude ?? true)
             {
-                fg.AppendLine($"WaveAmplitude => {item.WaveAmplitude}");
+                fg.AppendItem(item.WaveAmplitude, "WaveAmplitude");
             }
             if (printMask?.WaveFrequency ?? true)
             {
-                fg.AppendLine($"WaveFrequency => {item.WaveFrequency}");
+                fg.AppendItem(item.WaveFrequency, "WaveFrequency");
             }
             if (printMask?.SunPower ?? true)
             {
-                fg.AppendLine($"SunPower => {item.SunPower}");
+                fg.AppendItem(item.SunPower, "SunPower");
             }
             if (printMask?.ReflectivityAmount ?? true)
             {
-                fg.AppendLine($"ReflectivityAmount => {item.ReflectivityAmount}");
+                fg.AppendItem(item.ReflectivityAmount, "ReflectivityAmount");
             }
             if (printMask?.FresnelAmount ?? true)
             {
-                fg.AppendLine($"FresnelAmount => {item.FresnelAmount}");
+                fg.AppendItem(item.FresnelAmount, "FresnelAmount");
             }
             if (printMask?.ScrollXSpeed ?? true)
             {
-                fg.AppendLine($"ScrollXSpeed => {item.ScrollXSpeed}");
+                fg.AppendItem(item.ScrollXSpeed, "ScrollXSpeed");
             }
             if (printMask?.ScrollYSpeed ?? true)
             {
-                fg.AppendLine($"ScrollYSpeed => {item.ScrollYSpeed}");
+                fg.AppendItem(item.ScrollYSpeed, "ScrollYSpeed");
             }
             if (printMask?.FogDistanceNearPlane ?? true)
             {
-                fg.AppendLine($"FogDistanceNearPlane => {item.FogDistanceNearPlane}");
+                fg.AppendItem(item.FogDistanceNearPlane, "FogDistanceNearPlane");
             }
             if (printMask?.FogDistanceFarPlane ?? true)
             {
-                fg.AppendLine($"FogDistanceFarPlane => {item.FogDistanceFarPlane}");
+                fg.AppendItem(item.FogDistanceFarPlane, "FogDistanceFarPlane");
             }
             if (printMask?.ShallowColor ?? true)
             {
-                fg.AppendLine($"ShallowColor => {item.ShallowColor}");
+                fg.AppendItem(item.ShallowColor, "ShallowColor");
             }
             if (printMask?.DeepColor ?? true)
             {
-                fg.AppendLine($"DeepColor => {item.DeepColor}");
+                fg.AppendItem(item.DeepColor, "DeepColor");
             }
             if (printMask?.ReflectionColor ?? true)
             {
-                fg.AppendLine($"ReflectionColor => {item.ReflectionColor}");
+                fg.AppendItem(item.ReflectionColor, "ReflectionColor");
             }
             if (printMask?.TextureBlend ?? true)
             {
-                fg.AppendLine($"TextureBlend => {item.TextureBlend}");
+                fg.AppendItem(item.TextureBlend, "TextureBlend");
             }
             if (printMask?.RainSimulatorForce ?? true)
             {
-                fg.AppendLine($"RainSimulatorForce => {item.RainSimulatorForce}");
+                fg.AppendItem(item.RainSimulatorForce, "RainSimulatorForce");
             }
             if (printMask?.RainSimulatorVelocity ?? true)
             {
-                fg.AppendLine($"RainSimulatorVelocity => {item.RainSimulatorVelocity}");
+                fg.AppendItem(item.RainSimulatorVelocity, "RainSimulatorVelocity");
             }
             if (printMask?.RainSimulatorFalloff ?? true)
             {
-                fg.AppendLine($"RainSimulatorFalloff => {item.RainSimulatorFalloff}");
+                fg.AppendItem(item.RainSimulatorFalloff, "RainSimulatorFalloff");
             }
             if (printMask?.RainSimulatorDampner ?? true)
             {
-                fg.AppendLine($"RainSimulatorDampner => {item.RainSimulatorDampner}");
+                fg.AppendItem(item.RainSimulatorDampner, "RainSimulatorDampner");
             }
             if (printMask?.RainSimulatorStartingSize ?? true)
             {
-                fg.AppendLine($"RainSimulatorStartingSize => {item.RainSimulatorStartingSize}");
+                fg.AppendItem(item.RainSimulatorStartingSize, "RainSimulatorStartingSize");
             }
             if (printMask?.DisplacementSimulatorForce ?? true)
             {
-                fg.AppendLine($"DisplacementSimulatorForce => {item.DisplacementSimulatorForce}");
+                fg.AppendItem(item.DisplacementSimulatorForce, "DisplacementSimulatorForce");
             }
             if (printMask?.DisplacementSimulatorVelocity ?? true)
             {
-                fg.AppendLine($"DisplacementSimulatorVelocity => {item.DisplacementSimulatorVelocity}");
+                fg.AppendItem(item.DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
             }
             if (printMask?.DisplacementSimulatorFalloff ?? true)
             {
-                fg.AppendLine($"DisplacementSimulatorFalloff => {item.DisplacementSimulatorFalloff}");
+                fg.AppendItem(item.DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
             }
             if (printMask?.DisplacementSimulatorDampner ?? true)
             {
-                fg.AppendLine($"DisplacementSimulatorDampner => {item.DisplacementSimulatorDampner}");
+                fg.AppendItem(item.DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
             }
             if (printMask?.DisplacementSimulatorStartingSize ?? true)
             {
-                fg.AppendLine($"DisplacementSimulatorStartingSize => {item.DisplacementSimulatorStartingSize}");
+                fg.AppendItem(item.DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendLine($"Damage => {item.Damage}");
+                fg.AppendItem(item.Damage, "Damage");
             }
-            if (printMask?.RelatedWaters?.Overall ?? true)
+            if ((printMask?.RelatedWaters?.Overall ?? true)
+                && item.RelatedWaters.TryGet(out var RelatedWatersItem))
             {
-                item.RelatedWaters?.ToString(fg, "RelatedWaters");
+                RelatedWatersItem?.ToString(fg, "RelatedWaters");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         

@@ -17,7 +17,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Drawing;
-using Loqui.Presentation;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -87,13 +86,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region WeatherTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<WeatherType> _WeatherTypes = new SetList<WeatherType>();
-        public ISetList<WeatherType> WeatherTypes => _WeatherTypes;
+        private ExtendedList<WeatherType>? _WeatherTypes;
+        public ExtendedList<WeatherType>? WeatherTypes
+        {
+            get => this._WeatherTypes;
+            set => this._WeatherTypes = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<WeatherType> IWeather.WeatherTypes => _WeatherTypes;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IWeatherTypeGetter> IWeatherGetter.WeatherTypes => _WeatherTypes;
+        IReadOnlyList<IWeatherTypeGetter>? IWeatherGetter.WeatherTypes => _WeatherTypes;
         #endregion
 
         #endregion
@@ -502,13 +503,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<WeatherSound> _Sounds = new SetList<WeatherSound>();
-        public ISetList<WeatherSound> Sounds => _Sounds;
+        private ExtendedList<WeatherSound>? _Sounds;
+        public ExtendedList<WeatherSound>? Sounds
+        {
+            get => this._Sounds;
+            set => this._Sounds = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<WeatherSound> IWeather.Sounds => _Sounds;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IWeatherSoundGetter> IWeatherGetter.Sounds => _Sounds;
+        IReadOnlyList<IWeatherSoundGetter>? IWeatherGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -536,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IWeatherGetter rhs)) return false;
             return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -694,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureLowerLayer = initialValue;
                 this.TextureUpperLayer = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
                 this.FogDayNear = initialValue;
                 this.FogDayFar = initialValue;
                 this.FogNightNear = initialValue;
@@ -726,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ThunderLightningFrequency = initialValue;
                 this.Classification = initialValue;
                 this.LightningColor = initialValue;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.FNAMDataTypeState = initialValue;
                 this.HNAMDataTypeState = initialValue;
                 this.DATADataTypeState = initialValue;
@@ -787,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureLowerLayer = TextureLowerLayer;
                 this.TextureUpperLayer = TextureUpperLayer;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>>(WeatherTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(WeatherTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
                 this.FogDayNear = FogDayNear;
                 this.FogDayFar = FogDayFar;
                 this.FogNightNear = FogNightNear;
@@ -819,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ThunderLightningFrequency = ThunderLightningFrequency;
                 this.Classification = Classification;
                 this.LightningColor = LightningColor;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.FNAMDataTypeState = FNAMDataTypeState;
                 this.HNAMDataTypeState = HNAMDataTypeState;
                 this.DATADataTypeState = DATADataTypeState;
@@ -837,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem TextureLowerLayer;
             public TItem TextureUpperLayer;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>>? WeatherTypes;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>? WeatherTypes;
             public TItem FogDayNear;
             public TItem FogDayFar;
             public TItem FogNightNear;
@@ -869,14 +872,14 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem ThunderLightningFrequency;
             public TItem Classification;
             public TItem LightningColor;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>>? Sounds;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>? Sounds;
             public TItem FNAMDataTypeState;
             public TItem HNAMDataTypeState;
             public TItem DATADataTypeState;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -1137,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (WeatherTypes != null)
                 {
-                    obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>>(eval(this.WeatherTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherType.Mask<R>?>>());
+                    obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.WeatherTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherType.Mask<R>?>>());
                     if (WeatherTypes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();
@@ -1183,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.LightningColor = eval(this.LightningColor);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound.Mask<R>?>>>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherSound.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherSound.Mask<R>?>>());
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherSound.Mask<R>?>>();
@@ -1223,39 +1226,34 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.TextureLowerLayer ?? true)
                     {
-                        fg.AppendLine($"TextureLowerLayer => {TextureLowerLayer}");
+                        fg.AppendItem(TextureLowerLayer, "TextureLowerLayer");
                     }
                     if (printMask?.TextureUpperLayer ?? true)
                     {
-                        fg.AppendLine($"TextureUpperLayer => {TextureUpperLayer}");
+                        fg.AppendItem(TextureUpperLayer, "TextureUpperLayer");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
                         Model?.ToString(fg);
                     }
-                    if (printMask?.WeatherTypes?.Overall ?? true)
+                    if ((printMask?.WeatherTypes?.Overall ?? true)
+                        && WeatherTypes.TryGet(out var WeatherTypesItem))
                     {
                         fg.AppendLine("WeatherTypes =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (WeatherTypes != null)
+                            fg.AppendItem(WeatherTypesItem.Overall);
+                            if (WeatherTypesItem.Specific != null)
                             {
-                                if (WeatherTypes.Overall != null)
+                                foreach (var subItem in WeatherTypesItem.Specific)
                                 {
-                                    fg.AppendLine(WeatherTypes.Overall.ToString());
-                                }
-                                if (WeatherTypes.Specific != null)
-                                {
-                                    foreach (var subItem in WeatherTypes.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1263,151 +1261,146 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.FogDayNear ?? true)
                     {
-                        fg.AppendLine($"FogDayNear => {FogDayNear}");
+                        fg.AppendItem(FogDayNear, "FogDayNear");
                     }
                     if (printMask?.FogDayFar ?? true)
                     {
-                        fg.AppendLine($"FogDayFar => {FogDayFar}");
+                        fg.AppendItem(FogDayFar, "FogDayFar");
                     }
                     if (printMask?.FogNightNear ?? true)
                     {
-                        fg.AppendLine($"FogNightNear => {FogNightNear}");
+                        fg.AppendItem(FogNightNear, "FogNightNear");
                     }
                     if (printMask?.FogNightFar ?? true)
                     {
-                        fg.AppendLine($"FogNightFar => {FogNightFar}");
+                        fg.AppendItem(FogNightFar, "FogNightFar");
                     }
                     if (printMask?.HdrEyeAdaptSpeed ?? true)
                     {
-                        fg.AppendLine($"HdrEyeAdaptSpeed => {HdrEyeAdaptSpeed}");
+                        fg.AppendItem(HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
                     }
                     if (printMask?.HdrBlurRadius ?? true)
                     {
-                        fg.AppendLine($"HdrBlurRadius => {HdrBlurRadius}");
+                        fg.AppendItem(HdrBlurRadius, "HdrBlurRadius");
                     }
                     if (printMask?.HdrBlurPasses ?? true)
                     {
-                        fg.AppendLine($"HdrBlurPasses => {HdrBlurPasses}");
+                        fg.AppendItem(HdrBlurPasses, "HdrBlurPasses");
                     }
                     if (printMask?.HdrEmissiveMult ?? true)
                     {
-                        fg.AppendLine($"HdrEmissiveMult => {HdrEmissiveMult}");
+                        fg.AppendItem(HdrEmissiveMult, "HdrEmissiveMult");
                     }
                     if (printMask?.HdrTargetLum ?? true)
                     {
-                        fg.AppendLine($"HdrTargetLum => {HdrTargetLum}");
+                        fg.AppendItem(HdrTargetLum, "HdrTargetLum");
                     }
                     if (printMask?.HdrUpperLumClamp ?? true)
                     {
-                        fg.AppendLine($"HdrUpperLumClamp => {HdrUpperLumClamp}");
+                        fg.AppendItem(HdrUpperLumClamp, "HdrUpperLumClamp");
                     }
                     if (printMask?.HdrBrightScale ?? true)
                     {
-                        fg.AppendLine($"HdrBrightScale => {HdrBrightScale}");
+                        fg.AppendItem(HdrBrightScale, "HdrBrightScale");
                     }
                     if (printMask?.HdrBrightClamp ?? true)
                     {
-                        fg.AppendLine($"HdrBrightClamp => {HdrBrightClamp}");
+                        fg.AppendItem(HdrBrightClamp, "HdrBrightClamp");
                     }
                     if (printMask?.HdrLumRampNoTex ?? true)
                     {
-                        fg.AppendLine($"HdrLumRampNoTex => {HdrLumRampNoTex}");
+                        fg.AppendItem(HdrLumRampNoTex, "HdrLumRampNoTex");
                     }
                     if (printMask?.HdrLumRampMin ?? true)
                     {
-                        fg.AppendLine($"HdrLumRampMin => {HdrLumRampMin}");
+                        fg.AppendItem(HdrLumRampMin, "HdrLumRampMin");
                     }
                     if (printMask?.HdrLumRampMax ?? true)
                     {
-                        fg.AppendLine($"HdrLumRampMax => {HdrLumRampMax}");
+                        fg.AppendItem(HdrLumRampMax, "HdrLumRampMax");
                     }
                     if (printMask?.HdrSunlightDimmer ?? true)
                     {
-                        fg.AppendLine($"HdrSunlightDimmer => {HdrSunlightDimmer}");
+                        fg.AppendItem(HdrSunlightDimmer, "HdrSunlightDimmer");
                     }
                     if (printMask?.HdrGrassDimmer ?? true)
                     {
-                        fg.AppendLine($"HdrGrassDimmer => {HdrGrassDimmer}");
+                        fg.AppendItem(HdrGrassDimmer, "HdrGrassDimmer");
                     }
                     if (printMask?.HdrTreeDimmer ?? true)
                     {
-                        fg.AppendLine($"HdrTreeDimmer => {HdrTreeDimmer}");
+                        fg.AppendItem(HdrTreeDimmer, "HdrTreeDimmer");
                     }
                     if (printMask?.WindSpeed ?? true)
                     {
-                        fg.AppendLine($"WindSpeed => {WindSpeed}");
+                        fg.AppendItem(WindSpeed, "WindSpeed");
                     }
                     if (printMask?.CloudSpeedLower ?? true)
                     {
-                        fg.AppendLine($"CloudSpeedLower => {CloudSpeedLower}");
+                        fg.AppendItem(CloudSpeedLower, "CloudSpeedLower");
                     }
                     if (printMask?.CloudSpeedUpper ?? true)
                     {
-                        fg.AppendLine($"CloudSpeedUpper => {CloudSpeedUpper}");
+                        fg.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
                     }
                     if (printMask?.TransDelta ?? true)
                     {
-                        fg.AppendLine($"TransDelta => {TransDelta}");
+                        fg.AppendItem(TransDelta, "TransDelta");
                     }
                     if (printMask?.SunGlare ?? true)
                     {
-                        fg.AppendLine($"SunGlare => {SunGlare}");
+                        fg.AppendItem(SunGlare, "SunGlare");
                     }
                     if (printMask?.SunDamage ?? true)
                     {
-                        fg.AppendLine($"SunDamage => {SunDamage}");
+                        fg.AppendItem(SunDamage, "SunDamage");
                     }
                     if (printMask?.PrecipitationBeginFadeIn ?? true)
                     {
-                        fg.AppendLine($"PrecipitationBeginFadeIn => {PrecipitationBeginFadeIn}");
+                        fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
                     }
                     if (printMask?.PrecipitationEndFadeOut ?? true)
                     {
-                        fg.AppendLine($"PrecipitationEndFadeOut => {PrecipitationEndFadeOut}");
+                        fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
                     }
                     if (printMask?.ThunderLightningBeginFadeIn ?? true)
                     {
-                        fg.AppendLine($"ThunderLightningBeginFadeIn => {ThunderLightningBeginFadeIn}");
+                        fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
                     }
                     if (printMask?.ThunderLightningEndFadeOut ?? true)
                     {
-                        fg.AppendLine($"ThunderLightningEndFadeOut => {ThunderLightningEndFadeOut}");
+                        fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
                     }
                     if (printMask?.ThunderLightningFrequency ?? true)
                     {
-                        fg.AppendLine($"ThunderLightningFrequency => {ThunderLightningFrequency}");
+                        fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
                     }
                     if (printMask?.Classification ?? true)
                     {
-                        fg.AppendLine($"Classification => {Classification}");
+                        fg.AppendItem(Classification, "Classification");
                     }
                     if (printMask?.LightningColor ?? true)
                     {
-                        fg.AppendLine($"LightningColor => {LightningColor}");
+                        fg.AppendItem(LightningColor, "LightningColor");
                     }
-                    if (printMask?.Sounds?.Overall ?? true)
+                    if ((printMask?.Sounds?.Overall ?? true)
+                        && Sounds.TryGet(out var SoundsItem))
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Sounds != null)
+                            fg.AppendItem(SoundsItem.Overall);
+                            if (SoundsItem.Specific != null)
                             {
-                                if (Sounds.Overall != null)
+                                foreach (var subItem in SoundsItem.Specific)
                                 {
-                                    fg.AppendLine(Sounds.Overall.ToString());
-                                }
-                                if (Sounds.Specific != null)
-                                {
-                                    foreach (var subItem in Sounds.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -1415,15 +1408,15 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.FNAMDataTypeState ?? true)
                     {
-                        fg.AppendLine($"FNAMDataTypeState => {FNAMDataTypeState}");
+                        fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
                     }
                     if (printMask?.HNAMDataTypeState ?? true)
                     {
-                        fg.AppendLine($"HNAMDataTypeState => {HNAMDataTypeState}");
+                        fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -1900,22 +1893,19 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"TextureLowerLayer => {TextureLowerLayer}");
-                fg.AppendLine($"TextureUpperLayer => {TextureUpperLayer}");
+                fg.AppendItem(TextureLowerLayer, "TextureLowerLayer");
+                fg.AppendItem(TextureUpperLayer, "TextureUpperLayer");
                 Model?.ToString(fg);
-                fg.AppendLine("WeatherTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (WeatherTypes.TryGet(out var WeatherTypesItem))
                 {
-                    if (WeatherTypes != null)
+                    fg.AppendLine("WeatherTypes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (WeatherTypes.Overall != null)
+                        fg.AppendItem(WeatherTypesItem.Overall);
+                        if (WeatherTypesItem.Specific != null)
                         {
-                            fg.AppendLine(WeatherTypes.Overall.ToString());
-                        }
-                        if (WeatherTypes.Specific != null)
-                        {
-                            foreach (var subItem in WeatherTypes.Specific)
+                            foreach (var subItem in WeatherTypesItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1926,52 +1916,49 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"FogDayNear => {FogDayNear}");
-                fg.AppendLine($"FogDayFar => {FogDayFar}");
-                fg.AppendLine($"FogNightNear => {FogNightNear}");
-                fg.AppendLine($"FogNightFar => {FogNightFar}");
-                fg.AppendLine($"HdrEyeAdaptSpeed => {HdrEyeAdaptSpeed}");
-                fg.AppendLine($"HdrBlurRadius => {HdrBlurRadius}");
-                fg.AppendLine($"HdrBlurPasses => {HdrBlurPasses}");
-                fg.AppendLine($"HdrEmissiveMult => {HdrEmissiveMult}");
-                fg.AppendLine($"HdrTargetLum => {HdrTargetLum}");
-                fg.AppendLine($"HdrUpperLumClamp => {HdrUpperLumClamp}");
-                fg.AppendLine($"HdrBrightScale => {HdrBrightScale}");
-                fg.AppendLine($"HdrBrightClamp => {HdrBrightClamp}");
-                fg.AppendLine($"HdrLumRampNoTex => {HdrLumRampNoTex}");
-                fg.AppendLine($"HdrLumRampMin => {HdrLumRampMin}");
-                fg.AppendLine($"HdrLumRampMax => {HdrLumRampMax}");
-                fg.AppendLine($"HdrSunlightDimmer => {HdrSunlightDimmer}");
-                fg.AppendLine($"HdrGrassDimmer => {HdrGrassDimmer}");
-                fg.AppendLine($"HdrTreeDimmer => {HdrTreeDimmer}");
-                fg.AppendLine($"WindSpeed => {WindSpeed}");
-                fg.AppendLine($"CloudSpeedLower => {CloudSpeedLower}");
-                fg.AppendLine($"CloudSpeedUpper => {CloudSpeedUpper}");
-                fg.AppendLine($"TransDelta => {TransDelta}");
-                fg.AppendLine($"SunGlare => {SunGlare}");
-                fg.AppendLine($"SunDamage => {SunDamage}");
-                fg.AppendLine($"PrecipitationBeginFadeIn => {PrecipitationBeginFadeIn}");
-                fg.AppendLine($"PrecipitationEndFadeOut => {PrecipitationEndFadeOut}");
-                fg.AppendLine($"ThunderLightningBeginFadeIn => {ThunderLightningBeginFadeIn}");
-                fg.AppendLine($"ThunderLightningEndFadeOut => {ThunderLightningEndFadeOut}");
-                fg.AppendLine($"ThunderLightningFrequency => {ThunderLightningFrequency}");
-                fg.AppendLine($"Classification => {Classification}");
-                fg.AppendLine($"LightningColor => {LightningColor}");
-                fg.AppendLine("Sounds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(FogDayNear, "FogDayNear");
+                fg.AppendItem(FogDayFar, "FogDayFar");
+                fg.AppendItem(FogNightNear, "FogNightNear");
+                fg.AppendItem(FogNightFar, "FogNightFar");
+                fg.AppendItem(HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
+                fg.AppendItem(HdrBlurRadius, "HdrBlurRadius");
+                fg.AppendItem(HdrBlurPasses, "HdrBlurPasses");
+                fg.AppendItem(HdrEmissiveMult, "HdrEmissiveMult");
+                fg.AppendItem(HdrTargetLum, "HdrTargetLum");
+                fg.AppendItem(HdrUpperLumClamp, "HdrUpperLumClamp");
+                fg.AppendItem(HdrBrightScale, "HdrBrightScale");
+                fg.AppendItem(HdrBrightClamp, "HdrBrightClamp");
+                fg.AppendItem(HdrLumRampNoTex, "HdrLumRampNoTex");
+                fg.AppendItem(HdrLumRampMin, "HdrLumRampMin");
+                fg.AppendItem(HdrLumRampMax, "HdrLumRampMax");
+                fg.AppendItem(HdrSunlightDimmer, "HdrSunlightDimmer");
+                fg.AppendItem(HdrGrassDimmer, "HdrGrassDimmer");
+                fg.AppendItem(HdrTreeDimmer, "HdrTreeDimmer");
+                fg.AppendItem(WindSpeed, "WindSpeed");
+                fg.AppendItem(CloudSpeedLower, "CloudSpeedLower");
+                fg.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
+                fg.AppendItem(TransDelta, "TransDelta");
+                fg.AppendItem(SunGlare, "SunGlare");
+                fg.AppendItem(SunDamage, "SunDamage");
+                fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                fg.AppendItem(Classification, "Classification");
+                fg.AppendItem(LightningColor, "LightningColor");
+                if (Sounds.TryGet(out var SoundsItem))
                 {
-                    if (Sounds != null)
+                    fg.AppendLine("Sounds =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Sounds.Overall != null)
+                        fg.AppendItem(SoundsItem.Overall);
+                        if (SoundsItem.Specific != null)
                         {
-                            fg.AppendLine(Sounds.Overall.ToString());
-                        }
-                        if (Sounds.Specific != null)
-                        {
-                            foreach (var subItem in Sounds.Specific)
+                            foreach (var subItem in SoundsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1982,11 +1969,11 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"FNAMDataTypeState => {FNAMDataTypeState}");
-                fg.AppendLine($"HNAMDataTypeState => {HNAMDataTypeState}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
+                fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -2292,7 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? TextureLowerLayer { get; set; }
         new String? TextureUpperLayer { get; set; }
         new Model? Model { get; set; }
-        new ISetList<WeatherType> WeatherTypes { get; }
+        new ExtendedList<WeatherType>? WeatherTypes { get; set; }
         new Single FogDayNear { get; set; }
         new Single FogDayFar { get; set; }
         new Single FogNightNear { get; set; }
@@ -2324,7 +2311,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte ThunderLightningFrequency { get; set; }
         new Weather.WeatherClassification Classification { get; set; }
         new Color LightningColor { get; set; }
-        new ISetList<WeatherSound> Sounds { get; }
+        new ExtendedList<WeatherSound>? Sounds { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.HNAMDataType HNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }
@@ -2347,7 +2334,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? TextureLowerLayer { get; }
         String? TextureUpperLayer { get; }
         IModelGetter? Model { get; }
-        IReadOnlySetList<IWeatherTypeGetter> WeatherTypes { get; }
+        IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }
         Single FogDayNear { get; }
         Single FogDayFar { get; }
         Single FogNightNear { get; }
@@ -2379,7 +2366,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte ThunderLightningFrequency { get; }
         Weather.WeatherClassification Classification { get; }
         Color LightningColor { get; }
-        IReadOnlySetList<IWeatherSoundGetter> Sounds { get; }
+        IReadOnlyList<IWeatherSoundGetter>? Sounds { get; }
         Weather.FNAMDataType FNAMDataTypeState { get; }
         Weather.HNAMDataType HNAMDataTypeState { get; }
         Weather.DATADataType DATADataTypeState { get; }
@@ -3209,7 +3196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Model:
                     return typeof(Model);
                 case Weather_FieldIndex.WeatherTypes:
-                    return typeof(ISetList<WeatherType>);
+                    return typeof(ExtendedList<WeatherType>);
                 case Weather_FieldIndex.FogDayNear:
                     return typeof(Single);
                 case Weather_FieldIndex.FogDayFar:
@@ -3273,7 +3260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.LightningColor:
                     return typeof(Color);
                 case Weather_FieldIndex.Sounds:
-                    return typeof(ISetList<WeatherSound>);
+                    return typeof(ExtendedList<WeatherSound>);
                 case Weather_FieldIndex.FNAMDataTypeState:
                     return typeof(Weather.FNAMDataType);
                 case Weather_FieldIndex.HNAMDataTypeState:
@@ -3343,7 +3330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TextureLowerLayer = default;
             item.TextureUpperLayer = default;
             item.Model = null;
-            item.WeatherTypes.Unset();
+            item.WeatherTypes = null;
             item.FogDayNear = default;
             item.FogDayFar = default;
             item.FogNightNear = default;
@@ -3375,7 +3362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThunderLightningFrequency = default;
             item.Classification = default;
             item.LightningColor = default;
-            item.Sounds.Unset();
+            item.Sounds = null;
             item.FNAMDataTypeState = default;
             item.HNAMDataTypeState = default;
             item.DATADataTypeState = default;
@@ -3506,16 +3493,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x304D414E: // NAM0
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.ParseRepeatedItem(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item.WeatherTypes,
-                        transl: (MutagenFrame r, out WeatherType listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.WeatherTypes = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.ParseRepeatedItem(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out WeatherType listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<WeatherType>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
                 }
                 case 0x4D414E46: // FNAM
@@ -3581,18 +3569,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Weather_Registration.SNAM_HEADER,
-                        item: item.Sounds,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out WeatherSound listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<WeatherSound>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Sounds = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Weather_Registration.SNAM_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out WeatherSound listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<WeatherSound>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<WeatherSound>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
                 }
                 default:
@@ -3750,25 +3739,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.TextureLowerLayer ?? true)
+            if ((printMask?.TextureLowerLayer ?? true)
+                && item.TextureLowerLayer.TryGet(out var TextureLowerLayerItem))
             {
-                fg.AppendLine($"TextureLowerLayer => {item.TextureLowerLayer}");
+                fg.AppendItem(TextureLowerLayerItem, "TextureLowerLayer");
             }
-            if (printMask?.TextureUpperLayer ?? true)
+            if ((printMask?.TextureUpperLayer ?? true)
+                && item.TextureUpperLayer.TryGet(out var TextureUpperLayerItem))
             {
-                fg.AppendLine($"TextureUpperLayer => {item.TextureUpperLayer}");
+                fg.AppendItem(TextureUpperLayerItem, "TextureUpperLayer");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.WeatherTypes?.Overall ?? true)
+            if ((printMask?.WeatherTypes?.Overall ?? true)
+                && item.WeatherTypes.TryGet(out var WeatherTypesItem))
             {
                 fg.AppendLine("WeatherTypes =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.WeatherTypes)
+                    foreach (var subItem in WeatherTypesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3782,135 +3775,136 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.FogDayNear ?? true)
             {
-                fg.AppendLine($"FogDayNear => {item.FogDayNear}");
+                fg.AppendItem(item.FogDayNear, "FogDayNear");
             }
             if (printMask?.FogDayFar ?? true)
             {
-                fg.AppendLine($"FogDayFar => {item.FogDayFar}");
+                fg.AppendItem(item.FogDayFar, "FogDayFar");
             }
             if (printMask?.FogNightNear ?? true)
             {
-                fg.AppendLine($"FogNightNear => {item.FogNightNear}");
+                fg.AppendItem(item.FogNightNear, "FogNightNear");
             }
             if (printMask?.FogNightFar ?? true)
             {
-                fg.AppendLine($"FogNightFar => {item.FogNightFar}");
+                fg.AppendItem(item.FogNightFar, "FogNightFar");
             }
             if (printMask?.HdrEyeAdaptSpeed ?? true)
             {
-                fg.AppendLine($"HdrEyeAdaptSpeed => {item.HdrEyeAdaptSpeed}");
+                fg.AppendItem(item.HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
             }
             if (printMask?.HdrBlurRadius ?? true)
             {
-                fg.AppendLine($"HdrBlurRadius => {item.HdrBlurRadius}");
+                fg.AppendItem(item.HdrBlurRadius, "HdrBlurRadius");
             }
             if (printMask?.HdrBlurPasses ?? true)
             {
-                fg.AppendLine($"HdrBlurPasses => {item.HdrBlurPasses}");
+                fg.AppendItem(item.HdrBlurPasses, "HdrBlurPasses");
             }
             if (printMask?.HdrEmissiveMult ?? true)
             {
-                fg.AppendLine($"HdrEmissiveMult => {item.HdrEmissiveMult}");
+                fg.AppendItem(item.HdrEmissiveMult, "HdrEmissiveMult");
             }
             if (printMask?.HdrTargetLum ?? true)
             {
-                fg.AppendLine($"HdrTargetLum => {item.HdrTargetLum}");
+                fg.AppendItem(item.HdrTargetLum, "HdrTargetLum");
             }
             if (printMask?.HdrUpperLumClamp ?? true)
             {
-                fg.AppendLine($"HdrUpperLumClamp => {item.HdrUpperLumClamp}");
+                fg.AppendItem(item.HdrUpperLumClamp, "HdrUpperLumClamp");
             }
             if (printMask?.HdrBrightScale ?? true)
             {
-                fg.AppendLine($"HdrBrightScale => {item.HdrBrightScale}");
+                fg.AppendItem(item.HdrBrightScale, "HdrBrightScale");
             }
             if (printMask?.HdrBrightClamp ?? true)
             {
-                fg.AppendLine($"HdrBrightClamp => {item.HdrBrightClamp}");
+                fg.AppendItem(item.HdrBrightClamp, "HdrBrightClamp");
             }
             if (printMask?.HdrLumRampNoTex ?? true)
             {
-                fg.AppendLine($"HdrLumRampNoTex => {item.HdrLumRampNoTex}");
+                fg.AppendItem(item.HdrLumRampNoTex, "HdrLumRampNoTex");
             }
             if (printMask?.HdrLumRampMin ?? true)
             {
-                fg.AppendLine($"HdrLumRampMin => {item.HdrLumRampMin}");
+                fg.AppendItem(item.HdrLumRampMin, "HdrLumRampMin");
             }
             if (printMask?.HdrLumRampMax ?? true)
             {
-                fg.AppendLine($"HdrLumRampMax => {item.HdrLumRampMax}");
+                fg.AppendItem(item.HdrLumRampMax, "HdrLumRampMax");
             }
             if (printMask?.HdrSunlightDimmer ?? true)
             {
-                fg.AppendLine($"HdrSunlightDimmer => {item.HdrSunlightDimmer}");
+                fg.AppendItem(item.HdrSunlightDimmer, "HdrSunlightDimmer");
             }
             if (printMask?.HdrGrassDimmer ?? true)
             {
-                fg.AppendLine($"HdrGrassDimmer => {item.HdrGrassDimmer}");
+                fg.AppendItem(item.HdrGrassDimmer, "HdrGrassDimmer");
             }
             if (printMask?.HdrTreeDimmer ?? true)
             {
-                fg.AppendLine($"HdrTreeDimmer => {item.HdrTreeDimmer}");
+                fg.AppendItem(item.HdrTreeDimmer, "HdrTreeDimmer");
             }
             if (printMask?.WindSpeed ?? true)
             {
-                fg.AppendLine($"WindSpeed => {item.WindSpeed}");
+                fg.AppendItem(item.WindSpeed, "WindSpeed");
             }
             if (printMask?.CloudSpeedLower ?? true)
             {
-                fg.AppendLine($"CloudSpeedLower => {item.CloudSpeedLower}");
+                fg.AppendItem(item.CloudSpeedLower, "CloudSpeedLower");
             }
             if (printMask?.CloudSpeedUpper ?? true)
             {
-                fg.AppendLine($"CloudSpeedUpper => {item.CloudSpeedUpper}");
+                fg.AppendItem(item.CloudSpeedUpper, "CloudSpeedUpper");
             }
             if (printMask?.TransDelta ?? true)
             {
-                fg.AppendLine($"TransDelta => {item.TransDelta}");
+                fg.AppendItem(item.TransDelta, "TransDelta");
             }
             if (printMask?.SunGlare ?? true)
             {
-                fg.AppendLine($"SunGlare => {item.SunGlare}");
+                fg.AppendItem(item.SunGlare, "SunGlare");
             }
             if (printMask?.SunDamage ?? true)
             {
-                fg.AppendLine($"SunDamage => {item.SunDamage}");
+                fg.AppendItem(item.SunDamage, "SunDamage");
             }
             if (printMask?.PrecipitationBeginFadeIn ?? true)
             {
-                fg.AppendLine($"PrecipitationBeginFadeIn => {item.PrecipitationBeginFadeIn}");
+                fg.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
             }
             if (printMask?.PrecipitationEndFadeOut ?? true)
             {
-                fg.AppendLine($"PrecipitationEndFadeOut => {item.PrecipitationEndFadeOut}");
+                fg.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
             }
             if (printMask?.ThunderLightningBeginFadeIn ?? true)
             {
-                fg.AppendLine($"ThunderLightningBeginFadeIn => {item.ThunderLightningBeginFadeIn}");
+                fg.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
             }
             if (printMask?.ThunderLightningEndFadeOut ?? true)
             {
-                fg.AppendLine($"ThunderLightningEndFadeOut => {item.ThunderLightningEndFadeOut}");
+                fg.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
             }
             if (printMask?.ThunderLightningFrequency ?? true)
             {
-                fg.AppendLine($"ThunderLightningFrequency => {item.ThunderLightningFrequency}");
+                fg.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
             }
             if (printMask?.Classification ?? true)
             {
-                fg.AppendLine($"Classification => {item.Classification}");
+                fg.AppendItem(item.Classification, "Classification");
             }
             if (printMask?.LightningColor ?? true)
             {
-                fg.AppendLine($"LightningColor => {item.LightningColor}");
+                fg.AppendItem(item.LightningColor, "LightningColor");
             }
-            if (printMask?.Sounds?.Overall ?? true)
+            if ((printMask?.Sounds?.Overall ?? true)
+                && item.Sounds.TryGet(out var SoundsItem))
             {
                 fg.AppendLine("Sounds =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Sounds)
+                    foreach (var subItem in SoundsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3924,15 +3918,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.FNAMDataTypeState ?? true)
             {
-                fg.AppendLine($"FNAMDataTypeState => {item.FNAMDataTypeState}");
+                fg.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
             }
             if (printMask?.HNAMDataTypeState ?? true)
             {
-                fg.AppendLine($"HNAMDataTypeState => {item.HNAMDataTypeState}");
+                fg.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -3944,8 +3938,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.TextureUpperLayer.HasValue && checkMask.TextureUpperLayer.Value != (item.TextureUpperLayer != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.WeatherTypes?.Overall.HasValue ?? false && checkMask.WeatherTypes!.Overall.Value != item.WeatherTypes.HasBeenSet) return false;
-            if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != item.Sounds.HasBeenSet) return false;
+            if (checkMask.WeatherTypes?.Overall.HasValue ?? false && checkMask.WeatherTypes!.Overall.Value != (item.WeatherTypes != null)) return false;
+            if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != (item.Sounds != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -3959,8 +3953,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.TextureUpperLayer = (item.TextureUpperLayer != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var WeatherTypesItem = item.WeatherTypes;
-            mask.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>>(WeatherTypesItem.HasBeenSet, WeatherTypesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.WeatherTypes.TryGet(out var WeatherTypesItem))
+            {
+                mask.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>?>(true, WeatherTypesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.FogDayNear = true;
             mask.FogDayFar = true;
             mask.FogNightNear = true;
@@ -3992,8 +3988,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ThunderLightningFrequency = true;
             mask.Classification = true;
             mask.LightningColor = true;
-            var SoundsItem = item.Sounds;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>>(SoundsItem.HasBeenSet, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Sounds.TryGet(out var SoundsItem))
+            {
+                mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.FNAMDataTypeState = true;
             mask.HNAMDataTypeState = true;
             mask.DATADataTypeState = true;
@@ -4186,9 +4184,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+            if (obj.Sounds != null)
             {
-                yield return item;
+                foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -4275,20 +4276,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
                 try
                 {
-                    if (rhs.WeatherTypes.HasBeenSet)
+                    if ((rhs.WeatherTypes != null))
                     {
-                        item.WeatherTypes.SetTo(
-                            items: rhs.WeatherTypes,
-                            converter: (r) =>
+                        item.WeatherTypes = 
+                            rhs.WeatherTypes
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<WeatherType>();
                     }
                     else
                     {
-                        item.WeatherTypes.Unset();
+                        item.WeatherTypes = null;
                     }
                 }
                 catch (Exception ex)
@@ -4430,20 +4432,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
                 try
                 {
-                    if (rhs.Sounds.HasBeenSet)
+                    if ((rhs.Sounds != null))
                     {
-                        item.Sounds.SetTo(
-                            items: rhs.Sounds,
-                            converter: (r) =>
+                        item.Sounds = 
+                            rhs.Sounds
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<WeatherSound>();
                     }
                     else
                     {
-                        item.Sounds.Unset();
+                        item.Sounds = null;
                     }
                 }
                 catch (Exception ex)
@@ -4644,7 +4647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Model));
                 }
             }
-            if (item.WeatherTypes.HasBeenSet
+            if ((item.WeatherTypes != null)
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WeatherTypes) ?? true))
             {
                 ListXmlTranslation<IWeatherTypeGetter>.Instance.Write(
@@ -4953,7 +4956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (item.Sounds.HasBeenSet
+            if ((item.Sounds != null)
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
                 ListXmlTranslation<IWeatherSoundGetter>.Instance.Write(
@@ -5176,11 +5179,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.WeatherTypes.SetTo(WeatherTypesItem);
+                            item.WeatherTypes = WeatherTypesItem.ToExtendedList();
                         }
                         else
                         {
-                            item.WeatherTypes.Unset();
+                            item.WeatherTypes = null;
                         }
                     }
                     catch (Exception ex)
@@ -5765,11 +5768,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Sounds.SetTo(SoundsItem);
+                            item.Sounds = SoundsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Sounds.Unset();
+                            item.Sounds = null;
                         }
                     }
                     catch (Exception ex)
@@ -6225,7 +6228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlySetList<IWeatherTypeGetter> WeatherTypes { get; private set; } = EmptySetList<WeatherTypeBinaryOverlay>.Instance;
+        public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         private int? _FNAMLocation;
         public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
         #region FogDayNear
@@ -6387,7 +6390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _LightningColor_IsSet => _DATALocation.HasValue;
         public Color LightningColor => _LightningColor_IsSet ? _data.Span.Slice(_LightningColorLocation, 3).ReadColor() : default;
         #endregion
-        public IReadOnlySetList<IWeatherSoundGetter> Sounds { get; private set; } = EmptySetList<WeatherSoundBinaryOverlay>.Instance;
+        public IReadOnlyList<IWeatherSoundGetter>? Sounds { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is ILoadScreenLocationGetter rhs)) return false;
             return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -346,15 +346,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Direct ?? true)
                     {
-                        fg.AppendLine($"Direct => {Direct}");
+                        fg.AppendItem(Direct, "Direct");
                     }
                     if (printMask?.Indirect ?? true)
                     {
-                        fg.AppendLine($"Indirect => {Indirect}");
+                        fg.AppendItem(Indirect, "Indirect");
                     }
                     if (printMask?.GridPoint ?? true)
                     {
-                        fg.AppendLine($"GridPoint => {GridPoint}");
+                        fg.AppendItem(GridPoint, "GridPoint");
                     }
                 }
                 fg.AppendLine("]");
@@ -481,9 +481,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Direct => {Direct}");
-                fg.AppendLine($"Indirect => {Indirect}");
-                fg.AppendLine($"GridPoint => {GridPoint}");
+                fg.AppendItem(Direct, "Direct");
+                fg.AppendItem(Indirect, "Indirect");
+                fg.AppendItem(GridPoint, "GridPoint");
             }
             #endregion
 
@@ -1313,15 +1313,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Direct ?? true)
             {
-                fg.AppendLine($"Direct => {item.Direct}");
+                fg.AppendItem(item.Direct, "Direct");
             }
             if (printMask?.Indirect ?? true)
             {
-                fg.AppendLine($"Indirect => {item.Indirect}");
+                fg.AppendItem(item.Indirect, "Indirect");
             }
             if (printMask?.GridPoint ?? true)
             {
-                fg.AppendLine($"GridPoint => {item.GridPoint}");
+                fg.AppendItem(item.GridPoint, "GridPoint");
             }
         }
         

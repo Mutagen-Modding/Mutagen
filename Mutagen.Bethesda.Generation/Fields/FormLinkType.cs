@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateToString(FileGeneration fg, string name, Accessor accessor, string fgAccessor)
         {
             if (!this.IntegrateField) return;
-            fg.AppendLine($"{fgAccessor}.AppendLine($\"{name} => {{{accessor.PropertyOrDirectAccess}}}\");");
+            fg.AppendLine($"fg.{nameof(FileGeneration.AppendItem)}({accessor}{(string.IsNullOrWhiteSpace(this.Name) ? null : $", \"{this.Name}\"")});");
         }
 
         public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier)
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateCopySetToConverter(FileGeneration fg)
         {
-            fg.AppendLine($"(r) => new {DirectTypeName(getter: false)}(r.{FormIDTypeString})");
+            fg.AppendLine($".Select(r => new {DirectTypeName(getter: false)}(r.{FormIDTypeString}))");
         }
 
         public override void GenerateForClass(FileGeneration fg)

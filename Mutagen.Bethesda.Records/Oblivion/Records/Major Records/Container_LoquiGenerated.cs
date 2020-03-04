@@ -82,13 +82,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<ContainerItem> _Items = new SetList<ContainerItem>();
-        public ISetList<ContainerItem> Items => _Items;
+        private ExtendedList<ContainerItem>? _Items;
+        public ExtendedList<ContainerItem>? Items
+        {
+            get => this._Items;
+            set => this._Items = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<ContainerItem> IContainer.Items => _Items;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IContainerItemGetter> IContainerGetter.Items => _Items;
+        IReadOnlyList<IContainerItemGetter>? IContainerGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -150,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IContainerGetter rhs)) return false;
             return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -308,7 +310,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Script = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>());
                 this.Flags = initialValue;
                 this.Weight = initialValue;
                 this.OpenSound = initialValue;
@@ -341,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Script = Script;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>());
                 this.Flags = Flags;
                 this.Weight = Weight;
                 this.OpenSound = OpenSound;
@@ -361,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Script;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>>? Items;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>?>? Items;
             public TItem Flags;
             public TItem Weight;
             public TItem OpenSound;
@@ -370,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -489,7 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Script = eval(this.Script);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerItem.Mask<R>?>>>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerItem.Mask<R>?>>());
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ContainerItem.Mask<R>?>>();
@@ -531,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -539,31 +541,26 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendLine($"Script => {Script}");
+                        fg.AppendItem(Script, "Script");
                     }
-                    if (printMask?.Items?.Overall ?? true)
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items.TryGet(out var ItemsItem))
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Items != null)
+                            fg.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
                             {
-                                if (Items.Overall != null)
+                                foreach (var subItem in ItemsItem.Specific)
                                 {
-                                    fg.AppendLine(Items.Overall.ToString());
-                                }
-                                if (Items.Specific != null)
-                                {
-                                    foreach (var subItem in Items.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -571,23 +568,23 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendLine($"Weight => {Weight}");
+                        fg.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.OpenSound ?? true)
                     {
-                        fg.AppendLine($"OpenSound => {OpenSound}");
+                        fg.AppendItem(OpenSound, "OpenSound");
                     }
                     if (printMask?.CloseSound ?? true)
                     {
-                        fg.AppendLine($"CloseSound => {CloseSound}");
+                        fg.AppendItem(CloseSound, "CloseSound");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -764,22 +761,19 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
+                fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendLine($"Script => {Script}");
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Script, "Script");
+                if (Items.TryGet(out var ItemsItem))
                 {
-                    if (Items != null)
+                    fg.AppendLine("Items =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Items.Overall != null)
+                        fg.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
                         {
-                            fg.AppendLine(Items.Overall.ToString());
-                        }
-                        if (Items.Specific != null)
-                        {
-                            foreach (var subItem in Items.Specific)
+                            foreach (var subItem in ItemsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -790,13 +784,13 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"Weight => {Weight}");
-                fg.AppendLine($"OpenSound => {OpenSound}");
-                fg.AppendLine($"CloseSound => {CloseSound}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Weight, "Weight");
+                fg.AppendItem(OpenSound, "OpenSound");
+                fg.AppendItem(CloseSound, "CloseSound");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -972,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new IFormLinkNullable<Script> Script { get; }
-        new ISetList<ContainerItem> Items { get; }
+        new ExtendedList<ContainerItem>? Items { get; set; }
         new Container.ContainerFlag Flags { get; set; }
         new Single Weight { get; set; }
         new IFormLinkNullable<Sound> OpenSound { get; }
@@ -997,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        IReadOnlySetList<IContainerItemGetter> Items { get; }
+        IReadOnlyList<IContainerItemGetter>? Items { get; }
         Container.ContainerFlag Flags { get; }
         Single Weight { get; }
         IFormLinkNullableGetter<ISoundGetter> OpenSound { get; }
@@ -1529,7 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Container_FieldIndex.Script:
                     return typeof(IFormLinkNullable<Script>);
                 case Container_FieldIndex.Items:
-                    return typeof(ISetList<ContainerItem>);
+                    return typeof(ExtendedList<ContainerItem>);
                 case Container_FieldIndex.Flags:
                     return typeof(Container.ContainerFlag);
                 case Container_FieldIndex.Weight:
@@ -1602,7 +1596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Script.FormKey = null;
-            item.Items.Unset();
+            item.Items = null;
             item.Flags = default;
             item.Weight = default;
             item.OpenSound.FormKey = null;
@@ -1729,18 +1723,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F544E43: // CNTO
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Container_Registration.CNTO_HEADER,
-                        item: item.Items,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out ContainerItem listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<ContainerItem>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Items = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Container_Registration.CNTO_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out ContainerItem listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<ContainerItem>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<ContainerItem>();
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Items);
                 }
                 case 0x41544144: // DATA
@@ -1895,25 +1890,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Script ?? true)
+            if ((printMask?.Script ?? true)
+                && item.Script.TryGet(out var ScriptItem))
             {
-                fg.AppendLine($"Script => {item.Script}");
+                fg.AppendItem(ScriptItem, "Script");
             }
-            if (printMask?.Items?.Overall ?? true)
+            if ((printMask?.Items?.Overall ?? true)
+                && item.Items.TryGet(out var ItemsItem))
             {
                 fg.AppendLine("Items =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Items)
+                    foreach (var subItem in ItemsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1927,23 +1926,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendLine($"Weight => {item.Weight}");
+                fg.AppendItem(item.Weight, "Weight");
             }
-            if (printMask?.OpenSound ?? true)
+            if ((printMask?.OpenSound ?? true)
+                && item.OpenSound.TryGet(out var OpenSoundItem))
             {
-                fg.AppendLine($"OpenSound => {item.OpenSound}");
+                fg.AppendItem(OpenSoundItem, "OpenSound");
             }
-            if (printMask?.CloseSound ?? true)
+            if ((printMask?.CloseSound ?? true)
+                && item.CloseSound.TryGet(out var CloseSoundItem))
             {
-                fg.AppendLine($"CloseSound => {item.CloseSound}");
+                fg.AppendItem(CloseSoundItem, "CloseSound");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1955,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
-            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != item.Items.HasBeenSet) return false;
+            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
             if (checkMask.OpenSound.HasValue && checkMask.OpenSound.Value != (item.OpenSound.FormKey != null)) return false;
             if (checkMask.CloseSound.HasValue && checkMask.CloseSound.Value != (item.CloseSound.FormKey != null)) return false;
             return base.HasBeenSet(
@@ -1971,8 +1972,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = (item.Script.FormKey != null);
-            var ItemsItem = item.Items;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerItem.Mask<bool>?>>>(ItemsItem.HasBeenSet, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerItem.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Items.TryGet(out var ItemsItem))
+            {
+                mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerItem.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerItem.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.Flags = true;
             mask.Weight = true;
             mask.OpenSound = (item.OpenSound.FormKey != null);
@@ -2114,9 +2117,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 yield return item;
             }
             yield return obj.Script;
-            foreach (var item in obj.Items.SelectMany(f => f.Links))
+            if (obj.Items != null)
             {
-                yield return item;
+                foreach (var item in obj.Items.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield return obj.OpenSound;
             yield return obj.CloseSound;
@@ -2205,20 +2211,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.Items);
                 try
                 {
-                    if (rhs.Items.HasBeenSet)
+                    if ((rhs.Items != null))
                     {
-                        item.Items.SetTo(
-                            items: rhs.Items,
-                            converter: (r) =>
+                        item.Items = 
+                            rhs.Items
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<ContainerItem>();
                     }
                     else
                     {
-                        item.Items.Unset();
+                        item.Items = null;
                     }
                 }
                 catch (Exception ex)
@@ -2427,7 +2434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Container_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if (item.Items.HasBeenSet
+            if ((item.Items != null)
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<IContainerItemGetter>.Instance.Write(
@@ -2673,11 +2680,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Items.SetTo(ItemsItem);
+                            item.Items = ItemsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Items.Unset();
+                            item.Items = null;
                         }
                     }
                     catch (Exception ex)
@@ -3091,7 +3098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Script_IsSet => _ScriptLocation.HasValue;
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IContainerItemGetter> Items { get; private set; } = EmptySetList<ContainerItemBinaryOverlay>.Instance;
+        public IReadOnlyList<IContainerItemGetter>? Items { get; private set; }
         private int? _DATALocation;
         public Container.DATADataType DATADataTypeState { get; private set; }
         #region Flags

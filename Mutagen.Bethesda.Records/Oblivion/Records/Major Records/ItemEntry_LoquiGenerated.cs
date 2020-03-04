@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IItemEntryGetter rhs)) return false;
             return ((ItemEntryCommon)((IItemEntryGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -338,11 +338,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Item ?? true)
                     {
-                        fg.AppendLine($"Item => {Item}");
+                        fg.AppendItem(Item, "Item");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendLine($"Count => {Count}");
+                        fg.AppendItem(Count, "Count");
                     }
                 }
                 fg.AppendLine("]");
@@ -459,8 +459,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendLine($"Item => {Item}");
-                fg.AppendLine($"Count => {Count}");
+                fg.AppendItem(Item, "Item");
+                fg.AppendItem(Count, "Count");
             }
             #endregion
 
@@ -1267,11 +1267,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Item ?? true)
             {
-                fg.AppendLine($"Item => {item.Item}");
+                fg.AppendItem(item.Item, "Item");
             }
-            if (printMask?.Count ?? true)
+            if ((printMask?.Count ?? true)
+                && item.Count.TryGet(out var CountItem))
             {
-                fg.AppendLine($"Count => {item.Count}");
+                fg.AppendItem(CountItem, "Count");
             }
         }
         

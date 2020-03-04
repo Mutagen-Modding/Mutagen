@@ -16,7 +16,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
-using Loqui.Presentation;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -83,13 +82,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<RegionArea> _Areas = new SetList<RegionArea>();
-        public ISetList<RegionArea> Areas => _Areas;
+        private ExtendedList<RegionArea>? _Areas;
+        public ExtendedList<RegionArea>? Areas
+        {
+            get => this._Areas;
+            set => this._Areas = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<RegionArea> IRegion.Areas => _Areas;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRegionAreaGetter> IRegionGetter.Areas => _Areas;
+        IReadOnlyList<IRegionAreaGetter>? IRegionGetter.Areas => _Areas;
         #endregion
 
         #endregion
@@ -163,7 +164,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IRegionGetter rhs)) return false;
             return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -321,7 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.MapColor = initialValue;
                 this.Worldspace = initialValue;
-                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
                 this.Objects = new MaskItem<TItem, RegionDataObjects.Mask<TItem>?>(initialValue, new RegionDataObjects.Mask<TItem>(initialValue));
                 this.Weather = new MaskItem<TItem, RegionDataWeather.Mask<TItem>?>(initialValue, new RegionDataWeather.Mask<TItem>(initialValue));
                 this.MapName = new MaskItem<TItem, RegionDataMapName.Mask<TItem>?>(initialValue, new RegionDataMapName.Mask<TItem>(initialValue));
@@ -354,7 +355,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.MapColor = MapColor;
                 this.Worldspace = Worldspace;
-                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>>(Areas, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(Areas, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
                 this.Objects = new MaskItem<TItem, RegionDataObjects.Mask<TItem>?>(Objects, new RegionDataObjects.Mask<TItem>(Objects));
                 this.Weather = new MaskItem<TItem, RegionDataWeather.Mask<TItem>?>(Weather, new RegionDataWeather.Mask<TItem>(Weather));
                 this.MapName = new MaskItem<TItem, RegionDataMapName.Mask<TItem>?>(MapName, new RegionDataMapName.Mask<TItem>(MapName));
@@ -374,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Icon;
             public TItem MapColor;
             public TItem Worldspace;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>>? Areas;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>? Areas;
             public MaskItem<TItem, RegionDataObjects.Mask<TItem>?>? Objects { get; set; }
             public MaskItem<TItem, RegionDataWeather.Mask<TItem>?>? Weather { get; set; }
             public MaskItem<TItem, RegionDataMapName.Mask<TItem>?>? MapName { get; set; }
@@ -383,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -534,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Worldspace = eval(this.Worldspace);
                 if (Areas != null)
                 {
-                    obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>>(eval(this.Areas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea.Mask<R>?>>());
+                    obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.Areas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea.Mask<R>?>>());
                     if (Areas.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
@@ -576,39 +577,34 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendLine($"Icon => {Icon}");
+                        fg.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.MapColor ?? true)
                     {
-                        fg.AppendLine($"MapColor => {MapColor}");
+                        fg.AppendItem(MapColor, "MapColor");
                     }
                     if (printMask?.Worldspace ?? true)
                     {
-                        fg.AppendLine($"Worldspace => {Worldspace}");
+                        fg.AppendItem(Worldspace, "Worldspace");
                     }
-                    if (printMask?.Areas?.Overall ?? true)
+                    if ((printMask?.Areas?.Overall ?? true)
+                        && Areas.TryGet(out var AreasItem))
                     {
                         fg.AppendLine("Areas =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Areas != null)
+                            fg.AppendItem(AreasItem.Overall);
+                            if (AreasItem.Specific != null)
                             {
-                                if (Areas.Overall != null)
+                                foreach (var subItem in AreasItem.Specific)
                                 {
-                                    fg.AppendLine(Areas.Overall.ToString());
-                                }
-                                if (Areas.Specific != null)
-                                {
-                                    foreach (var subItem in Areas.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -809,22 +805,19 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Icon => {Icon}");
-                fg.AppendLine($"MapColor => {MapColor}");
-                fg.AppendLine($"Worldspace => {Worldspace}");
-                fg.AppendLine("Areas =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Icon, "Icon");
+                fg.AppendItem(MapColor, "MapColor");
+                fg.AppendItem(Worldspace, "Worldspace");
+                if (Areas.TryGet(out var AreasItem))
                 {
-                    if (Areas != null)
+                    fg.AppendLine("Areas =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Areas.Overall != null)
+                        fg.AppendItem(AreasItem.Overall);
+                        if (AreasItem.Specific != null)
                         {
-                            fg.AppendLine(Areas.Overall.ToString());
-                        }
-                        if (Areas.Specific != null)
-                        {
-                            foreach (var subItem in Areas.Specific)
+                            foreach (var subItem in AreasItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -835,8 +828,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
                 Objects?.ToString(fg);
                 Weather?.ToString(fg);
                 MapName?.ToString(fg);
@@ -1012,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
         new IFormLinkNullable<Worldspace> Worldspace { get; }
-        new ISetList<RegionArea> Areas { get; }
+        new ExtendedList<RegionArea>? Areas { get; set; }
         new RegionDataObjects? Objects { get; set; }
         new RegionDataWeather? Weather { get; set; }
         new RegionDataMapName? MapName { get; set; }
@@ -1037,7 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Icon { get; }
         Color? MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
-        IReadOnlySetList<IRegionAreaGetter> Areas { get; }
+        IReadOnlyList<IRegionAreaGetter>? Areas { get; }
         IRegionDataObjectsGetter? Objects { get; }
         IRegionDataWeatherGetter? Weather { get; }
         IRegionDataMapNameGetter? MapName { get; }
@@ -1569,7 +1562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Region_FieldIndex.Worldspace:
                     return typeof(IFormLinkNullable<Worldspace>);
                 case Region_FieldIndex.Areas:
-                    return typeof(ISetList<RegionArea>);
+                    return typeof(ExtendedList<RegionArea>);
                 case Region_FieldIndex.Objects:
                     return typeof(RegionDataObjects);
                 case Region_FieldIndex.Weather:
@@ -1641,7 +1634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon = default;
             item.MapColor = default;
             item.Worldspace.FormKey = null;
-            item.Areas.Unset();
+            item.Areas = null;
             item.Objects = null;
             item.Weather = null;
             item.MapName = null;
@@ -1766,18 +1759,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x494C5052: // RPLI
                 case 0x444C5052: // RPLD
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
-                        item: item.Areas,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out RegionArea listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Areas = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out RegionArea listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<RegionArea>();
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
                 }
                 case 0x54414452: // RDAT
@@ -1926,25 +1920,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Icon ?? true)
+            if ((printMask?.Icon ?? true)
+                && item.Icon.TryGet(out var IconItem))
             {
-                fg.AppendLine($"Icon => {item.Icon}");
+                fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.MapColor ?? true)
+            if ((printMask?.MapColor ?? true)
+                && item.MapColor.TryGet(out var MapColorItem))
             {
-                fg.AppendLine($"MapColor => {item.MapColor}");
+                fg.AppendItem(MapColorItem, "MapColor");
             }
-            if (printMask?.Worldspace ?? true)
+            if ((printMask?.Worldspace ?? true)
+                && item.Worldspace.TryGet(out var WorldspaceItem))
             {
-                fg.AppendLine($"Worldspace => {item.Worldspace}");
+                fg.AppendItem(WorldspaceItem, "Worldspace");
             }
-            if (printMask?.Areas?.Overall ?? true)
+            if ((printMask?.Areas?.Overall ?? true)
+                && item.Areas.TryGet(out var AreasItem))
             {
                 fg.AppendLine("Areas =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Areas)
+                    foreach (var subItem in AreasItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1956,25 +1954,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Objects?.Overall ?? true)
+            if ((printMask?.Objects?.Overall ?? true)
+                && item.Objects.TryGet(out var ObjectsItem))
             {
-                item.Objects?.ToString(fg, "Objects");
+                ObjectsItem?.ToString(fg, "Objects");
             }
-            if (printMask?.Weather?.Overall ?? true)
+            if ((printMask?.Weather?.Overall ?? true)
+                && item.Weather.TryGet(out var WeatherItem))
             {
-                item.Weather?.ToString(fg, "Weather");
+                WeatherItem?.ToString(fg, "Weather");
             }
-            if (printMask?.MapName?.Overall ?? true)
+            if ((printMask?.MapName?.Overall ?? true)
+                && item.MapName.TryGet(out var MapNameItem))
             {
-                item.MapName?.ToString(fg, "MapName");
+                MapNameItem?.ToString(fg, "MapName");
             }
-            if (printMask?.Grasses?.Overall ?? true)
+            if ((printMask?.Grasses?.Overall ?? true)
+                && item.Grasses.TryGet(out var GrassesItem))
             {
-                item.Grasses?.ToString(fg, "Grasses");
+                GrassesItem?.ToString(fg, "Grasses");
             }
-            if (printMask?.Sounds?.Overall ?? true)
+            if ((printMask?.Sounds?.Overall ?? true)
+                && item.Sounds.TryGet(out var SoundsItem))
             {
-                item.Sounds?.ToString(fg, "Sounds");
+                SoundsItem?.ToString(fg, "Sounds");
             }
         }
         
@@ -1985,7 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != (item.MapColor != null)) return false;
             if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != (item.Worldspace.FormKey != null)) return false;
-            if (checkMask.Areas?.Overall.HasValue ?? false && checkMask.Areas!.Overall.Value != item.Areas.HasBeenSet) return false;
+            if (checkMask.Areas?.Overall.HasValue ?? false && checkMask.Areas!.Overall.Value != (item.Areas != null)) return false;
             if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects.Overall.Value != (item.Objects != null)) return false;
             if (checkMask.Objects?.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
             if (checkMask.Weather?.Overall.HasValue ?? false && checkMask.Weather.Overall.Value != (item.Weather != null)) return false;
@@ -2008,8 +2011,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Icon = (item.Icon != null);
             mask.MapColor = (item.MapColor != null);
             mask.Worldspace = (item.Worldspace.FormKey != null);
-            var AreasItem = item.Areas;
-            mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>>(AreasItem.HasBeenSet, AreasItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Areas.TryGet(out var AreasItem))
+            {
+                mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>?>(true, AreasItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             var itemObjects = item.Objects;
             mask.Objects = new MaskItem<bool, RegionDataObjects.Mask<bool>?>(itemObjects != null, itemObjects?.GetHasBeenSetMask());
             var itemWeather = item.Weather;
@@ -2256,20 +2261,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Areas);
                 try
                 {
-                    if (rhs.Areas.HasBeenSet)
+                    if ((rhs.Areas != null))
                     {
-                        item.Areas.SetTo(
-                            items: rhs.Areas,
-                            converter: (r) =>
+                        item.Areas = 
+                            rhs.Areas
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<RegionArea>();
                     }
                     else
                     {
-                        item.Areas.Unset();
+                        item.Areas = null;
                     }
                 }
                 catch (Exception ex)
@@ -2584,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Region_FieldIndex.Worldspace,
                     errorMask: errorMask);
             }
-            if (item.Areas.HasBeenSet
+            if ((item.Areas != null)
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
                 ListXmlTranslation<IRegionAreaGetter>.Instance.Write(
@@ -2849,11 +2855,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Areas.SetTo(AreasItem);
+                            item.Areas = AreasItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Areas.Unset();
+                            item.Areas = null;
                         }
                     }
                     catch (Exception ex)
@@ -3273,7 +3279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
         public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormLinkNullable<IWorldspaceGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IRegionAreaGetter> Areas { get; private set; } = EmptySetList<RegionAreaBinaryOverlay>.Instance;
+        public IReadOnlyList<IRegionAreaGetter>? Areas { get; private set; }
         #region RegionAreaLogic
         partial void RegionAreaLogicCustomParse(
             BinaryMemoryReadStream stream,

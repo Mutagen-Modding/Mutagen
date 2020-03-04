@@ -172,37 +172,50 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else if (field is ContainerType cont)
                     {
+                        FileGeneration subFg = new FileGeneration();
                         if (cont.SubTypeGeneration is LoquiType contLoqui
                             && await HasLinks(contLoqui, includeBaseClass: true) != LinkCase.No)
                         {
                             var linktype = await HasLinks(contLoqui, includeBaseClass: true);
-                            switch (linktype)
+                            if (linktype != LinkCase.No)
                             {
-                                case LinkCase.Yes:
-                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.SelectMany(f => f.Links))");
-                                    break;
-                                case LinkCase.Maybe:
-                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.WhereCastable<{contLoqui.TypeName(getter: true)}, ILinkContainer>()");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine(".SelectMany((f) => f.Links))");
-                                    }
-                                    break;
-                                default:
-                                    break;
+                                switch (linktype)
+                                {
+                                    case LinkCase.Yes:
+                                        subFg.AppendLine($"foreach (var item in obj.{field.Name}.SelectMany(f => f.Links))");
+                                        break;
+                                    case LinkCase.Maybe:
+                                        subFg.AppendLine($"foreach (var item in obj.{field.Name}.WhereCastable<{contLoqui.TypeName(getter: true)}, ILinkContainer>()");
+                                        using (new DepthWrapper(subFg))
+                                        {
+                                            subFg.AppendLine(".SelectMany((f) => f.Links))");
+                                        }
+                                        break;
+                                    default:
+                                        throw new NotImplementedException();
+                                }
                             }
                         }
                         else if (cont.SubTypeGeneration is FormLinkType formIDType)
                         {
-                            fg.AppendLine($"foreach (var item in obj.{field.Name})");
+                            subFg.AppendLine($"foreach (var item in obj.{field.Name})");
                         }
                         else
                         {
                             continue;
                         }
-                        using (new BraceWrapper(fg))
+
+                        if (field.HasBeenSet)
                         {
-                            fg.AppendLine($"yield return item;");
+                            fg.AppendLine($"if (obj.{field.Name} != null)");
+                        }
+                        using (new BraceWrapper(fg, doIt: field.HasBeenSet))
+                        {
+                            fg.AppendLines(subFg);
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"yield return item;");
+                            }
                         }
                     }
                     else if (field is DictType dict)

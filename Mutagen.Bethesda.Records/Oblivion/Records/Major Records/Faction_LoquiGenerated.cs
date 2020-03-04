@@ -65,13 +65,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Relation> _Relations = new SetList<Relation>();
-        public ISetList<Relation> Relations => _Relations;
+        private ExtendedList<Relation>? _Relations;
+        public ExtendedList<Relation>? Relations
+        {
+            get => this._Relations;
+            set => this._Relations = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Relation> IFaction.Relations => _Relations;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRelationGetter> IFactionGetter.Relations => _Relations;
+        IReadOnlyList<IRelationGetter>? IFactionGetter.Relations => _Relations;
         #endregion
 
         #endregion
@@ -99,13 +101,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SetList<Rank> _Ranks = new SetList<Rank>();
-        public ISetList<Rank> Ranks => _Ranks;
+        private ExtendedList<Rank>? _Ranks;
+        public ExtendedList<Rank>? Ranks
+        {
+            get => this._Ranks;
+            set => this._Ranks = value;
+        }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISetList<Rank> IFaction.Ranks => _Ranks;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySetList<IRankGetter> IFactionGetter.Ranks => _Ranks;
+        IReadOnlyList<IRankGetter>? IFactionGetter.Ranks => _Ranks;
         #endregion
 
         #endregion
@@ -124,7 +128,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IFactionGetter rhs)) return false;
             return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -280,10 +284,10 @@ namespace Mutagen.Bethesda.Oblivion
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
                 this.Flags = initialValue;
                 this.CrimeGoldMultiplier = initialValue;
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -305,10 +309,10 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
                 this.Flags = Flags;
                 this.CrimeGoldMultiplier = CrimeGoldMultiplier;
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -321,14 +325,14 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public TItem Name;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>>? Relations;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>? Relations;
             public TItem Flags;
             public TItem CrimeGoldMultiplier;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>>? Ranks;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>? Ranks;
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -443,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Name = eval(this.Name);
                 if (Relations != null)
                 {
-                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, Relation.Mask<R>?>>());
+                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>?>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, Relation.Mask<R>?>>());
                     if (Relations.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Relation.Mask<R>?>>();
@@ -460,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.CrimeGoldMultiplier = eval(this.CrimeGoldMultiplier);
                 if (Ranks != null)
                 {
-                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
+                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
                     if (Ranks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Rank.Mask<R>?>>();
@@ -497,31 +501,26 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.Relations?.Overall ?? true)
+                    if ((printMask?.Relations?.Overall ?? true)
+                        && Relations.TryGet(out var RelationsItem))
                     {
                         fg.AppendLine("Relations =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Relations != null)
+                            fg.AppendItem(RelationsItem.Overall);
+                            if (RelationsItem.Specific != null)
                             {
-                                if (Relations.Overall != null)
+                                foreach (var subItem in RelationsItem.Specific)
                                 {
-                                    fg.AppendLine(Relations.Overall.ToString());
-                                }
-                                if (Relations.Specific != null)
-                                {
-                                    foreach (var subItem in Relations.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -529,35 +528,30 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.CrimeGoldMultiplier ?? true)
                     {
-                        fg.AppendLine($"CrimeGoldMultiplier => {CrimeGoldMultiplier}");
+                        fg.AppendItem(CrimeGoldMultiplier, "CrimeGoldMultiplier");
                     }
-                    if (printMask?.Ranks?.Overall ?? true)
+                    if ((printMask?.Ranks?.Overall ?? true)
+                        && Ranks.TryGet(out var RanksItem))
                     {
                         fg.AppendLine("Ranks =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            if (Ranks != null)
+                            fg.AppendItem(RanksItem.Overall);
+                            if (RanksItem.Specific != null)
                             {
-                                if (Ranks.Overall != null)
+                                foreach (var subItem in RanksItem.Specific)
                                 {
-                                    fg.AppendLine(Ranks.Overall.ToString());
-                                }
-                                if (Ranks.Specific != null)
-                                {
-                                    foreach (var subItem in Ranks.Specific)
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            subItem?.ToString(fg);
-                                        }
-                                        fg.AppendLine("]");
+                                        subItem?.ToString(fg);
                                     }
+                                    fg.AppendLine("]");
                                 }
                             }
                         }
@@ -698,20 +692,17 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendLine($"Name => {Name}");
-                fg.AppendLine("Relations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Name, "Name");
+                if (Relations.TryGet(out var RelationsItem))
                 {
-                    if (Relations != null)
+                    fg.AppendLine("Relations =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Relations.Overall != null)
+                        fg.AppendItem(RelationsItem.Overall);
+                        if (RelationsItem.Specific != null)
                         {
-                            fg.AppendLine(Relations.Overall.ToString());
-                        }
-                        if (Relations.Specific != null)
-                        {
-                            foreach (var subItem in Relations.Specific)
+                            foreach (var subItem in RelationsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -722,23 +713,20 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"CrimeGoldMultiplier => {CrimeGoldMultiplier}");
-                fg.AppendLine("Ranks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(CrimeGoldMultiplier, "CrimeGoldMultiplier");
+                if (Ranks.TryGet(out var RanksItem))
                 {
-                    if (Ranks != null)
+                    fg.AppendLine("Ranks =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
                     {
-                        if (Ranks.Overall != null)
+                        fg.AppendItem(RanksItem.Overall);
+                        if (RanksItem.Specific != null)
                         {
-                            fg.AppendLine(Ranks.Overall.ToString());
-                        }
-                        if (Ranks.Specific != null)
-                        {
-                            foreach (var subItem in Ranks.Specific)
+                            foreach (var subItem in RanksItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -749,8 +737,8 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    fg.AppendLine("]");
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -903,10 +891,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IFactionInternal>
     {
         new String? Name { get; set; }
-        new ISetList<Relation> Relations { get; }
+        new ExtendedList<Relation>? Relations { get; set; }
         new Faction.FactionFlag? Flags { get; set; }
         new Single? CrimeGoldMultiplier { get; set; }
-        new ISetList<Rank> Ranks { get; }
+        new ExtendedList<Rank>? Ranks { get; set; }
     }
 
     public partial interface IFactionInternal :
@@ -924,10 +912,10 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         String? Name { get; }
-        IReadOnlySetList<IRelationGetter> Relations { get; }
+        IReadOnlyList<IRelationGetter>? Relations { get; }
         Faction.FactionFlag? Flags { get; }
         Single? CrimeGoldMultiplier { get; }
-        IReadOnlySetList<IRankGetter> Ranks { get; }
+        IReadOnlyList<IRankGetter>? Ranks { get; }
 
     }
 
@@ -1410,13 +1398,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Name:
                     return typeof(String);
                 case Faction_FieldIndex.Relations:
-                    return typeof(ISetList<Relation>);
+                    return typeof(ExtendedList<Relation>);
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return typeof(Single);
                 case Faction_FieldIndex.Ranks:
-                    return typeof(ISetList<Rank>);
+                    return typeof(ExtendedList<Rank>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1478,10 +1466,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.Relations.Unset();
+            item.Relations = null;
             item.Flags = default;
             item.CrimeGoldMultiplier = default;
-            item.Ranks.Unset();
+            item.Ranks = null;
             base.Clear(item);
         }
         
@@ -1583,18 +1571,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Faction_Registration.XNAM_HEADER,
-                        item: item.Relations,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out Relation listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<Relation>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Relations = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Faction_Registration.XNAM_HEADER,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out Relation listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Relation>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<Relation>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
                 }
                 case 0x41544144: // DATA
@@ -1614,18 +1603,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 case 0x4D414E49: // INAM
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Rank_Registration.TriggeringRecordTypes,
-                        item: item.Ranks,
-                        lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        transl: (MutagenFrame r, out Rank listSubItem) =>
-                        {
-                            return LoquiBinaryTranslation<Rank>.Instance.Parse(
-                                frame: r,
-                                item: out listSubItem,
-                                masterReferences: masterReferences);
-                        });
+                    item.Ranks = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            triggeringRecord: Rank_Registration.TriggeringRecordTypes,
+                            lengthLength: frame.MetaData.SubConstants.LengthLength,
+                            transl: (MutagenFrame r, out Rank listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Rank>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: masterReferences);
+                            })
+                        .ToExtendedList<Rank>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
                 }
                 default:
@@ -1745,17 +1735,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendLine($"Name => {item.Name}");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Relations?.Overall ?? true)
+            if ((printMask?.Relations?.Overall ?? true)
+                && item.Relations.TryGet(out var RelationsItem))
             {
                 fg.AppendLine("Relations =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Relations)
+                    foreach (var subItem in RelationsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1767,21 +1759,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.CrimeGoldMultiplier ?? true)
+            if ((printMask?.CrimeGoldMultiplier ?? true)
+                && item.CrimeGoldMultiplier.TryGet(out var CrimeGoldMultiplierItem))
             {
-                fg.AppendLine($"CrimeGoldMultiplier => {item.CrimeGoldMultiplier}");
+                fg.AppendItem(CrimeGoldMultiplierItem, "CrimeGoldMultiplier");
             }
-            if (printMask?.Ranks?.Overall ?? true)
+            if ((printMask?.Ranks?.Overall ?? true)
+                && item.Ranks.TryGet(out var RanksItem))
             {
                 fg.AppendLine("Ranks =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Ranks)
+                    foreach (var subItem in RanksItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1800,10 +1795,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Faction.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Relations?.Overall.HasValue ?? false && checkMask.Relations!.Overall.Value != item.Relations.HasBeenSet) return false;
+            if (checkMask.Relations?.Overall.HasValue ?? false && checkMask.Relations!.Overall.Value != (item.Relations != null)) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.CrimeGoldMultiplier.HasValue && checkMask.CrimeGoldMultiplier.Value != (item.CrimeGoldMultiplier != null)) return false;
-            if (checkMask.Ranks?.Overall.HasValue ?? false && checkMask.Ranks!.Overall.Value != item.Ranks.HasBeenSet) return false;
+            if (checkMask.Ranks?.Overall.HasValue ?? false && checkMask.Ranks!.Overall.Value != (item.Ranks != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1814,12 +1809,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Faction.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
-            var RelationsItem = item.Relations;
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>>(RelationsItem.HasBeenSet, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Relations.TryGet(out var RelationsItem))
+            {
+                mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>?>(true, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             mask.Flags = (item.Flags != null);
             mask.CrimeGoldMultiplier = (item.CrimeGoldMultiplier != null);
-            var RanksItem = item.Ranks;
-            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>>(RanksItem.HasBeenSet, RanksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            if (item.Ranks.TryGet(out var RanksItem))
+            {
+                mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>?>(true, RanksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1941,9 +1940,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Relations.SelectMany(f => f.Links))
+            if (obj.Relations != null)
             {
-                yield return item;
+                foreach (var item in obj.Relations.SelectMany(f => f.Links))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2000,20 +2002,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                 try
                 {
-                    if (rhs.Relations.HasBeenSet)
+                    if ((rhs.Relations != null))
                     {
-                        item.Relations.SetTo(
-                            items: rhs.Relations,
-                            converter: (r) =>
+                        item.Relations = 
+                            rhs.Relations
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<Relation>();
                     }
                     else
                     {
-                        item.Relations.Unset();
+                        item.Relations = null;
                     }
                 }
                 catch (Exception ex)
@@ -2039,20 +2042,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                 try
                 {
-                    if (rhs.Ranks.HasBeenSet)
+                    if ((rhs.Ranks != null))
                     {
-                        item.Ranks.SetTo(
-                            items: rhs.Ranks,
-                            converter: (r) =>
+                        item.Ranks = 
+                            rhs.Ranks
+                            .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
-                            });
+                            })
+                            .ToExtendedList<Rank>();
                     }
                     else
                     {
-                        item.Ranks.Unset();
+                        item.Ranks = null;
                     }
                 }
                 catch (Exception ex)
@@ -2217,7 +2221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Faction_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Relations.HasBeenSet
+            if ((item.Relations != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
                 ListXmlTranslation<IRelationGetter>.Instance.Write(
@@ -2260,7 +2264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                     errorMask: errorMask);
             }
-            if (item.Ranks.HasBeenSet
+            if ((item.Ranks != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
                 ListXmlTranslation<IRankGetter>.Instance.Write(
@@ -2419,11 +2423,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Relations.SetTo(RelationsItem);
+                            item.Relations = RelationsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Relations.Unset();
+                            item.Relations = null;
                         }
                     }
                     catch (Exception ex)
@@ -2483,11 +2487,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Ranks.SetTo(RanksItem);
+                            item.Ranks = RanksItem.ToExtendedList();
                         }
                         else
                         {
-                            item.Ranks.Unset();
+                            item.Ranks = null;
                         }
                     }
                     catch (Exception ex)
@@ -2777,7 +2781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlySetList<IRelationGetter> Relations { get; private set; } = EmptySetList<RelationBinaryOverlay>.Instance;
+        public IReadOnlyList<IRelationGetter>? Relations { get; private set; }
         #region Flags
         private int? _FlagsLocation;
         private bool Flags_IsSet => _FlagsLocation.HasValue;
@@ -2787,7 +2791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _CrimeGoldMultiplierLocation;
         public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeGoldMultiplierLocation.Value, _package.Meta)) : default(Single?);
         #endregion
-        public IReadOnlySetList<IRankGetter> Ranks { get; private set; } = EmptySetList<RankBinaryOverlay>.Instance;
+        public IReadOnlyList<IRankGetter>? Ranks { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

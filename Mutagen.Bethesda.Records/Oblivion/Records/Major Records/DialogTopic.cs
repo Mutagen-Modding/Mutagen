@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
             {
-                obj.Items.SetTo(rhs.Items.Select((dia) => (DialogItem)dia.Duplicate(getNextFormKey, duplicatedRecords)));
+                obj.Items = rhs.Items.Select((dia) => (DialogItem)dia.Duplicate(getNextFormKey, duplicatedRecords)).ToExtendedList();
             }
         }
 
@@ -43,18 +43,16 @@ namespace Mutagen.Bethesda.Oblivion
                     return;
                 }
                 frame.Reader.Position += groupMeta.HeaderLength;
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
+                obj.Items = Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
                     frame: frame.SpawnWithLength(groupMeta.ContentLength),
                     lengthLength: 4,
-                    item: obj.Items,
                     transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
                     {
                         return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
                             frame: r,
                             item: out listItem,
                             masterReferences: masterReferences);
-                    }
-                    );
+                    }).ToExtendedList();
             }
         }
 
@@ -62,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj, MasterReferences masterReferences)
             {
-                if (obj.Items.Count == 0) return;
+                if (obj.Items == null || obj.Items.Count == 0) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
@@ -88,9 +86,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             private ReadOnlyMemorySlice<byte>? _grupData;
 
-            public ReadOnlySpan<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public ReadOnlyMemorySlice<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan.ToArray() : default(ReadOnlyMemorySlice<byte>);
 
-            public IReadOnlySetList<IDialogItemGetter> Items { get; private set; } = EmptySetList<IDialogItemGetter>.Instance;
+            public IReadOnlyList<IDialogItemGetter>? Items { get; private set; }
 
             partial void CustomEnd(IBinaryReadStream stream, int finalPos, int offset)
             {

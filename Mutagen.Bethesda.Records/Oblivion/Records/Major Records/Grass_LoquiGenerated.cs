@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Equals and Hash
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is IGrassGetter rhs)) return false;
             return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs);
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Equals
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Mask<TItem> rhs)) return false;
                 return Equals(rhs);
@@ -629,55 +629,55 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Density ?? true)
                     {
-                        fg.AppendLine($"Density => {Density}");
+                        fg.AppendItem(Density, "Density");
                     }
                     if (printMask?.MinSlope ?? true)
                     {
-                        fg.AppendLine($"MinSlope => {MinSlope}");
+                        fg.AppendItem(MinSlope, "MinSlope");
                     }
                     if (printMask?.MaxSlope ?? true)
                     {
-                        fg.AppendLine($"MaxSlope => {MaxSlope}");
+                        fg.AppendItem(MaxSlope, "MaxSlope");
                     }
                     if (printMask?.Fluff1 ?? true)
                     {
-                        fg.AppendLine($"Fluff1 => {Fluff1}");
+                        fg.AppendItem(Fluff1, "Fluff1");
                     }
                     if (printMask?.UnitFromWaterAmount ?? true)
                     {
-                        fg.AppendLine($"UnitFromWaterAmount => {UnitFromWaterAmount}");
+                        fg.AppendItem(UnitFromWaterAmount, "UnitFromWaterAmount");
                     }
                     if (printMask?.Fluff2 ?? true)
                     {
-                        fg.AppendLine($"Fluff2 => {Fluff2}");
+                        fg.AppendItem(Fluff2, "Fluff2");
                     }
                     if (printMask?.UnitFromWaterMode ?? true)
                     {
-                        fg.AppendLine($"UnitFromWaterMode => {UnitFromWaterMode}");
+                        fg.AppendItem(UnitFromWaterMode, "UnitFromWaterMode");
                     }
                     if (printMask?.PositionRange ?? true)
                     {
-                        fg.AppendLine($"PositionRange => {PositionRange}");
+                        fg.AppendItem(PositionRange, "PositionRange");
                     }
                     if (printMask?.HeightRange ?? true)
                     {
-                        fg.AppendLine($"HeightRange => {HeightRange}");
+                        fg.AppendItem(HeightRange, "HeightRange");
                     }
                     if (printMask?.ColorRange ?? true)
                     {
-                        fg.AppendLine($"ColorRange => {ColorRange}");
+                        fg.AppendItem(ColorRange, "ColorRange");
                     }
                     if (printMask?.WavePeriod ?? true)
                     {
-                        fg.AppendLine($"WavePeriod => {WavePeriod}");
+                        fg.AppendItem(WavePeriod, "WavePeriod");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendLine($"Flags => {Flags}");
+                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -905,19 +905,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 Model?.ToString(fg);
-                fg.AppendLine($"Density => {Density}");
-                fg.AppendLine($"MinSlope => {MinSlope}");
-                fg.AppendLine($"MaxSlope => {MaxSlope}");
-                fg.AppendLine($"Fluff1 => {Fluff1}");
-                fg.AppendLine($"UnitFromWaterAmount => {UnitFromWaterAmount}");
-                fg.AppendLine($"Fluff2 => {Fluff2}");
-                fg.AppendLine($"UnitFromWaterMode => {UnitFromWaterMode}");
-                fg.AppendLine($"PositionRange => {PositionRange}");
-                fg.AppendLine($"HeightRange => {HeightRange}");
-                fg.AppendLine($"ColorRange => {ColorRange}");
-                fg.AppendLine($"WavePeriod => {WavePeriod}");
-                fg.AppendLine($"Flags => {Flags}");
-                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                fg.AppendItem(Density, "Density");
+                fg.AppendItem(MinSlope, "MinSlope");
+                fg.AppendItem(MaxSlope, "MaxSlope");
+                fg.AppendItem(Fluff1, "Fluff1");
+                fg.AppendItem(UnitFromWaterAmount, "UnitFromWaterAmount");
+                fg.AppendItem(Fluff2, "Fluff2");
+                fg.AppendItem(UnitFromWaterMode, "UnitFromWaterMode");
+                fg.AppendItem(PositionRange, "PositionRange");
+                fg.AppendItem(HeightRange, "HeightRange");
+                fg.AppendItem(ColorRange, "ColorRange");
+                fg.AppendItem(WavePeriod, "WavePeriod");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -2063,61 +2063,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Model?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.Model?.ToString(fg, "Model");
+                ModelItem?.ToString(fg, "Model");
             }
             if (printMask?.Density ?? true)
             {
-                fg.AppendLine($"Density => {item.Density}");
+                fg.AppendItem(item.Density, "Density");
             }
             if (printMask?.MinSlope ?? true)
             {
-                fg.AppendLine($"MinSlope => {item.MinSlope}");
+                fg.AppendItem(item.MinSlope, "MinSlope");
             }
             if (printMask?.MaxSlope ?? true)
             {
-                fg.AppendLine($"MaxSlope => {item.MaxSlope}");
+                fg.AppendItem(item.MaxSlope, "MaxSlope");
             }
             if (printMask?.Fluff1 ?? true)
             {
-                fg.AppendLine($"Fluff1 => {item.Fluff1}");
+                fg.AppendItem(item.Fluff1, "Fluff1");
             }
             if (printMask?.UnitFromWaterAmount ?? true)
             {
-                fg.AppendLine($"UnitFromWaterAmount => {item.UnitFromWaterAmount}");
+                fg.AppendItem(item.UnitFromWaterAmount, "UnitFromWaterAmount");
             }
             if (printMask?.Fluff2 ?? true)
             {
-                fg.AppendLine($"Fluff2 => {item.Fluff2}");
+                fg.AppendItem(item.Fluff2, "Fluff2");
             }
             if (printMask?.UnitFromWaterMode ?? true)
             {
-                fg.AppendLine($"UnitFromWaterMode => {item.UnitFromWaterMode}");
+                fg.AppendItem(item.UnitFromWaterMode, "UnitFromWaterMode");
             }
             if (printMask?.PositionRange ?? true)
             {
-                fg.AppendLine($"PositionRange => {item.PositionRange}");
+                fg.AppendItem(item.PositionRange, "PositionRange");
             }
             if (printMask?.HeightRange ?? true)
             {
-                fg.AppendLine($"HeightRange => {item.HeightRange}");
+                fg.AppendItem(item.HeightRange, "HeightRange");
             }
             if (printMask?.ColorRange ?? true)
             {
-                fg.AppendLine($"ColorRange => {item.ColorRange}");
+                fg.AppendItem(item.ColorRange, "ColorRange");
             }
             if (printMask?.WavePeriod ?? true)
             {
-                fg.AppendLine($"WavePeriod => {item.WavePeriod}");
+                fg.AppendItem(item.WavePeriod, "WavePeriod");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendLine($"Flags => {item.Flags}");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendLine($"DATADataTypeState => {item.DATADataTypeState}");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         

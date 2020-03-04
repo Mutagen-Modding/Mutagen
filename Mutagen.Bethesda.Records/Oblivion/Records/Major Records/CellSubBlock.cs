@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = new CellSubBlock();
             ret.DeepCopyIn(this, duplicateMask);
-            ret.Cells.SetTo(this.Cells.Select(i => (Cell)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
+            ret.Cells = this.Cells.Select(i => (Cell)i.Duplicate(getNextFormKey, duplicatedRecordTracker)).ToExtendedList();
             return ret;
         }
     }
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         partial class CellSubBlockBinaryOverlay
         {
-            public IReadOnlySetList<ICellGetter> Cells { get; private set; } = EmptySetList<CellBinaryOverlay>.Instance;
+            public IReadOnlyList<ICellGetter>? Cells { get; private set; }
 
             partial void CellsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
