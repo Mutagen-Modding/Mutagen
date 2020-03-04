@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Group" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="566180fb-53c9-4677-ad3d-c6c55fef91bf" ID="16">
+  <Object name="Group" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="bf12722f-f38f-429d-b80e-b055025380eb" ID="62">
     <Generic name="T" isLoqui="true" getterVariance="Out" override="true" isClass="true">
       <Where>SkyrimMajorRecord</Where>
     </Generic>
@@ -18,4 +18,4 @@
       </Dict>
     </Fields>
   </Object>
-></Loqui>
+&gt;</Loqui>

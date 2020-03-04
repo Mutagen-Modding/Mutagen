@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ModHeader" recordType="TES4" objType="Record" GUID="1745b948-7eb0-45ff-8799-461afdadeb89" ID="2">
+  <Object name="ModHeader" recordType="TES4" objType="Record" GUID="5c10abbb-9600-4bd1-ba4c-8a244a69f0be" ID="63">
     <Fields>
       <Enum name="Flags" enumName="ModHeader.HeaderFlag" byteLength="4" />
       <UInt32 name="FormID" />
@@ -20,7 +20,7 @@
       <Int32 name="INCC" recordType="INCC" />
     </Fields>
   </Object>
-  <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="df74bd92-cdb3-4e89-a90f-1aabd4f27c05" ID="3">
+  <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="14fe521a-e32e-433c-9915-71a5f7ca5c5b" ID="64">
     <Fields>
       <Float name="Version" />
       <Int32 name="NumRecords" />
