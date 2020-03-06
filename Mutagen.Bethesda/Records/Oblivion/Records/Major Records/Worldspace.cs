@@ -478,15 +478,16 @@ namespace Mutagen.Bethesda.Oblivion
 
             ReadOnlyMemorySlice<byte>? GetOffsetDataCustom()
             {
+                if (!_OffsetDataLocation.HasValue) return null;
                 if (this.UsingOffsetLength)
                 {
                     var lenFrame = this._package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
                     var len = BinaryPrimitives.ReadInt32LittleEndian(lenFrame.Content);
-                    return _data.Slice(_OffsetDataLocation!.Value + this._package.Meta.SubConstants.HeaderLength, len);
+                    return _data.Slice(_OffsetDataLocation.Value + this._package.Meta.SubConstants.HeaderLength, len);
                 }
                 else
                 {
-                    var spanFrame = this._package.Meta.SubRecordFrame(this._data.Slice(_OffsetDataLocation!.Value));
+                    var spanFrame = this._package.Meta.SubRecordFrame(this._data.Slice(_OffsetDataLocation.Value));
                     return spanFrame.Content.ToArray();
                 }
             }

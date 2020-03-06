@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.0.2" />
+    <PackageReference Include="Loqui" Version="1.0.4-prerelease-3" />
     <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="3.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
