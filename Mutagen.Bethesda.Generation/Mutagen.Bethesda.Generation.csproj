@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.0.4-prerelease-3" />
-    <PackageReference Include="Loqui.Generation" Version="1.0.4-prerelease-3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.3" />
+    <PackageReference Include="Loqui" Version="1.0.4" />
+    <PackageReference Include="Loqui.Generation" Version="1.0.4" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.3.1" />
   </ItemGroup>
 
   <ItemGroup>
