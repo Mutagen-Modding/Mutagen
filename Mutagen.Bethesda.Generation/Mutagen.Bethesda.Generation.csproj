@@ -6,9 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
-    <ProjectReference Include="..\..\Loqui\Loqui.Generation\Loqui.Generation.csproj" />
-    <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
+    <PackageReference Include="Loqui" Version="1.0.2" />
+    <PackageReference Include="Loqui.Generation" Version="1.0.2" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
 
