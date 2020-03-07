@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new ListTypeModule());
             this.SubModules.Add(new DictTypeModule());
             this.SubModules.Add(new LinkModule());
-            this.SubModules.Add(new FolderExportModule());
+            //this.SubModules.Add(new FolderExportModule());
             this.SubModules.Add(new ReactiveModule());
             this.SubModules.Add(new MajorRecordModule());
             this.SubModules.Add(new MajorRecordEnumerationModule());

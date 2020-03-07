@@ -13,46 +13,12 @@ using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CellBlock : IXmlFolderItem
+    public partial class CellBlock
     {
-        public static readonly CellBlock.TranslationMask XmlFolderTranslationMask = new CellBlock.TranslationMask(true)
-        {
-            SubBlocks = new MaskItem<bool, CellSubBlock.TranslationMask?>(false, default)
-        };
-        public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
-
         public static CellBlock.TranslationMask duplicateMask = new CellBlock.TranslationMask(true)
         {
             SubBlocks = new MaskItem<bool, CellSubBlock.TranslationMask?>(false, default)
         };
-
-        public async Task WriteToXmlFolder(
-            DirectoryPath dir,
-            string name,
-            XElement node,
-            int counter,
-            ErrorMaskBuilder? errorMask)
-        {
-            var subDir = Path.Combine(dir.Path, $"{this.BlockNumber}");
-            Directory.CreateDirectory(subDir);
-            this.WriteToXml(
-                Path.Combine(subDir, "Group.xml"),
-                errorMask: errorMask,
-                translationMask: XmlFolderTranslationCrystal);
-            int blockCounter = 0;
-            List<Task> tasks = new List<Task>();
-            foreach (var item in this.SubBlocks.TryIterate())
-            {
-                int stampedCounter = blockCounter++;
-                tasks.Add(Task.Run(() =>
-                {
-                    item.WriteToXmlFolder(
-                        path: Path.Combine(subDir, $"{stampedCounter.ToString()}.xml"),
-                        errorMask: errorMask);
-                }));
-            }
-            await Task.WhenAll(tasks).ConfigureAwait(false);
-        }
 
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker = null)
         {
@@ -61,46 +27,5 @@ namespace Mutagen.Bethesda.Oblivion
             ret.SubBlocks = this.SubBlocks.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)).ToExtendedList();
             return ret;
         }
-
-        public static async Task<CellBlock> CreateFromXmlFolder(
-            XElement node,
-            string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            CellBlock ret = new CellBlock();
-            var groupPath = Path.Combine(path, $"Group.xml");
-            if (File.Exists(groupPath))
-            {
-                XElement elem = XElement.Load(groupPath);
-                CellBlockXmlCreateTranslation.FillPublicXml(
-                    ret,
-                    elem,
-                    errorMask,
-                    translationMask: XmlFolderTranslationCrystal);
-            }
-            var dir = new DirectoryPath(path);
-            List<Task<CellSubBlock>> tasks = new List<Task<CellSubBlock>>();
-            foreach (var f in dir.EnumerateFiles(recursive: false)
-                .SelectWhere(subDir =>
-                {
-                    if (int.TryParse(subDir.NameWithoutExtension, out var i))
-                    {
-                        return TryGet<(int Index, FilePath File)>.Succeed((i, subDir));
-                    }
-                    else
-                    {
-                        return TryGet<(int Index, FilePath File)>.Failure;
-                    }
-                })
-                .OrderBy(i => i.Index))
-            {
-                tasks.Add(Task.Run(() => CellSubBlock.CreateFromXmlFolder(f.File, f.Index)));
-            }
-            var subBlocks = await Task.WhenAll(tasks).ConfigureAwait(false);
-            ret.SubBlocks = subBlocks.ToExtendedList();
-            return ret;
-        }
     }
 }
-

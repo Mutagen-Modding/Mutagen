@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
-    public interface IPlacedGetter : IMajorRecordGetter, ILoquiObjectGetter, IXmlFolderItem
+    public interface IPlacedGetter : IMajorRecordGetter, ILoquiObjectGetter
     {
     }
 }

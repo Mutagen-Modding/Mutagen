@@ -28,49 +28,6 @@ namespace Mutagen.Bethesda.Oblivion
             MeleeAlertOK = 0x0080,
             DoNotAcquire = 0x0100,
         }
-
-        public static async Task<CombatStyle> CreateFromXmlFolder(
-            XElement node,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = CreateFromXml(
-                node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (ret == null) throw new NullReferenceException();
-            var customEndingNode = node.Element("CustomEndingFlags");
-            if (customEndingNode == null
-                || !customEndingNode.TryGetAttribute<bool>("value", out var val)
-                || val)
-            {
-                ret.CSTDDataTypeState &= ~CSTDDataType.Break4;
-            }
-            return ret;
-        }
-
-        public override async Task WriteToXmlFolder(
-            DirectoryPath dir,
-            string name,
-            XElement node,
-            int counter,
-            ErrorMaskBuilder? errorMask)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CombatStyle");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CombatStyle");
-            }
-            CombatStyleXmlWriteTranslation.WriteToNodeXml(
-                item: this,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: null);
-            if (!this.CSTDDataTypeState.HasFlag(CSTDDataType.Break4)) return;
-            elem.Add(new XElement("CustomEndingFlags", new XAttribute("value", "false")));
-        }
     }
 
     namespace Internals

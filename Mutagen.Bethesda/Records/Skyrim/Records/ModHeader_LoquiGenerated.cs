@@ -25,8 +25,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -1123,18 +1121,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RecordType GRUP_RECORD_TYPE = ModHeader_Registration.TRIGGERING_RECORD_TYPE;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => ModHeaderCommon.Instance.GetLinks(this);
-        public async Task WriteToXmlFolder(
-            DirectoryPath dir,
-            string name,
-            XElement node,
-            int counter,
-            ErrorMaskBuilder? errorMask)
-        {
-            this.WriteToXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: null);
-        }
         #endregion
 
         #region Binary Translation

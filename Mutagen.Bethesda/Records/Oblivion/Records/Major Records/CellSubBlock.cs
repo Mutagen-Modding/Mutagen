@@ -20,21 +20,6 @@ namespace Mutagen.Bethesda.Oblivion
             Cells = new Loqui.MaskItem<bool, Cell.TranslationMask?>(false, default)
         };
 
-        public void WriteToXmlFolder(
-            string path,
-            ErrorMaskBuilder? errorMask)
-        {
-            this.WriteToXml(
-                path, 
-                errorMask,
-                translationMask: null);
-        }
-
-        public static CellSubBlock CreateFromXmlFolder(FilePath file, int index)
-        {
-            return CellSubBlock.CreateFromXml(file.Path);
-        }
-
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker = null)
         {
             var ret = new CellSubBlock();

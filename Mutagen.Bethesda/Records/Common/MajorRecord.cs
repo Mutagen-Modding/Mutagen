@@ -76,11 +76,6 @@ namespace Mutagen.Bethesda.Internals
     {
         public bool IsCompressed => ((MajorRecord.MajorRecordFlag)this.MajorRecordFlagsRaw).HasFlag(MajorRecord.MajorRecordFlag.Compressed);
 
-        public Task WriteToXmlFolder(DirectoryPath dir, string name, XElement node, int counter, ErrorMaskBuilder? errorMask)
-        {
-            throw new NotImplementedException();
-        }
-
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
         {
             return ((MajorRecordCommon)this.CommonInstance()).Duplicate(this, getNextFormKey, duplicatedRecordTracker);

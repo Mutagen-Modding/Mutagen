@@ -29,33 +29,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
-    public static class GroupExt
-    {
-        public static async Task CreateFromXmlFolder<T>(
-            this Group<T> group,
-            DirectoryPath dir,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            int index)
-            where T : SkyrimMajorRecord, ILoquiObject<T>, IFormKey, IBinaryItem
-        {
-            throw new NotImplementedException();
-        }
-
-        public static async Task WriteToXmlFolder<T, T_ErrMask>(
-            this Group<T> group,
-            DirectoryPath dir,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            int index)
-            where T : SkyrimMajorRecord, ILoquiObject<T>, IFormKey, IBinaryItem
-            where T_ErrMask : MajorRecord.ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
     namespace Internals
     {
         public partial class GroupBinaryWriteTranslation
