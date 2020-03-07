@@ -18,8 +18,10 @@ steps:
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
+  displayName: 'NuGet restore'
   inputs:
     restoreSolution: '$(solution)'
+    vstsFeed: '3b91d9cc-9c4f-4129-88d6-e77bb8a0cb62/6309bacb-dd0d-47a7-ac81-f23a748d0aec'
 
 - task: VSBuild@1
   inputs:
@@ -27,18 +29,16 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
+  displayName: "Test Release"
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'test'
+    projects: '**/*UnitTests.csproj'
 
-- task: NuGetCommand@2
-  displayName: 'Pack Mutagen'
+- task: DotNetCoreCLI@2
+  displayName: "Pack"
   inputs:
-    command: pack
-    packagesToPack: Mutagen.Bethesda/Mutagen.Bethesda.csproj
-    includeReferencedProjects: true
-#    includeSymbols: true
+      command: pack
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: Mutagen'
