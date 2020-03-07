@@ -31,8 +31,8 @@
     <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
     <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
