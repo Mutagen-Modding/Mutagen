@@ -2961,7 +2961,6 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
         void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
         public void AddRecords(
             OblivionMod rhsMod,
@@ -4876,30 +4875,6 @@ namespace Mutagen.Bethesda.Oblivion
             return (ICache<T, FormKey>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
         }
 
-        public static Task WriteToBinaryAsync(
-            this IOblivionModGetter item,
-            Stream stream,
-            ModKey modKey)
-        {
-            return OblivionModCommon.WriteAsync(
-                item: item,
-                stream: stream,
-                modKey: modKey);
-        }
-
-        public static async Task WriteToBinaryAsync(
-            this IOblivionModGetter item,
-            string path,
-            ModKey? modKeyOverride)
-        {
-            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
-            {
-                await OblivionModCommon.WriteAsync(
-                    item: item,
-                    stream: stream,
-                    modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
-            }
-        }
         public static void WriteToBinaryParallel(
             this IOblivionModGetter item,
             Stream stream,
@@ -8035,111 +8010,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             });
             UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
-        }
-        
-        public static async Task WriteAsync(
-            IOblivionModGetter item,
-            Stream stream,
-            ModKey modKey)
-        {
-            var masterRefs = new MasterReferences(modKey, item.MasterReferences);
-            item.ModHeader.WriteToBinary(
-                new MutagenWriter(stream, GameConstants.Oblivion),
-                masterRefs);
-            List<Task<IEnumerable<Stream>>> outputStreams = new List<Task<IEnumerable<Stream>>>();
-            outputStreams.Add(WriteGroupAsync(item.GameSettings, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Globals, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Classes, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Factions, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Hairs, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Eyes, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Races, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Sounds, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Skills, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.MagicEffects, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Scripts, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.LandTextures, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Enchantments, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Spells, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Birthsigns, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Activators, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.AlchemicalApparatus, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Armors, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Books, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Clothes, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Containers, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Doors, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Ingredients, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Lights, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Miscellaneous, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Statics, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Grasses, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Trees, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Flora, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Furnature, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Weapons, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Ammo, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.NPCs, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Creatures, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.LeveledCreatures, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.SoulGems, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Keys, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Potions, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Subspaces, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.SigilStones, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.LeveledItems, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Weathers, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Climates, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Regions, masterRefs));
-            outputStreams.Add(WriteCellsAsync(item.Cells, masterRefs));
-            outputStreams.Add(WriteWorldspacesAsync(item.Worldspaces, masterRefs));
-            outputStreams.Add(WriteDialogTopicsAsync(item.DialogTopics, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Quests, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.IdleAnimations, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.AIPackages, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.CombatStyles, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.LoadScreens, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.LeveledSpells, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.AnimatedObjects, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Waters, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.EffectShaders, masterRefs));
-            await UtilityTranslation.CompileStreamsInto(
-                outputStreams,
-                stream);
-        }
-        
-        public static async Task<IEnumerable<Stream>> WriteGroupAsync<T>(
-            IGroupGetter<T> group,
-            MasterReferences masters)
-            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;
-            List<Task<Stream>> streams = new List<Task<Stream>>();
-            byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
-            BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
-            using (var stream = new MutagenWriter(new MemoryStream(groupBytes), GameConstants.Oblivion))
-            {
-                stream.Position += 8;
-                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);
-            }
-            streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));
-            foreach (var cutItems in group.Records.Cut(CutCount))
-            {
-                streams.Add(
-                    Task.Run<Stream>(() =>
-                    {
-                        MemoryTributary trib = new MemoryTributary();
-                        using (var stream = new MutagenWriter(trib, GameConstants.Oblivion, dispose: false))
-                        {
-                            foreach (var item in cutItems)
-                            {
-                                item.WriteToBinary(stream, masters);
-                            }
-                        }
-                        return trib;
-                    }));
-            }
-            return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
         }
         
         public IEnumerable<ILinkGetter> GetLinks(IOblivionModGetter obj)
@@ -13433,7 +13303,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public GameMode GameMode => GameMode.Oblivion;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         void IModGetter.WriteToBinary(string path, ModKey? modKey) => this.WriteToBinary(path, modKey, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKey) => this.WriteToBinaryAsync(path, modKey);
         void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public IEnumerable<ILinkGetter> Links => OblivionModCommon.Instance.GetLinks(this);

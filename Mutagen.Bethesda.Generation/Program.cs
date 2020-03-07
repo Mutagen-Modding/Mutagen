@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "MaskItem<T, GenderedI";
+            string testString = "lic static async Task WriteA";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

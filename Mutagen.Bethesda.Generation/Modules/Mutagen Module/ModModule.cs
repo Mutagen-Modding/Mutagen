@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
             fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);");
-            fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);");
 
 
@@ -256,47 +255,6 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public static Task WriteToBinaryAsync"))
-            {
-                args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
-                args.Add($"Stream stream");
-                args.Add($"ModKey modKey");
-            }
-            using (new BraceWrapper(fg))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"return {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteAsync"))
-                {
-                    args.AddPassArg("item");
-                    args.AddPassArg("stream");
-                    args.AddPassArg("modKey");
-                }
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                $"public static async Task WriteToBinaryAsync"))
-            {
-                args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
-                args.Add($"string path");
-                args.Add($"ModKey? modKeyOverride");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))");
-                using (new BraceWrapper(fg))
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"await {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteAsync"))
-                    {
-                        args.AddPassArg("item");
-                        args.AddPassArg("stream");
-                        args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
-                    }
-                }
-            }
-
-            using (var args = new FunctionWrapper(fg,
                 $"public static void WriteToBinaryParallel"))
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
@@ -347,7 +305,6 @@ namespace Mutagen.Bethesda.Generation
 
             GenerateGetGroup(obj, fg);
             GenerateWriteParallel(obj, fg);
-            GenerateWriteAsync(obj, fg);
         }
 
         private void GenerateGetGroup(ObjectGeneration obj, FileGeneration fg)
@@ -510,112 +467,6 @@ namespace Mutagen.Bethesda.Generation
                     }
                     fg.AppendLine($"UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);");
                     fg.AppendLine($"streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);");
-                }
-                fg.AppendLine();
-            }
-        }
-
-        private void GenerateWriteAsync(ObjectGeneration obj, FileGeneration fg)
-        {
-            LoquiType groupInstance = null;
-            LoquiType listGroupInstance = null;
-            using (var args = new FunctionWrapper(fg,
-                "public static async Task WriteAsync"))
-            {
-                args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
-                args.Add($"Stream stream");
-                args.Add($"ModKey modKey");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"var masterRefs = new MasterReferences(modKey, item.MasterReferences);");
-                using (var args = new ArgsWrapper(fg,
-                    "item.ModHeader.WriteToBinary"))
-                {
-                    args.Add($"new MutagenWriter(stream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode})");
-                    args.Add($"masterRefs");
-                }
-                fg.AppendLine($"List<Task<IEnumerable<Stream>>> outputStreams = new List<Task<IEnumerable<Stream>>>();");
-                foreach (var field in obj.IterateFields())
-                {
-                    if (!(field is LoquiType loqui)) continue;
-                    if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                    if (loqui.TargetObjectGeneration.Name == "ListGroup")
-                    {
-                        listGroupInstance = loqui;
-                    }
-                    else
-                    {
-                        groupInstance = loqui;
-                    }
-                    if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
-                        && loqui.TargetObjectGeneration.Name != "ListGroup")
-                    {
-                        fg.AppendLine($"outputStreams.Add(WriteGroupAsync(item.{field.Name}, masterRefs));");
-                    }
-                    else
-                    {
-                        fg.AppendLine($"outputStreams.Add(Write{field.Name}Async(item.{field.Name}, masterRefs));");
-                    }
-                }
-                using (var args = new ArgsWrapper(fg,
-                    $"await {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.CompileStreamsInto)}"))
-                {
-                    args.Add("outputStreams");
-                    args.Add("stream");
-                }
-            }
-            fg.AppendLine();
-
-            if (groupInstance != null)
-            {
-                using (var args = new FunctionWrapper(fg,
-                    $"public static async Task<IEnumerable<Stream>> WriteGroupAsync<T>"))
-                {
-                    args.Add("IGroupGetter<T> group");
-                    args.Add("MasterReferences masters");
-                    args.Wheres.AddRange(groupInstance.TargetObjectGeneration.GenerateWhereClauses(LoquiInterfaceType.IGetter, groupInstance.TargetObjectGeneration.Generics));
-                }
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine("if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;");
-                    fg.AppendLine($"List<Task<Stream>> streams = new List<Task<Stream>>();");
-                    fg.AppendLine($"byte[] groupBytes = new byte[{nameof(GameConstants)}.Oblivion.GroupConstants.HeaderLength];");
-                    fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");
-                    fg.AppendLine($"using (var stream = new MutagenWriter(new MemoryStream(groupBytes), {nameof(GameConstants)}.{obj.GetObjectData().GameMode}))");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);");
-                    }
-                    fg.AppendLine($"streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));");
-                    fg.AppendLine($"foreach (var cutItems in group.Records.Cut(CutCount))");
-                    using (new BraceWrapper(fg))
-                    {
-                        using (var args = new ArgsWrapper(fg,
-                            "streams.Add"))
-                        {
-                            args.Add((subFg) =>
-                            {
-                                subFg.AppendLine($"Task.Run<Stream>(() =>");
-                                using (new BraceWrapper(subFg) { AppendParenthesis = true })
-                                {
-                                    subFg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
-                                    subFg.AppendLine($"using (var stream = new MutagenWriter(trib, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, dispose: false))");
-                                    using (new BraceWrapper(subFg))
-                                    {
-                                        subFg.AppendLine($"foreach (var item in cutItems)");
-                                        using (new BraceWrapper(subFg))
-                                        {
-                                            subFg.AppendLine($"item.WriteToBinary(stream, masters);");
-                                        }
-                                    }
-                                    subFg.AppendLine($"return trib;");
-                                }
-                            });
-                        }
-                    }
-                    fg.AppendLine($"return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);");
                 }
                 fg.AppendLine();
             }

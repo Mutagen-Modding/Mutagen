@@ -982,7 +982,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
         void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1814,30 +1813,6 @@ namespace Mutagen.Bethesda.Skyrim
             return (ICache<T, FormKey>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
         }
 
-        public static Task WriteToBinaryAsync(
-            this ISkyrimModGetter item,
-            Stream stream,
-            ModKey modKey)
-        {
-            return SkyrimModCommon.WriteAsync(
-                item: item,
-                stream: stream,
-                modKey: modKey);
-        }
-
-        public static async Task WriteToBinaryAsync(
-            this ISkyrimModGetter item,
-            string path,
-            ModKey? modKeyOverride)
-        {
-            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
-            {
-                await SkyrimModCommon.WriteAsync(
-                    item: item,
-                    stream: stream,
-                    modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
-            }
-        }
         public static void WriteToBinaryParallel(
             this ISkyrimModGetter item,
             Stream stream,
@@ -2976,66 +2951,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             });
             UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
-        }
-        
-        public static async Task WriteAsync(
-            ISkyrimModGetter item,
-            Stream stream,
-            ModKey modKey)
-        {
-            var masterRefs = new MasterReferences(modKey, item.MasterReferences);
-            item.ModHeader.WriteToBinary(
-                new MutagenWriter(stream, GameConstants.Skyrim),
-                masterRefs);
-            List<Task<IEnumerable<Stream>>> outputStreams = new List<Task<IEnumerable<Stream>>>();
-            outputStreams.Add(WriteGroupAsync(item.GameSettings, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Keywords, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.LocationReferenceTypes, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Actions, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.TextureSets, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Globals, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Classes, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Factions, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.HeadParts, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Hairs, masterRefs));
-            outputStreams.Add(WriteGroupAsync(item.Eyes, masterRefs));
-            await UtilityTranslation.CompileStreamsInto(
-                outputStreams,
-                stream);
-        }
-        
-        public static async Task<IEnumerable<Stream>> WriteGroupAsync<T>(
-            IGroupGetter<T> group,
-            MasterReferences masters)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;
-            List<Task<Stream>> streams = new List<Task<Stream>>();
-            byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
-            BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
-            using (var stream = new MutagenWriter(new MemoryStream(groupBytes), GameConstants.Skyrim))
-            {
-                stream.Position += 8;
-                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);
-            }
-            streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));
-            foreach (var cutItems in group.Records.Cut(CutCount))
-            {
-                streams.Add(
-                    Task.Run<Stream>(() =>
-                    {
-                        MemoryTributary trib = new MemoryTributary();
-                        using (var stream = new MutagenWriter(trib, GameConstants.Skyrim, dispose: false))
-                        {
-                            foreach (var item in cutItems)
-                            {
-                                item.WriteToBinary(stream, masters);
-                            }
-                        }
-                        return trib;
-                    }));
-            }
-            return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
         }
         
         public IEnumerable<ILinkGetter> GetLinks(ISkyrimModGetter obj)
@@ -4576,7 +4491,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         void IModGetter.WriteToBinary(string path, ModKey? modKey) => this.WriteToBinary(path, modKey, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKey) => this.WriteToBinaryAsync(path, modKey);
         void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);
