@@ -109,20 +109,20 @@ namespace Mutagen.Bethesda.Generation
                 new APILine(
                     nicknameKey: "GroupMask",
                     resolutionString: "GroupMask? importMask = null",
-                    when: (obj) => obj.GetObjectType() == ObjectType.Mod)
+                    when: (obj, dir) => obj.GetObjectType() == ObjectType.Mod)
             };
             APILine masterRefs = new APILine(
                 nicknameKey: "MasterReferences",
                 resolutionString: "MasterReferences masterReferences",
-                when: (obj) => obj.GetObjectType() != ObjectType.Mod);
+                when: (obj, dir) => obj.GetObjectType() != ObjectType.Mod);
             var modKey = new APILine(
                 nicknameKey: "ModKey",
                 resolutionString: "ModKey modKey",
-                when: (obj) => obj.GetObjectType() == ObjectType.Mod);
+                when: (obj, dir) => obj.GetObjectType() == ObjectType.Mod);
             var modKeyOptional = new APILine(
                 nicknameKey: "ModKeyOptional",
                 resolutionString: "ModKey? modKeyOverride = null",
-                when: (obj) => obj.GetObjectType() == ObjectType.Mod);
+                when: (obj, dir) => obj.GetObjectType() == ObjectType.Mod);
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
                 $"{nameof(RecordTypeConverter)}? recordTypeConverter");
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))");
             using (new BraceWrapper(fg))
             {
-                internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());
+                internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
             }
         }
 
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Reader).ToArray());
+                internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
 
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
-                    internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());
+                    internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
                 }
                 fg.AppendLine("using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))
@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
                 fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
-                internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Reader).ToArray());
+                internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
 
