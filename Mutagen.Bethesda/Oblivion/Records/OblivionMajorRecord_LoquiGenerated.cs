@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => OblivionMajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((OblivionMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             CopyInFromBinary(
                 item: item,
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             MajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
         }
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteEmbedded(
             IOblivionMajorRecordGetter item,
             MutagenWriter writer,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             MajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
@@ -1905,7 +1905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             WriteEmbedded(
@@ -1922,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             Write(
@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             Write(
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => OblivionMajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((OblivionMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(

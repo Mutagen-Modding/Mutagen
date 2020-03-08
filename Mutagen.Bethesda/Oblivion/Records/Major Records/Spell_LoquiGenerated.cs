@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((SpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISpellInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             CopyInFromBinary(
                 item: item,
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISpellInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromBinary(
             ISpellInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
         }
@@ -1879,7 +1879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1896,7 +1896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Write(
             MutagenWriter writer,
             ISpellGetter item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             Write(
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             ISpellAbstractGetter item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             Write(
@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             Write(
@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             Write(
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((SpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(

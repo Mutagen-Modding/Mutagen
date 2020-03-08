@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj, MasterReferences masterReferences)
+            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj, MasterReferenceReader masterReferences)
             {
                 if (frame.Reader.Complete) return;
                 GroupHeader groupMeta = frame.MetaData.GetGroup(frame);
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj, MasterReferences masterReferences)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj, MasterReferenceReader masterReferences)
             {
                 if (obj.Items == null || obj.Items.Count == 0) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))

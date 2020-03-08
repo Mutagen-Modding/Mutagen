@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((EffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Effect CreateFromBinary(
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             return CreateFromBinary(
                 masterReferences: masterReferences,
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Effect CreateFromBinary(
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Effect();
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IEffect item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             CopyInFromBinary(
                 item: item,
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IEffect item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((EffectSetterCommon)((IEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             IEffect item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
         }
         
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int? lastParsed,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromBinary(
             IEffect item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
@@ -2439,12 +2439,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void WriteBinaryEffectInitialCustom(
             MutagenWriter writer,
             IEffectGetter item,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
 
         public static void WriteBinaryEffectInitial(
             MutagenWriter writer,
             IEffectGetter item,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             WriteBinaryEffectInitialCustom(
                 writer: writer,
@@ -2455,7 +2455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteEmbedded(
             IEffectGetter item,
             MutagenWriter writer,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
         }
 
@@ -2463,7 +2463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             EffectBinaryWriteTranslation.WriteBinaryEffectInitial(
                 writer: writer,
@@ -2502,7 +2502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IEffectGetter item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             WriteEmbedded(
@@ -2519,7 +2519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             Write(
@@ -2538,12 +2538,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryEffectInitialCustom(
             MutagenFrame frame,
             IEffect item,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
 
         public static void FillBinaryEffectInitialCustomPublic(
             MutagenFrame frame,
             IEffect item,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             FillBinaryEffectInitialCustom(
                 frame: frame,
@@ -2562,7 +2562,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IEffectGetter item,
             MutagenWriter writer,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             ((EffectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2627,7 +2627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((EffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(

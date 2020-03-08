@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Binary
 
         public FormKey Parse(
             ReadOnlySpan<byte> span,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
             var modID = span[3];
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             out FormKey item,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             item = Parse(
                 frame.ReadSpan(4),
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Binary
 
         public FormKey Parse(
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             return Parse(
                 frame.ReadSpan(4),
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             FormKey item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             bool nullable = false)
         {
             UInt32BinaryTranslation.Instance.Write(
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             FormKey item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordType header,
             bool nullable = false)
         {

@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -385,7 +386,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var masterRefs = new MasterReferences(item.ModKey, item.MasterReferences);");
+                fg.AppendLine($"var masterRefs = new {nameof(MasterReferenceReader)}(item.ModKey, item.MasterReferences);");
                 fg.AppendLine($"var modHeader = item.ModHeader.DeepCopy() as ModHeader;");
                 fg.AppendLine($"modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);");
                 using (var args = new ArgsWrapper(fg,
@@ -442,7 +443,7 @@ namespace Mutagen.Bethesda.Generation
                     $"public static void WriteGroupParallel<T>"))
                 {
                     args.Add("IGroupGetter<T> group");
-                    args.Add("MasterReferences masters");
+                    args.Add($"{nameof(MasterReferenceReader)} masters");
                     args.Add("int targetIndex");
                     args.Add("Stream[] streamDepositArray");
                     args.Wheres.AddRange(groupInstance.TargetObjectGeneration.GenerateWhereClauses(LoquiInterfaceType.IGetter, groupInstance.TargetObjectGeneration.Generics));

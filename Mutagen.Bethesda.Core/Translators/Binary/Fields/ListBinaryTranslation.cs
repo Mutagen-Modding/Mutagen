@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             RecordType triggeringRecord,
             int lengthLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl)
         {
             var ret = new List<T>();
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Binary
 
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl)
         {
             var ret = new List<T>();
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int amount,
             RecordType triggeringRecord,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl)
         {
             var ret = new List<T>();
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Binary
         public delegate Task<TryGet<T>> BinarySubParseDelegate(MutagenFrame reader);
         public delegate Task<TryGet<T>> BinaryMasterParseDelegate(
             MutagenFrame reader,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
         public delegate Task<TryGet<T>> BinarySubParseRecordDelegate(
             MutagenFrame reader,
             RecordType header);

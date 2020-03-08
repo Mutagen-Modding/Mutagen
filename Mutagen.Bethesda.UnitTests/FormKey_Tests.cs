@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.UnitTests
         #region BinaryTranslation
         public ModKey TargetModKey() => new ModKey("Master2", true);
 
-        public MasterReferences TypicalMasters() => 
-            new MasterReferences(
+        public MasterReferenceReader TypicalMasters() => 
+            new MasterReferenceReader(
                 ModKey.Dummy,
                 new List<IMasterReferenceGetter>()
                 {

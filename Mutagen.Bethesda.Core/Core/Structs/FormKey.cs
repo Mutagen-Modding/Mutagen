@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
             this.ID = id & 0xFFFFFF;
         }
 
-        public static FormKey Factory(MasterReferences masterReferences, uint id)
+        public static FormKey Factory(MasterReferenceReader masterReferences, uint id)
         {
             var modID = ModID.GetModIDByteFromUInt(id);
 
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda
             return ID.ToString("X6");
         }
 
-        public FormID GetFormID(MasterReferences list)
+        public FormID GetFormID(MasterReferenceReader list)
         {
             for (byte i = 0; i < list.Masters.Count; i++)
             {

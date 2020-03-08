@@ -49,12 +49,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryCreateTranslation
         {
-            public static async Task CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
+            public static async Task CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj, MasterReferenceReader masterReferences)
             {
                 CustomBinaryEnd(frame, obj, masterReferences);
             }
 
-            private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
+            private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj, MasterReferenceReader masterReferences)
             {
                 if (frame.Reader.Complete) return;
                 var groupMeta = frame.MetaData.GetGroup(frame);
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
             static void ParseTypical(
                 MutagenFrame frame,
                 ICellInternal obj,
-                MasterReferences masterReferences,
+                MasterReferenceReader masterReferences,
                 IList<IPlaced> coll,
                 bool persistentParse)
             {
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }));
             }
 
-            static bool ParseTemporaryOutliers(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
+            static bool ParseTemporaryOutliers(MutagenFrame frame, ICellInternal obj, MasterReferenceReader masterReferences)
             {
                 var majorMeta = frame.MetaData.GetMajorRecord(frame);
                 var nextHeader = majorMeta.RecordType;
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return false;
             }
 
-            static void ParseTemporary(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
+            static void ParseTemporary(MutagenFrame frame, ICellInternal obj, MasterReferenceReader masterReferences)
             {
                 var groupMeta = frame.MetaData.ReadGroup(frame);
                 var formKey = FormKey.Factory(masterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj, MasterReferences masterReferences)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj, MasterReferenceReader masterReferences)
             {
                 var pathGrid = obj.PathGrid;
                 var landscape = obj.Landscape;

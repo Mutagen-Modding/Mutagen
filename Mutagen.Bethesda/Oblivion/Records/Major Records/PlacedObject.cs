@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class PlacedObjectBinaryCreateTranslation
         {
-            static partial void FillBinaryOpenByDefaultCustom(MutagenFrame frame, IPlacedObjectInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryOpenByDefaultCustom(MutagenFrame frame, IPlacedObjectInternal item, MasterReferenceReader masterReferences)
             {
                 item.OpenByDefault = true;
                 frame.Position += frame.MetaData.SubConstants.HeaderLength;
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class PlacedObjectBinaryWriteTranslation
         {
-            static partial void WriteBinaryOpenByDefaultCustom(MutagenWriter writer, IPlacedObjectGetter item, MasterReferences masterReferences)
+            static partial void WriteBinaryOpenByDefaultCustom(MutagenWriter writer, IPlacedObjectGetter item, MasterReferenceReader masterReferences)
             {
                 if (item.OpenByDefault)
                 {

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global CreateFromBinary(
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter recordTypeConverter)
         {
             return GlobalCustomParsing.Create<Global>(
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
                 IGlobalGetter item,
-                MasterReferences masterReferences)
+                MasterReferenceReader masterReferences)
             {
                 Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
                     writer,

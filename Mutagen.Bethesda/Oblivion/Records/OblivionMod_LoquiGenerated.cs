@@ -5546,7 +5546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             IOblivionMod item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
         }
         
@@ -5555,7 +5555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             GroupMask? importMask,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -6423,7 +6423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter,
             GroupMask? importMask = null)
         {
-            var masterReferences = new MasterReferences(modKey, item.ModHeader.MasterReferences);
+            var masterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
             await UtilityAsyncTranslation.ModParse(
                 record: item,
                 frame: frame,
@@ -7300,7 +7300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryWriteParameters param,
             ModKey modKey)
         {
-            var masterRefs = new MasterReferences(item.ModKey, item.MasterReferences);
+            var masterRefs = new MasterReferenceReader(item.ModKey, item.MasterReferences);
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(
@@ -7372,7 +7372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public static void WriteGroupParallel<T>(
             IGroupGetter<T> group,
-            MasterReferences masters,
+            MasterReferenceReader masters,
             int targetIndex,
             Stream[] streamDepositArray)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
@@ -11880,7 +11880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GroupMask? importMask,
             RecordTypeConverter? recordTypeConverter)
         {
-            MasterReferences masterReferences = new MasterReferences(item.ModKey, item.ModHeader.MasterReferences);
+            MasterReferenceReader masterReferences = new MasterReferenceReader(item.ModKey, item.ModHeader.MasterReferences);
             var ModHeaderItem = item.ModHeader;
             ((ModHeaderBinaryWriteTranslation)((IBinaryItem)ModHeaderItem).BinaryWriteTranslator).Write(
                 item: ModHeaderItem,

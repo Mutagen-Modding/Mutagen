@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
         public delegate bool BinaryMasterParseDelegate<T>(
             MutagenFrame reader,
             out T item,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
         public delegate bool BinarySubParseRecordDelegate<T>(
             MutagenFrame reader,
             RecordType header,
@@ -36,19 +36,19 @@ namespace Mutagen.Bethesda
         public delegate void BinaryMasterWriteDelegate<T>(
             MutagenWriter writer,
             T item,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
 
         public delegate void RecordStructFill<R>(
             R record,
             MutagenFrame frame,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
 
         public delegate TryGet<int?> RecordTypeFill<R>(
             R record,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter);
 
         public delegate TryGet<int?> RecordTypelessStructFill<R>(
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda
             int? lastParsed,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter);
 
         public delegate TryGet<int?> ModRecordTypeFill<R, G>(
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             G importMask,
             RecordTypeConverter? recordTypeConverter);
 
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             RecordType recType,
             RecordTypeConverter? recordTypeConverter,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
             where M : IMajorRecordCommonGetter
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             bool setFinal,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             bool setFinal,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             bool setFinal,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             bool setFinal,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypelessStructFill<M> fillTyped)
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda
         public static G GroupParse<G>(
             G record,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda
         public static M ModParse<M, G>(
             M record,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             G importMask,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
@@ -578,14 +578,14 @@ namespace Mutagen.Bethesda
         public delegate void RecordStructFill<R>(
             R record,
             MutagenFrame frame,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
 
         public delegate Task<TryGet<int?>> RecordTypeFill<R>(
             R record,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter);
 
         public delegate Task<TryGet<int?>> RecordTypelessStructFill<R>(
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda
             int? lastParsed,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter);
 
         public delegate Task<TryGet<int?>> ModRecordTypeFill<R, G>(
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             G? importMask,
             RecordTypeConverter? recordTypeConverter)
             where G : class;
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             RecordType recType,
             RecordTypeConverter? recordTypeConverter,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
             where M : IMajorRecordCommonGetter
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             bool setFinal,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             bool setFinal,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             bool setFinal,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             bool setFinal,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypelessStructFill<M> fillTyped)
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda
         public static async Task<G> GroupParse<G>(
             G record,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda
         public static async Task<M> ModParse<M, G>(
             M record,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             G? importMask,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,

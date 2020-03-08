@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
         void Write(
             MutagenWriter writer,
             object item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null);
     }
 
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Binary
         object BinaryWriteTranslator { get; }
         void WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null);
     }
 }

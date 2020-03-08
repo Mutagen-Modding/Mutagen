@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Generation
@@ -93,7 +94,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                    args.Add($"MasterReferences masterReferences");
+                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                     if (DoErrorMasksStatic)
                     {
                         args.Add($"ErrorMaskBuilder errorMask");
@@ -106,7 +107,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                    args.Add($"MasterReferences masterReferences");
+                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                     if (DoErrorMasksStatic)
                     {
                         args.Add($"ErrorMaskBuilder errorMask");
@@ -117,9 +118,9 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"FillBinary{field.Name}Custom"))
                     {
-                        args.Add($"frame: frame");
-                        args.Add($"item: item");
-                        args.Add($"masterReferences: masterReferences");
+                        args.AddPassArg($"frame");
+                        args.AddPassArg($"item");
+                        args.AddPassArg($"masterReferences");
                         if (DoErrorMasksStatic)
                         {
                             args.Add($"errorMask: errorMask");
@@ -143,7 +144,7 @@ namespace Mutagen.Bethesda.Generation
                 args.SemiColon = true;
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
-                args.Add($"MasterReferences masterReferences");
+                args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                 if (DoErrorMasksStatic)
                 {
                     args.Add($"ErrorMaskBuilder errorMask");
@@ -156,7 +157,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
-                args.Add($"MasterReferences masterReferences");
+                args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                 if (DoErrorMasksStatic)
                 {
                     args.Add($"ErrorMaskBuilder errorMask");

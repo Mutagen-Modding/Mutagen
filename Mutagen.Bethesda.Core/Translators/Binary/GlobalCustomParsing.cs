@@ -36,8 +36,8 @@ namespace Mutagen.Bethesda.Binary
 
         public static T Create<T>(
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            Func<MutagenFrame, MasterReferences, char, T> getter)
+            MasterReferenceReader masterReferences,
+            Func<MutagenFrame, MasterReferenceReader, char, T> getter)
             where T : IMajorRecordCommon, IGlobalCommon
         {
             var initialPos = frame.Position;

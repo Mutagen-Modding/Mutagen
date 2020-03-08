@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static GenderedItem<TItem> Parse<TItem>(
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             UtilityTranslation.BinaryMasterParseDelegate<TItem> transl)
         {
             if (!transl(frame, out var male, masterReferences))
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static GenderedItem<TItem?> Parse<TItem>(
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordType maleMarker,
             RecordType femaleMarker,
             UtilityTranslation.BinaryMasterParseDelegate<TItem> transl)

@@ -102,7 +102,7 @@
     <Compile Include="Core\Links\IFormLink.cs" />
     <Compile Include="Core\Links\ILink.cs" />
     <Compile Include="Core\Links\ILinkContainer.cs" />
-    <Compile Include="Core\MasterReferences.cs" />
+    <Compile Include="Core\MasterReferenceReader.cs" />
     <Compile Include="Preprocessing\ModDecompressor.cs" />
     <Compile Include="Core\Structs\ModID.cs" />
     <Compile Include="Core\Structs\ModKey.cs" />

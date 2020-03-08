@@ -10,6 +10,7 @@ using System.IO;
 using Noggog;
 using Loqui.Internal;
 using System.Xml.Linq;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -113,7 +114,7 @@ namespace Mutagen.Bethesda.Generation
             };
             APILine masterRefs = new APILine(
                 nicknameKey: "MasterReferences",
-                resolutionString: "MasterReferences masterReferences",
+                resolutionString: $"{nameof(MasterReferenceReader)} masterReferences",
                 when: (obj, dir) => obj.GetObjectType() != ObjectType.Mod);
             var modKey = new APILine(
                 nicknameKey: "ModKey",
@@ -396,7 +397,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add("MutagenFrame frame");
-                    args.Add($"MasterReferences masterReferences");
+                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -447,7 +448,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     args.Add("RecordType nextRecordType");
                     args.Add("int contentLength");
-                    args.Add("MasterReferences masterReferences");
+                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                     if (data.ObjectType == ObjectType.Mod)
                     {
                         args.Add($"GroupMask? importMask");
@@ -734,14 +735,14 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add("MutagenWriter writer");
                 args.Add($"{obj.Interface(internalInterface: true, getter: true)} obj");
-                args.Add("MasterReferences masterReferences");
+                args.Add($"{nameof(MasterReferenceReader)} masterReferences");
             }
             using (var args = new FunctionWrapper(fg,
                 $"public static void CustomBinaryEndExportInternal"))
             {
                 args.Add("MutagenWriter writer");
                 args.Add($"{obj.Interface(internalInterface: true, getter: true)} obj");
-                args.Add("MasterReferences masterReferences");
+                args.Add($"{nameof(MasterReferenceReader)} masterReferences");
             }
             using (new BraceWrapper(fg))
             {
@@ -766,14 +767,14 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("MutagenFrame frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
-                    args.Add("MasterReferences masterReferences");
+                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                 }
                 using (var args = new FunctionWrapper(fg,
                     $"public static void CustomBinaryEndImportPublic"))
                 {
                     args.Add("MutagenFrame frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
-                    args.Add("MasterReferences masterReferences");
+                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -976,8 +977,8 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add($"frame: frame.SpawnWithLength(customLen + frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)})");
                                 args.Add("recordType: nextRecord");
-                                args.Add("recordTypeConverter: recordTypeConverter");
-                                args.Add("masterReferences: masterReferences");
+                                args.AddPassArg("recordTypeConverter");
+                                args.AddPassArg("masterReferences");
                             }
                         }
                         fg.AppendLine("default:");
@@ -1007,7 +1008,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() == ObjectType.Mod)
             {
-                fg.AppendLine($"var masterReferences = new MasterReferences(modKey, {accessor}.ModHeader.MasterReferences);");
+                fg.AppendLine($"var masterReferences = new {nameof(MasterReferenceReader)}(modKey, {accessor}.ModHeader.MasterReferences);");
             }
 
             if (await obj.IsMajorRecord())
@@ -1243,7 +1244,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                     args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
                     args.Add("MutagenWriter writer");
-                    args.Add($"MasterReferences masterReferences");
+                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -1324,14 +1325,14 @@ namespace Mutagen.Bethesda.Generation
                     args.Add("RecordTypeConverter? recordTypeConverter");
                     if (obj.GetObjectType() != ObjectType.Mod)
                     {
-                        args.Add($"MasterReferences masterReferences");
+                        args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                     }
                 }
                 using (new BraceWrapper(fg))
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
-                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(item.ModKey, item.ModHeader.MasterReferences);");
+                        fg.AppendLine($"{nameof(MasterReferenceReader)} masterReferences = new {nameof(MasterReferenceReader)}(item.ModKey, item.ModHeader.MasterReferences);");
                     }
                     if (obj.HasLoquiBaseObject)
                     {

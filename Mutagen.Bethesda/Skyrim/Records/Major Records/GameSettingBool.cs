@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GameSettingBoolBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item, MasterReferenceReader masterReferences)
             {
                 var subFrame = frame.MetaData.ReadSubRecordFrame(frame);
                 item.Data = (bool)(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content) != 0);
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class GameSettingBoolBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item, MasterReferences masterReferences)
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item, MasterReferenceReader masterReferences)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.ExportSubRecordHeader(writer, GameSettingBool_Registration.DATA_HEADER))

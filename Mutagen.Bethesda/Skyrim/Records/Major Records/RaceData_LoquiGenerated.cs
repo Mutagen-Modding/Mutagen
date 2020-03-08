@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((RaceDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static RaceData CreateFromBinary(
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             return CreateFromBinary(
                 masterReferences: masterReferences,
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static RaceData CreateFromBinary(
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             var ret = new RaceData();
@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRaceData item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             CopyInFromBinary(
                 item: item,
@@ -2091,7 +2091,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRaceData item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((RaceDataSetterCommon)((IRaceDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
@@ -2792,7 +2792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void FillBinaryStructs(
             IRaceData item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             item.SkillBoost0 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(
                 frame: frame,
@@ -2860,7 +2860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromBinary(
             IRaceData item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
@@ -4929,12 +4929,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void WriteBinaryMountDataCustom(
             MutagenWriter writer,
             IRaceDataGetter item,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
 
         public static void WriteBinaryMountData(
             MutagenWriter writer,
             IRaceDataGetter item,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             WriteBinaryMountDataCustom(
                 writer: writer,
@@ -4945,7 +4945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteEmbedded(
             IRaceDataGetter item,
             MutagenWriter writer,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             var SkillBoost0Item = item.SkillBoost0;
             ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost0Item).BinaryWriteTranslator).Write(
@@ -5092,7 +5092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IRaceDataGetter item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
@@ -5110,7 +5110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             Write(
@@ -5129,12 +5129,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryMountDataCustom(
             MutagenFrame frame,
             IRaceData item,
-            MasterReferences masterReferences);
+            MasterReferenceReader masterReferences);
 
         public static void FillBinaryMountDataCustomPublic(
             MutagenFrame frame,
             IRaceData item,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             FillBinaryMountDataCustom(
                 frame: frame,
@@ -5153,7 +5153,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IRaceDataGetter item,
             MutagenWriter writer,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             ((RaceDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -5217,7 +5217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((RaceDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(

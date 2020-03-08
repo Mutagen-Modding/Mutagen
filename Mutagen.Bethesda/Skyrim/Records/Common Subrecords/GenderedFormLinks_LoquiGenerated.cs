@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((GenderedFormLinksBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static GenderedFormLinks<T> CreateFromBinary(
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             return CreateFromBinary(
                 masterReferences: masterReferences,
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GenderedFormLinks<T> CreateFromBinary(
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             var ret = new GenderedFormLinks<T>();
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary<T>(
             this IGenderedFormLinks<T> item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
             where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
         {
             CopyInFromBinary(
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary<T>(
             this IGenderedFormLinks<T> item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
         {
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void FillBinaryStructs(
             IGenderedFormLinks<T> item,
             MutagenFrame frame,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
         {
             item.Male.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromBinary(
             IGenderedFormLinks<T> item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
@@ -1572,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteEmbedded<T>(
             IGenderedFormLinksGetter<T> item,
             MutagenWriter writer,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write<T>(
             MutagenWriter writer,
             IGenderedFormLinksGetter<T> item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             throw new NotImplementedException();
@@ -1625,7 +1625,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary<T, T_ErrMask>(
             this IGenderedFormLinksGetter<T> item,
             MutagenWriter writer,
-            MasterReferences masterReferences)
+            MasterReferenceReader masterReferences)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
@@ -1693,7 +1693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             ((GenderedFormLinksBinaryWriteTranslation)this.BinaryWriteTranslator).Write(

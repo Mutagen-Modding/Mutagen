@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class WorldspaceBinaryWriteTranslation
         {
-            static partial void WriteBinaryOffsetLengthCustom(MutagenWriter writer, IWorldspaceGetter item, MasterReferences masterReferences)
+            static partial void WriteBinaryOffsetLengthCustom(MutagenWriter writer, IWorldspaceGetter item, MasterReferenceReader masterReferences)
             {
                 if (!item.OffsetData.TryGet(out var offset)) return;
                 if (!item.UsingOffsetLength) return;
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer.Write(offset);
             }
 
-            static partial void WriteBinaryOffsetDataCustom(MutagenWriter writer, IWorldspaceGetter item, MasterReferences masterReferences)
+            static partial void WriteBinaryOffsetDataCustom(MutagenWriter writer, IWorldspaceGetter item, MasterReferenceReader masterReferences)
             {
                 if (item.UsingOffsetLength) return;
                 if (!item.OffsetData.TryGet(out var offset)) return;
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj, MasterReferences masterReferences)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj, MasterReferenceReader masterReferences)
             {
                 var road = obj.Road;
                 var topCell = obj.TopCell;
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class WorldspaceBinaryCreateTranslation
         {
-            static partial void FillBinaryOffsetLengthCustom(MutagenFrame frame, IWorldspaceInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryOffsetLengthCustom(MutagenFrame frame, IWorldspaceInternal item, MasterReferenceReader masterReferences)
             {
                 item.UsingOffsetLength = true;
                 var xxxxMeta = frame.MetaData.ReadSubRecord(frame);
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.OffsetData = frame.Reader.ReadBytes(contentLen);
             }
 
-            static partial void FillBinaryOffsetDataCustom(MutagenFrame frame, IWorldspaceInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryOffsetDataCustom(MutagenFrame frame, IWorldspaceInternal item, MasterReferenceReader masterReferences)
             {
                 if (item.UsingOffsetLength) return;
                 if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.OffsetData = frame.Reader.ReadBytes(len);
             }
 
-            public static async Task CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj, MasterReferences masterReferences)
+            public static async Task CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj, MasterReferenceReader masterReferences)
             {
                 if (frame.Reader.Complete) return;
                 var next = HeaderTranslation.GetNextType(

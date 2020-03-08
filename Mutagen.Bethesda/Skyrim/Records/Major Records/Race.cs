@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class RaceBinaryCreateTranslation
         {
-            static partial void FillBinaryExtraMarkersCustom(MutagenFrame frame, IRaceInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryExtraMarkersCustom(MutagenFrame frame, IRaceInternal item, MasterReferenceReader masterReferences)
             {
                 if (frame.Complete) return;
                 var subHeader = frame.MetaData.GetSubRecord(frame);
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class RaceBinaryWriteTranslation
         {
-            static partial void WriteBinaryExtraMarkersCustom(MutagenWriter writer, IRaceGetter item, MasterReferences masterReferences)
+            static partial void WriteBinaryExtraMarkersCustom(MutagenWriter writer, IRaceGetter item, MasterReferenceReader masterReferences)
             {
                 if (item.ExportingExtraNam2)
                 {
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class RaceDataBinaryCreateTranslation
         {
-            static partial void FillBinaryMountDataCustom(MutagenFrame frame, IRaceData item, MasterReferences masterReferences)
+            static partial void FillBinaryMountDataCustom(MutagenFrame frame, IRaceData item, MasterReferenceReader masterReferences)
             {
                 throw new NotImplementedException();
             }
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class RaceDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryMountDataCustom(MutagenWriter writer, IRaceDataGetter item, MasterReferences masterReferences)
+            static partial void WriteBinaryMountDataCustom(MutagenWriter writer, IRaceDataGetter item, MasterReferenceReader masterReferences)
             {
                 throw new NotImplementedException();
             }

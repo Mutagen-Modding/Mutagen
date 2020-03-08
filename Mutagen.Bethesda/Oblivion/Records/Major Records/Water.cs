@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class WaterBinaryCreateTranslation
         {
-            static partial void FillBinaryOddExtraBytesCustom(MutagenFrame frame, IWaterInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryOddExtraBytesCustom(MutagenFrame frame, IWaterInternal item, MasterReferenceReader masterReferences)
             {
                 if (frame.Remaining == 2)
                 {
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinaryBloodCustomLogicCustom(MutagenFrame frame, IWaterInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryBloodCustomLogicCustom(MutagenFrame frame, IWaterInternal item, MasterReferenceReader masterReferences)
             {
                 if (frame.Remaining == 2)
                 {
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinaryNothingCustomLogicCustom(MutagenFrame frame, IWaterInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryNothingCustomLogicCustom(MutagenFrame frame, IWaterInternal item, MasterReferenceReader masterReferences)
             {
                 if (frame.Remaining == 2)
                 {
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.DATADataTypeState |= Water.DATADataType.Has;
             }
 
-            static partial void FillBinaryOilCustomLogicCustom(MutagenFrame frame, IWaterInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryOilCustomLogicCustom(MutagenFrame frame, IWaterInternal item, MasterReferenceReader masterReferences)
             {
                 if (frame.Remaining == 2)
                 {

@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public static void WriteCellsParallel(
                 IListGroupGetter<ICellBlockGetter> group,
-                MasterReferences masters,
+                MasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
             {
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteBlocksParallel(
                 ICellBlockGetter block,
-                MasterReferences masters,
+                MasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
             {
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteSubBlocksParallel(
                 ICellSubBlockGetter subBlock,
-                MasterReferences masters,
+                MasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
             {
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteWorldspacesParallel(
                 IGroupGetter<IWorldspaceGetter> group,
-                MasterReferences masters,
+                MasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
             {
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteBlocksParallel(
                 IWorldspaceBlockGetter block,
-                MasterReferences masters,
+                MasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
             {
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteSubBlocksParallel(
                 IWorldspaceSubBlockGetter subBlock,
-                MasterReferences masters,
+                MasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
             {
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteDialogTopicsParallel(
                 IGroupGetter<IDialogTopicGetter> group,
-                MasterReferences masters,
+                MasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
             {

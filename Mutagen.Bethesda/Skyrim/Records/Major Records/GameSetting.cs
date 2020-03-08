@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GameSetting CreateFromBinary(
             MutagenFrame frame,
-            MasterReferences masterReferences,
+            MasterReferenceReader masterReferences,
             RecordTypeConverter recordTypeConverter)
         {
             var majorMeta = frame.MetaData.GetMajorRecord(frame);

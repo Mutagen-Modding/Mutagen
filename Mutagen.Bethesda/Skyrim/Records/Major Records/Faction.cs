@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class FactionBinaryCreateTranslation
         {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item, MasterReferences masterReferences)
+            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item, MasterReferenceReader masterReferences)
             {
                 item.Conditions = new ExtendedList<Condition>();
                 ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame, masterReferences);
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FactionBinaryWriteTranslation
         {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IFactionGetter item, MasterReferences masterReferences)
+            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IFactionGetter item, MasterReferenceReader masterReferences)
             {
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer, masterReferences);
             }
