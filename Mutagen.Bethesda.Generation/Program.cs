@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Oblivion"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda/Records/Oblivion"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Records/Oblivion"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Oblivion",
                 });
             oblivProto.AddProjectToModify(
-                new FileInfo(Path.Combine(oblivProto.GenerationFolder.FullName, "../../Mutagen.Bethesda.csproj")));
+                new FileInfo(Path.Combine(oblivProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Records.csproj")));
 
             var skyrimProto = gen.AddProtocol(
                 new ProtocolGeneration(
