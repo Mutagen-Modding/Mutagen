@@ -100,12 +100,12 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Skyrim"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda/Records/Skyrim"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Records/Skyrim"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Skyrim",
                 });
             skyrimProto.AddProjectToModify(
-                new FileInfo(Path.Combine(skyrimProto.GenerationFolder.FullName, "../../Mutagen.Bethesda.csproj")));
+                new FileInfo(Path.Combine(skyrimProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Records.csproj")));
 
             gen.Generate().Wait();
         }

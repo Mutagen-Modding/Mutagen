@@ -21,6 +21,7 @@
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Records\Mutagen.Bethesda.Records.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
   <ItemGroup>
