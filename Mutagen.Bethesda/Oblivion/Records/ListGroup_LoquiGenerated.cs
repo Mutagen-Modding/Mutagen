@@ -1853,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Embedded<T>(
+        public static void WriteEmbedded<T>(
             IListGroupGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.LastModified);
         }
 
-        public static void Write_RecordTypes<T>(
+        public static void WriteRecordTypes<T>(
             IListGroupGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -1905,11 +1905,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: ListGroup_Registration.GRUP_HEADER,
                 type: ObjectType.Group))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

@@ -1679,13 +1679,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IGlobalGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1707,11 +1707,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Global_Registration.GLOB_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

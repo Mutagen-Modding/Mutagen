@@ -4900,24 +4900,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 obj: obj,
                 masterReferences: masterReferences);
         }
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             ICellGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             ICellGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -5001,11 +5001,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Cell_Registration.CELL_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

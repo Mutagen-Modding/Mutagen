@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ItemEntryBinaryWriteTranslation Instance = new ItemEntryBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IItemEntryGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1794,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: ItemEntry_Registration.CNTO_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

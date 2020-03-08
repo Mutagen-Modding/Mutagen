@@ -1907,13 +1907,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GameSettingStringBinaryWriteTranslation Instance = new GameSettingStringBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IGameSettingStringGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1936,11 +1936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: GameSettingString_Registration.GMST_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

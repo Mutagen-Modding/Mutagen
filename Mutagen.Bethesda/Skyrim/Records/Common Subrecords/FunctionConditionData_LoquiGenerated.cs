@@ -2549,7 +2549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IFunctionConditionDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2568,7 +2568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);

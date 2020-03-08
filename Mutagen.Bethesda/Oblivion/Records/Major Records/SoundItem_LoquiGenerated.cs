@@ -1814,7 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static SoundItemBinaryWriteTranslation Instance = new SoundItemBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             ISoundItemGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

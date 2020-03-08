@@ -1831,7 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static MapDataBinaryWriteTranslation Instance = new MapDataBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IMapDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: MapData_Registration.MNAM_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

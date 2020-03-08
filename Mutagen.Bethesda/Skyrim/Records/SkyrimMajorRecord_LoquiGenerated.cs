@@ -1882,12 +1882,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static SkyrimMajorRecordBinaryWriteTranslation Instance = new SkyrimMajorRecordBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             ISkyrimMajorRecordGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_Embedded(
+            MajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
@@ -1901,11 +1901,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

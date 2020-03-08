@@ -1979,13 +1979,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AnimatedObjectBinaryWriteTranslation Instance = new AnimatedObjectBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IAnimatedObjectGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2016,11 +2016,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: AnimatedObject_Registration.ANIO_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

@@ -2202,13 +2202,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static FurnatureBinaryWriteTranslation Instance = new FurnatureBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IFurnatureGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2248,11 +2248,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Furnature_Registration.FURN_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

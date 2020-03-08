@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static WeatherSoundBinaryWriteTranslation Instance = new WeatherSoundBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IWeatherSoundGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1782,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: WeatherSound_Registration.SNAM_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

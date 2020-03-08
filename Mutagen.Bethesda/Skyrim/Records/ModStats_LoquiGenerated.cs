@@ -1831,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ModStatsBinaryWriteTranslation Instance = new ModStatsBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IModStatsGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: ModStats_Registration.HEDR_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

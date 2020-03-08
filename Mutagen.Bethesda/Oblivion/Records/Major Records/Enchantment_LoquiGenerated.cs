@@ -2597,24 +2597,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static EnchantmentBinaryWriteTranslation Instance = new EnchantmentBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IEnchantmentGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IEnchantmentGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2667,11 +2667,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Enchantment_Registration.ENCH_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

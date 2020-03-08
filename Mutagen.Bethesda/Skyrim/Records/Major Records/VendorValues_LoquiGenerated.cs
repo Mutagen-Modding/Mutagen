@@ -2089,7 +2089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static VendorValuesBinaryWriteTranslation Instance = new VendorValuesBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IVendorValuesGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2113,7 +2113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: VendorValues_Registration.VENV_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

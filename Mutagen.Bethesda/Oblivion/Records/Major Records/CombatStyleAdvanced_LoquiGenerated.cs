@@ -3379,7 +3379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static CombatStyleAdvancedBinaryWriteTranslation Instance = new CombatStyleAdvancedBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             ICombatStyleAdvancedGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -3460,7 +3460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: CombatStyleAdvanced_Registration.CSAD_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

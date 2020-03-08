@@ -1654,11 +1654,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

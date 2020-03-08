@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);");
+                        fg.AppendLine($"GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream, default!);");
                     }
                     fg.AppendLine($"subStreams[0] = groupByteStream;");
                     fg.AppendLine($"Parallel.ForEach(cuts, (cutItems, state, counter) =>");

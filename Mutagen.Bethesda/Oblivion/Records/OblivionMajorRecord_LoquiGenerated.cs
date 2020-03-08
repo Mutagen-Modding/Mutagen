@@ -1891,12 +1891,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static OblivionMajorRecordBinaryWriteTranslation Instance = new OblivionMajorRecordBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IOblivionMajorRecordGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_Embedded(
+            MajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
@@ -1908,11 +1908,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

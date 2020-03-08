@@ -1701,11 +1701,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: PlacedObject_Registration.REFR_HEADER,
                 type: ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

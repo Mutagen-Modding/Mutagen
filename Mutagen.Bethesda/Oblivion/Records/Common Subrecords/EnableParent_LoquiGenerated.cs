@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static EnableParentBinaryWriteTranslation Instance = new EnableParentBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IEnableParentGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1782,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: EnableParent_Registration.XESP_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

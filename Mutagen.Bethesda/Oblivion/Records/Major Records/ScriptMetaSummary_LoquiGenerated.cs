@@ -2020,7 +2020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IScriptMetaSummaryGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: ScriptMetaSummary_Registration.SCHR_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

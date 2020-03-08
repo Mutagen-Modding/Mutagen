@@ -2328,7 +2328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static WorldspaceSubBlockBinaryWriteTranslation Instance = new WorldspaceSubBlockBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IWorldspaceSubBlockGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2344,7 +2344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.LastModified);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IWorldspaceSubBlockGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -2377,11 +2377,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: WorldspaceSubBlock_Registration.GRUP_HEADER,
                 type: ObjectType.Group))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

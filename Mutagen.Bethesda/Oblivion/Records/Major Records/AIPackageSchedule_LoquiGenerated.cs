@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static AIPackageScheduleBinaryWriteTranslation Instance = new AIPackageScheduleBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IAIPackageScheduleGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: AIPackageSchedule_Registration.PSDT_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

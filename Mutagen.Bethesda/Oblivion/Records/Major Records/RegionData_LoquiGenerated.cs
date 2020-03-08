@@ -1998,14 +1998,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static RegionDataBinaryWriteTranslation Instance = new RegionDataBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IRegionDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IRegionDataGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -2040,11 +2040,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: RegionData_Registration.RDAT_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

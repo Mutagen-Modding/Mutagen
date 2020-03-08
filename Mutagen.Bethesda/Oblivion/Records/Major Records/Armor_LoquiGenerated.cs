@@ -2454,24 +2454,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IArmorGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ClothingAbstractBinaryWriteTranslation.Write_Embedded(
+            ClothingAbstractBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IArmorGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            ClothingAbstractBinaryWriteTranslation.Write_RecordTypes(
+            ClothingAbstractBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2504,11 +2504,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Armor_Registration.ARMO_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

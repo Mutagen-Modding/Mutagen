@@ -3130,24 +3130,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GrassBinaryWriteTranslation Instance = new GrassBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IGrassGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IGrassGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3205,11 +3205,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Grass_Registration.GRAS_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

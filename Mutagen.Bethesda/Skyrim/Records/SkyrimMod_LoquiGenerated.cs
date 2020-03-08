@@ -2777,7 +2777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (var stream = new MutagenWriter(groupByteStream, GameConstants.Skyrim, dispose: false))
             {
                 stream.Position += 8;
-                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);
+                GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream, default!);
             }
             subStreams[0] = groupByteStream;
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
@@ -4052,7 +4052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static SkyrimModBinaryWriteTranslation Instance = new SkyrimModBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             ISkyrimModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
@@ -4206,7 +4206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 importMask: importMask,

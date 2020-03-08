@@ -1889,12 +1889,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             ISoundDataExtendedInternalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            SoundDataBinaryWriteTranslation.Write_Embedded(
+            SoundDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
@@ -1923,7 +1923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: SoundDataExtended_Registration.SNDX_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

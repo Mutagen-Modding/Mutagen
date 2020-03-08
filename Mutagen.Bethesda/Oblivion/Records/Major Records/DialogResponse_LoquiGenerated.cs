@@ -2387,14 +2387,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static DialogResponseBinaryWriteTranslation Instance = new DialogResponseBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IDialogResponseGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IDialogResponseGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -2436,11 +2436,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

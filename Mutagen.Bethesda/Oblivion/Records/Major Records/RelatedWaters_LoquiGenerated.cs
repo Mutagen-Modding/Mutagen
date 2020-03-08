@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static RelatedWatersBinaryWriteTranslation Instance = new RelatedWatersBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IRelatedWatersGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: RelatedWaters_Registration.GNAM_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

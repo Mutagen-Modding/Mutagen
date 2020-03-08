@@ -2941,13 +2941,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static HeadPartBinaryWriteTranslation Instance = new HeadPartBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IHeadPartGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3023,11 +3023,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: HeadPart_Registration.HDPT_HEADER,
                 type: ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

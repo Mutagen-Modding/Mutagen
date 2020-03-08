@@ -7478,24 +7478,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static EffectShaderBinaryWriteTranslation Instance = new EffectShaderBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IEffectShaderGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IEffectShaderGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -7714,11 +7714,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: EffectShader_Registration.EFSH_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

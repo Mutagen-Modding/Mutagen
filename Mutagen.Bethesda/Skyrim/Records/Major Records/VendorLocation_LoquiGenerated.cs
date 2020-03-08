@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static VendorLocationBinaryWriteTranslation Instance = new VendorLocationBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IVendorLocationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1869,7 +1869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: VendorLocation_Registration.PLVD_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

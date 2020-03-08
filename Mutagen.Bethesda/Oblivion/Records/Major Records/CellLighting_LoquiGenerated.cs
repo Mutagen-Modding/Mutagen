@@ -2354,7 +2354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static CellLightingBinaryWriteTranslation Instance = new CellLightingBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             ICellLightingGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2398,7 +2398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: CellLighting_Registration.XCLL_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

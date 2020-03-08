@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Generation
                 if (HasEmbeddedFields(obj))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"Write_Embedded"))
+                        $"WriteEmbedded"))
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Generation
                     if (firstBase != null)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{this.TranslationWriteClass(firstBase)}.Write_Embedded"))
+                            $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
                         {
                             args.Add($"item: item");
                             args.Add($"writer: writer");
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Generation
                 if (HasRecordTypeFields(obj))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"Write_RecordTypes"))
+                        $"WriteRecordTypes"))
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Generation
                     if (firstBase != null)
                     {
                         using (var args = new ArgsWrapper(fg,
-                        $"{this.TranslationWriteClass(firstBase)}.Write_RecordTypes"))
+                        $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                         {
                             args.Add($"item: item");
                             args.Add($"writer: writer");
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Generation
             if (HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_Embedded{obj.GetGenericTypes(MaskType.Normal)}"))
+                    $"public static void WriteEmbedded{obj.GetGenericTypes(MaskType.Normal)}"))
                 {
                     args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                     args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Generation
                         if (firstBase != null)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{TranslationWriteClass(firstBase)}.Write_Embedded"))
+                                $"{TranslationWriteClass(firstBase)}.WriteEmbedded"))
                             {
                                 args.Add("item: item");
                                 args.Add("writer: writer");
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_RecordTypes{obj.GetGenericTypes(MaskType.Normal)}"))
+                    $"public static void WriteRecordTypes{obj.GetGenericTypes(MaskType.Normal)}"))
                 {
                     args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                     args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Generation
                         if (firstBase != null)
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"{TranslationWriteClass(firstBase)}.Write_RecordTypes"))
+                                $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                             {
                                 args.Add($"item: item");
                                 args.Add("writer: writer");

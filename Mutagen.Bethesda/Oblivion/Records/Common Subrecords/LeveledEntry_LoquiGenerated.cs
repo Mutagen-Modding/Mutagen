@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static LeveledEntryBinaryWriteTranslation Instance = new LeveledEntryBinaryWriteTranslation();
 
-        public static void Write_Embedded<T>(
+        public static void WriteEmbedded<T>(
             ILeveledEntryGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1820,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: LeveledEntry_Registration.LVLO_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

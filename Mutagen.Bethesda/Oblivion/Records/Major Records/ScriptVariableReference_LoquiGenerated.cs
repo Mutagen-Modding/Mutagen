@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ScriptVariableReferenceBinaryWriteTranslation Instance = new ScriptVariableReferenceBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IScriptVariableReferenceGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

@@ -2472,7 +2472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static TexturesBinaryWriteTranslation Instance = new TexturesBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             ITexturesGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -2526,7 +2526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

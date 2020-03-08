@@ -2213,14 +2213,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ScriptEffectBinaryWriteTranslation Instance = new ScriptEffectBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IScriptEffectGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IScriptEffectGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -2266,11 +2266,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

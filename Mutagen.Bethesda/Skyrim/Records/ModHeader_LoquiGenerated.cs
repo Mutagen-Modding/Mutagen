@@ -3311,7 +3311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IModHeaderGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -3326,7 +3326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.Version2);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IModHeaderGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -3400,11 +3400,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: ModHeader_Registration.TES4_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

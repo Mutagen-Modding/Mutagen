@@ -2243,24 +2243,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ClothingBinaryWriteTranslation Instance = new ClothingBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IClothingGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ClothingAbstractBinaryWriteTranslation.Write_Embedded(
+            ClothingAbstractBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IClothingGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            ClothingAbstractBinaryWriteTranslation.Write_RecordTypes(
+            ClothingAbstractBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2288,11 +2288,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Clothing_Registration.CLOT_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

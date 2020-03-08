@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             ILockInformationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: LockInformation_Registration.XLOC_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

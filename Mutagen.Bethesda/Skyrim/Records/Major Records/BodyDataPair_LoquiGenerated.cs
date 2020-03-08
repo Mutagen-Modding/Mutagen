@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static BodyDataPairBinaryWriteTranslation Instance = new BodyDataPairBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IBodyDataPairGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -1949,7 +1949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static BodyDataBinaryWriteTranslation Instance = new BodyDataBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IBodyDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 length: 4);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IBodyDataGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -1865,11 +1865,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

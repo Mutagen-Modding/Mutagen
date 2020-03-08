@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GetEventDataBinaryWriteTranslation Instance = new GetEventDataBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IGetEventDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2157,7 +2157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);

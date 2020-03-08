@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static RelationBinaryWriteTranslation Instance = new RelationBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IRelationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1779,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Relation_Registration.XNAM_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

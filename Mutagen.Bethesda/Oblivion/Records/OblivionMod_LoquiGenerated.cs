@@ -7386,7 +7386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
             {
                 stream.Position += 8;
-                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);
+                GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream, default!);
             }
             subStreams[0] = groupByteStream;
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
@@ -11874,7 +11874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static OblivionModBinaryWriteTranslation Instance = new OblivionModBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IOblivionModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
@@ -12568,7 +12568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 importMask: importMask,

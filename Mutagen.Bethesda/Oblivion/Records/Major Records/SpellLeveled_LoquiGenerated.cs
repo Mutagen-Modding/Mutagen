@@ -1854,11 +1854,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: SpellLeveled_Registration.LVSP_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                SpellBinaryWriteTranslation.Write_RecordTypes(
+                SpellBinaryWriteTranslation.WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

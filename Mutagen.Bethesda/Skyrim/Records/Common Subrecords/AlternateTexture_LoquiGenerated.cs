@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static AlternateTextureBinaryWriteTranslation Instance = new AlternateTextureBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IAlternateTextureGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1860,7 +1860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);

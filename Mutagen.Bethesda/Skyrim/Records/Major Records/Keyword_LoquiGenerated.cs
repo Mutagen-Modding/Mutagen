@@ -1839,13 +1839,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static KeywordBinaryWriteTranslation Instance = new KeywordBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IKeywordGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1868,11 +1868,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: Keyword_Registration.KYWD_HEADER,
                 type: ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

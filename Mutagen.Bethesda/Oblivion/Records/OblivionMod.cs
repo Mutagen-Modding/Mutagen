@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    ListGroupBinaryWriteTranslation.Write_Embedded<ICellBlockGetter>(group, stream, default!);
+                    ListGroupBinaryWriteTranslation.WriteEmbedded<ICellBlockGetter>(group, stream, default!);
                 }
                 streams[0] = groupByteStream;
                 Parallel.ForEach(group.Records, (cellBlock, state, counter) =>
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    CellBlockBinaryWriteTranslation.Write_Embedded(block, stream, default!);
+                    CellBlockBinaryWriteTranslation.WriteEmbedded(block, stream, default!);
                 }
                 streams[0] = groupByteStream;
                 if (subBlocks != null)
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    CellSubBlockBinaryWriteTranslation.Write_Embedded(subBlock, stream, default!);
+                    CellSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream, default!);
                 }
                 streams[0] = groupByteStream;
                 if (cells != null)
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    GroupBinaryWriteTranslation.Write_Embedded<IWorldspaceGetter>(group, stream, default!);
+                    GroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream, default!);
                 }
                 streams[0] = groupByteStream;
                 Parallel.ForEach(group.Records, (worldspace, worldspaceState, worldspaceCounter) =>
@@ -218,11 +218,11 @@ namespace Mutagen.Bethesda.Oblivion
                             record: Worldspace_Registration.WRLD_HEADER,
                             type: ObjectType.Record))
                         {
-                            WorldspaceBinaryWriteTranslation.Write_Embedded(
+                            WorldspaceBinaryWriteTranslation.WriteEmbedded(
                                 item: worldspace,
                                 writer: writer,
                                 masterReferences: masters);
-                            WorldspaceBinaryWriteTranslation.Write_RecordTypes(
+                            WorldspaceBinaryWriteTranslation.WriteRecordTypes(
                                 item: worldspace,
                                 writer: writer,
                                 recordTypeConverter: null,
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    WorldspaceBlockBinaryWriteTranslation.Write_Embedded(block, stream, default!);
+                    WorldspaceBlockBinaryWriteTranslation.WriteEmbedded(block, stream, default!);
                 }
                 streams[0] = groupByteStream;
                 if (items != null)
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    WorldspaceSubBlockBinaryWriteTranslation.Write_Embedded(subBlock, stream, default!);
+                    WorldspaceSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream, default!);
                 }
                 streams[0] = groupByteStream;
                 if (items != null)

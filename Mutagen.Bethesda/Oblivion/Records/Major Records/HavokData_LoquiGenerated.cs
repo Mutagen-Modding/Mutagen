@@ -1831,7 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static HavokDataBinaryWriteTranslation Instance = new HavokDataBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IHavokDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: HavokData_Registration.HNAM_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Internals
     {
         public readonly static MasterReferenceBinaryWriteTranslation Instance = new MasterReferenceBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IMasterReferenceGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

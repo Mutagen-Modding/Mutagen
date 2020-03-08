@@ -1905,13 +1905,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GlobalFloatBinaryWriteTranslation Instance = new GlobalFloatBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IGlobalFloatGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            GlobalBinaryWriteTranslation.Write_RecordTypes(
+            GlobalBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1933,11 +1933,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: GlobalFloat_Registration.GLOB_HEADER,
                 type: ObjectType.Record))
             {
-                OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

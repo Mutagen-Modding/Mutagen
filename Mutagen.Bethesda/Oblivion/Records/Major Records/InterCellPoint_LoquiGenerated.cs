@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static InterCellPointBinaryWriteTranslation Instance = new InterCellPointBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IInterCellPointGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1753,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);

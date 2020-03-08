@@ -5021,24 +5021,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 masterReferences: masterReferences);
         }
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IFactionGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            SkyrimMajorRecordBinaryWriteTranslation.Write_Embedded(
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
         }
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IFactionGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            MajorRecordBinaryWriteTranslation.Write_RecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -5178,11 +5178,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: Faction_Registration.FACT_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
-                Write_RecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

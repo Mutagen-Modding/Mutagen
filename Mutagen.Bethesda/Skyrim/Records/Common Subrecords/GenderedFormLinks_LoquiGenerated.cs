@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static GenderedFormLinksBinaryWriteTranslation Instance = new GenderedFormLinksBinaryWriteTranslation();
 
-        public static void Write_Embedded<T>(
+        public static void WriteEmbedded<T>(
             IGenderedFormLinksGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);

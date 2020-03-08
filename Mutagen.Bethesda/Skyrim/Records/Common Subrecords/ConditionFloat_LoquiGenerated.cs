@@ -1777,12 +1777,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 obj: obj,
                 masterReferences: masterReferences);
         }
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IConditionFloatGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            ConditionBinaryWriteTranslation.Write_Embedded(
+            ConditionBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: ConditionFloat_Registration.CTDA_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

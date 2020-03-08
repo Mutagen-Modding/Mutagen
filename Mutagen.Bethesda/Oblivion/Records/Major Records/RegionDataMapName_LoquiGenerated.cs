@@ -1723,13 +1723,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static RegionDataMapNameBinaryWriteTranslation Instance = new RegionDataMapNameBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IRegionDataMapNameGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            RegionDataBinaryWriteTranslation.Write_RecordTypes(
+            RegionDataBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -1747,11 +1747,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            RegionDataBinaryWriteTranslation.Write_Embedded(
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

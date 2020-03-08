@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static AIPackageLocationBinaryWriteTranslation Instance = new AIPackageLocationBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IAIPackageLocationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1871,7 +1871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: AIPackageLocation_Registration.PLDT_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

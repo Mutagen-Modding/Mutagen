@@ -1722,13 +1722,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AlphaLayerBinaryWriteTranslation Instance = new AlphaLayerBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IAlphaLayerGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            BaseLayerBinaryWriteTranslation.Write_RecordTypes(
+            BaseLayerBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter.Combine(AlphaLayer_Registration.BaseConverter),
@@ -1745,11 +1745,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            BaseLayerBinaryWriteTranslation.Write_Embedded(
+            BaseLayerBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

@@ -2069,7 +2069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
 
-        public static void Write_RecordTypes(
+        public static void WriteRecordTypes(
             IModelGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter,
@@ -2104,7 +2104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_RecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,

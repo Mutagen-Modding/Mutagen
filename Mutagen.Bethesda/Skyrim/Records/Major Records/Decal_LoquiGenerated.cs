@@ -2522,7 +2522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static DecalBinaryWriteTranslation Instance = new DecalBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IDecalGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2571,7 +2571,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: Decal_Registration.DODT_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

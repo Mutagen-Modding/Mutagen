@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             ITeleportDestinationGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: TeleportDestination_Registration.XTEL_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

@@ -1745,7 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ObjectBoundsBinaryWriteTranslation Instance = new ObjectBoundsBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IObjectBoundsGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: ObjectBounds_Registration.OBND_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);

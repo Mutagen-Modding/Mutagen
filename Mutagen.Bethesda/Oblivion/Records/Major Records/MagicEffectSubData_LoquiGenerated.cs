@@ -2212,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static MagicEffectSubDataBinaryWriteTranslation Instance = new MagicEffectSubDataBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IMagicEffectSubDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2251,7 +2251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
-            Write_Embedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);

@@ -2538,7 +2538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static AttackDataBinaryWriteTranslation Instance = new AttackDataBinaryWriteTranslation();
 
-        public static void Write_Embedded(
+        public static void WriteEmbedded(
             IAttackDataGetter item,
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -2592,7 +2592,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: AttackData_Registration.ATKD_HEADER,
                 type: ObjectType.Subrecord))
             {
-                Write_Embedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer,
                     masterReferences: masterReferences);
