@@ -56,15 +56,15 @@
     <Compile Include="Enums\StringBinaryType.cs" />
     <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
-    <Compile Include="Records\Common\GenderedItem.cs" />
-    <Compile Include="Records\Common\ListGroupAbstract.cs" />
-    <Compile Include="Records\Common\ProtocolDefinition_Bethesda.cs" />
+    <Compile Include="Records\GenderedItem.cs" />
+    <Compile Include="Records\ListGroupAbstract.cs" />
+    <Compile Include="Records\ProtocolDefinition_Bethesda.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayArrayHelper.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayFactoryPackage.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlaySetList.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayNumberedList.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\GenderedItemBinaryOverlay.cs" />
-    <Compile Include="Records\Common\GroupAbstract.cs" />
+    <Compile Include="Records\GroupAbstract.cs" />
     <Compile Include="Translators\Binary\BinaryOverlay.cs" />
     <Compile Include="Translators\Binary\CompositeReadStream.cs" />
     <Compile Include="Translators\Binary\GlobalCustomParsing.cs" />
@@ -112,10 +112,10 @@
     <Compile Include="Patching\Pipeline.cs" />
     <Compile Include="Locators\RecordInterest.cs" />
     <Compile Include="Locators\RecordLocator.cs" />
-    <Compile Include="Records\Common\MajorRecord.cs">
+    <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common\MasterReference_LoquiGenerated.cs">
+    <Compile Include="Records\MasterReference_LoquiGenerated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
     <Compile Include="Core\Structs\RecordType.cs" />
@@ -166,7 +166,7 @@
     <Compile Include="Translators\XML\FormKeyXmlTranslation.cs" />
     <Compile Include="Translators\Folder\IXmlFolderItem.cs" />
     <Compile Include="Translators\Folder\LoquiXmlFolderTranslation.cs" />
-    <Compile Include="Records\Common\MajorRecord_LoquiGenerated.cs">
+    <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Translators\XML\ModKeyXmlTranslation.cs" />

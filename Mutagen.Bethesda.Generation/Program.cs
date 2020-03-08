@@ -78,34 +78,34 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Bethesda"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda/Records/Common"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Records"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda",
                 });
             bethesdaProto.AddProjectToModify(
-                new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../../Mutagen.Bethesda.csproj")));
+                new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Core.csproj")));
 
             var oblivProto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Oblivion"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Records/Oblivion"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda/Oblivion"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Oblivion",
                 });
             oblivProto.AddProjectToModify(
-                new FileInfo(Path.Combine(oblivProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Records.csproj")));
+                new FileInfo(Path.Combine(oblivProto.GenerationFolder.FullName, "../Mutagen.Bethesda.csproj")));
 
             var skyrimProto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Skyrim"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Records/Skyrim"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda/Skyrim"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Skyrim",
                 });
             skyrimProto.AddProjectToModify(
-                new FileInfo(Path.Combine(skyrimProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Records.csproj")));
+                new FileInfo(Path.Combine(skyrimProto.GenerationFolder.FullName, "../Mutagen.Bethesda.csproj")));
 
             gen.Generate().Wait();
         }
