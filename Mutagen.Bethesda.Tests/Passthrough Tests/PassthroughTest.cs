@@ -171,9 +171,7 @@ namespace Mutagen.Bethesda.Tests
                         record.IsCompressed = false;
                     }
 
-                    mod.WriteToBinaryParallel(
-                        outputPath,
-                        Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                    mod.WriteToBinaryParallel(outputPath);
                     GC.Collect();
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
@@ -200,9 +198,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
                     {
-                        wrapper.WriteToBinary(
-                            binaryOverlayPath,
-                            Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                        wrapper.WriteToBinary(binaryOverlayPath);
                     }
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
@@ -244,9 +240,7 @@ namespace Mutagen.Bethesda.Tests
                 if (Settings.TestCopyIn)
                 {
                     var copyIn = await ImportCopyIn(this.FilePath.Path);
-                    copyIn.WriteToBinary(
-                        copyInPath,
-                        Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                    copyIn.WriteToBinary(copyInPath);
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {

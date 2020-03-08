@@ -1101,8 +1101,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -1128,8 +1128,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         OTFT_HEADER,
                         REFR_HEADER,
                         RACE_HEADER,
-                        SPEL_HEADER,
                         TXST_HEADER,
+                        SPEL_HEADER,
                         VTYP_HEADER
                     })
             );

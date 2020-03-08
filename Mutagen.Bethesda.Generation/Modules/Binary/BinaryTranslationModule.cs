@@ -118,11 +118,19 @@ namespace Mutagen.Bethesda.Generation
             var modKey = new APILine(
                 nicknameKey: "ModKey",
                 resolutionString: "ModKey modKey",
-                when: (obj, dir) => obj.GetObjectType() == ObjectType.Mod);
+                when: (obj, dir) =>
+                {
+                    if (dir == TranslationDirection.Writer) return false;
+                    return obj.GetObjectType() == ObjectType.Mod;
+                });
             var modKeyOptional = new APILine(
                 nicknameKey: "ModKeyOptional",
                 resolutionString: "ModKey? modKeyOverride = null",
-                when: (obj, dir) => obj.GetObjectType() == ObjectType.Mod);
+                when: (obj, dir) =>
+                {
+                    if (dir == TranslationDirection.Writer) return false;
+                    return obj.GetObjectType() == ObjectType.Mod;
+                });
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
                 $"{nameof(RecordTypeConverter)}? recordTypeConverter");
@@ -891,7 +899,6 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"using (var writer = new MutagenWriter(memStream, dispose: false, meta: {nameof(GameConstants)}.{nameof(GameConstants.Get)}(item.GameMode)))");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
                     internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
                 }
                 fg.AppendLine("using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
@@ -1171,7 +1178,6 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
                             args.Add($"importMask: importMask");
-                            args.Add($"modKey: modKey");
                         }
                         args.Add($"recordTypeConverter: recordTypeConverter");
                         if (obj.GetObjectType() != ObjectType.Mod)
@@ -1296,7 +1302,6 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         args.Add($"GroupMask? importMask");
-                        args.Add($"ModKey modKey");
                     }
                     args.Add("RecordTypeConverter? recordTypeConverter");
                     if (obj.GetObjectType() != ObjectType.Mod)
@@ -1308,7 +1313,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
-                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(modKey, item.ModHeader.MasterReferences);");
+                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(item.ModKey, item.ModHeader.MasterReferences);");
                     }
                     if (obj.HasLoquiBaseObject)
                     {
@@ -1482,8 +1487,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
                     fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.GetGroupGetter<T>() => this.GetGroupGetter<T>();");
-                    fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey? modKey) => this.WriteToBinary(path, modKey, importMask: null);");
-                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);");
+                    fg.AppendLine($"void IModGetter.WriteToBinary(string path) => this.WriteToBinary(path, importMask: null);");
+                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path) => this.WriteToBinaryParallel(path);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
                 }
 

@@ -30,9 +30,7 @@ namespace Mutagen.Bethesda.Tests
             using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Import"))
             {
                 var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
-                mod.WriteToBinary(
-                    oblivionOutputPath,
-                    modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                mod.WriteToBinary(oblivionOutputPath);
                 var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, meta: GameConstants.Get(GameMode.Oblivion));
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {
@@ -60,7 +58,6 @@ namespace Mutagen.Bethesda.Tests
                 var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
                 mod.WriteToBinary(
                     oblivionOutputPath,
-                    modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                     importMask: new GroupMask()
                     {
                         NPCs = true

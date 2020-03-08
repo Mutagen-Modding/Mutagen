@@ -39,8 +39,8 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
-            fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);");
-            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);");
+            fg.AppendLine($"void IModGetter.WriteToBinary(string path) => this.WriteToBinary(path, importMask: null);");
+            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path) => this.WriteToBinaryParallel(path);");
 
 
             using (var args = new FunctionWrapper(fg,
@@ -259,7 +259,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"Stream stream");
-                args.Add($"ModKey modKey");
             }
             using (new BraceWrapper(fg))
             {
@@ -268,7 +267,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.AddPassArg("item");
                     args.AddPassArg("stream");
-                    args.AddPassArg("modKey");
                 }
             }
             fg.AppendLine();
@@ -278,7 +276,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"string path");
-                args.Add($"ModKey? modKeyOverride");
             }
             using (new BraceWrapper(fg))
             {
@@ -290,7 +287,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.AddPassArg("item");
                         args.AddPassArg("stream");
-                        args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
                     }
                 }
             }
@@ -371,11 +367,10 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"Stream stream");
-                args.Add($"ModKey modKey");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var masterRefs = new MasterReferences(modKey, item.MasterReferences);");
+                fg.AppendLine($"var masterRefs = new MasterReferences(item.ModKey, item.MasterReferences);");
                 using (var args = new ArgsWrapper(fg,
                     "item.ModHeader.WriteToBinary"))
                 {

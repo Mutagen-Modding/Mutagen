@@ -980,8 +980,8 @@ namespace Mutagen.Bethesda.Skyrim
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
-        void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
-        void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
+        void IModGetter.WriteToBinary(string path) => this.WriteToBinary(path, importMask: null);
+        void IModGetter.WriteToBinaryParallel(string path) => this.WriteToBinaryParallel(path);
         public void AddRecords(
             SkyrimMod rhsMod,
             GroupMask? mask = null)
@@ -1649,26 +1649,22 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void WriteToBinaryParallel(
             this ISkyrimModGetter item,
-            Stream stream,
-            ModKey modKey)
+            Stream stream)
         {
             SkyrimModCommon.WriteParallel(
                 item: item,
-                stream: stream,
-                modKey: modKey);
+                stream: stream);
         }
 
         public static void WriteToBinaryParallel(
             this ISkyrimModGetter item,
-            string path,
-            ModKey? modKeyOverride)
+            string path)
         {
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
                     item: item,
-                    stream: stream,
-                    modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
+                    stream: stream);
             }
         }
 
@@ -2726,10 +2722,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         const int CutCount = 100;
         public static void WriteParallel(
             ISkyrimModGetter item,
-            Stream stream,
-            ModKey modKey)
+            Stream stream)
         {
-            var masterRefs = new MasterReferences(modKey, item.MasterReferences);
+            var masterRefs = new MasterReferences(item.ModKey, item.MasterReferences);
             item.ModHeader.WriteToBinary(
                 new MutagenWriter(stream, GameConstants.Skyrim),
                 masterRefs);
@@ -4047,10 +4042,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            ModKey modKey,
             RecordTypeConverter? recordTypeConverter)
         {
-            MasterReferences masterReferences = new MasterReferences(modKey, item.ModHeader.MasterReferences);
+            MasterReferences masterReferences = new MasterReferences(item.ModKey, item.ModHeader.MasterReferences);
             var ModHeaderItem = item.ModHeader;
             ((ModHeaderBinaryWriteTranslation)((IBinaryItem)ModHeaderItem).BinaryWriteTranslator).Write(
                 item: ModHeaderItem,
@@ -4194,7 +4188,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISkyrimModGetter item,
-            ModKey modKey,
             RecordTypeConverter? recordTypeConverter,
             GroupMask? importMask = null)
         {
@@ -4202,21 +4195,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 importMask: importMask,
-                modKey: modKey,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            ModKey modKey,
             RecordTypeConverter? recordTypeConverter,
             GroupMask? importMask = null)
         {
             Write(
                 item: (ISkyrimModGetter)item,
                 importMask: importMask,
-                modKey: modKey,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -4238,13 +4228,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModGetter item,
             MutagenWriter writer,
-            ModKey modKey,
             GroupMask? importMask = null)
         {
             SkyrimModBinaryWriteTranslation.Instance.Write(
                 item: item,
                 importMask: importMask,
-                modKey: modKey,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -4252,18 +4240,15 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModGetter item,
             string path,
-            ModKey? modKeyOverride = null,
             GroupMask? importMask = null)
         {
             using (var memStream = new MemoryTributary())
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false, meta: GameConstants.Get(item.GameMode)))
                 {
-                    var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                     SkyrimModBinaryWriteTranslation.Instance.Write(
                         item: item,
                         importMask: importMask,
-                        modKey: modKey,
                         writer: writer,
                         recordTypeConverter: null);
                 }
@@ -4278,7 +4263,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModGetter item,
             Stream stream,
-            ModKey modKey,
             GroupMask? importMask = null)
         {
             using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
@@ -4286,7 +4270,6 @@ namespace Mutagen.Bethesda.Skyrim
                 SkyrimModBinaryWriteTranslation.Instance.Write(
                     item: item,
                     importMask: importMask,
-                    modKey: modKey,
                     writer: writer,
                     recordTypeConverter: null);
             }
@@ -4324,8 +4307,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
-        void IModGetter.WriteToBinary(string path, ModKey? modKey) => this.WriteToBinary(path, modKey, importMask: null);
-        void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);
+        void IModGetter.WriteToBinary(string path) => this.WriteToBinary(path, importMask: null);
+        void IModGetter.WriteToBinaryParallel(string path) => this.WriteToBinaryParallel(path);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);
         [DebuggerStepThrough]

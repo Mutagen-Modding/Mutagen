@@ -68,9 +68,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             var mod = OblivionModBinaryOverlay.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
                 ModKey);
-            mod.WriteToBinary(
-                BinaryPath,
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+            mod.WriteToBinary(BinaryPath);
         }
 
         [Benchmark]
@@ -81,9 +79,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 new MemorySlice<byte>(bytes),
                 ModKey);
             DataOutput.Position = 0;
-            mod.WriteToBinary(
-                DataOutput,
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+            mod.WriteToBinary(DataOutput);
         }
 
         [Benchmark]
@@ -93,9 +89,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             var mod = OblivionModBinaryOverlay.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
                 ModKey);
-            mod.WriteToBinaryParallel(
-                BinaryPath,
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+            mod.WriteToBinaryParallel(BinaryPath);
         }
 
         [Benchmark]
@@ -106,9 +100,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 new MemorySlice<byte>(bytes),
                 ModKey);
             DataOutput.Position = 0;
-            mod.WriteToBinaryParallel(
-                DataOutput,
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+            mod.WriteToBinaryParallel(DataOutput);
         }
 
         [Benchmark]
@@ -121,26 +113,20 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public void WriteBinaryToMemory()
         {
             DataOutput.Position = 0;
-            Mod.WriteToBinary(
-                DataOutput,
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+            Mod.WriteToBinary(DataOutput);
         }
 
         [Benchmark]
         public void WriteBinaryParallelToDisk()
         {
-            Mod.WriteToBinaryParallel(
-                BinaryPath,
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+            Mod.WriteToBinaryParallel(BinaryPath);
         }
 
         [Benchmark]
         public void WriteBinaryParallelToMemory()
         {
             DataOutput.Position = 0;
-            Mod.WriteToBinaryParallel(
-                DataOutput,
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+            Mod.WriteToBinaryParallel(DataOutput);
         }
     }
 }
