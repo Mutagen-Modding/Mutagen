@@ -39,8 +39,8 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
-            fg.AppendLine($"void IModGetter.WriteToBinary(string path) => this.WriteToBinary(path, importMask: null);");
-            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path) => this.WriteToBinaryParallel(path);");
+            fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
+            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param);");
 
 
             using (var args = new FunctionWrapper(fg,
@@ -259,6 +259,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"Stream stream");
+                args.Add($"{nameof(BinaryWriteParameters)}? param = null");
             }
             using (new BraceWrapper(fg))
             {
@@ -267,6 +268,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.AddPassArg("item");
                     args.AddPassArg("stream");
+                    args.Add($"param: param ?? {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)}");
+                    args.Add("modKey: item.ModKey");
                 }
             }
             fg.AppendLine();
@@ -276,9 +279,17 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"string path");
+                args.Add($"{nameof(BinaryWriteParameters)}? param = null");
             }
             using (new BraceWrapper(fg))
             {
+                fg.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
+                using (var args = new ArgsWrapper(fg,
+                    $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
+                {
+                    args.Add("mod: item");
+                    args.AddPassArg("path");
+                }
                 fg.AppendLine("using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))
                 {
@@ -287,6 +298,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.AddPassArg("item");
                         args.AddPassArg("stream");
+                        args.Add($"param: param");
+                        args.AddPassArg("modKey");
                     }
                 }
             }
@@ -367,12 +380,16 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"Stream stream");
+                args.Add($"{nameof(BinaryWriteParameters)} param");
+                args.Add($"ModKey modKey");
             }
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"var masterRefs = new MasterReferences(item.ModKey, item.MasterReferences);");
+                fg.AppendLine($"var modHeader = item.ModHeader.DeepCopy() as ModHeader;");
+                fg.AppendLine($"modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);");
                 using (var args = new ArgsWrapper(fg,
-                    "item.ModHeader.WriteToBinary"))
+                    "modHeader.WriteToBinary"))
                 {
                     args.Add($"new MutagenWriter(stream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode})");
                     args.Add($"masterRefs");

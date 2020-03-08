@@ -131,6 +131,14 @@ namespace Mutagen.Bethesda.Generation
                     if (dir == TranslationDirection.Writer) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
+            var writeParamOptional = new APILine(
+                nicknameKey: "WriteParamOptional",
+                resolutionString: $"{nameof(BinaryWriteParameters)}? param = null",
+                when: (obj, dir) =>
+                {
+                    if (dir == TranslationDirection.Reader) return false;
+                    return obj.GetObjectType() == ObjectType.Mod;
+                });
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
                 $"{nameof(RecordTypeConverter)}? recordTypeConverter");
@@ -142,7 +150,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         CustomMethodAPI.FactoryPublic(masterRefs),
                         CustomMethodAPI.FactoryPublic(modKey),
-                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null")
+                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
+                        CustomMethodAPI.FactoryPublic(writeParamOptional),
                     }),
                 readerAPI: new MethodAPI(
                     majorAPI: new APILine[] { new APILine("MutagenFrame", "MutagenFrame frame") },
@@ -151,7 +160,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         CustomMethodAPI.FactoryPublic(masterRefs),
                         CustomMethodAPI.FactoryPublic(modKey),
-                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null")
+                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
+                        CustomMethodAPI.FactoryPublic(writeParamOptional),
                     }));
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(
@@ -161,7 +171,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             CustomMethodAPI.FactoryPublic(masterRefs),
                         },
-                        optionalAPI: modKeyOptional.And(modAPILines).ToArray()))
+                        optionalAPI: modKeyOptional.AndSingle(writeParamOptional).And(modAPILines).ToArray()))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -177,6 +187,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             CustomMethodAPI.FactoryPublic(masterRefs),
                             CustomMethodAPI.FactoryPublic(modKey),
+                            CustomMethodAPI.FactoryPublic(writeParamOptional),
                         },
                         optionalAPI: modAPILines))
                 {
@@ -893,6 +904,13 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
+            fg.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
+            using (var args = new ArgsWrapper(fg,
+                $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
+            {
+                args.Add("mod: item");
+                args.AddPassArg("path");
+            }
             fg.AppendLine("using (var memStream = new MemoryTributary())");
             using (new BraceWrapper(fg))
             {
@@ -1487,8 +1505,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
                     fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.GetGroupGetter<T>() => this.GetGroupGetter<T>();");
-                    fg.AppendLine($"void IModGetter.WriteToBinary(string path) => this.WriteToBinary(path, importMask: null);");
-                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path) => this.WriteToBinaryParallel(path);");
+                    fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
+                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param: param);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
                 }
 

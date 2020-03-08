@@ -161,6 +161,11 @@ namespace Mutagen.Bethesda.Tests
 
                 List<Exception> delayedExceptions = new List<Exception>();
 
+                var writeParams = new BinaryWriteParameters()
+                {
+                    MasterFlagMatch = BinaryWriteParameters.MasterFlagMatchOption.NoCheck
+                };
+
                 // Do normal
                 if (Settings.TestNormal)
                 {
@@ -171,7 +176,7 @@ namespace Mutagen.Bethesda.Tests
                         record.IsCompressed = false;
                     }
 
-                    mod.WriteToBinaryParallel(outputPath);
+                    mod.WriteToBinaryParallel(outputPath, writeParams);
                     GC.Collect();
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
@@ -198,7 +203,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
                     {
-                        wrapper.WriteToBinary(binaryOverlayPath);
+                        wrapper.WriteToBinary(binaryOverlayPath, writeParams);
                     }
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
@@ -240,7 +245,7 @@ namespace Mutagen.Bethesda.Tests
                 if (Settings.TestCopyIn)
                 {
                     var copyIn = await ImportCopyIn(this.FilePath.Path);
-                    copyIn.WriteToBinary(copyInPath);
+                    copyIn.WriteToBinary(copyInPath, writeParams);
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {

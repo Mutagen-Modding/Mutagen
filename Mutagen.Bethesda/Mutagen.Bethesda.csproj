@@ -49,6 +49,7 @@
     <Compile Include="Core\Links\ILinkCache.cs" />
     <Compile Include="Core\Links\LoadOrderLinkCache.cs" />
     <Compile Include="Core\LoadOrder.cs" />
+    <Compile Include="Core\Structs\BinaryWriteParameters.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Core\MajorRecordInstantiator.cs" />
     <Compile Include="Core\Structs\ModIndex.cs" />

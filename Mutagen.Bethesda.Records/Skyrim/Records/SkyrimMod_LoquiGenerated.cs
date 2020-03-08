@@ -980,8 +980,8 @@ namespace Mutagen.Bethesda.Skyrim
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
-        void IModGetter.WriteToBinary(string path) => this.WriteToBinary(path, importMask: null);
-        void IModGetter.WriteToBinaryParallel(string path) => this.WriteToBinaryParallel(path);
+        void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
         public void AddRecords(
             SkyrimMod rhsMod,
             GroupMask? mask = null)
@@ -1649,22 +1649,32 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void WriteToBinaryParallel(
             this ISkyrimModGetter item,
-            Stream stream)
+            Stream stream,
+            BinaryWriteParameters? param = null)
         {
             SkyrimModCommon.WriteParallel(
                 item: item,
-                stream: stream);
+                stream: stream,
+                param: param ?? BinaryWriteParameters.Default,
+                modKey: item.ModKey);
         }
 
         public static void WriteToBinaryParallel(
             this ISkyrimModGetter item,
-            string path)
+            string path,
+            BinaryWriteParameters? param = null)
         {
+            param ??= BinaryWriteParameters.Default;
+            var modKey = param.RunMasterMatch(
+                mod: item,
+                path: path);
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
                     item: item,
-                    stream: stream);
+                    stream: stream,
+                    param: param,
+                    modKey: modKey);
             }
         }
 
@@ -2722,10 +2732,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         const int CutCount = 100;
         public static void WriteParallel(
             ISkyrimModGetter item,
-            Stream stream)
+            Stream stream,
+            BinaryWriteParameters param,
+            ModKey modKey)
         {
             var masterRefs = new MasterReferences(item.ModKey, item.MasterReferences);
-            item.ModHeader.WriteToBinary(
+            var modHeader = item.ModHeader.DeepCopy() as ModHeader;
+            modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
+            modHeader.WriteToBinary(
                 new MutagenWriter(stream, GameConstants.Skyrim),
                 masterRefs);
             Stream[] outputStreams = new Stream[11];
@@ -4189,6 +4203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimModGetter item,
             RecordTypeConverter? recordTypeConverter,
+            BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
             Write_RecordTypes(
@@ -4202,12 +4217,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             RecordTypeConverter? recordTypeConverter,
+            BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
             Write(
                 item: (ISkyrimModGetter)item,
                 importMask: importMask,
                 writer: writer,
+                param: param,
                 recordTypeConverter: recordTypeConverter);
         }
 
@@ -4228,20 +4245,27 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModGetter item,
             MutagenWriter writer,
+            BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
             SkyrimModBinaryWriteTranslation.Instance.Write(
                 item: item,
                 importMask: importMask,
                 writer: writer,
+                param: param,
                 recordTypeConverter: null);
         }
 
         public static void WriteToBinary(
             this ISkyrimModGetter item,
             string path,
+            BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
+            param ??= BinaryWriteParameters.Default;
+            var modKey = param.RunMasterMatch(
+                mod: item,
+                path: path);
             using (var memStream = new MemoryTributary())
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false, meta: GameConstants.Get(item.GameMode)))
@@ -4250,6 +4274,7 @@ namespace Mutagen.Bethesda.Skyrim
                         item: item,
                         importMask: importMask,
                         writer: writer,
+                        param: param,
                         recordTypeConverter: null);
                 }
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
@@ -4263,6 +4288,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModGetter item,
             Stream stream,
+            BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
             using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
@@ -4271,6 +4297,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item: item,
                     importMask: importMask,
                     writer: writer,
+                    param: param,
                     recordTypeConverter: null);
             }
         }
@@ -4307,8 +4334,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
-        void IModGetter.WriteToBinary(string path) => this.WriteToBinary(path, importMask: null);
-        void IModGetter.WriteToBinaryParallel(string path) => this.WriteToBinaryParallel(path);
+        void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);
         [DebuggerStepThrough]
