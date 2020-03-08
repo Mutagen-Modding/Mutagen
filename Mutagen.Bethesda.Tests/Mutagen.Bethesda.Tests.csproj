@@ -22,7 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Records\Mutagen.Bethesda.Records.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarks\Benchmarks.cs" />

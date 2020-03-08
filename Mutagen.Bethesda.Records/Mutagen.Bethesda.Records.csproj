@@ -979,6 +979,6 @@
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.3.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
   </ItemGroup>
 </Project>
