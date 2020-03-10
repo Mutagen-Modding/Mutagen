@@ -159,6 +159,10 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"recordTypeConverter: null");
                         args.Add($"masterReferences: masterReferences");
                     }
+                    if (loquiGen.Name == "ModHeader")
+                    {
+                        fg.AppendLine("masterReferences.SetTo(item.ModHeader.MasterReferences);");
+                    }
                 }
                 else
                 {

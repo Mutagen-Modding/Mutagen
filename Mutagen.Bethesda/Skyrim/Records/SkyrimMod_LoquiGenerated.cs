@@ -2263,6 +2263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         recordTypeConverter: null,
                         masterReferences: masterReferences);
+                    masterReferences.SetTo(item.ModHeader.MasterReferences);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
                 }
                 case 0x54534D47: // GMST
@@ -4510,14 +4511,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x34534554: // TES4
                 {
                     _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    _package.MasterReferences.Masters = 
+                    _package.MasterReferences.SetTo(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
                             {
                                 Master = master.Master,
                                 FileSize = master.FileSize,
-                            })
-                        .ToList();
+                            }));
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
                 }
                 case 0x54534D47: // GMST

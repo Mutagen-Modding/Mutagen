@@ -2090,20 +2090,22 @@ namespace Mutagen.Bethesda.Generation
                                                 if (obj.GetObjectType() == ObjectType.Mod
                                                     && field.Field.Name == "ModHeader")
                                                 {
-                                                    fg.AppendLine("_package.MasterReferences.Masters = ");
-                                                    using (new DepthWrapper(fg))
+                                                    using (var args = new ArgsWrapper(fg,
+                                                        "_package.MasterReferences.SetTo"))
                                                     {
-                                                        fg.AppendLine("this.ModHeader.MasterReferences.Select(");
-                                                        using (new DepthWrapper(fg))
+                                                        args.Add(subFg =>
                                                         {
-                                                            fg.AppendLine($"master => new {nameof(MasterReference)}()");
-                                                            using (new BraceWrapper(fg) { AppendParenthesis = true })
+                                                            subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
+                                                            using (new DepthWrapper(subFg))
                                                             {
-                                                                fg.AppendLine("Master = master.Master,");
-                                                                fg.AppendLine("FileSize = master.FileSize,");
+                                                                subFg.AppendLine($"master => new {nameof(MasterReference)}()");
+                                                                using (new BraceWrapper(subFg) { AppendParenthesis = true })
+                                                                {
+                                                                    subFg.AppendLine("Master = master.Master,");
+                                                                    subFg.AppendLine("FileSize = master.FileSize,");
+                                                                }
                                                             }
-                                                        }
-                                                        fg.AppendLine(".ToList();");
+                                                        });
                                                     }
                                                 }
                                             });

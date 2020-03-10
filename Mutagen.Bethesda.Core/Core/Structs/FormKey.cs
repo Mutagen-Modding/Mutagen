@@ -110,23 +110,6 @@ namespace Mutagen.Bethesda
             return ID.ToString("X6");
         }
 
-        public FormID GetFormID(MasterReferenceReader list)
-        {
-            for (byte i = 0; i < list.Masters.Count; i++)
-            {
-                if (list.Masters[i].Master == this.ModKey)
-                {
-                    return new FormID(
-                        new ModID(i),
-                        this.ID);
-                }
-            }
-
-            return new FormID(
-                new ModID((byte)list.Masters.Count),
-                this.ID);
-        }
-
         public override bool Equals(object other)
         {
             if (!(other is FormKey key)) return false;
