@@ -13,7 +13,8 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             out FormKey item,
-            MasterReferenceReader masterReferences)
+            MasterReferenceReader masterReferences,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))
             {
@@ -26,7 +27,8 @@ namespace Mutagen.Bethesda.Binary
 
         public FormKey Parse(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MasterReferenceReader masterReferences,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))
             {
@@ -38,7 +40,8 @@ namespace Mutagen.Bethesda.Binary
         public FormKey Parse(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            FormKey defaultVal)
+            FormKey defaultVal,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))
             {
@@ -50,7 +53,8 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse<T>(
             MutagenFrame frame,
             out IFormLink<T> item,
-            MasterReferenceReader masterReferences)
+            MasterReferenceReader masterReferences,
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))

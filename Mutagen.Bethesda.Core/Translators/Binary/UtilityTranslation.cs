@@ -25,7 +25,8 @@ namespace Mutagen.Bethesda
         public delegate bool BinaryMasterParseDelegate<T>(
             MutagenFrame reader,
             out T item,
-            MasterReferenceReader masterReferences);
+            MasterReferenceReader masterReferences,
+            RecordTypeConverter? recordTypeConverter);
         public delegate bool BinarySubParseRecordDelegate<T>(
             MutagenFrame reader,
             RecordType header,
@@ -36,7 +37,8 @@ namespace Mutagen.Bethesda
         public delegate void BinaryMasterWriteDelegate<T>(
             MutagenWriter writer,
             T item,
-            MasterReferenceReader masterReferences);
+            MasterReferenceReader masterReferences,
+            RecordTypeConverter? recordTypeConverter);
 
         public delegate void RecordStructFill<R>(
             R record,
