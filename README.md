@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/leviathan1753/Mutagen/_apis/build/status/Noggog.Loqui?branchName=master)](https://dev.azure.com/leviathan1753/Mutagen/_build/latest?definitionId=4&branchName=master) [![NuGet Stats](https://img.shields.io/nuget/v/Mutagen.Bethesda.svg)](https://www.nuget.org/packages/Mutagen.Bethesda)
+
 # Mutagen
 Mutagen is a C# library for analyzing, modifying, and creating Bethesda mods. One of its main features is offering interfaces and classes for the records that exist at compile time and are first class citizens in C#. With actual members for each field they get the benefits of type safety, simple live debugging, Intellisense features such as autocomplete. The interfaces offer clean API to the user and abstract away much of the binary record specifics and oddities of how they are stored on disk, while the actual implementation remains very closely tied to the data offering as much speed as it can by leveraging some of the latest C# features. Most of the public facing API is created by code generation, with small manual snippets of code for the one-off special cases. This means the library is able to provide consistent API with very little manual work when adding new record definitions or features.
 
@@ -31,12 +33,11 @@ Check out the [Wiki](https://github.com/Noggog/Mutagen/wiki) for more detailed e
 
 [Generated Record Suite API](https://github.com/Noggog/Mutagen/wiki/Generated-Record-Suite)
 
-[Examples](https://github.com/Noggog/Mutagen/wiki/Examples)
+[Examples Wiki](https://github.com/Noggog/Mutagen/wiki/Examples)
+
+[Example Project](https://github.com/Noggog/Mutagen.Examples)
 
 ## Installing Mutagen
-Mutagen can be added to your C# project via NuGet.  Search for it in Visual Studio, or find it [here]().
+Mutagen can be added to your C# project via NuGet, under the package name `Mutagen.Bethesda`.  Search for it in Visual Studio, or find it [here](https://www.nuget.org/packages/Mutagen.Bethesda/).
 
 Please check out [Setting Up Your First Project](https://github.com/Noggog/Mutagen/wiki/Setting-Up-Your-First-Project) to get you started.
-
-## Cloning Mutagen Source
-Instructions for cloning and building Mutagen source code can be found on the [Cloning Mutagen](https://github.com/Noggog/Mutagen/wiki/Cloning-Mutagen) page.
