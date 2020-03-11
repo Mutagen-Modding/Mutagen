@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -28,6 +31,25 @@ namespace Mutagen.Bethesda.Skyrim
             return new FormKey(
                 this.ModKey,
                 this.ModHeader.Stats.NextObjectID++);
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class SkyrimModBinaryWriteTranslation
+        {
+            public static void WriteModHeader(
+                IModHeaderGetter header,
+                MutagenWriter writer,
+                ModKey modKey,
+                MasterReferenceReader masterReferences)
+            {
+                var modHeader = header.DeepCopy() as ModHeader;
+                modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
+                modHeader.WriteToBinary(
+                    writer: writer,
+                    masterReferences: masterReferences);
+            }
         }
     }
 }

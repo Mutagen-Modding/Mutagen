@@ -124,6 +124,14 @@ namespace Mutagen.Bethesda.Generation
                     if (dir == TranslationDirection.Writer) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
+            var modKeyWriter = new APILine(
+                nicknameKey: "ModKeyWriter",
+                resolutionString: "ModKey modKey",
+                when: (obj, dir) =>
+                {
+                    if (dir == TranslationDirection.Reader) return false;
+                    return obj.GetObjectType() == ObjectType.Mod;
+                });
             var modKeyOptional = new APILine(
                 nicknameKey: "ModKeyOptional",
                 resolutionString: "ModKey? modKeyOverride = null",
@@ -151,6 +159,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         CustomMethodAPI.FactoryPublic(masterRefs),
                         CustomMethodAPI.FactoryPublic(modKey),
+                        CustomMethodAPI.FactoryPrivate(modKeyWriter, "modKey"),
                         CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
                         CustomMethodAPI.FactoryPublic(writeParamOptional),
                     }),
@@ -161,6 +170,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         CustomMethodAPI.FactoryPublic(masterRefs),
                         CustomMethodAPI.FactoryPublic(modKey),
+                        CustomMethodAPI.FactoryPrivate(modKeyWriter, "modKey"),
                         CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
                         CustomMethodAPI.FactoryPublic(writeParamOptional),
                     }));
@@ -225,6 +235,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
+            fg.AppendLine("var modKey = item.ModKey;");
             fg.AppendLine("using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))");
             using (new BraceWrapper(fg))
             {
@@ -1197,6 +1208,7 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
                             args.Add($"importMask: importMask");
+                            args.AddPassArg($"modKey");
                         }
                         args.Add($"recordTypeConverter: recordTypeConverter");
                         if (obj.GetObjectType() != ObjectType.Mod)
@@ -1321,6 +1333,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         args.Add($"GroupMask? importMask");
+                        args.Add($"ModKey modKey");
                     }
                     args.Add("RecordTypeConverter? recordTypeConverter");
                     if (obj.GetObjectType() != ObjectType.Mod)
@@ -1446,8 +1459,26 @@ namespace Mutagen.Bethesda.Generation
                             if (!generator.ShouldGenerateWrite(field)) continue;
                             if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                             if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
+
+                            var loqui = field as LoquiType;
+
+                            // Custom Modheader insert
+                            if (loqui != null
+                                && loqui.Name == "ModHeader")
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    $"WriteModHeader"))
+                                {
+                                    args.Add("header: item.ModHeader");
+                                    args.AddPassArg("writer");
+                                    args.AddPassArg("modKey");
+                                    args.AddPassArg("masterReferences");
+                                }
+                                continue;
+                            }
+
                             bool doIf = true;
-                            if (field is LoquiType loqui
+                            if (loqui != null
                                 && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group
                                 && obj.GetObjectType() == ObjectType.Mod)
                             {
@@ -2133,6 +2164,12 @@ namespace Mutagen.Bethesda.Generation
                 await GenerateCreateExtras(obj, fg);
             }
             await base.GenerateInCommon(obj, fg, maskTypes);
+        }
+
+        public override void CustomMainWriteMixInPreLoad(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            fg.AppendLine("var modKey = item.ModKey;");
         }
     }
 }

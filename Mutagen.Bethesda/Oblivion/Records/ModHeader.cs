@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mutagen.Bethesda.Binary;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

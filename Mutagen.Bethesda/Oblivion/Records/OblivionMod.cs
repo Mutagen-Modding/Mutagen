@@ -97,6 +97,22 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
+        public partial class OblivionModBinaryWriteTranslation
+        {
+            public static void WriteModHeader(
+                IModHeaderGetter header,
+                MutagenWriter writer,
+                ModKey modKey,
+                MasterReferenceReader masterReferences)
+            {
+                var modHeader = header.DeepCopy() as ModHeader;
+                modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
+                modHeader.WriteToBinary(
+                    writer: writer,
+                    masterReferences: masterReferences);
+            }
+        }
+
         public partial class OblivionModCommon
         {
             public static void WriteCellsParallel(

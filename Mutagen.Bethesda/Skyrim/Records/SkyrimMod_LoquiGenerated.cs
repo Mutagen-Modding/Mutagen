@@ -4056,15 +4056,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
+            ModKey modKey,
             RecordTypeConverter? recordTypeConverter)
         {
             MasterReferenceReader masterReferences = new MasterReferenceReader(item.ModKey, item.ModHeader.MasterReferences);
-            var ModHeaderItem = item.ModHeader;
-            ((ModHeaderBinaryWriteTranslation)((IBinaryItem)ModHeaderItem).BinaryWriteTranslator).Write(
-                item: ModHeaderItem,
+            WriteModHeader(
+                header: item.ModHeader,
                 writer: writer,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+                modKey: modKey,
+                masterReferences: masterReferences);
             if (importMask?.GameSettings ?? true)
             {
                 if (item.GameSettings.RecordCache.Count > 0)
@@ -4202,6 +4202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISkyrimModGetter item,
+            ModKey modKey,
             RecordTypeConverter? recordTypeConverter,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
@@ -4210,12 +4211,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 importMask: importMask,
+                modKey: modKey,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
+            ModKey modKey,
             RecordTypeConverter? recordTypeConverter,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
@@ -4225,6 +4228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 importMask: importMask,
                 writer: writer,
                 param: param,
+                modKey: modKey,
                 recordTypeConverter: recordTypeConverter);
         }
 
@@ -4248,11 +4252,13 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
+            var modKey = item.ModKey;
             SkyrimModBinaryWriteTranslation.Instance.Write(
                 item: item,
                 importMask: importMask,
                 writer: writer,
                 param: param,
+                modKey: modKey,
                 recordTypeConverter: null);
         }
 
@@ -4275,6 +4281,7 @@ namespace Mutagen.Bethesda.Skyrim
                         importMask: importMask,
                         writer: writer,
                         param: param,
+                        modKey: modKey,
                         recordTypeConverter: null);
                 }
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
@@ -4291,6 +4298,7 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
+            var modKey = item.ModKey;
             using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
             {
                 SkyrimModBinaryWriteTranslation.Instance.Write(
@@ -4298,6 +4306,7 @@ namespace Mutagen.Bethesda.Skyrim
                     importMask: importMask,
                     writer: writer,
                     param: param,
+                    modKey: modKey,
                     recordTypeConverter: null);
             }
         }
