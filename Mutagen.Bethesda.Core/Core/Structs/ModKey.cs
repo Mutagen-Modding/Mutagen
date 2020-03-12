@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda
 
         public override string ToString()
         {
-            return $"{Name}.{(this.Master ? "esm" : "esp")}";
+            return string.IsNullOrWhiteSpace(Name) ? "Null" : $"{Name}.{(this.Master ? "esm" : "esp")}";
         }
 
         public static bool TryFactory(string str, [MaybeNullWhen(false)]out ModKey modKey)

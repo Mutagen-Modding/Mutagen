@@ -132,5 +132,11 @@ namespace Mutagen.Bethesda
         {
             this.EDID = Null;
         }
+
+        public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
+        {
+            modKey = default!;
+            return false;
+        }
     }
 }

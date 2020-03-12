@@ -1,6 +1,7 @@
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Mutagen.Bethesda
     public interface ILinkGetter
     {
         Type TargetType { get; }
+        bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey);
         bool TryResolveFormKey<M>(ILinkCache<M> package, out FormKey formKey) where M : IModGetter;
         bool TryResolveCommon<M>(ILinkCache<M> package, out IMajorRecordCommonGetter majorRecord) where M : IModGetter;
     }

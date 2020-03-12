@@ -100,13 +100,24 @@ namespace Mutagen.Bethesda.Oblivion
         public partial class OblivionModBinaryWriteTranslation
         {
             public static void WriteModHeader(
-                IModHeaderGetter header,
+                IOblivionModGetter mod,
                 MutagenWriter writer,
                 ModKey modKey,
+                BinaryWriteParameters param,
                 MasterReferenceReader masterReferences)
             {
-                var modHeader = header.DeepCopy() as ModHeader;
+                var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
                 modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
+                switch (param.MastersListSync)
+                {
+                    case BinaryWriteParameters.MastersListSyncOption.NoCheck:
+                        break;
+                    case BinaryWriteParameters.MastersListSyncOption.Iterate:
+                        modHeader.MasterReferences.SetTo(masterReferences.Masters.Select(m => m.DeepCopy()));
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
                 modHeader.WriteToBinary(
                     writer: writer,
                     masterReferences: masterReferences);

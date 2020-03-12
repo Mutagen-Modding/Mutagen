@@ -62,6 +62,10 @@ namespace Mutagen.Bethesda.Internals
                     index,
                     key.ID);
             }
+            if (key == FormKey.Null)
+            {
+                return FormID.Null;
+            }
             throw new ArgumentException($"Could not map FormKey to a master index: {key}");
         }
     }

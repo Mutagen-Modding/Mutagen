@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda
 {
     public struct FormID : IEquatable<FormID>
     {
-        public static readonly FormID NULL = new FormID();
+        public static readonly FormID Null = new FormID();
         public readonly uint Raw;
         public ModID ModID => new ModID(ModID.GetModIDByteFromUInt(this.Raw));
         public uint ID => this.Raw & 0x00FFFFFF;

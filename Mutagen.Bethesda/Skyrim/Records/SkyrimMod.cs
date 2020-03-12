@@ -39,13 +39,34 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class SkyrimModBinaryWriteTranslation
         {
             public static void WriteModHeader(
-                IModHeaderGetter header,
+                ISkyrimModGetter mod,
                 MutagenWriter writer,
                 ModKey modKey,
+                BinaryWriteParameters param,
                 MasterReferenceReader masterReferences)
             {
-                var modHeader = header.DeepCopy() as ModHeader;
+                var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
                 modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
+                param ??= BinaryWriteParameters.Default;
+                HashSet<ModKey> modKeys = new HashSet<ModKey>(); 
+                switch (param.MastersListSync)
+                {
+                    case BinaryWriteParameters.MastersListSyncOption.NoCheck:
+                        modKeys.Add(modHeader.MasterReferences.Select(m => m.Master));
+                        break;
+                    case BinaryWriteParameters.MastersListSyncOption.Iterate:
+                        modKeys.Add(mod.Links.SelectWhere(l =>
+                        {
+                            if (l.TryGetModKey(out var modKey))
+                            {
+                                return TryGet<ModKey>.Succeed(modKey);
+                            }
+                            return TryGet<ModKey>.Failure;
+                        }));
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
                 modHeader.WriteToBinary(
                     writer: writer,
                     masterReferences: masterReferences);

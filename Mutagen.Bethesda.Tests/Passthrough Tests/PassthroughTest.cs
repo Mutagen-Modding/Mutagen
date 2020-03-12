@@ -163,7 +163,8 @@ namespace Mutagen.Bethesda.Tests
 
                 var writeParams = new BinaryWriteParameters()
                 {
-                    MasterFlagMatch = BinaryWriteParameters.MasterFlagMatchOption.NoCheck
+                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                    MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 };
 
                 // Do normal

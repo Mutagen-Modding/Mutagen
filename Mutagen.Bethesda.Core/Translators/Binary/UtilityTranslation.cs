@@ -308,6 +308,39 @@ namespace Mutagen.Bethesda
             return record;
         }
 
+        public static MasterReferenceReader ConstructWriteMasters(IModGetter mod, BinaryWriteParameters param)
+        {
+            MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
+            HashSet<ModKey> modKeys = new HashSet<ModKey>();
+            switch (param.MastersListSync)
+            {
+                case BinaryWriteParameters.MastersListSyncOption.NoCheck:
+                    modKeys.Add(mod.MasterReferences.Select(m => m.Master));
+                    break;
+                case BinaryWriteParameters.MastersListSyncOption.Iterate:
+                    modKeys.Add(
+                        mod.Links.SelectWhere(l =>
+                        {
+                            if (l.TryGetModKey(out var modKey))
+                            {
+                                return TryGet<ModKey>.Succeed(modKey);
+                            }
+                            return TryGet<ModKey>.Failure;
+                        })
+                        .And(mod.EnumerateMajorRecords().Select(m => m.FormKey.ModKey)));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            modKeys.Remove(mod.ModKey);
+            modKeys.Remove(ModKey.Null);
+            ret.SetTo(modKeys.Select(m => new MasterReference()
+            {
+                Master = m
+            }));
+            return ret;
+        }
+
         public static ReadOnlyMemorySlice<byte> DecompressSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
         {
             var majorMeta = meta.MajorRecord(slice);

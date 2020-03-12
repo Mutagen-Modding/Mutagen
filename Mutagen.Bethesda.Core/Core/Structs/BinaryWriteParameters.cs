@@ -9,7 +9,10 @@ namespace Mutagen.Bethesda
     {
         public static BinaryWriteParameters Default = new BinaryWriteParameters();
 
-        public enum MasterFlagMatchOption
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod's master flag in sync
+        /// </summary>
+        public enum MasterFlagSyncOption
         {
             /// <summary>
             // Do no check
@@ -26,26 +29,46 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Parameter to specify what logic to use to keep the mod's master flag in sync
+        /// Flag to specify what logic to use to keep a mod's master list in sync
         /// </summary>
-        public MasterFlagMatchOption MasterFlagMatch = MasterFlagMatchOption.ThrowIfMisaligned;
+        public enum MastersListSyncOption
+        {
+            /// <summary>
+            // Do no check
+            /// </summary>
+            NoCheck,
+            /// <summary>
+            /// Iterate source mod before writing to compile the list of masters to use.
+            /// </summary>
+            Iterate,
+        }
+
+        /// <summary>
+        /// Logic to use to keep a mod's master flag in sync
+        /// </summary>
+        public MasterFlagSyncOption MasterFlagSync = MasterFlagSyncOption.ThrowIfMisaligned;
+
+        /// <summary>
+        /// Logic to use to keep a mod's master list in sync
+        /// </summary>
+        public MastersListSyncOption MastersListSync = MastersListSyncOption.Iterate;
 
         public ModKey RunMasterMatch(IModGetter mod, string path)
         {
-            if (MasterFlagMatch == MasterFlagMatchOption.NoCheck) return mod.ModKey;
+            if (MasterFlagSync == MasterFlagSyncOption.NoCheck) return mod.ModKey;
             if (!ModKey.TryFactory(Path.GetFileName(path), out var pathModKey))
             {
                 throw new ArgumentException($"Could not convert path to a ModKey to compare against: {Path.GetFileName(path)}");
             }
-            switch (MasterFlagMatch)
+            switch (MasterFlagSync)
             {
-                case MasterFlagMatchOption.ThrowIfMisaligned:
+                case MasterFlagSyncOption.ThrowIfMisaligned:
                     if (mod.ModKey != pathModKey)
                     {
                         throw new ArgumentException($"ModKeys were misaligned: {mod.ModKey} != {pathModKey}");
                     }
                     return mod.ModKey;
-                case MasterFlagMatchOption.CorrectToPath:
+                case MasterFlagSyncOption.CorrectToPath:
                     return pathModKey;
                 default:
                     throw new NotImplementedException();

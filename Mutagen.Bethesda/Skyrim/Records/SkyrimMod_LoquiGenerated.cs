@@ -4058,13 +4058,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             GroupMask? importMask,
             ModKey modKey,
-            RecordTypeConverter? recordTypeConverter)
+            BinaryWriteParameters param,
+            RecordTypeConverter? recordTypeConverter,
+            MasterReferenceReader masterReferences)
         {
-            MasterReferenceReader masterReferences = new MasterReferenceReader(item.ModKey, item.ModHeader.MasterReferences);
             WriteModHeader(
-                header: item.ModHeader,
+                mod: item,
                 writer: writer,
                 modKey: modKey,
+                param: param,
                 masterReferences: masterReferences);
             if (importMask?.GameSettings ?? true)
             {
@@ -4208,12 +4210,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
+            param ??= BinaryWriteParameters.Default;
+            var masterReferences = UtilityTranslation.ConstructWriteMasters(item, param);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
                 importMask: importMask,
                 modKey: modKey,
-                recordTypeConverter: recordTypeConverter);
+                param: param,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences);
         }
 
         public void Write(

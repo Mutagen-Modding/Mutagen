@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IModGetter : IMajorRecordGetterEnumerable
+    public interface IModGetter : IMajorRecordGetterEnumerable, ILinkContainer
     {
         GameMode GameMode { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
         ModKey ModKey { get; }
     }
 
-    public interface IMod : IModGetter, ILinkContainer, IMajorRecordEnumerable
+    public interface IMod : IModGetter, IMajorRecordEnumerable
     {
         new IList<MasterReference> MasterReferences { get; }
         ICache<T, FormKey> GetGroup<T>() where T : IMajorRecordCommon;

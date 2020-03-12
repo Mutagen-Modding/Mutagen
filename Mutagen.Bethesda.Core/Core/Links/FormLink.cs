@@ -107,5 +107,12 @@ namespace Mutagen.Bethesda
             }
             return TryGet<TMajor>.Failure;
         }
+
+        public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
+        {
+            modKey = this.FormKey.ModKey;
+            return true;
+
+        }
     }
 }
