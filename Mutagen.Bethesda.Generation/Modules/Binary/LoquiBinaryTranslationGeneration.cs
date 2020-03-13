@@ -72,25 +72,25 @@ namespace Mutagen.Bethesda.Generation
             var loquiGen = typeGen as LoquiType;
             bool isGroup = objGen.GetObjectType() == ObjectType.Mod
                 && loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
-            if (isGroup)
+            if (typeGen.HasBeenSet)
             {
-                var dictGroup = loquiGen.TargetObjectGeneration.Name == "Group";
-                fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
+                fg.AppendLine($"if ({itemAccessor.DirectAccess}.TryGet(out var {typeGen.Name}Item))");
+                itemAccessor = $"{typeGen.Name}Item";
             }
-            using (new BraceWrapper(fg, doIt: isGroup))
+            else
             {
-                if (typeGen.HasBeenSet)
+                // We want to cache retrievals, in case it's a wrapper being written
+                fg.AppendLine($"var {typeGen.Name}Item = {itemAccessor.DirectAccess};");
+                itemAccessor = $"{typeGen.Name}Item";
+            }
+            using (new BraceWrapper(fg, doIt: typeGen.HasBeenSet))
+            {
+                if (isGroup)
                 {
-                    fg.AppendLine($"if ({itemAccessor.DirectAccess}.TryGet(out var {typeGen.Name}Item))");
-                    itemAccessor = $"{typeGen.Name}Item";
+                    var dictGroup = loquiGen.TargetObjectGeneration.Name == "Group";
+                    fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
                 }
-                else
-                {
-                    // We want to cache retrievals, in case it's a wrapper being written
-                    fg.AppendLine($"var {typeGen.Name}Item = {itemAccessor.DirectAccess};");
-                    itemAccessor = $"{typeGen.Name}Item";
-                }
-                using (new BraceWrapper(fg, doIt: typeGen.HasBeenSet))
+                using (new BraceWrapper(fg, doIt: isGroup))
                 {
                     if (loquiGen.TryGetFieldData(out var data)
                         && data.MarkerType.HasValue)

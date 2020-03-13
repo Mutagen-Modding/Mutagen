@@ -4070,9 +4070,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 masterReferences: masterReferences);
             if (importMask?.GameSettings ?? true)
             {
-                if (item.GameSettings.RecordCache.Count > 0)
+                var GameSettingsItem = item.GameSettings;
+                if (GameSettingsItem.RecordCache.Count > 0)
                 {
-                    var GameSettingsItem = item.GameSettings;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
                         writer: writer,
@@ -4082,9 +4082,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Keywords ?? true)
             {
-                if (item.Keywords.RecordCache.Count > 0)
+                var KeywordsItem = item.Keywords;
+                if (KeywordsItem.RecordCache.Count > 0)
                 {
-                    var KeywordsItem = item.Keywords;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
                         writer: writer,
@@ -4094,9 +4094,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.LocationReferenceTypes ?? true)
             {
-                if (item.LocationReferenceTypes.RecordCache.Count > 0)
+                var LocationReferenceTypesItem = item.LocationReferenceTypes;
+                if (LocationReferenceTypesItem.RecordCache.Count > 0)
                 {
-                    var LocationReferenceTypesItem = item.LocationReferenceTypes;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
                         item: LocationReferenceTypesItem,
                         writer: writer,
@@ -4106,9 +4106,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Actions ?? true)
             {
-                if (item.Actions.RecordCache.Count > 0)
+                var ActionsItem = item.Actions;
+                if (ActionsItem.RecordCache.Count > 0)
                 {
-                    var ActionsItem = item.Actions;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
                         writer: writer,
@@ -4118,9 +4118,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.TextureSets ?? true)
             {
-                if (item.TextureSets.RecordCache.Count > 0)
+                var TextureSetsItem = item.TextureSets;
+                if (TextureSetsItem.RecordCache.Count > 0)
                 {
-                    var TextureSetsItem = item.TextureSets;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
                         item: TextureSetsItem,
                         writer: writer,
@@ -4130,9 +4130,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Globals ?? true)
             {
-                if (item.Globals.RecordCache.Count > 0)
+                var GlobalsItem = item.Globals;
+                if (GlobalsItem.RecordCache.Count > 0)
                 {
-                    var GlobalsItem = item.Globals;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
                         writer: writer,
@@ -4142,9 +4142,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Classes ?? true)
             {
-                if (item.Classes.RecordCache.Count > 0)
+                var ClassesItem = item.Classes;
+                if (ClassesItem.RecordCache.Count > 0)
                 {
-                    var ClassesItem = item.Classes;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
                         writer: writer,
@@ -4154,9 +4154,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Factions ?? true)
             {
-                if (item.Factions.RecordCache.Count > 0)
+                var FactionsItem = item.Factions;
+                if (FactionsItem.RecordCache.Count > 0)
                 {
-                    var FactionsItem = item.Factions;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
                         writer: writer,
@@ -4166,9 +4166,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.HeadParts ?? true)
             {
-                if (item.HeadParts.RecordCache.Count > 0)
+                var HeadPartsItem = item.HeadParts;
+                if (HeadPartsItem.RecordCache.Count > 0)
                 {
-                    var HeadPartsItem = item.HeadParts;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: HeadPartsItem,
                         writer: writer,
@@ -4178,9 +4178,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Hairs ?? true)
             {
-                if (item.Hairs.RecordCache.Count > 0)
+                var HairsItem = item.Hairs;
+                if (HairsItem.RecordCache.Count > 0)
                 {
-                    var HairsItem = item.Hairs;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
                         item: HairsItem,
                         writer: writer,
@@ -4190,9 +4190,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Eyes ?? true)
             {
-                if (item.Eyes.RecordCache.Count > 0)
+                var EyesItem = item.Eyes;
+                if (EyesItem.RecordCache.Count > 0)
                 {
-                    var EyesItem = item.Eyes;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
                         item: EyesItem,
                         writer: writer,
