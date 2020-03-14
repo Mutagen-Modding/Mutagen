@@ -17,7 +17,6 @@ namespace Mutagen.Bethesda.Generation
         {
             this.AdditionalWriteParams.Add(AdditionalParam);
             this.AdditionalCopyInParams.Add(AdditionalParam);
-            this.AdditionalCopyInRetParams.Add(AdditionalParam);
             this.PreferDirectTranslation = false;
         }
 
@@ -62,7 +61,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor masterAccessor)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             FormLinkType linkType = typeGen as FormLinkType;
@@ -84,6 +84,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"errorMask: {errorMaskAccessor}");
                         }
                         args.Add($"item: out {outItemAccessor.DirectAccess}");
+                        args.Add($"masterReferences: {masterAccessor}");
                         foreach (var writeParam in this.AdditionalCopyInRetParams)
                         {
                             var get = writeParam(

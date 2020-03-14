@@ -1302,12 +1302,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sounds = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.ParseRepeatedItem(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out RegionSound listSubItem) =>
+                            masterReferences: masterReferences,
+                            transl: (MutagenFrame r, out RegionSound listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RegionSound>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<RegionSound>();
                     return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.Sounds);

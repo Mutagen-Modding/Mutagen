@@ -80,6 +80,36 @@ namespace Mutagen.Bethesda.Binary
             }
             return ret;
         }
+
+        public IEnumerable<T> ParseRepeatedItem(
+            MutagenFrame frame,
+            long lengthLength,
+            MasterReferenceReader masterReferences,
+            BinaryMasterParseRecordDelegate<T> transl,
+            ICollectionGetter<RecordType>? triggeringRecord = null,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new List<T>();
+            while (!frame.Complete)
+            {
+                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                }
+                var startingPos = frame.Position;
+                if (transl(frame, nextRecord, out var subIitem, masterReferences, recordTypeConverter))
+                {
+                    ret.Add(subIitem);
+                }
+                if (frame.Position == startingPos)
+                {
+                    throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
+                }
+            }
+            return ret;
+        }
         #endregion
 
         #region Lengthed Triggering Record
@@ -129,6 +159,24 @@ namespace Mutagen.Bethesda.Binary
                 transl: (MutagenFrame reader, RecordType header, out T subItem)
                     => transl(reader, out subItem));
         }
+
+        public IEnumerable<T> ParseRepeatedItem(
+            MutagenFrame frame,
+            long lengthLength,
+            MasterReferenceReader masterReferences,
+            BinaryMasterParseDelegate<T> transl,
+            ICollectionGetter<RecordType> triggeringRecord,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return this.ParseRepeatedItem(
+                frame: frame,
+                triggeringRecord: triggeringRecord,
+                lengthLength: lengthLength,
+                masterReferences: masterReferences,
+                transl: (MutagenFrame reader, RecordType header, out T subItem, MasterReferenceReader m, RecordTypeConverter? r)
+                    => transl(reader, out subItem, m, r),
+                recordTypeConverter: recordTypeConverter);
+        }
         #endregion
 
         public IEnumerable<T> ParseRepeatedItem(
@@ -172,6 +220,24 @@ namespace Mutagen.Bethesda.Binary
             for (int i = 0; i < amount; i++)
             {
                 if (transl(frame, out var subItem))
+                {
+                    ret.Add(subItem);
+                }
+            }
+            return ret;
+        }
+
+        public IEnumerable<T> ParseRepeatedItem(
+            MutagenFrame frame,
+            int amount,
+            MasterReferenceReader masterReferences,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new List<T>();
+            for (int i = 0; i < amount; i++)
+            {
+                if (transl(frame, out var subItem, masterReferences, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
@@ -257,7 +323,8 @@ namespace Mutagen.Bethesda.Binary
         public delegate Task<TryGet<T>> BinarySubParseDelegate(MutagenFrame reader);
         public delegate Task<TryGet<T>> BinaryMasterParseDelegate(
             MutagenFrame reader,
-            MasterReferenceReader masterReferences);
+            MasterReferenceReader masterReferences,
+            RecordTypeConverter? recordTypeConverter);
         public delegate Task<TryGet<T>> BinarySubParseRecordDelegate(
             MutagenFrame reader,
             RecordType header);
@@ -298,6 +365,38 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
+        public async Task<IEnumerable<T>> ParseRepeatedItem(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            int lengthLength,
+            MasterReferenceReader masterReferences,
+            BinaryMasterParseDelegate transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new List<T>();
+            while (!frame.Complete && !frame.Reader.Complete)
+            {
+                if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                }
+                var startingPos = frame.Position;
+                var item = await transl(frame, masterReferences, recordTypeConverter).ConfigureAwait(false);
+                if (item.Succeeded)
+                {
+                    ret.Add(item.Value);
+                }
+
+                if (frame.Position == startingPos)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
+                }
+            }
+            return ret;
+        }
+
         public async Task<IEnumerable<T>> ParseRepeatedItemThreaded(
             MutagenFrame frame,
             RecordType triggeringRecord,
@@ -316,6 +415,34 @@ namespace Mutagen.Bethesda.Binary
                 }
 
                 var toDo = transl(frame);
+
+                tasks.Add(Task.Run(() => toDo));
+            }
+            var ret = await Task.WhenAll(tasks).ConfigureAwait(false);
+            return ret.Where(i => i.Succeeded)
+                .Select(i => i.Value);
+        }
+
+        public async Task<IEnumerable<T>> ParseRepeatedItemThreaded(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            MasterReferenceReader masterReferences,
+            BinaryMasterParseDelegate transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var tasks = new List<Task<TryGet<T>>>();
+            while (!frame.Complete && !frame.Reader.Complete)
+            {
+                var nextRec = HeaderTranslation.GetNextSubRecordType(
+                    reader: frame.Reader,
+                    contentLength: out var contentLen);
+                if (nextRec != triggeringRecord) break;
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                }
+
+                var toDo = transl(frame, masterReferences, recordTypeConverter);
 
                 tasks.Add(Task.Run(() => toDo));
             }
@@ -347,6 +474,38 @@ namespace Mutagen.Bethesda.Binary
                     triggeringRecord,
                     lengthLength,
                     transl: transl).ConfigureAwait(false);
+            }
+            return new ExtendedList<T>(items);
+        }
+
+        public async Task<ExtendedList<T>> ParseRepeatedItem(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            int lengthLength,
+            MasterReferenceReader masterReferences,
+            BinaryMasterParseDelegate transl,
+            bool thread,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            IEnumerable<T> items;
+            if (thread)
+            {
+                items = await ParseRepeatedItemThreaded(
+                    frame,
+                    triggeringRecord,
+                    masterReferences: masterReferences,
+                    transl: transl,
+                    recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+            }
+            else
+            {
+                items = await ParseRepeatedItem(
+                    frame,
+                    triggeringRecord,
+                    lengthLength,
+                    masterReferences: masterReferences,
+                    transl: transl,
+                    recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
             }
             return new ExtendedList<T>(items);
         }

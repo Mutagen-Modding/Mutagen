@@ -1746,13 +1746,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: SigilStone_Registration.EFID_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out Effect listSubItem) =>
+                            transl: (MutagenFrame r, out Effect listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Effect>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<Effect>();
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Effects);

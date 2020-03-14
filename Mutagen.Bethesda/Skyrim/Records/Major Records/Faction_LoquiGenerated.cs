@@ -2815,13 +2815,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Faction_Registration.XNAM_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out Relation listSubItem) =>
+                            transl: (MutagenFrame r, out Relation listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Relation>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<Relation>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
@@ -2924,13 +2925,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out Rank listSubItem) =>
+                            transl: (MutagenFrame r, out Rank listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Rank>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<Rank>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);

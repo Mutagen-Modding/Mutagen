@@ -4577,13 +4577,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Creature_Registration.CNTO_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out ItemEntry listSubItem) =>
+                            transl: (MutagenFrame r, out ItemEntry listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<ItemEntry>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
@@ -4645,13 +4646,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Creature_Registration.SNAM_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out RankPlacement listSubItem) =>
+                            transl: (MutagenFrame r, out RankPlacement listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<RankPlacement>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
@@ -4811,13 +4813,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out CreatureSound listSubItem) =>
+                            transl: (MutagenFrame r, out CreatureSound listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<CreatureSound>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<CreatureSound>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);

@@ -1469,12 +1469,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
                             thread: true,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.GroupConstants.LengthLength,
-                            transl: async (MutagenFrame r) =>
+                            transl: async (MutagenFrame r, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return await LoquiBinaryAsyncTranslation<WorldspaceSubBlock>.Instance.Parse(
                                     frame: r,
-                                    masterReferences: masterReferences).ConfigureAwait(false);
+                                    masterReferences: m).ConfigureAwait(false);
                             }).ConfigureAwait(false))
                         .ToExtendedList<WorldspaceSubBlock>();
                     return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);

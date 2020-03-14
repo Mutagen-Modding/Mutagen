@@ -191,7 +191,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor mastersAccessor)
         {
             var targetLoquiGen = targetGen as LoquiType;
             var loquiGen = typeGen as LoquiType;
@@ -212,7 +213,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    args.Add($"masterReferences: masterReferences");
+                    args.Add($"masterReferences: {mastersAccessor}");
                 }
                 if (data?.RecordTypeConverter != null
                     && data.RecordTypeConverter.FromConversions.Count > 0)

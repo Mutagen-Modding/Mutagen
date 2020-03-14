@@ -105,7 +105,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor mastersAccessor)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             var data = typeGen.GetFieldData();

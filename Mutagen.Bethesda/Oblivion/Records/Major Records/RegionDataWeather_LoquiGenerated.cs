@@ -1239,12 +1239,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Weathers = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out WeatherChance listSubItem) =>
+                            masterReferences: masterReferences,
+                            transl: (MutagenFrame r, out WeatherChance listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<WeatherChance>();
                     return TryGet<int?>.Succeed((int)RegionDataWeather_FieldIndex.Weathers);

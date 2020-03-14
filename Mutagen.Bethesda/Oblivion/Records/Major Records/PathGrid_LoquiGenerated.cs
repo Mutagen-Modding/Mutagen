@@ -1596,12 +1596,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.InterCellConnections = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.ParseRepeatedItem(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out InterCellPoint listSubItem) =>
+                            masterReferences: masterReferences,
+                            transl: (MutagenFrame r, out InterCellPoint listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<InterCellPoint>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<InterCellPoint>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
@@ -1612,13 +1613,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: PathGrid_Registration.PGRL_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out PointToReferenceMapping listSubItem) =>
+                            transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<PointToReferenceMapping>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);

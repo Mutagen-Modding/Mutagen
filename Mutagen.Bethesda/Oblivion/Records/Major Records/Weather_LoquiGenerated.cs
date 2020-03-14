@@ -3493,12 +3493,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.WeatherTypes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.ParseRepeatedItem(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out WeatherType listSubItem) =>
+                            masterReferences: masterReferences,
+                            transl: (MutagenFrame r, out WeatherType listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<WeatherType>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
@@ -3570,13 +3571,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Weather_Registration.SNAM_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out WeatherSound listSubItem) =>
+                            transl: (MutagenFrame r, out WeatherSound listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<WeatherSound>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<WeatherSound>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);

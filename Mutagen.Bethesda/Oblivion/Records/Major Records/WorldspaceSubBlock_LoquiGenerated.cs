@@ -1469,12 +1469,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<Cell>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: WorldspaceSubBlock_Registration.CELL_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.MajorConstants.LengthLength,
-                            transl: async (MutagenFrame r) =>
+                            transl: async (MutagenFrame r, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
                                     frame: r,
-                                    masterReferences: masterReferences).ConfigureAwait(false);
+                                    masterReferences: m).ConfigureAwait(false);
                             }).ConfigureAwait(false))
                         .ToExtendedList<Cell>();
                     return TryGet<int?>.Succeed((int)WorldspaceSubBlock_FieldIndex.Items);

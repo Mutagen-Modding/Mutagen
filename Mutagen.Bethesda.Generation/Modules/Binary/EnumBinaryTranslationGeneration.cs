@@ -99,7 +99,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor mastersAccessor)
         {
             var eType = typeGen as EnumType;
             using (var args = new ArgsWrapper(fg,

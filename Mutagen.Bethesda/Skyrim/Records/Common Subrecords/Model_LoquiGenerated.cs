@@ -1325,20 +1325,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.Data);
                 }
                 case 0x53444F4D: // MODS
-                {
-                    item.AlternateTextures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.ParseRepeatedItem(
-                            amount: frame.ReadInt32(),
-                            frame: frame,
-                            transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: masterReferences);
-                            })
-                        .ToExtendedList<AlternateTexture>();
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
+                    {
+                        item.AlternateTextures =
+                            Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.ParseRepeatedItem(
+                                amount: frame.ReadInt32(),
+                                frame: frame,
+                                transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
+                                {
+                                    return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
+                                        frame: r,
+                                        item: out listSubItem,
+                                        masterReferences: masterReferences);
+                                })
+                            .ToExtendedList<AlternateTexture>();
+                        return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
                 }
                 default:
                     return TryGet<int?>.Failure;

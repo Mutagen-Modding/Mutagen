@@ -1589,13 +1589,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: ScriptFields_Registration.SLSD_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out LocalVariable listSubItem) =>
+                            transl: (MutagenFrame r, out LocalVariable listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<LocalVariable>();
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
@@ -1607,8 +1608,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem) =>
+                            transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 switch (header.TypeInt)
                                 {
@@ -1616,12 +1618,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
                                             frame: r,
                                             item: out listSubItem,
-                                            masterReferences: masterReferences);
+                                            masterReferences: m);
                                     case 0x4F524353: // SCRO
                                         return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
                                             frame: r,
                                             item: out listSubItem,
-                                            masterReferences: masterReferences);
+                                            masterReferences: m);
                                     default:
                                         throw new NotImplementedException();
                                 }

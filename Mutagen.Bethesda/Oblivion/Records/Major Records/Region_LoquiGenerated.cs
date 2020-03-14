@@ -1761,13 +1761,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out RegionArea listSubItem) =>
+                            transl: (MutagenFrame r, out RegionArea listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<RegionArea>();
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);

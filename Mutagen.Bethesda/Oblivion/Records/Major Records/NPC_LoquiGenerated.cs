@@ -5401,13 +5401,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: NPC_Registration.SNAM_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out RankPlacement listSubItem) =>
+                            transl: (MutagenFrame r, out RankPlacement listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<RankPlacement>();
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Factions);
@@ -5457,13 +5458,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: NPC_Registration.CNTO_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out ItemEntry listSubItem) =>
+                            transl: (MutagenFrame r, out ItemEntry listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<ItemEntry>();
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Items);

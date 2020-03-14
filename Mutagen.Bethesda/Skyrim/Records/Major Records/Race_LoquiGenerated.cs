@@ -2995,13 +2995,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Attack>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out Attack listSubItem) =>
+                            transl: (MutagenFrame r, out Attack listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Attack>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<Attack>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Attacks);

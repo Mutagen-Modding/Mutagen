@@ -1640,8 +1640,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem) =>
+                            transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 switch (header.TypeInt)
                                 {
@@ -1649,12 +1650,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
                                             frame: r,
                                             item: out listSubItem,
-                                            masterReferences: masterReferences);
+                                            masterReferences: m);
                                     case 0x54585441: // ATXT
                                         return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
                                             frame: r,
                                             item: out listSubItem,
-                                            masterReferences: masterReferences);
+                                            masterReferences: m);
                                     default:
                                         throw new NotImplementedException();
                                 }

@@ -1490,13 +1490,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NPCSpawn>>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out LeveledEntry<NPCSpawn> listSubItem) =>
+                            transl: (MutagenFrame r, out LeveledEntry<NPCSpawn> listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LeveledEntry<NPCSpawn>>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<LeveledEntry<NPCSpawn>>();
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);

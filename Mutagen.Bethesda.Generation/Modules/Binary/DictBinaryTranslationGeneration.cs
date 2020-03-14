@@ -237,6 +237,7 @@ namespace Mutagen.Bethesda.Generation
                                             retAccessor: "return ",
                                             outItemAccessor: new Accessor("dictSubItem"),
                                             translationAccessor: "dictTranslMask",
+                                            mastersAccessor: "masterReferences",
                                             asyncMode: AsyncMode.Direct,
                                             errorMaskAccessor: null);
                                     }
@@ -267,6 +268,7 @@ namespace Mutagen.Bethesda.Generation
                                 retAccessor: "return ",
                                 outItemAccessor: new Accessor("dictSubItem"),
                                 translationAccessor: "dictTranslMask",
+                                mastersAccessor: "masterReferences",
                                 asyncMode: AsyncMode.Direct,
                                 errorMaskAccessor: null);
                         }
@@ -285,7 +287,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor mastersAccessor)
         {
             throw new NotImplementedException();
         }

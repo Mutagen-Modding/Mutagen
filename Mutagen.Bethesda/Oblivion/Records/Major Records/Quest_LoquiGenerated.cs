@@ -1897,13 +1897,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out Condition listSubItem) =>
+                            transl: (MutagenFrame r, out Condition listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
@@ -1914,13 +1915,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Quest_Registration.INDX_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out QuestStage listSubItem) =>
+                            transl: (MutagenFrame r, out QuestStage listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<QuestStage>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<QuestStage>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
@@ -1931,13 +1933,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Quest_Registration.QSTA_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out QuestTarget listSubItem) =>
+                            transl: (MutagenFrame r, out QuestTarget listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<QuestTarget>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<QuestTarget>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);

@@ -3156,13 +3156,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Race_Registration.XNAM_HEADER,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out RaceRelation listSubItem) =>
+                            transl: (MutagenFrame r, out RaceRelation listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<RaceRelation>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
@@ -3258,13 +3259,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out FacePart listSubItem) =>
+                            transl: (MutagenFrame r, out FacePart listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<FacePart>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<FacePart>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);

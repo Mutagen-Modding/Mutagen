@@ -1287,20 +1287,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E4F4349: // ICON
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
-                    item.BodyParts = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.ParseRepeatedItem(
-                            frame: frame,
-                            triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out BodyPart listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: masterReferences);
-                            })
-                        .ToExtendedList<BodyPart>();
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
+                        item.BodyParts =
+                            Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.ParseRepeatedItem(
+                                frame: frame,
+                                triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
+                                lengthLength: frame.MetaData.SubConstants.LengthLength,
+                                transl: (MutagenFrame r, out BodyPart listSubItem) =>
+                                {
+                                    return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
+                                        frame: r,
+                                        item: out listSubItem,
+                                        masterReferences: masterReferences);
+                                })
+                            .ToExtendedList<BodyPart>();
+                        return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
                 }
                 default:
                     return TryGet<int?>.Failure;

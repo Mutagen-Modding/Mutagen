@@ -1277,13 +1277,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
+                            masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out LogEntry listSubItem) =>
+                            transl: (MutagenFrame r, out LogEntry listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LogEntry>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<LogEntry>();
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);

@@ -1239,12 +1239,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Objects = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject>.Instance.ParseRepeatedItem(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out RegionDataObject listSubItem) =>
+                            masterReferences: masterReferences,
+                            transl: (MutagenFrame r, out RegionDataObject listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RegionDataObject>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
-                                    masterReferences: masterReferences);
+                                    masterReferences: m);
                             })
                         .ToExtendedList<RegionDataObject>();
                     return TryGet<int?>.Succeed((int)RegionDataObjects_FieldIndex.Objects);

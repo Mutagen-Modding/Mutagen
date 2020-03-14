@@ -85,7 +85,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor mastersAccessor)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
