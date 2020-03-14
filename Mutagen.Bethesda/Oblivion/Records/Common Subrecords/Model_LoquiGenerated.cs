@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Model CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Model();
             ((ModelSetterCommon)((IModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IModel item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModel item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1912,7 +1912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IModelGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IModelGetter)item,
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

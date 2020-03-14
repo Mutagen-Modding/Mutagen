@@ -31,6 +31,7 @@ namespace Noggog
         /// <returns>string containing a character for every byte in the input span</returns>
         public static string ToZString(ReadOnlyMemorySlice<byte> bytes)
         {
+            if (bytes.Length <= 0) return string.Empty;
             return string.Create(bytes.Length, bytes, (chars, state) =>
             {
                 for (int i = 0; i < state.Length; i++)

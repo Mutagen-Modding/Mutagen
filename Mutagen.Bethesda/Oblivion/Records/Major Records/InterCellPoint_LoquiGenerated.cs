@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((InterCellPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static InterCellPoint CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new InterCellPoint();
             ((InterCellPointSetterCommon)((IInterCellPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPoint item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IInterCellPoint item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1751,7 +1751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IInterCellPointGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
@@ -1763,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IInterCellPointGetter)item,
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((InterCellPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

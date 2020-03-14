@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1518,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static PlacedObject CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PlacedObject();
             ((PlacedObjectSetterCommon)((IPlacedObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedObjectInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2587,7 +2587,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.TeleportDestination = Mutagen.Bethesda.Oblivion.TeleportDestination.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
                 }
@@ -2595,7 +2594,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Lock = Mutagen.Bethesda.Oblivion.LockInformation.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
                 }
@@ -2627,7 +2625,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.EnableParent = Mutagen.Bethesda.Oblivion.EnableParent.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
                 }
@@ -2650,7 +2647,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.DistantLODData = Mutagen.Bethesda.Oblivion.DistantLODData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLODData);
                 }
@@ -2698,7 +2694,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.MapMarker = Mutagen.Bethesda.Oblivion.MapMarker.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
                 }
@@ -2758,7 +2753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedObjectInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IPlacedObjectInternal>(
                 record: item,
@@ -4766,16 +4761,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((TeleportDestinationBinaryWriteTranslation)((IBinaryItem)TeleportDestinationItem).BinaryWriteTranslator).Write(
                     item: TeleportDestinationItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             if (item.Lock.TryGet(out var LockItem))
             {
                 ((LockInformationBinaryWriteTranslation)((IBinaryItem)LockItem).BinaryWriteTranslator).Write(
                     item: LockItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4796,8 +4789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4813,8 +4805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)DistantLODDataItem).BinaryWriteTranslator).Write(
                     item: DistantLODDataItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4848,8 +4839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((MapMarkerBinaryWriteTranslation)((IBinaryItem)MapMarkerItem).BinaryWriteTranslator).Write(
                     item: MapMarkerItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             PlacedObjectBinaryWriteTranslation.WriteBinaryOpenByDefault(
                 writer: writer,
@@ -4886,7 +4876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IPlacedObjectGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -4909,7 +4899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPlacedObjectGetter)item,
@@ -4922,7 +4912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPlacedObjectGetter)item,
@@ -4935,7 +4925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPlacedObjectGetter)item,
@@ -5021,7 +5011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

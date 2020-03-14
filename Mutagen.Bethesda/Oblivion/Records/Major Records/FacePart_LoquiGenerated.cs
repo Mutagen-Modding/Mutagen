@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((FacePartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static FacePart CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new FacePart();
             ((FacePartSetterCommon)((IFacePartGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePart item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((FacePartSetterCommon)((IFacePartGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1262,7 +1262,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Model) return TryGet<int?>.Failure;
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Model);
                 }
@@ -1284,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFacePart item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1979,8 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1993,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IFacePartGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
@@ -2006,7 +2004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IFacePartGetter)item,
@@ -2097,7 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((FacePartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

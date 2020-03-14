@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -761,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static LeveledCreature CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new LeveledCreature();
             ((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledCreatureInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledCreatureInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<ILeveledCreatureInternal>(
                 record: item,
@@ -2529,8 +2529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<INPCSpawnGetter>(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -2549,7 +2548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ILeveledCreatureGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2572,7 +2571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
@@ -2585,7 +2584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             INPCSpawnGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
@@ -2598,7 +2597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
@@ -2611,7 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
@@ -2681,7 +2680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

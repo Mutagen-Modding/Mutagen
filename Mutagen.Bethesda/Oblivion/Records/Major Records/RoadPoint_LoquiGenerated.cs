@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RoadPoint CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RoadPoint();
             ((RoadPointSetterCommon)((IRoadPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPoint item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPoint item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1989,7 +1989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IRoadPointGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRoadPointGetter)item,
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

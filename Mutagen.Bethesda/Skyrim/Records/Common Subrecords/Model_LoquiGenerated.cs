@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Model CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Model();
             ((ModelSetterCommon)((IModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModel item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1349,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModel item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -2093,8 +2093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((AlternateTextureBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
+                        masterReferences: masterReferences);
                 });
         }
 
@@ -2102,7 +2101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IModelGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
@@ -2115,7 +2114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IModelGetter)item,
@@ -2207,7 +2206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

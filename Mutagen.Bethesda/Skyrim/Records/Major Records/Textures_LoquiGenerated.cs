@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TexturesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Textures CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Textures();
             ((TexturesSetterCommon)((ITexturesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextures item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextures item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -2524,7 +2524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ITexturesGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
@@ -2537,7 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ITexturesGetter)item,
@@ -2628,7 +2628,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TexturesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

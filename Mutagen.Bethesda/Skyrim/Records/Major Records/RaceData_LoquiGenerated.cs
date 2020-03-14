@@ -1657,7 +1657,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1680,7 +1680,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static RaceData CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RaceData();
             ((RaceDataSetterCommon)((IRaceDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IRaceData item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceDataSetterCommon)((IRaceDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2796,31 +2796,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.SkillBoost0 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null,
                 masterReferences: masterReferences);
             item.SkillBoost1 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null,
                 masterReferences: masterReferences);
             item.SkillBoost2 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null,
                 masterReferences: masterReferences);
             item.SkillBoost3 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null,
                 masterReferences: masterReferences);
             item.SkillBoost4 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null,
                 masterReferences: masterReferences);
             item.SkillBoost5 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null,
                 masterReferences: masterReferences);
             item.SkillBoost6 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null,
                 masterReferences: masterReferences);
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.MaleHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -2861,7 +2854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRaceData item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -4951,44 +4944,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost0Item).BinaryWriteTranslator).Write(
                 item: SkillBoost0Item,
                 writer: writer,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+                masterReferences: masterReferences);
             var SkillBoost1Item = item.SkillBoost1;
             ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost1Item).BinaryWriteTranslator).Write(
                 item: SkillBoost1Item,
                 writer: writer,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+                masterReferences: masterReferences);
             var SkillBoost2Item = item.SkillBoost2;
             ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost2Item).BinaryWriteTranslator).Write(
                 item: SkillBoost2Item,
                 writer: writer,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+                masterReferences: masterReferences);
             var SkillBoost3Item = item.SkillBoost3;
             ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost3Item).BinaryWriteTranslator).Write(
                 item: SkillBoost3Item,
                 writer: writer,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+                masterReferences: masterReferences);
             var SkillBoost4Item = item.SkillBoost4;
             ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost4Item).BinaryWriteTranslator).Write(
                 item: SkillBoost4Item,
                 writer: writer,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+                masterReferences: masterReferences);
             var SkillBoost5Item = item.SkillBoost5;
             ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost5Item).BinaryWriteTranslator).Write(
                 item: SkillBoost5Item,
                 writer: writer,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+                masterReferences: masterReferences);
             var SkillBoost6Item = item.SkillBoost6;
             ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost6Item).BinaryWriteTranslator).Write(
                 item: SkillBoost6Item,
                 writer: writer,
-                masterReferences: masterReferences,
-                recordTypeConverter: null);
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);
@@ -5093,7 +5079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IRaceDataGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -5111,7 +5097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceDataGetter)item,
@@ -5218,7 +5204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

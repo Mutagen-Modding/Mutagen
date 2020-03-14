@@ -88,7 +88,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             int lengthLength,
             MasterReferenceReader masterReferences,
-            BinaryMasterParseDelegate<T> transl)
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new List<T>();
             while (!frame.Complete && !frame.Reader.Complete)
@@ -99,7 +100,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
-                if (transl(frame, out var subItem, masterReferences))
+                if (transl(frame, out var subItem, masterReferences, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
@@ -148,12 +149,13 @@ namespace Mutagen.Bethesda.Binary
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            BinaryMasterParseDelegate<T> transl)
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new List<T>();
             while (!frame.Complete)
             {
-                if (transl(frame, out var subItem, masterReferences))
+                if (transl(frame, out var subItem, masterReferences, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
@@ -182,7 +184,8 @@ namespace Mutagen.Bethesda.Binary
             int amount,
             RecordType triggeringRecord,
             MasterReferenceReader masterReferences,
-            BinaryMasterParseDelegate<T> transl)
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new List<T>();
             for (int i = 0; i < amount; i++)
@@ -193,7 +196,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
-                if (transl(frame, out var subIitem, masterReferences))
+                if (transl(frame, out var subIitem, masterReferences, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }

@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static async Task<Worldspace> CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Worldspace();
             await ((WorldspaceSetterCommon)((IWorldspaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             await ((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2197,7 +2197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MapData = Mutagen.Bethesda.Oblivion.MapData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
                 }
@@ -2256,7 +2255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             await UtilityAsyncTranslation.MajorRecordParse<IWorldspaceInternal>(
                 record: item,
@@ -4024,8 +4023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((MapDataBinaryWriteTranslation)((IBinaryItem)MapDataItem).BinaryWriteTranslator).Write(
                     item: MapDataItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.WriteNullable(
                 writer,
@@ -4059,7 +4057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IWorldspaceGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -4086,7 +4084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -4099,7 +4097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IPlaceGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -4112,7 +4110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -4125,7 +4123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -4231,7 +4229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

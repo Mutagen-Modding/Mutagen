@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Binary
                 frame = default;
                 return false;
             }
-            frame = new SubRecordFrame(meta, stream.GetSpan(meta.RecordLength, offset: meta.HeaderLength));
+            frame = new SubRecordFrame(meta, stream.GetSpan(meta.TotalLength));
             return true;
         }
         public SubRecordMemoryFrame GetSubRecordMemoryFrame(BinaryMemoryReadStream stream, int offset = 0)

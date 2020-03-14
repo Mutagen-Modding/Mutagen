@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeatherTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new WeatherType();
             ((WeatherTypeSetterCommon)((IWeatherTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherType item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IWeatherTypeGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
@@ -1956,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWeatherTypeGetter)item,
@@ -2047,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeatherTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

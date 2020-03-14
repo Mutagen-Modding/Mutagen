@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Generation
                 });
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
-                $"{nameof(RecordTypeConverter)}? recordTypeConverter");
+                $"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new APILine[] { new APILine("MutagenWriter", "MutagenWriter writer") },

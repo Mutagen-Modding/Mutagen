@@ -116,10 +116,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                         }
-                        else
-                        {
-                            args.Add($"recordTypeConverter: null");
-                        }
                     }
                 }
             }
@@ -174,10 +170,6 @@ namespace Mutagen.Bethesda.Generation
                             && data.RecordTypeConverter.FromConversions.Count > 0)
                         {
                             args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
-                        }
-                        else
-                        {
-                            args.Add("recordTypeConverter: null");
                         }
                         args.Add($"masterReferences: masterReferences");
                     }

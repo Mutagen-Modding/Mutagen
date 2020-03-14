@@ -20,7 +20,8 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse<T>(
             MutagenFrame frame,
             out IEDIDLink<T> item,
-            MasterReferenceReader? masterReferences = null)
+            MasterReferenceReader? masterReferences = null,
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))

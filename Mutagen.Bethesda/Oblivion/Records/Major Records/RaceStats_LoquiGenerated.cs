@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceStats CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RaceStats();
             ((RaceStatsSetterCommon)((IRaceStatsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStats item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStats item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -2271,7 +2271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IRaceStatsGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
@@ -2283,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceStatsGetter)item,
@@ -2374,7 +2374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

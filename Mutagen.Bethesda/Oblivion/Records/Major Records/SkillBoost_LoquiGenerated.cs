@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new SkillBoost();
             ((SkillBoostSetterCommon)((ISkillBoostGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoost item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ISkillBoostGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ISkillBoostGetter)item,
@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

@@ -25,13 +25,14 @@ namespace Mutagen.Bethesda.Binary
         public static GenderedItem<TItem> Parse<TItem>(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl)
+            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
+            RecordTypeConverter? recordTypeConverter = null)
         {
-            if (!transl(frame, out var male, masterReferences))
+            if (!transl(frame, out var male, masterReferences, recordTypeConverter))
             {
                 throw new ArgumentException();
             }
-            if (!transl(frame, out var female, masterReferences))
+            if (!transl(frame, out var female, masterReferences, recordTypeConverter))
             {
                 throw new ArgumentException();
             }
@@ -102,7 +103,8 @@ namespace Mutagen.Bethesda.Binary
             MasterReferenceReader masterReferences,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl)
+            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
+            RecordTypeConverter? recordTypeConverter = null)
             where TItem : class
         {
             TItem? male = default, female = default;
@@ -113,7 +115,7 @@ namespace Mutagen.Bethesda.Binary
                 if (type == maleMarker)
                 {
                     frame.Position += subHeader.TotalLength;
-                    if (!transl(frame, out male, masterReferences))
+                    if (!transl(frame, out male, masterReferences, recordTypeConverter))
                     {
                         throw new ArgumentException();
                     }
@@ -121,7 +123,7 @@ namespace Mutagen.Bethesda.Binary
                 else if (type == femaleMarker)
                 {
                     frame.Position += subHeader.TotalLength;
-                    if (!transl(frame, out female, masterReferences))
+                    if (!transl(frame, out female, masterReferences, recordTypeConverter))
                     {
                         throw new ArgumentException();
                     }

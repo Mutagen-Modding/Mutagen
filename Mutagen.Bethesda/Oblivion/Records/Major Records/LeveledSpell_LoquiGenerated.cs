@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static LeveledSpell CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new LeveledSpell();
             ((LeveledSpellSetterCommon)((ILeveledSpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledSpellInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledSpellSetterCommon)((ILeveledSpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1414,7 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledSpellInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<ILeveledSpellInternal>(
                 record: item,
@@ -2317,8 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<ISpellAbstractGetter>(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 });
         }
@@ -2327,7 +2326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ILeveledSpellGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2350,7 +2349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILeveledSpellGetter)item,
@@ -2363,7 +2362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ISpellAbstractGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILeveledSpellGetter)item,
@@ -2376,7 +2375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILeveledSpellGetter)item,
@@ -2389,7 +2388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILeveledSpellGetter)item,
@@ -2459,7 +2458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

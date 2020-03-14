@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Race CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Race();
             ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -2434,7 +2434,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -3177,31 +3177,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     item.SkillBoost0 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
                         frame: dataFrame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     item.SkillBoost1 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
                         frame: dataFrame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     item.SkillBoost2 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
                         frame: dataFrame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     item.SkillBoost3 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
                         frame: dataFrame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     item.SkillBoost4 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
                         frame: dataFrame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
                         frame: dataFrame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
                         frame: dataFrame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
@@ -3315,7 +3308,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
                 }
@@ -3340,7 +3332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IRaceInternal>(
                 record: item,
@@ -5933,8 +5925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ((RaceRelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 });
             if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
@@ -5945,44 +5936,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost0Item).BinaryWriteTranslator).Write(
                         item: SkillBoost0Item,
                         writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
+                        masterReferences: masterReferences);
                     var SkillBoost1Item = item.SkillBoost1;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost1Item).BinaryWriteTranslator).Write(
                         item: SkillBoost1Item,
                         writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
+                        masterReferences: masterReferences);
                     var SkillBoost2Item = item.SkillBoost2;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost2Item).BinaryWriteTranslator).Write(
                         item: SkillBoost2Item,
                         writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
+                        masterReferences: masterReferences);
                     var SkillBoost3Item = item.SkillBoost3;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost3Item).BinaryWriteTranslator).Write(
                         item: SkillBoost3Item,
                         writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
+                        masterReferences: masterReferences);
                     var SkillBoost4Item = item.SkillBoost4;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost4Item).BinaryWriteTranslator).Write(
                         item: SkillBoost4Item,
                         writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
+                        masterReferences: masterReferences);
                     var SkillBoost5Item = item.SkillBoost5;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost5Item).BinaryWriteTranslator).Write(
                         item: SkillBoost5Item,
                         writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
+                        masterReferences: masterReferences);
                     var SkillBoost6Item = item.SkillBoost6;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost6Item).BinaryWriteTranslator).Write(
                         item: SkillBoost6Item,
                         writer: writer,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
+                        masterReferences: masterReferences);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Fluff);
@@ -6069,16 +6053,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: writer,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                     {
                         var Item = RaceStatsitem.Female;
                         ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: writer,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 }
             }
@@ -6093,8 +6075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ((FacePartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 });
             if (item.BodyData.TryGet(out var BodyDataitem))
@@ -6113,8 +6094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                                 item: Item,
                                 writer: writer,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
+                                masterReferences: masterReferences);
                         }
                     }
                 }
@@ -6129,8 +6109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                                 item: Item,
                                 writer: writer,
-                                masterReferences: masterReferences,
-                                recordTypeConverter: null);
+                                masterReferences: masterReferences);
                         }
                     }
                 }
@@ -6162,8 +6141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((FaceGenDataBinaryWriteTranslation)((IBinaryItem)FaceGenDataItem).BinaryWriteTranslator).Write(
                     item: FaceGenDataItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -6175,7 +6153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IRaceGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -6198,7 +6176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -6211,7 +6189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -6224,7 +6202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -6294,7 +6272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

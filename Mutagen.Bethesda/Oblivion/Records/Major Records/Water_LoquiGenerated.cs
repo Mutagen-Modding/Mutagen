@@ -1875,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Water CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Water();
             ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -3152,7 +3152,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RelatedWaters = Mutagen.Bethesda.Oblivion.RelatedWaters.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
                 }
@@ -3171,7 +3170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IWaterInternal>(
                 record: item,
@@ -5374,8 +5373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)RelatedWatersItem).BinaryWriteTranslator).Write(
                     item: RelatedWatersItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
         }
 
@@ -5383,7 +5381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IWaterGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -5406,7 +5404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5419,7 +5417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5432,7 +5430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5566,7 +5564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptMetaSummary CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ScriptMetaSummary();
             ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummary item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptMetaSummary item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2062,7 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IScriptMetaSummaryGetter)item,
@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

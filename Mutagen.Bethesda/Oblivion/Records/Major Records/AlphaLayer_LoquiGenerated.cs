@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AlphaLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static AlphaLayer CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new AlphaLayer();
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -850,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayerInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1743,7 +1743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IAlphaLayerGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             BaseLayerBinaryWriteTranslation.WriteEmbedded(
                 item: item,
@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAlphaLayerGetter)item,
@@ -1773,7 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IBaseLayerGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAlphaLayerGetter)item,
@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AlphaLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

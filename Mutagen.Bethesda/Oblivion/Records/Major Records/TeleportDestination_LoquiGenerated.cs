@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TeleportDestinationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static TeleportDestination CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new TeleportDestination();
             ((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITeleportDestination item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestination item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ITeleportDestinationGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1881,7 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ITeleportDestinationGetter)item,
@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TeleportDestinationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

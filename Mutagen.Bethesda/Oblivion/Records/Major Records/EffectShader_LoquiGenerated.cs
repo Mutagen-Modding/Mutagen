@@ -2914,7 +2914,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((EffectShaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2937,7 +2937,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static EffectShader CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new EffectShader();
             ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -3385,7 +3385,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -4564,7 +4564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IEffectShaderInternal>(
                 record: item,
@@ -7707,7 +7707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IEffectShaderGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -7730,7 +7730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -7743,7 +7743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -7756,7 +7756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -7825,7 +7825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((EffectShaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

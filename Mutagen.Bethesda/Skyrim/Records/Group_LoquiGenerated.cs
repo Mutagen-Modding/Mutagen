@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static async Task<Group<T>> CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Group<T>();
             await ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroup<T> item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
         {
             await ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroup<T> item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             await UtilityAsyncTranslation.GroupParse(
                 record: item,
@@ -1935,8 +1935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ((SkyrimMajorRecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: r,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 });
         }
@@ -1945,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
@@ -1969,7 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             throw new NotImplementedException();
         }
@@ -2081,7 +2080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

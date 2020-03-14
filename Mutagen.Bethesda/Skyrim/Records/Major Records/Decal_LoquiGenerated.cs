@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Decal();
             ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDecal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -2564,7 +2564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IDecalGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2582,7 +2582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IDecalGetter)item,
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

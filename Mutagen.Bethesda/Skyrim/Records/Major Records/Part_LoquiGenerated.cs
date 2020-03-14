@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Part CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Part();
             ((PartSetterCommon)((IPartGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IPart item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PartSetterCommon)((IPartGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPart item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IPartGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPartGetter)item,
@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

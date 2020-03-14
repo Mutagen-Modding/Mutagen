@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MasterReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda
         public static MasterReference CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new MasterReference();
             ((MasterReferenceSetterCommon)((IMasterReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda
             this IMasterReference item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Internals
             IMasterReference item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             IMasterReferenceGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
@@ -1818,7 +1818,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IMasterReferenceGetter)item,
@@ -1909,7 +1909,7 @@ namespace Mutagen.Bethesda.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MasterReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

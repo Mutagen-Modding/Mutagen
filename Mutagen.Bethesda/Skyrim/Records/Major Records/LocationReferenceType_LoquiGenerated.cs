@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static LocationReferenceType CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new LocationReferenceType();
             ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<ILocationReferenceTypeInternal>(
                 record: item,
@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ILocationReferenceTypeGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1884,7 +1884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
