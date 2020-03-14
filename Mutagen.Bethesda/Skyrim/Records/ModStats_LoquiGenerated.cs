@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ModStats CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ModStats();
             ((ModStatsSetterCommon)((IModStatsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModStats item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModStatsSetterCommon)((IModStatsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModStats item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IModStatsGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1865,7 +1865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IModStatsGetter)item,
@@ -1956,7 +1956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

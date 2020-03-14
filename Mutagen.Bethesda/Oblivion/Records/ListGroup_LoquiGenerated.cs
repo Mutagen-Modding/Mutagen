@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ListGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task<ListGroup<T>> CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ListGroup<T>();
             await ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroup<T> item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem
         {
             await ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IListGroup<T> item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             await UtilityAsyncTranslation.GroupParse(
                 record: item,
@@ -1887,8 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ((CellBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 });
         }
@@ -1897,7 +1896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IListGroupGetter<T> item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
@@ -1921,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             throw new NotImplementedException();
         }
@@ -2033,7 +2032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ListGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

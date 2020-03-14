@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WorldspaceSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task<WorldspaceSubBlock> CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new WorldspaceSubBlock();
             await ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceSubBlock item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             await ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceSubBlock item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             await UtilityAsyncTranslation.GroupParse(
                 record: item,
@@ -2360,8 +2360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ((CellBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 });
         }
@@ -2370,7 +2369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IWorldspaceSubBlockGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2393,7 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWorldspaceSubBlockGetter)item,
@@ -2489,7 +2488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WorldspaceSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

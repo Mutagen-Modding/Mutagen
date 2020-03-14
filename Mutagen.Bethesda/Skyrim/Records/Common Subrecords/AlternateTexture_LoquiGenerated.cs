@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AlternateTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static AlternateTexture CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new AlternateTexture();
             ((AlternateTextureSetterCommon)((IAlternateTextureGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IAlternateTexture item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AlternateTextureSetterCommon)((IAlternateTextureGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAlternateTexture item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IAlternateTextureGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAlternateTextureGetter)item,
@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AlternateTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

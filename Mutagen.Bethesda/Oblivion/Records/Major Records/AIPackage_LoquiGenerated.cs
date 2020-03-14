@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AIPackageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static AIPackage CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new AIPackage();
             ((AIPackageSetterCommon)((IAIPackageGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AIPackageSetterCommon)((IAIPackageGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1634,7 +1634,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Location = Mutagen.Bethesda.Oblivion.AIPackageLocation.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
                 }
@@ -1642,7 +1641,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Schedule = Mutagen.Bethesda.Oblivion.AIPackageSchedule.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
                 }
@@ -1650,7 +1648,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Target = Mutagen.Bethesda.Oblivion.AIPackageTarget.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
                 }
@@ -1687,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IAIPackageInternal>(
                 record: item,
@@ -2824,24 +2821,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((AIPackageLocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
                     item: LocationItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             if (item.Schedule.TryGet(out var ScheduleItem))
             {
                 ((AIPackageScheduleBinaryWriteTranslation)((IBinaryItem)ScheduleItem).BinaryWriteTranslator).Write(
                     item: ScheduleItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             if (item.Target.TryGet(out var TargetItem))
             {
                 ((AIPackageTargetBinaryWriteTranslation)((IBinaryItem)TargetItem).BinaryWriteTranslator).Write(
                     item: TargetItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
@@ -2853,8 +2847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
+                            masterReferences: masterReferences);
                     }
                 });
         }
@@ -2863,7 +2856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IAIPackageGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2886,7 +2879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAIPackageGetter)item,
@@ -2899,7 +2892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAIPackageGetter)item,
@@ -2912,7 +2905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAIPackageGetter)item,
@@ -3014,7 +3007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AIPackageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

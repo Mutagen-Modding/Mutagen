@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BodyPartDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static BodyPartData CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new BodyPartData();
             ((BodyPartDataSetterCommon)((IBodyPartDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IBodyPartDataInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BodyPartDataSetterCommon)((IBodyPartDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyPartDataInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IBodyPartDataInternal>(
                 record: item,
@@ -1694,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IBodyPartDataGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IBodyPartDataGetter)item,
@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IBodyPartDataGetter)item,
@@ -1743,7 +1743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IBodyPartDataGetter)item,
@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BodyPartDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

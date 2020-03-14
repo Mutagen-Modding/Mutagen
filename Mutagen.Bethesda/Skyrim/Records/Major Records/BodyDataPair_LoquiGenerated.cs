@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BodyDataPairBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static BodyDataPair CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new BodyDataPair();
             ((BodyDataPairSetterCommon)((IBodyDataPairGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IBodyDataPair item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BodyDataPairSetterCommon)((IBodyDataPairGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1213,7 +1213,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.Male = Mutagen.Bethesda.Skyrim.BodyData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)BodyDataPair_FieldIndex.Male);
                 }
@@ -1223,7 +1222,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.Female = Mutagen.Bethesda.Skyrim.BodyData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)BodyDataPair_FieldIndex.Female);
                 }
@@ -1236,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyDataPair item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1929,8 +1927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((BodyDataBinaryWriteTranslation)((IBinaryItem)MaleItem).BinaryWriteTranslator).Write(
                     item: MaleItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             if (item.Female.TryGet(out var FemaleItem))
             {
@@ -1938,8 +1935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((BodyDataBinaryWriteTranslation)((IBinaryItem)FemaleItem).BinaryWriteTranslator).Write(
                     item: FemaleItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
         }
 
@@ -1947,7 +1943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IBodyDataPairGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
@@ -1960,7 +1956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IBodyDataPairGetter)item,
@@ -2052,7 +2048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BodyDataPairBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

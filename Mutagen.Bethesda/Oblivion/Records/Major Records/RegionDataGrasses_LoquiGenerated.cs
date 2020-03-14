@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionDataGrassesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static RegionDataGrasses CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RegionDataGrasses();
             ((RegionDataGrassesSetterCommon)((IRegionDataGrassesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionDataGrassesSetterCommon)((IRegionDataGrassesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGrassesInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1896,7 +1896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IRegionDataGrassesGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             RegionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRegionDataGrassesGetter)item,
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IRegionDataGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRegionDataGrassesGetter)item,
@@ -1996,7 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionDataGrassesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

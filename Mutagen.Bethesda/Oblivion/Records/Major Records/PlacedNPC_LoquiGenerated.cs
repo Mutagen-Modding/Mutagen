@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PlacedNPCBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static PlacedNPC CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PlacedNPC();
             ((PlacedNPCSetterCommon)((IPlacedNPCGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PlacedNPCSetterCommon)((IPlacedNPCGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1813,7 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.DistantLODData = Mutagen.Bethesda.Oblivion.DistantLODData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.DistantLODData);
                 }
@@ -1821,7 +1820,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.EnableParent = Mutagen.Bethesda.Oblivion.EnableParent.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.EnableParent);
                 }
@@ -1882,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNPCInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IPlacedNPCInternal>(
                 record: item,
@@ -3134,16 +3132,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)DistantLODDataItem).BinaryWriteTranslator).Write(
                     item: DistantLODDataItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             if (item.EnableParent.TryGet(out var EnableParentItem))
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3181,7 +3177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IPlacedNPCGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -3204,7 +3200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPlacedNPCGetter)item,
@@ -3217,7 +3213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPlacedNPCGetter)item,
@@ -3230,7 +3226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPlacedNPCGetter)item,
@@ -3300,7 +3296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PlacedNPCBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Sound CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Sound();
             ((SoundSetterCommon)((ISoundGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundSetterCommon)((ISoundGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1248,7 +1248,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.SoundData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
@@ -1256,7 +1255,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.SoundDataExtended.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
                         masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
@@ -1275,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<ISoundInternal>(
                 record: item,
@@ -2008,8 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((SoundDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                    masterReferences: masterReferences);
             }
         }
 
@@ -2017,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ISoundGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2040,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ISoundGetter)item,
@@ -2053,7 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ISoundGetter)item,
@@ -2066,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ISoundGetter)item,
@@ -2135,7 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

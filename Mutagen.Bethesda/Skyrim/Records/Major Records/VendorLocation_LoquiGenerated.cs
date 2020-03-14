@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((VendorLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorLocation CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new VendorLocation();
             ((VendorLocationSetterCommon)((IVendorLocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorLocation item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((VendorLocationSetterCommon)((IVendorLocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVendorLocation item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1862,7 +1862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IVendorLocationGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IVendorLocationGetter)item,
@@ -1972,7 +1972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((VendorLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

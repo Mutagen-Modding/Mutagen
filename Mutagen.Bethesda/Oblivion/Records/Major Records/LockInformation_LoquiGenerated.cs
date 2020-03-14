@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LockInformation CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new LockInformation();
             ((LockInformationSetterCommon)((ILockInformationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformation item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILockInformation item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1960,7 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ILockInformationGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ILockInformationGetter)item,
@@ -2070,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

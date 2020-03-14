@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PathGridPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PathGridPoint CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PathGridPoint();
             ((PathGridPointSetterCommon)((IPathGridPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPoint item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPoint item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IPathGridPointGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
@@ -2080,7 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPathGridPointGetter)item,
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PathGridPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

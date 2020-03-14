@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CellLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -761,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CellLighting CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new CellLighting();
             ((CellLightingSetterCommon)((ICellLightingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLighting item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLighting item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -2391,7 +2391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ICellLightingGetter item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2409,7 +2409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ICellLightingGetter)item,
@@ -2500,7 +2500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CellLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
