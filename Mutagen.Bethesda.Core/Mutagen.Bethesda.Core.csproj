@@ -44,15 +44,15 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Links\DirectModLinkCache.cs" />
-    <Compile Include="Core\Links\FormLinkNullable.cs" />
-    <Compile Include="Core\Links\ILinkCache.cs" />
-    <Compile Include="Core\Links\LoadOrderLinkCache.cs" />
-    <Compile Include="Core\LoadOrder.cs" />
-    <Compile Include="Core\Structs\BinaryWriteParameters.cs" />
+    <Compile Include="Links\DirectModLinkCache.cs" />
+    <Compile Include="Links\FormLinkNullable.cs" />
+    <Compile Include="Links\ILinkCache.cs" />
+    <Compile Include="Links\LoadOrderLinkCache.cs" />
+    <Compile Include="Load Order\LoadOrder.cs" />
+    <Compile Include="Translators\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
-    <Compile Include="Core\MajorRecordInstantiator.cs" />
-    <Compile Include="Core\Structs\ModIndex.cs" />
+    <Compile Include="Utility\MajorRecordInstantiator.cs" />
+    <Compile Include="Structs\ModIndex.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
     <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
@@ -82,13 +82,13 @@
     <Compile Include="Preprocessing\BinaryFileProcessor.cs" />
     <Compile Include="Preprocessing\ModRecordAligner.cs" />
     <Compile Include="Translators\Binary\BinaryStringUtility.cs" />
-    <Compile Include="Core\Constants.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Enums\GameMode.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Extensions\NoggogRxExt.cs" />
-    <Compile Include="Core\Structs\FormID.cs" />
-    <Compile Include="Core\Structs\FormKey.cs" />
+    <Compile Include="Structs\FormID.cs" />
+    <Compile Include="Structs\FormKey.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IFormKey.cs" />
     <Compile Include="Interfaces\Major Records\IGameSettingCommon.cs" />
@@ -96,17 +96,17 @@
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IMutagenReadStream.cs" />
     <Compile Include="Interfaces\INamed.cs" />
-    <Compile Include="Core\Links\EDIDLink.cs" />
-    <Compile Include="Core\Links\FormLink.cs" />
-    <Compile Include="Core\Links\IEDIDLink.cs" />
-    <Compile Include="Core\Links\IFormLink.cs" />
-    <Compile Include="Core\Links\ILink.cs" />
-    <Compile Include="Core\Links\ILinkContainer.cs" />
-    <Compile Include="Core\MasterReferenceReader.cs" />
+    <Compile Include="Links\EDIDLink.cs" />
+    <Compile Include="Links\FormLink.cs" />
+    <Compile Include="Links\IEDIDLink.cs" />
+    <Compile Include="Links\IFormLink.cs" />
+    <Compile Include="Links\ILink.cs" />
+    <Compile Include="Links\ILinkContainer.cs" />
+    <Compile Include="Utility\MasterReferenceReader.cs" />
     <Compile Include="Preprocessing\ModDecompressor.cs" />
-    <Compile Include="Core\Structs\ModID.cs" />
-    <Compile Include="Core\Structs\ModKey.cs" />
-    <Compile Include="Core\ModListing.cs" />
+    <Compile Include="Structs\ModID.cs" />
+    <Compile Include="Structs\ModKey.cs" />
+    <Compile Include="Load Order\ModListing.cs" />
     <Compile Include="Preprocessing\ModRecordSorter.cs" />
     <Compile Include="Enums\ObjectType.cs" />
     <Compile Include="Patching\Pipeline.cs" />
@@ -118,8 +118,8 @@
     <Compile Include="Records\MasterReference_LoquiGenerated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
-    <Compile Include="Core\Structs\RecordType.cs" />
-    <Compile Include="Core\RecordTypeConverter.cs" />
+    <Compile Include="Structs\RecordType.cs" />
+    <Compile Include="Utility\RecordTypeConverter.cs" />
     <Compile Include="Streams\MutagenBinaryReadStream.cs" />
     <Compile Include="Streams\MutagenMemoryReadStream.cs" />
     <Compile Include="Translators\Binary\Fields\BooleanBinaryTranslation.cs" />

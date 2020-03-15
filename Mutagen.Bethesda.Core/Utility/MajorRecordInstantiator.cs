@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Internals
 {
     public delegate T MajorRecordActivator<T>(FormKey formKey) where T : IMajorRecordCommon;
     public static class MajorRecordInstantiator<T>
