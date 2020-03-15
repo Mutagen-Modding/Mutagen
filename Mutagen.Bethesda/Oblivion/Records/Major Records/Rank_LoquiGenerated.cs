@@ -1976,29 +1976,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.RankNumber,
                 header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER));
-            if (item.Name.TryGet(out var Nameitem))
-            {
-                if (Nameitem.Male.TryGet(out var male))
-                {
-                    using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER)))
-                    {
-                        Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                            writer: writer,
-                            item: male,
-                            binaryType: StringBinaryType.NullTerminate);
-                    }
-                }
-                if (Nameitem.Female.TryGet(out var female))
-                {
-                    using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER)))
-                    {
-                        Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                            writer: writer,
-                            item: female,
-                            binaryType: StringBinaryType.NullTerminate);
-                    }
-                }
-            }
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.Name,
+                maleMarker: Rank_Registration.MNAM_HEADER,
+                femaleMarker: Rank_Registration.FNAM_HEADER,
+                transl: StringBinaryTranslation.Instance.WriteNullable);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Insignia,

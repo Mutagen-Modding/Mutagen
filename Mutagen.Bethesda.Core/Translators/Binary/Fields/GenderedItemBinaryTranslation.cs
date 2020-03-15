@@ -135,5 +135,157 @@ namespace Mutagen.Bethesda.Binary
             }
             return new GenderedItem<TItem?>(male, female);
         }
+
+        public static void Write<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            UtilityTranslation.BinarySubWriteDelegate<T> transl)
+        {
+            if (item == null) return;
+            var male = item.Male;
+            if (male != null)
+            {
+                transl(writer, male);
+            }
+            var female = item.Female;
+            if (female != null)
+            {
+                transl(writer, female);
+            }
+        }
+
+        public static void Write<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            UtilityTranslation.BinarySubWriteDelegate<T> transl)
+        {
+            if (item == null) return;
+            var male = item.Male;
+            if (male != null)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
+                {
+                    transl(writer, male);
+                }
+            }
+            var female = item.Female;
+            if (female != null)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                {
+                    transl(writer, female);
+                }
+            }
+        }
+
+        public static void Write<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            RecordType markerType,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            UtilityTranslation.BinarySubWriteDelegate<T> transl)
+        {
+            if (item == null) return;
+            using (HeaderExport.ExportSubRecordHeader(writer, markerType))
+            {
+            }
+            var male = item.Male;
+            if (male != null)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
+                {
+                    transl(writer, male);
+                }
+            }
+            var female = item.Female;
+            if (female != null)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                {
+                    transl(writer, female);
+                }
+            }
+        }
+
+        public static void Write<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            RecordType markerType,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            MasterReferenceReader masterReferences,
+            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (item == null) return;
+            using (HeaderExport.ExportSubRecordHeader(writer, markerType))
+            {
+            }
+            var male = item.Male;
+            if (male != null)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
+                {
+                }
+                transl(writer, male, masterReferences, recordTypeConverter);
+            }
+            var female = item.Female;
+            if (female != null)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                {
+                }
+                transl(writer, female, masterReferences, recordTypeConverter);
+            }
+        }
+
+        public static void Write<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            RecordType recordType,
+            UtilityTranslation.BinarySubWriteDelegate<T> transl)
+        {
+            if (item == null) return;
+            using (HeaderExport.ExportSubRecordHeader(writer, recordType))
+            {
+                var male = item.Male;
+                if (male != null)
+                {
+                    transl(writer, male);
+                }
+                var female = item.Female;
+                if (female != null)
+                {
+                    transl(writer, female);
+                }
+            }
+        }
+
+        public static void Write<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            RecordType recordType,
+            MasterReferenceReader masterReferences,
+            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (item == null) return;
+            using (HeaderExport.ExportSubRecordHeader(writer, recordType))
+            {
+                var male = item.Male;
+                if (male != null)
+                {
+                    transl(writer, male, masterReferences, recordTypeConverter);
+                }
+                var female = item.Female;
+                if (female != null)
+                {
+                    transl(writer, female, masterReferences, recordTypeConverter);
+                }
+            }
+        }
     }
 }

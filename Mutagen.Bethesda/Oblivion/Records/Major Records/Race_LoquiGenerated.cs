@@ -5974,68 +5974,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Fluff);
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.Height.Male);
-                    }
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.Height.Female);
-                    }
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.Weight.Male);
-                    }
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.Weight.Female);
-                    }
+                    GenderedItemBinaryTranslation.Write(
+                        writer: writer,
+                        item: item.Height,
+                        transl: FloatBinaryTranslation.Instance.Write);
+                    GenderedItemBinaryTranslation.Write(
+                        writer: writer,
+                        item: item.Weight,
+                        transl: FloatBinaryTranslation.Instance.Write);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                         writer,
                         item.Flags,
                         length: 2);
                 }
             }
-            if (item.Voices.TryGet(out var Voicesitem))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.VNAM_HEADER)))
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.Voices,
+                recordType: Race_Registration.VNAM_HEADER,
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRaceGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
-                    {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: Voicesitem.Male,
-                            masterReferences: masterReferences);
-                    }
-                    {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: Voicesitem.Female,
-                            masterReferences: masterReferences);
-                    }
-                }
-            }
-            if (item.DefaultHair.TryGet(out var DefaultHairitem))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DNAM_HEADER)))
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        masterReferences: m);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.DefaultHair,
+                recordType: Race_Registration.DNAM_HEADER,
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
-                    {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: DefaultHairitem.Male,
-                            masterReferences: masterReferences);
-                    }
-                    {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: DefaultHairitem.Female,
-                            masterReferences: masterReferences);
-                    }
-                }
-            }
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        masterReferences: m);
+                });
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultHairColor,
@@ -6048,26 +6024,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.FaceGenFaceClamp,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.UNAM_HEADER));
-            if (item.RaceStats.TryGet(out var RaceStatsitem))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.ATTR_HEADER)))
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.RaceStats,
+                recordType: Race_Registration.ATTR_HEADER,
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IRaceStatsGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
-                    {
-                        var Item = RaceStatsitem.Male;
-                        ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: writer,
-                            masterReferences: masterReferences);
-                    }
-                    {
-                        var Item = RaceStatsitem.Female;
-                        ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: writer,
-                            masterReferences: masterReferences);
-                    }
-                }
-            }
+                    var Item = subItem;
+                    ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        masterReferences: m);
+                });
             using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, ObjectType.Subrecord)) { }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
                 writer: writer,
@@ -6083,42 +6052,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             masterReferences: m);
                     }
                 });
-            if (item.BodyData.TryGet(out var BodyDataitem))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.NAM1_HEADER)))
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.BodyData,
+                markerType: Race_Registration.NAM1_HEADER,
+                maleMarker: Race_Registration.MNAM_HEADER,
+                femaleMarker: Race_Registration.FNAM_HEADER,
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
-                }
-                if (BodyDataitem.Male.TryGet(out var male))
-                {
-                    using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.MNAM_HEADER)))
+                    if (subItem.TryGet(out var Item))
                     {
+                        ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            masterReferences: m);
                     }
-                    {
-                        if (male.TryGet(out var Item))
-                        {
-                            ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                                item: Item,
-                                writer: writer,
-                                masterReferences: masterReferences);
-                        }
-                    }
-                }
-                if (BodyDataitem.Female.TryGet(out var female))
-                {
-                    using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.FNAM_HEADER)))
-                    {
-                    }
-                    {
-                        if (female.TryGet(out var Item))
-                        {
-                            ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                                item: Item,
-                                writer: writer,
-                                masterReferences: masterReferences);
-                        }
-                    }
-                }
-            }
+                });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Hairs,

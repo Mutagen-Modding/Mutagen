@@ -1,6 +1,7 @@
 ﻿using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -104,88 +105,65 @@ namespace Mutagen.Bethesda.Generation
             GenderedType gendered = typeGen as GenderedType;
             var gen = this.Module.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
             var data = typeGen.GetFieldData();
-            bool isLoqui = gendered.SubTypeGeneration is LoquiType;
-            if (typeGen.HasBeenSet)
+            if (!this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subTransl))
             {
-                fg.AppendLine($"if ({itemAccessor}.TryGet(out var {typeGen.Name}item))");
-                itemAccessor = $"{typeGen.Name}item";
+                throw new ArgumentException("Unsupported type generator: " + gendered.SubTypeGeneration);
             }
-            using (new BraceWrapper(fg, doIt: typeGen.HasBeenSet))
+            var allowDirectWrite = subTransl.AllowDirectWrite(objGen, typeGen);
+            bool needsMasters = gendered.SubTypeGeneration is FormLinkType || gendered.SubTypeGeneration is LoquiType;
+            var typeName = gendered.SubTypeGeneration.TypeName(getter: true);
+            if (gendered.SubTypeGeneration is LoquiType loqui)
             {
+                typeName = loqui.TypeName(getter: true, internalInterface: true);
+            }
+            using (var args = new ArgsWrapper(fg,
+                $"GenderedItemBinaryTranslation.Write"))
+            {
+                args.Add($"writer: {writerAccessor}");
+                args.Add($"item: {itemAccessor}");
                 if (data.RecordType.HasValue)
                 {
-                    fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.ExportSubRecordHeader)}({writerAccessor}, recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})))");
+                    args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
                 else if (data.MarkerType.HasValue)
                 {
-                    fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.ExportSubRecordHeader)}({writerAccessor}, recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.MarkerType.Value)})))");
-                    using (new BraceWrapper(fg))
-                    {
-                    }
+                    args.Add($"markerType: {objGen.RecordTypeHeaderName(data.MarkerType.Value)}");
                 }
-                using (new BraceWrapper(fg, doIt: data.RecordType.HasValue))
+                if (gendered.MaleMarker.HasValue)
                 {
-                    var origAccessor = itemAccessor;
-                    if (gendered.MaleMarker.HasValue)
+                    args.Add($"maleMarker: {objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)}");
+                }
+                if (gendered.FemaleMarker.HasValue)
+                {
+                    args.Add($"femaleMarker: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
+                }
+                if (needsMasters)
+                {
+                    args.AddPassArg($"masterReferences");
+                }
+                if (allowDirectWrite)
+                {
+                    args.Add($"transl: {subTransl.GetTranslatorInstance(gendered.SubTypeGeneration, getter: true)}.Write{(gendered.SubTypeGeneration.HasBeenSet ? "Nullable" : string.Empty)}");
+                }
+                else
+                {
+                    args.Add((gen) =>
                     {
-                        fg.AppendLine($"if ({origAccessor}.Male.TryGet(out var male))");
-                        itemAccessor = "male";
-                    }
-                    else
-                    {
-                        itemAccessor = $"{origAccessor}.Male";
-                    }
-                    using (new BraceWrapper(fg, doIt: gendered.MaleMarker.HasValue))
-                    {
-                        if (gendered.MaleMarker.HasValue)
+                        var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)} subItem{(needsMasters ? $", {nameof(MasterReferenceReader)} m, {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        using (new BraceWrapper(gen))
                         {
-                            fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.ExportSubRecordHeader)}({writerAccessor}, recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)})))");
-                            using (new BraceWrapper(fg))
-                            {
-                                if (!isLoqui)
-                                {
-                                    gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor, mastersAccessor);
-                                }
-                            }
+                            subTransl.GenerateWrite(
+                                fg: gen,
+                                objGen: objGen,
+                                typeGen: gendered.SubTypeGeneration,
+                                writerAccessor: "subWriter",
+                                translationAccessor: "subTranslMask",
+                                itemAccessor: new Accessor($"subItem"),
+                                errorMaskAccessor: null,
+                                mastersAccessor: "m");
                         }
-                        if (isLoqui || !gendered.MaleMarker.HasValue)
-                        {
-                            using (new BraceWrapper(fg))
-                            {
-                                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor, mastersAccessor);
-                            }
-                        }
-                    }
-                    if (gendered.FemaleMarker.HasValue)
-                    {
-                        fg.AppendLine($"if ({origAccessor}.Female.TryGet(out var female))");
-                        itemAccessor = "female";
-                    }
-                    else
-                    {
-                        itemAccessor = $"{origAccessor}.Female";
-                    }
-                    using (new BraceWrapper(fg, doIt: gendered.FemaleMarker.HasValue))
-                    {
-                        if (gendered.FemaleMarker.HasValue)
-                        {
-                            fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.ExportSubRecordHeader)}({writerAccessor}, recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)})))");
-                            using (new BraceWrapper(fg))
-                            {
-                                if (!isLoqui)
-                                {
-                                    gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor, mastersAccessor);
-                                }
-                            }
-                        }
-                        if (isLoqui || !gendered.FemaleMarker.HasValue)
-                        {
-                            using (new BraceWrapper(fg))
-                            {
-                                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor, mastersAccessor);
-                            }
-                        }
-                    }
+                    });
                 }
             }
         }

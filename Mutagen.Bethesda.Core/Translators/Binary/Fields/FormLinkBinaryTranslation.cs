@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IFormLinkGetter<T> item,
             MasterReferenceReader masterReferences,
-            bool nullable = false)
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
             FormKeyBinaryTranslation.Instance.Write(
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IEDIDLinkGetter<T> item,
             MasterReferenceReader masterReferences,
-            bool nullable = false)
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
             this.Write(

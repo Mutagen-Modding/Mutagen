@@ -63,6 +63,14 @@ namespace Mutagen.Bethesda.Binary
             Write(writer, item, binaryType: StringBinaryType.NullTerminate);
         }
 
+        public void WriteNullable(
+            MutagenWriter writer,
+            string? item)
+        {
+            if (item == null) return;
+            Write(writer, item, binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             string item,

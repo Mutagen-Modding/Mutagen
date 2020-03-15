@@ -5348,24 +5348,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.MovementTypeNames,
                 recordType: Race_Registration.MTNM_HEADER,
                 transl: StringBinaryTranslation.Instance.Write);
-            if (item.Voices.TryGet(out var Voicesitem))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.VTCK_HEADER)))
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.Voices,
+                recordType: Race_Registration.VTCK_HEADER,
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IVoiceTypeGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
-                    {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: Voicesitem.Male,
-                            masterReferences: masterReferences);
-                    }
-                    {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: Voicesitem.Female,
-                            masterReferences: masterReferences);
-                    }
-                }
-            }
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        masterReferences: m);
+                });
             if (item.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
             {
                 ((GenderedFormLinksBinaryWriteTranslation)((IBinaryItem)DecapitateArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
