@@ -59,7 +59,21 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"maleMarker: {objGen.RecordTypeHeaderName(gender.MaleMarker.Value)}");
                     args.Add($"femaleMarker: {objGen.RecordTypeHeaderName(gender.FemaleMarker.Value)}");
                 }
+                var subData = gender.SubTypeGeneration.GetFieldData();
+                if (subData.RecordType.HasValue
+                    && !(gender.SubTypeGeneration is LoquiType))
+                {
+                    args.Add($"contentMarker: {objGen.RecordTypeHeaderName(subData.RecordType.Value)}");
+                }
                 LoquiType loqui = gender.SubTypeGeneration as LoquiType;
+                if (loqui != null)
+                {
+                    if (subData?.RecordTypeConverter != null
+                        && subData.RecordTypeConverter.FromConversions.Count > 0)
+                    {
+                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                    }
+                }
                 if (loqui != null
                     && !loqui.CanStronglyType)
                 {
@@ -249,8 +263,11 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine("get");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault()};");
-                                fg.AppendLine($"var data = {dataAccessor}.Span.Slice({currentPosition}, {subLen});");
+                                if (typeGen.HasBeenSet)
+                                {
+                                    fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault()};");
+                                }
+                                fg.AppendLine($"var data = {dataAccessor}.Span.Slice({currentPosition}, {subLen * 2});");
                                 using (var args = new ArgsWrapper(fg,
                                     $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
                                 {

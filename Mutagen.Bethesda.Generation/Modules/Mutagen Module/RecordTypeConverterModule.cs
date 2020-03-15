@@ -70,7 +70,19 @@ namespace Mutagen.Bethesda.Generation
             }
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
-                if (!(field is LoquiType loquiType)) continue;
+                LoquiType loquiType = field as LoquiType;
+                if (loquiType == null)
+                {
+                    switch (field)
+                    {
+                        case WrapperType wrapper:
+                            loquiType = wrapper.SubTypeGeneration as LoquiType;
+                            if (loquiType != null) break;
+                            continue;
+                        default:
+                            continue;
+                    }
+                }
                 var fieldData = loquiType.GetFieldData();
                 if (fieldData.RecordTypeConverter == null || fieldData.RecordTypeConverter.FromConversions.Count == 0) continue;
                 using (var args = new ArgsWrapper(fg,

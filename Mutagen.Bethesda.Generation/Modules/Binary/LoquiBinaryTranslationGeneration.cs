@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Generation
                         if (data?.RecordTypeConverter != null
                             && data.RecordTypeConverter.FromConversions.Count > 0)
                         {
-                            args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                            args.Add($"recordTypeConverter: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
                         }
                     }
                 }

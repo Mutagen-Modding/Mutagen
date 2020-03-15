@@ -733,6 +733,7 @@
     <Compile Include="Skyrim\Records\Common Enums\ArmorType.cs" />
     <Compile Include="Skyrim\Records\Common Enums\BipedObject.cs" />
     <Compile Include="Skyrim\Records\Common Enums\Combat.cs" />
+    <Compile Include="Skyrim\Records\Common Enums\EquipType.cs" />
     <Compile Include="Skyrim\Records\Common Enums\Skill.cs" />
     <Compile Include="Skyrim\Records\Common Enums\VendorLocation.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\AlternateTexture.cs">
@@ -801,6 +802,15 @@
     <Compile Include="Skyrim\Records\Major Records\Armor_LoquiGenerated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ArtObject_LoquiGenerated.cs">
+      <DependentUpon>ArtObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AvailableMorphs.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AvailableMorphs_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\BodyData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -831,11 +841,20 @@
     <Compile Include="Skyrim\Records\Major Records\Decal_LoquiGenerated.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\EquipType_LoquiGenerated.cs">
+      <DependentUpon>EquipType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Eye.cs">
       <DependentUpon>Eye.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Eye_LoquiGenerated.cs">
       <DependentUpon>Eye.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\FaceFxPhonemes.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\FaceFxPhonemes_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
@@ -903,17 +922,35 @@
     <Compile Include="Skyrim\Records\Major Records\Hair_LoquiGenerated.cs">
       <DependentUpon>Hair.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\HeadData_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\HeadPart.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\HeadPartReference_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\HeadPart_LoquiGenerated.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ImpactDataSet_LoquiGenerated.cs">
+      <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Keyword_LoquiGenerated.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\LocationReferenceType_LoquiGenerated.cs">
       <DependentUpon>LocationReferenceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MaterialType_LoquiGenerated.cs">
+      <DependentUpon>MaterialType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MovementType_LoquiGenerated.cs">
+      <DependentUpon>MovementType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NPC_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Outfit_LoquiGenerated.cs">
       <DependentUpon>Outfit.xml</DependentUpon>
@@ -924,6 +961,9 @@
     <Compile Include="Skyrim\Records\Major Records\Part_LoquiGenerated.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PhonemeTarget_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedObject_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -933,6 +973,9 @@
     <Compile Include="Skyrim\Records\Major Records\RaceData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RaceMovementType_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Race_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -940,6 +983,12 @@
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\SkillBoost_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SoundDescriptor_LoquiGenerated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SpeedOverrides_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\SpellAbstract_LoquiGenerated.cs">
@@ -953,6 +1002,15 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Textures_LoquiGenerated.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\TintAssets.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\TintAssets_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\TintPreset_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\VendorLocation_LoquiGenerated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
@@ -983,6 +1041,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\SkyrimMod_LoquiGenerated.cs">
       <DependentUpon>SkyrimMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\SimpleModel_LoquiGenerated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

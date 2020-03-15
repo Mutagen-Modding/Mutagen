@@ -1,5 +1,6 @@
 ﻿using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool ExportingExtraNam2 { get; set; }
 
         [Flags]
-        public enum Flag : uint
+        public enum Flag : ulong
         {
             Playable = 0x0000_0001,
             FaceGenHead = 0x0000_0002,
@@ -47,14 +48,9 @@ namespace Mutagen.Bethesda.Skyrim
             AllowMultipleMembraneShaders = 0x2000_0000,
             CanDualWield = 0x4000_0000,
             AvoidsRoads = 0x8000_0000,
-        }
-
-        [Flags]
-        public enum Flag2
-        {
-            UseAdvancedAvoidance = 0x01,
-            NonHostile = 0x02,
-            AllowMountedCombat = 0x10
+            UseAdvancedAvoidance = 0x0001_0000_0000,
+            NonHostile = 0x0002_0000_0000,
+            AllowMountedCombat = 0x0010_0000_0000,
         }
 
         public enum Size
@@ -80,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class RaceBinaryCreateTranslation
         {
-            static partial void FillBinaryExtraMarkersCustom(MutagenFrame frame, IRaceInternal item, MasterReferenceReader masterReferences)
+            static partial void FillBinaryExtraNAM2Custom(MutagenFrame frame, IRaceInternal item, MasterReferenceReader masterReferences)
             {
                 if (frame.Complete) return;
                 var subHeader = frame.MetaData.GetSubRecord(frame);
@@ -94,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class RaceBinaryWriteTranslation
         {
-            static partial void WriteBinaryExtraMarkersCustom(MutagenWriter writer, IRaceGetter item, MasterReferenceReader masterReferences)
+            static partial void WriteBinaryExtraNAM2Custom(MutagenWriter writer, IRaceGetter item, MasterReferenceReader masterReferences)
             {
                 if (item.ExportingExtraNam2)
                 {
@@ -107,21 +103,51 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public bool ExportingExtraNam2 => throw new NotImplementedException();
             public bool ExportingExtraNam3 => throw new NotImplementedException();
-        }
 
-        public partial class RaceDataBinaryCreateTranslation
-        {
-            static partial void FillBinaryMountDataCustom(MutagenFrame frame, IRaceData item, MasterReferenceReader masterReferences)
+            partial void ExtraNAM2CustomParse(BinaryMemoryReadStream stream, int offset)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IReadOnlyDictionary<BipedObjectFlag, string> BipedObjectNames => throw new NotImplementedException();
+
+            void BipedObjectNamesCustomParse(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 throw new NotImplementedException();
             }
         }
 
+        public partial class RaceDataBinaryCreateTranslation
+        {
+            static partial void FillBinaryFlags2Custom(MutagenFrame frame, IRaceData item, MasterReferenceReader masterReferences)
+            {
+                ulong flags2 = frame.ReadUInt32();
+                flags2 <<= 32;
+                item.Flags |= ((Race.Flag)flags2);
+            }
+
+            static partial void FillBinaryMountDataCustom(MutagenFrame frame, IRaceData item, MasterReferenceReader masterReferences)
+            {
+                if (!frame.Complete)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+
         public partial class RaceDataBinaryWriteTranslation
         {
+            static partial void WriteBinaryFlags2Custom(MutagenWriter writer, IRaceDataGetter item, MasterReferenceReader masterReferences)
+            {
+                ulong flags = (ulong)item.Flags;
+                flags >>= 32;
+                writer.Write((uint)flags);
+            }
+
             static partial void WriteBinaryMountDataCustom(MutagenWriter writer, IRaceDataGetter item, MasterReferenceReader masterReferences)
             {
-                throw new NotImplementedException();
+                //ToDo
+                //Implement Mount Data export
             }
         }
     }

@@ -52,47 +52,38 @@ namespace Mutagen.Bethesda.Binary
             {
                 var subHeader = frame.MetaData.GetSubRecord(frame);
                 RecordType type = subHeader.RecordType;
-                if (type == maleMarker)
+                if (type != maleMarker && type != femaleMarker)
                 {
-                    if (skipMarker)
-                    {
-                        frame.Position += subHeader.TotalLength;
-                        if (!transl(frame, out male))
-                        {
-                            throw new ArgumentException();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += subHeader.HeaderLength;
-                        if (!transl(frame.SpawnWithLength(subHeader.RecordLength), out male))
-                        {
-                            throw new ArgumentException();
-                        }
-                    }
+                    break;
                 }
-                else if (type == femaleMarker)
+                TItem item;
+                if (skipMarker)
                 {
-                    if (skipMarker)
+                    frame.Position += subHeader.TotalLength;
+                    if (!transl(frame, out item))
                     {
-                        frame.Position += subHeader.TotalLength;
-                        if (!transl(frame, out female))
-                        {
-                            throw new ArgumentException();
-                        }
-                    }
-                    else
-                    {
-                        frame.Position += subHeader.HeaderLength;
-                        if (!transl(frame.SpawnWithLength(subHeader.RecordLength), out female))
-                        {
-                            throw new ArgumentException();
-                        }
+                        throw new ArgumentException();
                     }
                 }
                 else
                 {
-                    break;
+                    frame.Position += subHeader.HeaderLength;
+                    if (!transl(frame.SpawnWithLength(subHeader.RecordLength), out item))
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                if (type == maleMarker)
+                {
+                    male = item;
+                }
+                else if (type == femaleMarker)
+                {
+                    female = item;
+                }
+                else
+                {
+                    throw new ArgumentException();
                 }
             }
             return new GenderedItem<TItem?>(male, female);
@@ -131,6 +122,63 @@ namespace Mutagen.Bethesda.Binary
                 else
                 {
                     break;
+                }
+            }
+            return new GenderedItem<TItem?>(male, female);
+        }
+
+        public static GenderedItem<TItem?> Parse<TItem>(
+            MutagenFrame frame,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            RecordType contentMarker,
+            UtilityTranslation.BinarySubParseDelegate<TItem> transl,
+            bool skipMarker)
+            where TItem : class
+        {
+            TItem? male = default, female = default;
+            for (int i = 0; i < 2; i++)
+            {
+                var genderedHeader = frame.MetaData.GetSubRecord(frame);
+                RecordType type = genderedHeader.RecordType;
+                if (type != maleMarker && type != femaleMarker)
+                {
+                    break;
+                }
+                frame.Position += genderedHeader.TotalLength;
+                var subHeader = frame.MetaData.GetSubRecord(frame);
+                if (contentMarker != subHeader.RecordType)
+                {
+                    break;
+                }
+                TItem item;
+                if (skipMarker)
+                {
+                    frame.Position += subHeader.TotalLength;
+                    if (!transl(frame, out item))
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                else
+                {
+                    frame.Position += subHeader.HeaderLength;
+                    if (!transl(frame.SpawnWithLength(subHeader.RecordLength), out item))
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                if (type == maleMarker)
+                {
+                    male = item;
+                }
+                else if (type == femaleMarker)
+                {
+                    female = item;
+                }
+                else
+                {
+                    throw new ArgumentException();
                 }
             }
             return new GenderedItem<TItem?>(male, female);
@@ -176,6 +224,34 @@ namespace Mutagen.Bethesda.Binary
                 using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
                 {
                     transl(writer, female);
+                }
+            }
+        }
+
+        public static void Write<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            MasterReferenceReader masterReferences,
+            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (item == null) return;
+            var male = item.Male;
+            if (male != null)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
+                {
+                    transl(writer, male, masterReferences, recordTypeConverter);
+                }
+            }
+            var female = item.Female;
+            if (female != null)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                {
+                    transl(writer, female, masterReferences, recordTypeConverter);
                 }
             }
         }

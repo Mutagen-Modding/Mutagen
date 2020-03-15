@@ -254,22 +254,25 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new List<T>();
+            if (!HeaderTranslation.TryGetRecordType(frame.Reader, frame.MetaData.SubConstants.LengthLength, triggeringRecord))
+            {
+                throw new ArgumentException($"Unexpected record encountered.");
+            }
+            if (!IsLoqui)
+            {
+                frame.Position += frame.MetaData.SubConstants.HeaderLength;
+            }
+            var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, frame.MetaData.SubConstants.LengthLength, triggeringRecord)) break;
-                if (!IsLoqui)
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                }
-                var startingPos = frame.Position;
                 if (transl(frame, out var subIitem, masterReferences, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }
-                if (frame.Position == startingPos)
-                {
-                    throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
-                }
+            }
+            if (frame.Position == startingPos)
+            {
+                throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
             return ret;
         }
@@ -330,6 +333,47 @@ namespace Mutagen.Bethesda.Binary
                 masterReferences: masterReferences,
                 transl: transl,
                 recordTypeConverter: recordTypeConverter);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            RecordType counterType,
+            RecordType recordType,
+            BinarySubWriteDelegate<T> transl)
+        {
+            if (items == null) return;
+            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            {
+                writer.Write(items.Count);
+            }
+            this.WriteRecordList(
+                writer: writer,
+                items: items,
+                recordType: recordType,
+                transl: transl);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            RecordType counterType,
+            RecordType recordType,
+            MasterReferenceReader masterReferences,
+            BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (items == null) return;
+            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            {
+                writer.Write(items.Count);
+            }
+            this.WriteRecordList(
+                writer: writer,
+                items: items,
+                recordType: recordType,
+                masterReferences: masterReferences,
+                transl: transl);
         }
 
         private void WriteRecordList(

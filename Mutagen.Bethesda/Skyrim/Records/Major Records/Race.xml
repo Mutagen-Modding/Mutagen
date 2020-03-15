@@ -14,13 +14,18 @@
         <FormLink refName="Keyword" recordType="KWDA" />
       </List>
       <RefDirect name="Data" refName="RaceData" />
-      <String name="MaleSkeletalModel" markerType="MNAM" recordType="ANAM" />
-      <String name="FemaleSkeletalModel" markerType="FNAM" recordType="ANAM" />
+      <Gendered name="SkeletalModel" maleMarker="MNAM" femaleMarker="FNAM">
+        <RefDirect refName="SimpleModel" recordType="ANAM" >
+          <RecordTypeOverrides>
+            <Mapping From="MODL" To="ANAM" />
+          </RecordTypeOverrides>
+        </RefDirect>
+      </Gendered>
       <Nothing name="NAM2Marker" recordType="NAM2" />
       <List name="MovementTypeNames">
         <String recordType="MTNM" />
       </List>
-      <Gendered name="Voices" recordType="VTCK" >
+      <Gendered name="Voices" recordType="VTCK">
         <FormLink refName="VoiceType" />
       </Gendered>
       <Ref name="DecapitateArmors" recordType="DNAM">
@@ -46,7 +51,42 @@
         <FormLink refName="Eye" />
       </List>
       <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
-      <CustomLogic name="ExtraMarkers" />
+      <CustomLogic name="ExtraNAM2" />
+      <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM">
+        <RefDirect refName="Model" />
+      </Gendered>
+      <FormLink name="MaterialType" recordType="NAM4" refName="MaterialType" />
+      <FormLink name="ImpactDataSet" recordType="NAM5" refName="ImpactDataSet" />
+      <FormLink name="DecapitationFX" recordType="NAM7" refName="ArtObject" />
+      <FormLink name="OpenLootSound" recordType="ONAM" refName="SoundDescriptor" />
+      <FormLink name="CloseLootSound" recordType="LNAM" refName="SoundDescriptor" />
+      <Dict name="BipedObjectNames" binary="Custom" recordType="NAME">
+        <Key>
+          <Enum enumName="BipedObjectFlag" />
+        </Key>
+        <Value>
+          <String />
+        </Value>
+      </Dict>
+      <RefList name="MovementTypes" refName="RaceMovementType" />
+      <Enum name="EquipmentFlags" enumName="EquipTypeFlag" byteLength="4" recordType="VNAM" />
+      <List name="EquipmentSlots">
+        <FormLink recordType="QNAM" refName="EquipType" />
+      </List>
+      <FormLink name="UnarmedEquipSlot" refName="EquipType" recordType="UNES" />
+      <List name="PhonemeTargetNames">
+        <String recordType="PHTN" />
+      </List>
+      <RefDirect name="FaceFxPhonemes" refName="FaceFxPhonemes" />
+      <FormLink name="BaseMovementDefaultWalk" refName="MovementType" recordType="WKMV" />
+      <FormLink name="BaseMovementDefaultRun" refName="MovementType" recordType="RNMV" />
+      <FormLink name="BaseMovementDefaultSwim" refName="MovementType" recordType="SWMV" />
+      <FormLink name="BaseMovementDefaultFly" refName="MovementType" recordType="FLMV" />
+      <FormLink name="BaseMovementDefaultSneak" refName="MovementType" recordType="SNMV" />
+      <FormLink name="BaseMovementDefaultSprint" refName="MovementType" recordType="SPMV" />
+      <Gendered name="HeadData" markerType="NAM0" maleMarker="MNAM" femaleMarker="FNAM">
+        <RefDirect refName="HeadData" />
+      </Gendered>
     </Fields>
   </Object>
   <Object name="BodyTemplate" recordType="BODT" objType="Subrecord" GUID="8f6a5735-ee64-4fe6-b024-fffabb2bd8e4" ID="51">
@@ -66,10 +106,12 @@
       <RefDirect name="SkillBoost5" refName="SkillBoost" />
       <RefDirect name="SkillBoost6" refName="SkillBoost" />
       <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
-      <Float name="MaleHeight" />
-      <Float name="FemaleHeight" />
-      <Float name="MaleWeight" />
-      <Float name="FemaleWeight" />
+      <Gendered name="Height" >
+        <Float />
+      </Gendered>
+      <Gendered name="Weight" >
+        <Float />
+      </Gendered>
       <Enum name="Flags" enumName="Race.Flag" byteLength="4" />
       <Float name="StartingHealth" />
       <Float name="StartingMagicka" />
@@ -78,7 +120,7 @@
       <Float name="BaseMass" />
       <Float name="AccelerationRate" />
       <Float name="DecelerationRate" />
-      <Enum name="Size" enumName="Race.Size" byteLength="1" />
+      <Enum name="Size" enumName="Race.Size" byteLength="4" />
       <Enum name="HeadBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
       <Enum name="HairBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
       <Float name="InjuredHealthPercent" />
@@ -93,7 +135,7 @@
       <Float name="FlightRadius" />
       <Float name="AngularAccelerationRate" />
       <Float name="AngularTolerance" />
-      <Enum name="Flags2" enumName="Race.Flag2" byteLength="4" />
+      <CustomLogic name="Flags2" />
       <CustomLogic name="MountData" />
     </Fields>
   </Object>
@@ -113,6 +155,151 @@
     <Fields>
       <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" />
       <RefDirect name="Part" refName="Model" />
+    </Fields>
+  </Object>
+  <Object name="RaceMovementType" objType="Subrecord" GUID="fb099dce-2d5d-4b0e-86dd-ae8fa82d4951" ID="67">
+    <Fields>
+      <FormLink name="MovementType" refName="MovementType" recordType="MTYP" />
+      <RefDirect name="Overrides" refName="SpeedOverrides" recordType="SPED" />
+    </Fields>
+  </Object>
+  <Object name="SpeedOverrides" objType="Subrecord" GUID="9e8f3f43-b822-4733-90a8-18f6e067be2e" ID="68">
+    <Fields>
+      <Float name="LeftWalk" />
+      <Float name="LeftRun" />
+      <Float name="RightWalk" />
+      <Float name="RightRun" />
+      <Float name="ForwardWalk" />
+      <Float name="ForwardRun" />
+      <Float name="BackWalk" />
+      <Float name="BackRun" />
+      <Float name="RotateWalk" />
+      <Float name="RotateRun" />
+      <Float name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="FaceFxPhonemes" objType="Subrecord" GUID="b965bdb9-1d8c-4efe-8cfa-2f35cd13370a" ID="70">
+    <Fields>
+      <CustomLogic name="Parsing" recordType="PHWT" />
+      <RefDirect name="IY" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="IH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="EH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="EY" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="AE" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="AA" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="AW" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="AY" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="AH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="AO" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="OY" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="OW" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="UH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="UW" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="ER" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="AX" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="S" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="SH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="Z" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="ZH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="F" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="TH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="V" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="DH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="M" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="N" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="NG" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="L" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="R" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="W" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="Y" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="HH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="B" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="D" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="JH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="G" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="P" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="T" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="K" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="CH" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="SIL" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="SHOTSIL" refName="PhonemeTarget" binary="DoNothing" />
+      <RefDirect name="FLAP" refName="PhonemeTarget" binary="DoNothing" />
+    </Fields>
+  </Object>
+  <Object name="PhonemeTarget" objType="Subrecord" GUID="de2d7619-85dc-497e-b8a2-b955f9340a93" ID="71">
+    <Fields>
+      <Float name="Aah_LipBigAah" />
+      <Float name="BigAah_LipDST" />
+      <Float name="BMP_LipEee" />
+      <Float name="ChJsh_LipFV" />
+      <Float name="DST_LipK" />
+      <Float name="Eee_LipL" />
+      <Float name="Eh_LipR" />
+      <Float name="FV_LipTh" />
+      <Float name="I" />
+      <Float name="K" />
+      <Float name="N" />
+      <Float name="Oh" />
+      <Float name="OohQ" />
+      <Float name="R" />
+      <Float name="TH" />
+      <Float name="W" />
+    </Fields>
+  </Object>
+  <Object name="HeadData" objType="Subrecord" GUID="c0a94c29-c6cd-4b72-b019-b2af3b6b2b34" ID="72">
+    <Fields>
+      <RefList name="HeadParts" refName="HeadPartReference" />
+      <RefDirect name="AvailableMorphs" refName="AvailableMorphs" />
+      <List name="RacePresets">
+        <FormLink refName="NPC" recordType="RPRM" />
+      </List>
+      <List name="AvailableHairColors">
+        <FormLink refName="ColorRecord" recordType="ACHM" />
+      </List>
+      <List name="FaceDetails">
+        <FormLink refName="TextureSet" recordType="FTSM" />
+      </List>
+      <FormLink name="DefaultFaceTexture" refName="TextureSet" recordType="DFTM" />
+      <RefList name="TintMasks" refName="TintAssets" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="MorphRace" refName="Race" recordType="NAM8" />
+      <FormLink name="ArmorRace" refName="Race" recordType="RNAM" />
+    </Fields>
+  </Object>
+  <Object name="HeadPartReference" objType="Subrecord" GUID="d9a4b8da-2a5b-42d5-9cf6-614b7a13bc26" ID="73">
+    <Fields>
+      <Int32 name="Number" recordType="INDX" />
+      <FormLink name="Head" refName="HeadPart" recordType="HEAD" />
+    </Fields>
+  </Object>
+  <!-- ToDo: Decode when there's more interesting flags/members to expose -->
+  <Object name="AvailableMorphs" objType="Subrecord" GUID="43c181c2-3ab3-4a0c-82ce-3eb86e48d09b" ID="74">
+    <Fields>
+      <CustomLogic name="Parse" recordType="MPAI" />
+      <Int32 name="NoseIndex" binary="DoNothing" />
+      <ByteArray name="NoseData" byteLength="32" nullable="NotNull" binary="DoNothing" />
+      <Int32 name="BrowIndex" binary="DoNothing" />
+      <ByteArray name="BrowData" byteLength="32" nullable="NotNull" binary="DoNothing" />
+      <Int32 name="EyeIndex" binary="DoNothing" />
+      <ByteArray name="EyeData" byteLength="32" nullable="NotNull" binary="DoNothing" />
+      <Int32 name="LipIndex" binary="DoNothing" />
+      <ByteArray name="LipData" byteLength="32" nullable="NotNull" binary="DoNothing" />
+    </Fields>
+  </Object>
+  <Object name="TintAssets" objType="Subrecord" GUID="2a4a72e5-c74d-4afd-9783-e4947dc83f79" ID="76">
+    <Fields>
+      <UInt16 name="Index" recordType="TINI" />
+      <String name="FileName" recordType="TINT" />
+      <Enum name="MaskType" enumName="TintAssets.TintMaskType" byteLength="2" recordType="TINP" />
+      <FormLink name="PresetDefault" refName="ColorRecord" recordType="TIND" />
+      <RefList name="Presets" refName="TintPreset" />
+    </Fields>
+  </Object>
+  <Object name="TintPreset" objType="Subrecord" GUID="3feb2956-21fb-4da7-870a-f55ae751eff0" ID="77">
+    <Fields>
+      <FormLink name="Color" refName="ColorRecord" recordType="TINC" />
+      <Float name="DefaultValue" recordType="TINV" />
+      <UInt16 name="Index" recordType="TIRS" />
     </Fields>
   </Object>
 </Loqui>

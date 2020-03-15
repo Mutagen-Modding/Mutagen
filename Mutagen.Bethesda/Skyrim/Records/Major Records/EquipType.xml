@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EquipType" recordType="EQUP" objType="Record" baseClass="SkyrimMajorRecord" GUID="8aeacc80-2d8c-45fc-8cf1-48c04bc3a4ca" ID="69">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

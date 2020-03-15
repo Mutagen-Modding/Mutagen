@@ -92,17 +92,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IRaceDataGetter.Fluff => this.Fluff;
         #endregion
-        #region MaleHeight
-        public Single MaleHeight { get; set; } = default;
+        #region Height
+        public GenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        IGenderedItemGetter<Single> IRaceDataGetter.Height => this.Height;
         #endregion
-        #region FemaleHeight
-        public Single FemaleHeight { get; set; } = default;
-        #endregion
-        #region MaleWeight
-        public Single MaleWeight { get; set; } = default;
-        #endregion
-        #region FemaleWeight
-        public Single FemaleWeight { get; set; } = default;
+        #region Weight
+        public GenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
+        IGenderedItemGetter<Single> IRaceDataGetter.Weight => this.Weight;
         #endregion
         #region Flags
         public Race.Flag Flags { get; set; } = default;
@@ -176,9 +172,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AngularTolerance
         public Single AngularTolerance { get; set; } = default;
-        #endregion
-        #region Flags2
-        public Race.Flag2 Flags2 { get; set; } = default;
         #endregion
 
         #region To String
@@ -358,10 +351,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
                 this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
                 this.Fluff = initialValue;
-                this.MaleHeight = initialValue;
-                this.FemaleHeight = initialValue;
-                this.MaleWeight = initialValue;
-                this.FemaleWeight = initialValue;
+                this.Height = new GenderedItem<TItem>(initialValue, initialValue);
+                this.Weight = new GenderedItem<TItem>(initialValue, initialValue);
                 this.Flags = initialValue;
                 this.StartingHealth = initialValue;
                 this.StartingMagicka = initialValue;
@@ -385,7 +376,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FlightRadius = initialValue;
                 this.AngularAccelerationRate = initialValue;
                 this.AngularTolerance = initialValue;
-                this.Flags2 = initialValue;
             }
 
             public Mask(
@@ -397,10 +387,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SkillBoost5,
                 TItem SkillBoost6,
                 TItem Fluff,
-                TItem MaleHeight,
-                TItem FemaleHeight,
-                TItem MaleWeight,
-                TItem FemaleWeight,
+                TItem Height,
+                TItem Weight,
                 TItem Flags,
                 TItem StartingHealth,
                 TItem StartingMagicka,
@@ -423,8 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem AimAngleTolerance,
                 TItem FlightRadius,
                 TItem AngularAccelerationRate,
-                TItem AngularTolerance,
-                TItem Flags2)
+                TItem AngularTolerance)
             {
                 this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost0, new SkillBoost.Mask<TItem>(SkillBoost0));
                 this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost1, new SkillBoost.Mask<TItem>(SkillBoost1));
@@ -434,10 +421,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost5, new SkillBoost.Mask<TItem>(SkillBoost5));
                 this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost6, new SkillBoost.Mask<TItem>(SkillBoost6));
                 this.Fluff = Fluff;
-                this.MaleHeight = MaleHeight;
-                this.FemaleHeight = FemaleHeight;
-                this.MaleWeight = MaleWeight;
-                this.FemaleWeight = FemaleWeight;
+                this.Height = new GenderedItem<TItem>(Height, Height);
+                this.Weight = new GenderedItem<TItem>(Weight, Weight);
                 this.Flags = Flags;
                 this.StartingHealth = StartingHealth;
                 this.StartingMagicka = StartingMagicka;
@@ -461,7 +446,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FlightRadius = FlightRadius;
                 this.AngularAccelerationRate = AngularAccelerationRate;
                 this.AngularTolerance = AngularTolerance;
-                this.Flags2 = Flags2;
             }
 
             #pragma warning disable CS8618
@@ -481,10 +465,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost5 { get; set; }
             public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost6 { get; set; }
             public TItem Fluff;
-            public TItem MaleHeight;
-            public TItem FemaleHeight;
-            public TItem MaleWeight;
-            public TItem FemaleWeight;
+            public GenderedItem<TItem> Height;
+            public GenderedItem<TItem> Weight;
             public TItem Flags;
             public TItem StartingHealth;
             public TItem StartingMagicka;
@@ -508,7 +490,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem FlightRadius;
             public TItem AngularAccelerationRate;
             public TItem AngularTolerance;
-            public TItem Flags2;
             #endregion
 
             #region Equals
@@ -529,10 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.SkillBoost5, rhs.SkillBoost5)) return false;
                 if (!object.Equals(this.SkillBoost6, rhs.SkillBoost6)) return false;
                 if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-                if (!object.Equals(this.MaleHeight, rhs.MaleHeight)) return false;
-                if (!object.Equals(this.FemaleHeight, rhs.FemaleHeight)) return false;
-                if (!object.Equals(this.MaleWeight, rhs.MaleWeight)) return false;
-                if (!object.Equals(this.FemaleWeight, rhs.FemaleWeight)) return false;
+                if (!object.Equals(this.Height, rhs.Height)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.StartingHealth, rhs.StartingHealth)) return false;
                 if (!object.Equals(this.StartingMagicka, rhs.StartingMagicka)) return false;
@@ -556,7 +535,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.FlightRadius, rhs.FlightRadius)) return false;
                 if (!object.Equals(this.AngularAccelerationRate, rhs.AngularAccelerationRate)) return false;
                 if (!object.Equals(this.AngularTolerance, rhs.AngularTolerance)) return false;
-                if (!object.Equals(this.Flags2, rhs.Flags2)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -570,10 +548,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret = ret.CombineHashCode(this.SkillBoost5?.GetHashCode());
                 ret = ret.CombineHashCode(this.SkillBoost6?.GetHashCode());
                 ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleWeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Height?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
                 ret = ret.CombineHashCode(this.Flags?.GetHashCode());
                 ret = ret.CombineHashCode(this.StartingHealth?.GetHashCode());
                 ret = ret.CombineHashCode(this.StartingMagicka?.GetHashCode());
@@ -597,7 +573,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret = ret.CombineHashCode(this.FlightRadius?.GetHashCode());
                 ret = ret.CombineHashCode(this.AngularAccelerationRate?.GetHashCode());
                 ret = ret.CombineHashCode(this.AngularTolerance?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags2?.GetHashCode());
                 return ret;
             }
 
@@ -642,10 +617,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.SkillBoost6.Specific != null && !this.SkillBoost6.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Fluff)) return false;
-                if (!eval(this.MaleHeight)) return false;
-                if (!eval(this.FemaleHeight)) return false;
-                if (!eval(this.MaleWeight)) return false;
-                if (!eval(this.FemaleWeight)) return false;
+                if (!eval(this.Height.Male) || !eval(this.Height.Female)) return false;
+                if (!eval(this.Weight.Male) || !eval(this.Weight.Female)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.StartingHealth)) return false;
                 if (!eval(this.StartingMagicka)) return false;
@@ -669,7 +642,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.FlightRadius)) return false;
                 if (!eval(this.AngularAccelerationRate)) return false;
                 if (!eval(this.AngularTolerance)) return false;
-                if (!eval(this.Flags2)) return false;
                 return true;
             }
             #endregion
@@ -713,10 +685,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.SkillBoost6.Specific != null && this.SkillBoost6.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Fluff)) return true;
-                if (eval(this.MaleHeight)) return true;
-                if (eval(this.FemaleHeight)) return true;
-                if (eval(this.MaleWeight)) return true;
-                if (eval(this.FemaleWeight)) return true;
+                if (eval(this.Height.Male) || eval(this.Height.Female)) return true;
+                if (eval(this.Weight.Male) || eval(this.Weight.Female)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.StartingHealth)) return true;
                 if (eval(this.StartingMagicka)) return true;
@@ -740,7 +710,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.FlightRadius)) return true;
                 if (eval(this.AngularAccelerationRate)) return true;
                 if (eval(this.AngularTolerance)) return true;
-                if (eval(this.Flags2)) return true;
                 return false;
             }
             #endregion
@@ -763,10 +732,12 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.SkillBoost5 = this.SkillBoost5 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost5.Overall), this.SkillBoost5.Specific?.Translate(eval));
                 obj.SkillBoost6 = this.SkillBoost6 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost6.Overall), this.SkillBoost6.Specific?.Translate(eval));
                 obj.Fluff = eval(this.Fluff);
-                obj.MaleHeight = eval(this.MaleHeight);
-                obj.FemaleHeight = eval(this.FemaleHeight);
-                obj.MaleWeight = eval(this.MaleWeight);
-                obj.FemaleWeight = eval(this.FemaleWeight);
+                obj.Height = new GenderedItem<R>(
+                    eval(this.Height.Male),
+                    eval(this.Height.Female));
+                obj.Weight = new GenderedItem<R>(
+                    eval(this.Weight.Male),
+                    eval(this.Weight.Female));
                 obj.Flags = eval(this.Flags);
                 obj.StartingHealth = eval(this.StartingHealth);
                 obj.StartingMagicka = eval(this.StartingMagicka);
@@ -790,7 +761,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FlightRadius = eval(this.FlightRadius);
                 obj.AngularAccelerationRate = eval(this.AngularAccelerationRate);
                 obj.AngularTolerance = eval(this.AngularTolerance);
-                obj.Flags2 = eval(this.Flags2);
             }
             #endregion
 
@@ -845,21 +815,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Fluff, "Fluff");
                     }
-                    if (printMask?.MaleHeight ?? true)
+                    if ((true))
                     {
-                        fg.AppendItem(MaleHeight, "MaleHeight");
+                        fg.AppendLine($"Height => {Height}");
                     }
-                    if (printMask?.FemaleHeight ?? true)
+                    if ((true))
                     {
-                        fg.AppendItem(FemaleHeight, "FemaleHeight");
-                    }
-                    if (printMask?.MaleWeight ?? true)
-                    {
-                        fg.AppendItem(MaleWeight, "MaleWeight");
-                    }
-                    if (printMask?.FemaleWeight ?? true)
-                    {
-                        fg.AppendItem(FemaleWeight, "FemaleWeight");
+                        fg.AppendLine($"Weight => {Weight}");
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -953,10 +915,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(AngularTolerance, "AngularTolerance");
                     }
-                    if (printMask?.Flags2 ?? true)
-                    {
-                        fg.AppendItem(Flags2, "Flags2");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -990,10 +948,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost5;
             public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost6;
             public Exception? Fluff;
-            public Exception? MaleHeight;
-            public Exception? FemaleHeight;
-            public Exception? MaleWeight;
-            public Exception? FemaleWeight;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Height;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Weight;
             public Exception? Flags;
             public Exception? StartingHealth;
             public Exception? StartingMagicka;
@@ -1017,7 +973,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? FlightRadius;
             public Exception? AngularAccelerationRate;
             public Exception? AngularTolerance;
-            public Exception? Flags2;
             #endregion
 
             #region IErrorMask
@@ -1042,14 +997,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return SkillBoost6;
                     case RaceData_FieldIndex.Fluff:
                         return Fluff;
-                    case RaceData_FieldIndex.MaleHeight:
-                        return MaleHeight;
-                    case RaceData_FieldIndex.FemaleHeight:
-                        return FemaleHeight;
-                    case RaceData_FieldIndex.MaleWeight:
-                        return MaleWeight;
-                    case RaceData_FieldIndex.FemaleWeight:
-                        return FemaleWeight;
+                    case RaceData_FieldIndex.Height:
+                        return Height;
+                    case RaceData_FieldIndex.Weight:
+                        return Weight;
                     case RaceData_FieldIndex.Flags:
                         return Flags;
                     case RaceData_FieldIndex.StartingHealth:
@@ -1096,8 +1047,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return AngularAccelerationRate;
                     case RaceData_FieldIndex.AngularTolerance:
                         return AngularTolerance;
-                    case RaceData_FieldIndex.Flags2:
-                        return Flags2;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1132,17 +1081,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.Fluff:
                         this.Fluff = ex;
                         break;
-                    case RaceData_FieldIndex.MaleHeight:
-                        this.MaleHeight = ex;
+                    case RaceData_FieldIndex.Height:
+                        this.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
-                    case RaceData_FieldIndex.FemaleHeight:
-                        this.FemaleHeight = ex;
-                        break;
-                    case RaceData_FieldIndex.MaleWeight:
-                        this.MaleWeight = ex;
-                        break;
-                    case RaceData_FieldIndex.FemaleWeight:
-                        this.FemaleWeight = ex;
+                    case RaceData_FieldIndex.Weight:
+                        this.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case RaceData_FieldIndex.Flags:
                         this.Flags = ex;
@@ -1213,9 +1156,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.AngularTolerance:
                         this.AngularTolerance = ex;
                         break;
-                    case RaceData_FieldIndex.Flags2:
-                        this.Flags2 = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1250,17 +1190,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.Fluff:
                         this.Fluff = (Exception?)obj;
                         break;
-                    case RaceData_FieldIndex.MaleHeight:
-                        this.MaleHeight = (Exception?)obj;
+                    case RaceData_FieldIndex.Height:
+                        this.Height = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case RaceData_FieldIndex.FemaleHeight:
-                        this.FemaleHeight = (Exception?)obj;
-                        break;
-                    case RaceData_FieldIndex.MaleWeight:
-                        this.MaleWeight = (Exception?)obj;
-                        break;
-                    case RaceData_FieldIndex.FemaleWeight:
-                        this.FemaleWeight = (Exception?)obj;
+                    case RaceData_FieldIndex.Weight:
+                        this.Weight = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case RaceData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -1331,9 +1265,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.AngularTolerance:
                         this.AngularTolerance = (Exception?)obj;
                         break;
-                    case RaceData_FieldIndex.Flags2:
-                        this.Flags2 = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1350,10 +1281,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (SkillBoost5 != null) return true;
                 if (SkillBoost6 != null) return true;
                 if (Fluff != null) return true;
-                if (MaleHeight != null) return true;
-                if (FemaleHeight != null) return true;
-                if (MaleWeight != null) return true;
-                if (FemaleWeight != null) return true;
+                if (Height != null) return true;
+                if (Weight != null) return true;
                 if (Flags != null) return true;
                 if (StartingHealth != null) return true;
                 if (StartingMagicka != null) return true;
@@ -1377,7 +1306,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (FlightRadius != null) return true;
                 if (AngularAccelerationRate != null) return true;
                 if (AngularTolerance != null) return true;
-                if (Flags2 != null) return true;
                 return false;
             }
             #endregion
@@ -1420,10 +1348,8 @@ namespace Mutagen.Bethesda.Skyrim
                 SkillBoost5?.ToString(fg);
                 SkillBoost6?.ToString(fg);
                 fg.AppendItem(Fluff, "Fluff");
-                fg.AppendItem(MaleHeight, "MaleHeight");
-                fg.AppendItem(FemaleHeight, "FemaleHeight");
-                fg.AppendItem(MaleWeight, "MaleWeight");
-                fg.AppendItem(FemaleWeight, "FemaleWeight");
+                fg.AppendLine($"Height => {Height}");
+                fg.AppendLine($"Weight => {Weight}");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(StartingHealth, "StartingHealth");
                 fg.AppendItem(StartingMagicka, "StartingMagicka");
@@ -1447,7 +1373,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(FlightRadius, "FlightRadius");
                 fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
                 fg.AppendItem(AngularTolerance, "AngularTolerance");
-                fg.AppendItem(Flags2, "Flags2");
             }
             #endregion
 
@@ -1464,10 +1389,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SkillBoost5 = this.SkillBoost5.Combine(rhs.SkillBoost5, (l, r) => l.Combine(r));
                 ret.SkillBoost6 = this.SkillBoost6.Combine(rhs.SkillBoost6, (l, r) => l.Combine(r));
                 ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-                ret.MaleHeight = this.MaleHeight.Combine(rhs.MaleHeight);
-                ret.FemaleHeight = this.FemaleHeight.Combine(rhs.FemaleHeight);
-                ret.MaleWeight = this.MaleWeight.Combine(rhs.MaleWeight);
-                ret.FemaleWeight = this.FemaleWeight.Combine(rhs.FemaleWeight);
+                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
+                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.StartingHealth = this.StartingHealth.Combine(rhs.StartingHealth);
                 ret.StartingMagicka = this.StartingMagicka.Combine(rhs.StartingMagicka);
@@ -1491,7 +1414,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.FlightRadius = this.FlightRadius.Combine(rhs.FlightRadius);
                 ret.AngularAccelerationRate = this.AngularAccelerationRate.Combine(rhs.AngularAccelerationRate);
                 ret.AngularTolerance = this.AngularTolerance.Combine(rhs.AngularTolerance);
-                ret.Flags2 = this.Flags2.Combine(rhs.Flags2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1521,10 +1443,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost5;
             public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost6;
             public bool Fluff;
-            public bool MaleHeight;
-            public bool FemaleHeight;
-            public bool MaleWeight;
-            public bool FemaleWeight;
+            public MaskItem<bool, GenderedItem<bool>?> Height;
+            public MaskItem<bool, GenderedItem<bool>?> Weight;
             public bool Flags;
             public bool StartingHealth;
             public bool StartingMagicka;
@@ -1548,7 +1468,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool FlightRadius;
             public bool AngularAccelerationRate;
             public bool AngularTolerance;
-            public bool Flags2;
             #endregion
 
             #region Ctors
@@ -1562,10 +1481,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkillBoost5 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
                 this.SkillBoost6 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
                 this.Fluff = defaultOn;
-                this.MaleHeight = defaultOn;
-                this.FemaleHeight = defaultOn;
-                this.MaleWeight = defaultOn;
-                this.FemaleWeight = defaultOn;
+                this.Height = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.Weight = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Flags = defaultOn;
                 this.StartingHealth = defaultOn;
                 this.StartingMagicka = defaultOn;
@@ -1589,7 +1506,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FlightRadius = defaultOn;
                 this.AngularAccelerationRate = defaultOn;
                 this.AngularTolerance = defaultOn;
-                this.Flags2 = defaultOn;
             }
 
             #endregion
@@ -1613,10 +1529,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SkillBoost5?.Overall ?? true, SkillBoost5?.Specific?.GetCrystal()));
                 ret.Add((SkillBoost6?.Overall ?? true, SkillBoost6?.Specific?.GetCrystal()));
                 ret.Add((Fluff, null));
-                ret.Add((MaleHeight, null));
-                ret.Add((FemaleHeight, null));
-                ret.Add((MaleWeight, null));
-                ret.Add((FemaleWeight, null));
+                ret.Add((Height?.Overall ?? true, null));
+                ret.Add((Weight?.Overall ?? true, null));
                 ret.Add((Flags, null));
                 ret.Add((StartingHealth, null));
                 ret.Add((StartingMagicka, null));
@@ -1640,7 +1554,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FlightRadius, null));
                 ret.Add((AngularAccelerationRate, null));
                 ret.Add((AngularTolerance, null));
-                ret.Add((Flags2, null));
             }
         }
         #endregion
@@ -1725,10 +1638,8 @@ namespace Mutagen.Bethesda.Skyrim
         new SkillBoost SkillBoost5 { get; set; }
         new SkillBoost SkillBoost6 { get; set; }
         new Byte[] Fluff { get; set; }
-        new Single MaleHeight { get; set; }
-        new Single FemaleHeight { get; set; }
-        new Single MaleWeight { get; set; }
-        new Single FemaleWeight { get; set; }
+        new GenderedItem<Single> Height { get; set; }
+        new GenderedItem<Single> Weight { get; set; }
         new Race.Flag Flags { get; set; }
         new Single StartingHealth { get; set; }
         new Single StartingMagicka { get; set; }
@@ -1752,7 +1663,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single FlightRadius { get; set; }
         new Single AngularAccelerationRate { get; set; }
         new Single AngularTolerance { get; set; }
-        new Race.Flag2 Flags2 { get; set; }
     }
 
     public partial interface IRaceDataGetter :
@@ -1775,10 +1685,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkillBoostGetter SkillBoost5 { get; }
         ISkillBoostGetter SkillBoost6 { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
-        Single MaleHeight { get; }
-        Single FemaleHeight { get; }
-        Single MaleWeight { get; }
-        Single FemaleWeight { get; }
+        IGenderedItemGetter<Single> Height { get; }
+        IGenderedItemGetter<Single> Weight { get; }
         Race.Flag Flags { get; }
         Single StartingHealth { get; }
         Single StartingMagicka { get; }
@@ -1802,7 +1710,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single FlightRadius { get; }
         Single AngularAccelerationRate { get; }
         Single AngularTolerance { get; }
-        Race.Flag2 Flags2 { get; }
 
     }
 
@@ -2121,34 +2028,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         SkillBoost5 = 5,
         SkillBoost6 = 6,
         Fluff = 7,
-        MaleHeight = 8,
-        FemaleHeight = 9,
-        MaleWeight = 10,
-        FemaleWeight = 11,
-        Flags = 12,
-        StartingHealth = 13,
-        StartingMagicka = 14,
-        StartingStamina = 15,
-        BaseCarryWeight = 16,
-        BaseMass = 17,
-        AccelerationRate = 18,
-        DecelerationRate = 19,
-        Size = 20,
-        HeadBipedObject = 21,
-        HairBipedObject = 22,
-        InjuredHealthPercent = 23,
-        ShieldBipedObject = 24,
-        HealthRegen = 25,
-        MagickaRegen = 26,
-        StaminaRegen = 27,
-        UnarmedDamage = 28,
-        UnarmedReach = 29,
-        BodyBipedObject = 30,
-        AimAngleTolerance = 31,
-        FlightRadius = 32,
-        AngularAccelerationRate = 33,
-        AngularTolerance = 34,
-        Flags2 = 35,
+        Height = 8,
+        Weight = 9,
+        Flags = 10,
+        StartingHealth = 11,
+        StartingMagicka = 12,
+        StartingStamina = 13,
+        BaseCarryWeight = 14,
+        BaseMass = 15,
+        AccelerationRate = 16,
+        DecelerationRate = 17,
+        Size = 18,
+        HeadBipedObject = 19,
+        HairBipedObject = 20,
+        InjuredHealthPercent = 21,
+        ShieldBipedObject = 22,
+        HealthRegen = 23,
+        MagickaRegen = 24,
+        StaminaRegen = 25,
+        UnarmedDamage = 26,
+        UnarmedReach = 27,
+        BodyBipedObject = 28,
+        AimAngleTolerance = 29,
+        FlightRadius = 30,
+        AngularAccelerationRate = 31,
+        AngularTolerance = 32,
     }
     #endregion
 
@@ -2166,9 +2070,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "b455e069-05b6-4f16-b587-b7f1530d620b";
 
-        public const ushort AdditionalFieldCount = 36;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 36;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(RaceData.Mask<>);
 
@@ -2214,14 +2118,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)RaceData_FieldIndex.SkillBoost6;
                 case "FLUFF":
                     return (ushort)RaceData_FieldIndex.Fluff;
-                case "MALEHEIGHT":
-                    return (ushort)RaceData_FieldIndex.MaleHeight;
-                case "FEMALEHEIGHT":
-                    return (ushort)RaceData_FieldIndex.FemaleHeight;
-                case "MALEWEIGHT":
-                    return (ushort)RaceData_FieldIndex.MaleWeight;
-                case "FEMALEWEIGHT":
-                    return (ushort)RaceData_FieldIndex.FemaleWeight;
+                case "HEIGHT":
+                    return (ushort)RaceData_FieldIndex.Height;
+                case "WEIGHT":
+                    return (ushort)RaceData_FieldIndex.Weight;
                 case "FLAGS":
                     return (ushort)RaceData_FieldIndex.Flags;
                 case "STARTINGHEALTH":
@@ -2268,8 +2168,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)RaceData_FieldIndex.AngularAccelerationRate;
                 case "ANGULARTOLERANCE":
                     return (ushort)RaceData_FieldIndex.AngularTolerance;
-                case "FLAGS2":
-                    return (ushort)RaceData_FieldIndex.Flags2;
                 default:
                     return null;
             }
@@ -2288,10 +2186,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.SkillBoost5:
                 case RaceData_FieldIndex.SkillBoost6:
                 case RaceData_FieldIndex.Fluff:
-                case RaceData_FieldIndex.MaleHeight:
-                case RaceData_FieldIndex.FemaleHeight:
-                case RaceData_FieldIndex.MaleWeight:
-                case RaceData_FieldIndex.FemaleWeight:
+                case RaceData_FieldIndex.Height:
+                case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
                 case RaceData_FieldIndex.StartingHealth:
                 case RaceData_FieldIndex.StartingMagicka:
@@ -2315,7 +2211,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
-                case RaceData_FieldIndex.Flags2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2336,10 +2231,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.SkillBoost6:
                     return true;
                 case RaceData_FieldIndex.Fluff:
-                case RaceData_FieldIndex.MaleHeight:
-                case RaceData_FieldIndex.FemaleHeight:
-                case RaceData_FieldIndex.MaleWeight:
-                case RaceData_FieldIndex.FemaleWeight:
+                case RaceData_FieldIndex.Height:
+                case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
                 case RaceData_FieldIndex.StartingHealth:
                 case RaceData_FieldIndex.StartingMagicka:
@@ -2363,7 +2256,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
-                case RaceData_FieldIndex.Flags2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2383,10 +2275,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.SkillBoost5:
                 case RaceData_FieldIndex.SkillBoost6:
                 case RaceData_FieldIndex.Fluff:
-                case RaceData_FieldIndex.MaleHeight:
-                case RaceData_FieldIndex.FemaleHeight:
-                case RaceData_FieldIndex.MaleWeight:
-                case RaceData_FieldIndex.FemaleWeight:
+                case RaceData_FieldIndex.Height:
+                case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
                 case RaceData_FieldIndex.StartingHealth:
                 case RaceData_FieldIndex.StartingMagicka:
@@ -2410,7 +2300,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
-                case RaceData_FieldIndex.Flags2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2438,14 +2327,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "SkillBoost6";
                 case RaceData_FieldIndex.Fluff:
                     return "Fluff";
-                case RaceData_FieldIndex.MaleHeight:
-                    return "MaleHeight";
-                case RaceData_FieldIndex.FemaleHeight:
-                    return "FemaleHeight";
-                case RaceData_FieldIndex.MaleWeight:
-                    return "MaleWeight";
-                case RaceData_FieldIndex.FemaleWeight:
-                    return "FemaleWeight";
+                case RaceData_FieldIndex.Height:
+                    return "Height";
+                case RaceData_FieldIndex.Weight:
+                    return "Weight";
                 case RaceData_FieldIndex.Flags:
                     return "Flags";
                 case RaceData_FieldIndex.StartingHealth:
@@ -2492,8 +2377,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "AngularAccelerationRate";
                 case RaceData_FieldIndex.AngularTolerance:
                     return "AngularTolerance";
-                case RaceData_FieldIndex.Flags2:
-                    return "Flags2";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2512,10 +2395,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.SkillBoost5:
                 case RaceData_FieldIndex.SkillBoost6:
                 case RaceData_FieldIndex.Fluff:
-                case RaceData_FieldIndex.MaleHeight:
-                case RaceData_FieldIndex.FemaleHeight:
-                case RaceData_FieldIndex.MaleWeight:
-                case RaceData_FieldIndex.FemaleWeight:
+                case RaceData_FieldIndex.Height:
+                case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
                 case RaceData_FieldIndex.StartingHealth:
                 case RaceData_FieldIndex.StartingMagicka:
@@ -2539,7 +2420,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
-                case RaceData_FieldIndex.Flags2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2559,10 +2439,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.SkillBoost5:
                 case RaceData_FieldIndex.SkillBoost6:
                 case RaceData_FieldIndex.Fluff:
-                case RaceData_FieldIndex.MaleHeight:
-                case RaceData_FieldIndex.FemaleHeight:
-                case RaceData_FieldIndex.MaleWeight:
-                case RaceData_FieldIndex.FemaleWeight:
+                case RaceData_FieldIndex.Height:
+                case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
                 case RaceData_FieldIndex.StartingHealth:
                 case RaceData_FieldIndex.StartingMagicka:
@@ -2586,7 +2464,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
-                case RaceData_FieldIndex.Flags2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2614,14 +2491,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(SkillBoost);
                 case RaceData_FieldIndex.Fluff:
                     return typeof(Byte[]);
-                case RaceData_FieldIndex.MaleHeight:
-                    return typeof(Single);
-                case RaceData_FieldIndex.FemaleHeight:
-                    return typeof(Single);
-                case RaceData_FieldIndex.MaleWeight:
-                    return typeof(Single);
-                case RaceData_FieldIndex.FemaleWeight:
-                    return typeof(Single);
+                case RaceData_FieldIndex.Height:
+                    return typeof(GenderedItem<Single>);
+                case RaceData_FieldIndex.Weight:
+                    return typeof(GenderedItem<Single>);
                 case RaceData_FieldIndex.Flags:
                     return typeof(Race.Flag);
                 case RaceData_FieldIndex.StartingHealth:
@@ -2668,8 +2541,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case RaceData_FieldIndex.AngularTolerance:
                     return typeof(Single);
-                case RaceData_FieldIndex.Flags2:
-                    return typeof(Race.Flag2);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2678,7 +2549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(RaceDataXmlWriteTranslation);
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
-        public const int NumStructFields = 36;
+        public const int NumStructFields = 33;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RaceDataBinaryWriteTranslation);
         #region Interface
@@ -2730,10 +2601,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SkillBoost5.Clear();
             item.SkillBoost6.Clear();
             item.Fluff = new byte[2];
-            item.MaleHeight = default;
-            item.FemaleHeight = default;
-            item.MaleWeight = default;
-            item.FemaleWeight = default;
+            item.Height.Male = default;
+            item.Height.Female = default;
+            item.Weight.Male = default;
+            item.Weight.Female = default;
             item.Flags = default;
             item.StartingHealth = default;
             item.StartingMagicka = default;
@@ -2757,7 +2628,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FlightRadius = default;
             item.AngularAccelerationRate = default;
             item.AngularTolerance = default;
-            item.Flags2 = default;
         }
         
         #region Xml Translation
@@ -2816,10 +2686,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 masterReferences: masterReferences);
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.MaleHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FemaleHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaleWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FemaleWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                frame: frame,
+                transl: FloatBinaryTranslation.Instance.Parse);
+            item.Weight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                frame: frame,
+                transl: FloatBinaryTranslation.Instance.Parse);
             item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.StartingHealth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.StartingMagicka = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -2828,7 +2700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BaseMass = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.AccelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.DecelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Size = EnumBinaryTranslation<Race.Size>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Size = EnumBinaryTranslation<Race.Size>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.HeadBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.HairBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.InjuredHealthPercent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -2843,7 +2715,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FlightRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.AngularAccelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.AngularTolerance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags2 = EnumBinaryTranslation<Race.Flag2>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            RaceDataBinaryCreateTranslation.FillBinaryFlags2CustomPublic(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences);
             RaceDataBinaryCreateTranslation.FillBinaryMountDataCustomPublic(
                 frame: frame,
                 item: item,
@@ -2904,10 +2779,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.SkillBoost5 = MaskItemExt.Factory(item.SkillBoost5.GetEqualsMask(rhs.SkillBoost5, include), include);
             ret.SkillBoost6 = MaskItemExt.Factory(item.SkillBoost6.GetEqualsMask(rhs.SkillBoost6, include), include);
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
-            ret.MaleHeight = item.MaleHeight.EqualsWithin(rhs.MaleHeight);
-            ret.FemaleHeight = item.FemaleHeight.EqualsWithin(rhs.FemaleHeight);
-            ret.MaleWeight = item.MaleWeight.EqualsWithin(rhs.MaleWeight);
-            ret.FemaleWeight = item.FemaleWeight.EqualsWithin(rhs.FemaleWeight);
+            ret.Height = new GenderedItem<bool>(
+                male: item.Height.Male.EqualsWithin(rhs.Height.Male),
+                female: item.Height.Female.EqualsWithin(rhs.Height.Female));
+            ret.Weight = new GenderedItem<bool>(
+                male: item.Weight.Male.EqualsWithin(rhs.Weight.Male),
+                female: item.Weight.Female.EqualsWithin(rhs.Weight.Female));
             ret.Flags = item.Flags == rhs.Flags;
             ret.StartingHealth = item.StartingHealth.EqualsWithin(rhs.StartingHealth);
             ret.StartingMagicka = item.StartingMagicka.EqualsWithin(rhs.StartingMagicka);
@@ -2931,7 +2808,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.FlightRadius = item.FlightRadius.EqualsWithin(rhs.FlightRadius);
             ret.AngularAccelerationRate = item.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate);
             ret.AngularTolerance = item.AngularTolerance.EqualsWithin(rhs.AngularTolerance);
-            ret.Flags2 = item.Flags2 == rhs.Flags2;
         }
         
         public string ToString(
@@ -3010,21 +2886,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
-            if (printMask?.MaleHeight ?? true)
+            if (true)
             {
-                fg.AppendItem(item.MaleHeight, "MaleHeight");
+                item.Height.ToString(fg, "Height");
             }
-            if (printMask?.FemaleHeight ?? true)
+            if (true)
             {
-                fg.AppendItem(item.FemaleHeight, "FemaleHeight");
-            }
-            if (printMask?.MaleWeight ?? true)
-            {
-                fg.AppendItem(item.MaleWeight, "MaleWeight");
-            }
-            if (printMask?.FemaleWeight ?? true)
-            {
-                fg.AppendItem(item.FemaleWeight, "FemaleWeight");
+                item.Weight.ToString(fg, "Weight");
             }
             if (printMask?.Flags ?? true)
             {
@@ -3118,10 +2986,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.AngularTolerance, "AngularTolerance");
             }
-            if (printMask?.Flags2 ?? true)
-            {
-                fg.AppendItem(item.Flags2, "Flags2");
-            }
         }
         
         public bool HasBeenSet(
@@ -3143,10 +3007,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.SkillBoost5 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost5?.GetHasBeenSetMask());
             mask.SkillBoost6 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost6?.GetHasBeenSetMask());
             mask.Fluff = true;
-            mask.MaleHeight = true;
-            mask.FemaleHeight = true;
-            mask.MaleWeight = true;
-            mask.FemaleWeight = true;
+            mask.Height = new GenderedItem<bool>(true, true);
+            mask.Weight = new GenderedItem<bool>(true, true);
             mask.Flags = true;
             mask.StartingHealth = true;
             mask.StartingMagicka = true;
@@ -3170,7 +3032,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.FlightRadius = true;
             mask.AngularAccelerationRate = true;
             mask.AngularTolerance = true;
-            mask.Flags2 = true;
         }
         
         #region Equals and Hash
@@ -3188,10 +3049,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
             if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
-            if (!lhs.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
-            if (!lhs.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
-            if (!lhs.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
-            if (!lhs.FemaleWeight.EqualsWithin(rhs.FemaleWeight)) return false;
+            if (!Equals(lhs.Height, rhs.Height)) return false;
+            if (!Equals(lhs.Weight, rhs.Weight)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.StartingHealth.EqualsWithin(rhs.StartingHealth)) return false;
             if (!lhs.StartingMagicka.EqualsWithin(rhs.StartingMagicka)) return false;
@@ -3215,7 +3074,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
             if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
             if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
-            if (lhs.Flags2 != rhs.Flags2) return false;
             return true;
         }
         
@@ -3230,10 +3088,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.SkillBoost5).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.SkillBoost6).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaleHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FemaleHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaleWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FemaleWeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Height.Male, item.Height.Female).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Weight.Male, item.Weight.Female).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.StartingHealth).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.StartingMagicka).CombineHashCode(ret);
@@ -3257,7 +3113,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.FlightRadius).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.AngularAccelerationRate).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.AngularTolerance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags2).CombineHashCode(ret);
             return ret;
         }
         
@@ -3447,21 +3302,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Fluff = rhs.Fluff.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.MaleHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Height) ?? true))
             {
-                item.MaleHeight = rhs.MaleHeight;
+                errorMask?.PushIndex((int)RaceData_FieldIndex.Height);
+                try
+                {
+                    item.Height = new GenderedItem<Single>(
+                        male: rhs.Height.Male,
+                        female: rhs.Height.Female);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.FemaleHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Weight) ?? true))
             {
-                item.FemaleHeight = rhs.FemaleHeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.MaleWeight) ?? true))
-            {
-                item.MaleWeight = rhs.MaleWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.FemaleWeight) ?? true))
-            {
-                item.FemaleWeight = rhs.FemaleWeight;
+                errorMask?.PushIndex((int)RaceData_FieldIndex.Weight);
+                try
+                {
+                    item.Weight = new GenderedItem<Single>(
+                        male: rhs.Weight.Male,
+                        female: rhs.Weight.Female);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
             {
@@ -3554,10 +3431,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.AngularTolerance) ?? true))
             {
                 item.AngularTolerance = rhs.AngularTolerance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags2) ?? true))
-            {
-                item.Flags2 = rhs.Flags2;
             }
         }
         
@@ -3734,41 +3607,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)RaceData_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.MaleHeight) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.Height) ?? true))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaleHeight),
-                    item: item.MaleHeight,
-                    fieldIndex: (int)RaceData_FieldIndex.MaleHeight,
-                    errorMask: errorMask);
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Height),
+                        item: item.Height.Male,
+                        errorMask: errorMask);
+                }
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Height),
+                        item: item.Height.Female,
+                        errorMask: errorMask);
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.FemaleHeight) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.Weight) ?? true))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FemaleHeight),
-                    item: item.FemaleHeight,
-                    fieldIndex: (int)RaceData_FieldIndex.FemaleHeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.MaleWeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaleWeight),
-                    item: item.MaleWeight,
-                    fieldIndex: (int)RaceData_FieldIndex.MaleWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.FemaleWeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FemaleWeight),
-                    item: item.FemaleWeight,
-                    fieldIndex: (int)RaceData_FieldIndex.FemaleWeight,
-                    errorMask: errorMask);
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight.Male,
+                        errorMask: errorMask);
+                }
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight.Female,
+                        errorMask: errorMask);
+                }
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
             {
@@ -3975,15 +3846,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.AngularTolerance),
                     item: item.AngularTolerance,
                     fieldIndex: (int)RaceData_FieldIndex.AngularTolerance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags2) ?? true))
-            {
-                EnumXmlTranslation<Race.Flag2>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags2),
-                    item: item.Flags2,
-                    fieldIndex: (int)RaceData_FieldIndex.Flags2,
                     errorMask: errorMask);
             }
         }
@@ -4244,13 +4106,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "MaleHeight":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.MaleHeight);
+                case "Height":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.Height);
                     try
                     {
-                        item.MaleHeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                        item.Height = new GenderedItem<Single>(
+                            male: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4262,49 +4128,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "FemaleHeight":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.FemaleHeight);
+                case "Weight":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.Weight);
                     try
                     {
-                        item.FemaleHeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaleWeight":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.MaleWeight);
-                    try
-                    {
-                        item.MaleWeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleWeight":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.FemaleWeight);
-                    try
-                    {
-                        item.FemaleWeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                        item.Weight = new GenderedItem<Single>(
+                            male: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4730,24 +4564,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Flags2":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.Flags2);
-                    try
-                    {
-                        item.Flags2 = EnumXmlTranslation<Race.Flag2>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     break;
             }
@@ -4919,6 +4735,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static RaceDataBinaryWriteTranslation Instance = new RaceDataBinaryWriteTranslation();
 
+        static partial void WriteBinaryFlags2Custom(
+            MutagenWriter writer,
+            IRaceDataGetter item,
+            MasterReferenceReader masterReferences);
+
+        public static void WriteBinaryFlags2(
+            MutagenWriter writer,
+            IRaceDataGetter item,
+            MasterReferenceReader masterReferences)
+        {
+            WriteBinaryFlags2Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences);
+        }
+
         static partial void WriteBinaryMountDataCustom(
             MutagenWriter writer,
             IRaceDataGetter item,
@@ -4978,18 +4810,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            GenderedItemBinaryTranslation.Write(
                 writer: writer,
-                item: item.MaleHeight);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                item: item.Height,
+                transl: FloatBinaryTranslation.Instance.Write);
+            GenderedItemBinaryTranslation.Write(
                 writer: writer,
-                item: item.FemaleHeight);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaleWeight);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FemaleWeight);
+                item: item.Weight,
+                transl: FloatBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                 writer,
                 item.Flags,
@@ -5018,7 +4846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Size>.Instance.Write(
                 writer,
                 item.Size,
-                length: 1);
+                length: 4);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
                 writer,
                 item.HeadBipedObject,
@@ -5065,10 +4893,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AngularTolerance);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag2>.Instance.Write(
-                writer,
-                item.Flags2,
-                length: 4);
+            RaceDataBinaryWriteTranslation.WriteBinaryFlags2(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences);
             RaceDataBinaryWriteTranslation.WriteBinaryMountData(
                 writer: writer,
                 item: item,
@@ -5111,6 +4939,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RaceDataBinaryCreateTranslation
     {
         public readonly static RaceDataBinaryCreateTranslation Instance = new RaceDataBinaryCreateTranslation();
+
+        static partial void FillBinaryFlags2Custom(
+            MutagenFrame frame,
+            IRaceData item,
+            MasterReferenceReader masterReferences);
+
+        public static void FillBinaryFlags2CustomPublic(
+            MutagenFrame frame,
+            IRaceData item,
+            MasterReferenceReader masterReferences)
+        {
+            FillBinaryFlags2Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences);
+        }
 
         static partial void FillBinaryMountDataCustom(
             MutagenFrame frame,
@@ -5221,10 +5065,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(10)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(12)), _package, default(RecordTypeConverter));
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(14, 2).ToArray();
-        public Single MaleHeight => SpanExt.GetFloat(_data.Span.Slice(16, 4));
-        public Single FemaleHeight => SpanExt.GetFloat(_data.Span.Slice(20, 4));
-        public Single MaleWeight => SpanExt.GetFloat(_data.Span.Slice(24, 4));
-        public Single FemaleWeight => SpanExt.GetFloat(_data.Span.Slice(28, 4));
+        #region Height
+        public IGenderedItemGetter<Single> Height
+        {
+            get
+            {
+                var data = _data.Span.Slice(16, 8);
+                return new GenderedItem<Single>(
+                    SpanExt.GetFloat(data),
+                    SpanExt.GetFloat(data.Slice(4)));
+            }
+        }
+        #endregion
+        #region Weight
+        public IGenderedItemGetter<Single> Weight
+        {
+            get
+            {
+                var data = _data.Span.Slice(24, 8);
+                return new GenderedItem<Single>(
+                    SpanExt.GetFloat(data),
+                    SpanExt.GetFloat(data.Slice(4)));
+            }
+        }
+        #endregion
         public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(32, 4));
         public Single StartingHealth => SpanExt.GetFloat(_data.Span.Slice(36, 4));
         public Single StartingMagicka => SpanExt.GetFloat(_data.Span.Slice(40, 4));
@@ -5233,22 +5097,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single BaseMass => SpanExt.GetFloat(_data.Span.Slice(52, 4));
         public Single AccelerationRate => SpanExt.GetFloat(_data.Span.Slice(56, 4));
         public Single DecelerationRate => SpanExt.GetFloat(_data.Span.Slice(60, 4));
-        public Race.Size Size => (Race.Size)_data.Span.Slice(64, 1)[0];
-        public BipedObject HeadBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(65, 4));
-        public BipedObject HairBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(69, 4));
-        public Single InjuredHealthPercent => SpanExt.GetFloat(_data.Span.Slice(73, 4));
-        public BipedObject ShieldBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(77, 4));
-        public Single HealthRegen => SpanExt.GetFloat(_data.Span.Slice(81, 4));
-        public Single MagickaRegen => SpanExt.GetFloat(_data.Span.Slice(85, 4));
-        public Single StaminaRegen => SpanExt.GetFloat(_data.Span.Slice(89, 4));
-        public Single UnarmedDamage => SpanExt.GetFloat(_data.Span.Slice(93, 4));
-        public Single UnarmedReach => SpanExt.GetFloat(_data.Span.Slice(97, 4));
-        public BipedObject BodyBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(101, 4));
-        public Single AimAngleTolerance => SpanExt.GetFloat(_data.Span.Slice(105, 4));
-        public Single FlightRadius => SpanExt.GetFloat(_data.Span.Slice(109, 4));
-        public Single AngularAccelerationRate => SpanExt.GetFloat(_data.Span.Slice(113, 4));
-        public Single AngularTolerance => SpanExt.GetFloat(_data.Span.Slice(117, 4));
-        public Race.Flag2 Flags2 => (Race.Flag2)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(121, 4));
+        public Race.Size Size => (Race.Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(64, 4));
+        public BipedObject HeadBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(68, 4));
+        public BipedObject HairBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(72, 4));
+        public Single InjuredHealthPercent => SpanExt.GetFloat(_data.Span.Slice(76, 4));
+        public BipedObject ShieldBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(80, 4));
+        public Single HealthRegen => SpanExt.GetFloat(_data.Span.Slice(84, 4));
+        public Single MagickaRegen => SpanExt.GetFloat(_data.Span.Slice(88, 4));
+        public Single StaminaRegen => SpanExt.GetFloat(_data.Span.Slice(92, 4));
+        public Single UnarmedDamage => SpanExt.GetFloat(_data.Span.Slice(96, 4));
+        public Single UnarmedReach => SpanExt.GetFloat(_data.Span.Slice(100, 4));
+        public BipedObject BodyBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(104, 4));
+        public Single AimAngleTolerance => SpanExt.GetFloat(_data.Span.Slice(108, 4));
+        public Single FlightRadius => SpanExt.GetFloat(_data.Span.Slice(112, 4));
+        public Single AngularAccelerationRate => SpanExt.GetFloat(_data.Span.Slice(116, 4));
+        public Single AngularTolerance => SpanExt.GetFloat(_data.Span.Slice(120, 4));
+        #region Flags2
+        partial void Flags2CustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         #region MountData
         partial void MountDataCustomParse(
             BinaryMemoryReadStream stream,
@@ -5278,7 +5146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x7D + package.Meta.SubConstants.HeaderLength;
+            stream.Position += 0x7C + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

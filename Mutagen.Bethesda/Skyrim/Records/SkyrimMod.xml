@@ -14,6 +14,7 @@
       <Group name="HeadParts" refName="HeadPart" />
       <Group name="Hairs" refName="Hair" />
       <Group name="Eyes" refName="Eye" />
+      <Group name="Races" refName="Race" />
     </Fields>
   </Object>
 </Loqui>

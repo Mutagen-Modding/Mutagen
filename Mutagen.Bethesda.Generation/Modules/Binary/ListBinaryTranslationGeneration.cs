@@ -62,6 +62,17 @@ namespace Mutagen.Bethesda.Generation
             {
                 loqui.CustomData[LoquiBinaryTranslationGeneration.AsyncOverrideKey] = asyncItem;
             }
+            var data = listType.TryCreateFieldData();
+            var subData = listType.SubTypeGeneration.TryCreateFieldData();
+            ListBinaryType listBinaryType = GetListType(listType, data, subData);
+            switch (listBinaryType)
+            {
+                case ListBinaryType.CounterRecord:
+                    subData.HandleTrigger = false;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private ListBinaryType GetListType(
@@ -116,7 +127,7 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.TryGetFieldData(out var data)
                 && data.MarkerType.HasValue)
             {
-                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)}, ObjectType.Subrecord)) {{ }}");
             }
 
             var subData = list.SubTypeGeneration.GetFieldData();
@@ -141,9 +152,27 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {GetWriteAccessor(itemAccessor)}");
-                if (listBinaryType == ListBinaryType.Trigger)
+                switch (listBinaryType)
                 {
-                    args.Add($"recordType: {data.TriggeringRecordSetAccessor}");
+                    case ListBinaryType.SubTrigger:
+                        break;
+                    case ListBinaryType.Trigger:
+                        args.Add($"recordType: {data.TriggeringRecordSetAccessor}");
+                        break;
+                    case ListBinaryType.CounterRecord:
+                        var counterType = new RecordType(list.CustomData[CounterRecordType] as string);
+                        args.Add($"counterType: {objGen.RecordTypeHeaderName(counterType)}");
+                        if (subData.HasTrigger)
+                        {
+                            args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
+                        }
+                        break;
+                    case ListBinaryType.PrependCount:
+                        break;
+                    case ListBinaryType.Frame:
+                        break;
+                    default:
+                        break;
                 }
                 if (listOfRecords)
                 {

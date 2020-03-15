@@ -1267,13 +1267,19 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
+        public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
+        public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
+        public static readonly RecordType MATT_HEADER = new RecordType("MATT");
+        public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
+        public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
@@ -1353,13 +1359,19 @@ namespace Mutagen.Bethesda.Internals
                         LVSP_HEADER,
                         SPEL_HEADER,
                         AACT_HEADER,
+                        ARTO_HEADER,
                         BPTD_HEADER,
                         CLFM_HEADER,
+                        EQUP_HEADER,
                         FLST_HEADER,
                         HDPT_HEADER,
+                        IPDS_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
+                        MATT_HEADER,
+                        MOVT_HEADER,
                         OTFT_HEADER,
+                        SNDR_HEADER,
                         TXST_HEADER,
                         VTYP_HEADER
                     })

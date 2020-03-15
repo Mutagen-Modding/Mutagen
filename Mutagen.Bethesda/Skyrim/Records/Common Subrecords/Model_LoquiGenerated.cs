@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Model :
+        SimpleModel,
         IModel,
         ILoquiObjectSetter<Model>,
         IEquatable<Model>,
@@ -46,20 +47,6 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region File
-        public String File { get; set; } = string.Empty;
-        #endregion
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Data;
-        public Byte[]? Data
-        {
-            get => this._Data;
-            set => this._Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModelGetter.Data => this.Data;
-        #endregion
         #region AlternateTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<AlternateTexture>? _AlternateTextures;
@@ -77,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public override void ToString(
             FileGeneration fg,
             string? name = null)
         {
@@ -106,9 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected override object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -124,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Model CreateFromXml(
+        public static new Model CreateFromXml(
             XElement node,
             Model.TranslationMask? translationMask = null)
         {
@@ -149,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Model CreateFromXml(
+        public new static Model CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -236,16 +221,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<TItem> :
+        public new class Mask<TItem> :
+            SimpleModel.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
+            : base(initialValue)
             {
-                this.File = initialValue;
-                this.Data = initialValue;
                 this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>());
             }
 
@@ -253,9 +238,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem File,
                 TItem Data,
                 TItem AlternateTextures)
+            : base(
+                File: File,
+                Data: Data)
             {
-                this.File = File;
-                this.Data = Data;
                 this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(AlternateTextures, Enumerable.Empty<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>());
             }
 
@@ -268,8 +254,6 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem File;
-            public TItem Data;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>? AlternateTextures;
             #endregion
 
@@ -283,27 +267,24 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.File, rhs.File)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.AlternateTextures, rhs.AlternateTextures)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 int ret = 0;
-                ret = ret.CombineHashCode(this.File?.GetHashCode());
-                ret = ret.CombineHashCode(this.Data?.GetHashCode());
                 ret = ret.CombineHashCode(this.AlternateTextures?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
                 return ret;
             }
 
             #endregion
 
             #region All
-            public bool All(Func<TItem, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.File)) return false;
-                if (!eval(this.Data)) return false;
+                if (!base.All(eval)) return false;
                 if (this.AlternateTextures != null)
                 {
                     if (!eval(this.AlternateTextures.Overall)) return false;
@@ -321,10 +302,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<TItem, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.File)) return true;
-                if (eval(this.Data)) return true;
+                if (base.Any(eval)) return true;
                 if (this.AlternateTextures != null)
                 {
                     if (eval(this.AlternateTextures.Overall)) return true;
@@ -342,7 +322,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<TItem, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Model.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
@@ -351,8 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.File = eval(this.File);
-                obj.Data = eval(this.Data);
+                base.Translate_InternalFill(obj, eval);
                 if (AlternateTextures != null)
                 {
                     obj.AlternateTextures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>?>(eval(this.AlternateTextures.Overall), Enumerable.Empty<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>());
@@ -390,14 +369,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.File ?? true)
-                    {
-                        fg.AppendItem(File, "File");
-                    }
-                    if (printMask?.Data ?? true)
-                    {
-                        fg.AppendItem(Data, "Data");
-                    }
                     if ((printMask?.AlternateTextures?.Overall ?? true)
                         && AlternateTextures.TryGet(out var AlternateTexturesItem))
                     {
@@ -428,89 +399,58 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
 
-        public class ErrorMask :
-            IErrorMask,
+        public new class ErrorMask :
+            SimpleModel.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Overall { get; set; }
-            private List<string>? _warnings;
-            public List<string> Warnings
-            {
-                get
-                {
-                    if (_warnings == null)
-                    {
-                        _warnings = new List<string>();
-                    }
-                    return _warnings;
-                }
-            }
-            public Exception? File;
-            public Exception? Data;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>? AlternateTextures;
             #endregion
 
             #region IErrorMask
-            public object? GetNthMask(int index)
+            public override object? GetNthMask(int index)
             {
                 Model_FieldIndex enu = (Model_FieldIndex)index;
                 switch (enu)
                 {
-                    case Model_FieldIndex.File:
-                        return File;
-                    case Model_FieldIndex.Data:
-                        return Data;
                     case Model_FieldIndex.AlternateTextures:
                         return AlternateTextures;
                     default:
-                        throw new ArgumentException($"Index is out of range: {index}");
+                        return base.GetNthMask(index);
                 }
             }
 
-            public void SetNthException(int index, Exception ex)
+            public override void SetNthException(int index, Exception ex)
             {
                 Model_FieldIndex enu = (Model_FieldIndex)index;
                 switch (enu)
                 {
-                    case Model_FieldIndex.File:
-                        this.File = ex;
-                        break;
-                    case Model_FieldIndex.Data:
-                        this.Data = ex;
-                        break;
                     case Model_FieldIndex.AlternateTextures:
                         this.AlternateTextures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>(ex, null);
                         break;
                     default:
-                        throw new ArgumentException($"Index is out of range: {index}");
+                        base.SetNthException(index, ex);
+                        break;
                 }
             }
 
-            public void SetNthMask(int index, object obj)
+            public override void SetNthMask(int index, object obj)
             {
                 Model_FieldIndex enu = (Model_FieldIndex)index;
                 switch (enu)
                 {
-                    case Model_FieldIndex.File:
-                        this.File = (Exception?)obj;
-                        break;
-                    case Model_FieldIndex.Data:
-                        this.Data = (Exception?)obj;
-                        break;
                     case Model_FieldIndex.AlternateTextures:
                         this.AlternateTextures = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>)obj;
                         break;
                     default:
-                        throw new ArgumentException($"Index is out of range: {index}");
+                        base.SetNthMask(index, obj);
+                        break;
                 }
             }
 
-            public bool IsInError()
+            public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (File != null) return true;
-                if (Data != null) return true;
                 if (AlternateTextures != null) return true;
                 return false;
             }
@@ -524,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
                 fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
@@ -544,10 +484,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(File, "File");
-                fg.AppendItem(Data, "Data");
+                base.ToString_FillInternal(fg);
                 if (AlternateTextures.TryGet(out var AlternateTexturesItem))
                 {
                     fg.AppendLine("AlternateTextures =>");
@@ -578,8 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.File = this.File.Combine(rhs.File);
-                ret.Data = this.Data.Combine(rhs.Data);
                 ret.AlternateTextures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>(ExceptionExt.Combine(this.AlternateTextures?.Overall, rhs.AlternateTextures?.Overall), ExceptionExt.Combine(this.AlternateTextures?.Specific, rhs.AlternateTextures?.Specific));
                 return ret;
             }
@@ -591,45 +528,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Factory
-            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
             {
                 return new ErrorMask();
             }
             #endregion
 
         }
-        public class TranslationMask : ITranslationMask
+        public new class TranslationMask :
+            SimpleModel.TranslationMask,
+            ITranslationMask
         {
             #region Members
-            private TranslationCrystal? _crystal;
-            public bool File;
-            public bool Data;
             public MaskItem<bool, AlternateTexture.TranslationMask?> AlternateTextures;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
+                : base(defaultOn)
             {
-                this.File = defaultOn;
-                this.Data = defaultOn;
                 this.AlternateTextures = new MaskItem<bool, AlternateTexture.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
-            public TranslationCrystal GetCrystal()
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                if (_crystal != null) return _crystal;
-                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-                GetCrystal(ret);
-                _crystal = new TranslationCrystal(ret.ToArray());
-                return _crystal;
-            }
-
-            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-            {
-                ret.Add((File, null));
-                ret.Add((Data, null));
+                base.GetCrystal(ret);
                 ret.Add((AlternateTextures?.Overall ?? true, AlternateTextures?.Specific?.GetCrystal()));
             }
         }
@@ -638,14 +563,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Model_Registration.TRIGGERING_RECORD_TYPE;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => ModelCommon.Instance.GetLinks(this);
+        public override IEnumerable<ILinkGetter> Links => ModelCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
@@ -659,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Model CreateFromBinary(
+        public static new Model CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
@@ -669,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: null);
         }
 
-        public static Model CreateFromBinary(
+        public new static Model CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
@@ -696,7 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ModelSetterCommon)((IModelGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static Model GetNew()
+        internal static new Model GetNew()
         {
             return new Model();
         }
@@ -707,28 +630,19 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IModel :
         IModelGetter,
+        ISimpleModel,
         ILoquiObjectSetter<IModel>
     {
-        new String File { get; set; }
-        new Byte[]? Data { get; set; }
         new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
     }
 
     public partial interface IModelGetter :
-        ILoquiObject,
+        ISimpleModelGetter,
         ILoquiObject<IModelGetter>,
         IXmlItem,
         ILinkContainer,
         IBinaryItem
     {
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonInstance();
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object? CommonSetterInstance();
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterTranslationInstance();
-        String File { get; }
-        ReadOnlyMemorySlice<Byte>? Data { get; }
         IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }
 
     }
@@ -803,18 +717,6 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ModelCommon)((IModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
-        }
-
-        public static void DeepCopyIn(
-            this IModel lhs,
-            IModelGetter rhs,
-            Model.TranslationMask? copyMask = null)
-        {
-            ((ModelSetterTranslationCommon)((IModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: default);
         }
 
         public static void DeepCopyIn(
@@ -1060,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "b5deaeea-11c5-4c34-94e4-3db4c24be832";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 3;
 
@@ -1092,10 +994,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "FILE":
-                    return (ushort)Model_FieldIndex.File;
-                case "DATA":
-                    return (ushort)Model_FieldIndex.Data;
                 case "ALTERNATETEXTURES":
                     return (ushort)Model_FieldIndex.AlternateTextures;
                 default:
@@ -1110,11 +1008,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Model_FieldIndex.AlternateTextures:
                     return true;
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.Data:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return SimpleModel_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1125,11 +1020,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Model_FieldIndex.AlternateTextures:
                     return true;
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.Data:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return SimpleModel_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1138,12 +1030,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.Data:
                 case Model_FieldIndex.AlternateTextures:
                     return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return SimpleModel_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1152,14 +1042,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    return "File";
-                case Model_FieldIndex.Data:
-                    return "Data";
                 case Model_FieldIndex.AlternateTextures:
                     return "AlternateTextures";
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return SimpleModel_Registration.GetNthName(index);
             }
         }
 
@@ -1168,12 +1054,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.Data:
                 case Model_FieldIndex.AlternateTextures:
                     return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return SimpleModel_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1182,12 +1066,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.Data:
                 case Model_FieldIndex.AlternateTextures:
                     return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return SimpleModel_Registration.IsProtected(index);
             }
         }
 
@@ -1196,24 +1078,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    return typeof(String);
-                case Model_FieldIndex.Data:
-                    return typeof(Byte[]);
                 case Model_FieldIndex.AlternateTextures:
                     return typeof(ExtendedList<AlternateTexture>);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return SimpleModel_Registration.GetNthType(index);
             }
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ModelXmlWriteTranslation);
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODT_HEADER = new RecordType("MODT");
         public static readonly RecordType MODS_HEADER = new RecordType("MODS");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1247,18 +1124,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ModelSetterCommon
+    public partial class ModelSetterCommon : SimpleModelSetterCommon
     {
-        public static readonly ModelSetterCommon Instance = new ModelSetterCommon();
+        public new static readonly ModelSetterCommon Instance = new ModelSetterCommon();
 
         partial void ClearPartial();
         
         public void Clear(IModel item)
         {
             ClearPartial();
-            item.File = string.Empty;
-            item.Data = default;
             item.AlternateTextures = null;
+            base.Clear(item);
+        }
+        
+        public override void Clear(ISimpleModel item)
+        {
+            Clear(item: (IModel)item);
         }
         
         #region Xml Translation
@@ -1290,13 +1171,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IModel item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
-        {
-        }
-        
         protected static TryGet<int?> FillBinaryRecordTypes(
             IModel item,
             MutagenFrame frame,
@@ -1309,21 +1183,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.File = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
-                }
-                case 0x54444F4D: // MODT
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Data = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.Data);
-                }
                 case 0x53444F4D: // MODS
                 {
                     item.AlternateTextures = 
@@ -1342,7 +1201,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return SimpleModelSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences);
             }
         }
         
@@ -1365,9 +1231,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ModelCommon
+    public partial class ModelCommon : SimpleModelCommon
     {
-        public static readonly ModelCommon Instance = new ModelCommon();
+        public new static readonly ModelCommon Instance = new ModelCommon();
 
         public Model.Mask<bool> GetEqualsMask(
             IModelGetter item,
@@ -1390,12 +1256,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.File = string.Equals(item.File, rhs.File);
-            ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
             ret.AlternateTextures = item.AlternateTextures.CollectionEqualsHelper(
                 rhs.AlternateTextures,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
@@ -1442,15 +1307,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Model.Mask<bool>? printMask = null)
         {
-            if (printMask?.File ?? true)
-            {
-                fg.AppendItem(item.File, "File");
-            }
-            if ((printMask?.Data ?? true)
-                && item.Data.TryGet(out var DataItem))
-            {
-                fg.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
-            }
+            SimpleModelCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
             if ((printMask?.AlternateTextures?.Overall ?? true)
                 && item.AlternateTextures.TryGet(out var AlternateTexturesItem))
             {
@@ -1476,20 +1336,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModelGetter item,
             Model.Mask<bool?> checkMask)
         {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != (item.Data != null)) return false;
             if (checkMask.AlternateTextures?.Overall.HasValue ?? false && checkMask.AlternateTextures!.Overall.Value != (item.AlternateTextures != null)) return false;
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
             IModelGetter item,
             Model.Mask<bool> mask)
         {
-            mask.File = true;
-            mask.Data = (item.Data != null);
             if (item.AlternateTextures.TryGet(out var AlternateTexturesItem))
             {
                 mask.AlternateTextures = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, AlternateTexture.Mask<bool>?>>?>(true, AlternateTexturesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, AlternateTexture.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static Model_FieldIndex ConvertFieldIndex(SimpleModel_FieldIndex index)
+        {
+            switch (index)
+            {
+                case SimpleModel_FieldIndex.File:
+                    return (Model_FieldIndex)((int)index);
+                case SimpleModel_FieldIndex.Data:
+                    return (Model_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
@@ -1500,28 +1375,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.File, rhs.File)) return false;
-            if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals(rhs)) return false;
             if (!lhs.AlternateTextures.SequenceEqual(rhs.AlternateTextures)) return false;
             return true;
+        }
+        
+        public override bool Equals(
+            ISimpleModelGetter? lhs,
+            ISimpleModelGetter? rhs)
+        {
+            return Equals(
+                lhs: (IModelGetter?)lhs,
+                rhs: rhs as IModelGetter);
         }
         
         public virtual int GetHashCode(IModelGetter item)
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(item.File).CombineHashCode(ret);
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ret = HashHelper.GetHashCode(DataItem).CombineHashCode(ret);
-            }
             ret = HashHelper.GetHashCode(item.AlternateTextures).CombineHashCode(ret);
+            ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
+        }
+        
+        public override int GetHashCode(ISimpleModelGetter item)
+        {
+            return GetHashCode(item: (IModelGetter)item);
         }
         
         #endregion
         
         
-        public object GetNew()
+        public override object GetNew()
         {
             return Model.GetNew();
         }
@@ -1529,6 +1413,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IModelGetter obj)
         {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
             if (obj.AlternateTextures != null)
             {
                 foreach (var item in obj.AlternateTextures.SelectMany(f => f.Links))
@@ -1542,9 +1430,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ModelSetterTranslationCommon
+    public partial class ModelSetterTranslationCommon : SimpleModelSetterTranslationCommon
     {
-        public static readonly ModelSetterTranslationCommon Instance = new ModelSetterTranslationCommon();
+        public new static readonly ModelSetterTranslationCommon Instance = new ModelSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
@@ -1553,21 +1441,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.File) ?? true))
-            {
-                item.File = rhs.File;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Data) ?? true))
-            {
-                if(rhs.Data.TryGet(out var Datarhs))
-                {
-                    item.Data = Datarhs.ToArray();
-                }
-                else
-                {
-                    item.Data = default;
-                }
-            }
+            base.DeepCopyIn(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.AlternateTextures) ?? true))
             {
                 errorMask?.PushIndex((int)Model_FieldIndex.AlternateTextures);
@@ -1600,6 +1478,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+        }
+        
+        
+        public override void DeepCopyIn(
+            ISimpleModel item,
+            ISimpleModelGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IModel)item,
+                rhs: (IModelGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -1653,22 +1545,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration Registration => Model_Registration.Instance;
+        public new static Model_Registration Registration => Model_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ModelCommon.Instance;
+        protected override object CommonInstance() => ModelCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected override object CommonSetterInstance()
         {
             return ModelSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ModelSetterTranslationCommon.Instance;
-        [DebuggerStepThrough]
-        object IModelGetter.CommonInstance() => this.CommonInstance();
-        [DebuggerStepThrough]
-        object IModelGetter.CommonSetterInstance() => this.CommonSetterInstance();
-        [DebuggerStepThrough]
-        object IModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        protected override object CommonSetterTranslationInstance() => ModelSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1679,9 +1565,11 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ModelXmlWriteTranslation : IXmlWriteTranslator
+    public partial class ModelXmlWriteTranslation :
+        SimpleModelXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public readonly static ModelXmlWriteTranslation Instance = new ModelXmlWriteTranslation();
+        public new readonly static ModelXmlWriteTranslation Instance = new ModelXmlWriteTranslation();
 
         public static void WriteToNodeXml(
             IModelGetter item,
@@ -1689,25 +1577,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)Model_FieldIndex.File) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.File),
-                    item: item.File,
-                    fieldIndex: (int)Model_FieldIndex.File,
-                    errorMask: errorMask);
-            }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)Model_FieldIndex.Data) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Data),
-                    item: item.Data.Value,
-                    fieldIndex: (int)Model_FieldIndex.Data,
-                    errorMask: errorMask);
-            }
+            SimpleModelXmlWriteTranslation.WriteToNodeXml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if ((item.AlternateTextures != null)
                 && (translationMask?.GetShouldTranslate((int)Model_FieldIndex.AlternateTextures) ?? true))
             {
@@ -1751,7 +1625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public void Write(
+        public override void Write(
             XElement node,
             object item,
             ErrorMaskBuilder? errorMask,
@@ -1766,40 +1640,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public void Write(
+        public override void Write(
             XElement node,
-            IModelGetter item,
+            ISimpleModelGetter item,
             ErrorMaskBuilder? errorMask,
-            int fieldIndex,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IModelGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
+            Write(
+                item: (IModelGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
 
     }
 
-    public partial class ModelXmlCreateTranslation
+    public partial class ModelXmlCreateTranslation : SimpleModelXmlCreateTranslation
     {
-        public readonly static ModelXmlCreateTranslation Instance = new ModelXmlCreateTranslation();
+        public new readonly static ModelXmlCreateTranslation Instance = new ModelXmlCreateTranslation();
 
         public static void FillPublicXml(
             IModel item,
@@ -1835,42 +1695,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "File":
-                    errorMask?.PushIndex((int)Model_FieldIndex.File);
-                    try
-                    {
-                        item.File = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Data":
-                    errorMask?.PushIndex((int)Model_FieldIndex.Data);
-                    try
-                    {
-                        item.Data = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "AlternateTextures":
                     errorMask?.PushIndex((int)Model_FieldIndex.AlternateTextures);
                     try
@@ -1900,6 +1724,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
+                    SimpleModelXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                     break;
             }
         }
@@ -1948,23 +1778,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void WriteToXml(
             this IModelGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IModelGetter item,
             Stream stream,
             out Model.ErrorMask errorMask,
             Model.TranslationMask? translationMask = null,
@@ -1980,82 +1793,6 @@ namespace Mutagen.Bethesda.Skyrim
             node.Elements().First().Save(stream);
         }
 
-        public static void WriteToXml(
-            this IModelGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IModelGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IModelGetter item,
-            XElement node,
-            string? name = null,
-            Model.TranslationMask? translationMask = null)
-        {
-            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IModelGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IModelGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
     }
     #endregion
 
@@ -2066,9 +1803,11 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ModelBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ModelBinaryWriteTranslation :
+        SimpleModelBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
+        public new readonly static ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IModelGetter item,
@@ -2076,15 +1815,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter,
             MasterReferenceReader masterReferences)
         {
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            SimpleModelBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
                 writer: writer,
-                item: item.File,
-                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Data,
-                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODT_HEADER));
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IAlternateTextureGetter>.Instance.Write(
                 writer: writer,
                 items: item.AlternateTextures,
@@ -2112,7 +1847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 masterReferences: masterReferences);
         }
 
-        public void Write(
+        public override void Write(
             MutagenWriter writer,
             object item,
             MasterReferenceReader masterReferences,
@@ -2125,11 +1860,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override void Write(
+            MutagenWriter writer,
+            ISimpleModelGetter item,
+            MasterReferenceReader masterReferences,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IModelGetter)item,
+                masterReferences: masterReferences,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
     }
 
-    public partial class ModelBinaryCreateTranslation
+    public partial class ModelBinaryCreateTranslation : SimpleModelBinaryCreateTranslation
     {
-        public readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
+        public new readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
 
     }
 
@@ -2139,18 +1887,6 @@ namespace Mutagen.Bethesda.Skyrim
     #region Binary Write Mixins
     public static class ModelBinaryTranslationMixIn
     {
-        public static void WriteToBinary(
-            this IModelGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
-        {
-            ((ModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null);
-        }
-
     }
     #endregion
 
@@ -2159,23 +1895,17 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ModelBinaryOverlay :
-        BinaryOverlay,
+        SimpleModelBinaryOverlay,
         IModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration Registration => Model_Registration.Instance;
+        public new static Model_Registration Registration => Model_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ModelCommon.Instance;
+        protected override object CommonInstance() => ModelCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ModelSetterTranslationCommon.Instance;
-        [DebuggerStepThrough]
-        object IModelGetter.CommonInstance() => this.CommonInstance();
-        [DebuggerStepThrough]
-        object? IModelGetter.CommonSetterInstance() => null;
-        [DebuggerStepThrough]
-        object IModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        protected override object CommonSetterTranslationInstance() => ModelSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2183,11 +1913,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModelGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => ModelCommon.Instance.GetLinks(this);
+        public override IEnumerable<ILinkGetter> Links => ModelCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected override object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -2202,9 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
@@ -2217,14 +1943,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        #region File
-        private int? _FileLocation;
-        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.Meta)) : string.Empty;
-        #endregion
-        #region Data
-        private int? _DataLocation;
-        public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
         public IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2262,7 +1980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public TryGet<int?> FillRecordType(
+        public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset,
@@ -2273,24 +1991,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
-                    _FileLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
-                }
-                case 0x54444F4D: // MODT
-                {
-                    _DataLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.Data);
-                }
                 case 0x53444F4D: // MODS
                 {
                     throw new NotImplementedException();
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
             }
         }
     }

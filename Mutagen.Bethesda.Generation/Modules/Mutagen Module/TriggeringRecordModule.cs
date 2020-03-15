@@ -135,11 +135,26 @@ namespace Mutagen.Bethesda.Generation
                     switch (dict.Mode)
                     {
                         case DictMode.KeyedValue:
-                            if (!dict.ValueTypeGen.TryGetFieldData(out var subData)) continue;
-                            if (!subData.HasTrigger) continue;
-                            recordTypes.Add(subData.TriggeringRecordTypes);
-                            break;
+                            {
+                                if (!dict.ValueTypeGen.TryGetFieldData(out var subData)) continue;
+                                if (!subData.HasTrigger) continue;
+                                recordTypes.Add(subData.TriggeringRecordTypes);
+                                break;
+                            }
                         case DictMode.KeyValue:
+                            {
+                                if (dict.KeyTypeGen.TryGetFieldData(out var subData)
+                                    && subData.HasTrigger)
+                                {
+                                    recordTypes.Add(subData.TriggeringRecordTypes);
+                                }
+                                if (dict.ValueTypeGen.TryGetFieldData(out subData)
+                                    && subData.HasTrigger)
+                                {
+                                    recordTypes.Add(subData.TriggeringRecordTypes);
+                                }
+                                break;
+                            }
                         default:
                             throw new NotImplementedException();
                     }
@@ -150,6 +165,11 @@ namespace Mutagen.Bethesda.Generation
                     {
                         recordTypes.Add(gendered.MaleMarker.Value);
                         recordTypes.Add(gendered.FemaleMarker.Value);
+                    }
+                    var subData = gendered.SubTypeGeneration.GetFieldData();
+                    if (subData.RecordType != null)
+                    {
+                        recordTypes.Add(subData.RecordType.Value);
                     }
                 }
             }
@@ -226,6 +246,11 @@ namespace Mutagen.Bethesda.Generation
                         }
                         break;
                     case DictMode.KeyValue:
+                        if (dictType.KeyTypeGen is LoquiType || dictType.ValueTypeGen is LoquiType)
+                        {
+                            throw new NotImplementedException();
+                        }
+                        break;
                     default:
                         throw new NotImplementedException();
                 }

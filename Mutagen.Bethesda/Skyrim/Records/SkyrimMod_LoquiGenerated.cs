@@ -54,6 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             _HeadParts_Object = new Group<HeadPart>(this);
             _Hairs_Object = new Group<Hair>(this);
             _Eyes_Object = new Group<Eye>(this);
+            _Races_Object = new Group<Race>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -142,6 +143,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<Eye> Eyes => _Eyes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IEyeGetter> ISkyrimModGetter.Eyes => _Eyes_Object;
+        #endregion
+        #region Races
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly Group<Race> _Races_Object;
+        public Group<Race> Races => _Races_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IRaceGetter> ISkyrimModGetter.Races => _Races_Object;
         #endregion
 
         #region To String
@@ -325,6 +333,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -339,7 +348,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Factions,
                 TItem HeadParts,
                 TItem Hairs,
-                TItem Eyes)
+                TItem Eyes,
+                TItem Races)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -353,6 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(HeadParts, new Group.Mask<TItem>(HeadParts));
                 this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(Hairs, new Group.Mask<TItem>(Hairs));
                 this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(Eyes, new Group.Mask<TItem>(Eyes));
+                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(Races, new Group.Mask<TItem>(Races));
             }
 
             #pragma warning disable CS8618
@@ -376,6 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? HeadParts { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Hairs { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Eyes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Races { get; set; }
             #endregion
 
             #region Equals
@@ -400,6 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
                 if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
                 if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
+                if (!object.Equals(this.Races, rhs.Races)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -417,6 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret = ret.CombineHashCode(this.HeadParts?.GetHashCode());
                 ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
                 ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Races?.GetHashCode());
                 return ret;
             }
 
@@ -485,6 +499,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Eyes.Overall)) return false;
                     if (this.Eyes.Specific != null && !this.Eyes.Specific.All(eval)) return false;
                 }
+                if (Races != null)
+                {
+                    if (!eval(this.Races.Overall)) return false;
+                    if (this.Races.Specific != null && !this.Races.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -552,6 +571,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Eyes.Overall)) return true;
                     if (this.Eyes.Specific != null && this.Eyes.Specific.Any(eval)) return true;
                 }
+                if (Races != null)
+                {
+                    if (eval(this.Races.Overall)) return true;
+                    if (this.Races.Specific != null && this.Races.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -578,6 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
                 obj.Hairs = this.Hairs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
                 obj.Eyes = this.Eyes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
+                obj.Races = this.Races == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
             }
             #endregion
 
@@ -648,6 +673,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Eyes?.ToString(fg);
                     }
+                    if (printMask?.Races?.Overall ?? true)
+                    {
+                        Races?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -685,6 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
             public MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>? Hairs;
             public MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>? Eyes;
+            public MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>? Races;
             #endregion
 
             #region IErrorMask
@@ -717,6 +747,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Hairs;
                     case SkyrimMod_FieldIndex.Eyes:
                         return Eyes;
+                    case SkyrimMod_FieldIndex.Races:
+                        return Races;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -762,6 +794,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Eyes:
                         this.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Races:
+                        this.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -809,6 +844,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Eyes:
                         this.Eyes = (MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Races:
+                        this.Races = (MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -829,6 +867,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (HeadParts != null) return true;
                 if (Hairs != null) return true;
                 if (Eyes != null) return true;
+                if (Races != null) return true;
                 return false;
             }
             #endregion
@@ -875,6 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
                 HeadParts?.ToString(fg);
                 Hairs?.ToString(fg);
                 Eyes?.ToString(fg);
+                Races?.ToString(fg);
             }
             #endregion
 
@@ -895,6 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
                 ret.Hairs = this.Hairs.Combine(rhs.Hairs, (l, r) => l.Combine(r));
                 ret.Eyes = this.Eyes.Combine(rhs.Eyes, (l, r) => l.Combine(r));
+                ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -928,6 +969,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<HeadPart.TranslationMask>?> HeadParts;
             public MaskItem<bool, Group.TranslationMask<Hair.TranslationMask>?> Hairs;
             public MaskItem<bool, Group.TranslationMask<Eye.TranslationMask>?> Eyes;
+            public MaskItem<bool, Group.TranslationMask<Race.TranslationMask>?> Races;
             #endregion
 
             #region Ctors
@@ -945,6 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HeadParts = new MaskItem<bool, Group.TranslationMask<HeadPart.TranslationMask>?>(defaultOn, null);
                 this.Hairs = new MaskItem<bool, Group.TranslationMask<Hair.TranslationMask>?>(defaultOn, null);
                 this.Eyes = new MaskItem<bool, Group.TranslationMask<Eye.TranslationMask>?>(defaultOn, null);
+                this.Races = new MaskItem<bool, Group.TranslationMask<Race.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -972,6 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HeadParts?.Overall ?? true, HeadParts?.Specific?.GetCrystal()));
                 ret.Add((Hairs?.Overall ?? true, Hairs?.Specific?.GetCrystal()));
                 ret.Add((Eyes?.Overall ?? true, Eyes?.Specific?.GetCrystal()));
+                ret.Add((Races?.Overall ?? true, Races?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1029,6 +1073,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Eyes ?? true)
             {
                 this.Eyes.RecordCache.Set(rhsMod.Eyes.RecordCache.Items);
+            }
+            if (mask?.Races ?? true)
+            {
+                this.Races.RecordCache.Set(rhsMod.Races.RecordCache.Items);
             }
         }
 
@@ -1114,6 +1162,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Eye>());
             }
+            if (mask?.Races ?? true)
+            {
+                this.Races.RecordCache.Set(
+                    rhs.Races.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Race>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -1150,6 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += HeadParts.RecordCache.Count > 0 ? 1 : 0;
             count += Hairs.RecordCache.Count > 0 ? 1 : 0;
             count += Eyes.RecordCache.Count > 0 ? 1 : 0;
+            count += Races.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1335,6 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<HeadPart> HeadParts { get; }
         new Group<Hair> Hairs { get; }
         new Group<Eye> Eyes { get; }
+        new Group<Race> Races { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -1363,6 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IHeadPartGetter> HeadParts { get; }
         IGroupGetter<IHairGetter> Hairs { get; }
         IGroupGetter<IEyeGetter> Eyes { get; }
+        IGroupGetter<IRaceGetter> Races { get; }
 
     }
 
@@ -1796,6 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         HeadParts = 9,
         Hairs = 10,
         Eyes = 11,
+        Races = 12,
     }
     #endregion
 
@@ -1813,9 +1872,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -1869,6 +1928,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Hairs;
                 case "EYES":
                     return (ushort)SkyrimMod_FieldIndex.Eyes;
+                case "RACES":
+                    return (ushort)SkyrimMod_FieldIndex.Races;
                 default:
                     return null;
             }
@@ -1891,6 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.HeadParts:
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
+                case SkyrimMod_FieldIndex.Races:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1914,6 +1976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.HeadParts:
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
+                case SkyrimMod_FieldIndex.Races:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1937,6 +2000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.HeadParts:
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
+                case SkyrimMod_FieldIndex.Races:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1972,6 +2036,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Hairs";
                 case SkyrimMod_FieldIndex.Eyes:
                     return "Eyes";
+                case SkyrimMod_FieldIndex.Races:
+                    return "Races";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1994,6 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.HeadParts:
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
+                case SkyrimMod_FieldIndex.Races:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2018,6 +2085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.HeadParts:
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
+                case SkyrimMod_FieldIndex.Races:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2053,6 +2121,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Hair>);
                 case SkyrimMod_FieldIndex.Eyes:
                     return typeof(Group<Eye>);
+                case SkyrimMod_FieldIndex.Races:
+                    return typeof(Group<Race>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2071,6 +2141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
+        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -2089,12 +2160,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         FACT_HEADER,
                         HDPT_HEADER,
                         HAIR_HEADER,
-                        EYES_HEADER
+                        EYES_HEADER,
+                        RACE_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 12;
+        public const int NumTypedFields = 13;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2148,6 +2220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HeadParts.Clear();
             item.Hairs.Clear();
             item.Eyes.Clear();
+            item.Races.Clear();
         }
         
         #region Xml Translation
@@ -2431,6 +2504,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Eyes);
                 }
+                case 0x45434152: // RACE
+                {
+                    if (importMask?.Races ?? true)
+                    {
+                        await item.Races.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -2495,6 +2583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
             ret.Hairs = MaskItemExt.Factory(item.Hairs.GetEqualsMask(rhs.Hairs, include), include);
             ret.Eyes = MaskItemExt.Factory(item.Eyes.GetEqualsMask(rhs.Eyes, include), include);
+            ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
         }
         
         public string ToString(
@@ -2589,6 +2678,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Eyes?.ToString(fg, "Eyes");
             }
+            if (printMask?.Races?.Overall ?? true)
+            {
+                item.Races?.ToString(fg, "Races");
+            }
         }
         
         public bool HasBeenSet(
@@ -2614,6 +2707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HeadParts = new MaskItem<bool, Group.Mask<bool>?>(true, item.HeadParts?.GetHasBeenSetMask());
             mask.Hairs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hairs?.GetHasBeenSetMask());
             mask.Eyes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Eyes?.GetHasBeenSetMask());
+            mask.Races = new MaskItem<bool, Group.Mask<bool>?>(true, item.Races?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -2635,6 +2729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.HeadParts, rhs.HeadParts)) return false;
             if (!object.Equals(lhs.Hairs, rhs.Hairs)) return false;
             if (!object.Equals(lhs.Eyes, rhs.Eyes)) return false;
+            if (!object.Equals(lhs.Races, rhs.Races)) return false;
             return true;
         }
         
@@ -2653,6 +2748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.HeadParts).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Races).CombineHashCode(ret);
             return ret;
         }
         
@@ -2725,6 +2821,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEye":
                 case "IEyeInternal":
                     return obj.Eyes.RecordCache;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    return obj.Races.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -2743,7 +2844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             modHeader.WriteToBinary(
                 new MutagenWriter(stream, GameConstants.Skyrim),
                 masterRefs);
-            Stream[] outputStreams = new Stream[11];
+            Stream[] outputStreams = new Stream[12];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -2756,6 +2857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 10, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 11, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2880,6 +2982,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Races is ILinkContainer RaceslinkCont)
+            {
+                foreach (var item in RaceslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2926,6 +3035,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Eyes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Races.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3042,6 +3155,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEye":
                 case "IEyeInternal":
                     foreach (var item in obj.Eyes.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    foreach (var item in obj.Races.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -3305,6 +3427,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Races) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Races);
+                try
+                {
+                    item.Races.DeepCopyIn(
+                        rhs: rhs.Races,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Races));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -3525,6 +3667,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Eyes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Eyes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Races) ?? true))
+            {
+                var RacesItem = item.Races;
+                ((GroupXmlWriteTranslation)((IXmlItem)RacesItem).XmlWriteTranslator).Write<IRaceGetter>(
+                    item: RacesItem,
+                    node: node,
+                    name: nameof(item.Races),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Races,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Races));
             }
         }
 
@@ -3841,6 +3994,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Races":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Races);
+                    try
+                    {
+                        item.Races.CopyInFromXml<Race>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -4021,6 +4193,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool HeadParts;
         public bool Hairs;
         public bool Eyes;
+        public bool Races;
         public GroupMask()
         {
         }
@@ -4037,6 +4210,7 @@ namespace Mutagen.Bethesda.Skyrim
             HeadParts = defaultValue;
             Hairs = defaultValue;
             Eyes = defaultValue;
+            Races = defaultValue;
         }
     }
 
@@ -4185,6 +4359,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
                         item: EyesItem,
+                        writer: writer,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Races ?? true)
+            {
+                var RacesItem = item.Races;
+                if (RacesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
+                        item: RacesItem,
                         writer: writer,
                         masterReferences: masterReferences);
                 }
@@ -4446,6 +4631,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IEyeGetter>? _Eyes => _Eyes_IsSet ? GroupBinaryOverlay<IEyeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IEyeGetter> Eyes => _Eyes ?? new Group<Eye>(this);
         #endregion
+        #region Races
+        private RangeInt64? _RacesLocation;
+        private bool _Races_IsSet => _RacesLocation.HasValue;
+        private IGroupGetter<IRaceGetter>? _Races => _Races_IsSet ? GroupBinaryOverlay<IRaceGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IRaceGetter> Races => _Races ?? new Group<Race>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -4569,6 +4760,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _EyesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Eyes);
+                }
+                case 0x45434152: // RACE
+                {
+                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

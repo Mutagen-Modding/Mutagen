@@ -8,6 +8,40 @@ namespace Mutagen.Bethesda.Binary
         where E : struct, Enum, IConvertible
     {
         public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
+        public readonly static UnderlyingType Underlying;
+
+        public enum UnderlyingType
+        {
+            Int,
+            UInt,
+            Long,
+            ULong,
+        }
+
+        static EnumBinaryTranslation()
+        {
+            var underlying = Enum.GetUnderlyingType(typeof(E));
+            if (underlying == typeof(int))
+            {
+                Underlying = UnderlyingType.Int;
+            }
+            else if (underlying == typeof(uint))
+            {
+                Underlying = UnderlyingType.UInt;
+            }
+            else if (underlying == typeof(long))
+            {
+                Underlying = UnderlyingType.Long;
+            }
+            else if (underlying == typeof(ulong))
+            {
+                Underlying = UnderlyingType.ULong;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public bool Parse(
             MutagenFrame frame,
@@ -99,7 +133,24 @@ namespace Mutagen.Bethesda.Binary
 
         protected void WriteValue(MutagenWriter writer, E item, long length)
         {
-            var i = item.ToInt32(null);
+            long i;
+            switch (Underlying)
+            {
+                case UnderlyingType.Int:
+                    i = item.ToInt32(null);
+                    break;
+                case UnderlyingType.UInt:
+                    i = item.ToUInt32(null);
+                    break;
+                case UnderlyingType.Long:
+                    i = item.ToInt64(null);
+                    break;
+                case UnderlyingType.ULong:
+                    i = (long)item.ToUInt64(null);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
             switch (length)
             {
                 case 1:
@@ -109,7 +160,7 @@ namespace Mutagen.Bethesda.Binary
                     writer.Write((ushort)i);
                     break;
                 case 4:
-                    writer.Write(i);
+                    writer.Write((uint)i);
                     break;
                 default:
                     throw new NotImplementedException();

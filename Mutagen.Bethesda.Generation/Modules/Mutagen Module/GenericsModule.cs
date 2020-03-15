@@ -33,6 +33,11 @@ namespace Mutagen.Bethesda.Generation
                                 loquiType = keyLoqui;
                                 break;
                             case DictMode.KeyValue:
+                                if (dict.KeyTypeGen is LoquiType || dict.ValueTypeGen is LoquiType)
+                                {
+                                    throw new NotImplementedException();
+                                }
+                                continue;
                             default:
                                 throw new NotImplementedException();
                         }

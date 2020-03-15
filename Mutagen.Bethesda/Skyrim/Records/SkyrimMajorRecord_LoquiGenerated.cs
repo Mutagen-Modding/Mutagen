@@ -1086,9 +1086,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
@@ -1096,11 +1098,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
+        public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
+        public static readonly RecordType MATT_HEADER = new RecordType("MATT");
+        public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
+        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
@@ -1113,9 +1120,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         AACT_HEADER,
                         ARMO_HEADER,
+                        ARTO_HEADER,
                         BPTD_HEADER,
                         CLAS_HEADER,
                         CLFM_HEADER,
+                        EQUP_HEADER,
                         EYES_HEADER,
                         FACT_HEADER,
                         FLST_HEADER,
@@ -1123,11 +1132,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         GLOB_HEADER,
                         HAIR_HEADER,
                         HDPT_HEADER,
+                        IPDS_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
+                        MATT_HEADER,
+                        MOVT_HEADER,
+                        NPC__HEADER,
                         OTFT_HEADER,
                         REFR_HEADER,
                         RACE_HEADER,
+                        SNDR_HEADER,
                         SPEL_HEADER,
                         TXST_HEADER,
                         VTYP_HEADER

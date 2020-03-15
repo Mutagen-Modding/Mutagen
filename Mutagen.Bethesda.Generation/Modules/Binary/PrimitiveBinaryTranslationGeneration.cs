@@ -69,7 +69,8 @@ namespace Mutagen.Bethesda.Generation
                         }
                         args.Add($"errorMask: {errorMaskAccessor}");
                     }
-                    if (data.RecordType.HasValue)
+                    if (data.RecordType.HasValue
+                        && data.HandleTrigger)
                     {
                         args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                     }
