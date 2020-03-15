@@ -16,10 +16,10 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void GroupErrTest()
         {
-            Group.ErrorMask<NPC.ErrorMask> group_ErrorMask = new Group.ErrorMask<NPC.ErrorMask>();
+            Group.ErrorMask<Npc.ErrorMask> group_ErrorMask = new Group.ErrorMask<Npc.ErrorMask>();
             group_ErrorMask.SetNthMask(
                 (int)Group_FieldIndex.RecordCache,
-                new MaskItem<Exception?, IEnumerable<MaskItem<Exception, NPC.ErrorMask>>?>(null, null));
+                new MaskItem<Exception?, IEnumerable<MaskItem<Exception, Npc.ErrorMask>>?>(null, null));
         }
     }
 }

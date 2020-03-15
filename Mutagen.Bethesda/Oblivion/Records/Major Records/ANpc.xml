@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NPCAbstract" baseClass="NPCSpawn" abstract="true" objType="Record" GUID="64c259ed-5c42-4608-8c24-a41b06215b07" ID="94">
+  <Object name="ANpc" baseClass="NpcSpawn" abstract="true" objType="Record" GUID="64c259ed-5c42-4608-8c24-a41b06215b07" ID="94">
     <Fields>
     </Fields>
   </Object>

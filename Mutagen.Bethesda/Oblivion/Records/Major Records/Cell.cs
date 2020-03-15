@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     }
                                     break;
                                 case 0x52484341: //"ACHR":
-                                    if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
+                                    if (LoquiBinaryTranslation<PlacedNpc>.Instance.Parse(
                                             frame: r,
                                             item: out var placedNPC,
                                             masterReferences: masterReferences))
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 }
                                 break;
                             case 0x52484341: //"ACHR":
-                                if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
+                                if (LoquiBinaryTranslation<PlacedNpc>.Instance.Parse(
                                         frame: r,
                                         item: out var placedNPC,
                                         masterReferences: masterReferences))
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
                             case 0x45524341: // "ACRE":
                                 return PlacedCreatureBinaryOverlay.PlacedCreatureFactory(new BinaryMemoryReadStream(span), package);
                             case 0x52484341: // "ACHR":
-                                return PlacedNPCBinaryOverlay.PlacedNPCFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedNpcBinaryOverlay.PlacedNpcFactory(new BinaryMemoryReadStream(span), package);
                             case 0x52464552: // "REFR":
                                 return PlacedObjectBinaryOverlay.PlacedObjectFactory(new BinaryMemoryReadStream(span), package);
                             default:

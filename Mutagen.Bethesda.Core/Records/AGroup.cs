@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public abstract class GroupAbstract<T> : IEnumerable<T>, IGroupCommon<T>
+    public abstract class AGroup<T> : IEnumerable<T>, IGroupCommon<T>
         where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -26,17 +26,17 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IMod SourceMod { get; private set; }
 
-        protected GroupAbstract()
+        protected AGroup()
         {
             this.SourceMod = null!;
         }
 
-        public GroupAbstract(IModGetter getter)
+        public AGroup(IModGetter getter)
         {
             this.SourceMod = null!;
         }
 
-        public GroupAbstract(IMod mod)
+        public AGroup(IMod mod)
         {
             this.SourceMod = mod;
         }

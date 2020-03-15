@@ -35,7 +35,7 @@
       <Group name="Furnature" refName="Furnature" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammo" refName="Ammo" />
-      <Group name="NPCs" refName="NPC" />
+      <Group name="Npcs" refName="Npc" />
       <Group name="Creatures" refName="Creature" />
       <Group name="LeveledCreatures" refName="LeveledCreature" />
       <Group name="SoulGems" refName="SoulGem" />

@@ -1075,14 +1075,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
-        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
-        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType INGR_HEADER = new RecordType("INGR");
         public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
@@ -1094,13 +1094,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1150,14 +1150,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         TREE_HEADER,
                         WATR_HEADER,
                         WTHR_HEADER,
-                        APPA_HEADER,
-                        AMMO_HEADER,
-                        BOOK_HEADER,
                         FULL_HEADER,
                         SCRI_HEADER,
                         ENAM_HEADER,
                         ANAM_HEADER,
                         BMDT_HEADER,
+                        APPA_HEADER,
+                        AMMO_HEADER,
+                        BOOK_HEADER,
                         INGR_HEADER,
                         KEYM_HEADER,
                         LVLI_HEADER,
@@ -1169,13 +1169,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         WEAP_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER,
+                        LVSP_HEADER,
+                        SPEL_HEADER,
                         LVLC_HEADER,
                         CREA_HEADER,
                         NPC__HEADER,
                         CELL_HEADER,
-                        WRLD_HEADER,
-                        LVSP_HEADER,
-                        SPEL_HEADER
+                        WRLD_HEADER
                     })
             );
         });

@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LeveledSpell :
-        SpellAbstract,
+        ASpell,
         ILeveledSpellInternal,
         ILoquiObjectSetter<LeveledSpell>,
         IEquatable<LeveledSpell>,
@@ -72,15 +72,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledEntry<SpellAbstract>>? _Entries;
-        public ExtendedList<LeveledEntry<SpellAbstract>>? Entries
+        private ExtendedList<LeveledEntry<ASpell>>? _Entries;
+        public ExtendedList<LeveledEntry<ASpell>>? Entries
         {
             get => this._Entries;
             set => this._Entries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILeveledEntryGetter<ISpellAbstractGetter>>? ILeveledSpellGetter.Entries => _Entries;
+        IReadOnlyList<ILeveledEntryGetter<IASpellGetter>>? ILeveledSpellGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            SpellAbstract.Mask<TItem>,
+            ASpell.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -455,13 +455,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            SpellAbstract.ErrorMask,
+            ASpell.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
             public Exception? ChanceNone;
             public Exception? Flags;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<SpellAbstract.ErrorMask>?>>?>? Entries;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ASpell.ErrorMask>?>>?>? Entries;
             #endregion
 
             #region IErrorMask
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Flags = ex;
                         break;
                     case LeveledSpell_FieldIndex.Entries:
-                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<SpellAbstract.ErrorMask>?>>?>(ex, null);
+                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ASpell.ErrorMask>?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Flags = (Exception?)obj;
                         break;
                     case LeveledSpell_FieldIndex.Entries:
-                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<SpellAbstract.ErrorMask>?>>?>)obj;
+                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ASpell.ErrorMask>?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<SpellAbstract.ErrorMask>?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ASpell.ErrorMask>?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -615,13 +615,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            SpellAbstract.TranslationMask,
+            ASpell.TranslationMask,
             ITranslationMask
         {
             #region Members
             public bool ChanceNone;
             public bool Flags;
-            public MaskItem<bool, LeveledEntry.TranslationMask<SpellAbstract.TranslationMask>?> Entries;
+            public MaskItem<bool, LeveledEntry.TranslationMask<ASpell.TranslationMask>?> Entries;
             #endregion
 
             #region Ctors
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.ChanceNone = defaultOn;
                 this.Flags = defaultOn;
-                this.Entries = new MaskItem<bool, LeveledEntry.TranslationMask<SpellAbstract.TranslationMask>?>(defaultOn, null);
+                this.Entries = new MaskItem<bool, LeveledEntry.TranslationMask<ASpell.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -726,23 +726,23 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILeveledSpell :
         ILeveledSpellGetter,
-        ISpellAbstract,
+        IASpell,
         ILoquiObjectSetter<ILeveledSpellInternal>
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new ExtendedList<LeveledEntry<SpellAbstract>>? Entries { get; set; }
+        new ExtendedList<LeveledEntry<ASpell>>? Entries { get; set; }
     }
 
     public partial interface ILeveledSpellInternal :
-        ISpellAbstractInternal,
+        IASpellInternal,
         ILeveledSpell,
         ILeveledSpellGetter
     {
     }
 
     public partial interface ILeveledSpellGetter :
-        ISpellAbstractGetter,
+        IASpellGetter,
         ILoquiObject<ILeveledSpellGetter>,
         IXmlItem,
         ILinkContainer,
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
-        IReadOnlyList<ILeveledEntryGetter<ISpellAbstractGetter>>? Entries { get; }
+        IReadOnlyList<ILeveledEntryGetter<IASpellGetter>>? Entries { get; }
 
     }
 
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Flags:
                     return false;
                 default:
-                    return SpellAbstract_Registration.GetNthIsEnumerable(index);
+                    return ASpell_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Flags:
                     return false;
                 default:
-                    return SpellAbstract_Registration.GetNthIsLoqui(index);
+                    return ASpell_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Entries:
                     return false;
                 default:
-                    return SpellAbstract_Registration.GetNthIsSingleton(index);
+                    return ASpell_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Entries:
                     return "Entries";
                 default:
-                    return SpellAbstract_Registration.GetNthName(index);
+                    return ASpell_Registration.GetNthName(index);
             }
         }
 
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Entries:
                     return false;
                 default:
-                    return SpellAbstract_Registration.IsNthDerivative(index);
+                    return ASpell_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Entries:
                     return false;
                 default:
-                    return SpellAbstract_Registration.IsProtected(index);
+                    return ASpell_Registration.IsProtected(index);
             }
         }
 
@@ -1215,9 +1215,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledSpell_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledEntry<SpellAbstract>>);
+                    return typeof(ExtendedList<LeveledEntry<ASpell>>);
                 default:
-                    return SpellAbstract_Registration.GetNthType(index);
+                    return ASpell_Registration.GetNthType(index);
             }
         }
 
@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LeveledSpellSetterCommon : SpellAbstractSetterCommon
+    public partial class LeveledSpellSetterCommon : ASpellSetterCommon
     {
         public new static readonly LeveledSpellSetterCommon Instance = new LeveledSpellSetterCommon();
 
@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
         
-        public override void Clear(ISpellAbstractInternal item)
+        public override void Clear(IASpellInternal item)
         {
             Clear(item: (ILeveledSpellInternal)item);
         }
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 default:
-                    SpellAbstractSetterCommon.FillPrivateElementXml(
+                    ASpellSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
-            SpellAbstractSetterCommon.FillBinaryStructs(
+            ASpellSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences);
@@ -1385,23 +1385,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F4C564C: // LVLO
                 {
                     item.Entries = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<SpellAbstract>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ASpell>>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: LeveledSpell_Registration.LVLO_HEADER,
                             masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
-                            transl: (MutagenFrame r, out LeveledEntry<SpellAbstract> listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out LeveledEntry<ASpell> listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
-                                return LoquiBinaryTranslation<LeveledEntry<SpellAbstract>>.Instance.Parse(
+                                return LoquiBinaryTranslation<LeveledEntry<ASpell>>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem,
                                     masterReferences: m);
                             })
-                        .ToExtendedList<LeveledEntry<SpellAbstract>>();
+                        .ToExtendedList<LeveledEntry<ASpell>>();
                     return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Entries);
                 }
                 default:
-                    return SpellAbstractSetterCommon.FillBinaryRecordTypes(
+                    return ASpellSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledSpellCommon : SpellAbstractCommon
+    public partial class LeveledSpellCommon : ASpellCommon
     {
         public new static readonly LeveledSpellCommon Instance = new LeveledSpellCommon();
 
@@ -1508,7 +1508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             LeveledSpell.Mask<bool>? printMask = null)
         {
-            SpellAbstractCommon.ToStringFields(
+            ASpellCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1570,19 +1570,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 mask: mask);
         }
         
-        public static LeveledSpell_FieldIndex ConvertFieldIndex(SpellAbstract_FieldIndex index)
+        public static LeveledSpell_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
         {
             switch (index)
             {
-                case SpellAbstract_FieldIndex.MajorRecordFlagsRaw:
+                case ASpell_FieldIndex.MajorRecordFlagsRaw:
                     return (LeveledSpell_FieldIndex)((int)index);
-                case SpellAbstract_FieldIndex.FormKey:
+                case ASpell_FieldIndex.FormKey:
                     return (LeveledSpell_FieldIndex)((int)index);
-                case SpellAbstract_FieldIndex.Version:
+                case ASpell_FieldIndex.Version:
                     return (LeveledSpell_FieldIndex)((int)index);
-                case SpellAbstract_FieldIndex.EditorID:
+                case ASpell_FieldIndex.EditorID:
                     return (LeveledSpell_FieldIndex)((int)index);
-                case SpellAbstract_FieldIndex.OblivionMajorRecordFlags:
+                case ASpell_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledSpell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1640,8 +1640,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            ISpellAbstractGetter? lhs,
-            ISpellAbstractGetter? rhs)
+            IASpellGetter? lhs,
+            IASpellGetter? rhs)
         {
             return Equals(
                 lhs: (ILeveledSpellGetter?)lhs,
@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public override int GetHashCode(ISpellAbstractGetter item)
+        public override int GetHashCode(IASpellGetter item)
         {
             return GetHashCode(item: (ILeveledSpellGetter)item);
         }
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledSpellSetterTranslationCommon : SpellAbstractSetterTranslationCommon
+    public partial class LeveledSpellSetterTranslationCommon : ASpellSetterTranslationCommon
     {
         public new static readonly LeveledSpellSetterTranslationCommon Instance = new LeveledSpellSetterTranslationCommon();
 
@@ -1784,11 +1784,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             rhs.Entries
                             .Select(r =>
                             {
-                                return r.DeepCopy<SpellAbstract, ISpellAbstractGetter, SpellAbstract.TranslationMask>(
+                                return r.DeepCopy<ASpell, IASpellGetter, ASpell.TranslationMask>(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LeveledEntry<SpellAbstract>>();
+                            .ToExtendedList<LeveledEntry<ASpell>>();
                     }
                     else
                     {
@@ -1808,8 +1808,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            ISpellAbstractInternal item,
-            ISpellAbstractGetter rhs,
+            IASpellInternal item,
+            IASpellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1821,8 +1821,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            ISpellAbstract item,
-            ISpellAbstractGetter rhs,
+            IASpell item,
+            IASpellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledSpellXmlWriteTranslation :
-        SpellAbstractXmlWriteTranslation,
+        ASpellXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static LeveledSpellXmlWriteTranslation Instance = new LeveledSpellXmlWriteTranslation();
@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            SpellAbstractXmlWriteTranslation.WriteToNodeXml(
+            ASpellXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1996,18 +1996,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Entries != null)
                 && (translationMask?.GetShouldTranslate((int)LeveledSpell_FieldIndex.Entries) ?? true))
             {
-                ListXmlTranslation<ILeveledEntryGetter<ISpellAbstractGetter>>.Instance.Write(
+                ListXmlTranslation<ILeveledEntryGetter<IASpellGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Entries),
                     item: item.Entries,
                     fieldIndex: (int)LeveledSpell_FieldIndex.Entries,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LeveledSpell_FieldIndex.Entries),
-                    transl: (XElement subNode, ILeveledEntryGetter<ISpellAbstractGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, ILeveledEntryGetter<IASpellGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         if (subItem.TryGet(out var Item))
                         {
-                            ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<ISpellAbstractGetter>(
+                            ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<IASpellGetter>(
                                 item: Item,
                                 node: subNode,
                                 name: null,
@@ -2055,7 +2055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            ISpellAbstractGetter item,
+            IASpellGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -2100,7 +2100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledSpellXmlCreateTranslation : SpellAbstractXmlCreateTranslation
+    public partial class LeveledSpellXmlCreateTranslation : ASpellXmlCreateTranslation
     {
         public new readonly static LeveledSpellXmlCreateTranslation Instance = new LeveledSpellXmlCreateTranslation();
 
@@ -2178,10 +2178,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)LeveledSpell_FieldIndex.Entries);
                     try
                     {
-                        if (ListXmlTranslation<LeveledEntry<SpellAbstract>>.Instance.Parse(
+                        if (ListXmlTranslation<LeveledEntry<ASpell>>.Instance.Parse(
                             node: node,
                             enumer: out var EntriesItem,
-                            transl: LoquiXmlTranslation<LeveledEntry<SpellAbstract>>.Instance.Parse,
+                            transl: LoquiXmlTranslation<LeveledEntry<ASpell>>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -2203,7 +2203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    SpellAbstractXmlCreateTranslation.FillPublicElementXml(
+                    ASpellXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2283,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledSpellBinaryWriteTranslation :
-        SpellAbstractBinaryWriteTranslation,
+        ASpellBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static LeveledSpellBinaryWriteTranslation Instance = new LeveledSpellBinaryWriteTranslation();
@@ -2308,15 +2308,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(LeveledSpell_Registration.LVLF_HEADER));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<ISpellAbstractGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<IASpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
                 masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, ILeveledEntryGetter<ISpellAbstractGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ILeveledEntryGetter<IASpellGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
-                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<ISpellAbstractGetter>(
+                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<IASpellGetter>(
                             item: Item,
                             writer: subWriter,
                             masterReferences: m);
@@ -2362,7 +2362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            ISpellAbstractGetter item,
+            IASpellGetter item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2401,7 +2401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledSpellBinaryCreateTranslation : SpellAbstractBinaryCreateTranslation
+    public partial class LeveledSpellBinaryCreateTranslation : ASpellBinaryCreateTranslation
     {
         public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
 
@@ -2421,7 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledSpellBinaryOverlay :
-        SpellAbstractBinaryOverlay,
+        ASpellBinaryOverlay,
         ILeveledSpellGetter
     {
         #region Common Routing
@@ -2478,7 +2478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool Flags_IsSet => _FlagsLocation.HasValue;
         public LeveledFlag? Flags => Flags_IsSet ? (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(LeveledFlag?);
         #endregion
-        public IReadOnlyList<ILeveledEntryGetter<ISpellAbstractGetter>>? Entries { get; private set; }
+        public IReadOnlyList<ILeveledEntryGetter<IASpellGetter>>? Entries { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2541,11 +2541,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C564C: // LVLO
                 {
-                    this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<ISpellAbstractGetter>>.FactoryByArray(
+                    this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<IASpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => LeveledEntryBinaryOverlay<ISpellAbstractGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => LeveledEntryBinaryOverlay<IASpellGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

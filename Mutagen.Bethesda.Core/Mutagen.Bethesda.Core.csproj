@@ -57,14 +57,14 @@
     <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Records\GenderedItem.cs" />
-    <Compile Include="Records\ListGroupAbstract.cs" />
+    <Compile Include="Records\AListGroup.cs" />
     <Compile Include="Records\ProtocolDefinition_Bethesda.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayArrayHelper.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayFactoryPackage.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlaySetList.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayNumberedList.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\GenderedItemBinaryOverlay.cs" />
-    <Compile Include="Records\GroupAbstract.cs" />
+    <Compile Include="Records\AGroup.cs" />
     <Compile Include="Translators\Binary\BinaryOverlay.cs" />
     <Compile Include="Translators\Binary\CompositeReadStream.cs" />
     <Compile Include="Translators\Binary\GlobalCustomParsing.cs" />

@@ -6,7 +6,7 @@
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" />
       <List name="ActorEffect" counterRecType="SPCT">
-        <FormLink refName="SpellAbstract" recordType="SPLO" />
+        <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />
       <RefDirect name="BodyTemplate" refName="BodyTemplate" />
@@ -251,7 +251,7 @@
       <RefList name="HeadParts" refName="HeadPartReference" />
       <RefDirect name="AvailableMorphs" refName="AvailableMorphs" />
       <List name="RacePresets">
-        <FormLink refName="NPC" recordType="RPRM" />
+        <FormLink refName="Npc" recordType="RPRM" />
       </List>
       <List name="AvailableHairColors">
         <FormLink refName="ColorRecord" recordType="ACHM" />

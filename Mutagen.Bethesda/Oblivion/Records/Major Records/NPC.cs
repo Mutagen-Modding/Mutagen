@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class NPC
+    public partial class Npc
     {
         [Flags]
-        public enum NPCFlag
+        public enum NpcFlag
         {
             Female = 0x000001,
             Essential = 0x000002,

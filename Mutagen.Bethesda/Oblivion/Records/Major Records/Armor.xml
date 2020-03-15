@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Armor" baseClass="ClothingAbstract" objType="Record" recordType="ARMO" GUID="484e38f3-afde-4661-9c39-a8bc1e92eb99" ID="67">
+  <Object name="Armor" baseClass="AClothing" objType="Record" recordType="ARMO" GUID="484e38f3-afde-4661-9c39-a8bc1e92eb99" ID="67">
     <Fields>
       <Data recordType="DATA">
         <Fields>

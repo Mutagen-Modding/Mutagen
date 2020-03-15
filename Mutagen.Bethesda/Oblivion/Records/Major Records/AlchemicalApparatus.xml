@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AlchemicalApparatus" baseClass="ItemAbstract" objType="Record" recordType="APPA" GUID="731a9b97-8051-4d72-8008-3e53a96659cd" ID="66">
+  <Object name="AlchemicalApparatus" baseClass="AItem" objType="Record" recordType="APPA" GUID="731a9b97-8051-4d72-8008-3e53a96659cd" ID="66">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />

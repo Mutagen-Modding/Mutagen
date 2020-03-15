@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Key :
-        ItemAbstract,
+        AItem,
         IKeyInternal,
         ILoquiObjectSetter<Key>,
         INamed,
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            ItemAbstract.Mask<TItem>,
+            AItem.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            ItemAbstract.ErrorMask,
+            AItem.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            ItemAbstract.TranslationMask,
+            AItem.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -809,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IKey :
         IKeyGetter,
-        IItemAbstract,
+        IAItem,
         ILoquiObjectSetter<IKeyInternal>
     {
         new String? Name { get; set; }
@@ -822,14 +822,14 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface IKeyInternal :
-        IItemAbstractInternal,
+        IAItemInternal,
         IKey,
         IKeyGetter
     {
     }
 
     public partial interface IKeyGetter :
-        IItemAbstractGetter,
+        IAItemGetter,
         ILoquiObject<IKeyGetter>,
         IXmlItem,
         ILinkContainer,
@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Key_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.GetNthIsEnumerable(index);
+                    return AItem_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Key_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.GetNthIsLoqui(index);
+                    return AItem_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Key_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.GetNthIsSingleton(index);
+                    return AItem_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Key_FieldIndex.DATADataTypeState:
                     return "DATADataTypeState";
                 default:
-                    return ItemAbstract_Registration.GetNthName(index);
+                    return AItem_Registration.GetNthName(index);
             }
         }
 
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Key_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.IsNthDerivative(index);
+                    return AItem_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1331,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Key_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.IsProtected(index);
+                    return AItem_Registration.IsProtected(index);
             }
         }
 
@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Key_FieldIndex.DATADataTypeState:
                     return typeof(Key.DATADataType);
                 default:
-                    return ItemAbstract_Registration.GetNthType(index);
+                    return AItem_Registration.GetNthType(index);
             }
         }
 
@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class KeySetterCommon : ItemAbstractSetterCommon
+    public partial class KeySetterCommon : AItemSetterCommon
     {
         public new static readonly KeySetterCommon Instance = new KeySetterCommon();
 
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
         
-        public override void Clear(IItemAbstractInternal item)
+        public override void Clear(IAItemInternal item)
         {
             Clear(item: (IKeyInternal)item);
         }
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Key.DATADataType.Has;
                     break;
                 default:
-                    ItemAbstractSetterCommon.FillPrivateElementXml(
+                    AItemSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
-            ItemAbstractSetterCommon.FillBinaryStructs(
+            AItemSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences);
@@ -1562,7 +1562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)Key_FieldIndex.Weight);
                 }
                 default:
-                    return ItemAbstractSetterCommon.FillBinaryRecordTypes(
+                    return AItemSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class KeyCommon : ItemAbstractCommon
+    public partial class KeyCommon : AItemCommon
     {
         public new static readonly KeyCommon Instance = new KeyCommon();
 
@@ -1674,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Key.Mask<bool>? printMask = null)
         {
-            ItemAbstractCommon.ToStringFields(
+            AItemCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1743,19 +1743,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 mask: mask);
         }
         
-        public static Key_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        public static Key_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
         {
             switch (index)
             {
-                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                case AItem_FieldIndex.MajorRecordFlagsRaw:
                     return (Key_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.FormKey:
+                case AItem_FieldIndex.FormKey:
                     return (Key_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.Version:
+                case AItem_FieldIndex.Version:
                     return (Key_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.EditorID:
+                case AItem_FieldIndex.EditorID:
                     return (Key_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                case AItem_FieldIndex.OblivionMajorRecordFlags:
                     return (Key_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1817,8 +1817,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IItemAbstractGetter? lhs,
-            IItemAbstractGetter? rhs)
+            IAItemGetter? lhs,
+            IAItemGetter? rhs)
         {
             return Equals(
                 lhs: (IKeyGetter?)lhs,
@@ -1869,7 +1869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public override int GetHashCode(IItemAbstractGetter item)
+        public override int GetHashCode(IAItemGetter item)
         {
             return GetHashCode(item: (IKeyGetter)item);
         }
@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class KeySetterTranslationCommon : ItemAbstractSetterTranslationCommon
+    public partial class KeySetterTranslationCommon : AItemSetterTranslationCommon
     {
         public new static readonly KeySetterTranslationCommon Instance = new KeySetterTranslationCommon();
 
@@ -1999,8 +1999,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IItemAbstractInternal item,
-            IItemAbstractGetter rhs,
+            IAItemInternal item,
+            IAItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -2012,8 +2012,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IItemAbstract item,
-            IItemAbstractGetter rhs,
+            IAItem item,
+            IAItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -2148,7 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class KeyXmlWriteTranslation :
-        ItemAbstractXmlWriteTranslation,
+        AItemXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static KeyXmlWriteTranslation Instance = new KeyXmlWriteTranslation();
@@ -2159,7 +2159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ItemAbstractXmlWriteTranslation.WriteToNodeXml(
+            AItemXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2277,7 +2277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            IItemAbstractGetter item,
+            IAItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class KeyXmlCreateTranslation : ItemAbstractXmlCreateTranslation
+    public partial class KeyXmlCreateTranslation : AItemXmlCreateTranslation
     {
         public new readonly static KeyXmlCreateTranslation Instance = new KeyXmlCreateTranslation();
 
@@ -2489,7 +2489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractXmlCreateTranslation.FillPublicElementXml(
+                    AItemXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2569,7 +2569,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class KeyBinaryWriteTranslation :
-        ItemAbstractBinaryWriteTranslation,
+        AItemBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static KeyBinaryWriteTranslation Instance = new KeyBinaryWriteTranslation();
@@ -2668,7 +2668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IItemAbstractGetter item,
+            IAItemGetter item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2707,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class KeyBinaryCreateTranslation : ItemAbstractBinaryCreateTranslation
+    public partial class KeyBinaryCreateTranslation : AItemBinaryCreateTranslation
     {
         public new readonly static KeyBinaryCreateTranslation Instance = new KeyBinaryCreateTranslation();
 
@@ -2727,7 +2727,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class KeyBinaryOverlay :
-        ItemAbstractBinaryOverlay,
+        AItemBinaryOverlay,
         IKeyGetter
     {
         #region Common Routing

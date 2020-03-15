@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weapon" baseClass="ItemAbstract" objType="Record" recordType="WEAP" GUID="7251519c-a94a-44f1-a46c-c9a659b6e36c" ID="82">
+  <Object name="Weapon" baseClass="AItem" objType="Record" recordType="WEAP" GUID="7251519c-a94a-44f1-a46c-c9a659b6e36c" ID="82">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />

@@ -19,7 +19,7 @@
   </Object>
   <Object name="ContainerItem" objType="Subrecord" recordType="CNTO" GUID="2cffd274-8e8f-4c07-8b09-679098c41712" ID="72">
     <Fields>
-      <FormLink name="Item" refName="ItemAbstract" />
+      <FormLink name="Item" refName="AItem" />
       <UInt32 name="Count" />
     </Fields>
   </Object>

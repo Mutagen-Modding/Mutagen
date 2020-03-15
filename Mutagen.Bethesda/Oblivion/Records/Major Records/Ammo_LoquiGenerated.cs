@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Ammo :
-        ItemAbstract,
+        AItem,
         IAmmoInternal,
         ILoquiObjectSetter<Ammo>,
         INamed,
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            ItemAbstract.Mask<TItem>,
+            AItem.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            ItemAbstract.ErrorMask,
+            AItem.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            ItemAbstract.TranslationMask,
+            AItem.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -971,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAmmo :
         IAmmoGetter,
-        IItemAbstract,
+        IAItem,
         ILoquiObjectSetter<IAmmoInternal>
     {
         new String? Name { get; set; }
@@ -988,14 +988,14 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface IAmmoInternal :
-        IItemAbstractInternal,
+        IAItemInternal,
         IAmmo,
         IAmmoGetter
     {
     }
 
     public partial interface IAmmoGetter :
-        IItemAbstractGetter,
+        IAItemGetter,
         ILoquiObject<IAmmoGetter>,
         IXmlItem,
         ILinkContainer,
@@ -1420,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.GetNthIsEnumerable(index);
+                    return AItem_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.GetNthIsLoqui(index);
+                    return AItem_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.GetNthIsSingleton(index);
+                    return AItem_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.DATADataTypeState:
                     return "DATADataTypeState";
                 default:
-                    return ItemAbstract_Registration.GetNthName(index);
+                    return AItem_Registration.GetNthName(index);
             }
         }
 
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.IsNthDerivative(index);
+                    return AItem_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ItemAbstract_Registration.IsProtected(index);
+                    return AItem_Registration.IsProtected(index);
             }
         }
 
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.DATADataTypeState:
                     return typeof(Ammo.DATADataType);
                 default:
-                    return ItemAbstract_Registration.GetNthType(index);
+                    return AItem_Registration.GetNthType(index);
             }
         }
 
@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AmmoSetterCommon : ItemAbstractSetterCommon
+    public partial class AmmoSetterCommon : AItemSetterCommon
     {
         public new static readonly AmmoSetterCommon Instance = new AmmoSetterCommon();
 
@@ -1644,7 +1644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
         
-        public override void Clear(IItemAbstractInternal item)
+        public override void Clear(IAItemInternal item)
         {
             Clear(item: (IAmmoInternal)item);
         }
@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Ammo.DATADataType.Has;
                     break;
                 default:
-                    ItemAbstractSetterCommon.FillPrivateElementXml(
+                    AItemSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
-            ItemAbstractSetterCommon.FillBinaryStructs(
+            AItemSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences);
@@ -1794,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Damage);
                 }
                 default:
-                    return ItemAbstractSetterCommon.FillBinaryRecordTypes(
+                    return AItemSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AmmoCommon : ItemAbstractCommon
+    public partial class AmmoCommon : AItemCommon
     {
         public new static readonly AmmoCommon Instance = new AmmoCommon();
 
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Ammo.Mask<bool>? printMask = null)
         {
-            ItemAbstractCommon.ToStringFields(
+            AItemCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -2001,19 +2001,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 mask: mask);
         }
         
-        public static Ammo_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        public static Ammo_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
         {
             switch (index)
             {
-                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                case AItem_FieldIndex.MajorRecordFlagsRaw:
                     return (Ammo_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.FormKey:
+                case AItem_FieldIndex.FormKey:
                     return (Ammo_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.Version:
+                case AItem_FieldIndex.Version:
                     return (Ammo_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.EditorID:
+                case AItem_FieldIndex.EditorID:
                     return (Ammo_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                case AItem_FieldIndex.OblivionMajorRecordFlags:
                     return (Ammo_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -2079,8 +2079,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IItemAbstractGetter? lhs,
-            IItemAbstractGetter? rhs)
+            IAItemGetter? lhs,
+            IAItemGetter? rhs)
         {
             return Equals(
                 lhs: (IAmmoGetter?)lhs,
@@ -2138,7 +2138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public override int GetHashCode(IItemAbstractGetter item)
+        public override int GetHashCode(IAItemGetter item)
         {
             return GetHashCode(item: (IAmmoGetter)item);
         }
@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AmmoSetterTranslationCommon : ItemAbstractSetterTranslationCommon
+    public partial class AmmoSetterTranslationCommon : AItemSetterTranslationCommon
     {
         public new static readonly AmmoSetterTranslationCommon Instance = new AmmoSetterTranslationCommon();
 
@@ -2284,8 +2284,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IItemAbstractInternal item,
-            IItemAbstractGetter rhs,
+            IAItemInternal item,
+            IAItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -2297,8 +2297,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IItemAbstract item,
-            IItemAbstractGetter rhs,
+            IAItem item,
+            IAItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -2433,7 +2433,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AmmoXmlWriteTranslation :
-        ItemAbstractXmlWriteTranslation,
+        AItemXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static AmmoXmlWriteTranslation Instance = new AmmoXmlWriteTranslation();
@@ -2444,7 +2444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ItemAbstractXmlWriteTranslation.WriteToNodeXml(
+            AItemXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2599,7 +2599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            IItemAbstractGetter item,
+            IAItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -2644,7 +2644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AmmoXmlCreateTranslation : ItemAbstractXmlCreateTranslation
+    public partial class AmmoXmlCreateTranslation : AItemXmlCreateTranslation
     {
         public new readonly static AmmoXmlCreateTranslation Instance = new AmmoXmlCreateTranslation();
 
@@ -2883,7 +2883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ItemAbstractXmlCreateTranslation.FillPublicElementXml(
+                    AItemXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2963,7 +2963,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AmmoBinaryWriteTranslation :
-        ItemAbstractBinaryWriteTranslation,
+        AItemBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static AmmoBinaryWriteTranslation Instance = new AmmoBinaryWriteTranslation();
@@ -3074,7 +3074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IItemAbstractGetter item,
+            IAItemGetter item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3113,7 +3113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AmmoBinaryCreateTranslation : ItemAbstractBinaryCreateTranslation
+    public partial class AmmoBinaryCreateTranslation : AItemBinaryCreateTranslation
     {
         public new readonly static AmmoBinaryCreateTranslation Instance = new AmmoBinaryCreateTranslation();
 
@@ -3133,7 +3133,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AmmoBinaryOverlay :
-        ItemAbstractBinaryOverlay,
+        AItemBinaryOverlay,
         IAmmoGetter
     {
         #region Common Routing

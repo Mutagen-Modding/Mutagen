@@ -33,15 +33,15 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class NPC :
+    public partial class Npc :
         SkyrimMajorRecord,
-        INPCInternal,
-        ILoquiObjectSetter<NPC>,
-        IEquatable<NPC>,
+        INpcInternal,
+        ILoquiObjectSetter<Npc>,
+        IEquatable<Npc>,
         IEqualsMask
     {
         #region Ctor
-        protected NPC()
+        protected Npc()
         {
             CustomCtor();
         }
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            NPCMixIn.ToString(
+            NpcMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -65,29 +65,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INPCGetter rhs)) return false;
-            return ((NPCCommon)((INPCGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is INpcGetter rhs)) return false;
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NPC obj)
+        public bool Equals(Npc obj)
         {
-            return ((NPCCommon)((INPCGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((NPCCommon)((INPCGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => NPCXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => NpcXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((NPCXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((NpcXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -96,9 +96,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new NPC CreateFromXml(
+        public static new Npc CreateFromXml(
             XElement node,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -107,27 +107,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static NPC CreateFromXml(
+        public static Npc CreateFromXml(
             XElement node,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null)
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPC.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static NPC CreateFromXml(
+        public new static Npc CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new NPC();
-            ((NPCSetterCommon)((INPCGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Npc();
+            ((NpcSetterCommon)((INpcGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -135,9 +135,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NPC CreateFromXml(
+        public static Npc CreateFromXml(
             string path,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -145,10 +145,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static NPC CreateFromXml(
+        public static Npc CreateFromXml(
             string path,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null)
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,10 +157,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static NPC CreateFromXml(
+        public static Npc CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -169,9 +169,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static NPC CreateFromXml(
+        public static Npc CreateFromXml(
             Stream stream,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -179,10 +179,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static NPC CreateFromXml(
+        public static Npc CreateFromXml(
             Stream stream,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null)
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,10 +191,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static NPC CreateFromXml(
+        public static Npc CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new NPC.Mask<R>();
+                var ret = new Npc.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -305,16 +305,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(NPC.Mask<bool>? printMask = null)
+            public string ToString(Npc.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, NPC.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Npc.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NPC.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Npc.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                NPC_FieldIndex enu = (NPC_FieldIndex)index;
+                Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                NPC_FieldIndex enu = (NPC_FieldIndex)index;
+                Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                NPC_FieldIndex enu = (NPC_FieldIndex)index;
+                Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -441,14 +441,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = NPC_Registration.TRIGGERING_RECORD_TYPE;
-        public NPC(FormKey formKey)
+        public new static readonly RecordType GRUP_RECORD_TYPE = Npc_Registration.TRIGGERING_RECORD_TYPE;
+        public Npc(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public NPC(IMod mod)
+        public Npc(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
@@ -457,13 +457,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NPCBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((NPCBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new NPC CreateFromBinary(
+        public static new Npc CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
@@ -481,13 +481,13 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: null);
         }
 
-        public new static NPC CreateFromBinary(
+        public new static Npc CreateFromBinary(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new NPC();
-            ((NPCSetterCommon)((INPCGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Npc();
+            ((NpcSetterCommon)((INpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -501,39 +501,39 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INPCGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((NPCSetterCommon)((INPCGetter)this).CommonSetterInstance()!).Clear(this);
+            ((NpcSetterCommon)((INpcGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new NPC GetNew()
+        internal static new Npc GetNew()
         {
-            return new NPC();
+            return new Npc();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface INPC :
-        INPCGetter,
+    public partial interface INpc :
+        INpcGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<INPCInternal>
+        ILoquiObjectSetter<INpcInternal>
     {
     }
 
-    public partial interface INPCInternal :
+    public partial interface INpcInternal :
         ISkyrimMajorRecordInternal,
-        INPC,
-        INPCGetter
+        INpc,
+        INpcGetter
     {
     }
 
-    public partial interface INPCGetter :
+    public partial interface INpcGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<INPCGetter>,
+        ILoquiObject<INpcGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -543,42 +543,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class NPCMixIn
+    public static class NpcMixIn
     {
-        public static void Clear(this INPCInternal item)
+        public static void Clear(this INpcInternal item)
         {
-            ((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static NPC.Mask<bool> GetEqualsMask(
-            this INPCGetter item,
-            INPCGetter rhs,
+        public static Npc.Mask<bool> GetEqualsMask(
+            this INpcGetter item,
+            INpcGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NPCCommon)((INPCGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this INPCGetter item,
+            this INpcGetter item,
             string? name = null,
-            NPC.Mask<bool>? printMask = null)
+            Npc.Mask<bool>? printMask = null)
         {
-            return ((NPCCommon)((INPCGetter)item).CommonInstance()!).ToString(
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this INPCGetter item,
+            this INpcGetter item,
             FileGeneration fg,
             string? name = null,
-            NPC.Mask<bool>? printMask = null)
+            Npc.Mask<bool>? printMask = null)
         {
-            ((NPCCommon)((INPCGetter)item).CommonInstance()!).ToString(
+            ((NpcCommon)((INpcGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -586,86 +586,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this INPCGetter item,
-            NPC.Mask<bool?> checkMask)
+            this INpcGetter item,
+            Npc.Mask<bool?> checkMask)
         {
-            return ((NPCCommon)((INPCGetter)item).CommonInstance()!).HasBeenSet(
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static NPC.Mask<bool> GetHasBeenSetMask(this INPCGetter item)
+        public static Npc.Mask<bool> GetHasBeenSetMask(this INpcGetter item)
         {
-            var ret = new NPC.Mask<bool>(false);
-            ((NPCCommon)((INPCGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Npc.Mask<bool>(false);
+            ((NpcCommon)((INpcGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this INPCGetter item,
-            INPCGetter rhs)
+            this INpcGetter item,
+            INpcGetter rhs)
         {
-            return ((NPCCommon)((INPCGetter)item).CommonInstance()!).Equals(
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this INPCInternal lhs,
-            INPCGetter rhs,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? copyMask = null)
+            this INpcInternal lhs,
+            INpcGetter rhs,
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NpcSetterTranslationCommon)((INpcGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = NPC.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this INPCInternal lhs,
-            INPCGetter rhs,
+            this INpcInternal lhs,
+            INpcGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NpcSetterTranslationCommon)((INpcGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static NPC DeepCopy(
-            this INPCGetter item,
-            NPC.TranslationMask? copyMask = null)
+        public static Npc DeepCopy(
+            this INpcGetter item,
+            Npc.TranslationMask? copyMask = null)
         {
-            return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static NPC DeepCopy(
-            this INPCGetter item,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? copyMask = null)
+        public static Npc DeepCopy(
+            this INpcGetter item,
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? copyMask = null)
         {
-            return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static NPC DeepCopy(
-            this INPCGetter item,
+        public static Npc DeepCopy(
+            this INpcGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -674,9 +674,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             XElement node,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -687,10 +687,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             XElement node,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null)
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -698,16 +698,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPC.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -715,9 +715,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             string path,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -727,10 +727,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             string path,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null)
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -741,10 +741,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -755,9 +755,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             Stream stream,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -767,10 +767,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             Stream stream,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null)
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -781,10 +781,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INPCInternal item,
+            this INpcInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            NPC.TranslationMask? translationMask = null)
+            Npc.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this INPCInternal item,
+            this INpcInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
@@ -811,12 +811,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this INPCInternal item,
+            this INpcInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum NPC_FieldIndex
+    public enum Npc_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -846,9 +846,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NPC_Registration : ILoquiRegistration
+    public partial class Npc_Registration : ILoquiRegistration
     {
-        public static readonly NPC_Registration Instance = new NPC_Registration();
+        public static readonly Npc_Registration Instance = new Npc_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -863,23 +863,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(NPC.Mask<>);
+        public static readonly Type MaskType = typeof(Npc.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(NPC.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Npc.ErrorMask);
 
-        public static readonly Type ClassType = typeof(NPC);
+        public static readonly Type ClassType = typeof(Npc);
 
-        public static readonly Type GetterType = typeof(INPCGetter);
+        public static readonly Type GetterType = typeof(INpcGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(INPC);
+        public static readonly Type SetterType = typeof(INpc);
 
-        public static readonly Type? InternalSetterType = typeof(INPCInternal);
+        public static readonly Type? InternalSetterType = typeof(INpcInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.NPC";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.Npc";
 
-        public const string Name = "NPC";
+        public const string Name = "Npc";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            Npc_FieldIndex enu = (Npc_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            Npc_FieldIndex enu = (Npc_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -918,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            Npc_FieldIndex enu = (Npc_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            Npc_FieldIndex enu = (Npc_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            Npc_FieldIndex enu = (Npc_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            Npc_FieldIndex enu = (Npc_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            Npc_FieldIndex enu = (Npc_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -966,12 +966,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(NPCXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(NpcXmlWriteTranslation);
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = NPC__HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(NPCBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1004,13 +1004,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NPCSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class NpcSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly NPCSetterCommon Instance = new NPCSetterCommon();
+        public new static readonly NpcSetterCommon Instance = new NpcSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(INPCInternal item)
+        public void Clear(INpcInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -1018,17 +1018,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (INPCInternal)item);
+            Clear(item: (INpcInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (INPCInternal)item);
+            Clear(item: (INpcInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            INPCInternal item,
+            INpcInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void CopyInFromXml(
-            INPCInternal item,
+            INpcInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    NPCXmlCreateTranslation.FillPublicElementXml(
+                    NpcXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1081,9 +1081,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => NPC_Registration.NPC__HEADER;
+        public override RecordType RecordType => Npc_Registration.NPC__HEADER;
         protected static void FillBinaryStructs(
-            INPCInternal item,
+            INpcInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
@@ -1094,12 +1094,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void CopyInFromBinary(
-            INPCInternal item,
+            INpcInternal item,
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<INPCInternal>(
+            UtilityTranslation.MajorRecordParse<INpcInternal>(
                 record: item,
                 frame: frame,
                 recType: RecordType,
@@ -1112,17 +1112,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NPCCommon : SkyrimMajorRecordCommon
+    public partial class NpcCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly NPCCommon Instance = new NPCCommon();
+        public new static readonly NpcCommon Instance = new NpcCommon();
 
-        public NPC.Mask<bool> GetEqualsMask(
-            INPCGetter item,
-            INPCGetter rhs,
+        public Npc.Mask<bool> GetEqualsMask(
+            INpcGetter item,
+            INpcGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new NPC.Mask<bool>(false);
-            ((NPCCommon)((INPCGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Npc.Mask<bool>(false);
+            ((NpcCommon)((INpcGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1131,9 +1131,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            INPCGetter item,
-            INPCGetter rhs,
-            NPC.Mask<bool> ret,
+            INpcGetter item,
+            INpcGetter rhs,
+            Npc.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1141,9 +1141,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            INPCGetter item,
+            INpcGetter item,
             string? name = null,
-            NPC.Mask<bool>? printMask = null)
+            Npc.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1155,18 +1155,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            INPCGetter item,
+            INpcGetter item,
             FileGeneration fg,
             string? name = null,
-            NPC.Mask<bool>? printMask = null)
+            Npc.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NPC =>");
+                fg.AppendLine($"Npc =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NPC) =>");
+                fg.AppendLine($"{name} (Npc) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1180,9 +1180,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            INPCGetter item,
+            INpcGetter item,
             FileGeneration fg,
-            NPC.Mask<bool>? printMask = null)
+            Npc.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1191,8 +1191,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            INPCGetter item,
-            NPC.Mask<bool?> checkMask)
+            INpcGetter item,
+            Npc.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1200,49 +1200,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            INPCGetter item,
-            NPC.Mask<bool> mask)
+            INpcGetter item,
+            Npc.Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static NPC_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Npc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new NPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Npc_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (NPC_FieldIndex)((int)index);
+                    return (Npc_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1250,8 +1250,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            INPCGetter? lhs,
-            INPCGetter? rhs)
+            INpcGetter? lhs,
+            INpcGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1264,8 +1264,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (INPCGetter?)lhs,
-                rhs: rhs as INPCGetter);
+                lhs: (INpcGetter?)lhs,
+                rhs: rhs as INpcGetter);
         }
         
         public override bool Equals(
@@ -1273,11 +1273,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (INPCGetter?)lhs,
-                rhs: rhs as INPCGetter);
+                lhs: (INpcGetter?)lhs,
+                rhs: rhs as INpcGetter);
         }
         
-        public virtual int GetHashCode(INPCGetter item)
+        public virtual int GetHashCode(INpcGetter item)
         {
             int ret = 0;
             ret = ret.CombineHashCode(base.GetHashCode());
@@ -1286,12 +1286,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (INPCGetter)item);
+            return GetHashCode(item: (INpcGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (INPCGetter)item);
+            return GetHashCode(item: (INpcGetter)item);
         }
         
         #endregion
@@ -1299,11 +1299,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return NPC.GetNew();
+            return Npc.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(INPCGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(INpcGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
@@ -1312,28 +1312,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        partial void PostDuplicate(Npc obj, Npc rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new NPC(getNextFormKey());
-            ret.DeepCopyIn((NPC)item);
+            var ret = new Npc(getNextFormKey());
+            ret.DeepCopyIn((Npc)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (NPC)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (Npc)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class NPCSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class NpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly NPCSetterTranslationCommon Instance = new NPCSetterTranslationCommon();
+        public new static readonly NpcSetterTranslationCommon Instance = new NpcSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            INPCInternal item,
-            INPCGetter rhs,
+            INpcInternal item,
+            INpcGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1345,8 +1345,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            INPC item,
-            INPCGetter rhs,
+            INpc item,
+            INpcGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1364,8 +1364,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (INPCInternal)item,
-                rhs: (INPCGetter)rhs,
+                item: (INpcInternal)item,
+                rhs: (INpcGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1377,8 +1377,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (INPC)item,
-                rhs: (INPCGetter)rhs,
+                item: (INpc)item,
+                rhs: (INpcGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1390,8 +1390,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (INPCInternal)item,
-                rhs: (INPCGetter)rhs,
+                item: (INpcInternal)item,
+                rhs: (INpcGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1403,31 +1403,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (INPC)item,
-                rhs: (INPCGetter)rhs,
+                item: (INpc)item,
+                rhs: (INpcGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public NPC DeepCopy(
-            INPCGetter item,
-            NPC.TranslationMask? copyMask = null)
+        public Npc DeepCopy(
+            INpcGetter item,
+            Npc.TranslationMask? copyMask = null)
         {
-            NPC ret = (NPC)((NPCCommon)((INPCGetter)item).CommonInstance()!).GetNew();
+            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public NPC DeepCopy(
-            INPCGetter item,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? copyMask = null)
+        public Npc DeepCopy(
+            INpcGetter item,
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? copyMask = null)
         {
-            NPC ret = (NPC)((NPCCommon)((INPCGetter)item).CommonInstance()!).GetNew();
+            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1435,12 +1435,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public NPC DeepCopy(
-            INPCGetter item,
+        public Npc DeepCopy(
+            INpcGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            NPC ret = (NPC)((NPCCommon)((INPCGetter)item).CommonInstance()!).GetNew();
+            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1455,21 +1455,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NPC
+    public partial class Npc
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
-        public new static NPC_Registration Registration => NPC_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
+        public new static Npc_Registration Registration => Npc_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NPCCommon.Instance;
+        protected override object CommonInstance() => NpcCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return NPCSetterCommon.Instance;
+            return NpcSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NPCSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NpcSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1480,14 +1480,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class NPCXmlWriteTranslation :
+    public partial class NpcXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static NPCXmlWriteTranslation Instance = new NPCXmlWriteTranslation();
+        public new readonly static NpcXmlWriteTranslation Instance = new NpcXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            INPCGetter item,
+            INpcGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1501,16 +1501,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            INPCGetter item,
+            INpcGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.NPC");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Npc");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.NPC");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Npc");
             }
             WriteToNodeXml(
                 item: item,
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (INPCGetter)item,
+                item: (INpcGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (INPCGetter)item,
+                item: (INpcGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (INPCGetter)item,
+                item: (INpcGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1566,12 +1566,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NPCXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class NpcXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static NPCXmlCreateTranslation Instance = new NPCXmlCreateTranslation();
+        public new readonly static NpcXmlCreateTranslation Instance = new NpcXmlCreateTranslation();
 
         public static void FillPublicXml(
-            INPCInternal item,
+            INpcInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    NPCXmlCreateTranslation.FillPublicElementXml(
+                    NpcXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            INPCInternal item,
+            INpcInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1621,30 +1621,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class NPCXmlTranslationMixIn
+    public static class NpcXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this INPCGetter item,
+            this INpcGetter item,
             XElement node,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null,
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((NPCXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((NpcXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPC.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this INPCGetter item,
+            this INpcGetter item,
             string path,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null,
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1658,10 +1658,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this INPCGetter item,
+            this INpcGetter item,
             Stream stream,
-            out NPC.ErrorMask errorMask,
-            NPC.TranslationMask? translationMask = null,
+            out Npc.ErrorMask errorMask,
+            Npc.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1684,21 +1684,21 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class NPCBinaryWriteTranslation :
+    public partial class NpcBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NPCBinaryWriteTranslation Instance = new NPCBinaryWriteTranslation();
+        public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            INPCGetter item,
+            INpcGetter item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: NPC_Registration.NPC__HEADER,
+                record: Npc_Registration.NPC__HEADER,
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (INPCGetter)item,
+                item: (INpcGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -1733,7 +1733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (INPCGetter)item,
+                item: (INpcGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (INPCGetter)item,
+                item: (INpcGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -1754,9 +1754,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NPCBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class NpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static NPCBinaryCreateTranslation Instance = new NPCBinaryCreateTranslation();
+        public new readonly static NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
     }
 
@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class NPCBinaryTranslationMixIn
+    public static class NpcBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1773,34 +1773,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class NPCBinaryOverlay :
+    public partial class NpcBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
-        INPCGetter
+        INpcGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
-        public new static NPC_Registration Registration => NPC_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
+        public new static Npc_Registration Registration => Npc_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NPCCommon.Instance;
+        protected override object CommonInstance() => NpcCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NPCSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NpcSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INPCGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => NPCXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => NpcXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((NPCXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((NpcXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1808,13 +1808,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NPCBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((NPCBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected NPCBinaryOverlay(
+        protected NpcBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1835,13 +1835,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static NPCBinaryOverlay NPCFactory(
+        public static NpcBinaryOverlay NpcFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new NPCBinaryOverlay(
+            var ret = new NpcBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

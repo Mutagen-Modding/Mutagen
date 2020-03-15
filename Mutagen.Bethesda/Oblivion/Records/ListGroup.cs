@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ListGroupBinaryOverlay<T>
         {
-            private ListGroupAbstract.GroupListOverlay<T>? _Records;
+            private AListGroup.GroupListOverlay<T>? _Records;
             public IReadOnlyList<T> Records => _Records!;
 
             partial void CustomCtor(
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
                 int finalPos,
                 int offset)
             {
-                _Records = ListGroupAbstract.GroupListOverlay<T>.Factory(
+                _Records = AListGroup.GroupListOverlay<T>.Factory(
                     stream,
                     _data,
                     _package,

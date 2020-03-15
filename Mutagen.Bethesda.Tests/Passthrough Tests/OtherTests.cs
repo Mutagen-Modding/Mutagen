@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Tests
                 modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                 importMask: new Mutagen.Bethesda.Oblivion.GroupMask()
                 {
-                    NPCs = true
+                    Npcs = true
                 });
 
             using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Import"))
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Tests
                     {
                         reader.Position = rec;
                         var t = HeaderTranslation.ReadNextRecordType(reader);
-                        if (!t.Equals(NPC_Registration.NPC__HEADER))
+                        if (!t.Equals(Npc_Registration.NPC__HEADER))
                         {
                             throw new ArgumentException("Exported a non-NPC record.");
                         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Tests
                     oblivionOutputPath,
                     importMask: new GroupMask()
                     {
-                        NPCs = true
+                        Npcs = true
                     });
                 var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, GameMode.Oblivion);
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Tests
                     {
                         reader.Position = rec;
                         var t = HeaderTranslation.ReadNextRecordType(reader);
-                        if (!t.Equals(NPC_Registration.NPC__HEADER))
+                        if (!t.Equals(Npc_Registration.NPC__HEADER))
                         {
                             throw new ArgumentException("Exported a non-NPC record.");
                         }

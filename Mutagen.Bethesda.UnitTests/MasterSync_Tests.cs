@@ -120,9 +120,9 @@ namespace Mutagen.Bethesda.UnitTests
             var knights = ModKey.Factory("Knights.esm");
             var other = ModKey.Factory("Other.esp");
             var mod = new OblivionMod(obliv);
-            var otherNpc = new NPC(new FormKey(other, 0x123456));
+            var otherNpc = new Npc(new FormKey(other, 0x123456));
             mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456)));
-            mod.NPCs.RecordCache.Set(otherNpc);
+            mod.Npcs.RecordCache.Set(otherNpc);
             otherNpc.Race.FormKey = new FormKey(knights, 0x123456);
             var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
             mod.WriteToBinary(modPath,
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.UnitTests
             var knights = ModKey.Factory("Knights.esm");
             var mod = new OblivionMod(obliv);
             mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456)));
-            mod.NPCs.RecordCache.Set(new NPC(new FormKey(knights, 0x123456)));
+            mod.Npcs.RecordCache.Set(new Npc(new FormKey(knights, 0x123456)));
             mod.ModHeader.MasterReferences.Add(new MasterReference()
             {
                 Master = ModKey.Factory("Other.esp")
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var folder = new TempFolder();
             var obliv = ModKey.Factory("Oblivion.esm");
             var mod = new OblivionMod(obliv);
-            var npc = mod.NPCs.AddNew();
+            var npc = mod.Npcs.AddNew();
             npc.Race.FormKey = FormKey.Null;
             var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
             mod.WriteToBinary(modPath,

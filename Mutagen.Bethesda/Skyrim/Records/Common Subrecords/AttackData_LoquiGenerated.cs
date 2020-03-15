@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Spell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<SpellAbstract> _Spell = new FormLink<SpellAbstract>();
-        public IFormLink<SpellAbstract> Spell => this._Spell;
+        protected IFormLink<ASpell> _Spell = new FormLink<ASpell>();
+        public IFormLink<ASpell> Spell => this._Spell;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISpellAbstractGetter> IAttackDataGetter.Spell => this.Spell;
+        IFormLinkGetter<IASpellGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
         #region Flags
         public AttackData.Flag Flags { get; set; } = default;
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
-        new IFormLink<SpellAbstract> Spell { get; }
+        new IFormLink<ASpell> Spell { get; }
         new AttackData.Flag Flags { get; set; }
         new Single AttackAngle { get; set; }
         new Single StrikeAngle { get; set; }
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         Single DamageMult { get; }
         Single Chance { get; }
-        IFormLinkGetter<ISpellAbstractGetter> Spell { get; }
+        IFormLinkGetter<IASpellGetter> Spell { get; }
         AttackData.Flag Flags { get; }
         Single AttackAngle { get; }
         Single StrikeAngle { get; }
@@ -1455,7 +1455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case AttackData_FieldIndex.Chance:
                     return typeof(Single);
                 case AttackData_FieldIndex.Spell:
-                    return typeof(IFormLink<SpellAbstract>);
+                    return typeof(IFormLink<ASpell>);
                 case AttackData_FieldIndex.Flags:
                     return typeof(AttackData.Flag);
                 case AttackData_FieldIndex.AttackAngle:
@@ -2706,7 +2706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single DamageMult => SpanExt.GetFloat(_data.Span.Slice(0, 4));
         public Single Chance => SpanExt.GetFloat(_data.Span.Slice(4, 4));
-        public IFormLinkGetter<ISpellAbstractGetter> Spell => new FormLink<ISpellAbstractGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
+        public IFormLinkGetter<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
         public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
         public Single AttackAngle => SpanExt.GetFloat(_data.Span.Slice(16, 4));
         public Single StrikeAngle => SpanExt.GetFloat(_data.Span.Slice(20, 4));

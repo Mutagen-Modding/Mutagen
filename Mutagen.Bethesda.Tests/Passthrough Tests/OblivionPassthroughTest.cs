@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XSCL"),
                 new RecordType("DATA"));
             ret.AddAlignments(
-                PlacedNPC_Registration.ACHR_HEADER,
+                PlacedNpc_Registration.ACHR_HEADER,
                 new RecordType("EDID"),
                 new RecordType("NAME"),
                 new RecordType("XPCI"),

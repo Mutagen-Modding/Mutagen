@@ -203,9 +203,6 @@
     <Compile Include="Oblivion\Records\Major Records\Climate_LoquiGenerated.cs">
       <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\ClothingAbstract_LoquiGenerated.cs">
-      <DependentUpon>ClothingAbstract.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Major Records\Clothing_LoquiGenerated.cs">
       <DependentUpon>Clothing.xml</DependentUpon>
     </Compile>
@@ -374,11 +371,8 @@
     <Compile Include="Oblivion\Records\Major Records\InterCellPoint_LoquiGenerated.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\ItemAbstract_LoquiGenerated.cs">
-      <DependentUpon>ItemAbstract.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Major Records\ItemEntry_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\Key_LoquiGenerated.cs">
       <DependentUpon>Key.xml</DependentUpon>
@@ -449,17 +443,8 @@
     <Compile Include="Oblivion\Records\Major Records\Miscellaneous_LoquiGenerated.cs">
       <DependentUpon>Miscellaneous.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\NPC.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\NPCAbstract_LoquiGenerated.cs">
-      <DependentUpon>NPCAbstract.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\NPCSpawn_LoquiGenerated.cs">
-      <DependentUpon>NPCSpawn.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\NPC_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
+    <Compile Include="Oblivion\Records\Major Records\Npc.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\PathGrid.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
@@ -475,9 +460,6 @@
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\PlacedCreature_LoquiGenerated.cs">
       <DependentUpon>PlacedCreature.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\PlacedNPC_LoquiGenerated.cs">
-      <DependentUpon>PlacedNPC.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\PlacedObject.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
@@ -522,7 +504,7 @@
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\RankPlacement_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\Rank_LoquiGenerated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
@@ -640,9 +622,6 @@
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\SpellAbstract_LoquiGenerated.cs">
-      <DependentUpon>SpellAbstract.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\SpellLeveled_LoquiGenerated.cs">
       <DependentUpon>SpellLeveled.xml</DependentUpon>
@@ -949,9 +928,6 @@
     <Compile Include="Skyrim\Records\Major Records\MovementType_LoquiGenerated.cs">
       <DependentUpon>MovementType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\NPC_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Outfit_LoquiGenerated.cs">
       <DependentUpon>Outfit.xml</DependentUpon>
     </Compile>
@@ -990,9 +966,6 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\SpeedOverrides_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\SpellAbstract_LoquiGenerated.cs">
-      <DependentUpon>SpellAbstract.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -1044,6 +1017,33 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\SimpleModel_LoquiGenerated.cs">
       <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\AClothing_LoquiGenerated.cs">
+      <DependentUpon>AClothing.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\AItem_LoquiGenerated.cs">
+      <DependentUpon>AItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ASpell_LoquiGenerated.cs">
+      <DependentUpon>ASpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ASpell_LoquiGenerated.cs">
+      <DependentUpon>ASpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ANpc_LoquiGenerated.cs">
+      <DependentUpon>ANpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\NpcSpawn_LoquiGenerated.cs">
+      <DependentUpon>NpcSpawn.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Npc_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\Npc_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\PlacedNpc_LoquiGenerated.cs">
+      <DependentUpon>PlacedNpc.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

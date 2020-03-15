@@ -73,15 +73,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RacePresets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<NPC>>? _RacePresets;
-        public ExtendedList<IFormLink<NPC>>? RacePresets
+        private ExtendedList<IFormLink<Npc>>? _RacePresets;
+        public ExtendedList<IFormLink<Npc>>? RacePresets
         {
             get => this._RacePresets;
             set => this._RacePresets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<INPCGetter>>? IHeadDataGetter.RacePresets => _RacePresets;
+        IReadOnlyList<IFormLinkGetter<INpcGetter>>? IHeadDataGetter.RacePresets => _RacePresets;
         #endregion
 
         #endregion
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ExtendedList<HeadPartReference>? HeadParts { get; set; }
         new AvailableMorphs? AvailableMorphs { get; set; }
-        new ExtendedList<IFormLink<NPC>>? RacePresets { get; set; }
+        new ExtendedList<IFormLink<Npc>>? RacePresets { get; set; }
         new ExtendedList<IFormLink<ColorRecord>>? AvailableHairColors { get; set; }
         new ExtendedList<IFormLink<TextureSet>>? FaceDetails { get; set; }
         new IFormLinkNullable<TextureSet> DefaultFaceTexture { get; }
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         IReadOnlyList<IHeadPartReferenceGetter>? HeadParts { get; }
         IAvailableMorphsGetter? AvailableMorphs { get; }
-        IReadOnlyList<IFormLinkGetter<INPCGetter>>? RacePresets { get; }
+        IReadOnlyList<IFormLinkGetter<INpcGetter>>? RacePresets { get; }
         IReadOnlyList<IFormLinkGetter<IColorRecordGetter>>? AvailableHairColors { get; }
         IReadOnlyList<IFormLinkGetter<ITextureSetGetter>>? FaceDetails { get; }
         IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture { get; }
@@ -1876,7 +1876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadData_FieldIndex.AvailableMorphs:
                     return typeof(AvailableMorphs);
                 case HeadData_FieldIndex.RacePresets:
-                    return typeof(ExtendedList<IFormLink<NPC>>);
+                    return typeof(ExtendedList<IFormLink<Npc>>);
                 case HeadData_FieldIndex.AvailableHairColors:
                     return typeof(ExtendedList<IFormLink<ColorRecord>>);
                 case HeadData_FieldIndex.FaceDetails:
@@ -2077,13 +2077,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return TryGet<int?>.Failure;
                     item.RacePresets = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<NPC>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.RPRM_HEADER,
                             masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<NPC>>();
+                        .ToExtendedList<IFormLink<Npc>>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
                 }
                 case 0x4D484341: // ACHM
@@ -2659,8 +2659,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.RacePresets = 
                             rhs.RacePresets
-                            .Select(r => new FormLink<NPC>(r.FormKey))
-                            .ToExtendedList<IFormLink<NPC>>();
+                            .Select(r => new FormLink<Npc>(r.FormKey))
+                            .ToExtendedList<IFormLink<Npc>>();
                     }
                     else
                     {
@@ -2930,14 +2930,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.RacePresets != null)
                 && (translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<INPCGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.RacePresets),
                     item: item.RacePresets,
                     fieldIndex: (int)HeadData_FieldIndex.RacePresets,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)HeadData_FieldIndex.RacePresets),
-                    transl: (XElement subNode, IFormLinkGetter<INPCGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<INpcGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -3208,7 +3208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)HeadData_FieldIndex.RacePresets);
                     try
                     {
-                        if (ListXmlTranslation<IFormLink<NPC>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<Npc>>.Instance.Parse(
                             node: node,
                             enumer: out var RacePresetsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -3587,11 +3587,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     masterReferences: masterReferences);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INPCGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RacePresets,
                 masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<INPCGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3784,7 +3784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IAvailableMorphsGetter? AvailableMorphs { get; private set; }
         public bool AvailableMorphs_IsSet => AvailableMorphs != null;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<INPCGetter>>? RacePresets { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>>? RacePresets { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>>? AvailableHairColors { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>>? FaceDetails { get; private set; }
         #region DefaultFaceTexture
@@ -3877,10 +3877,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D525052: // RPRM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return TryGet<int?>.Failure;
-                    this.RacePresets = BinaryOverlaySetList<IFormLinkGetter<INPCGetter>>.FactoryByArray(
+                    this.RacePresets = BinaryOverlaySetList<IFormLinkGetter<INpcGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<INPCGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

@@ -18,16 +18,16 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Empty(((IOblivionMod)mod).EnumerateMajorRecords());
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommon>());
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommonGetter>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<INPC>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<INPCGetter>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<NPC>());
+            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<INpc>());
+            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<INpcGetter>());
+            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<Npc>());
         }
 
         [Fact]
         public void EnumerateAll()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            mod.NPCs.AddNew();
+            mod.Npcs.AddNew();
             mod.Ammo.AddNew();
             Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords().Count());
             Assert.Equal(2, ((IOblivionMod)mod).EnumerateMajorRecords().Count());
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void EnumerateAllViaGeneric()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            mod.NPCs.AddNew();
+            mod.Npcs.AddNew();
             mod.Ammo.AddNew();
             Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommon>().Count());
             Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommonGetter>().Count());
@@ -47,18 +47,18 @@ namespace Mutagen.Bethesda.UnitTests
         public void EnumerateSpecificType_Matched()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            mod.NPCs.AddNew();
+            mod.Npcs.AddNew();
             mod.Ammo.AddNew();
-            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INPC>());
-            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INPCGetter>());
-            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<NPC>());
+            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INpc>());
+            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INpcGetter>());
+            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<Npc>());
         }
 
         [Fact]
         public void EnumerateSpecificType_Unmatched()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            mod.NPCs.AddNew();
+            mod.Npcs.AddNew();
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmo>());
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmoGetter>());
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<Ammo>());

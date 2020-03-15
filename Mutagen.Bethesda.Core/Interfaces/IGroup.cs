@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
 
     public static class IGroupCommonExt
     {
-        public static TMajor AddNew<TMajor>(this GroupAbstract<TMajor> group)
+        public static TMajor AddNew<TMajor>(this AGroup<TMajor> group)
             where TMajor : IMajorRecordInternal, IBinaryItem, IEquatable<TMajor>
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey());

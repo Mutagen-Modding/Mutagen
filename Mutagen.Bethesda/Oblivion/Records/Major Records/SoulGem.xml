@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoulGem" objType="Record" baseClass="ItemAbstract" recordType="SLGM" GUID="89d80e87-52e9-4c7c-8a27-bb4303d77edf" ID="96">
+  <Object name="SoulGem" objType="Record" baseClass="AItem" recordType="SLGM" GUID="89d80e87-52e9-4c7c-8a27-bb4303d77edf" ID="96">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />

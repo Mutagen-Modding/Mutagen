@@ -18,7 +18,7 @@ using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class Group<T> : GroupAbstract<T>
+    public partial class Group<T> : AGroup<T>
     {
         public Group(IModGetter getter) : base(getter)
         {

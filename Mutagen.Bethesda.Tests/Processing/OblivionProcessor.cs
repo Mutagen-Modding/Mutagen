@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!NPC_Registration.NPC__HEADER.Equals(recType)) return;
+            if (!Npc_Registration.NPC__HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width);
             this.DynamicMove(
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!PlacedNPC_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!PlacedNpc_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
 
             int amount = 0;
             stream.Position = loc.Min;

@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Creature :
-        NPCAbstract,
+        ANpc,
         ICreatureInternal,
         ILoquiObjectSetter<Creature>,
         INamed,
@@ -87,15 +87,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<SpellAbstract>>? _Spells;
-        public ExtendedList<IFormLink<SpellAbstract>>? Spells
+        private ExtendedList<IFormLink<ASpell>>? _Spells;
+        public ExtendedList<IFormLink<ASpell>>? Spells
         {
             get => this._Spells;
             set => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<ISpellAbstractGetter>>? ICreatureGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -231,10 +231,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region DeathItem
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<ItemAbstract> _DeathItem = new FormLinkNullable<ItemAbstract>();
-        public IFormLinkNullable<ItemAbstract> DeathItem => this._DeathItem;
+        protected IFormLinkNullable<AItem> _DeathItem = new FormLinkNullable<AItem>();
+        public IFormLinkNullable<AItem> DeathItem => this._DeathItem;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IItemAbstractGetter> ICreatureGetter.DeathItem => this.DeathItem;
+        IFormLinkNullableGetter<IAItemGetter> ICreatureGetter.DeathItem => this.DeathItem;
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -297,8 +297,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BuySellServices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private NPC.BuySellServiceFlag _BuySellServices;
-        public NPC.BuySellServiceFlag BuySellServices
+        private Npc.BuySellServiceFlag _BuySellServices;
+        public Npc.BuySellServiceFlag BuySellServices
         {
             get => this._BuySellServices;
             set
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            NPCAbstract.Mask<TItem>,
+            ANpc.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            NPCAbstract.ErrorMask,
+            ANpc.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -2868,7 +2868,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            NPCAbstract.TranslationMask,
+            ANpc.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -3141,13 +3141,13 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICreature :
         ICreatureGetter,
-        INPCAbstract,
+        IANpc,
         ILoquiObjectSetter<ICreatureInternal>
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new ExtendedList<ItemEntry>? Items { get; set; }
-        new ExtendedList<IFormLink<SpellAbstract>>? Spells { get; set; }
+        new ExtendedList<IFormLink<ASpell>>? Spells { get; set; }
         new ExtendedList<String>? Models { get; set; }
         new Byte[]? NIFT { get; set; }
         new Creature.CreatureFlag Flags { get; set; }
@@ -3158,13 +3158,13 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt16 CalcMin { get; set; }
         new UInt16 CalcMax { get; set; }
         new ExtendedList<RankPlacement>? Factions { get; set; }
-        new IFormLinkNullable<ItemAbstract> DeathItem { get; }
+        new IFormLinkNullable<AItem> DeathItem { get; }
         new IFormLinkNullable<Script> Script { get; }
         new Byte Aggression { get; set; }
         new Byte Confidence { get; set; }
         new Byte EnergyLevel { get; set; }
         new Byte Responsibility { get; set; }
-        new NPC.BuySellServiceFlag BuySellServices { get; set; }
+        new Npc.BuySellServiceFlag BuySellServices { get; set; }
         new Skill Teaches { get; set; }
         new Byte MaximumTrainingLevel { get; set; }
         new ExtendedList<IFormLink<AIPackage>>? AIPackages { get; set; }
@@ -3199,14 +3199,14 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface ICreatureInternal :
-        INPCAbstractInternal,
+        IANpcInternal,
         ICreature,
         ICreatureGetter
     {
     }
 
     public partial interface ICreatureGetter :
-        INPCAbstractGetter,
+        IANpcGetter,
         ILoquiObject<ICreatureGetter>,
         IXmlItem,
         ILinkContainer,
@@ -3215,7 +3215,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         IReadOnlyList<IItemEntryGetter>? Items { get; }
-        IReadOnlyList<IFormLinkGetter<ISpellAbstractGetter>>? Spells { get; }
+        IReadOnlyList<IFormLinkGetter<IASpellGetter>>? Spells { get; }
         IReadOnlyList<String>? Models { get; }
         ReadOnlyMemorySlice<Byte>? NIFT { get; }
         Creature.CreatureFlag Flags { get; }
@@ -3226,13 +3226,13 @@ namespace Mutagen.Bethesda.Oblivion
         UInt16 CalcMin { get; }
         UInt16 CalcMax { get; }
         IReadOnlyList<IRankPlacementGetter>? Factions { get; }
-        IFormLinkNullableGetter<IItemAbstractGetter> DeathItem { get; }
+        IFormLinkNullableGetter<IAItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         Byte Aggression { get; }
         Byte Confidence { get; }
         Byte EnergyLevel { get; }
         Byte Responsibility { get; }
-        NPC.BuySellServiceFlag BuySellServices { get; }
+        Npc.BuySellServiceFlag BuySellServices { get; }
         Skill Teaches { get; }
         Byte MaximumTrainingLevel { get; }
         IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? AIPackages { get; }
@@ -3837,7 +3837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return NPCAbstract_Registration.GetNthIsEnumerable(index);
+                    return ANpc_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -3901,7 +3901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return NPCAbstract_Registration.GetNthIsLoqui(index);
+                    return ANpc_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -3964,7 +3964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return NPCAbstract_Registration.GetNthIsSingleton(index);
+                    return ANpc_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -4078,7 +4078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.DATADataTypeState:
                     return "DATADataTypeState";
                 default:
-                    return NPCAbstract_Registration.GetNthName(index);
+                    return ANpc_Registration.GetNthName(index);
             }
         }
 
@@ -4141,7 +4141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return NPCAbstract_Registration.IsNthDerivative(index);
+                    return ANpc_Registration.IsNthDerivative(index);
             }
         }
 
@@ -4204,7 +4204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return NPCAbstract_Registration.IsProtected(index);
+                    return ANpc_Registration.IsProtected(index);
             }
         }
 
@@ -4220,7 +4220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Items:
                     return typeof(ExtendedList<ItemEntry>);
                 case Creature_FieldIndex.Spells:
-                    return typeof(ExtendedList<IFormLink<SpellAbstract>>);
+                    return typeof(ExtendedList<IFormLink<ASpell>>);
                 case Creature_FieldIndex.Models:
                     return typeof(ExtendedList<String>);
                 case Creature_FieldIndex.NIFT:
@@ -4242,7 +4242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Factions:
                     return typeof(ExtendedList<RankPlacement>);
                 case Creature_FieldIndex.DeathItem:
-                    return typeof(IFormLinkNullable<ItemAbstract>);
+                    return typeof(IFormLinkNullable<AItem>);
                 case Creature_FieldIndex.Script:
                     return typeof(IFormLinkNullable<Script>);
                 case Creature_FieldIndex.Aggression:
@@ -4254,7 +4254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Responsibility:
                     return typeof(Byte);
                 case Creature_FieldIndex.BuySellServices:
-                    return typeof(NPC.BuySellServiceFlag);
+                    return typeof(Npc.BuySellServiceFlag);
                 case Creature_FieldIndex.Teaches:
                     return typeof(Skill);
                 case Creature_FieldIndex.MaximumTrainingLevel:
@@ -4318,7 +4318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.DATADataTypeState:
                     return typeof(Creature.DATADataType);
                 default:
-                    return NPCAbstract_Registration.GetNthType(index);
+                    return ANpc_Registration.GetNthType(index);
             }
         }
 
@@ -4385,7 +4385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CreatureSetterCommon : NPCAbstractSetterCommon
+    public partial class CreatureSetterCommon : ANpcSetterCommon
     {
         public new static readonly CreatureSetterCommon Instance = new CreatureSetterCommon();
 
@@ -4449,12 +4449,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
         
-        public override void Clear(INPCAbstractInternal item)
+        public override void Clear(IANpcInternal item)
         {
             Clear(item: (ICreatureInternal)item);
         }
         
-        public override void Clear(INPCSpawnInternal item)
+        public override void Clear(INpcSpawnInternal item)
         {
             Clear(item: (ICreatureInternal)item);
         }
@@ -4489,7 +4489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Creature.DATADataType.Has;
                     break;
                 default:
-                    NPCAbstractSetterCommon.FillPrivateElementXml(
+                    ANpcSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -4539,7 +4539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
-            NPCAbstractSetterCommon.FillBinaryStructs(
+            ANpcSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences);
@@ -4592,13 +4592,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F4C5053: // SPLO
                 {
                     item.Spells = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SpellAbstract>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Creature_Registration.SPLO_HEADER,
                             masterReferences: masterReferences,
                             lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<SpellAbstract>>();
+                        .ToExtendedList<IFormLink<ASpell>>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
                 }
                 case 0x5A46494E: // NIFZ
@@ -4688,7 +4688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Confidence = dataFrame.ReadUInt8();
                     item.EnergyLevel = dataFrame.ReadUInt8();
                     item.Responsibility = dataFrame.ReadUInt8();
-                    item.BuySellServices = EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.MaximumTrainingLevel = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
@@ -4826,7 +4826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);
                 }
                 default:
-                    return NPCAbstractSetterCommon.FillBinaryRecordTypes(
+                    return ANpcSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -4855,7 +4855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureCommon : NPCAbstractCommon
+    public partial class CreatureCommon : ANpcCommon
     {
         public new static readonly CreatureCommon Instance = new CreatureCommon();
 
@@ -5004,7 +5004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Creature.Mask<bool>? printMask = null)
         {
-            NPCAbstractCommon.ToStringFields(
+            ANpcCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -5437,38 +5437,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 mask: mask);
         }
         
-        public static Creature_FieldIndex ConvertFieldIndex(NPCAbstract_FieldIndex index)
+        public static Creature_FieldIndex ConvertFieldIndex(ANpc_FieldIndex index)
         {
             switch (index)
             {
-                case NPCAbstract_FieldIndex.MajorRecordFlagsRaw:
+                case ANpc_FieldIndex.MajorRecordFlagsRaw:
                     return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.FormKey:
+                case ANpc_FieldIndex.FormKey:
                     return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.Version:
+                case ANpc_FieldIndex.Version:
                     return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.EditorID:
+                case ANpc_FieldIndex.EditorID:
                     return (Creature_FieldIndex)((int)index);
-                case NPCAbstract_FieldIndex.OblivionMajorRecordFlags:
+                case ANpc_FieldIndex.OblivionMajorRecordFlags:
                     return (Creature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Creature_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
+        public static new Creature_FieldIndex ConvertFieldIndex(NpcSpawn_FieldIndex index)
         {
             switch (index)
             {
-                case NPCSpawn_FieldIndex.MajorRecordFlagsRaw:
+                case NpcSpawn_FieldIndex.MajorRecordFlagsRaw:
                     return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.FormKey:
+                case NpcSpawn_FieldIndex.FormKey:
                     return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.Version:
+                case NpcSpawn_FieldIndex.Version:
                     return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.EditorID:
+                case NpcSpawn_FieldIndex.EditorID:
                     return (Creature_FieldIndex)((int)index);
-                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
+                case NpcSpawn_FieldIndex.OblivionMajorRecordFlags:
                     return (Creature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -5575,8 +5575,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            INPCAbstractGetter? lhs,
-            INPCAbstractGetter? rhs)
+            IANpcGetter? lhs,
+            IANpcGetter? rhs)
         {
             return Equals(
                 lhs: (ICreatureGetter?)lhs,
@@ -5584,8 +5584,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            INPCSpawnGetter? lhs,
-            INPCSpawnGetter? rhs)
+            INpcSpawnGetter? lhs,
+            INpcSpawnGetter? rhs)
         {
             return Equals(
                 lhs: (ICreatureGetter?)lhs,
@@ -5708,12 +5708,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public override int GetHashCode(INPCAbstractGetter item)
+        public override int GetHashCode(IANpcGetter item)
         {
             return GetHashCode(item: (ICreatureGetter)item);
         }
         
-        public override int GetHashCode(INPCSpawnGetter item)
+        public override int GetHashCode(INpcSpawnGetter item)
         {
             return GetHashCode(item: (ICreatureGetter)item);
         }
@@ -5799,7 +5799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureSetterTranslationCommon : NPCAbstractSetterTranslationCommon
+    public partial class CreatureSetterTranslationCommon : ANpcSetterTranslationCommon
     {
         public new static readonly CreatureSetterTranslationCommon Instance = new CreatureSetterTranslationCommon();
 
@@ -5899,8 +5899,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Spells = 
                             rhs.Spells
-                            .Select(r => new FormLink<SpellAbstract>(r.FormKey))
-                            .ToExtendedList<IFormLink<SpellAbstract>>();
+                            .Select(r => new FormLink<ASpell>(r.FormKey))
+                            .ToExtendedList<IFormLink<ASpell>>();
                     }
                     else
                     {
@@ -6242,8 +6242,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            INPCAbstractInternal item,
-            INPCAbstractGetter rhs,
+            IANpcInternal item,
+            IANpcGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -6255,8 +6255,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            INPCAbstract item,
-            INPCAbstractGetter rhs,
+            IANpc item,
+            IANpcGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -6268,8 +6268,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            INPCSpawnInternal item,
-            INPCSpawnGetter rhs,
+            INpcSpawnInternal item,
+            INpcSpawnGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -6281,8 +6281,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            INPCSpawn item,
-            INPCSpawnGetter rhs,
+            INpcSpawn item,
+            INpcSpawnGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -6417,7 +6417,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureXmlWriteTranslation :
-        NPCAbstractXmlWriteTranslation,
+        ANpcXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static CreatureXmlWriteTranslation Instance = new CreatureXmlWriteTranslation();
@@ -6428,7 +6428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            NPCAbstractXmlWriteTranslation.WriteToNodeXml(
+            ANpcXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -6483,14 +6483,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Spells != null)
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<ISpellAbstractGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)Creature_FieldIndex.Spells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Spells),
-                    transl: (XElement subNode, IFormLinkGetter<ISpellAbstractGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<IASpellGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -6677,7 +6677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BuySellServices) ?? true))
                 {
-                    EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                    EnumXmlTranslation<Npc.BuySellServiceFlag>.Instance.Write(
                         node: node,
                         name: nameof(item.BuySellServices),
                         item: item.BuySellServices,
@@ -7048,7 +7048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            INPCAbstractGetter item,
+            IANpcGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -7063,7 +7063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            INPCSpawnGetter item,
+            INpcSpawnGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -7108,7 +7108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CreatureXmlCreateTranslation : NPCAbstractXmlCreateTranslation
+    public partial class CreatureXmlCreateTranslation : ANpcXmlCreateTranslation
     {
         public new readonly static CreatureXmlCreateTranslation Instance = new CreatureXmlCreateTranslation();
 
@@ -7215,7 +7215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
                     try
                     {
-                        if (ListXmlTranslation<IFormLink<SpellAbstract>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<ASpell>>.Instance.Parse(
                             node: node,
                             enumer: out var SpellsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -7553,7 +7553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Creature_FieldIndex.BuySellServices);
                     try
                     {
-                        item.BuySellServices = EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                        item.BuySellServices = EnumXmlTranslation<Npc.BuySellServiceFlag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8157,7 +8157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    NPCAbstractXmlCreateTranslation.FillPublicElementXml(
+                    ANpcXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -8237,7 +8237,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureBinaryWriteTranslation :
-        NPCAbstractBinaryWriteTranslation,
+        ANpcBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static CreatureBinaryWriteTranslation Instance = new CreatureBinaryWriteTranslation();
@@ -8290,11 +8290,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             masterReferences: m);
                     }
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellAbstractGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
                 masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellAbstractGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -8359,7 +8359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer.Write(item.Confidence);
                     writer.Write(item.EnergyLevel);
                     writer.Write(item.Responsibility);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Write(
                         writer,
                         item.BuySellServices,
                         length: 4);
@@ -8505,7 +8505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            INPCAbstractGetter item,
+            IANpcGetter item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -8518,7 +8518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            INPCSpawnGetter item,
+            INpcSpawnGetter item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -8557,7 +8557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CreatureBinaryCreateTranslation : NPCAbstractBinaryCreateTranslation
+    public partial class CreatureBinaryCreateTranslation : ANpcBinaryCreateTranslation
     {
         public new readonly static CreatureBinaryCreateTranslation Instance = new CreatureBinaryCreateTranslation();
 
@@ -8577,7 +8577,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureBinaryOverlay :
-        NPCAbstractBinaryOverlay,
+        ANpcBinaryOverlay,
         ICreatureGetter
     {
         #region Common Routing
@@ -8634,7 +8634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Model_IsSet => Model != null;
         #endregion
         public IReadOnlyList<IItemEntryGetter>? Items { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<ISpellAbstractGetter>>? Spells { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IASpellGetter>>? Spells { get; private set; }
         public IReadOnlyList<String>? Models { get; private set; }
         #region NIFT
         private int? _NIFTLocation;
@@ -8681,7 +8681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
-        public IFormLinkNullableGetter<IItemAbstractGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemAbstractGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormLinkNullable<IItemAbstractGetter>.Empty;
+        public IFormLinkNullableGetter<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormLinkNullable<IAItemGetter>.Empty;
         #endregion
         #region Script
         private int? _ScriptLocation;
@@ -8713,7 +8713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region BuySellServices
         private int _BuySellServicesLocation => _AIDTLocation!.Value + 0x4;
         private bool _BuySellServices_IsSet => _AIDTLocation.HasValue;
-        public NPC.BuySellServiceFlag BuySellServices => _BuySellServices_IsSet ? (NPC.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BuySellServicesLocation, 4)) : default;
+        public Npc.BuySellServiceFlag BuySellServices => _BuySellServices_IsSet ? (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BuySellServicesLocation, 4)) : default;
         #endregion
         #region Teaches
         private int _TeachesLocation => _AIDTLocation!.Value + 0x8;
@@ -8919,10 +8919,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    this.Spells = BinaryOverlaySetList<IFormLinkGetter<ISpellAbstractGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlaySetList<IFormLinkGetter<IASpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISpellAbstractGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

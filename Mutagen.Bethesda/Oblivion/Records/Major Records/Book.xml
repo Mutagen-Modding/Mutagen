@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Book" baseClass="ItemAbstract" objType="Record" recordType="BOOK" GUID="e16c811f-5052-494d-8102-b7450f5b6833" ID="68">
+  <Object name="Book" baseClass="AItem" objType="Record" recordType="BOOK" GUID="e16c811f-5052-494d-8102-b7450f5b6833" ID="68">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />

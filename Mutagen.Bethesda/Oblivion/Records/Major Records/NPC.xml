@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NPC" baseClass="NPCAbstract" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
+  <Object name="Npc" baseClass="ANpc" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
     <Interface>INamed</Interface>
     <Interface>IOwner</Interface>
     <Fields>
@@ -8,7 +8,7 @@
       <RefDirect name="Model" refName="Model" />
       <Data recordType="ACBS">
         <Fields>
-          <Enum name="Flags" enumName="NPC.NPCFlag" byteLength="4" />
+          <Enum name="Flags" enumName="Npc.NpcFlag" byteLength="4" />
           <UInt16 name="BaseSpellPoints" />
           <UInt16 name="Fatigue" />
           <UInt16 name="BarterGold" />
@@ -20,10 +20,10 @@
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
-      <FormLink name="DeathItem" refName="ItemAbstract" recordType="INAM" />
+      <FormLink name="DeathItem" refName="AItem" recordType="INAM" />
       <FormLink name="Race" refName="Race" recordType="RNAM" />
       <List name="Spells">
-        <FormLink refName="SpellAbstract" recordType="SPLO" />
+        <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <List name="Items">
@@ -35,7 +35,7 @@
           <UInt8 name="Confidence" />
           <UInt8 name="EnergyLevel" />
           <UInt8 name="Responsibility" />
-          <Enum name="BuySellServices" enumName="NPC.BuySellServiceFlag" byteLength="4" />
+          <Enum name="BuySellServices" enumName="Npc.BuySellServiceFlag" byteLength="4" />
           <Enum name="Teaches" enumName="Skill" byteLength="1" />
           <UInt8 name="MaximumTrainingLevel" />
           <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
@@ -104,7 +104,7 @@
   </Object>
   <Object name="ItemEntry" objType="Subrecord" recordType="CNTO" GUID="c4622b63-e996-4d1d-b707-e75cba9c197d" ID="86">
     <Fields>
-      <FormLink name="Item" refName="ItemAbstract" />
+      <FormLink name="Item" refName="AItem" />
       <Int32 name="Count" hasBeenSet="True" />
     </Fields>
   </Object>

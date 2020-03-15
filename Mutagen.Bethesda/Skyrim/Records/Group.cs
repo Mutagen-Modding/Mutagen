@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Group<T> : GroupAbstract<T>
+    public partial class Group<T> : AGroup<T>
     {
         public Group(IModGetter getter) : base(getter)
         {

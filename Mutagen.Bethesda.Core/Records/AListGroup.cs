@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public abstract class ListGroupAbstract
+    public abstract class AListGroup
     {
         public class GroupListOverlay<T> : IReadOnlyList<T>
         {

@@ -35,17 +35,17 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<INPCGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<INPCGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<NPC>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<NPC>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<INpcGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<Npc>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<Npc>(FormKey.Null, out var _));
         }
 
         [Fact]
         public void Direct_NoMatch()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            mod.NPCs.AddNew();
+            mod.Npcs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
 
             // Test query fails
@@ -55,18 +55,18 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<INPCGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<INPCGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<NPC>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<NPC>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<INpcGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<Npc>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<Npc>(FormKey.Null, out var _));
         }
 
         [Fact]
         public void Direct_Typical()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            var npc1 = mod.NPCs.AddNew();
-            var npc2 = mod.NPCs.AddNew();
+            var npc1 = mod.Npcs.AddNew();
+            var npc2 = mod.Npcs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
 
             {
@@ -94,19 +94,19 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryLookup<INPCGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<INpcGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryLookup<INPCGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<INpcGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryLookup<NPC>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<Npc>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryLookup<NPC>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<Npc>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
         }
@@ -117,10 +117,10 @@ namespace Mutagen.Bethesda.UnitTests
             var wrapper = OblivionMod.CreateFromBinaryOverlay(PathToTestFile);
             var package = wrapper.CreateLinkCache();
             {
-                Assert.True(package.TryLookup<INPCGetter>(TestFileFormKey, out var rec));
+                Assert.True(package.TryLookup<INpcGetter>(TestFileFormKey, out var rec));
             }
             {
-                Assert.False(package.TryLookup<NPC>(TestFileFormKey, out var rec));
+                Assert.False(package.TryLookup<Npc>(TestFileFormKey, out var rec));
             }
         }
         #endregion
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void LoadOrder_NoMatch()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            mod.NPCs.AddNew();
+            mod.Npcs.AddNew();
             var loadOrder = new LoadOrder<OblivionMod>();
             loadOrder.Add(mod);
             var package = new LoadOrderLinkCache<OblivionMod>(loadOrder);
@@ -162,8 +162,8 @@ namespace Mutagen.Bethesda.UnitTests
         public void LoadOrder_Single()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            var npc1 = mod.NPCs.AddNew();
-            var npc2 = mod.NPCs.AddNew();
+            var npc1 = mod.Npcs.AddNew();
+            var npc2 = mod.Npcs.AddNew();
             var loadOrder = new LoadOrder<OblivionMod>();
             loadOrder.Add(mod);
             var package = new LoadOrderLinkCache<OblivionMod>(loadOrder);
@@ -194,19 +194,19 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryLookup<INPCGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<INpcGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryLookup<INPCGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<INpcGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryLookup<NPC>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<Npc>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryLookup<NPC>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<Npc>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
         }
@@ -216,8 +216,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod1 = new OblivionMod(ModKey.Dummy);
             var mod2 = new OblivionMod(new ModKey("Dummy2", true));
-            var npc1 = mod1.NPCs.AddNew();
-            var npc2 = mod2.NPCs.AddNew();
+            var npc1 = mod1.Npcs.AddNew();
+            var npc2 = mod2.Npcs.AddNew();
             var loadOrder = new LoadOrder<OblivionMod>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
@@ -249,19 +249,19 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryLookup<INPCGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<INpcGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryLookup<INPCGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<INpcGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryLookup<NPC>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<Npc>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryLookup<NPC>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<Npc>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
         }
@@ -271,11 +271,11 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod1 = new OblivionMod(ModKey.Dummy);
             var mod2 = new OblivionMod(new ModKey("Dummy2", true));
-            var unoverriddenNPC = mod1.NPCs.AddNew();
-            var overriddenNPC = mod1.NPCs.AddNew();
-            var topModNPC = mod2.NPCs.AddNew();
-            var overrideNPC = (NPC)overriddenNPC.DeepCopy();
-            mod2.NPCs.RecordCache.Set(overrideNPC);
+            var unoverriddenNpc = mod1.Npcs.AddNew();
+            var overriddenNpc = mod1.Npcs.AddNew();
+            var topModNpc = mod2.Npcs.AddNew();
+            var overrideNpc = (Npc)overriddenNpc.DeepCopy();
+            mod2.Npcs.RecordCache.Set(overrideNpc);
             var loadOrder = new LoadOrder<OblivionMod>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
@@ -283,49 +283,49 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query successes
             {
-                Assert.True(package.TryLookup(overriddenNPC.FormKey, out var rec));
-                Assert.Same(rec, overrideNPC);
-                Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryLookup(unoverriddenNPC.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryLookup(topModNPC.FormKey, out rec));
-                Assert.Same(rec, topModNPC);
+                Assert.True(package.TryLookup(overriddenNpc.FormKey, out var rec));
+                Assert.Same(rec, overrideNpc);
+                Assert.NotSame(rec, overriddenNpc);
+                Assert.True(package.TryLookup(unoverriddenNpc.FormKey, out rec));
+                Assert.Same(rec, unoverriddenNpc);
+                Assert.True(package.TryLookup(topModNpc.FormKey, out rec));
+                Assert.Same(rec, topModNpc);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(overriddenNPC.FormKey, out var rec));
-                Assert.Same(rec, overrideNPC);
-                Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(unoverriddenNPC.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(topModNPC.FormKey, out rec));
-                Assert.Same(rec, topModNPC);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(overriddenNpc.FormKey, out var rec));
+                Assert.Same(rec, overrideNpc);
+                Assert.NotSame(rec, overriddenNpc);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(unoverriddenNpc.FormKey, out rec));
+                Assert.Same(rec, unoverriddenNpc);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(topModNpc.FormKey, out rec));
+                Assert.Same(rec, topModNpc);
             }
             {
-                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(overriddenNPC.FormKey, out var rec));
-                Assert.Same(rec, overrideNPC);
-                Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(unoverriddenNPC.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(topModNPC.FormKey, out rec));
-                Assert.Same(rec, topModNPC);
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(overriddenNpc.FormKey, out var rec));
+                Assert.Same(rec, overrideNpc);
+                Assert.NotSame(rec, overriddenNpc);
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(unoverriddenNpc.FormKey, out rec));
+                Assert.Same(rec, unoverriddenNpc);
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(topModNpc.FormKey, out rec));
+                Assert.Same(rec, topModNpc);
             }
             {
-                Assert.True(package.TryLookup<INPCGetter>(overriddenNPC.FormKey, out var rec));
-                Assert.Same(rec, overrideNPC);
-                Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryLookup<INPCGetter>(unoverriddenNPC.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryLookup<INPCGetter>(topModNPC.FormKey, out rec));
-                Assert.Same(rec, topModNPC);
+                Assert.True(package.TryLookup<INpcGetter>(overriddenNpc.FormKey, out var rec));
+                Assert.Same(rec, overrideNpc);
+                Assert.NotSame(rec, overriddenNpc);
+                Assert.True(package.TryLookup<INpcGetter>(unoverriddenNpc.FormKey, out rec));
+                Assert.Same(rec, unoverriddenNpc);
+                Assert.True(package.TryLookup<INpcGetter>(topModNpc.FormKey, out rec));
+                Assert.Same(rec, topModNpc);
             }
             {
-                Assert.True(package.TryLookup<NPC>(overriddenNPC.FormKey, out var rec));
-                Assert.Same(rec, overrideNPC);
-                Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryLookup<NPC>(unoverriddenNPC.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryLookup<NPC>(topModNPC.FormKey, out rec));
-                Assert.Same(rec, topModNPC);
+                Assert.True(package.TryLookup<Npc>(overriddenNpc.FormKey, out var rec));
+                Assert.Same(rec, overrideNpc);
+                Assert.NotSame(rec, overriddenNpc);
+                Assert.True(package.TryLookup<Npc>(unoverriddenNpc.FormKey, out rec));
+                Assert.Same(rec, unoverriddenNpc);
+                Assert.True(package.TryLookup<Npc>(topModNpc.FormKey, out rec));
+                Assert.Same(rec, topModNpc);
             }
         }
 
@@ -339,14 +339,14 @@ namespace Mutagen.Bethesda.UnitTests
             loadOrder.Add(overrideWrapper);
             var package = loadOrder.CreateLinkCache();
             {
-                Assert.True(package.TryLookup<INPCGetter>(TestFileFormKey, out var rec));
-                Assert.True(package.TryLookup<INPCGetter>(TestFileFormKey2, out rec));
+                Assert.True(package.TryLookup<INpcGetter>(TestFileFormKey, out var rec));
+                Assert.True(package.TryLookup<INpcGetter>(TestFileFormKey2, out rec));
                 Assert.True(rec.Name.TryGet(out var name));
                 Assert.Equal("A Name", name);
             }
             {
-                Assert.False(package.TryLookup<NPC>(TestFileFormKey, out var rec));
-                Assert.False(package.TryLookup<NPC>(TestFileFormKey2, out rec));
+                Assert.False(package.TryLookup<Npc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryLookup<Npc>(TestFileFormKey2, out rec));
             }
         }
         #endregion
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FormLink_TryResolve_NoLink()
         {
-            FormLink<INPC> formLink = new FormLink<INPC>(UnusedFormKey);
+            FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
             var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
             Assert.False(formLink.TryResolve(package, out var link));
         }
@@ -364,9 +364,9 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_TryResolve_Linked()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            var npc = mod.NPCs.AddNew();
+            var npc = mod.Npcs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
-            FormLink<INPC> formLink = new FormLink<INPC>(npc.FormKey);
+            FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(npc, linkedRec);
         }
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FormLink_Resolve_NoLink()
         {
-            FormLink<INPC> formLink = new FormLink<INPC>(UnusedFormKey);
+            FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
             var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
             Assert.Null(formLink.Resolve(package));
         }
@@ -383,9 +383,9 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_Resolve_Linked()
         {
             var mod = new OblivionMod(ModKey.Dummy);
-            var npc = mod.NPCs.AddNew();
+            var npc = mod.Npcs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
-            FormLink<INPC> formLink = new FormLink<INPC>(npc.FormKey);
+            FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             Assert.Same(npc, formLink.Resolve(package));
         }
         #endregion

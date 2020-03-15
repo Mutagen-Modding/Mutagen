@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Clothing :
-        ClothingAbstract,
+        AClothing,
         IClothingInternal,
         ILoquiObjectSetter<Clothing>,
         IEquatable<Clothing>,
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            ClothingAbstract.Mask<TItem>,
+            AClothing.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            ClothingAbstract.ErrorMask,
+            AClothing.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            ClothingAbstract.TranslationMask,
+            AClothing.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IClothing :
         IClothingGetter,
-        IClothingAbstract,
+        IAClothing,
         ILoquiObjectSetter<IClothingInternal>
     {
         new UInt32 Value { get; set; }
@@ -681,14 +681,14 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface IClothingInternal :
-        IClothingAbstractInternal,
+        IAClothingInternal,
         IClothing,
         IClothingGetter
     {
     }
 
     public partial interface IClothingGetter :
-        IClothingAbstractGetter,
+        IAClothingGetter,
         ILoquiObject<IClothingGetter>,
         IXmlItem,
         IBinaryItem
@@ -1085,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ClothingAbstract_Registration.GetNthIsEnumerable(index);
+                    return AClothing_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ClothingAbstract_Registration.GetNthIsLoqui(index);
+                    return AClothing_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ClothingAbstract_Registration.GetNthIsSingleton(index);
+                    return AClothing_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Clothing_FieldIndex.DATADataTypeState:
                     return "DATADataTypeState";
                 default:
-                    return ClothingAbstract_Registration.GetNthName(index);
+                    return AClothing_Registration.GetNthName(index);
             }
         }
 
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ClothingAbstract_Registration.IsNthDerivative(index);
+                    return AClothing_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
-                    return ClothingAbstract_Registration.IsProtected(index);
+                    return AClothing_Registration.IsProtected(index);
             }
         }
 
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Clothing_FieldIndex.DATADataTypeState:
                     return typeof(Clothing.DATADataType);
                 default:
-                    return ClothingAbstract_Registration.GetNthType(index);
+                    return AClothing_Registration.GetNthType(index);
             }
         }
 
@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClothingSetterCommon : ClothingAbstractSetterCommon
+    public partial class ClothingSetterCommon : AClothingSetterCommon
     {
         public new static readonly ClothingSetterCommon Instance = new ClothingSetterCommon();
 
@@ -1231,12 +1231,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
         
-        public override void Clear(IClothingAbstractInternal item)
+        public override void Clear(IAClothingInternal item)
         {
             Clear(item: (IClothingInternal)item);
         }
         
-        public override void Clear(IItemAbstractInternal item)
+        public override void Clear(IAItemInternal item)
         {
             Clear(item: (IClothingInternal)item);
         }
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DATADataTypeState |= Clothing.DATADataType.Has;
                     break;
                 default:
-                    ClothingAbstractSetterCommon.FillPrivateElementXml(
+                    AClothingSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             MasterReferenceReader masterReferences)
         {
-            ClothingAbstractSetterCommon.FillBinaryStructs(
+            AClothingSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences);
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Weight);
                 }
                 default:
-                    return ClothingAbstractSetterCommon.FillBinaryRecordTypes(
+                    return AClothingSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClothingCommon : ClothingAbstractCommon
+    public partial class ClothingCommon : AClothingCommon
     {
         public new static readonly ClothingCommon Instance = new ClothingCommon();
 
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Clothing.Mask<bool>? printMask = null)
         {
-            ClothingAbstractCommon.ToStringFields(
+            AClothingCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1488,64 +1488,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 mask: mask);
         }
         
-        public static Clothing_FieldIndex ConvertFieldIndex(ClothingAbstract_FieldIndex index)
+        public static Clothing_FieldIndex ConvertFieldIndex(AClothing_FieldIndex index)
         {
             switch (index)
             {
-                case ClothingAbstract_FieldIndex.MajorRecordFlagsRaw:
+                case AClothing_FieldIndex.MajorRecordFlagsRaw:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.FormKey:
+                case AClothing_FieldIndex.FormKey:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Version:
+                case AClothing_FieldIndex.Version:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.EditorID:
+                case AClothing_FieldIndex.EditorID:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.OblivionMajorRecordFlags:
+                case AClothing_FieldIndex.OblivionMajorRecordFlags:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Name:
+                case AClothing_FieldIndex.Name:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Script:
+                case AClothing_FieldIndex.Script:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Enchantment:
+                case AClothing_FieldIndex.Enchantment:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                case AClothing_FieldIndex.EnchantmentPoints:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.BipedFlags:
+                case AClothing_FieldIndex.BipedFlags:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.Flags:
+                case AClothing_FieldIndex.Flags:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                case AClothing_FieldIndex.MaleBipedModel:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                case AClothing_FieldIndex.MaleWorldModel:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.MaleIcon:
+                case AClothing_FieldIndex.MaleIcon:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                case AClothing_FieldIndex.FemaleBipedModel:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                case AClothing_FieldIndex.FemaleWorldModel:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.FemaleIcon:
+                case AClothing_FieldIndex.FemaleIcon:
                     return (Clothing_FieldIndex)((int)index);
-                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                case AClothing_FieldIndex.BMDTDataTypeState:
                     return (Clothing_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Clothing_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        public static new Clothing_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
         {
             switch (index)
             {
-                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                case AItem_FieldIndex.MajorRecordFlagsRaw:
                     return (Clothing_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.FormKey:
+                case AItem_FieldIndex.FormKey:
                     return (Clothing_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.Version:
+                case AItem_FieldIndex.Version:
                     return (Clothing_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.EditorID:
+                case AItem_FieldIndex.EditorID:
                     return (Clothing_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                case AItem_FieldIndex.OblivionMajorRecordFlags:
                     return (Clothing_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1603,8 +1603,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IClothingAbstractGetter? lhs,
-            IClothingAbstractGetter? rhs)
+            IAClothingGetter? lhs,
+            IAClothingGetter? rhs)
         {
             return Equals(
                 lhs: (IClothingGetter?)lhs,
@@ -1612,8 +1612,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IItemAbstractGetter? lhs,
-            IItemAbstractGetter? rhs)
+            IAItemGetter? lhs,
+            IAItemGetter? rhs)
         {
             return Equals(
                 lhs: (IClothingGetter?)lhs,
@@ -1648,12 +1648,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public override int GetHashCode(IClothingAbstractGetter item)
+        public override int GetHashCode(IAClothingGetter item)
         {
             return GetHashCode(item: (IClothingGetter)item);
         }
         
-        public override int GetHashCode(IItemAbstractGetter item)
+        public override int GetHashCode(IAItemGetter item)
         {
             return GetHashCode(item: (IClothingGetter)item);
         }
@@ -1700,7 +1700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClothingSetterTranslationCommon : ClothingAbstractSetterTranslationCommon
+    public partial class ClothingSetterTranslationCommon : AClothingSetterTranslationCommon
     {
         public new static readonly ClothingSetterTranslationCommon Instance = new ClothingSetterTranslationCommon();
 
@@ -1744,8 +1744,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IClothingAbstractInternal item,
-            IClothingAbstractGetter rhs,
+            IAClothingInternal item,
+            IAClothingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1757,8 +1757,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IClothingAbstract item,
-            IClothingAbstractGetter rhs,
+            IAClothing item,
+            IAClothingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1770,8 +1770,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IItemAbstractInternal item,
-            IItemAbstractGetter rhs,
+            IAItemInternal item,
+            IAItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1783,8 +1783,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IItemAbstract item,
-            IItemAbstractGetter rhs,
+            IAItem item,
+            IAItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1919,7 +1919,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ClothingXmlWriteTranslation :
-        ClothingAbstractXmlWriteTranslation,
+        AClothingXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static ClothingXmlWriteTranslation Instance = new ClothingXmlWriteTranslation();
@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ClothingAbstractXmlWriteTranslation.WriteToNodeXml(
+            AClothingXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2004,7 +2004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            IClothingAbstractGetter item,
+            IAClothingGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            IItemAbstractGetter item,
+            IAItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -2064,7 +2064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClothingXmlCreateTranslation : ClothingAbstractXmlCreateTranslation
+    public partial class ClothingXmlCreateTranslation : AClothingXmlCreateTranslation
     {
         public new readonly static ClothingXmlCreateTranslation Instance = new ClothingXmlCreateTranslation();
 
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ClothingAbstractXmlCreateTranslation.FillPublicElementXml(
+                    AClothingXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2238,7 +2238,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ClothingBinaryWriteTranslation :
-        ClothingAbstractBinaryWriteTranslation,
+        AClothingBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static ClothingBinaryWriteTranslation Instance = new ClothingBinaryWriteTranslation();
@@ -2248,7 +2248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             MasterReferenceReader masterReferences)
         {
-            ClothingAbstractBinaryWriteTranslation.WriteEmbedded(
+            AClothingBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer,
                 masterReferences: masterReferences);
@@ -2260,7 +2260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter,
             MasterReferenceReader masterReferences)
         {
-            ClothingAbstractBinaryWriteTranslation.WriteRecordTypes(
+            AClothingBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2315,7 +2315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IClothingAbstractGetter item,
+            IAClothingGetter item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2328,7 +2328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IItemAbstractGetter item,
+            IAItemGetter item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2367,7 +2367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClothingBinaryCreateTranslation : ClothingAbstractBinaryCreateTranslation
+    public partial class ClothingBinaryCreateTranslation : AClothingBinaryCreateTranslation
     {
         public new readonly static ClothingBinaryCreateTranslation Instance = new ClothingBinaryCreateTranslation();
 
@@ -2387,7 +2387,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ClothingBinaryOverlay :
-        ClothingAbstractBinaryOverlay,
+        AClothingBinaryOverlay,
         IClothingGetter
     {
         #region Common Routing
