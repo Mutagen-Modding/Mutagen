@@ -2523,14 +2523,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<INPCSpawnGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
-                transl: (MutagenWriter subWriter, ILeveledEntryGetter<INPCSpawnGetter> subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, ILeveledEntryGetter<INPCSpawnGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<INPCSpawnGetter>(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(

@@ -2329,13 +2329,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.SPLO_HEADER),
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
         }
 

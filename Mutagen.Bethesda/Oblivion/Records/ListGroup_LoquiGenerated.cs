@@ -1881,14 +1881,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
                 items: item.Records,
-                transl: (MutagenWriter subWriter, T subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, T subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((CellBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
         }

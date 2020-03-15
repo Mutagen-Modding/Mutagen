@@ -2658,25 +2658,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.InterCellConnections,
                 recordType: PathGrid_Registration.PGRI_HEADER,
-                transl: (MutagenWriter subWriter, IInterCellPointGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IInterCellPointGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((InterCellPointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPointToReferenceMappingGetter>.Instance.Write(
                 writer: writer,
                 items: item.PointToReferenceMappings,
-                transl: (MutagenWriter subWriter, IPointToReferenceMappingGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IPointToReferenceMappingGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((PointToReferenceMappingBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
         }

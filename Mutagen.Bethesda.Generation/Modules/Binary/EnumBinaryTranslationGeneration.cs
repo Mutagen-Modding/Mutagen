@@ -33,7 +33,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor mastersAccessor)
         {
             var eType = typeGen as EnumType;
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;

@@ -1325,20 +1325,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.Data);
                 }
                 case 0x53444F4D: // MODS
-                    {
-                        item.AlternateTextures =
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.ParseRepeatedItem(
-                                amount: frame.ReadInt32(),
-                                frame: frame,
-                                transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
-                                {
-                                    return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
-                                        frame: r,
-                                        item: out listSubItem,
-                                        masterReferences: masterReferences);
-                                })
-                            .ToExtendedList<AlternateTexture>();
-                        return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
+                {
+                    item.AlternateTextures = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.ParseRepeatedItem(
+                            amount: frame.ReadInt32(),
+                            frame: frame,
+                            masterReferences: masterReferences,
+                            transl: (MutagenFrame r, out AlternateTexture listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem,
+                                    masterReferences: m);
+                            })
+                        .ToExtendedList<AlternateTexture>();
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -2087,13 +2088,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IAlternateTextureGetter>.Instance.Write(
                 writer: writer,
                 items: item.AlternateTextures,
-                transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((AlternateTextureBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
         }
 

@@ -2696,13 +2696,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IQuestGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Quests,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IQuestGetter> subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IQuestGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.QSTI_HEADER),
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,

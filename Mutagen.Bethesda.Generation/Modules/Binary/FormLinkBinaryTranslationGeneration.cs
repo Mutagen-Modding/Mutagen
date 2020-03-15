@@ -15,7 +15,6 @@ namespace Mutagen.Bethesda.Generation
         public FormLinkBinaryTranslationGeneration()
             : base(expectedLen: 4)
         {
-            this.AdditionalWriteParams.Add(AdditionalParam);
             this.AdditionalCopyInParams.Add(AdditionalParam);
             this.PreferDirectTranslation = false;
         }
@@ -148,17 +147,47 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor mastersAccessor)
         {
             FormLinkType linkType = typeGen as FormLinkType;
+            var data = typeGen.GetFieldData();
             switch (linkType.FormIDType)
             {
                 case FormLinkType.FormIDTypeEnum.Normal:
-                    base.GenerateWrite(fg, objGen, typeGen, writerAccessor, itemAccessor, errorMaskAccessor,
-                        translationMaskAccessor: translationMaskAccessor);
+                    if (CustomWrite != null)
+                    {
+                        CustomWrite(fg, writerAccessor, itemAccessor);
+                    }
+                    else if (data.HasTrigger || !PreferDirectTranslation)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
+                        {
+                            args.Add($"writer: {writerAccessor}");
+                            args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
+                            if (this.DoErrorMasks)
+                            {
+                                if (typeGen.HasIndex)
+                                {
+                                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                                }
+                                args.Add($"errorMask: {errorMaskAccessor}");
+                            }
+                            if (data.RecordType.HasValue)
+                            {
+                                args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                            }
+
+                            args.Add($"masterReferences: {mastersAccessor}");
+                        }
+                    }
+                    else
+                    {
+                        fg.AppendLine($"{writerAccessor.DirectAccess}.Write({itemAccessor.DirectAccess});");
+                    }
                     break;
                 case FormLinkType.FormIDTypeEnum.EDIDChars:
-                    var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
                     using (var args = new ArgsWrapper(fg,
                         $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
                     {

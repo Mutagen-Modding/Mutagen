@@ -3097,14 +3097,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
                 writer: writer,
                 items: item.Areas,
-                transl: (MutagenWriter subWriter, IRegionAreaGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((RegionAreaBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
             RegionBinaryWriteTranslation.WriteBinaryRegionAreaLogic(

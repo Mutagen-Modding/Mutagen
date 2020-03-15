@@ -2977,25 +2977,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.ExtraParts,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.HNAM_HEADER),
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPartGetter>.Instance.Write(
                 writer: writer,
                 items: item.Parts,
-                transl: (MutagenWriter subWriter, IPartGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IPartGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((PartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(

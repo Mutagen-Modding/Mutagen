@@ -279,10 +279,24 @@ namespace Mutagen.Bethesda.Binary
             IEnumerable<T>? items,
             BinarySubWriteDelegate<T> transl)
         {
-            if (items == null) return; 
+            if (items == null) return;
             foreach (var item in items)
             {
                 transl(writer, item);
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IEnumerable<T>? items,
+            MasterReferenceReader masterReferences,
+            BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (items == null) return;
+            foreach (var item in items)
+            {
+                transl(writer, item, masterReferences, recordTypeConverter);
             }
         }
 
@@ -300,6 +314,24 @@ namespace Mutagen.Bethesda.Binary
                 transl: transl);
         }
 
+        public void Write(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            RecordType recordType,
+            MasterReferenceReader masterReferences,
+            BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (items == null) return;
+            this.WriteRecordList(
+                writer: writer,
+                items: items,
+                recordType: recordType,
+                masterReferences: masterReferences,
+                transl: transl,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         private void WriteRecordList(
             MutagenWriter writer,
             IReadOnlyList<T> items,
@@ -311,6 +343,23 @@ namespace Mutagen.Bethesda.Binary
                 foreach (var item in items)
                 {
                     transl(writer, item);
+                }
+            }
+        }
+
+        private void WriteRecordList(
+            MutagenWriter writer,
+            IReadOnlyList<T> items,
+            RecordType recordType,
+            MasterReferenceReader masterReferences,
+            BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            {
+                foreach (var item in items)
+                {
+                    transl(writer, item, masterReferences, recordTypeConverter);
                 }
             }
         }

@@ -2825,13 +2825,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.MasterReferences,
-                transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((MasterReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
             Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.WriteNullable(
                 writer: writer,

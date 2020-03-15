@@ -2744,26 +2744,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IBaseLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.Layers,
-                transl: (MutagenWriter subWriter, IBaseLayerGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IBaseLayerGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((BaseLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
                 recordType: Landscape_Registration.VTEX_HEADER,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
         }
 

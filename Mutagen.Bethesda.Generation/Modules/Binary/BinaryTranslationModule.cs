@@ -1271,9 +1271,9 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"{TranslationWriteClass(firstBase)}.WriteEmbedded"))
                             {
-                                args.Add("item: item");
-                                args.Add("writer: writer");
-                                args.Add("masterReferences: masterReferences");
+                                args.AddPassArg("item");
+                                args.AddPassArg("writer");
+                                args.AddPassArg("masterReferences");
                             }
                         }
                     }
@@ -1318,7 +1318,8 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "writer",
                                 itemAccessor: Accessor.FromType(field, "item"),
                                 translationAccessor: null,
-                                errorMaskAccessor: null);
+                                errorMaskAccessor: null,
+                                mastersAccessor: "masterReferences");
                         }
                     }
                 }
@@ -1352,17 +1353,17 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                             {
-                                args.Add($"item: item");
-                                args.Add("writer: writer");
+                                args.AddPassArg($"item");
+                                args.AddPassArg("writer");
                                 if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
                                 {
                                     args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
                                 }
                                 else
                                 {
-                                    args.Add("recordTypeConverter: recordTypeConverter");
+                                    args.AddPassArg("recordTypeConverter");
                                 }
-                                args.Add($"masterReferences: masterReferences");
+                                args.AddPassArg($"masterReferences");
                             }
                         }
                     }
@@ -1441,7 +1442,8 @@ namespace Mutagen.Bethesda.Generation
                                             writerAccessor: "writer",
                                                 translationAccessor: null,
                                             itemAccessor: Accessor.FromType(subField.Field, "item"),
-                                            errorMaskAccessor: null);
+                                            errorMaskAccessor: null,
+                                            mastersAccessor: "masterReferences");
                                     }
                                     for (int i = 0; i < dataType.BreakIndices.Count; i++)
                                     {
@@ -1495,7 +1497,8 @@ namespace Mutagen.Bethesda.Generation
                                     writerAccessor: "writer",
                                     itemAccessor: accessor,
                                     translationAccessor: null,
-                                    errorMaskAccessor: null);
+                                    errorMaskAccessor: null,
+                                    mastersAccessor: "masterReferences");
                             }
                         }
                     }

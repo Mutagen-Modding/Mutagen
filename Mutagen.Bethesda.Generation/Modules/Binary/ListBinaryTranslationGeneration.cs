@@ -104,7 +104,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor mastersAccessor)
         {
             var list = typeGen as ListType;
             if (!this.Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
@@ -127,6 +128,7 @@ namespace Mutagen.Bethesda.Generation
             var listOfRecords = !isLoqui
                 && listBinaryType == ListBinaryType.SubTrigger
                 && allowDirectWrite;
+            bool needsMasters = list.SubTypeGeneration is FormLinkType || list.SubTypeGeneration is LoquiType;
 
             var typeName = list.SubTypeGeneration.TypeName(getter: true);
             if (list.SubTypeGeneration is LoquiType loqui)
@@ -151,6 +153,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"translationMask: {translationMaskAccessor}");
                 }
+                if (needsMasters)
+                {
+                    args.Add($"masterReferences: {mastersAccessor}");
+                }
                 if (allowDirectWrite)
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: true)}.Write");
@@ -160,7 +166,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName} subItem) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName} subItem{(needsMasters ? $", {nameof(MasterReferenceReader)} m, {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -170,6 +176,7 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "subWriter",
                                 translationAccessor: "listTranslMask",
                                 itemAccessor: new Accessor($"subItem"),
+                                mastersAccessor: "m",
                                 errorMaskAccessor: null);
                         }
                     });

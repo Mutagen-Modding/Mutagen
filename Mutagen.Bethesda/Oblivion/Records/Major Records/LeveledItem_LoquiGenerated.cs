@@ -2336,14 +2336,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<IItemAbstractGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
-                transl: (MutagenWriter subWriter, ILeveledEntryGetter<IItemAbstractGetter> subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, ILeveledEntryGetter<IItemAbstractGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<IItemAbstractGetter>(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
             LeveledItemSetterCommon.SpecialWrite_Vestigial_Internal(

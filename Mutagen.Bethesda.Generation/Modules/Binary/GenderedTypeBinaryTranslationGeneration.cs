@@ -91,7 +91,15 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
+        public override void GenerateWrite(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            Accessor writerAccessor, 
+            Accessor itemAccessor, 
+            Accessor errorMaskAccessor,
+            Accessor translationAccessor,
+            Accessor mastersAccessor)
         {
             GenderedType gendered = typeGen as GenderedType;
             var gen = this.Module.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
@@ -136,7 +144,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 if (!isLoqui)
                                 {
-                                    gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor);
+                                    gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor, mastersAccessor);
                                 }
                             }
                         }
@@ -144,7 +152,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             using (new BraceWrapper(fg))
                             {
-                                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor);
+                                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor, mastersAccessor);
                             }
                         }
                     }
@@ -166,7 +174,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 if (!isLoqui)
                                 {
-                                    gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor);
+                                    gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor, mastersAccessor);
                                 }
                             }
                         }
@@ -174,7 +182,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             using (new BraceWrapper(fg))
                             {
-                                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor);
+                                gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, itemAccessor, errorMaskAccessor, translationAccessor, mastersAccessor);
                             }
                         }
                     }

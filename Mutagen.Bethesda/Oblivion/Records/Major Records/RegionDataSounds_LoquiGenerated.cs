@@ -2015,13 +2015,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.Sounds,
                 recordType: RegionDataSounds_Registration.RDSD_HEADER,
-                transl: (MutagenWriter subWriter, IRegionSoundGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IRegionSoundGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((RegionSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
         }
 

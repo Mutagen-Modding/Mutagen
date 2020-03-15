@@ -1883,12 +1883,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.Grasses,
                 recordType: RegionDataGrasses_Registration.RDGS_HEADER,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
         }
 

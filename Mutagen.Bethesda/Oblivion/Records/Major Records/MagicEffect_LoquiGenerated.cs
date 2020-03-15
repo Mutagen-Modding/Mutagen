@@ -3651,7 +3651,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.CounterEffects,
                 recordType: MagicEffect_Registration.ESCE_HEADER,
-                transl: (MutagenWriter subWriter, IEDIDLinkGetter<IMagicEffectGetter> subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IEDIDLinkGetter<IMagicEffectGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: subWriter,

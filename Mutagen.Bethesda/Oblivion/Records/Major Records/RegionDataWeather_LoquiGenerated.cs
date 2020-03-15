@@ -1902,13 +1902,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.Weathers,
                 recordType: RegionDataWeather_Registration.RDWT_HEADER,
-                transl: (MutagenWriter subWriter, IWeatherChanceGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IWeatherChanceGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((WeatherChanceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
         }
 

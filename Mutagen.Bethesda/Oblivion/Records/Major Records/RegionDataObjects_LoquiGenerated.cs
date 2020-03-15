@@ -1902,13 +1902,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.Objects,
                 recordType: RegionDataObjects_Registration.RDOT_HEADER,
-                transl: (MutagenWriter subWriter, IRegionDataObjectGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IRegionDataObjectGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((RegionDataObjectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
         }
 

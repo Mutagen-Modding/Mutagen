@@ -32,7 +32,15 @@ namespace Mutagen.Bethesda.Generation
         {
         }
 
-        public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
+        public override void GenerateWrite(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen, 
+            Accessor writerAccessor, 
+            Accessor itemAccessor, 
+            Accessor errorMaskAccessor, 
+            Accessor translationAccessor,
+            Accessor mastersAccessor)
         {
         }
 

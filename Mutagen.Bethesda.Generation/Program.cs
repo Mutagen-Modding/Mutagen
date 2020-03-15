@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "BinaryWriteParameters? param = nul";
+            string testString = "header: recordTypeConverter.ConvertToCustom(Race_Registration.KWDA_HEADER),";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

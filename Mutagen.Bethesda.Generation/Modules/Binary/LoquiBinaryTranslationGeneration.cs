@@ -67,7 +67,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor mastersAccessor)
         {
             var loquiGen = typeGen as LoquiType;
             bool isGroup = objGen.GetObjectType() == ObjectType.Mod
@@ -110,7 +111,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"item: {itemAccessor}");
                         args.Add($"writer: {writerAccessor}");
-                        args.Add($"masterReferences: masterReferences");
+                        args.Add($"masterReferences: {mastersAccessor}");
                         if (data?.RecordTypeConverter != null
                             && data.RecordTypeConverter.FromConversions.Count > 0)
                         {

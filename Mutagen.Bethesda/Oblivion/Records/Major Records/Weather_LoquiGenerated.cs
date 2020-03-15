@@ -5967,13 +5967,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.WeatherTypes,
                 recordType: Weather_Registration.NAM0_HEADER,
-                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        masterReferences: masterReferences);
+                        masterReferences: m);
                 });
             if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
             {
@@ -6068,14 +6069,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                transl: (MutagenWriter subWriter, IWeatherSoundGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, IWeatherSoundGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((WeatherSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
         }

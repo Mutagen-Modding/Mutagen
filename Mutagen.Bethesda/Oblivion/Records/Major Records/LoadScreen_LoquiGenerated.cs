@@ -2237,14 +2237,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ILoadScreenLocationGetter>.Instance.Write(
                 writer: writer,
                 items: item.Locations,
-                transl: (MutagenWriter subWriter, ILoadScreenLocationGetter subItem) =>
+                masterReferences: masterReferences,
+                transl: (MutagenWriter subWriter, ILoadScreenLocationGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((LoadScreenLocationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            masterReferences: masterReferences);
+                            masterReferences: m);
                     }
                 });
         }
