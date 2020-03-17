@@ -8,7 +8,6 @@ using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
-using System.IO;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -18,12 +17,11 @@ namespace Mutagen.Bethesda.Skyrim
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-
-        public override FormKey GetNextFormKey()
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IMod.NextObjectID
         {
-            return new FormKey(
-                this.ModKey,
-                this.ModHeader.Stats.NextObjectID++);
+            get => this.ModHeader.Stats.NextObjectID;
+            set => this.ModHeader.Stats.NextObjectID = value;
         }
     }
 

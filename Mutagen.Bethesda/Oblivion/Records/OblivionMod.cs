@@ -22,17 +22,16 @@ namespace Mutagen.Bethesda.Oblivion
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IMod.NextObjectID
+        {
+            get => this.ModHeader.Stats.NextObjectID;
+            set => this.ModHeader.Stats.NextObjectID = value;
+        }
 
         partial void CustomCtor()
         {
             this.ModHeader.Stats.NextObjectID = 0xD62; // first available ID on empty CS plugins
-        }
-
-        public override FormKey GetNextFormKey()
-        {
-            return new FormKey(
-                this.ModKey,
-                this.ModHeader.Stats.NextObjectID++);
         }
 
         partial void GetCustomRecordCount(Action<int> setter)

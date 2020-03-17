@@ -17,11 +17,11 @@ namespace Mutagen.Bethesda
         ModKey ModKey { get; }
     }
 
-    public interface IMod : IModGetter, IMajorRecordEnumerable
+    public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator
     {
         new IList<MasterReference> MasterReferences { get; }
         ICache<T, FormKey> GetGroup<T>() where T : IMajorRecordCommon;
-        FormKey GetNextFormKey();
+        uint NextObjectID { get; set; }
         void SyncRecordCount();
     }
 
