@@ -8,25 +8,18 @@ using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
+using System.IO;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SkyrimMod
+    public partial class SkyrimMod : AMod
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
 
-        public ModKey ModKey { get; } = ModKey.Null;
-
-        public SkyrimMod(ModKey modKey)
-            : this()
-        {
-            this.ModKey = modKey;
-        }
-
-        public FormKey GetNextFormKey()
+        public override FormKey GetNextFormKey()
         {
             return new FormKey(
                 this.ModKey,

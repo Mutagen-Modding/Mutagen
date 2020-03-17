@@ -69,84 +69,84 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<GameSetting> _GameSettings_Object;
+        private Group<GameSetting> _GameSettings_Object;
         public Group<GameSetting> GameSettings => _GameSettings_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IGameSettingGetter> ISkyrimModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Keyword> _Keywords_Object;
+        private Group<Keyword> _Keywords_Object;
         public Group<Keyword> Keywords => _Keywords_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IKeywordGetter> ISkyrimModGetter.Keywords => _Keywords_Object;
         #endregion
         #region LocationReferenceTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<LocationReferenceType> _LocationReferenceTypes_Object;
+        private Group<LocationReferenceType> _LocationReferenceTypes_Object;
         public Group<LocationReferenceType> LocationReferenceTypes => _LocationReferenceTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ILocationReferenceTypeGetter> ISkyrimModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
         #endregion
         #region Actions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<ActionRecord> _Actions_Object;
+        private Group<ActionRecord> _Actions_Object;
         public Group<ActionRecord> Actions => _Actions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IActionRecordGetter> ISkyrimModGetter.Actions => _Actions_Object;
         #endregion
         #region TextureSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<TextureSet> _TextureSets_Object;
+        private Group<TextureSet> _TextureSets_Object;
         public Group<TextureSet> TextureSets => _TextureSets_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ITextureSetGetter> ISkyrimModGetter.TextureSets => _TextureSets_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Global> _Globals_Object;
+        private Group<Global> _Globals_Object;
         public Group<Global> Globals => _Globals_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IGlobalGetter> ISkyrimModGetter.Globals => _Globals_Object;
         #endregion
         #region Classes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Class> _Classes_Object;
+        private Group<Class> _Classes_Object;
         public Group<Class> Classes => _Classes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IClassGetter> ISkyrimModGetter.Classes => _Classes_Object;
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Faction> _Factions_Object;
+        private Group<Faction> _Factions_Object;
         public Group<Faction> Factions => _Factions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IFactionGetter> ISkyrimModGetter.Factions => _Factions_Object;
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<HeadPart> _HeadParts_Object;
+        private Group<HeadPart> _HeadParts_Object;
         public Group<HeadPart> HeadParts => _HeadParts_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IHeadPartGetter> ISkyrimModGetter.HeadParts => _HeadParts_Object;
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Hair> _Hairs_Object;
+        private Group<Hair> _Hairs_Object;
         public Group<Hair> Hairs => _Hairs_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IHairGetter> ISkyrimModGetter.Hairs => _Hairs_Object;
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Eye> _Eyes_Object;
+        private Group<Eye> _Eyes_Object;
         public Group<Eye> Eyes => _Eyes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IEyeGetter> ISkyrimModGetter.Eyes => _Eyes_Object;
         #endregion
         #region Races
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Group<Race> _Races_Object;
+        private Group<Race> _Races_Object;
         public Group<Race> Races => _Races_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IRaceGetter> ISkyrimModGetter.Races => _Races_Object;
@@ -1021,11 +1021,27 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public GameMode GameMode => GameMode.Skyrim;
+        public override GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
+        public SkyrimMod(ModKey modKey)
+            : base(modKey)
+        {
+            _GameSettings_Object = new Group<GameSetting>(this);
+            _Keywords_Object = new Group<Keyword>(this);
+            _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
+            _Actions_Object = new Group<ActionRecord>(this);
+            _TextureSets_Object = new Group<TextureSet>(this);
+            _Globals_Object = new Group<Global>(this);
+            _Classes_Object = new Group<Class>(this);
+            _Factions_Object = new Group<Faction>(this);
+            _HeadParts_Object = new Group<HeadPart>(this);
+            _Hairs_Object = new Group<Hair>(this);
+            _Eyes_Object = new Group<Eye>(this);
+            _Races_Object = new Group<Race>(this);
+        }
         public void AddRecords(
             SkyrimMod rhsMod,
             GroupMask? mask = null)
@@ -1186,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
             return router;
         }
 
-        public void SyncRecordCount()
+        public override void SyncRecordCount()
         {
             this.ModHeader.Stats.NumRecords = GetRecordCount();
         }

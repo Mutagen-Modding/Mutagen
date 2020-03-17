@@ -16,27 +16,19 @@ using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionMod
+    public partial class OblivionMod : AMod
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
 
-        public ModKey ModKey { get; } = ModKey.Null;
-
-        public OblivionMod(ModKey modKey)
-            : this()
-        {
-            this.ModKey = modKey;
-        }
-
         partial void CustomCtor()
         {
             this.ModHeader.Stats.NextObjectID = 0xD62; // first available ID on empty CS plugins
         }
 
-        public FormKey GetNextFormKey()
+        public override FormKey GetNextFormKey()
         {
             return new FormKey(
                 this.ModKey,

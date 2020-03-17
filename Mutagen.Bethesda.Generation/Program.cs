@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "header: recordTypeConverter.ConvertToCustom(Race_Registration.KWDA_HEADER),";
+            string testString = "ublic IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

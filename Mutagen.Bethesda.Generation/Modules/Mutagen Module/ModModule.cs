@@ -37,12 +37,24 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
-            fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
+            fg.AppendLine($"public override {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
             fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param);");
 
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                fg.AppendLine($"public {obj.Name}({nameof(ModKey)} modKey)");
+                using (new DepthWrapper(fg))
+                {
+                    fg.AppendLine(": base(modKey)");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    await obj.GenerateInitializer(fg);
+                }
+            }
 
             using (var args = new FunctionWrapper(fg,
                 "public void AddRecords"))
@@ -130,7 +142,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public void SyncRecordCount"))
+                "public override void SyncRecordCount"))
             {
             }
             using (new BraceWrapper(fg))

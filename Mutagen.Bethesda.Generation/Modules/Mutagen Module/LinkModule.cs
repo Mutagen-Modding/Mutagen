@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Generation
                 if (linkCase == LinkCase.No) return;
             }
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(ILinkGetter)}> Links => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinks(this);");
+            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(ILinkGetter)}> Links => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinks(this);");
         }
     }
 }
