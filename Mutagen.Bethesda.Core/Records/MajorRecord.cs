@@ -15,7 +15,7 @@ using System.Xml.Linq;
 
 namespace Mutagen.Bethesda
 {
-    public partial interface IMajorRecord : IFormKey, IMajorRecordCommon
+    public partial interface IMajorRecord : IMajorRecordCommon
     {
         new FormKey FormKey { get; }
     }

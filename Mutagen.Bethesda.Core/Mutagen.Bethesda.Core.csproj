@@ -92,7 +92,6 @@
     <Compile Include="Structs\FormID.cs" />
     <Compile Include="Structs\FormKey.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
-    <Compile Include="Interfaces\IFormKey.cs" />
     <Compile Include="Interfaces\Major Records\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\Major Records\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMod.cs" />
