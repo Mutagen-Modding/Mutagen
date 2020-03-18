@@ -6055,6 +6055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 markerType: Race_Registration.NAM1_HEADER,
                 maleMarker: Race_Registration.MNAM_HEADER,
                 femaleMarker: Race_Registration.FNAM_HEADER,
+                markerWrap: false,
                 masterReferences: masterReferences,
                 transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {

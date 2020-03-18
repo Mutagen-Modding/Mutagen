@@ -235,6 +235,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType femaleMarker,
             MasterReferenceReader masterReferences,
             UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (item == null) return;
@@ -243,6 +244,13 @@ namespace Mutagen.Bethesda.Binary
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
                 {
+                    if (markerWrap)
+                    {
+                        transl(writer, male, masterReferences, recordTypeConverter);
+                    }
+                }
+                if (!markerWrap)
+                {
                     transl(writer, male, masterReferences, recordTypeConverter);
                 }
             }
@@ -250,6 +258,13 @@ namespace Mutagen.Bethesda.Binary
             if (female != null)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                {
+                    if (markerWrap)
+                    {
+                        transl(writer, female, masterReferences, recordTypeConverter);
+                    }
+                }
+                if (!markerWrap)
                 {
                     transl(writer, female, masterReferences, recordTypeConverter);
                 }
@@ -294,6 +309,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType femaleMarker,
             MasterReferenceReader masterReferences,
             UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (item == null) return;
@@ -305,16 +321,30 @@ namespace Mutagen.Bethesda.Binary
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
                 {
+                    if (markerWrap)
+                    {
+                        transl(writer, male, masterReferences, recordTypeConverter);
+                    }
                 }
-                transl(writer, male, masterReferences, recordTypeConverter);
+                if (!markerWrap)
+                {
+                    transl(writer, male, masterReferences, recordTypeConverter);
+                }
             }
             var female = item.Female;
             if (female != null)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
                 {
+                    if (markerWrap)
+                    {
+                        transl(writer, female, masterReferences, recordTypeConverter);
+                    }
                 }
-                transl(writer, female, masterReferences, recordTypeConverter);
+                if (!markerWrap)
+                {
+                    transl(writer, female, masterReferences, recordTypeConverter);
+                }
             }
         }
 
