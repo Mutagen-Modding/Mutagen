@@ -444,10 +444,5 @@ namespace Mutagen.Bethesda.Binary
         {
             return Reader.GetMemory(amount, offset);
         }
-
-        public string ReadZString(int length)
-        {
-            return Reader.ReadZString(length);
-        }
     }
 }

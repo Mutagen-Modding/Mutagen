@@ -28,6 +28,5 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="length">Number of bytes to read and reframe</param>
         /// <returns>A new stream wrapping an internal array, set to position 0.</returns>
         IMutagenReadStream ReadAndReframe(int length);
-        string ReadZString(int length);
     }
 }
