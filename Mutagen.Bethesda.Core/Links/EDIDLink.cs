@@ -8,31 +8,61 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// A specialized link for Oblivion Magic Effects, which use 4 character EditorIDs rather than FormIDs to link.
+    /// This class stores the target EDID as RecordType, as that is a convenient 4 character struct
+    /// </summary>
     public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLinkGetter<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
+        /// <summary>
+        /// A readonly singleton representing an unlinked EDIDLink
+        /// </summary>
         public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
-
+        
+        /// <summary>
+        /// A readonly singleton representing a "null" record type
+        /// </summary>
         public static readonly RecordType Null = new RecordType("\0\0\0\0");
+        
+        /// <summary>
+        /// Record type representing the target EditorID to link against
+        /// </summary>
         public virtual RecordType EDID { get; set; } = Null;
+        
         Type ILinkGetter.TargetType => typeof(TMajor);
 
+        /// <summary>
+        /// Default constructor that creates an unlinked EDIDLink
+        /// </summary>
         public EDIDLink()
             : base()
         {
         }
 
-        public EDIDLink(RecordType unlinkedEDID)
+        /// <summary>
+        /// Default constructor that creates an EDIDLink linked to the target EditorID
+        /// </summary>
+        public EDIDLink(RecordType edid)
             : this()
         {
-            this.EDID = unlinkedEDID;
+            this.EDID = edid;
         }
 
+        /// <summary>
+        /// Sets the link to the target EditorID
+        /// </summary>
+        /// <param name="type">Target EditorID to link to</param>
         public void Set(RecordType type)
         {
             this.EDID = type;
         }
 
+        /// <summary>
+        /// Sets the link to the target Major Record
+        /// </summary>
+        /// <param name="type">Target record to link to</param>
+        /// <exception cref="ArgumentException">If EditorID of target record is not 4 characters</exception>
         public void Set(TMajor? value)
         {
             if (value?.EditorID == null)
@@ -45,10 +75,23 @@ namespace Mutagen.Bethesda
             }
         }
 
+        /// <summary>
+        /// Compares equality of two links.
+        /// </summary>
+        /// <param name="other">Other link to compare to</param>
+        /// <returns>True if EDID members are equal</returns>
         public bool Equals(IEDIDLinkGetter<TMajor> other) => this.EDID.Equals(other.EDID);
 
+        /// <summary>
+        /// Returns hash code
+        /// </summary>
+        /// <returns>Hash code evaluated from EDID member</returns>
         public override int GetHashCode() => this.EDID.GetHashCode();
 
+        /// <summary>
+        /// Returns string representation of link
+        /// </summary>
+        /// <returns>Returns EDID RecordType string</returns>
         public override string ToString() => this.EDID.ToString();
 
         private bool TryLinkToMod(
@@ -75,6 +118,12 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        /// <summary>
+        /// Attempts to locate link target in given Link Cache.
+        /// </summary>
+        /// <param name="package">Link Cache to resolve against</param>
+        /// <param name="major">Located record if successful</param>
+        /// <returns>True if link was resolved and a record was retrieved</returns>
         public bool TryResolve<M>(ILinkCache<M> package, out TMajor major)
             where M : IModGetter
         {
@@ -95,6 +144,12 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        /// <summary>
+        /// Attempts to locate link target's FormKey in given Link Cache.
+        /// </summary>
+        /// <param name="package">Link Cache to resolve against</param>
+        /// <param name="major">Located FormKey if successful</param>
+        /// <returns>True if link was resolved and a record was retrieved</returns>
         public bool TryResolveFormKey<M>(ILinkCache<M> package, [MaybeNullWhen(false)]out FormKey formKey)
             where M : IModGetter
         {
@@ -118,6 +173,11 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        /// <summary>
+        /// Attempts to locate link target's FormKey in given Link Cache.
+        /// </summary>
+        /// <param name="package">Link Cache to resolve against</param>
+        /// <returns>TryGet object with located record if successful</returns>
         public ITryGetter<TMajor> TryResolve<TMod>(ILinkCache<TMod> package) 
             where TMod : IModGetter
         {
@@ -128,6 +188,9 @@ namespace Mutagen.Bethesda
             return TryGet<TMajor>.Failure;
         }
 
+        /// <summary>
+        /// Resets to an unlinked state
+        /// </summary>
         public virtual void Unset()
         {
             this.EDID = Null;

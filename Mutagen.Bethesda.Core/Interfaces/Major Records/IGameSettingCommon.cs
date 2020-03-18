@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// Various types that a GameSetting can contain
+    /// </summary>
     public enum GameSettingType
     {
         Float,
@@ -14,23 +17,56 @@ namespace Mutagen.Bethesda
         Bool
     }
 
+    /// <summary>
+    /// An interface that GameSetting objects implement to hook into the common systems
+    /// </summary>
     public interface IGameSettingCommon : IMajorRecordCommon
     {
+        /// <summary>
+        /// The type of data that the GameSetting contains
+        /// </summary>
         GameSettingType SettingType { get; }
     }
 
+    /// <summary>
+    /// An interface that numeric GameSetting objects implement to hook into the common systems
+    /// </summary>
     public interface IGameSettingNumeric : IGameSettingCommon
     {
+        /// <summary>
+        /// Raw float data representation of the numeric GameSetting's content
+        /// </summary>
         float? RawData { get; set; }
     }
 
+    /// <summary>
+    /// Static class to provide common GameSetting utility concepts
+    /// </summary>
     public static class GameSettingUtility
     {
+        /// <summary>
+        /// Character signal for Integer content
+        /// </summary>
         public const char IntChar = 'i';
+        /// <summary>
+        /// Character signal for Float content
+        /// </summary>
         public const char FloatChar = 'f';
+        /// <summary>
+        /// Character signal for String content
+        /// </summary>
         public const char StringChar = 's';
+        /// <summary>
+        /// Character signal for Boolean content
+        /// </summary>
         public const char BoolChar = 'b';
 
+        /// <summary>
+        /// Tries to convert a character to a corresponding enum type value.
+        /// </summary>
+        /// <param name="c">Character to convert</param>
+        /// <param name="type">Resulting enum type, if convertable</param>
+        /// <returns>True if character was able to be converted to an enum value</returns>
         public static bool TryGetGameSettingType(char c, out GameSettingType type)
         {
             switch (c)
@@ -53,6 +89,11 @@ namespace Mutagen.Bethesda
             }
         }
 
+        /// <summary>
+        /// Tries to convert a character to a corresponding enum type value.
+        /// </summary>
+        /// <param name="type">The type enum to convert</param>
+        /// <returns>Character paired with the type enum</returns>
         public static char GetChar(this GameSettingType type)
         {
             switch (type)
@@ -70,6 +111,13 @@ namespace Mutagen.Bethesda
             }
         }
 
+        /// <summary>
+        /// Adjusts a string to be GameSetting compliant with the given type.
+        /// This means having the correct character at the start of the string.
+        /// </summary>
+        /// <param name="input">String to check and correct</param>
+        /// <param name="type">Game type to conform to</param>
+        /// <returns>GameSetting compliant EditorID string</returns>
         public static string CorrectEDID(string input, GameSettingType type)
         {
             char triggerChar = type.GetChar();
@@ -85,6 +133,13 @@ namespace Mutagen.Bethesda
             return input;
         }
 
+        /// <summary>
+        /// Takes a span aligned to a major record, and attempts to locate the game setting type.
+        /// Will throw if the span is misaligned or doesn't start at a valid major record header.
+        /// </summary>
+        /// <param name="span">Data beginning at the start of a major record</param>
+        /// <param name="meta">Game meta information to use in parsing</param>
+        /// <returns>A response of the GameSettingType if found, or a reason if not.</returns>
         public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlySpan<byte> span, GameConstants meta)
         {
             var majorMeta = meta.MajorRecordFrame(span);

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// Different categories of Group records
+    /// </summary>
     public enum GroupTypeEnum
     {
         Type = 0,
