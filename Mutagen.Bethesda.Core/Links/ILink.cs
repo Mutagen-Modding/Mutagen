@@ -22,22 +22,6 @@ namespace Mutagen.Bethesda
         ITryGetter<TMajor> TryResolve<TMod>(ILinkCache<TMod> package) where TMod : IModGetter;
     }
 
-    public interface ISetLinkGetter : ILinkGetter
-    {
-        bool HasBeenSet { get; }
-    }
-
-    public interface ISetLinkGetter<out Major> : ILinkGetter<Major>, ISetLinkGetter
-        where Major : IMajorRecordCommonGetter
-    {
-    }
-
-    public interface ISetLink<T> : ISetLinkGetter<T>
-        where T : IMajorRecordCommonGetter
-    {
-        new bool HasBeenSet { get; set; }
-    }
-
     public static class ILinkExt
     {
         public static bool TryResolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkCache<TMod> package, out TMajor majorRecord)
