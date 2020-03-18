@@ -1453,7 +1453,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: LandTexture_Registration.GNAM_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Grass>>();
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);

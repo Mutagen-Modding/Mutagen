@@ -1423,7 +1423,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: CellSubBlock_Registration.CELL_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.MajorConstants.LengthLength,
                             transl: async (MutagenFrame r, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(

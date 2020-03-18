@@ -1470,7 +1470,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
                             thread: true,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.GroupConstants.LengthLength,
                             transl: async (MutagenFrame r, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return await LoquiBinaryAsyncTranslation<WorldspaceSubBlock>.Instance.Parse(

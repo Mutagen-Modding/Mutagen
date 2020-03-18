@@ -26,8 +26,6 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new CorrectnessModule());
             this.SubModules.Add(new ModModule());
             this.SubModules.Add(new ColorTypeModule());
-            this.SubModules.Add(new ListTypeModule());
-            this.SubModules.Add(new DictTypeModule());
             this.SubModules.Add(new LinkModule());
             //this.SubModules.Add(new FolderExportModule());
             this.SubModules.Add(new ReactiveModule());

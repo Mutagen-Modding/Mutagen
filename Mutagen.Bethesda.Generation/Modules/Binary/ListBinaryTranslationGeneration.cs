@@ -306,36 +306,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.AddPassArg($"masterReferences");
                     }
-                    if (list.CustomData.TryGetValue("lengthLength", out object len))
-                    {
-                        args.Add($"lengthLength: {len}");
-                    }
-                    else if (listBinaryType != ListBinaryType.CounterRecord
-                        && list.SubTypeGeneration.GetFieldData().HasTrigger)
-                    {
-                        if (list.SubTypeGeneration is MutagenLoquiType loqui)
-                        {
-                            switch (loqui.GetObjectType())
-                            {
-                                case ObjectType.Subrecord:
-                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                                    break;
-                                case ObjectType.Group:
-                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.GroupConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                                    break;
-                                case ObjectType.Record:
-                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.MajorConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                                    break;
-                                case ObjectType.Mod:
-                                default:
-                                    throw new ArgumentException();
-                            }
-                        }
-                        else
-                        {
-                            args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                        }
-                    }
                     var subGenTypes = subData.GenerationTypes.ToList();
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
                     if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(

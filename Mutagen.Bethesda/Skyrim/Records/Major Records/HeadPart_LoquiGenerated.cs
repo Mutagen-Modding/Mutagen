@@ -1758,7 +1758,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: HeadPart_Registration.HNAM_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<HeadPart>>();
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
@@ -1771,7 +1770,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Part_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out Part listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Part>.Instance.Parse(

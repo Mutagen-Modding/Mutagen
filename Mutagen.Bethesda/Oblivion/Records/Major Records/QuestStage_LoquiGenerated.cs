@@ -1278,7 +1278,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out LogEntry listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LogEntry>.Instance.Parse(

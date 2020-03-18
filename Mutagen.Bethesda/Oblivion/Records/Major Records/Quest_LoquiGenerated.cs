@@ -1898,7 +1898,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out Condition listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
@@ -1916,7 +1915,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Quest_Registration.INDX_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out QuestStage listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<QuestStage>.Instance.Parse(
@@ -1934,7 +1932,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Quest_Registration.QSTA_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out QuestTarget listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<QuestTarget>.Instance.Parse(

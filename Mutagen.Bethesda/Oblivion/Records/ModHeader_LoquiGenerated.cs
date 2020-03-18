@@ -1726,7 +1726,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: ModHeader_Registration.MAST_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out MasterReference listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<MasterReference>.Instance.Parse(

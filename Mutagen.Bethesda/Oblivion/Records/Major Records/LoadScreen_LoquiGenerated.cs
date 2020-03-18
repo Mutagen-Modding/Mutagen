@@ -1388,7 +1388,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: LoadScreen_Registration.LNAM_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out LoadScreenLocation listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LoadScreenLocation>.Instance.Parse(

@@ -139,7 +139,6 @@ namespace Mutagen.Bethesda.Oblivion
                 coll.AddRange(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        lengthLength: frame.MetaData.MajorConstants.LengthLength,
                         transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                         {
                             switch (header.TypeInt)
@@ -216,7 +215,6 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.TemporaryTimestamp = groupMeta.LastModifiedSpan.ToArray();
                 var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                     frame: frame,
-                    lengthLength: frame.MetaData.MajorConstants.LengthLength,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
                         switch (header.TypeInt)

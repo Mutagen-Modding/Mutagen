@@ -1590,7 +1590,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: ScriptFields_Registration.SLSD_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out LocalVariable listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
@@ -1609,7 +1608,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 switch (header.TypeInt)

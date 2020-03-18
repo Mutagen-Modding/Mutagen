@@ -4283,7 +4283,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Race_Registration.MTNM_HEADER,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: StringBinaryTranslation.Instance.Parse)
                         .ToExtendedList<String>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypeNames);
@@ -4346,7 +4345,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out Attack listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Attack>.Instance.Parse(
@@ -4468,7 +4466,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out RaceMovementType listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RaceMovementType>.Instance.Parse(
@@ -4492,7 +4489,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Race_Registration.QNAM_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<EquipType>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentSlots);
@@ -4512,7 +4508,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Race_Registration.PHTN_HEADER,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: StringBinaryTranslation.Instance.Parse)
                         .ToExtendedList<String>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.PhonemeTargetNames);

@@ -231,7 +231,6 @@ namespace Mutagen.Bethesda.Oblivion
                                 await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
                                     frame: frame,
                                     triggeringRecord: Worldspace_Registration.GRUP_HEADER,
-                                    lengthLength: frame.MetaData.MajorConstants.LengthLength,
                                     transl: (MutagenFrame r) =>
                                     {
                                         return LoquiBinaryAsyncTranslation<WorldspaceBlock>.Instance.Parse(
