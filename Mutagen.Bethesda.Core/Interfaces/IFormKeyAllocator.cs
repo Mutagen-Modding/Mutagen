@@ -7,5 +7,6 @@ namespace Mutagen.Bethesda
     public interface IFormKeyAllocator
     {
         FormKey GetNextFormKey();
+        FormKey GetNextFormKey(string editorID);
     }
 }

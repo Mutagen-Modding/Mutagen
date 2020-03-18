@@ -6,18 +6,18 @@ namespace Mutagen.Bethesda.Persistance
 {
     public class SimpleNextIDAllocator : IFormKeyAllocator
     {
-        private IMod mod;
+        public IMod Mod { get; }
 
         public SimpleNextIDAllocator(IMod mod)
         {
-            this.mod = mod;
+            this.Mod = mod;
         }
 
         public FormKey GetNextFormKey()
         {
             return new FormKey(
-                this.mod.ModKey,
-                this.mod.NextObjectID++);
+                this.Mod.ModKey,
+                this.Mod.NextObjectID++);
         }
 
         public FormKey GetNextFormKey(string editorID) => GetNextFormKey();

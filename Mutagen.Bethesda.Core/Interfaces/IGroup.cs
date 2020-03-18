@@ -30,5 +30,14 @@ namespace Mutagen.Bethesda
             group.InternalCache.Set(ret);
             return ret;
         }
+
+        public static TMajor AddNew<TMajor>(this AGroup<TMajor> group, string editorID)
+            where TMajor : IMajorRecordInternal, IBinaryItem, IEquatable<TMajor>
+        {
+            var ret = MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey(editorID));
+            ret.EditorID = editorID;
+            group.InternalCache.Set(ret);
+            return ret;
+        }
     }
 }

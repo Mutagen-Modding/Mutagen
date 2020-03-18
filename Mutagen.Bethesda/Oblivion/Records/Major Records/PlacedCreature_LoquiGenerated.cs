@@ -851,6 +851,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        public PlacedCreature(IMod mod, string editorID)
+            : this(mod.GetNextFormKey(editorID))
+        {
+            this.EditorID = editorID;
+        }
+
         #endregion
 
         #region Binary Translation

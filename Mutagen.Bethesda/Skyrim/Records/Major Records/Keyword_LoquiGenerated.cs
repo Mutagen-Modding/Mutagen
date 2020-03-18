@@ -506,6 +506,12 @@ namespace Mutagen.Bethesda.Skyrim
         {
         }
 
+        public Keyword(IMod mod, string editorID)
+            : this(mod.GetNextFormKey(editorID))
+        {
+            this.EditorID = editorID;
+        }
+
         #endregion
 
         #region Binary Translation

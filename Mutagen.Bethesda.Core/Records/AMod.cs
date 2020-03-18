@@ -28,38 +28,26 @@ namespace Mutagen.Bethesda
         IEnumerable<ILinkGetter> ILinkContainer.Links => throw new NotImplementedException();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
         IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
+        uint IMod.NextObjectID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         ICache<T, FormKey> IMod.GetGroup<T>() => throw new NotImplementedException();
         public abstract void SyncRecordCount();
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => throw new NotImplementedException();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => throw new NotImplementedException();
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => throw new NotImplementedException();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
-
-        IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<T> IMajorRecordGetterEnumerable.EnumerateMajorRecords<T>()
-        {
-            throw new NotImplementedException();
-        }
+        IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>() => throw new NotImplementedException();
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
+        IEnumerable<T> IMajorRecordGetterEnumerable.EnumerateMajorRecords<T>() => throw new NotImplementedException();
         #endregion
-
-        public uint NextObjectID 
-        {
-            get => throw new NotImplementedException(); 
-            set => throw new NotImplementedException();
-        }
 
         public FormKey GetNextFormKey()
         {
             return allocator.GetNextFormKey();
+        }
+
+        public FormKey GetNextFormKey(string editorID)
+        {
+            return allocator.GetNextFormKey(editorID);
         }
     }
 }

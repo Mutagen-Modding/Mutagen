@@ -1070,6 +1070,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        public Light(IMod mod, string editorID)
+            : this(mod.GetNextFormKey(editorID))
+        {
+            this.EditorID = editorID;
+        }
+
         #endregion
 
         #region Binary Translation

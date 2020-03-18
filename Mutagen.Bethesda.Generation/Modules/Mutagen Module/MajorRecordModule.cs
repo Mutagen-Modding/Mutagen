@@ -70,6 +70,17 @@ namespace Mutagen.Bethesda.Generation
             {
             }
             fg.AppendLine();
+
+            fg.AppendLine($"public {obj.Name}(IMod mod, string editorID)");
+            using (new DepthWrapper(fg))
+            {
+                fg.AppendLine($": this(mod.{nameof(IMod.GetNextFormKey)}(editorID))");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("this.EditorID = editorID;");
+            }
+            fg.AppendLine();
         }
 
         public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
