@@ -1454,7 +1454,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Birthsign_Registration.SPLO_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Spell>>();
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Spells);

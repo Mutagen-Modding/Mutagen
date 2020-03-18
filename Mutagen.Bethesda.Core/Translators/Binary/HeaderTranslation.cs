@@ -66,6 +66,22 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
+        public static bool TryGetRecordType(
+            IBinaryReadStream reader,
+            RecordType expectedHeader)
+        {
+            if (reader.Remaining < Constants.HEADER_LENGTH)
+            {
+                return false;
+            }
+            var header = reader.GetInt32();
+            if (expectedHeader.TypeInt != header)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static long Parse(
             IBinaryReadStream reader,
             RecordType expectedHeader,
@@ -118,22 +134,6 @@ namespace Mutagen.Bethesda.Binary
             RecordType expectedHeader)
         {
             if (TryParse(
-                reader,
-                expectedHeader,
-                out var contentLength,
-                lengthLength))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public static bool TryGetRecordType(
-            IBinaryReadStream reader,
-            int lengthLength,
-            RecordType expectedHeader)
-        {
-            if (TryGet(
                 reader,
                 expectedHeader,
                 out var contentLength,

@@ -27,13 +27,12 @@ namespace Mutagen.Bethesda.Binary
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            int lengthLength,
             BinarySubParseDelegate<T> transl)
         {
             var ret = new List<T>();
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
+                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
@@ -55,7 +54,6 @@ namespace Mutagen.Bethesda.Binary
 
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            long lengthLength,
             BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null)
         {
@@ -83,7 +81,6 @@ namespace Mutagen.Bethesda.Binary
 
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            long lengthLength,
             MasterReferenceReader masterReferences,
             BinaryMasterParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null,
@@ -116,7 +113,6 @@ namespace Mutagen.Bethesda.Binary
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            int lengthLength,
             MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
@@ -124,7 +120,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
+                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
@@ -148,21 +144,18 @@ namespace Mutagen.Bethesda.Binary
         #region Lengthed Triggering Records
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            long lengthLength,
             BinarySubParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord)
         {
             return this.ParseRepeatedItem(
                 frame: frame,
                 triggeringRecord: triggeringRecord,
-                lengthLength: lengthLength,
                 transl: (MutagenFrame reader, RecordType header, out T subItem)
                     => transl(reader, out subItem));
         }
 
         public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            long lengthLength,
             MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord,
@@ -171,7 +164,6 @@ namespace Mutagen.Bethesda.Binary
             return this.ParseRepeatedItem(
                 frame: frame,
                 triggeringRecord: triggeringRecord,
-                lengthLength: lengthLength,
                 masterReferences: masterReferences,
                 transl: (MutagenFrame reader, RecordType header, out T subItem, MasterReferenceReader m, RecordTypeConverter? r)
                     => transl(reader, out subItem, m, r),
@@ -253,8 +245,8 @@ namespace Mutagen.Bethesda.Binary
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new List<T>();
-            if (!HeaderTranslation.TryGetRecordType(frame.Reader, frame.MetaData.SubConstants.LengthLength, triggeringRecord))
+            var subHeader = frame.MetaData.GetSubRecord(frame);
+            if (subHeader.RecordType != triggeringRecord)
             {
                 throw new ArgumentException($"Unexpected record encountered.");
             }
@@ -262,6 +254,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 frame.Position += frame.MetaData.SubConstants.HeaderLength;
             }
+            var ret = new List<T>();
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {
@@ -310,78 +303,6 @@ namespace Mutagen.Bethesda.Binary
             BinarySubWriteDelegate<T> transl)
         {
             if (items == null) return;
-            this.WriteRecordList(
-                writer: writer,
-                items: items,
-                recordType: recordType,
-                transl: transl);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IReadOnlyList<T>? items,
-            RecordType recordType,
-            MasterReferenceReader masterReferences,
-            BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            if (items == null) return;
-            this.WriteRecordList(
-                writer: writer,
-                items: items,
-                recordType: recordType,
-                masterReferences: masterReferences,
-                transl: transl,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IReadOnlyList<T>? items,
-            RecordType counterType,
-            RecordType recordType,
-            BinarySubWriteDelegate<T> transl)
-        {
-            if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
-            {
-                writer.Write(items.Count);
-            }
-            this.WriteRecordList(
-                writer: writer,
-                items: items,
-                recordType: recordType,
-                transl: transl);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IReadOnlyList<T>? items,
-            RecordType counterType,
-            RecordType recordType,
-            MasterReferenceReader masterReferences,
-            BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
-            {
-                writer.Write(items.Count);
-            }
-            this.WriteRecordList(
-                writer: writer,
-                items: items,
-                recordType: recordType,
-                masterReferences: masterReferences,
-                transl: transl);
-        }
-
-        private void WriteRecordList(
-            MutagenWriter writer,
-            IReadOnlyList<T> items,
-            RecordType recordType,
-            BinarySubWriteDelegate<T> transl)
-        {
             using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
             {
                 foreach (var item in items)
@@ -391,20 +312,98 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        private void WriteRecordList(
+        public void Write(
             MutagenWriter writer,
-            IReadOnlyList<T> items,
+            IReadOnlyList<T>? items,
             RecordType recordType,
             MasterReferenceReader masterReferences,
             BinaryMasterWriteDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            if (items == null) return;
             using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
             {
                 foreach (var item in items)
                 {
                     transl(writer, item, masterReferences, recordTypeConverter);
                 }
+            }
+        }
+
+        public void WriteWithCounter(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            RecordType counterType,
+            RecordType recordType,
+            BinarySubWriteDelegate<T> transl)
+        {
+            if (items == null) return;
+            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            {
+                writer.Write(items.Count);
+            }
+            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            {
+                foreach (var item in items)
+                {
+                    transl(writer, item);
+                }
+            }
+        }
+
+        public void WriteWithCounter(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            RecordType counterType,
+            RecordType recordType,
+            MasterReferenceReader masterReferences,
+            BinaryMasterWriteDelegate<T> transl,
+            bool subRecordPerItem = false,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (items == null) return;
+            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            {
+                writer.Write(items.Count);
+            }
+            if (subRecordPerItem)
+            {
+                foreach (var item in items)
+                {
+                    using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                    {
+                        transl(writer, item, masterReferences, recordTypeConverter);
+                    }
+                }
+            }
+            else
+            {
+                using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                {
+                    foreach (var item in items)
+                    {
+                        transl(writer, item, masterReferences, recordTypeConverter);
+                    }
+                }
+            }
+        }
+
+        public void WriteWithCounter(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            RecordType counterType,
+            MasterReferenceReader masterReferences,
+            BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (items == null) return;
+            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            {
+                writer.Write(items.Count);
+            }
+            foreach (var item in items)
+            {
+                transl(writer, item, masterReferences, recordTypeConverter);
             }
         }
     }
@@ -431,13 +430,12 @@ namespace Mutagen.Bethesda.Binary
         public async Task<IEnumerable<T>> ParseRepeatedItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            int lengthLength,
             BinarySubParseDelegate transl)
         {
             var ret = new List<T>();
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
+                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
@@ -461,7 +459,6 @@ namespace Mutagen.Bethesda.Binary
         public async Task<IEnumerable<T>> ParseRepeatedItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            int lengthLength,
             MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate transl,
             RecordTypeConverter? recordTypeConverter = null)
@@ -469,7 +466,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
+                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
@@ -548,7 +545,6 @@ namespace Mutagen.Bethesda.Binary
         public async Task<ExtendedList<T>> ParseRepeatedItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            int lengthLength,
             BinarySubParseDelegate transl,
             bool thread = false)
         {
@@ -565,7 +561,6 @@ namespace Mutagen.Bethesda.Binary
                 items = await ParseRepeatedItem(
                     frame,
                     triggeringRecord,
-                    lengthLength,
                     transl: transl).ConfigureAwait(false);
             }
             return new ExtendedList<T>(items);
@@ -574,7 +569,6 @@ namespace Mutagen.Bethesda.Binary
         public async Task<ExtendedList<T>> ParseRepeatedItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            int lengthLength,
             MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate transl,
             bool thread,
@@ -595,7 +589,6 @@ namespace Mutagen.Bethesda.Binary
                 items = await ParseRepeatedItem(
                     frame,
                     triggeringRecord,
-                    lengthLength,
                     masterReferences: masterReferences,
                     transl: transl,
                     recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
@@ -609,14 +602,12 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             ICache<T, K> item,
             RecordType triggeringRecord,
-            int lengthLength,
             BinarySubParseDelegate transl)
         {
             item.SetTo(
                 await ParseRepeatedItem(
                     frame,
                     triggeringRecord,
-                    lengthLength,
                     transl: transl));
         }
         #endregion

@@ -1700,7 +1700,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Door_Registration.TNAM_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Place>>();
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);

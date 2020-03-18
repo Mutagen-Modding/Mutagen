@@ -1623,7 +1623,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Quest>>();
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);

@@ -5,7 +5,7 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" />
-      <List name="ActorEffect" counterRecType="SPCT">
+      <List name="ActorEffect" counterRecType="SPCT" counterSubrecordPerItem="true" >
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />

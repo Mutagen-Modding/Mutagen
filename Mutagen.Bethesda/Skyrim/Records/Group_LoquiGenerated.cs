@@ -1070,7 +1070,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
-                            lengthLength: 4,
                             transl: (MutagenFrame r) =>
                             {
                                 return LoquiBinaryAsyncTranslation<T>.Instance.Parse(

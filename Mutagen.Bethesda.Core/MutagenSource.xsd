@@ -199,6 +199,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="counterSubrecordPerItem" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether the subrecord is present per item
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

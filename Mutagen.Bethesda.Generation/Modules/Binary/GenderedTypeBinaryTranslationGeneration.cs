@@ -126,7 +126,8 @@ namespace Mutagen.Bethesda.Generation
             var allowDirectWrite = subTransl.AllowDirectWrite(objGen, typeGen);
             bool needsMasters = gendered.SubTypeGeneration is FormLinkType || gendered.SubTypeGeneration is LoquiType;
             var typeName = gendered.SubTypeGeneration.TypeName(getter: true);
-            if (gendered.SubTypeGeneration is LoquiType loqui)
+            var loqui = gendered.SubTypeGeneration as LoquiType;
+            if (loqui != null)
             {
                 typeName = loqui.TypeName(getter: true, internalInterface: true);
             }
@@ -150,6 +151,11 @@ namespace Mutagen.Bethesda.Generation
                 if (gendered.FemaleMarker.HasValue)
                 {
                     args.Add($"femaleMarker: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
+                }
+                if (gendered.MaleMarker.HasValue
+                    && loqui != null)
+                {
+                    args.Add("markerWrap: false");
                 }
                 if (needsMasters)
                 {

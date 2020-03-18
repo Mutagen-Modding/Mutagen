@@ -1647,7 +1647,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 switch (header.TypeInt)

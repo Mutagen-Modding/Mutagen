@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Generation
         const string AsyncItemKey = "ListAsyncItem";
         const string ThreadKey = "ListThread";
         public const string CounterRecordType = "ListCounterRecordType";
+        public const string CounterSubRecordPerItemType = "ListCounterSubRecordPerItemType";
         public const string PrependCountType = "ListPrependCountType";
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
@@ -56,6 +57,7 @@ namespace Mutagen.Bethesda.Generation
             var listType = field as ListType;
             listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
             listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
+            listType.CustomData[CounterSubRecordPerItemType] = node.GetAttribute("counterSubrecordPerItem", false);
             listType.CustomData[PrependCountType] = node.GetAttribute("prependCount", false);
             var asyncItem = node.GetAttribute<bool>("asyncItems", false);
             if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
@@ -147,8 +149,18 @@ namespace Mutagen.Bethesda.Generation
                 typeName = loqui.TypeName(getter: true, internalInterface: true);
             }
 
+            string suffix = string.Empty;
+            switch (listBinaryType)
+            {
+                case ListBinaryType.CounterRecord:
+                    suffix = "WithCounter";
+                    break;
+                default:
+                    break;
+            }
+
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write"))
+                $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write{suffix}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {GetWriteAccessor(itemAccessor)}");
@@ -162,9 +174,14 @@ namespace Mutagen.Bethesda.Generation
                     case ListBinaryType.CounterRecord:
                         var counterType = new RecordType(list.CustomData[CounterRecordType] as string);
                         args.Add($"counterType: {objGen.RecordTypeHeaderName(counterType)}");
-                        if (subData.HasTrigger)
+                        if (subData.HasTrigger
+                            && !subData.HandleTrigger)
                         {
                             args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
+                        }
+                        if ((bool)list.CustomData[CounterSubRecordPerItemType])
+                        {
+                            args.Add($"subRecordPerItem: true");
                         }
                         break;
                     case ListBinaryType.PrependCount:
@@ -305,36 +322,6 @@ namespace Mutagen.Bethesda.Generation
                     if (needsMasters)
                     {
                         args.AddPassArg($"masterReferences");
-                    }
-                    if (list.CustomData.TryGetValue("lengthLength", out object len))
-                    {
-                        args.Add($"lengthLength: {len}");
-                    }
-                    else if (listBinaryType != ListBinaryType.CounterRecord
-                        && list.SubTypeGeneration.GetFieldData().HasTrigger)
-                    {
-                        if (list.SubTypeGeneration is MutagenLoquiType loqui)
-                        {
-                            switch (loqui.GetObjectType())
-                            {
-                                case ObjectType.Subrecord:
-                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                                    break;
-                                case ObjectType.Group:
-                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.GroupConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                                    break;
-                                case ObjectType.Record:
-                                    args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.MajorConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                                    break;
-                                case ObjectType.Mod:
-                                default:
-                                    throw new ArgumentException();
-                            }
-                        }
-                        else
-                        {
-                            args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.LengthLength)}");
-                        }
                     }
                     var subGenTypes = subData.GenerationTypes.ToList();
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());

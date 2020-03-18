@@ -4289,7 +4289,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Race_Registration.MTNM_HEADER,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: StringBinaryTranslation.Instance.Parse)
                         .ToExtendedList<String>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypeNames);
@@ -4352,7 +4351,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out Attack listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Attack>.Instance.Parse(
@@ -4474,7 +4472,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out RaceMovementType listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RaceMovementType>.Instance.Parse(
@@ -4498,7 +4495,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Race_Registration.QNAM_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<EquipType>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentSlots);
@@ -4518,7 +4514,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Race_Registration.PHTN_HEADER,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: StringBinaryTranslation.Instance.Parse)
                         .ToExtendedList<String>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.PhonemeTargetNames);
@@ -8147,18 +8142,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: Race_Registration.SPCT_HEADER,
                 recordType: Race_Registration.SPLO_HEADER,
+                subRecordPerItem: true,
                 masterReferences: masterReferences,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER),
                         masterReferences: m);
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -8173,7 +8168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     masterReferences: masterReferences);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: Race_Registration.KSIZ_HEADER,
@@ -8184,7 +8179,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Race_Registration.KWDA_HEADER),
                         masterReferences: m);
                 });
             if (item.Data.TryGet(out var DataItem))
@@ -8199,6 +8193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.SkeletalModel,
                 maleMarker: Race_Registration.MNAM_HEADER,
                 femaleMarker: Race_Registration.FNAM_HEADER,
+                markerWrap: false,
                 masterReferences: masterReferences,
                 transl: (MutagenWriter subWriter, ISimpleModelGetter? subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
@@ -8316,6 +8311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 markerType: Race_Registration.NAM3_HEADER,
                 maleMarker: Race_Registration.MNAM_HEADER,
                 femaleMarker: Race_Registration.FNAM_HEADER,
+                markerWrap: false,
                 masterReferences: masterReferences,
                 transl: (MutagenWriter subWriter, IModelGetter? subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
@@ -8440,6 +8436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 markerType: Race_Registration.NAM0_HEADER,
                 maleMarker: Race_Registration.MNAM_HEADER,
                 femaleMarker: Race_Registration.FNAM_HEADER,
+                markerWrap: false,
                 masterReferences: masterReferences,
                 transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {

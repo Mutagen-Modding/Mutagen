@@ -45,7 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position += groupMeta.HeaderLength;
                 obj.Items = Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
                     frame: frame.SpawnWithLength(groupMeta.ContentLength),
-                    lengthLength: 4,
                     transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
                     {
                         return LoquiBinaryTranslation<DialogItem>.Instance.Parse(

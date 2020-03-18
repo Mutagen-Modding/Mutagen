@@ -179,30 +179,6 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
                 }
                 args.Add($"item: {itemAccessor.PropertyAccess}");
-                if (dict.CustomData.TryGetValue("lengthLength", out object len))
-                {
-                    args.Add($"lengthLength: {len}");
-                }
-                else if (dict.ValueTypeGen is LoquiType loqui)
-                {
-                    switch (loqui.TargetObjectGeneration.GetObjectType())
-                    {
-                        case ObjectType.Subrecord:
-                            args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
-                            break;
-                        case ObjectType.Group:
-                        case ObjectType.Record:
-                            args.Add($"lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH");
-                            break;
-                        case ObjectType.Mod:
-                        default:
-                            throw new ArgumentException();
-                    }
-                }
-                else
-                {
-                    args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
-                }
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(dict.ValueTypeGen.GetType());
                 if (subGenTypes.Count <= 1

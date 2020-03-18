@@ -1058,7 +1058,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 triggeringRecord: ListGroup<T>.T_RecordType,
                                 thread: true,
                                 masterReferences: masterReferences,
-                                lengthLength: 4,
                                 transl: async (MutagenFrame r, MasterReferenceReader m, RecordTypeConverter? conv) =>
                                 {
                                     return await LoquiBinaryAsyncTranslation<T>.Instance.Parse(

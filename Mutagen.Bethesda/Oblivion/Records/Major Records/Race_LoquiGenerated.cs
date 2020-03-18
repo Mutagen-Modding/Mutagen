@@ -3151,7 +3151,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Race_Registration.SPLO_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Spell>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
@@ -3163,7 +3162,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Race_Registration.XNAM_HEADER,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out RaceRelation listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
@@ -3266,7 +3264,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
-                            lengthLength: frame.MetaData.SubConstants.LengthLength,
                             transl: (MutagenFrame r, out FacePart listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<FacePart>.Instance.Parse(
@@ -6064,6 +6061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 markerType: Race_Registration.NAM1_HEADER,
                 maleMarker: Race_Registration.MNAM_HEADER,
                 femaleMarker: Race_Registration.FNAM_HEADER,
+                markerWrap: false,
                 masterReferences: masterReferences,
                 transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
                 {
