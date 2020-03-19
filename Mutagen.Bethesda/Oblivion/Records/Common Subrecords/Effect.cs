@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item, MasterReferenceReader masterReferences)
             {
                 var subMeta = frame.MetaData.ReadSubRecord(frame);
-                if (subMeta.RecordLength != Mutagen.Bethesda.Constants.HEADER_LENGTH)
+                if (subMeta.ContentLength != Mutagen.Bethesda.Constants.HEADER_LENGTH)
                 {
-                    throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.RecordLength}");
+                    throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.ContentLength}");
                 }
                 var magicEffName = frame.ReadMemory(4);
 
@@ -39,9 +39,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     throw new ArgumentException("Expected EFIT header.");
                 }
-                if (efitMeta.RecordLength < Mutagen.Bethesda.Constants.HEADER_LENGTH)
+                if (efitMeta.ContentLength < Mutagen.Bethesda.Constants.HEADER_LENGTH)
                 {
-                    throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitMeta.RecordLength}");
+                    throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitMeta.ContentLength}");
                 }
                 var magicEffName2 = frame.GetMemory(amount: Mutagen.Bethesda.Constants.HEADER_LENGTH, offset: efitMeta.HeaderLength);
                 if (!magicEffName.Span.SequenceEqual(magicEffName2.Span))

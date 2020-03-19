@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Binary
                 else
                 {
                     frame.Position += subHeader.HeaderLength;
-                    if (!transl(frame.SpawnWithLength(subHeader.RecordLength), out item))
+                    if (!transl(frame.SpawnWithLength(subHeader.ContentLength), out item))
                     {
                         throw new ArgumentException();
                     }
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Binary
                 else
                 {
                     frame.Position += subHeader.HeaderLength;
-                    if (!transl(frame.SpawnWithLength(subHeader.RecordLength), out item))
+                    if (!transl(frame.SpawnWithLength(subHeader.ContentLength), out item))
                     {
                         throw new ArgumentException();
                     }

@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this._DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                 this.DATADataTypeState = Water.DATADataType.Has;
-                var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
                 if (subLen <= 0x2)
                 {
                     this.DATADataTypeState |= Water.DATADataType.Break0;

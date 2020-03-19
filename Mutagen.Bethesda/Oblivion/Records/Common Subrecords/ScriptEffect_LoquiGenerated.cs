@@ -2460,7 +2460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _SCITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.SCITDataTypeState = ScriptEffect.SCITDataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x4)
                     {
                         this.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;

@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda
                     record: record,
                     frame: targetFrame,
                     nextRecordType: subMeta.RecordType,
-                    contentLength: subMeta.RecordLength,
+                    contentLength: subMeta.ContentLength,
                     masterReferences: masterReferences,
                     recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda
                     record: record,
                     frame: frame,
                     nextRecordType: subMeta.RecordType,
-                    contentLength: subMeta.RecordLength,
+                    contentLength: subMeta.ContentLength,
                     masterReferences: masterReferences,
                     recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda
                     frame: frame,
                     lastParsed: lastParsed,
                     nextRecordType: subMeta.RecordType,
-                    contentLength: subMeta.RecordLength,
+                    contentLength: subMeta.ContentLength,
                     masterReferences: masterReferences,
                     recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;

@@ -10474,7 +10474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x5A46464B: // KFFZ
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.Animations = BinaryOverlaySetList<String>.FactoryByLazyParse(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -10506,7 +10506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E45: // ENAM
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.Eyes = BinaryOverlaySetList<IFormLinkGetter<IEyeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

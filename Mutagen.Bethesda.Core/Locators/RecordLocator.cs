@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda
                             throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
                         }
                     }
-                    var recLength = majorRecordMeta.RecordLength;
+                    var recLength = majorRecordMeta.ContentLength;
                     if (fileLocs.AdditionalCriteria != null)
                     {
                         var pos = reader.Position;

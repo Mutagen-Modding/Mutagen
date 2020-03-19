@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame.Position -= subMeta.HeaderLength;
                 return;
             }
-            var pointDataSpan = frame.Reader.ReadSpan(subMeta.RecordLength);
+            var pointDataSpan = frame.Reader.ReadSpan(subMeta.ContentLength);
             var bytePointsNum = pointDataSpan.Length / POINT_LEN;
             if (bytePointsNum != ptCount)
             {
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     case 0x47414750: //"PGAG":
                         frame.Reader.Position += subMeta.HeaderLength;
                         if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                           frame.SpawnWithLength(subMeta.RecordLength, checkFraming: false),
+                           frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false),
                            item: out var unknownBytes))
                         {
                             item.Unknown = unknownBytes;
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         break;
                     case 0x52524750: // "PGRR":
                         frame.Reader.Position += subMeta.HeaderLength;
-                        var connectionInts = frame.Reader.ReadSpan(subMeta.RecordLength).AsInt16Span();
+                        var connectionInts = frame.Reader.ReadSpan(subMeta.ContentLength).AsInt16Span();
                         int numPts = pointDataSpan.Length / POINT_LEN;
                         PathGridPoint[] pathGridPoints = new PathGridPoint[numPts];
                         for (int i = 0; i < numPts; i++)
@@ -176,11 +176,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var pgrpMeta = _package.Meta.GetSubRecord(stream);
             if (pgrpMeta.RecordType != PathGridBinaryCreateTranslation.PGRP) return;
             stream.Position += pgrpMeta.HeaderLength;
-            var pointData = stream.ReadMemory(pgrpMeta.RecordLength);
-            var bytePointsNum = pgrpMeta.RecordLength / PathGridBinaryCreateTranslation.POINT_LEN;
+            var pointData = stream.ReadMemory(pgrpMeta.ContentLength);
+            var bytePointsNum = pgrpMeta.ContentLength / PathGridBinaryCreateTranslation.POINT_LEN;
             if (bytePointsNum != ptCount)
             {
-                throw new ArgumentException($"Unexpected point byte length, when compared to expected point count. {pgrpMeta.RecordLength} bytes: {bytePointsNum} != {ptCount} points.");
+                throw new ArgumentException($"Unexpected point byte length, when compared to expected point count. {pgrpMeta.ContentLength} bytes: {bytePointsNum} != {ptCount} points.");
             }
 
             bool readPGRR = false;
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         break;
                     case 0x52524750: // "PGRR":
                         stream.Position += subMeta.HeaderLength;
-                        var connectionPtData = stream.ReadMemory(subMeta.RecordLength);
+                        var connectionPtData = stream.ReadMemory(subMeta.ContentLength);
                         this.PointToPointConnections = BinaryOverlaySetList<IPathGridPointGetter>.FactoryByLazyParse(
                             pointData,
                             _package,

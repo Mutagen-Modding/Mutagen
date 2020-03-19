@@ -2913,7 +2913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524750: // PGRI
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.InterCellConnections = BinaryOverlaySetList<InterCellPointBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

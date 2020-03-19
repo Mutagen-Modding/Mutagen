@@ -3742,7 +3742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E53: // SNAM
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.SpeedTreeSeeds = BinaryOverlaySetList<UInt32>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

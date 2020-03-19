@@ -144,14 +144,14 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UsingOffsetLength = true;
                 var xxxxMeta = frame.MetaData.ReadSubRecord(frame);
                 if (xxxxMeta.RecordType != Worldspace_Registration.XXXX_HEADER
-                    || xxxxMeta.RecordLength != 4)
+                    || xxxxMeta.ContentLength != 4)
                 {
                     throw new ArgumentException();
                 }
                 var contentLen = frame.Reader.ReadInt32();
                 var ofstMeta = frame.MetaData.ReadSubRecord(frame);
                 if (ofstMeta.RecordType != Worldspace_Registration.OFST_HEADER
-                    || ofstMeta.RecordLength != 0)
+                    || ofstMeta.ContentLength != 0)
                 {
                     throw new ArgumentException();
                 }

@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Binary
         public bool HasContent => this.Span.Length >= this.HeaderLength;
         public sbyte HeaderLength => Meta.ModHeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
-        public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
-        public long TotalLength => this.HeaderLength + this.RecordLength;
+        public uint ContentLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
+        public long TotalLength => this.HeaderLength + this.ContentLength;
     }
 }

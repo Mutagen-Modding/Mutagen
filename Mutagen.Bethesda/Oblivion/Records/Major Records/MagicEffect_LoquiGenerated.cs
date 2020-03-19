@@ -3945,7 +3945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = MagicEffect.DATADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x24)
                     {
                         this.DATADataTypeState |= MagicEffect.DATADataType.Break0;
@@ -3955,7 +3955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x45435345: // ESCE
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.CounterEffects = BinaryOverlaySetList<IEDIDLinkGetter<IMagicEffectGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

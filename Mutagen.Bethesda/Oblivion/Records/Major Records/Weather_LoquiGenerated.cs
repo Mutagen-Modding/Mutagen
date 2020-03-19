@@ -6465,7 +6465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x304D414E: // NAM0
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.WeatherTypes = BinaryOverlaySetList<WeatherTypeBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

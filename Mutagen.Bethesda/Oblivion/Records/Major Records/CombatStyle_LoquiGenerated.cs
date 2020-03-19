@@ -6095,7 +6095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _CSTDLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.CSTDDataTypeState = CombatStyle.CSTDDataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x54)
                     {
                         this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;

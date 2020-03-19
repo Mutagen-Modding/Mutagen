@@ -3675,7 +3675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54534C57: // WLST
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.Weathers = BinaryOverlaySetList<WeatherChanceBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

@@ -5549,7 +5549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _CRVALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.CRVADataTypeState = Faction.CRVADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).RecordLength;
+                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0xC)
                     {
                         this.CRVADataTypeState |= Faction.CRVADataType.Break0;

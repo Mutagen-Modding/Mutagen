@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc;
             var subMeta = this.Meta.ReadSubRecord(stream);
             byte[] lenData = new byte[2];
-            BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.RecordLength + amount));
+            BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(
                 loc: loc + Constants.HEADER_LENGTH,
                 sub: lenData);

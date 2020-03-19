@@ -25,13 +25,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame.Reader.Position -= subMeta.HeaderLength;
                 return;
             }
-            var pointBytes = frame.Reader.ReadSpan(subMeta.RecordLength);
+            var pointBytes = frame.Reader.ReadSpan(subMeta.ContentLength);
 
             subMeta = frame.MetaData.ReadSubRecord(frame);
             switch (subMeta.RecordType.TypeInt)
             {
                 case 0x52524750: // "PGRR":
-                    var connBytes = frame.Reader.ReadSpan(subMeta.RecordLength);
+                    var connBytes = frame.Reader.ReadSpan(subMeta.ContentLength);
                     var connFloats = connBytes.AsFloatSpan();
                     int numPts = pointBytes.Length / POINT_LEN;
                     RoadPoint[] points = new RoadPoint[numPts];
@@ -130,13 +130,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var subMeta = _package.Meta.GetSubRecord(stream);
             if (subMeta.RecordType != Road_Registration.PGRP_HEADER) return;
             stream.Position += subMeta.HeaderLength;
-            var pointBytes = stream.ReadMemory(subMeta.RecordLength);
+            var pointBytes = stream.ReadMemory(subMeta.ContentLength);
             subMeta = _package.Meta.GetSubRecord(stream);
             switch (subMeta.RecordTypeInt)
             {
                 case 0x52524750: // "PGRR":
                     stream.Position += subMeta.HeaderLength;
-                    var connBytes = stream.ReadMemory(subMeta.RecordLength);
+                    var connBytes = stream.ReadMemory(subMeta.ContentLength);
                     this.Points = BinaryOverlaySetList<IRoadPointGetter>.FactoryByLazyParse(
                         pointBytes,
                         _package,

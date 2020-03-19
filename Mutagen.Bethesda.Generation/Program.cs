@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "ublic IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);";
+            string testString = "ar subLen = subMeta.RecordLen";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

@@ -39,14 +39,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subFrame = _package.Meta.ReadSubRecordFrame(stream);
                     if (subFrame.Header.RecordType != AvailableMorphs_Registration.MPAI_HEADER
-                        || subFrame.Header.RecordLength != 4)
+                        || subFrame.Header.ContentLength != 4)
                     {
                         throw new ArgumentException();
                     }
 
                     var contentFrame = _package.Meta.ReadSubRecordFrame(stream);
                     if (contentFrame.Header.RecordType != AvailableMorphs_Registration.MPAV_HEADER
-                        || contentFrame.Header.RecordLength != 32)
+                        || contentFrame.Header.ContentLength != 32)
                     {
                         throw new ArgumentException();
                     }

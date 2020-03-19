@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
             Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(flagByte);
             if (flag.HasFlag(Condition.Flag.UseGlobal))
             {
-                return ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.RecordLength, checkFraming: false), masterReferences);
+                return ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false), masterReferences);
             }
             else
             {
-                return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.RecordLength, checkFraming: false), masterReferences);
+                return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false), masterReferences);
             }
         }
     }
@@ -405,11 +405,11 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (subFrame.RecordTypeInt)
                 {
                     case 0x31534943: // CIS1
-                        _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.RecordLength);
+                        _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
                         ParameterOneString_IsSet = true;
                         break;
                     case 0x32534943: // CIS2
-                        _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.RecordLength);
+                        _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
                         ParameterTwoString_IsSet = true;
                         break;
                     default:

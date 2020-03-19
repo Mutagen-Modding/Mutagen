@@ -69,9 +69,9 @@ namespace Mutagen.Bethesda.Oblivion
                 int? lastParsed)
             {
                 var subMeta = _package.Meta.ReadSubRecord(stream);
-                if (subMeta.RecordLength != 1)
+                if (subMeta.ContentLength != 1)
                 {
-                    throw new ArgumentException($"Unexpected length: {subMeta.RecordLength}");
+                    throw new ArgumentException($"Unexpected length: {subMeta.ContentLength}");
                 }
                 if (stream.ReadByte() > 0)
                 {

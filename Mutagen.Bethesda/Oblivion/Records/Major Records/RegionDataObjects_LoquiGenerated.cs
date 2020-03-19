@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x544F4452: // RDOT
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.Objects = BinaryOverlaySetList<RegionDataObjectBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

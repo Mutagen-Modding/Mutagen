@@ -5282,7 +5282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x524C4358: // XCLR
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
-                    var subLen = subMeta.RecordLength;
+                    var subLen = subMeta.ContentLength;
                     this.Regions = BinaryOverlaySetList<IFormLinkGetter<IRegionGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

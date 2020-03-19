@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         {
             var meta = constants.MajorRecord(frame.RemainingSpan);
             if (meta.RecordType != type) return (false, -1);
-            return (true, meta.RecordLength);
+            return (true, meta.ContentLength);
         }
 
         [Benchmark]
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         {
             var meta = constants.GetMajorRecord(frame);
             if (meta.RecordType != type) return (false, -1);
-            return (true, meta.RecordLength);
+            return (true, meta.ContentLength);
         }
 
         [Benchmark]

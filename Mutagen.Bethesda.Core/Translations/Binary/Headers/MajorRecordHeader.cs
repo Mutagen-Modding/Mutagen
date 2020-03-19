@@ -21,10 +21,10 @@ namespace Mutagen.Bethesda.Binary
         public GameMode GameMode => Meta.GameMode;
         public sbyte HeaderLength => Meta.MajorConstants.HeaderLength;
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
-        public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
+        public uint ContentLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
         public int MajorRecordFlags => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(8, 4));
         public FormID FormID => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(12, 4)));
-        public long TotalLength => this.HeaderLength + this.RecordLength;
+        public long TotalLength => this.HeaderLength + this.ContentLength;
         public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Constants.CompressedFlag) > 0;
     }
 
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public MajorRecordHeader Header { get; }
         public ReadOnlySpan<byte> AllData { get; }
-        public ReadOnlySpan<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+        public ReadOnlySpan<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
         public MajorRecordFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public MajorRecordHeader Header { get; }
         public ReadOnlyMemorySlice<byte> AllData { get; }
-        public ReadOnlyMemorySlice<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+        public ReadOnlyMemorySlice<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
         public MajorRecordMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {

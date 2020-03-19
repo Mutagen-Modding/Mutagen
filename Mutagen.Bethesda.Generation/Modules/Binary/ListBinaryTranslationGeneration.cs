@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case ListBinaryType.Trigger:
                     fg.AppendLine("var subMeta = _package.Meta.ReadSubRecord(stream);");
-                    fg.AppendLine("var subLen = subMeta.RecordLength;");
+                    fg.AppendLine("var subLen = subMeta.ContentLength;");
                     var expectedLen = subGen.ExpectedLength(objGen, list.SubTypeGeneration);
                     if (expectedLen.HasValue)
                     {
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case ListBinaryType.CounterRecord:
                     fg.AppendLine("var subMeta = _package.Meta.ReadSubRecord(stream);");
-                    fg.AppendLine("var subLen = subMeta.RecordLength;");
+                    fg.AppendLine("var subLen = subMeta.ContentLength;");
                     if (!subData.HasTrigger)
                     {
                         throw new NotImplementedException();
