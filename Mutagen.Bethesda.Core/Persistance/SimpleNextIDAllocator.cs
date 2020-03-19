@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Persistance
         {
             return new FormKey(
                 this.Mod.ModKey,
-                this.Mod.NextObjectID++);
+                checked(this.Mod.NextObjectID++));
         }
 
         public FormKey GetNextFormKey(string editorID) => GetNextFormKey();
