@@ -1722,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x5453414D: // MAST
                 {
                     item.MasterReferences.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ModHeader_Registration.MAST_HEADER,
                             masterReferences: masterReferences,

@@ -2062,7 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.SpeedTreeSeeds = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: UInt32BinaryTranslation.Instance.Parse)
                         .ToExtendedList<UInt32>();

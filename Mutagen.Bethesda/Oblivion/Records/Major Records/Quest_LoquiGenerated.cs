@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445443: // CTDT
                 {
                     item.Conditions = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x58444E49: // INDX
                 {
                     item.Stages = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Quest_Registration.INDX_HEADER,
                             masterReferences: masterReferences,
@@ -1934,7 +1934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41545351: // QSTA
                 {
                     item.Targets = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Quest_Registration.QSTA_HEADER,
                             masterReferences: masterReferences,

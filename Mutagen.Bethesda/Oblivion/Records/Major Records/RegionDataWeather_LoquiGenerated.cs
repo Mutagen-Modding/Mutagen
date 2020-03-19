@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Weathers = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: (MutagenFrame r, out WeatherChance listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>

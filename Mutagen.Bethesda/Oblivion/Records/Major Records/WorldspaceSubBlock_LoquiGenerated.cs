@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C4543: // CELL
                 {
                     item.Items = 
-                        (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<Cell>.Instance.ParseRepeatedItem(
+                        (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<Cell>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: WorldspaceSubBlock_Registration.CELL_HEADER,
                             masterReferences: masterReferences,

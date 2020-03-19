@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 default:
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
-                        await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeatedItem(
+                        await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,

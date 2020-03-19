@@ -4226,7 +4226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content);
                     item.ActorEffect = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
                             frame: frame,
                             amount: amount,
                             triggeringRecord: Race_Registration.SPLO_HEADER,
@@ -4255,7 +4255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content);
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             amount: amount,
                             triggeringRecord: Race_Registration.KWDA_HEADER,
@@ -4286,7 +4286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D4E544D: // MTNM
                 {
                     item.MovementTypeNames = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.MTNM_HEADER,
                             transl: StringBinaryTranslation.Instance.Parse)
@@ -4347,7 +4347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x454B5441: // ATKE
                 {
                     item.Attacks = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Attack>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Attack>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
@@ -4373,7 +4373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Hairs = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
@@ -4384,7 +4384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Eyes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
@@ -4468,7 +4468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x44455053: // SPED
                 {
                     item.MovementTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceMovementType>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceMovementType>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
@@ -4491,7 +4491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E51: // QNAM
                 {
                     item.EquipmentSlots = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.QNAM_HEADER,
                             masterReferences: masterReferences,
@@ -4511,7 +4511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4E544850: // PHTN
                 {
                     item.PhonemeTargetNames = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.PHTN_HEADER,
                             transl: StringBinaryTranslation.Instance.Parse)

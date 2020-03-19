@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445443: // CTDT
                 {
                     item.Conditions = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
@@ -1546,7 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.RelatedIdleAnimations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)

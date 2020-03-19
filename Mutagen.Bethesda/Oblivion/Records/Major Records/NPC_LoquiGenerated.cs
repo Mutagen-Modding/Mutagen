@@ -5404,7 +5404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E53: // SNAM
                 {
                     item.Factions = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Npc_Registration.SNAM_HEADER,
                             masterReferences: masterReferences,
@@ -5439,7 +5439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F4C5053: // SPLO
                 {
                     item.Spells = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Npc_Registration.SPLO_HEADER,
                             masterReferences: masterReferences,
@@ -5459,7 +5459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F544E43: // CNTO
                 {
                     item.Items = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Npc_Registration.CNTO_HEADER,
                             masterReferences: masterReferences,
@@ -5494,7 +5494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44494B50: // PKID
                 {
                     item.AIPackages = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Npc_Registration.PKID_HEADER,
                             masterReferences: masterReferences,
@@ -5506,7 +5506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Animations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out String listSubItem) =>
                             {
@@ -5586,7 +5586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Eyes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)

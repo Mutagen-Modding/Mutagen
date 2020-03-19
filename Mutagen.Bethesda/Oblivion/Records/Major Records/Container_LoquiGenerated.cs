@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F544E43: // CNTO
                 {
                     item.Items = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Container_Registration.CNTO_HEADER,
                             masterReferences: masterReferences,

@@ -1643,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54585441: // ATXT
                 {
                     item.Layers = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Textures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandTexture>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandTexture>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)

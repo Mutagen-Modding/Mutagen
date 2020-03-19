@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E4C: // LNAM
                 {
                     item.Locations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LoadScreenLocation>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LoadScreenLocation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LoadScreen_Registration.LNAM_HEADER,
                             masterReferences: masterReferences,

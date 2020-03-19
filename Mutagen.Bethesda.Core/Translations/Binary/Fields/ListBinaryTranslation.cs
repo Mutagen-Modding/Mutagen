@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         #region Out Parameters
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             BinarySubParseDelegate<T> transl)
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null)
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
             BinaryMasterParseRecordDelegate<T> transl,
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Binary
         #endregion
 
         #region Lengthed Triggering Record
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             MasterReferenceReader masterReferences,
@@ -142,26 +142,26 @@ namespace Mutagen.Bethesda.Binary
         #endregion
 
         #region Lengthed Triggering Records
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             BinarySubParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord)
         {
-            return this.ParseRepeatedItem(
+            return this.Parse(
                 frame: frame,
                 triggeringRecord: triggeringRecord,
                 transl: (MutagenFrame reader, RecordType header, out T subItem)
                     => transl(reader, out subItem));
         }
 
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return this.ParseRepeatedItem(
+            return this.Parse(
                 frame: frame,
                 triggeringRecord: triggeringRecord,
                 masterReferences: masterReferences,
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Binary
         }
         #endregion
 
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             BinarySubParseDelegate<T> transl)
         {
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             int amount,
             BinarySubParseDelegate<T> transl)
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             int amount,
             MasterReferenceReader masterReferences,
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IEnumerable<T> ParseRepeatedItem(
+        public IEnumerable<T> Parse(
             MutagenFrame frame,
             int amount,
             RecordType triggeringRecord,
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Binary
             IsLoqui = typeof(T).InheritsFrom(typeof(ILoquiObject));
         }
 
-        public async Task<IEnumerable<T>> ParseRepeatedItem(
+        public async Task<IEnumerable<T>> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             BinarySubParseDelegate transl)
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public async Task<IEnumerable<T>> ParseRepeatedItem(
+        public async Task<IEnumerable<T>> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             MasterReferenceReader masterReferences,
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public async Task<IEnumerable<T>> ParseRepeatedItemThreaded(
+        public async Task<IEnumerable<T>> ParseThreaded(
             MutagenFrame frame,
             RecordType triggeringRecord,
             BinarySubParseDelegate transl)
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Binary
                 .Select(i => i.Value);
         }
 
-        public async Task<IEnumerable<T>> ParseRepeatedItemThreaded(
+        public async Task<IEnumerable<T>> ParseThreaded(
             MutagenFrame frame,
             RecordType triggeringRecord,
             MasterReferenceReader masterReferences,
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         #region Lengthed Triggering Record
-        public async Task<ExtendedList<T>> ParseRepeatedItem(
+        public async Task<ExtendedList<T>> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             BinarySubParseDelegate transl,
@@ -551,14 +551,14 @@ namespace Mutagen.Bethesda.Binary
             IEnumerable<T> items;
             if (thread)
             {
-                items = await ParseRepeatedItemThreaded(
+                items = await ParseThreaded(
                     frame,
                     triggeringRecord,
                     transl: transl).ConfigureAwait(false);
             }
             else
             {
-                items = await ParseRepeatedItem(
+                items = await Parse(
                     frame,
                     triggeringRecord,
                     transl: transl).ConfigureAwait(false);
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Binary
             return new ExtendedList<T>(items);
         }
 
-        public async Task<ExtendedList<T>> ParseRepeatedItem(
+        public async Task<ExtendedList<T>> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             MasterReferenceReader masterReferences,
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerable<T> items;
             if (thread)
             {
-                items = await ParseRepeatedItemThreaded(
+                items = await ParseThreaded(
                     frame,
                     triggeringRecord,
                     masterReferences: masterReferences,
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                items = await ParseRepeatedItem(
+                items = await Parse(
                     frame,
                     triggeringRecord,
                     masterReferences: masterReferences,
@@ -598,14 +598,14 @@ namespace Mutagen.Bethesda.Binary
         #endregion
 
         #region Cache Helpers
-        public async Task ParseRepeatedItem<K>(
+        public async Task Parse<K>(
             MutagenFrame frame,
             ICache<T, K> item,
             RecordType triggeringRecord,
             BinarySubParseDelegate transl)
         {
             item.SetTo(
-                await ParseRepeatedItem(
+                await Parse(
                     frame,
                     triggeringRecord,
                     transl: transl));

@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44484353: // SCHD
                 {
                     item.LogEntries = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,

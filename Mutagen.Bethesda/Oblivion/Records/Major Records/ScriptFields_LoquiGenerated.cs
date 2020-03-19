@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44534C53: // SLSD
                 {
                     item.LocalVariables = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ScriptFields_Registration.SLSD_HEADER,
                             masterReferences: masterReferences,
@@ -1604,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F524353: // SCRO
                 {
                     item.References = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,

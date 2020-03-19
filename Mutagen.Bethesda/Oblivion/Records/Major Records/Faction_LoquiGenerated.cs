@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E58: // XNAM
                 {
                     item.Relations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Faction_Registration.XNAM_HEADER,
                             masterReferences: masterReferences,
@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E49: // INAM
                 {
                     item.Ranks = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,

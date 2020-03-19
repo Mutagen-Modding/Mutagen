@@ -1600,7 +1600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.InterCellConnections = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: (MutagenFrame r, out InterCellPoint listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C524750: // PGRL
                 {
                     item.PointToReferenceMappings = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: PathGrid_Registration.PGRL_HEADER,
                             masterReferences: masterReferences,

@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "ar subLen = subMeta.RecordLen";
+            string testString = "a.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeated";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

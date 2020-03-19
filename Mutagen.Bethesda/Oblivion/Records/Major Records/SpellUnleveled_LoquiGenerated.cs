@@ -1570,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44494645: // EFID
                 {
                     item.Effects = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: SpellUnleveled_Registration.EFID_HEADER,
                             masterReferences: masterReferences,

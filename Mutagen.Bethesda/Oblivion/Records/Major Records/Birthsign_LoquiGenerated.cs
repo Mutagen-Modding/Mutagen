@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F4C5053: // SPLO
                 {
                     item.Spells = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Birthsign_Registration.SPLO_HEADER,
                             masterReferences: masterReferences,

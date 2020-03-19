@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E54: // TNAM
                 {
                     item.RandomTeleportDestinations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Place>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Place>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Door_Registration.TNAM_HEADER,
                             masterReferences: masterReferences,

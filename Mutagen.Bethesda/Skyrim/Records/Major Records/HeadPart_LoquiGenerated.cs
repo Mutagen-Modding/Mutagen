@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E48: // HNAM
                 {
                     item.ExtraParts = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadPart_Registration.HNAM_HEADER,
                             masterReferences: masterReferences,
@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x314D414E: // NAM1
                 {
                     item.Parts = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Part>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Part>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Part_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,

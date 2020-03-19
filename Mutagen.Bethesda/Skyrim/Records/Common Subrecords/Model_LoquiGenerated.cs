@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x53444F4D: // MODS
                 {
                     item.AlternateTextures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
                             amount: frame.ReadInt32(),
                             frame: frame,
                             masterReferences: masterReferences,

@@ -3147,7 +3147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F4C5053: // SPLO
                 {
                     item.Spells = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.SPLO_HEADER,
                             masterReferences: masterReferences,
@@ -3158,7 +3158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E58: // XNAM
                 {
                     item.Relations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.XNAM_HEADER,
                             masterReferences: masterReferences,
@@ -3260,7 +3260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.FaceData = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
@@ -3289,7 +3289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Hairs = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
@@ -3300,7 +3300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Eyes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)

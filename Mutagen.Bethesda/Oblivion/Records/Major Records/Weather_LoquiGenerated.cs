@@ -3497,7 +3497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.WeatherTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: (MutagenFrame r, out WeatherType listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
@@ -3574,7 +3574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E53: // SNAM
                 {
                     item.Sounds = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Weather_Registration.SNAM_HEADER,
                             masterReferences: masterReferences,

@@ -1455,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E47: // GNAM
                 {
                     item.PotentialGrass = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LandTexture_Registration.GNAM_HEADER,
                             masterReferences: masterReferences,

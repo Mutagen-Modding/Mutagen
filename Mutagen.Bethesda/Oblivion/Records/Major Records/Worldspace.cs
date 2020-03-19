@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Oblivion
                             break;
                         case 0x50555247: // "GRUP":
                             obj.SubCells = new ExtendedList<WorldspaceBlock>(
-                                await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
+                                await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.Parse(
                                     frame: frame,
                                     triggeringRecord: Worldspace_Registration.GRUP_HEADER,
                                     transl: (MutagenFrame r) =>

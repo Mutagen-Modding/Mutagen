@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
                     item.Sounds = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,

@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x444C5052: // RPLD
                 {
                     item.Areas = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,

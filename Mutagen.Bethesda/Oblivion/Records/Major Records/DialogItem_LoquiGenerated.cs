@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x454D414E: // NAME
                 {
                     item.Topics = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.NAME_HEADER,
                             masterReferences: masterReferences,
@@ -2191,7 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445254: // TRDT
                 {
                     item.Responses = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TRDT_HEADER,
                             masterReferences: masterReferences,
@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445443: // CTDT
                 {
                     item.Conditions = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,
@@ -2226,7 +2226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x544C4354: // TCLT
                 {
                     item.Choices = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TCLT_HEADER,
                             masterReferences: masterReferences,
@@ -2237,7 +2237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x464C4354: // TCLF
                 {
                     item.LinkFrom = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TCLF_HEADER,
                             masterReferences: masterReferences,

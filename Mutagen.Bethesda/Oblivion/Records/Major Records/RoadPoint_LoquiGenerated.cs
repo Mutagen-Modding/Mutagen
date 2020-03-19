@@ -1282,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.NumConnectionsFluffBytes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
             item.Connections.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.ParseRepeatedItem(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
                     frame: frame,
                     transl: P3FloatBinaryTranslation.Instance.Parse));
         }

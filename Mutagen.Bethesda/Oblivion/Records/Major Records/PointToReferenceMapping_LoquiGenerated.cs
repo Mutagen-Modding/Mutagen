@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences,
                 defaultVal: FormKey.Null);
             item.Points.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Parse(
                     frame: frame,
                     transl: Int16BinaryTranslation.Instance.Parse));
         }

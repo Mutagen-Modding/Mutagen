@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F4C564C: // LVLO
                 {
                     item.Entries = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<AItem>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<AItem>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LeveledItem_Registration.LVLO_HEADER,
                             masterReferences: masterReferences,

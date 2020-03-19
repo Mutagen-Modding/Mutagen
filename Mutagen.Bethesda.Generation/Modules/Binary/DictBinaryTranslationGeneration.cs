@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.ParseRepeatedItem",
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
                 if (listBinaryType == ListBinaryType.SubTrigger)

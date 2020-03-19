@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Types = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
                             {

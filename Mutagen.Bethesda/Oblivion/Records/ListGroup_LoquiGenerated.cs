@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (nextRecordType.Equals(ListGroup<T>.T_RecordType))
                     {
                         item.Records.SetTo(
-                            (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeatedItem(
+                            (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.Parse(
                                 frame: frame,
                                 triggeringRecord: ListGroup<T>.T_RecordType,
                                 thread: true,

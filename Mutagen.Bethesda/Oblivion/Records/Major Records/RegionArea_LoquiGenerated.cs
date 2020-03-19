@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPoints) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.RegionPoints = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: P2FloatBinaryTranslation.Instance.Parse)
                         .ToExtendedList<P2Float>();

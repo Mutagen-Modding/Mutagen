@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49545351: // QSTI
                 {
                     item.Quests = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Quest>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Quest>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
                             masterReferences: masterReferences,

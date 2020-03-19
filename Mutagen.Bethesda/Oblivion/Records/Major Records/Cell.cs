@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.VisibleWhenDistantTimestamp = groupMeta.LastModifiedSpan.ToArray();
                 }
                 coll.AddRange(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
                         frame: frame,
                         transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                         {
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
                 obj.TemporaryTimestamp = groupMeta.LastModifiedSpan.ToArray();
-                var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
+                var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
                     frame: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {

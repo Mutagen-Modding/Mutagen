@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
                     item.BodyParts = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
                             masterReferences: masterReferences,

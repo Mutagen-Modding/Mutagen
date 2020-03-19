@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x50555247: // GRUP
                 {
                     item.Items = 
-                        (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceSubBlock>.Instance.ParseRepeatedItem(
+                        (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceSubBlock>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
                             thread: true,

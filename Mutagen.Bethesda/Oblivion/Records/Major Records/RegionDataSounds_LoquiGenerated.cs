@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Sounds = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             masterReferences: masterReferences,
                             transl: (MutagenFrame r, out RegionSound listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>

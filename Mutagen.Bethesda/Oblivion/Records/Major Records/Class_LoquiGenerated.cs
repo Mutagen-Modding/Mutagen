@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.DATADataTypeState = Class.DATADataType.Has;
                     }
                     item.PrimaryAttributes.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: frame,
                             amount: 2,
                             transl: (MutagenFrame r, out ActorValue listSubItem) =>
@@ -1881,7 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.SecondaryAttributes.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: frame,
                             amount: 7,
                             transl: (MutagenFrame r, out ActorValue listSubItem) =>
