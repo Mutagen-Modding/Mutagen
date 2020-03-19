@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
     {
         public static readonly IFormLinkGetter<TMajor> Empty = new FormLink<TMajor>();
 
-        public virtual FormKey FormKey { get; set; } = FormKey.Null;
+        public FormKey FormKey { get; set; } = FormKey.Null;
         Type ILinkGetter.TargetType => typeof(TMajor);
 
         public FormLink()
@@ -26,17 +26,17 @@ namespace Mutagen.Bethesda
             this.FormKey = formKey;
         }
 
-        public virtual void Set(FormKey formKey)
+        public void Set(FormKey formKey)
         {
             this.Set(formKey);
         }
 
-        public virtual void Set(TMajor value)
+        public void Set(TMajor value)
         {
             this.FormKey = value?.FormKey ?? FormKey.Null;
         }
 
-        public virtual void Unset()
+        public void Unset()
         {
             this.FormKey = FormKey.Null;
         }
@@ -112,7 +112,6 @@ namespace Mutagen.Bethesda
         {
             modKey = this.FormKey.ModKey;
             return true;
-
         }
     }
 }

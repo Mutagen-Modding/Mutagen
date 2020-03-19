@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Record type representing the target EditorID to link against
         /// </summary>
-        public virtual RecordType EDID { get; set; } = Null;
+        public RecordType EDID { get; set; } = Null;
         
         Type ILinkGetter.TargetType => typeof(TMajor);
 
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Resets to an unlinked state
         /// </summary>
-        public virtual void Unset()
+        public void Unset()
         {
             this.EDID = Null;
         }
