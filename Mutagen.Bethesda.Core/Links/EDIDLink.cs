@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda
     /// A specialized link for Oblivion Magic Effects, which use 4 character EditorIDs rather than FormIDs to link.
     /// This class stores the target EDID as RecordType, as that is a convenient 4 character struct
     /// </summary>
+    /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
     public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLinkGetter<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
@@ -61,7 +62,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Sets the link to the target Major Record
         /// </summary>
-        /// <param name="type">Target record to link to</param>
+        /// <param name="value">Target record to link to</param>
         /// <exception cref="ArgumentException">If EditorID of target record is not 4 characters</exception>
         public void Set(TMajor? value)
         {
@@ -124,8 +125,9 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        public bool TryResolve<M>(ILinkCache<M> package, out TMajor major)
-            where M : IModGetter
+        /// <typeparam name="TMod">Mod type</typeparam>
+        public bool TryResolve<TMod>(ILinkCache<TMod> package, out TMajor major)
+            where TMod : IModGetter
         {
             if (this.EDID == Null)
             {
@@ -150,8 +152,9 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="major">Located FormKey if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        public bool TryResolveFormKey<M>(ILinkCache<M> package, [MaybeNullWhen(false)]out FormKey formKey)
-            where M : IModGetter
+        /// <typeparam name="TMod">Mod type</typeparam>
+        public bool TryResolveFormKey<TMod>(ILinkCache<TMod> package, [MaybeNullWhen(false)]out FormKey formKey)
+            where TMod : IModGetter
         {
             if (TryResolve(package, out var rec))
             {
@@ -174,10 +177,11 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Attempts to locate link target's FormKey in given Link Cache.
+        /// Attempts to locate link target in given Link Cache.
         /// </summary>
         /// <param name="package">Link Cache to resolve against</param>
         /// <returns>TryGet object with located record if successful</returns>
+        /// <typeparam name="TMod">Mod type</typeparam>
         public ITryGetter<TMajor> TryResolve<TMod>(ILinkCache<TMod> package) 
             where TMod : IModGetter
         {

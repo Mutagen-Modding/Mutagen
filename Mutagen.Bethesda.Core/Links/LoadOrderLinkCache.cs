@@ -8,6 +8,19 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// A Link Cache using a LoadOrder as its link target.
+    /// Will resolve links to the highest overriding mod containing the record being sought.
+    ///
+    /// Internal caching will only occur as deep into the load order as necessary, for only the types required
+    /// to serve the requested link.
+    ///
+    /// All functionality is multithread safe.
+    ///
+    /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
+    /// incorrect if modifications occur on content already cached.
+    /// </summary>
+    /// <typeparam name="TMod">Mod type</typeparam>
     public class LoadOrderLinkCache<TMod> : ILinkCache<TMod>
         where TMod : IModGetter
     {
@@ -23,6 +36,10 @@ namespace Mutagen.Bethesda
         private readonly Cache<IMajorRecordCommonGetter, FormKey> _loadOrderUntypedMajorRecords;
         private readonly Dictionary<Type, InternalTypedCache> _loadOrderMajorRecords;
 
+        /// <summary>
+        /// Constructs a LoadOrderLinkCache around a target load order
+        /// </summary>
+        /// <param name="loadOrder">LoadOrder to resolve against when linking</param>
         public LoadOrderLinkCache(LoadOrder<TMod> loadOrder)
         {
             this._loadOrder = loadOrder;
@@ -30,6 +47,16 @@ namespace Mutagen.Bethesda
             this._loadOrderMajorRecords = new Dictionary<Type, InternalTypedCache>();
         }
 
+        /// <summary>
+        /// Looks up a given FormKey to try to locate the target record.
+        ///
+        /// This call is not as optimized as its generic typed counterpart.
+        /// It does not know what type the record is limited to, and so much load and process
+        /// all record types in order to do a proper search.
+        /// </summary>
+        /// <param name="formKey">FormKey to search for</param>
+        /// <param name="majorRec">MajorRecord if found</param>
+        /// <returns>True if record was found</returns>
         public bool TryLookup(FormKey formKey, out IMajorRecordCommonGetter majorRec)
         {
             lock (this._loadOrderUntypedMajorRecords)
@@ -59,6 +86,21 @@ namespace Mutagen.Bethesda
             }
         }
 
+        /// <summary>
+        /// Looks up a given FormKey to try to locate the target record.
+        ///
+        /// Will only look into the Groups that are applicable to the given type.
+        /// </summary>
+        /// <param name="formKey">FormKey to search for</param>
+        /// <param name="majorRec">MajorRecord if found</param>
+        /// <typeparam name="TMajor">MajorRecod type or interface to look for</typeparam>
+        /// <returns>True if record was found</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.
+        /// Unexpected types include:
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
         public bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {

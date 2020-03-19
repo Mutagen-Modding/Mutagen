@@ -23,13 +23,16 @@ namespace Mutagen.Bethesda
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
         /// <summary>
         /// Returns the Group getter object associated with the given Major Record Type.
-        /// An unexpected type will throw an exception.
+        /// </summary>
+        /// <returns>Group getter object associated with the given Major Record Type</returns>
+        /// <typeparam name="TMajor">The type of Major Record to get the Group for</typeparam>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.
         /// Unexpected types include:
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
         ///   - A setter type is requested from a getter only object.
-        /// </summary>
-        /// <returns>Group getter object associated with the given Major Record Type</returns>
-        IReadOnlyCache<T, FormKey> GetGroupGetter<T>() where T : IMajorRecordCommonGetter;
+        /// </exception>
+        IReadOnlyCache<TMajor, FormKey> GetGroupGetter<TMajor>() where TMajor : IMajorRecordCommonGetter;
         /// <summary>
         /// Exports to disk in Bethesda binary format.
         /// Access and iterates through the mod object's contents in a single thread.
@@ -63,13 +66,16 @@ namespace Mutagen.Bethesda
         new IList<MasterReference> MasterReferences { get; }
         /// <summary>
         /// Returns the Group object associated with the given Major Record Type.
-        /// An unexpected type will throw an exception.
+        /// </summary>
+        /// <returns>Group object associated with the given Major Record Type</returns>
+        /// <typeparam name="TMajor">The type of Major Record to get the Group for</typeparam>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.
         /// Unexpected types include:
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
         ///   - A setter type is requested from a getter only object.
-        /// </summary>
-        /// <returns>Group object associated with the given Major Record Type</returns>
-        ICache<T, FormKey> GetGroup<T>() where T : IMajorRecordCommon;
+        /// </exception>
+        ICache<TMajor, FormKey> GetGroup<TMajor>() where TMajor : IMajorRecordCommon;
         uint NextObjectID { get; set; }
         void SyncRecordCount();
     }

@@ -18,6 +18,7 @@ namespace Mutagen.Bethesda
         /// <param name="source">Field to retrieve</param>
         /// <param name="item">Non-null result if field exists</param>
         /// <returns>True if field exists, and item contains a non-null value</returns>
+        /// <typeparam name="T">Item type being retrieved</typeparam>
         public static bool TryGet<T>(this T? source, [MaybeNullWhen(false)]out T item)
             where T : class
         {
@@ -37,6 +38,7 @@ namespace Mutagen.Bethesda
         /// <param name="source">Field to retrieve</param>
         /// <param name="item">Non-null result if field exists</param>
         /// <returns>True if field exists, and item contains a non-null value</returns>
+        /// <typeparam name="T">Item type being retrieved</typeparam>
         public static bool TryGet<T>(this Nullable<T> source, [MaybeNullWhen(false)]out T item)
             where T : struct
         {

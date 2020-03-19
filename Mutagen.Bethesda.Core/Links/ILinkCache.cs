@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -31,6 +31,13 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
         /// <returns>True if a matching record was found</returns>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.
+        /// Unexpected types include:
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
         bool TryLookup<TMajor>(FormKey formKey, out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter;
     }
