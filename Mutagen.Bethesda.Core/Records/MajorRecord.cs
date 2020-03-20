@@ -39,12 +39,21 @@ namespace Mutagen.Bethesda
         String? IMajorRecordGetter.EditorID => this.EditorID;
         #endregion
 
+        /// <summary>
+        /// Common MajorRecord flags
+        /// </summary>
         [Flags]
         public enum MajorRecordFlag
         {
+            /// <summary>
+            /// True if record content should be compressed
+            /// </summary>
             Compressed = 0x00040000,
         }
 
+        /// <summary>
+        /// A convenience property to print "EditorID - FormKey"
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string TitleString => $"{this.EditorID} - {this.FormKey.ToString()}";
 

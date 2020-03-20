@@ -13,16 +13,31 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// An abstract base class for Groups to inherit from for some common functionality
+    /// </summary>
     public abstract class AGroup<T> : IEnumerable<T>, IGroupCommon<T>
         where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected abstract ICache<T, FormKey> ProtectedCache { get; }
+        
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal ICache<T, FormKey> InternalCache => this.ProtectedCache;
+        
+        /// <summary>
+        /// An enumerable of all the records contained by the group.
+        /// </summary>
         public IEnumerable<T> Records => ProtectedCache.Items;
+        
+        /// <summary>
+        /// Number of records contained in the group.
+        /// </summary>
         public int Count => this.ProtectedCache.Count;
 
+        /// <summary>
+        /// The parent Mod object associated with the group.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IMod SourceMod { get; private set; }
 
@@ -31,16 +46,23 @@ namespace Mutagen.Bethesda
             this.SourceMod = null!;
         }
 
-        public AGroup(IModGetter getter)
+        protected AGroup(IModGetter getter)
         {
             this.SourceMod = null!;
         }
 
+        /// <summary>
+        /// Constructor with parent Mod to be associated with
+        /// </summary>
         public AGroup(IMod mod)
         {
             this.SourceMod = mod;
         }
 
+        /// <summary>
+        /// Constructor with parent Mod to be associated with
+        /// </summary>
+        /// <returns>String in format: "Group<T>(_record_count_)"</returns>
         public override string ToString()
         {
             return $"Group<{typeof(T).Name}>({this.InternalCache.Count})";

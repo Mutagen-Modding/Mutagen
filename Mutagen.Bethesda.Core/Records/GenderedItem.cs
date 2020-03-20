@@ -7,23 +7,49 @@ using static Loqui.EqualsMaskHelper;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// An interface for an object exposing readonly Gendered Items
+    /// </summary>
     public interface IGenderedItemGetter<out T> : IEnumerable<T>, IPrintable
     {
+        /// <summary>
+        /// Male item
+        /// </summary>
         T Male { get; }
+        
+        /// <summary>
+        /// Female item
+        /// </summary>
         T Female { get; }
     }
 
+    /// <summary>
+    /// An object exposing data in a gendered format
+    /// </summary>
     public class GenderedItem<T> : IGenderedItemGetter<T>
     {
+        /// <summary>
+        /// Male item
+        /// </summary>
         public T Male { get; set; }
+        
+        /// <summary>
+        /// Female item
+        /// </summary>
         public T Female { get; set; }
 
+        /// <summary>
+        /// Constructor that takes a male and female item
+        /// </summary>
         public GenderedItem(T male, T female)
         {
             this.Male = male;
             this.Female = female;
         }
 
+        /// <summary>
+        /// Enumerates first the male item, then the female item
+        /// </summary>
         public IEnumerator<T> GetEnumerator()
         {
             yield return Male;
@@ -32,6 +58,11 @@ namespace Mutagen.Bethesda
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
+        /// <summary>
+        /// Prints the male and female items to the stream
+        /// </summary>
+        /// <param name="fg">Stream to print into</param>
+        /// <param name="name">Optional name to include</param>
         public void ToString(FileGeneration fg, string? name)
         {
             GenderedItem.ToString(this, fg, name);

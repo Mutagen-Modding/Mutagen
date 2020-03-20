@@ -17,12 +17,14 @@ namespace Mutagen.Bethesda
         /// The MajorRecord Type that the link is associated with
         /// </summary>
         Type TargetType { get; }
+        
         /// <summary>
         /// Attempts to locate an associated ModKey from the link
         /// </summary>
         /// <param name="modKey">ModKey if found</param>
         /// <returns>True of ModKey information was located</returns>
         bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey);
+        
         /// <summary>
         /// Attempts to locate an associated FormKey from the link
         /// </summary>
@@ -30,6 +32,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if FormKey found</returns>
         /// <typeparam name="TMod">Mod type</typeparam>
         bool TryResolveFormKey<TMod>(ILinkCache<TMod> package, out FormKey formKey) where TMod : IModGetter;
+        
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
         /// </summary>
