@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "a.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeated";
+            string testString = ".Bethesda.Binary.ListBinaryTranslation<String>.Instance.WritePerItem";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

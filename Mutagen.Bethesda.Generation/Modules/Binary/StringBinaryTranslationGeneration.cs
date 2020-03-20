@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,16 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             bool squashedRepeatedList)
         {
+            var str = typeGen as Mutagen.Bethesda.Generation.StringType;
+            if (str.BinaryType != StringBinaryType.NullTerminate) return false;
             return !squashedRepeatedList;
+        }
+
+        public override bool AllowDirectWrite(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var str = typeGen as Mutagen.Bethesda.Generation.StringType;
+            if (str.BinaryType != StringBinaryType.NullTerminate) return false;
+            return true;
         }
 
         public StringBinaryTranslationGeneration()
@@ -120,11 +130,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
                 args.Add($"parseWhole: {(data.HasTrigger ? "true" : "false")}");
 
-                if (data.RecordType.HasValue)
-                {
-                    args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
-                }
-                else if (data.Length.HasValue)
+                if (data.Length.HasValue)
                 {
                     args.Add($"length: {data.Length.Value}");
                 }

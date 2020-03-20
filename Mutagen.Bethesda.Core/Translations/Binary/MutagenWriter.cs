@@ -221,6 +221,12 @@ namespace Mutagen.Bethesda.Binary
             Write(str.AsSpan());
         }
 
+        public void WriteZString(string str)
+        {
+            Write(str.AsSpan());
+            this.Write((byte)0);
+        }
+
         public void Write(Color color, bool extraByte)
         {
             this.Writer.Write(color.R);

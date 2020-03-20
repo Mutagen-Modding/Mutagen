@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,12 +33,19 @@ namespace Mutagen.Bethesda.Binary
             while (!frame.Complete && !frame.Reader.Complete)
             {
                 if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
+                var startingPos = frame.Position;
+                MutagenFrame subFrame;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var subHeader = frame.MetaData.GetSubRecord(frame);
+                    frame.Position += subHeader.HeaderLength;
+                    subFrame = frame.ReadAndReframe(subHeader.ContentLength);
                 }
-                var startingPos = frame.Position;
-                if (transl(frame, out var subItem))
+                else
+                {
+                    subFrame = frame;
+                }
+                if (transl(subFrame, out var subItem))
                 {
                     ret.Add(subItem);
                 }
@@ -263,6 +270,38 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            int amount,
+            RecordType triggeringRecord,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new List<T>();
+            var startingPos = frame.Position;
+            for (int i = 0; i < amount; i++)
+            {
+                var subHeader = frame.MetaData.GetSubRecord(frame);
+                if (subHeader.RecordType != triggeringRecord)
+                {
+                    throw new ArgumentException($"Unexpected record encountered.");
+                }
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                }
+                if (transl(frame, out var subIitem, recordTypeConverter))
+                {
+                    ret.Add(subIitem);
+                }
+            }
+            if (frame.Position == startingPos)
+            {
+                throw new ArgumentException($"Parsed item on the list consumed no data.");
+            }
+            return ret;
+        }
+
         public void Write(
             MutagenWriter writer,
             IEnumerable<T>? items,
@@ -317,6 +356,22 @@ namespace Mutagen.Bethesda.Binary
                 foreach (var item in items)
                 {
                     transl(writer, item, recordTypeConverter);
+                }
+            }
+        }
+
+        public void WritePerItem(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            RecordType recordType,
+            BinarySubWriteDelegate<T> transl)
+        {
+            if (items == null) return;
+            foreach (var item in items)
+            {
+                using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                {
+                    transl(writer, item);
                 }
             }
         }

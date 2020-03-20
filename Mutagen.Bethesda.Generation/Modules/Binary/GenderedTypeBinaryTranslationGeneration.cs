@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new ArgumentException("Unsupported type generator: " + gendered.SubTypeGeneration);
             }
-            var allowDirectWrite = subTransl.AllowDirectWrite(objGen, typeGen);
+            var allowDirectWrite = subTransl.AllowDirectWrite(objGen, gendered.SubTypeGeneration);
             bool needsMasters = gendered.SubTypeGeneration is FormLinkType || gendered.SubTypeGeneration is LoquiType;
             var typeName = gendered.SubTypeGeneration.TypeName(getter: true);
             var loqui = gendered.SubTypeGeneration as LoquiType;

@@ -23,7 +23,7 @@
       </Gendered>
       <Nothing name="NAM2Marker" recordType="NAM2" />
       <List name="MovementTypeNames">
-        <String recordType="MTNM" />
+        <String recordType="MTNM" binaryType="Plain" />
       </List>
       <Gendered name="Voices" recordType="VTCK">
         <FormLink refName="VoiceType" />
@@ -43,7 +43,9 @@
       <Float name="FacegenFaceClamp" recordType="UNAM" />
       <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
       <RefList name="Attacks" refName="Attack" />
-      <RefDirect name="BodyData" markerType="NAM1" refName="BodyDataPair" />
+      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM">
+        <RefDirect refName="BodyData" />
+      </Gendered>
       <List name="Hairs" recordType="HNAM">
         <FormLink refName="Hair" />
       </List>
@@ -62,7 +64,7 @@
       <FormLink name="CloseLootSound" recordType="LNAM" refName="SoundDescriptor" />
       <Dict name="BipedObjectNames" binary="Custom" recordType="NAME">
         <Key>
-          <Enum enumName="BipedObjectFlag" />
+          <Enum enumName="BipedObject" />
         </Key>
         <Value>
           <String />
@@ -145,15 +147,9 @@
       <Int8 name="Boost" />
     </Fields>
   </Object>
-  <Object name="BodyDataPair" objType="Subrecord" GUID="046e44ba-578b-4c1a-8073-2ba3fe0772ea" ID="59">
-    <Fields>
-      <RefDirect name="Male" markerType="MNAM" refName="BodyData" />
-      <RefDirect name="Female" markerType="FNAM" refName="BodyData" />
-    </Fields>
-  </Object>
   <Object name="BodyData" objType="Subrecord" GUID="baeb0edf-c312-4f2b-9a87-b0bc6542773b" ID="60">
     <Fields>
-      <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" />
+      <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
       <RefDirect name="Part" refName="Model" />
     </Fields>
   </Object>

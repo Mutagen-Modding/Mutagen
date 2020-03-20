@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public class BinaryStringUtility
+    public static class BinaryStringUtility
     {
         // ToDo
         // Can string.Create be used on spans?

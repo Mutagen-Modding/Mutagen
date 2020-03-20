@@ -86,6 +86,23 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += subHeader.TotalLength;
                 }
             }
+
+            static partial void FillBinaryBipedObjectNamesCustom(MutagenFrame frame, IRaceInternal item)
+            {
+                int counter = 0;
+                while (!frame.Reader.Complete)
+                {
+                    var subHeader = frame.MetaData.GetSubRecordFrame(frame);
+                    if (subHeader.Header.RecordType != Race_Registration.NAME_HEADER) break;
+                    BipedObject type = (BipedObject)counter++;
+                    var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
+                    if (!string.IsNullOrEmpty(val))
+                    {
+                        item.BipedObjectNames[type] = val;
+                    }
+                    frame.Position += subHeader.Header.TotalLength;
+                }
+            }
         }
 
         public partial class RaceBinaryWriteTranslation
@@ -95,6 +112,25 @@ namespace Mutagen.Bethesda.Skyrim
                 if (item.ExportingExtraNam2)
                 {
                     using var header = HeaderExport.ExportSubRecordHeader(writer, Race.NAM2);
+                }
+            }
+
+            static partial void WriteBinaryBipedObjectNamesCustom(MutagenWriter writer, IRaceGetter item)
+            {
+                var bipedObjs = item.BipedObjectNames;
+                for (int i = 0; i < EnumExt.GetSize<BipedObject>(); i++)
+                {
+                    using (HeaderExport.ExportSubRecordHeader(writer, Race_Registration.NAME_HEADER))
+                    {
+                        if (bipedObjs.TryGetValue((BipedObject)i, out var val))
+                        {
+                            writer.WriteZString(val);
+                        }
+                        else
+                        {
+                            writer.WriteZString(string.Empty);
+                        }
+                    }
                 }
             }
         }
@@ -109,7 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
                 throw new NotImplementedException();
             }
 
-            public IReadOnlyDictionary<BipedObjectFlag, string> BipedObjectNames => throw new NotImplementedException();
+            public IReadOnlyDictionary<BipedObject, string> BipedObjectNames => throw new NotImplementedException();
 
             void BipedObjectNamesCustomParse(BinaryMemoryReadStream stream, int finalPos, int offset)
             {

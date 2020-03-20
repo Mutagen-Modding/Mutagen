@@ -47,7 +47,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Index
-        public BodyData.PartIndex Index { get; set; } = default;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private BodyData.PartIndex? _Index;
+        public BodyData.PartIndex? Index
+        {
+            get => this._Index;
+            set => this._Index = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        BodyData.PartIndex? IBodyDataGetter.Index => this.Index;
         #endregion
         #region Part
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -591,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyDataGetter,
         ILoquiObjectSetter<IBodyData>
     {
-        new BodyData.PartIndex Index { get; set; }
+        new BodyData.PartIndex? Index { get; set; }
         new Model? Part { get; set; }
     }
 
@@ -608,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        BodyData.PartIndex Index { get; }
+        BodyData.PartIndex? Index { get; }
         IModelGetter? Part { get; }
 
     }
@@ -1071,9 +1079,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(BodyDataXmlWriteTranslation);
+        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public const int NumStructFields = 1;
-        public const int NumTypedFields = 1;
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        INDX_HEADER,
+                        MODL_HEADER
+                    })
+            );
+        });
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(BodyDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1153,7 +1174,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyData item,
             MutagenFrame frame)
         {
-            item.Index = EnumBinaryTranslation<BodyData.PartIndex>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1167,8 +1187,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Index) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Index = EnumBinaryTranslation<BodyData.PartIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Index);
+                }
                 case 0x4C444F4D: // MODL
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Part) return TryGet<int?>.Failure;
                     item.Part = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Part);
                 }
@@ -1271,9 +1299,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             BodyData.Mask<bool>? printMask = null)
         {
-            if (printMask?.Index ?? true)
+            if ((printMask?.Index ?? true)
+                && item.Index.TryGet(out var IndexItem))
             {
-                fg.AppendItem(item.Index, "Index");
+                fg.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Part?.Overall ?? true)
                 && item.Part.TryGet(out var PartItem))
@@ -1286,6 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyDataGetter item,
             BodyData.Mask<bool?> checkMask)
         {
+            if (checkMask.Index.HasValue && checkMask.Index.Value != (item.Index != null)) return false;
             if (checkMask.Part?.Overall.HasValue ?? false && checkMask.Part.Overall.Value != (item.Part != null)) return false;
             if (checkMask.Part?.Specific != null && (item.Part == null || !item.Part.HasBeenSet(checkMask.Part.Specific))) return false;
             return true;
@@ -1295,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyDataGetter item,
             BodyData.Mask<bool> mask)
         {
-            mask.Index = true;
+            mask.Index = (item.Index != null);
             var itemPart = item.Part;
             mask.Part = new MaskItem<bool, Model.Mask<bool>?>(itemPart != null, itemPart?.GetHasBeenSetMask());
         }
@@ -1315,7 +1345,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IBodyDataGetter item)
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
+            if (item.Index.TryGet(out var Indexitem))
+            {
+                ret = HashHelper.GetHashCode(Indexitem).CombineHashCode(ret);
+            }
             if (item.Part.TryGet(out var Partitem))
             {
                 ret = HashHelper.GetHashCode(Partitem).CombineHashCode(ret);
@@ -1477,7 +1510,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.Index) ?? true))
+            if ((item.Index != null)
+                && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.Index) ?? true))
             {
                 EnumXmlTranslation<BodyData.PartIndex>.Instance.Write(
                     node: node,
@@ -1814,21 +1848,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static BodyDataBinaryWriteTranslation Instance = new BodyDataBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IBodyDataGetter item,
-            MutagenWriter writer)
-        {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyData.PartIndex>.Instance.Write(
-                writer,
-                item.Index,
-                length: 4);
-        }
-
         public static void WriteRecordTypes(
             IBodyDataGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyData.PartIndex>.Instance.WriteNullable(
+                writer,
+                item.Index,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(BodyData_Registration.INDX_HEADER));
             if (item.Part.TryGet(out var PartItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)PartItem).BinaryWriteTranslator).Write(
@@ -1842,9 +1871,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1950,7 +1976,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        public BodyData.PartIndex Index => (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
+        #region Index
+        private int? _IndexLocation;
+        private bool Index_IsSet => _IndexLocation.HasValue;
+        public BodyData.PartIndex? Index => Index_IsSet ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation!.Value, _package.Meta)) : default(BodyData.PartIndex?);
+        #endregion
         #region Part
         public IModelGetter? Part { get; private set; }
         public bool Part_IsSet => Part != null;
@@ -2002,8 +2032,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Index) return TryGet<int?>.Failure;
+                    _IndexLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Index);
+                }
                 case 0x4C444F4D: // MODL
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Part) return TryGet<int?>.Failure;
                     this.Part = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,

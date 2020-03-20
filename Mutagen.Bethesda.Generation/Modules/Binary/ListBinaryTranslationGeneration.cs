@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Generation
 
             ListBinaryType listBinaryType = GetListType(list, data, subData);
 
-            var allowDirectWrite = subTransl.AllowDirectWrite(objGen, typeGen);
+            var allowDirectWrite = subTransl.AllowDirectWrite(objGen, list.SubTypeGeneration);
             var isLoqui = list.SubTypeGeneration is LoquiType;
             var listOfRecords = !isLoqui
                 && listBinaryType == ListBinaryType.SubTrigger
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write{suffix}"))
+                $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write{suffix}{(listOfRecords ? "PerItem" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {GetWriteAccessor(itemAccessor)}");
@@ -264,10 +264,17 @@ namespace Mutagen.Bethesda.Generation
             bool needsMasters = list.SubTypeGeneration is FormLinkType
                 || list.SubTypeGeneration is LoquiType;
 
+            bool recordPerItem = false;
+            if (((bool)list.CustomData[CounterSubRecordPerItemType])
+                && listBinaryType == ListBinaryType.CounterRecord)
+            {
+                recordPerItem = true;
+            }
+
             list.WrapSet(fg, itemAccessor, (wrapFg) =>
             {
                 using (var args = new ArgsWrapper(wrapFg,
-                    $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false)}>.Instance.Parse",
+                    $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false)}>.Instance.Parse{(recordPerItem ? "PerItem" : null)}",
                     suffixLine: $"{Loqui.Generation.Utility.ConfigAwait(isAsync)}{(isAsync ? ")" : null)}")
                 {
                     SemiColon = false,
@@ -317,7 +324,7 @@ namespace Mutagen.Bethesda.Generation
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
                     if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
                         objGen,
-                        typeGen: typeGen,
+                        typeGen: list.SubTypeGeneration,
                         squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                     {
                         if (list.SubTypeGeneration is LoquiType loqui

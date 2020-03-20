@@ -805,9 +805,6 @@
     <Compile Include="Skyrim\Records\Major Records\BodyTemplate.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\BodyTemplate_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Class_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
@@ -1044,6 +1041,9 @@
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\PlacedNpc_LoquiGenerated.cs">
       <DependentUpon>PlacedNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BodyTemplate_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

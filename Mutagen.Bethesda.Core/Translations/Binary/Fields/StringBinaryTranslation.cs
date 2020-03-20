@@ -90,8 +90,7 @@ namespace Mutagen.Bethesda.Binary
                     writer.Write(item);
                     break;
                 case StringBinaryType.NullTerminate:
-                    writer.Write(item);
-                    writer.Write((byte)0);
+                    writer.WriteZString(item);
                     break;
                 case StringBinaryType.PrependLength:
                     writer.Write(item.Length);
