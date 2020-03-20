@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda
             List<ModKey> loadOrderListing,
             Func<FilePath, ModKey, Task<TryGet<TMod>>> importer,
             Func<ModKey, LoadOrder<TMod>, Task<TMod>> processor)
-            where TMod : IMod
+            where TMod : class, IMod
         {
             return TypicalPatch(
                 dataFolder: new Noggog.DirectoryPath(mainArgs[0]),
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda
             List<ModKey> loadOrderListing,
             Func<FilePath, ModKey, Task<TryGet<TMod>>> importer,
             Func<ModKey, LoadOrder<TMod>, Task<TMod>> processor)
-            where TMod : IMod
+            where TMod : class, IMod
         {
             loadOrderListing.Remove(outModKey);
             var loadOrder = new LoadOrder<TMod>();

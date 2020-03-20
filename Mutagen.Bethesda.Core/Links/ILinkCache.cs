@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
         public static DirectModLinkCache<TMod> CreateLinkCache<TMod>(this TMod mod)
-            where TMod : IModGetter
+            where TMod : class, IModGetter
         {
             return new DirectModLinkCache<TMod>(mod);
         }
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ILinkCache<TMod> CreateLinkCache<TMod>(this LoadOrder<TMod> loadOrder)
-            where TMod : IModGetter
+            where TMod : class, IModGetter
         {
             return new LoadOrderLinkCache<TMod>(loadOrder);
         }

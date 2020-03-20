@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda
     }
 
     public class LoadOrder<TMod> : IEnumerable<ModListing<TMod>>
-        where TMod : IModGetter
+        where TMod : class, IModGetter
     {
         private readonly List<ModListing<TMod>> _modsByLoadOrder = new List<ModListing<TMod>>();
 
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda
         public bool TryGetMod(ModKey key, out (ModIndex Index, TMod Mod) result)
         {
             if (!this.TryGetListing(key, out var listing)
-                || !listing.Listing.Loaded)
+                || listing.Listing.Mod == null)
             {
                 result = default((ModIndex, TMod));
                 return false;

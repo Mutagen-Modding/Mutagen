@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda
     /// </summary>
     /// <typeparam name="TMod">Mod type</typeparam>
     public class LoadOrderLinkCache<TMod> : ILinkCache<TMod>
-        where TMod : IModGetter
+        where TMod : class, IModGetter
     {
         class InternalTypedCache
         {
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda
                     var targetIndex = this._loadOrder.Count - _processedUntypedDepth - 1;
                     var targetMod = this._loadOrder[targetIndex];
                     this._processedUntypedDepth++;
-                    if (!targetMod.Loaded) continue;
+                    if (targetMod.Mod == null) continue;
                     // Add records from that mod that aren't already cached
                     foreach (var record in targetMod.Mod.EnumerateMajorRecords())
                     {
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda
                     var targetIndex = this._loadOrder.Count - cache.Depth - 1;
                     var targetMod = this._loadOrder[targetIndex];
                     cache.Depth++;
-                    if (!targetMod.Loaded) continue;
+                    if (targetMod.Mod == null) continue;
                     // Add records from that mod that aren't already cached
                     foreach (var record in targetMod.Mod.EnumerateMajorRecords<TMajor>())
                     {
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda
         {
             foreach (var listing in this._loadOrder)
             {
-                if (listing.Loaded) yield return listing.Mod;
+                if (listing.Mod != null) yield return listing.Mod;
             }
         }
 

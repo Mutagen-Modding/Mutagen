@@ -97,6 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMod ret = new OblivionMod(modKey);
             foreach (var mod in loadOrder)
             {
+                if (mod.Mod == null) continue;
                 ret.AddRecords(mod.Mod);
             }
             return ret;
