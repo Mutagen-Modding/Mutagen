@@ -34,18 +34,18 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class FactionBinaryCreateTranslation
         {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item, MasterReferenceReader masterReferences)
+            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item)
             {
                 item.Conditions = new ExtendedList<Condition>();
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame, masterReferences);
+                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
             }
         }
 
         public partial class FactionBinaryWriteTranslation
         {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IFactionGetter item, MasterReferenceReader masterReferences)
+            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IFactionGetter item)
             {
-                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer, masterReferences);
+                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
             }
         }
 

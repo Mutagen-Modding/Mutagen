@@ -858,36 +858,29 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((DoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Door CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new Door CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static Door CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Door();
             ((DoorSetterCommon)((IDoorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1215,12 +1208,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IDoorInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1228,12 +1219,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDoorInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((DoorSetterCommon)((IDoorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1616,13 +1605,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => Door_Registration.DOOR_HEADER;
         protected static void FillBinaryStructs(
             IDoorInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1630,7 +1617,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1646,9 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Model);
                 }
                 case 0x49524353: // SCRI
@@ -1656,7 +1640,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
                 }
@@ -1665,7 +1648,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.OpenSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
                 }
@@ -1674,7 +1656,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.CloseSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
                 }
@@ -1683,7 +1664,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.LoopSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
                 }
@@ -1699,7 +1679,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Place>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Door_Registration.TNAM_HEADER,
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Place>>();
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
@@ -1710,15 +1689,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IDoorInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IDoorInternal>(
@@ -1726,7 +1703,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -2771,14 +2747,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IDoorGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
@@ -2788,29 +2762,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(Door_Registration.SCRI_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Door_Registration.SCRI_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.OpenSound,
-                header: recordTypeConverter.ConvertToCustom(Door_Registration.SNAM_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Door_Registration.SNAM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CloseSound,
-                header: recordTypeConverter.ConvertToCustom(Door_Registration.ANAM_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Door_Registration.ANAM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopSound,
-                header: recordTypeConverter.ConvertToCustom(Door_Registration.BNAM_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Door_Registration.BNAM_HEADER));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
@@ -2819,21 +2788,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlaceGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RandomTeleportDestinations,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlaceGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlaceGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Door_Registration.TNAM_HEADER),
-                        masterReferences: m);
+                        header: recordTypeConverter.ConvertToCustom(Door_Registration.TNAM_HEADER));
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             IDoorGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -2843,25 +2809,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IDoorGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2869,12 +2831,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IDoorGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2882,12 +2842,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IDoorGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2952,12 +2910,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((DoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

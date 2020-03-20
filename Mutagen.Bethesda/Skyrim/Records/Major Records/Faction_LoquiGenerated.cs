@@ -1741,36 +1741,29 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Faction CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new Faction CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static Faction CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Faction();
             ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -2134,12 +2127,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IFactionInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -2147,12 +2138,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFactionInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2787,13 +2776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override RecordType RecordType => Faction_Registration.FACT_HEADER;
         protected static void FillBinaryStructs(
             IFactionInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             SkyrimMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -2801,7 +2788,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -2821,13 +2807,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Faction_Registration.XNAM_HEADER,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out Relation listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out Relation listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Relation>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<Relation>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
@@ -2843,7 +2827,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.PrisonMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.PrisonMarker);
                 }
@@ -2852,7 +2835,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.FollowerWaitMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
                 }
@@ -2861,7 +2843,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.EvidenceChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.EvidenceChest);
                 }
@@ -2870,7 +2851,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.PlayerBelongingsChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerBelongingsChest);
                 }
@@ -2879,7 +2859,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.CrimeGroup.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGroup);
                 }
@@ -2888,7 +2867,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.JailOutfit.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
                 }
@@ -2930,13 +2908,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out Rank listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out Rank listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Rank>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<Rank>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
@@ -2946,7 +2922,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.VendorList.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorList);
                 }
@@ -2955,30 +2930,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.VendorChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorChest);
                 }
                 case 0x564E4556: // VENV
                 {
-                    item.VendorValues = Mutagen.Bethesda.Skyrim.VendorValues.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.VendorValues = Mutagen.Bethesda.Skyrim.VendorValues.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorValues);
                 }
                 case 0x44564C50: // PLVD
                 {
-                    item.VendorLocation = Mutagen.Bethesda.Skyrim.VendorLocation.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.VendorLocation = Mutagen.Bethesda.Skyrim.VendorLocation.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
                 }
                 case 0x43544943: // CITC
                 {
                     FactionBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
                         frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Conditions);
                 }
                 default:
@@ -2987,15 +2956,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IFactionInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IFactionInternal>(
@@ -3003,7 +2970,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -5011,42 +4977,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void WriteBinaryConditionsCustom(
             MutagenWriter writer,
-            IFactionGetter item,
-            MasterReferenceReader masterReferences);
+            IFactionGetter item);
 
         public static void WriteBinaryConditions(
             MutagenWriter writer,
-            IFactionGetter item,
-            MasterReferenceReader masterReferences)
+            IFactionGetter item)
         {
             WriteBinaryConditionsCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public static void WriteEmbedded(
             IFactionGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
             IFactionGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
@@ -5055,15 +5014,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRelationGetter>.Instance.Write(
                 writer: writer,
                 items: item.Relations,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IRelationGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IRelationGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((RelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.WriteNullable(
@@ -5074,33 +5031,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PrisonMarker,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.JAIL_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.JAIL_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FollowerWaitMarker,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.WAIT_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.WAIT_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EvidenceChest,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.STOL_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.STOL_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PlayerBelongingsChest,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.PLCN_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.PLCN_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CrimeGroup,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.CRGR_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.CRGR_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.JailOutfit,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.JOUT_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.JOUT_HEADER));
             if (item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Faction_Registration.CRVA_HEADER)))
@@ -5128,51 +5079,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankGetter>.Instance.Write(
                 writer: writer,
                 items: item.Ranks,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IRankGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IRankGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((RankBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.VendorList,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.VEND_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.VEND_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.VendorChest,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.VENC_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.VENC_HEADER));
             if (item.VendorValues.TryGet(out var VendorValuesItem))
             {
                 ((VendorValuesBinaryWriteTranslation)((IBinaryItem)VendorValuesItem).BinaryWriteTranslator).Write(
                     item: VendorValuesItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             if (item.VendorLocation.TryGet(out var VendorLocationItem))
             {
                 ((VendorLocationBinaryWriteTranslation)((IBinaryItem)VendorLocationItem).BinaryWriteTranslator).Write(
                     item: VendorLocationItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             FactionBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public void Write(
             MutagenWriter writer,
             IFactionGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -5182,25 +5125,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IFactionGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5208,12 +5147,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IFactionGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5221,12 +5158,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IFactionGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5239,18 +5174,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
-            IFactionInternal item,
-            MasterReferenceReader masterReferences);
+            IFactionInternal item);
 
         public static void FillBinaryConditionsCustomPublic(
             MutagenFrame frame,
-            IFactionInternal item,
-            MasterReferenceReader masterReferences)
+            IFactionInternal item)
         {
             FillBinaryConditionsCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
     }
@@ -5307,12 +5239,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

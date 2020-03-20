@@ -627,12 +627,10 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -964,12 +962,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IRegionDataInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -977,12 +973,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRegionDataInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionDataSetterCommon)((IRegionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1302,8 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             IRegionDataInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
         }
         
@@ -1312,7 +1305,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1340,7 +1332,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromBinary(
             IRegionDataInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
         }
@@ -2000,16 +1991,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void WriteEmbedded(
             IRegionDataGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
         }
 
         public static void WriteRecordTypes(
             IRegionDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             if (item.RDATDataTypeState.HasFlag(RegionData.RDATDataType.Has))
             {
@@ -2032,7 +2021,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Write(
             MutagenWriter writer,
             IRegionDataGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -2042,25 +2030,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRegionDataGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2081,12 +2065,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IRegionDataGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             ((RegionDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -2147,12 +2129,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

@@ -2073,36 +2073,29 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new CombatStyle CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new CombatStyle CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static CombatStyle CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new CombatStyle();
             ((CombatStyleSetterCommon)((ICombatStyleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -2489,12 +2482,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this ICombatStyleInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -2502,12 +2493,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICombatStyleInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3281,13 +3270,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => CombatStyle_Registration.CSTY_HEADER;
         protected static void FillBinaryStructs(
             ICombatStyleInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -3295,7 +3282,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -3378,15 +3364,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     CombatStyleBinaryCreateTranslation.FillBinarySecondaryFlagsCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
                 }
                 case 0x44415343: // CSAD
                 {
-                    item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
                 }
                 default:
@@ -3395,15 +3378,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             ICombatStyleInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<ICombatStyleInternal>(
@@ -3411,7 +3392,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -5540,42 +5520,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void WriteBinarySecondaryFlagsCustom(
             MutagenWriter writer,
-            ICombatStyleGetter item,
-            MasterReferenceReader masterReferences);
+            ICombatStyleGetter item);
 
         public static void WriteBinarySecondaryFlags(
             MutagenWriter writer,
-            ICombatStyleGetter item,
-            MasterReferenceReader masterReferences)
+            ICombatStyleGetter item)
         {
             WriteBinarySecondaryFlagsCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public static void WriteEmbedded(
             ICombatStyleGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
             ICombatStyleGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             if (item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSTD_HEADER)))
@@ -5683,8 +5656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     {
                                         CombatStyleBinaryWriteTranslation.WriteBinarySecondaryFlags(
                                             writer: writer,
-                                            item: item,
-                                            masterReferences: masterReferences);
+                                            item: item);
                                     }
                                 }
                             }
@@ -5696,15 +5668,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((CombatStyleAdvancedBinaryWriteTranslation)((IBinaryItem)AdvancedItem).BinaryWriteTranslator).Write(
                     item: AdvancedItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             ICombatStyleGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -5714,25 +5684,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ICombatStyleGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5740,12 +5706,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ICombatStyleGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5753,12 +5717,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ICombatStyleGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5771,18 +5733,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinarySecondaryFlagsCustom(
             MutagenFrame frame,
-            ICombatStyleInternal item,
-            MasterReferenceReader masterReferences);
+            ICombatStyleInternal item);
 
         public static void FillBinarySecondaryFlagsCustomPublic(
             MutagenFrame frame,
-            ICombatStyleInternal item,
-            MasterReferenceReader masterReferences)
+            ICombatStyleInternal item)
         {
             FillBinarySecondaryFlagsCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
     }
@@ -5838,12 +5797,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

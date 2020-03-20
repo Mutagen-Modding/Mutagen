@@ -564,36 +564,29 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RankPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static RankPlacement CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static RankPlacement CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public static RankPlacement CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RankPlacement();
             ((RankPlacementSetterCommon)((IRankPlacementGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -921,12 +914,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IRankPlacement item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -934,12 +925,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRankPlacement item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RankPlacementSetterCommon)((IRankPlacementGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1204,12 +1193,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             IRankPlacement item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             item.Faction.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
-                masterReferences: masterReferences,
                 defaultVal: FormKey.Null);
             item.Rank = frame.ReadUInt8();
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
@@ -1218,7 +1205,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromBinary(
             IRankPlacement item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
@@ -1228,7 +1214,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 setFinal: true,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }
@@ -1853,13 +1838,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void WriteEmbedded(
             IRankPlacementGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Faction,
-                masterReferences: masterReferences);
+                item: item.Faction);
             writer.Write(item.Rank);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1869,7 +1852,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRankPlacementGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -1879,20 +1861,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRankPlacementGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1913,12 +1892,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IRankPlacementGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             ((RankPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -1979,12 +1956,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RankPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

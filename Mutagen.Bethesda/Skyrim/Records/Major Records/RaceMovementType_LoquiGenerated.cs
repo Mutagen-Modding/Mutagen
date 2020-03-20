@@ -541,36 +541,29 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceMovementTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static RaceMovementType CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static RaceMovementType CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public static RaceMovementType CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RaceMovementType();
             ((RaceMovementTypeSetterCommon)((IRaceMovementTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -896,12 +889,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IRaceMovementType item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -909,12 +900,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRaceMovementType item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceMovementTypeSetterCommon)((IRaceMovementTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1179,8 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             IRaceMovementType item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
         }
         
@@ -1190,7 +1178,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int? lastParsed,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1202,16 +1189,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.MovementType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.MovementType);
                 }
                 case 0x44455053: // SPED
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.Overrides) return TryGet<int?>.Failure;
-                    item.Overrides = Mutagen.Bethesda.Skyrim.SpeedOverrides.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.Overrides = Mutagen.Bethesda.Skyrim.SpeedOverrides.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.Overrides);
                 }
                 default:
@@ -1222,14 +1206,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromBinary(
             IRaceMovementType item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
                 frame: frame,
                 setFinal: false,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
@@ -1861,45 +1843,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IRaceMovementTypeGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MovementType,
-                header: recordTypeConverter.ConvertToCustom(RaceMovementType_Registration.MTYP_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(RaceMovementType_Registration.MTYP_HEADER));
             if (item.Overrides.TryGet(out var OverridesItem))
             {
                 ((SpeedOverridesBinaryWriteTranslation)((IBinaryItem)OverridesItem).BinaryWriteTranslator).Write(
                     item: OverridesItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             IRaceMovementTypeGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceMovementTypeGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1920,12 +1895,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IRaceMovementTypeGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             ((RaceMovementTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -1986,12 +1959,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceMovementTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

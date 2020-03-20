@@ -2023,36 +2023,29 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Race CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new Race CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static Race CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Race();
             ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -2426,12 +2419,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IRaceInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -2439,12 +2430,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRaceInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3108,13 +3097,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => Race_Registration.RACE_HEADER;
         protected static void FillBinaryStructs(
             IRaceInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -3122,7 +3109,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -3150,7 +3136,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.SPLO_HEADER,
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Spell>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
@@ -3161,13 +3146,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.XNAM_HEADER,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out RaceRelation listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out RaceRelation listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<RaceRelation>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
@@ -3180,27 +3163,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.DATADataTypeState = Race.DATADataType.Has;
                     }
-                    item.SkillBoost0 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
-                        frame: dataFrame,
-                        masterReferences: masterReferences);
-                    item.SkillBoost1 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
-                        frame: dataFrame,
-                        masterReferences: masterReferences);
-                    item.SkillBoost2 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
-                        frame: dataFrame,
-                        masterReferences: masterReferences);
-                    item.SkillBoost3 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
-                        frame: dataFrame,
-                        masterReferences: masterReferences);
-                    item.SkillBoost4 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
-                        frame: dataFrame,
-                        masterReferences: masterReferences);
-                    item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
-                        frame: dataFrame,
-                        masterReferences: masterReferences);
-                    item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(
-                        frame: dataFrame,
-                        masterReferences: masterReferences);
+                    item.SkillBoost0 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost1 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost2 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost3 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost4 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
                     item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
@@ -3216,7 +3185,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Race>>(
                         frame: frame,
-                        masterReferences: masterReferences,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
@@ -3225,7 +3193,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.DefaultHair = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Hair>>(
                         frame: frame,
-                        masterReferences: masterReferences,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 }
@@ -3252,7 +3219,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.RaceStats = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<RaceStats>(
                         frame: frame,
-                        masterReferences: masterReferences,
                         transl: LoquiBinaryTranslation<RaceStats>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
@@ -3263,13 +3229,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out FacePart listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out FacePart listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<FacePart>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<FacePart>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
@@ -3279,7 +3243,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.BodyData = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<BodyData>(
                         frame: frame,
-                        masterReferences: masterReferences,
                         maleMarker: Race_Registration.MNAM_HEADER,
                         femaleMarker: Race_Registration.FNAM_HEADER,
                         transl: LoquiBinaryTranslation<BodyData>.Instance.Parse);
@@ -3291,7 +3254,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Hairs = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Hair>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
@@ -3302,7 +3264,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Eyes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Eye>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
@@ -3311,9 +3272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41474746: // FGGA
                 case 0x53544746: // FGTS
                 {
-                    item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
                 }
                 case 0x4D414E53: // SNAM
@@ -3328,15 +3287,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IRaceInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IRaceInternal>(
@@ -3344,7 +3301,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -5879,26 +5835,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void WriteEmbedded(
             IRaceGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
             IRaceGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
@@ -5912,27 +5864,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER),
-                        masterReferences: m);
+                        header: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRaceRelationGetter>.Instance.Write(
                 writer: writer,
                 items: item.Relations,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IRaceRelationGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IRaceRelationGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((RaceRelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
@@ -5942,38 +5890,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     var SkillBoost0Item = item.SkillBoost0;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost0Item).BinaryWriteTranslator).Write(
                         item: SkillBoost0Item,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                     var SkillBoost1Item = item.SkillBoost1;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost1Item).BinaryWriteTranslator).Write(
                         item: SkillBoost1Item,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                     var SkillBoost2Item = item.SkillBoost2;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost2Item).BinaryWriteTranslator).Write(
                         item: SkillBoost2Item,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                     var SkillBoost3Item = item.SkillBoost3;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost3Item).BinaryWriteTranslator).Write(
                         item: SkillBoost3Item,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                     var SkillBoost4Item = item.SkillBoost4;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost4Item).BinaryWriteTranslator).Write(
                         item: SkillBoost4Item,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                     var SkillBoost5Item = item.SkillBoost5;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost5Item).BinaryWriteTranslator).Write(
                         item: SkillBoost5Item,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                     var SkillBoost6Item = item.SkillBoost6;
                     ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost6Item).BinaryWriteTranslator).Write(
                         item: SkillBoost6Item,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Fluff);
@@ -5995,25 +5936,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Voices,
                 recordType: Race_Registration.VNAM_HEADER,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IRaceGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRaceGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        item: subItem,
-                        masterReferences: m);
+                        item: subItem);
                 });
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.DefaultHair,
                 recordType: Race_Registration.DNAM_HEADER,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        item: subItem,
-                        masterReferences: m);
+                        item: subItem);
                 });
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -6031,28 +5968,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.RaceStats,
                 recordType: Race_Registration.ATTR_HEADER,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IRaceStatsGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IRaceStatsGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
-                        writer: subWriter,
-                        masterReferences: m);
+                        writer: subWriter);
                 });
             using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, ObjectType.Subrecord)) { }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
                 writer: writer,
                 items: item.FaceData,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFacePartGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFacePartGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((FacePartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             GenderedItemBinaryTranslation.Write(
@@ -6062,47 +5995,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 maleMarker: Race_Registration.MNAM_HEADER,
                 femaleMarker: Race_Registration.FNAM_HEADER,
                 markerWrap: false,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Hairs,
                 recordType: Race_Registration.HNAM_HEADER,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        item: subItem,
-                        masterReferences: m);
+                        item: subItem);
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Eyes,
                 recordType: Race_Registration.ENAM_HEADER,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        item: subItem,
-                        masterReferences: m);
+                        item: subItem);
                 });
             if (item.FaceGenData.TryGet(out var FaceGenDataItem))
             {
                 ((FaceGenDataBinaryWriteTranslation)((IBinaryItem)FaceGenDataItem).BinaryWriteTranslator).Write(
                     item: FaceGenDataItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -6113,7 +6039,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRaceGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -6123,25 +6048,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -6149,12 +6070,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -6162,12 +6081,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IRaceGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -6232,12 +6149,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

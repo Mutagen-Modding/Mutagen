@@ -522,36 +522,29 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ConditionFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((ConditionFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new ConditionFloat CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new ConditionFloat CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static ConditionFloat CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ConditionFloat();
             ((ConditionFloatSetterCommon)((IConditionFloatGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -860,12 +853,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IConditionFloat item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -873,12 +864,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IConditionFloat item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((ConditionFloatSetterCommon)((IConditionFloatGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1140,24 +1129,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             IConditionFloat item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             ConditionSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
             item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             ConditionFloatBinaryCreateTranslation.FillBinaryDataCustomPublic(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
         
         public void CopyInFromBinary(
             IConditionFloat item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
@@ -1167,13 +1152,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 setFinal: true,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
             ConditionFloatBinaryCreateTranslation.CustomBinaryEndImportPublic(
                 frame: frame,
-                obj: item,
-                masterReferences: masterReferences);
+                obj: item);
         }
         
         #endregion
@@ -1749,56 +1732,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
-            IConditionFloatGetter item,
-            MasterReferenceReader masterReferences);
+            IConditionFloatGetter item);
 
         public static void WriteBinaryData(
             MutagenWriter writer,
-            IConditionFloatGetter item,
-            MasterReferenceReader masterReferences)
+            IConditionFloatGetter item)
         {
             WriteBinaryDataCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void CustomBinaryEndExport(
             MutagenWriter writer,
-            IConditionFloatGetter obj,
-            MasterReferenceReader masterReferences);
+            IConditionFloatGetter obj);
         public static void CustomBinaryEndExportInternal(
             MutagenWriter writer,
-            IConditionFloatGetter obj,
-            MasterReferenceReader masterReferences)
+            IConditionFloatGetter obj)
         {
             CustomBinaryEndExport(
                 writer: writer,
-                obj: obj,
-                masterReferences: masterReferences);
+                obj: obj);
         }
         public static void WriteEmbedded(
             IConditionFloatGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             ConditionBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
             ConditionFloatBinaryWriteTranslation.WriteBinaryData(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public void Write(
             MutagenWriter writer,
             IConditionFloatGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -1808,24 +1781,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             CustomBinaryEndExportInternal(
                 writer: writer,
-                obj: item,
-                masterReferences: masterReferences);
+                obj: item);
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IConditionFloatGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1833,12 +1802,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IConditionGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IConditionFloatGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1851,33 +1818,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IConditionFloat item,
-            MasterReferenceReader masterReferences);
+            IConditionFloat item);
 
         public static void FillBinaryDataCustomPublic(
             MutagenFrame frame,
-            IConditionFloat item,
-            MasterReferenceReader masterReferences)
+            IConditionFloat item)
         {
             FillBinaryDataCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void CustomBinaryEndImport(
             MutagenFrame frame,
-            IConditionFloat obj,
-            MasterReferenceReader masterReferences);
+            IConditionFloat obj);
         public static void CustomBinaryEndImportPublic(
             MutagenFrame frame,
-            IConditionFloat obj,
-            MasterReferenceReader masterReferences)
+            IConditionFloat obj)
         {
             CustomBinaryEndImport(
                 frame: frame,
-                obj: obj,
-                masterReferences: masterReferences);
+                obj: obj);
         }
     }
 
@@ -1933,12 +1894,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => ConditionFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((ConditionFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

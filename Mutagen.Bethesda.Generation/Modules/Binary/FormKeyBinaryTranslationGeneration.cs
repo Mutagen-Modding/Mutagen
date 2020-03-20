@@ -14,16 +14,7 @@ namespace Mutagen.Bethesda.Generation
         public FormKeyBinaryTranslationGeneration()
             : base(expectedLen: 4)
         {
-            this.AdditionalWriteParams.Add(AdditionalParam);
-            this.AdditionalCopyInParams.Add(AdditionalParam);
             this.PreferDirectTranslation = false;
-        }
-
-        private static TryGet<string> AdditionalParam(
-           ObjectGeneration objGen,
-           TypeGeneration typeGen)
-        {
-            return TryGet<string>.Succeed("masterReferences: masterReferences");
         }
 
         public override void GenerateWrapperFields(
@@ -55,8 +46,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             if (typeGen.TryGetFieldData(out var data)
@@ -73,7 +63,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"errorMask: {errorMaskAccessor}");
                 }
                 args.Add($"translationMask: {translationMaskAccessor}");
-                args.Add($"masterReferences: {mastersAccessor}");
             }
         }
     }

@@ -46,8 +46,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (CustomWrite != null)
@@ -154,8 +153,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             if (typeGen.TryGetFieldData(out var data)

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
         
-        static partial void FillBinaryPointsCustom(MutagenFrame frame, IRoadInternal item, MasterReferenceReader masterReferences)
+        static partial void FillBinaryPointsCustom(MutagenFrame frame, IRoadInternal item)
         {
             var subMeta = frame.MetaData.ReadSubRecord(frame);
             if (subMeta.RecordType != PGRP)
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RoadBinaryWriteTranslation
     {
-        static partial void WriteBinaryPointsCustom(MutagenWriter writer, IRoadGetter item, MasterReferenceReader masterReferences)
+        static partial void WriteBinaryPointsCustom(MutagenWriter writer, IRoadGetter item)
         {
             bool anyConnections = false;
             using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRP))

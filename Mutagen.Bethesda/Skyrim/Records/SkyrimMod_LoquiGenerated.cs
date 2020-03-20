@@ -2329,8 +2329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             ISkyrimMod item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
         }
         
@@ -2339,7 +2338,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             GroupMask? importMask,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2350,9 +2348,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
-                        masterReferences: masterReferences);
-                    masterReferences.SetTo(item.ModHeader.MasterReferences);
+                        recordTypeConverter: null);
+                    frame.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
                 }
                 case 0x54534D47: // GMST
@@ -2361,8 +2358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.GameSettings.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2376,8 +2372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.Keywords.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2391,8 +2386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.LocationReferenceTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2406,8 +2400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.Actions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2421,8 +2414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.TextureSets.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2436,8 +2428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.Globals.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2451,8 +2442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.Classes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2466,8 +2456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.Factions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2481,8 +2470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.HeadParts.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2496,8 +2484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.Hairs.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2511,8 +2498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.Eyes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2526,8 +2512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         await item.Races.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
+                            recordTypeConverter: null);
                     }
                     else
                     {
@@ -2548,12 +2533,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            var masterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
+            frame.Reader.MasterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
             await UtilityAsyncTranslation.ModParse(
                 record: item,
                 frame: frame,
                 importMask: importMask,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
@@ -2857,9 +2841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var masterRefs = new MasterReferenceReader(item.ModKey, item.MasterReferences);
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
-            modHeader.WriteToBinary(
-                new MutagenWriter(stream, GameConstants.Skyrim),
-                masterRefs);
+            modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
             Stream[] outputStreams = new Stream[12];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
@@ -2896,17 +2878,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (var stream = new MutagenWriter(groupByteStream, GameConstants.Skyrim, dispose: false))
             {
                 stream.Position += 8;
-                GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream, default!);
+                GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
             }
             subStreams[0] = groupByteStream;
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
-                using (var stream = new MutagenWriter(trib, GameConstants.Skyrim, dispose: false))
+                using (var stream = new MutagenWriter(trib, GameConstants.Skyrim, masters, dispose: false))
                 {
                     foreach (var item in cutItems)
                     {
-                        item.WriteToBinary(stream, masters);
+                        item.WriteToBinary(stream);
                     }
                 }
                 subStreams[(int)counter + 1] = trib;
@@ -4249,15 +4231,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GroupMask? importMask,
             ModKey modKey,
             BinaryWriteParameters param,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             WriteModHeader(
                 mod: item,
                 writer: writer,
                 modKey: modKey,
-                param: param,
-                masterReferences: masterReferences);
+                param: param);
             if (importMask?.GameSettings ?? true)
             {
                 var GameSettingsItem = item.GameSettings;
@@ -4265,8 +4245,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.Keywords ?? true)
@@ -4276,8 +4255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.LocationReferenceTypes ?? true)
@@ -4287,8 +4265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
                         item: LocationReferenceTypesItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.Actions ?? true)
@@ -4298,8 +4275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.TextureSets ?? true)
@@ -4309,8 +4285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
                         item: TextureSetsItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.Globals ?? true)
@@ -4320,8 +4295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.Classes ?? true)
@@ -4331,8 +4305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.Factions ?? true)
@@ -4342,8 +4315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.HeadParts ?? true)
@@ -4353,8 +4325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: HeadPartsItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.Hairs ?? true)
@@ -4364,8 +4335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
                         item: HairsItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.Eyes ?? true)
@@ -4375,8 +4345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
                         item: EyesItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
             if (importMask?.Races ?? true)
@@ -4386,8 +4355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
                         item: RacesItem,
-                        writer: writer,
-                        masterReferences: masterReferences);
+                        writer: writer);
                 }
             }
         }
@@ -4401,15 +4369,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GroupMask? importMask = null)
         {
             param ??= BinaryWriteParameters.Default;
-            var masterReferences = UtilityTranslation.ConstructWriteMasters(item, param);
+            writer.MasterReferences = UtilityTranslation.ConstructWriteMasters(item, param);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
                 importMask: importMask,
                 modKey: modKey,
                 param: param,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(

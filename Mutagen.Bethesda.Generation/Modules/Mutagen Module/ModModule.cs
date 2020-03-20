@@ -404,8 +404,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     "modHeader.WriteToBinary"))
                 {
-                    args.Add($"new MutagenWriter(stream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode})");
-                    args.Add($"masterRefs");
+                    args.Add($"new MutagenWriter(stream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, masterRefs)");
                 }
                 int groupCount = obj.IterateFields()
                     .Select(f => f as LoquiType)
@@ -472,20 +471,20 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream, default!);");
+                        fg.AppendLine($"GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);");
                     }
                     fg.AppendLine($"subStreams[0] = groupByteStream;");
                     fg.AppendLine($"Parallel.ForEach(cuts, (cutItems, state, counter) =>");
                     using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                     {
                         fg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
-                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, dispose: false))");
+                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, masters, dispose: false))");
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine($"foreach (var item in cutItems)");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"item.WriteToBinary(stream, masters);");
+                                fg.AppendLine($"item.WriteToBinary(stream);");
                             }
                         }
                         fg.AppendLine($"subStreams[(int)counter + 1] = trib;");

@@ -276,36 +276,29 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static LeveledEntry<T> CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static LeveledEntry<T> CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public static LeveledEntry<T> CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new LeveledEntry<T>();
             ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -687,13 +680,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary<T>(
             this ILeveledEntry<T> item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
             where T : OblivionMajorRecord, IXmlItem, IBinaryItem
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -701,13 +692,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary<T>(
             this ILeveledEntry<T> item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
             ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1008,14 +997,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             ILeveledEntry<T> item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             item.Level = frame.ReadInt16();
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
-                masterReferences: masterReferences,
                 defaultVal: FormKey.Null);
             if (frame.Complete) return;
             item.Count = frame.ReadInt16();
@@ -1026,7 +1013,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromBinary(
             ILeveledEntry<T> item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
@@ -1036,7 +1022,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 setFinal: true,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }
@@ -1790,8 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void WriteEmbedded<T>(
             ILeveledEntryGetter<T> item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             writer.Write(item.Level);
@@ -1800,8 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Fluff);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Reference,
-                masterReferences: masterReferences);
+                item: item.Reference);
             writer.Write(item.Count);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1811,7 +1794,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write<T>(
             MutagenWriter writer,
             ILeveledEntryGetter<T> item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
@@ -1822,15 +1804,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             throw new NotImplementedException();
@@ -1853,14 +1833,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary<T, T_ErrMask>(
             this ILeveledEntryGetter<T> item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((LeveledEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -1922,12 +1900,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

@@ -29,22 +29,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter recordTypeConverter)
         {
             return GlobalCustomParsing.Create<Global>(
                 frame,
-                masterReferences,
-                getter: (f, m, triggerChar) =>
+                getter: (f, triggerChar) =>
                 {
                     switch (triggerChar)
                     {
                         case GlobalInt.TRIGGER_CHAR:
-                            return GlobalInt.CreateFromBinary(f, m);
+                            return GlobalInt.CreateFromBinary(f);
                         case GlobalShort.TRIGGER_CHAR:
-                            return GlobalShort.CreateFromBinary(f, m);
+                            return GlobalShort.CreateFromBinary(f);
                         case GlobalFloat.TRIGGER_CHAR:
-                            return GlobalFloat.CreateFromBinary(f, m);
+                            return GlobalFloat.CreateFromBinary(f);
                         default:
                             throw new ArgumentException($"Unknown trigger char: {triggerChar}");
                     }
@@ -58,8 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
-                IGlobalGetter item,
-                MasterReferenceReader masterReferences)
+                IGlobalGetter item)
             {
                 Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
                     writer,

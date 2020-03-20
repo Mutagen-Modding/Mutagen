@@ -38,8 +38,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor)
+            Accessor translationAccessor)
         {
             if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
             BufferType buf = typeGen as BufferType;
@@ -53,8 +52,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             BufferType zero = typeGen as BufferType;
             using (var args = new ArgsWrapper(fg,

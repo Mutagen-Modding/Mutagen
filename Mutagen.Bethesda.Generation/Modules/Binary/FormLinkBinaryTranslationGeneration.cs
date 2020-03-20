@@ -15,7 +15,6 @@ namespace Mutagen.Bethesda.Generation
         public FormLinkBinaryTranslationGeneration()
             : base(expectedLen: 4)
         {
-            this.AdditionalCopyInParams.Add(AdditionalParam);
             this.PreferDirectTranslation = false;
         }
 
@@ -43,13 +42,6 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private static TryGet<string> AdditionalParam(
-           ObjectGeneration objGen,
-           TypeGeneration typeGen)
-        {
-            return TryGet<string>.Succeed("masterReferences: masterReferences");
-        }
-
         public override void GenerateCopyInRet(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -60,8 +52,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor masterAccessor)
+            Accessor translationAccessor)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             FormLinkType linkType = typeGen as FormLinkType;
@@ -83,7 +74,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"errorMask: {errorMaskAccessor}");
                         }
                         args.Add($"item: out {outItemAccessor.DirectAccess}");
-                        args.Add($"masterReferences: {masterAccessor}");
                         foreach (var writeParam in this.AdditionalCopyInRetParams)
                         {
                             var get = writeParam(
@@ -134,7 +124,6 @@ namespace Mutagen.Bethesda.Generation
                     DefaultOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null",
                     ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}"
                         .Single()
-                        .AndWhen("masterReferences: masterReferences", () => linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         .ToArray(),
                     SkipErrorMask = !this.DoErrorMasks,
                 });
@@ -147,8 +136,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             FormLinkType linkType = typeGen as FormLinkType;
             var data = typeGen.GetFieldData();
@@ -179,8 +167,6 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                             }
-
-                            args.Add($"masterReferences: {mastersAccessor}");
                         }
                     }
                     else

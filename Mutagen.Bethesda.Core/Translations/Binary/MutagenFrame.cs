@@ -37,6 +37,11 @@ namespace Mutagen.Bethesda.Binary
         public ReadOnlyMemorySlice<byte> RemainingMemory => this.Reader.RemainingMemory;
 
         public GameConstants MetaData => this.Reader.MetaData;
+        public MasterReferenceReader? MasterReferences
+        {
+            get => this.Reader.MasterReferences;
+            set => this.Reader.MasterReferences = value;
+        }
 
         [DebuggerStepThrough]
         public MutagenFrame(IMutagenReadStream reader)
@@ -169,7 +174,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 var res = ZlibStream.UncompressBuffer(bytes);
                 return new MutagenFrame(
-                    new MutagenMemoryReadStream(res, this.MetaData));
+                    new MutagenMemoryReadStream(res, this.MetaData, this.MasterReferences));
             }
             catch (Exception)
             {
@@ -340,7 +345,7 @@ namespace Mutagen.Bethesda.Binary
         public MutagenFrame ReadAndReframe(int length)
         {
             var offset = this.PositionWithOffset;
-            return new MutagenFrame(new MutagenMemoryReadStream(this.ReadBytes(length), this.MetaData, offsetReference: offset));
+            return new MutagenFrame(new MutagenMemoryReadStream(this.ReadBytes(length), this.MetaData, this.MasterReferences, offsetReference: offset));
         }
 
         IMutagenReadStream IMutagenReadStream.ReadAndReframe(int length) => this.ReadAndReframe(length);

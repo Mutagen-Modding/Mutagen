@@ -1239,36 +1239,29 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static HeadData CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static HeadData CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public static HeadData CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new HeadData();
             ((HeadDataSetterCommon)((IHeadDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1610,12 +1603,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IHeadData item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1623,12 +1614,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IHeadData item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((HeadDataSetterCommon)((IHeadDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2028,8 +2017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             IHeadData item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
         }
         
@@ -2039,7 +2027,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int? lastParsed,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -2053,13 +2040,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out HeadPartReference listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out HeadPartReference listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<HeadPartReference>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<HeadPartReference>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.HeadParts);
@@ -2067,9 +2052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4941504D: // MPAI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableMorphs) return TryGet<int?>.Failure;
-                    item.AvailableMorphs = Mutagen.Bethesda.Skyrim.AvailableMorphs.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.AvailableMorphs = Mutagen.Bethesda.Skyrim.AvailableMorphs.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableMorphs);
                 }
                 case 0x4D525052: // RPRM
@@ -2079,7 +2062,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.RPRM_HEADER,
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Npc>>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
@@ -2091,7 +2073,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ColorRecord>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.ACHM_HEADER,
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<ColorRecord>>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableHairColors);
@@ -2103,7 +2084,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<TextureSet>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.FTSM_HEADER,
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<TextureSet>>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.FaceDetails);
@@ -2114,7 +2094,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.DefaultFaceTexture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.DefaultFaceTexture);
                 }
@@ -2131,13 +2110,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<TintAssets>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: TintAssets_Registration.TriggeringRecordTypes,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out TintAssets listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out TintAssets listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<TintAssets>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<TintAssets>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.TintMasks);
@@ -2145,9 +2122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C444F4D: // MODL
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.Model) return TryGet<int?>.Failure;
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.Model);
                 }
                 case 0x384D414E: // NAM8
@@ -2156,7 +2131,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.MorphRace.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.MorphRace);
                 }
@@ -2166,7 +2140,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.ArmorRace.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.ArmorRace);
                 }
@@ -2178,14 +2151,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromBinary(
             IHeadData item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
                 frame: frame,
                 setFinal: false,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
@@ -3558,126 +3529,106 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IHeadDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IHeadPartReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IHeadPartReferenceGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IHeadPartReferenceGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((HeadPartReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             if (item.AvailableMorphs.TryGet(out var AvailableMorphsItem))
             {
                 ((AvailableMorphsBinaryWriteTranslation)((IBinaryItem)AvailableMorphsItem).BinaryWriteTranslator).Write(
                     item: AvailableMorphsItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RacePresets,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.RPRM_HEADER),
-                        masterReferences: m);
+                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.RPRM_HEADER));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AvailableHairColors,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.ACHM_HEADER),
-                        masterReferences: m);
+                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.ACHM_HEADER));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.FaceDetails,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.FTSM_HEADER),
-                        masterReferences: m);
+                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.FTSM_HEADER));
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultFaceTexture,
-                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.DFTM_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.DFTM_HEADER));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ITintAssetsGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintMasks,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, ITintAssetsGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ITintAssetsGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((TintAssetsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             if (item.Model.TryGet(out var ModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MorphRace,
-                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.NAM8_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.NAM8_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ArmorRace,
-                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.RNAM_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.RNAM_HEADER));
         }
 
         public void Write(
             MutagenWriter writer,
             IHeadDataGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IHeadDataGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3698,12 +3649,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IHeadDataGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             ((HeadDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -3764,12 +3713,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

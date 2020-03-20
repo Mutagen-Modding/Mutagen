@@ -808,36 +808,29 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((AttackDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static AttackData CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static AttackData CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public static AttackData CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new AttackData();
             ((AttackDataSetterCommon)((IAttackDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1181,12 +1174,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IAttackData item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1194,12 +1185,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAttackData item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((AttackDataSetterCommon)((IAttackDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1568,14 +1557,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             IAttackData item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             item.DamageMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Chance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Spell.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
-                masterReferences: masterReferences,
                 defaultVal: FormKey.Null);
             item.Flags = EnumBinaryTranslation<AttackData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.AttackAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1583,7 +1570,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Stagger = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.AttackType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
-                masterReferences: masterReferences,
                 defaultVal: FormKey.Null);
             item.Knockdown = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.RecoveryTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1593,7 +1579,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromBinary(
             IAttackData item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
@@ -1603,7 +1588,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 setFinal: true,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }
@@ -2540,8 +2524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static void WriteEmbedded(
             IAttackDataGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2551,8 +2534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Chance);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Spell,
-                masterReferences: masterReferences);
+                item: item.Spell);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AttackData.Flag>.Instance.Write(
                 writer,
                 item.Flags,
@@ -2568,8 +2550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Stagger);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackType,
-                masterReferences: masterReferences);
+                item: item.AttackType);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Knockdown);
@@ -2584,7 +2565,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAttackDataGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -2594,20 +2574,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAttackDataGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2628,12 +2605,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IAttackDataGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             ((AttackDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -2694,12 +2669,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((AttackDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

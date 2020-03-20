@@ -68,8 +68,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
             bool isGroup = objGen.GetObjectType() == ObjectType.Mod
@@ -112,7 +111,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"item: {itemAccessor}");
                         args.Add($"writer: {writerAccessor}");
-                        args.Add($"masterReferences: {mastersAccessor}");
                         if (data?.RecordTypeConverter != null
                             && data.RecordTypeConverter.FromConversions.Count > 0)
                         {
@@ -155,11 +153,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"recordTypeConverter: null");
-                        args.Add($"masterReferences: masterReferences");
                     }
                     if (loquiGen.Name == "ModHeader")
                     {
-                        fg.AppendLine("masterReferences.SetTo(item.ModHeader.MasterReferences);");
+                        fg.AppendLine($"{frameAccessor}.MasterReferences!.SetTo(item.ModHeader.MasterReferences);");
                     }
                 }
                 else
@@ -173,7 +170,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                         }
-                        args.Add($"masterReferences: masterReferences");
                     }
                 }
             }
@@ -193,8 +189,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor)
+            Accessor translationAccessor)
         {
             var targetLoquiGen = targetGen as LoquiType;
             var loquiGen = typeGen as LoquiType;
@@ -208,14 +203,6 @@ namespace Mutagen.Bethesda.Generation
                 if (asyncMode == AsyncMode.Off)
                 {
                     args.Add($"item: out {outItemAccessor.DirectAccess}");
-                }
-                if (objGen.GetObjectType() == ObjectType.Mod)
-                {
-                    args.Add($"masterReferences: item.TES4.MasterReferences");
-                }
-                else
-                {
-                    args.Add($"masterReferences: {mastersAccessor}");
                 }
                 if (data?.RecordTypeConverter != null
                     && data.RecordTypeConverter.FromConversions.Count > 0)

@@ -870,36 +870,29 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PathGridBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((PathGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new PathGrid CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new PathGrid CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static PathGrid CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PathGrid();
             ((PathGridSetterCommon)((IPathGridGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1219,12 +1212,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IPathGridInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1232,12 +1223,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPathGridInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((PathGridSetterCommon)((IPathGridGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1564,13 +1553,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => PathGrid_Registration.PGRD_HEADER;
         protected static void FillBinaryStructs(
             IPathGridInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1578,7 +1565,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1588,8 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
                         frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
                 }
                 case 0x47414750: // PGAG
@@ -1602,13 +1587,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.InterCellConnections = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out InterCellPoint listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out InterCellPoint listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<InterCellPoint>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<InterCellPoint>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
@@ -1619,13 +1602,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: PathGrid_Registration.PGRL_HEADER,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<PointToReferenceMapping>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
@@ -1636,15 +1617,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IPathGridInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IPathGridInternal>(
@@ -1652,7 +1631,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -2630,60 +2608,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void WriteBinaryPointToPointConnectionsCustom(
             MutagenWriter writer,
-            IPathGridGetter item,
-            MasterReferenceReader masterReferences);
+            IPathGridGetter item);
 
         public static void WriteBinaryPointToPointConnections(
             MutagenWriter writer,
-            IPathGridGetter item,
-            MasterReferenceReader masterReferences)
+            IPathGridGetter item)
         {
             WriteBinaryPointToPointConnectionsCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public static void WriteRecordTypes(
             IPathGridGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             PathGridBinaryWriteTranslation.WriteBinaryPointToPointConnections(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IInterCellPointGetter>.Instance.Write(
                 writer: writer,
                 items: item.InterCellConnections,
                 recordType: PathGrid_Registration.PGRI_HEADER,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IInterCellPointGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IInterCellPointGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((InterCellPointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
-                        writer: subWriter,
-                        masterReferences: m);
+                        writer: subWriter);
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPointToReferenceMappingGetter>.Instance.Write(
                 writer: writer,
                 items: item.PointToReferenceMappings,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IPointToReferenceMappingGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IPointToReferenceMappingGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((PointToReferenceMappingBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
         }
@@ -2691,7 +2659,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IPathGridGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -2701,25 +2668,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPathGridGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2727,12 +2690,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPathGridGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2740,12 +2701,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IPathGridGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2758,18 +2717,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryPointToPointConnectionsCustom(
             MutagenFrame frame,
-            IPathGridInternal item,
-            MasterReferenceReader masterReferences);
+            IPathGridInternal item);
 
         public static void FillBinaryPointToPointConnectionsCustomPublic(
             MutagenFrame frame,
-            IPathGridInternal item,
-            MasterReferenceReader masterReferences)
+            IPathGridInternal item)
         {
             FillBinaryPointToPointConnectionsCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
     }
@@ -2826,12 +2782,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => PathGridBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((PathGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

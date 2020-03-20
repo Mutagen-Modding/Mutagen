@@ -73,8 +73,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMask,
-            Accessor mastersAccesor)
+            Accessor translationMask)
         {
             var dict = typeGen as DictType;
             if (dict.Mode != DictMode.KeyedValue)
@@ -124,8 +123,7 @@ namespace Mutagen.Bethesda.Generation
                                 itemAccessor: new Accessor("dictSubItem"),
                                 writerAccessor: "r",
                                 translationAccessor: "dictTranslMask",
-                                errorMaskAccessor: null,
-                                mastersAccessor: mastersAccesor);
+                                errorMaskAccessor: null);
                         }
                     });
                 }
@@ -215,7 +213,6 @@ namespace Mutagen.Bethesda.Generation
                                             retAccessor: "return ",
                                             outItemAccessor: new Accessor("dictSubItem"),
                                             translationAccessor: "dictTranslMask",
-                                            mastersAccessor: "masterReferences",
                                             asyncMode: AsyncMode.Direct,
                                             errorMaskAccessor: null);
                                     }
@@ -246,7 +243,6 @@ namespace Mutagen.Bethesda.Generation
                                 retAccessor: "return ",
                                 outItemAccessor: new Accessor("dictSubItem"),
                                 translationAccessor: "dictTranslMask",
-                                mastersAccessor: "masterReferences",
                                 asyncMode: AsyncMode.Direct,
                                 errorMaskAccessor: null);
                         }
@@ -265,8 +261,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor)
+            Accessor translationAccessor)
         {
             throw new NotImplementedException();
         }

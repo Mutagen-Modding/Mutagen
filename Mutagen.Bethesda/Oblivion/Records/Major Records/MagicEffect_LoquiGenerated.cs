@@ -1196,36 +1196,29 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new MagicEffect CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new MagicEffect CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static MagicEffect CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new MagicEffect();
             ((MagicEffectSetterCommon)((IMagicEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1569,12 +1562,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IMagicEffectInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1582,12 +1573,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IMagicEffectInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((MagicEffectSetterCommon)((IMagicEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2076,13 +2065,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => MagicEffect_Registration.MGEF_HEADER;
         protected static void FillBinaryStructs(
             IMagicEffectInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -2090,7 +2077,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -2122,9 +2108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Model);
                 }
                 case 0x41544144: // DATA
@@ -2143,21 +2127,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CounterEffectCount = dataFrame.ReadUInt32();
                     item.Light.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     item.ProjectileSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.EffectShader.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MagicEffect.DATADataType.Break0;
                         return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.EffectShader);
                     }
-                    item.SubData = Mutagen.Bethesda.Oblivion.MagicEffectSubData.CreateFromBinary(
-                        frame: dataFrame,
-                        masterReferences: masterReferences);
+                    item.SubData = Mutagen.Bethesda.Oblivion.MagicEffectSubData.CreateFromBinary(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.SubData);
                 }
                 case 0x45435345: // ESCE
@@ -2166,7 +2146,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CounterEffects = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<MagicEffect>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            masterReferences: masterReferences,
                             transl: RecordTypeBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IEDIDLink<MagicEffect>>();
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
@@ -2177,15 +2156,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IMagicEffectInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IMagicEffectInternal>(
@@ -2193,7 +2170,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -3567,26 +3543,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void WriteEmbedded(
             IMagicEffectGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
             IMagicEffectGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
@@ -3606,8 +3578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             if (item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Has))
             {
@@ -3634,22 +3605,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer.Write(item.CounterEffectCount);
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Light,
-                        masterReferences: masterReferences);
+                        item: item.Light);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.ProjectileSpeed);
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.EffectShader,
-                        masterReferences: masterReferences);
+                        item: item.EffectShader);
                     if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
                     {
                         var SubDataItem = item.SubData;
                         ((MagicEffectSubDataBinaryWriteTranslation)((IBinaryItem)SubDataItem).BinaryWriteTranslator).Write(
                             item: SubDataItem,
-                            writer: writer,
-                            masterReferences: masterReferences);
+                            writer: writer);
                     }
                 }
             }
@@ -3657,8 +3625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.CounterEffects,
                 recordType: MagicEffect_Registration.ESCE_HEADER,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IEDIDLinkGetter<IMagicEffectGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IEDIDLinkGetter<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3669,7 +3636,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IMagicEffectGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -3679,25 +3645,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IMagicEffectGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3705,12 +3667,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IMagicEffectGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3718,12 +3678,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IMagicEffectGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3788,12 +3746,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

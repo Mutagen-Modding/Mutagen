@@ -1044,36 +1044,29 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((ClimateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Climate CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new Climate CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static Climate CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Climate();
             ((ClimateSetterCommon)((IClimateGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1409,12 +1402,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IClimateInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1422,12 +1413,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IClimateInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((ClimateSetterCommon)((IClimateGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1862,13 +1851,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => Climate_Registration.CLMT_HEADER;
         protected static void FillBinaryStructs(
             IClimateInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1876,7 +1863,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1888,13 +1874,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Weathers = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out WeatherChance listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out WeatherChance listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<WeatherChance>();
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
@@ -1917,9 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
                 }
                 case 0x4D414E54: // TNAM
@@ -1932,29 +1914,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     ClimateBinaryCreateTranslation.FillBinarySunriseBeginCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     ClimateBinaryCreateTranslation.FillBinarySunriseEndCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     ClimateBinaryCreateTranslation.FillBinarySunsetBeginCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     ClimateBinaryCreateTranslation.FillBinarySunsetEndCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     item.Volatility = dataFrame.ReadUInt8();
                     ClimateBinaryCreateTranslation.FillBinaryPhaseCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     ClimateBinaryCreateTranslation.FillBinaryPhaseLengthCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
                 }
                 default:
@@ -1963,15 +1939,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IClimateInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IClimateInternal>(
@@ -1979,7 +1953,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -3165,134 +3138,110 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void WriteBinarySunriseBeginCustom(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences);
+            IClimateGetter item);
 
         public static void WriteBinarySunriseBegin(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences)
+            IClimateGetter item)
         {
             WriteBinarySunriseBeginCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinarySunriseEndCustom(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences);
+            IClimateGetter item);
 
         public static void WriteBinarySunriseEnd(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences)
+            IClimateGetter item)
         {
             WriteBinarySunriseEndCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinarySunsetBeginCustom(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences);
+            IClimateGetter item);
 
         public static void WriteBinarySunsetBegin(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences)
+            IClimateGetter item)
         {
             WriteBinarySunsetBeginCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinarySunsetEndCustom(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences);
+            IClimateGetter item);
 
         public static void WriteBinarySunsetEnd(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences)
+            IClimateGetter item)
         {
             WriteBinarySunsetEndCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinaryPhaseCustom(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences);
+            IClimateGetter item);
 
         public static void WriteBinaryPhase(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences)
+            IClimateGetter item)
         {
             WriteBinaryPhaseCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinaryPhaseLengthCustom(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences);
+            IClimateGetter item);
 
         public static void WriteBinaryPhaseLength(
             MutagenWriter writer,
-            IClimateGetter item,
-            MasterReferenceReader masterReferences)
+            IClimateGetter item)
         {
             WriteBinaryPhaseLengthCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public static void WriteEmbedded(
             IClimateGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
             IClimateGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherChanceGetter>.Instance.Write(
                 writer: writer,
                 items: item.Weathers,
                 recordType: Climate_Registration.WLST_HEADER,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IWeatherChanceGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IWeatherChanceGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
                     ((WeatherChanceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
-                        writer: subWriter,
-                        masterReferences: m);
+                        writer: subWriter);
                 });
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3308,8 +3257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             if (item.TNAMDataTypeState.HasFlag(Climate.TNAMDataType.Has))
             {
@@ -3317,29 +3265,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     ClimateBinaryWriteTranslation.WriteBinarySunriseBegin(
                         writer: writer,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     ClimateBinaryWriteTranslation.WriteBinarySunriseEnd(
                         writer: writer,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     ClimateBinaryWriteTranslation.WriteBinarySunsetBegin(
                         writer: writer,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     ClimateBinaryWriteTranslation.WriteBinarySunsetEnd(
                         writer: writer,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     writer.Write(item.Volatility);
                     ClimateBinaryWriteTranslation.WriteBinaryPhase(
                         writer: writer,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     ClimateBinaryWriteTranslation.WriteBinaryPhaseLength(
                         writer: writer,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                 }
             }
         }
@@ -3347,7 +3289,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IClimateGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -3357,25 +3298,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IClimateGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3383,12 +3320,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IClimateGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3396,12 +3331,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IClimateGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3414,98 +3347,80 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinarySunriseBeginCustom(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences);
+            IClimateInternal item);
 
         public static void FillBinarySunriseBeginCustomPublic(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences)
+            IClimateInternal item)
         {
             FillBinarySunriseBeginCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinarySunriseEndCustom(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences);
+            IClimateInternal item);
 
         public static void FillBinarySunriseEndCustomPublic(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences)
+            IClimateInternal item)
         {
             FillBinarySunriseEndCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinarySunsetBeginCustom(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences);
+            IClimateInternal item);
 
         public static void FillBinarySunsetBeginCustomPublic(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences)
+            IClimateInternal item)
         {
             FillBinarySunsetBeginCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinarySunsetEndCustom(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences);
+            IClimateInternal item);
 
         public static void FillBinarySunsetEndCustomPublic(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences)
+            IClimateInternal item)
         {
             FillBinarySunsetEndCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinaryPhaseCustom(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences);
+            IClimateInternal item);
 
         public static void FillBinaryPhaseCustomPublic(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences)
+            IClimateInternal item)
         {
             FillBinaryPhaseCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinaryPhaseLengthCustom(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences);
+            IClimateInternal item);
 
         public static void FillBinaryPhaseLengthCustomPublic(
             MutagenFrame frame,
-            IClimateInternal item,
-            MasterReferenceReader masterReferences)
+            IClimateInternal item)
         {
             FillBinaryPhaseLengthCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
     }
@@ -3562,12 +3477,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((ClimateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

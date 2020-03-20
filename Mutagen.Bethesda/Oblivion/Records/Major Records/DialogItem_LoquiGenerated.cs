@@ -1291,36 +1291,29 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((DialogItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new DialogItem CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new DialogItem CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static DialogItem CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new DialogItem();
             ((DialogItemSetterCommon)((IDialogItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1655,12 +1648,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IDialogItemInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1668,12 +1659,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDialogItemInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((DialogItemSetterCommon)((IDialogItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2122,13 +2111,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => DialogItem_Registration.INFO_HEADER;
         protected static void FillBinaryStructs(
             IDialogItemInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -2136,7 +2123,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -2164,7 +2150,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Quest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 }
@@ -2173,7 +2158,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.PreviousTopic.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 }
@@ -2183,7 +2167,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.NAME_HEADER,
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
@@ -2194,13 +2177,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TRDT_HEADER,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out DialogResponse listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out DialogResponse listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<DialogResponse>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
@@ -2212,13 +2193,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                            masterReferences: masterReferences,
-                            transl: (MutagenFrame r, out Condition listSubItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
-                                    masterReferences: m);
+                                    item: out listSubItem);
                             })
                         .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
@@ -2229,7 +2208,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TCLT_HEADER,
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
@@ -2240,7 +2218,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TCLF_HEADER,
-                            masterReferences: masterReferences,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
@@ -2250,8 +2227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script.CopyInFromBinary(
                         frame: frame,
-                        recordTypeConverter: null,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
                 }
                 default:
@@ -2260,15 +2236,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IDialogItemInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IDialogItemInternal>(
@@ -2276,7 +2250,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -3677,26 +3650,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void WriteEmbedded(
             IDialogItemGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
             IDialogItemGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             if (item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogItem_Registration.DATA_HEADER)))
@@ -3717,88 +3686,74 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quest,
-                header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.QSTI_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.QSTI_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PreviousTopic,
-                header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.PNAM_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.PNAM_HEADER));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Topics,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.NAME_HEADER),
-                        masterReferences: m);
+                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.NAME_HEADER));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogResponseGetter>.Instance.Write(
                 writer: writer,
                 items: item.Responses,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IDialogResponseGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IDialogResponseGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((DialogResponseBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
                         ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter,
-                            masterReferences: m);
+                            writer: subWriter);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Choices,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLT_HEADER),
-                        masterReferences: m);
+                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLT_HEADER));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LinkFrom,
-                masterReferences: masterReferences,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, MasterReferenceReader m, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLF_HEADER),
-                        masterReferences: m);
+                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLF_HEADER));
                 });
             var ScriptItem = item.Script;
             ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)ScriptItem).BinaryWriteTranslator).Write(
                 item: ScriptItem,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public void Write(
             MutagenWriter writer,
             IDialogItemGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -3808,25 +3763,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IDialogItemGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3834,12 +3785,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IDialogItemGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3847,12 +3796,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IDialogItemGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3917,12 +3864,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((DialogItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

@@ -24,15 +24,14 @@ namespace Mutagen.Bethesda.Binary
 
         public static GenderedItem<TItem> Parse<TItem>(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            if (!transl(frame, out var male, masterReferences, recordTypeConverter))
+            if (!transl(frame, out var male, recordTypeConverter))
             {
                 throw new ArgumentException();
             }
-            if (!transl(frame, out var female, masterReferences, recordTypeConverter))
+            if (!transl(frame, out var female, recordTypeConverter))
             {
                 throw new ArgumentException();
             }
@@ -91,7 +90,6 @@ namespace Mutagen.Bethesda.Binary
 
         public static GenderedItem<TItem?> Parse<TItem>(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordType maleMarker,
             RecordType femaleMarker,
             UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
@@ -106,7 +104,7 @@ namespace Mutagen.Bethesda.Binary
                 if (type == maleMarker)
                 {
                     frame.Position += subHeader.TotalLength;
-                    if (!transl(frame, out male, masterReferences, recordTypeConverter))
+                    if (!transl(frame, out male, recordTypeConverter))
                     {
                         throw new ArgumentException();
                     }
@@ -114,7 +112,7 @@ namespace Mutagen.Bethesda.Binary
                 else if (type == femaleMarker)
                 {
                     frame.Position += subHeader.TotalLength;
-                    if (!transl(frame, out female, masterReferences, recordTypeConverter))
+                    if (!transl(frame, out female, recordTypeConverter))
                     {
                         throw new ArgumentException();
                     }
@@ -233,7 +231,6 @@ namespace Mutagen.Bethesda.Binary
             IGenderedItemGetter<T>? item,
             RecordType maleMarker,
             RecordType femaleMarker,
-            MasterReferenceReader masterReferences,
             UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
             bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
@@ -246,12 +243,12 @@ namespace Mutagen.Bethesda.Binary
                 {
                     if (markerWrap)
                     {
-                        transl(writer, male, masterReferences, recordTypeConverter);
+                        transl(writer, male, recordTypeConverter);
                     }
                 }
                 if (!markerWrap)
                 {
-                    transl(writer, male, masterReferences, recordTypeConverter);
+                    transl(writer, male, recordTypeConverter);
                 }
             }
             var female = item.Female;
@@ -261,12 +258,12 @@ namespace Mutagen.Bethesda.Binary
                 {
                     if (markerWrap)
                     {
-                        transl(writer, female, masterReferences, recordTypeConverter);
+                        transl(writer, female, recordTypeConverter);
                     }
                 }
                 if (!markerWrap)
                 {
-                    transl(writer, female, masterReferences, recordTypeConverter);
+                    transl(writer, female, recordTypeConverter);
                 }
             }
         }
@@ -307,7 +304,6 @@ namespace Mutagen.Bethesda.Binary
             RecordType markerType,
             RecordType maleMarker,
             RecordType femaleMarker,
-            MasterReferenceReader masterReferences,
             UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
             bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
@@ -323,12 +319,12 @@ namespace Mutagen.Bethesda.Binary
                 {
                     if (markerWrap)
                     {
-                        transl(writer, male, masterReferences, recordTypeConverter);
+                        transl(writer, male, recordTypeConverter);
                     }
                 }
                 if (!markerWrap)
                 {
-                    transl(writer, male, masterReferences, recordTypeConverter);
+                    transl(writer, male, recordTypeConverter);
                 }
             }
             var female = item.Female;
@@ -338,12 +334,12 @@ namespace Mutagen.Bethesda.Binary
                 {
                     if (markerWrap)
                     {
-                        transl(writer, female, masterReferences, recordTypeConverter);
+                        transl(writer, female, recordTypeConverter);
                     }
                 }
                 if (!markerWrap)
                 {
-                    transl(writer, female, masterReferences, recordTypeConverter);
+                    transl(writer, female, recordTypeConverter);
                 }
             }
         }
@@ -374,7 +370,6 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IGenderedItemGetter<T>? item,
             RecordType recordType,
-            MasterReferenceReader masterReferences,
             UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -384,12 +379,12 @@ namespace Mutagen.Bethesda.Binary
                 var male = item.Male;
                 if (male != null)
                 {
-                    transl(writer, male, masterReferences, recordTypeConverter);
+                    transl(writer, male, recordTypeConverter);
                 }
                 var female = item.Female;
                 if (female != null)
                 {
-                    transl(writer, female, masterReferences, recordTypeConverter);
+                    transl(writer, female, recordTypeConverter);
                 }
             }
         }

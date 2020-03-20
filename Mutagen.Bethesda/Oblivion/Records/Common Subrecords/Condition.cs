@@ -23,8 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
         static Condition CustomRecordTypeTrigger(
             MutagenFrame frame,
             RecordType recordType, 
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             var pos = frame.PositionWithOffset;
             var span = frame.ReadSpan(0x1A);
@@ -35,7 +34,6 @@ namespace Mutagen.Bethesda.Oblivion
             LoquiBinaryTranslation<Condition>.Instance.Parse(
                 frame: new MutagenFrame(new MutagenMemoryReadStream(newBytes, frame.MetaData, offsetReference: pos)),
                 item: out var item,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter);
             return item;
         }
@@ -57,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return (CompareOperator)((Mask & b) >> 4);
             }
 
-            static partial void FillBinaryInitialParserCustom(MutagenFrame frame, ICondition item, MasterReferenceReader masterReferences)
+            static partial void FillBinaryInitialParserCustom(MutagenFrame frame, ICondition item)
             {
                 byte b = frame.ReadUInt8();
                 item.Flags = GetFlag(b);
@@ -67,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ConditionBinaryWriteTranslation
         {
-            static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionGetter item, MasterReferenceReader masterReferences)
+            static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionGetter item)
             {
                 byte b = (byte)item.Flags;
                 b |= (byte)(((int)(item.CompareOperator) * 16) & ConditionBinaryCreateTranslation.Mask);

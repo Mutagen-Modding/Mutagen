@@ -1880,36 +1880,29 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Water CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new Water CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static Water CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Water();
             ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -2287,12 +2280,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IWaterInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -2300,12 +2291,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IWaterInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3018,13 +3007,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => Water_Registration.WATR_HEADER;
         protected static void FillBinaryStructs(
             IWaterInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -3032,7 +3019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -3071,7 +3057,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
                 }
@@ -3085,8 +3070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     WaterBinaryCreateTranslation.FillBinaryNothingCustomLogicCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Water.DATADataType.Break0;
@@ -3104,8 +3088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.FogDistanceNearPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     WaterBinaryCreateTranslation.FillBinaryBloodCustomLogicCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Water.DATADataType.Break1;
@@ -3125,8 +3108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     dataFrame.SetPosition(dataFrame.Position + 3);
                     WaterBinaryCreateTranslation.FillBinaryOilCustomLogicCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Water.DATADataType.Break2;
@@ -3140,8 +3122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DisplacementSimulatorForce = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     WaterBinaryCreateTranslation.FillBinaryOddExtraBytesCustomPublic(
                         frame: dataFrame,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Water.DATADataType.Break3;
@@ -3156,9 +3137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    item.RelatedWaters = Mutagen.Bethesda.Oblivion.RelatedWaters.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.RelatedWaters = Mutagen.Bethesda.Oblivion.RelatedWaters.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
                 }
                 default:
@@ -3167,15 +3146,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IWaterInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<IWaterInternal>(
@@ -3183,7 +3160,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -5154,90 +5130,74 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void WriteBinaryNothingCustomLogicCustom(
             MutagenWriter writer,
-            IWaterGetter item,
-            MasterReferenceReader masterReferences);
+            IWaterGetter item);
 
         public static void WriteBinaryNothingCustomLogic(
             MutagenWriter writer,
-            IWaterGetter item,
-            MasterReferenceReader masterReferences)
+            IWaterGetter item)
         {
             WriteBinaryNothingCustomLogicCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinaryBloodCustomLogicCustom(
             MutagenWriter writer,
-            IWaterGetter item,
-            MasterReferenceReader masterReferences);
+            IWaterGetter item);
 
         public static void WriteBinaryBloodCustomLogic(
             MutagenWriter writer,
-            IWaterGetter item,
-            MasterReferenceReader masterReferences)
+            IWaterGetter item)
         {
             WriteBinaryBloodCustomLogicCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinaryOilCustomLogicCustom(
             MutagenWriter writer,
-            IWaterGetter item,
-            MasterReferenceReader masterReferences);
+            IWaterGetter item);
 
         public static void WriteBinaryOilCustomLogic(
             MutagenWriter writer,
-            IWaterGetter item,
-            MasterReferenceReader masterReferences)
+            IWaterGetter item)
         {
             WriteBinaryOilCustomLogicCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinaryOddExtraBytesCustom(
             MutagenWriter writer,
-            IWaterGetter item,
-            MasterReferenceReader masterReferences);
+            IWaterGetter item);
 
         public static void WriteBinaryOddExtraBytes(
             MutagenWriter writer,
-            IWaterGetter item,
-            MasterReferenceReader masterReferences)
+            IWaterGetter item)
         {
             WriteBinaryOddExtraBytesCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public static void WriteEmbedded(
             IWaterGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
             IWaterGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Texture,
@@ -5260,16 +5220,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Sound,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER));
             if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
                 {
                     WaterBinaryWriteTranslation.WriteBinaryNothingCustomLogic(
                         writer: writer,
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break0))
                     {
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -5304,8 +5262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item: item.FogDistanceNearPlane);
                         WaterBinaryWriteTranslation.WriteBinaryBloodCustomLogic(
                             writer: writer,
-                            item: item,
-                            masterReferences: masterReferences);
+                            item: item);
                         if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break1))
                         {
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -5327,8 +5284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer.WriteZeros(3);
                             WaterBinaryWriteTranslation.WriteBinaryOilCustomLogic(
                                 writer: writer,
-                                item: item,
-                                masterReferences: masterReferences);
+                                item: item);
                             if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break2))
                             {
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -5351,8 +5307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     item: item.DisplacementSimulatorForce);
                                 WaterBinaryWriteTranslation.WriteBinaryOddExtraBytes(
                                     writer: writer,
-                                    item: item,
-                                    masterReferences: masterReferences);
+                                    item: item);
                                 if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break3))
                                 {
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -5378,15 +5333,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)RelatedWatersItem).BinaryWriteTranslator).Write(
                     item: RelatedWatersItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             IWaterGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -5396,25 +5349,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWaterGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5422,12 +5371,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWaterGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5435,12 +5382,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IWaterGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -5453,66 +5398,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryNothingCustomLogicCustom(
             MutagenFrame frame,
-            IWaterInternal item,
-            MasterReferenceReader masterReferences);
+            IWaterInternal item);
 
         public static void FillBinaryNothingCustomLogicCustomPublic(
             MutagenFrame frame,
-            IWaterInternal item,
-            MasterReferenceReader masterReferences)
+            IWaterInternal item)
         {
             FillBinaryNothingCustomLogicCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinaryBloodCustomLogicCustom(
             MutagenFrame frame,
-            IWaterInternal item,
-            MasterReferenceReader masterReferences);
+            IWaterInternal item);
 
         public static void FillBinaryBloodCustomLogicCustomPublic(
             MutagenFrame frame,
-            IWaterInternal item,
-            MasterReferenceReader masterReferences)
+            IWaterInternal item)
         {
             FillBinaryBloodCustomLogicCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinaryOilCustomLogicCustom(
             MutagenFrame frame,
-            IWaterInternal item,
-            MasterReferenceReader masterReferences);
+            IWaterInternal item);
 
         public static void FillBinaryOilCustomLogicCustomPublic(
             MutagenFrame frame,
-            IWaterInternal item,
-            MasterReferenceReader masterReferences)
+            IWaterInternal item)
         {
             FillBinaryOilCustomLogicCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinaryOddExtraBytesCustom(
             MutagenFrame frame,
-            IWaterInternal item,
-            MasterReferenceReader masterReferences);
+            IWaterInternal item);
 
         public static void FillBinaryOddExtraBytesCustomPublic(
             MutagenFrame frame,
-            IWaterInternal item,
-            MasterReferenceReader masterReferences)
+            IWaterInternal item)
         {
             FillBinaryOddExtraBytesCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
     }
@@ -5569,12 +5502,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

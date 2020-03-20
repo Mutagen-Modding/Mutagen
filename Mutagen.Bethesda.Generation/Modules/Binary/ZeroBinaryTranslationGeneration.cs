@@ -38,8 +38,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor)
+            Accessor translationAccessor)
         {
             if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
             ZeroType zero = typeGen as ZeroType;
@@ -53,8 +52,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor, 
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             ZeroType zero = typeGen as ZeroType;
             fg.AppendLine($"{writerAccessor}.WriteZeros({zero.Length});");

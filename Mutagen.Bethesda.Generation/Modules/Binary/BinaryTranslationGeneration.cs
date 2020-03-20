@@ -38,8 +38,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor);
+            Accessor translationAccessor);
 
         public abstract string GetTranslatorInstance(TypeGeneration typeGen, bool getter);
 
@@ -62,8 +61,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor);
+            Accessor translationAccessor);
 
         public virtual void GenerateWrapperFields(
             FileGeneration fg,

@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,11 +15,18 @@ namespace Mutagen.Bethesda.Binary
         /// Game constants meta object to reference for header length measurements
         /// </summary>
         GameConstants MetaData { get; }
+
+        /// <summary>
+        /// Optional MasterReferenceReader to reference while reading
+        /// </summary>
+        MasterReferenceReader? MasterReferences { get; set; }
+
         /// <summary>
         /// Convenience offset tracker variable for helping print meaningful position information
         /// relative to an original source file.  Only used if a stream gets reframed.
         /// </summary>
         long OffsetReference { get; }
+
         /// <summary>
         /// Reads an amount of bytes into an internal array and returns a new stream wrapping those bytes.
         /// OffsetReference is updated to be aligned to the original source starting position.

@@ -22,8 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void FillBinaryContainedRecordTypeCustom(
                 MutagenFrame frame,
-                IListGroup<T> item,
-                MasterReferenceReader masterReferences)
+                IListGroup<T> item)
             {
                 frame.Reader.Position += 4;
             }
@@ -33,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryContainedRecordTypeCustom<T>(
                 MutagenWriter writer,
-                IListGroupGetter<T> item,
-                MasterReferenceReader masterReferences)
+                IListGroupGetter<T> item)
                 where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(

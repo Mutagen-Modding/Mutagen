@@ -43,14 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GlobalIntBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item, MasterReferenceReader masterReferences)
+            static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item)
             {
             }
         }
 
         public partial class GlobalIntBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item, MasterReferenceReader masterReferences)
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.ExportSubRecordHeader(writer, GlobalInt_Registration.FLTV_HEADER))

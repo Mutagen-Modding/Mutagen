@@ -659,36 +659,29 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new TextureSet CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static new TextureSet CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public new static TextureSet CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new TextureSet();
             ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1007,12 +1000,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this ITextureSetInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1020,12 +1011,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITextureSetInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1360,13 +1349,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override RecordType RecordType => TextureSet_Registration.TXST_HEADER;
         protected static void FillBinaryStructs(
             ITextureSetInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             SkyrimMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1374,7 +1361,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1382,9 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x444E424F: // OBND
                 {
-                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
                 }
                 case 0x30305854: // TX00
@@ -1396,16 +1380,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x36305854: // TX06
                 case 0x37305854: // TX07
                 {
-                    item.Textures = Mutagen.Bethesda.Skyrim.Textures.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.Textures = Mutagen.Bethesda.Skyrim.Textures.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Textures);
                 }
                 case 0x54444F44: // DODT
                 {
-                    item.Decal = Mutagen.Bethesda.Skyrim.Decal.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.Decal = Mutagen.Bethesda.Skyrim.Decal.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
                 }
                 case 0x4D414E44: // DNAM
@@ -1420,15 +1400,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             ITextureSetInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.MajorRecordParse<ITextureSetInternal>(
@@ -1436,7 +1414,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
         }
@@ -2304,34 +2281,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ITextureSetGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
             {
                 ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                     item: ObjectBoundsItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             if (item.Textures.TryGet(out var TexturesItem))
             {
                 ((TexturesBinaryWriteTranslation)((IBinaryItem)TexturesItem).BinaryWriteTranslator).Write(
                     item: TexturesItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             if (item.Decal.TryGet(out var DecalItem))
             {
                 ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
                     item: DecalItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<TextureSet.Flag>.Instance.WriteNullable(
                 writer,
@@ -2343,7 +2315,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ITextureSetGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -2353,25 +2324,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    masterReferences: masterReferences);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2379,12 +2346,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2392,12 +2357,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2461,12 +2424,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

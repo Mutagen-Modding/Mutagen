@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj, MasterReferenceReader masterReferences)
+            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
             {
                 if (frame.Reader.Complete) return;
                 GroupHeader groupMeta = frame.MetaData.GetGroup(frame);
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                 {
                     obj.Timestamp = groupMeta.LastModifiedSpan.ToArray();
-                    if (FormKey.Factory(masterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)) != obj.FormKey)
+                    if (FormKey.Factory(frame.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)) != obj.FormKey)
                     {
                         throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                     }
@@ -49,23 +49,21 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
                             frame: r,
-                            item: out listItem,
-                            masterReferences: masterReferences);
+                            item: out listItem);
                     }).ToExtendedList();
             }
         }
 
         public partial class DialogTopicBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj, MasterReferenceReader masterReferences)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
             {
                 if (obj.Items == null || obj.Items.Count == 0) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,
-                        obj.FormKey,
-                        masterReferences);
+                        obj.FormKey);
                     writer.Write((int)GroupTypeEnum.TopicChildren);
                     writer.Write(obj.Timestamp);
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
@@ -73,9 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
                         items: obj.Items,
                         transl: (MutagenWriter subWriter, IDialogItemGetter subItem) =>
                         {
-                            subItem.WriteToBinary(
-                                 writer: subWriter,
-                                 masterReferences: masterReferences);
+                            subItem.WriteToBinary(subWriter);
                         });
                 }
             }

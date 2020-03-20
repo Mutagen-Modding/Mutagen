@@ -57,8 +57,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor)
+            Accessor translationAccessor)
         {
             throw new NotImplementedException();
         }
@@ -70,8 +69,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             this.GenerateWrite(
                 fg: fg,
@@ -96,7 +94,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                     if (DoErrorMasksStatic)
                     {
                         args.Add($"ErrorMaskBuilder errorMask");
@@ -109,7 +106,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                    args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                     if (DoErrorMasksStatic)
                     {
                         args.Add($"ErrorMaskBuilder errorMask");
@@ -122,7 +118,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.AddPassArg($"frame");
                         args.AddPassArg($"item");
-                        args.AddPassArg($"masterReferences");
                         if (DoErrorMasksStatic)
                         {
                             args.Add($"errorMask: errorMask");
@@ -146,7 +141,6 @@ namespace Mutagen.Bethesda.Generation
                 args.SemiColon = true;
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
-                args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                 if (DoErrorMasksStatic)
                 {
                     args.Add($"ErrorMaskBuilder errorMask");
@@ -159,7 +153,6 @@ namespace Mutagen.Bethesda.Generation
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
-                args.Add($"{nameof(MasterReferenceReader)} masterReferences");
                 if (DoErrorMasksStatic)
                 {
                     args.Add($"ErrorMaskBuilder errorMask");
@@ -172,7 +165,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("writer: writer");
                     args.Add("item: item");
-                    args.Add($"masterReferences: masterReferences");
                     if (DoErrorMasksStatic)
                     {
                         args.Add($"errorMask: errorMask");
@@ -193,7 +185,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add("item: item");
-                args.Add($"masterReferences: masterReferences");
                 if (DoErrorMasksStatic)
                 {
                     args.Add("errorMask: errorMask");
@@ -213,7 +204,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
                 args.Add("item: item");
-                args.Add($"masterReferences: masterReferences");
                 if (DoErrorMasksStatic)
                 {
                     args.Add("errorMask: errorMask");

@@ -81,7 +81,6 @@ namespace Mutagen.Bethesda.Binary
 
         public IEnumerable<T> Parse(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null,
             RecordTypeConverter? recordTypeConverter = null)
@@ -96,7 +95,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
-                if (transl(frame, nextRecord, out var subIitem, masterReferences, recordTypeConverter))
+                if (transl(frame, nextRecord, out var subIitem, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }
@@ -113,7 +112,6 @@ namespace Mutagen.Bethesda.Binary
         public IEnumerable<T> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -126,7 +124,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
-                if (transl(frame, out var subItem, masterReferences, recordTypeConverter))
+                if (transl(frame, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
@@ -156,7 +154,6 @@ namespace Mutagen.Bethesda.Binary
 
         public IEnumerable<T> Parse(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord,
             RecordTypeConverter? recordTypeConverter = null)
@@ -164,9 +161,8 @@ namespace Mutagen.Bethesda.Binary
             return this.Parse(
                 frame: frame,
                 triggeringRecord: triggeringRecord,
-                masterReferences: masterReferences,
-                transl: (MutagenFrame reader, RecordType header, out T subItem, MasterReferenceReader m, RecordTypeConverter? r)
-                    => transl(reader, out subItem, m, r),
+                transl: (MutagenFrame reader, RecordType header, out T subItem, RecordTypeConverter? r)
+                    => transl(reader, out subItem, r),
                 recordTypeConverter: recordTypeConverter);
         }
         #endregion
@@ -188,14 +184,13 @@ namespace Mutagen.Bethesda.Binary
 
         public IEnumerable<T> Parse(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new List<T>();
             while (!frame.Complete)
             {
-                if (transl(frame, out var subItem, masterReferences, recordTypeConverter))
+                if (transl(frame, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
@@ -222,14 +217,13 @@ namespace Mutagen.Bethesda.Binary
         public IEnumerable<T> Parse(
             MutagenFrame frame,
             int amount,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new List<T>();
             for (int i = 0; i < amount; i++)
             {
-                if (transl(frame, out var subItem, masterReferences, recordTypeConverter))
+                if (transl(frame, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
@@ -241,7 +235,6 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int amount,
             RecordType triggeringRecord,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -258,7 +251,7 @@ namespace Mutagen.Bethesda.Binary
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {
-                if (transl(frame, out var subIitem, masterReferences, recordTypeConverter))
+                if (transl(frame, out var subIitem, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }
@@ -285,14 +278,13 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             IEnumerable<T>? items,
-            MasterReferenceReader masterReferences,
             BinaryMasterWriteDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
             foreach (var item in items)
             {
-                transl(writer, item, masterReferences, recordTypeConverter);
+                transl(writer, item, recordTypeConverter);
             }
         }
 
@@ -316,7 +308,6 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IReadOnlyList<T>? items,
             RecordType recordType,
-            MasterReferenceReader masterReferences,
             BinaryMasterWriteDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -325,7 +316,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 foreach (var item in items)
                 {
-                    transl(writer, item, masterReferences, recordTypeConverter);
+                    transl(writer, item, recordTypeConverter);
                 }
             }
         }
@@ -356,7 +347,6 @@ namespace Mutagen.Bethesda.Binary
             IReadOnlyList<T>? items,
             RecordType counterType,
             RecordType recordType,
-            MasterReferenceReader masterReferences,
             BinaryMasterWriteDelegate<T> transl,
             bool subRecordPerItem = false,
             RecordTypeConverter? recordTypeConverter = null)
@@ -372,7 +362,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
                     {
-                        transl(writer, item, masterReferences, recordTypeConverter);
+                        transl(writer, item, recordTypeConverter);
                     }
                 }
             }
@@ -382,7 +372,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     foreach (var item in items)
                     {
-                        transl(writer, item, masterReferences, recordTypeConverter);
+                        transl(writer, item, recordTypeConverter);
                     }
                 }
             }
@@ -392,7 +382,6 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IReadOnlyList<T>? items,
             RecordType counterType,
-            MasterReferenceReader masterReferences,
             BinaryMasterWriteDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -403,7 +392,7 @@ namespace Mutagen.Bethesda.Binary
             }
             foreach (var item in items)
             {
-                transl(writer, item, masterReferences, recordTypeConverter);
+                transl(writer, item, recordTypeConverter);
             }
         }
     }
@@ -415,7 +404,6 @@ namespace Mutagen.Bethesda.Binary
         public delegate Task<TryGet<T>> BinarySubParseDelegate(MutagenFrame reader);
         public delegate Task<TryGet<T>> BinaryMasterParseDelegate(
             MutagenFrame reader,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter);
         public delegate Task<TryGet<T>> BinarySubParseRecordDelegate(
             MutagenFrame reader,
@@ -459,7 +447,6 @@ namespace Mutagen.Bethesda.Binary
         public async Task<IEnumerable<T>> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -472,7 +459,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
-                var item = await transl(frame, masterReferences, recordTypeConverter).ConfigureAwait(false);
+                var item = await transl(frame, recordTypeConverter).ConfigureAwait(false);
                 if (item.Succeeded)
                 {
                     ret.Add(item.Value);
@@ -516,7 +503,6 @@ namespace Mutagen.Bethesda.Binary
         public async Task<IEnumerable<T>> ParseThreaded(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -532,7 +518,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                 }
 
-                var toDo = transl(frame, masterReferences, recordTypeConverter);
+                var toDo = transl(frame, recordTypeConverter);
 
                 tasks.Add(Task.Run(() => toDo));
             }
@@ -569,7 +555,6 @@ namespace Mutagen.Bethesda.Binary
         public async Task<ExtendedList<T>> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
-            MasterReferenceReader masterReferences,
             BinaryMasterParseDelegate transl,
             bool thread,
             RecordTypeConverter? recordTypeConverter = null)
@@ -580,7 +565,6 @@ namespace Mutagen.Bethesda.Binary
                 items = await ParseThreaded(
                     frame,
                     triggeringRecord,
-                    masterReferences: masterReferences,
                     transl: transl,
                     recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
             }
@@ -589,7 +573,6 @@ namespace Mutagen.Bethesda.Binary
                 items = await Parse(
                     frame,
                     triggeringRecord,
-                    masterReferences: masterReferences,
                     transl: transl,
                     recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
             }

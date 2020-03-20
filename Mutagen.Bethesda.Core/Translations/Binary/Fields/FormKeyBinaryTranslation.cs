@@ -32,39 +32,34 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse(
             MutagenFrame frame,
-            out FormKey item,
-            MasterReferenceReader masterReferences)
+            out FormKey item)
         {
             item = Parse(
                 frame.ReadSpan(4),
-                masterReferences);
+                frame.MasterReferences!);
             return true;
         }
 
-        public FormKey Parse(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public FormKey Parse(MutagenFrame frame)
         {
             return Parse(
-                frame.ReadSpan(4),
-                masterReferences);
+                frame.ReadSpan(4), 
+                frame.MasterReferences!);
         }
 
         public void Write(
             MutagenWriter writer,
             FormKey item,
-            MasterReferenceReader masterReferences,
             bool nullable = false)
         {
             UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: masterReferences.GetFormID(item).Raw);
+                item: writer.MasterReferences!.GetFormID(item).Raw);
         }
 
         public void Write(
             MutagenWriter writer,
             FormKey item,
-            MasterReferenceReader masterReferences,
             RecordType header,
             bool nullable = false)
         {
@@ -72,8 +67,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 this.Write(
                     writer,
-                    item,
-                    masterReferences);
+                    item);
             }
         }
     }

@@ -1012,12 +1012,10 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => AClothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((AClothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -1351,12 +1349,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IAClothingInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1364,12 +1360,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAClothingInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((AClothingSetterCommon)((IAClothingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1874,13 +1868,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override RecordType RecordType => throw new ArgumentException();
         protected static void FillBinaryStructs(
             IAClothingInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             AItemSetterCommon.FillBinaryStructs(
                 item: item,
-                frame: frame,
-                masterReferences: masterReferences);
+                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1888,7 +1880,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1907,7 +1898,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Script);
                 }
@@ -1916,7 +1906,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Enchantment.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        masterReferences: masterReferences,
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Enchantment);
                 }
@@ -1940,17 +1929,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleBipedModel);
                 }
                 case 0x32444F4D: // MOD2
                 {
                     item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: AClothing_Registration.MaleWorldModelConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: AClothing_Registration.MaleWorldModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleWorldModel);
                 }
                 case 0x4E4F4349: // ICON
@@ -1965,16 +1951,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: AClothing_Registration.FemaleBipedModelConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: AClothing_Registration.FemaleBipedModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleBipedModel);
                 }
                 case 0x34444F4D: // MOD4
                 {
                     item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: AClothing_Registration.FemaleWorldModelConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: AClothing_Registration.FemaleWorldModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleWorldModel);
                 }
                 case 0x324F4349: // ICO2
@@ -1991,15 +1975,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences);
+                        recordTypeConverter: recordTypeConverter);
             }
         }
         
         public void CopyInFromBinary(
             IAClothingInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
         }
@@ -3358,26 +3340,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void WriteEmbedded(
             IAClothingGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
             IAClothingGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
@@ -3386,13 +3364,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.SCRI_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.SCRI_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Enchantment,
-                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.ENAM_HEADER),
-                masterReferences: masterReferences);
+                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.ENAM_HEADER));
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnchantmentPoints,
@@ -3415,15 +3391,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)MaleBipedModelItem).BinaryWriteTranslator).Write(
                     item: MaleBipedModelItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
             if (item.MaleWorldModel.TryGet(out var MaleWorldModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)MaleWorldModelItem).BinaryWriteTranslator).Write(
                     item: MaleWorldModelItem,
                     writer: writer,
-                    masterReferences: masterReferences,
                     recordTypeConverter: AClothing_Registration.MaleWorldModelConverter);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
@@ -3436,7 +3410,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleBipedModelItem).BinaryWriteTranslator).Write(
                     item: FemaleBipedModelItem,
                     writer: writer,
-                    masterReferences: masterReferences,
                     recordTypeConverter: AClothing_Registration.FemaleBipedModelConverter);
             }
             if (item.FemaleWorldModel.TryGet(out var FemaleWorldModelItem))
@@ -3444,7 +3417,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleWorldModelItem).BinaryWriteTranslator).Write(
                     item: FemaleWorldModelItem,
                     writer: writer,
-                    masterReferences: masterReferences,
                     recordTypeConverter: AClothing_Registration.FemaleWorldModelConverter);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
@@ -3457,29 +3429,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Write(
             MutagenWriter writer,
             IAClothingGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAClothingGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3487,12 +3454,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IAItemGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAClothingGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3500,12 +3465,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAClothingGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3513,12 +3476,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IAClothingGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3583,12 +3544,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => AClothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((AClothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

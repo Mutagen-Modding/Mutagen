@@ -571,36 +571,29 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static SoundData CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static SoundData CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public static SoundData CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new SoundData();
             ((SoundDataSetterCommon)((ISoundDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -940,12 +933,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this ISoundDataInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -953,12 +944,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISoundDataInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1248,17 +1237,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             ISoundDataInternal item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             SoundDataBinaryCreateTranslation.FillBinaryMinimumAttenuationDistanceCustomPublic(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
             SoundDataBinaryCreateTranslation.FillBinaryMaximumAttenuationDistanceCustomPublic(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
             item.FrequencyAdjustment = frame.ReadInt8();
             frame.Position += 1;
             item.Flags = EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -1267,7 +1253,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromBinary(
             ISoundDataInternal item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
@@ -1277,7 +1262,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 setFinal: true,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }
@@ -1952,49 +1936,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void WriteBinaryMinimumAttenuationDistanceCustom(
             MutagenWriter writer,
-            ISoundDataInternalGetter item,
-            MasterReferenceReader masterReferences);
+            ISoundDataInternalGetter item);
 
         public static void WriteBinaryMinimumAttenuationDistance(
             MutagenWriter writer,
-            ISoundDataInternalGetter item,
-            MasterReferenceReader masterReferences)
+            ISoundDataInternalGetter item)
         {
             WriteBinaryMinimumAttenuationDistanceCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void WriteBinaryMaximumAttenuationDistanceCustom(
             MutagenWriter writer,
-            ISoundDataInternalGetter item,
-            MasterReferenceReader masterReferences);
+            ISoundDataInternalGetter item);
 
         public static void WriteBinaryMaximumAttenuationDistance(
             MutagenWriter writer,
-            ISoundDataInternalGetter item,
-            MasterReferenceReader masterReferences)
+            ISoundDataInternalGetter item)
         {
             WriteBinaryMaximumAttenuationDistanceCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public static void WriteEmbedded(
             ISoundDataInternalGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             SoundDataBinaryWriteTranslation.WriteBinaryMinimumAttenuationDistance(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
             SoundDataBinaryWriteTranslation.WriteBinaryMaximumAttenuationDistance(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
             writer.Write(item.FrequencyAdjustment);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2008,7 +1983,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Write(
             MutagenWriter writer,
             ISoundDataInternalGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
@@ -2018,20 +1992,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (ISoundDataInternalGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2044,34 +2015,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryMinimumAttenuationDistanceCustom(
             MutagenFrame frame,
-            ISoundDataInternal item,
-            MasterReferenceReader masterReferences);
+            ISoundDataInternal item);
 
         public static void FillBinaryMinimumAttenuationDistanceCustomPublic(
             MutagenFrame frame,
-            ISoundDataInternal item,
-            MasterReferenceReader masterReferences)
+            ISoundDataInternal item)
         {
             FillBinaryMinimumAttenuationDistanceCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         static partial void FillBinaryMaximumAttenuationDistanceCustom(
             MutagenFrame frame,
-            ISoundDataInternal item,
-            MasterReferenceReader masterReferences);
+            ISoundDataInternal item);
 
         public static void FillBinaryMaximumAttenuationDistanceCustomPublic(
             MutagenFrame frame,
-            ISoundDataInternal item,
-            MasterReferenceReader masterReferences)
+            ISoundDataInternal item)
         {
             FillBinaryMaximumAttenuationDistanceCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
     }
@@ -2084,12 +2049,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ISoundDataInternalGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             ((SoundDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -2149,12 +2112,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

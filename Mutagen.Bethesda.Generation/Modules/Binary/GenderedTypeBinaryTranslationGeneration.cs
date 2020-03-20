@@ -49,11 +49,6 @@ namespace Mutagen.Bethesda.Generation
                 $"{itemAccessor} = {this.Namespace}GenderedItemBinaryTranslation.Parse<{gender.SubTypeGeneration.TypeName(getter: false)}>"))
             {
                 args.AddPassArg($"frame");
-                if (gender.SubTypeGeneration is FormLinkType
-                    || gender.SubTypeGeneration is LoquiType)
-                {
-                    args.AddPassArg("masterReferences");
-                }
                 if (gender.MaleMarker.HasValue)
                 {
                     args.Add($"maleMarker: {objGen.RecordTypeHeaderName(gender.MaleMarker.Value)}");
@@ -100,8 +95,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor, 
             Accessor outItemAccessor, 
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor)
+            Accessor translationAccessor)
         {
             throw new NotImplementedException();
         }
@@ -113,8 +107,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor, 
             Accessor itemAccessor, 
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor)
+            Accessor translationAccessor)
         {
             GenderedType gendered = typeGen as GenderedType;
             var gen = this.Module.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
@@ -157,10 +150,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("markerWrap: false");
                 }
-                if (needsMasters)
-                {
-                    args.AddPassArg($"masterReferences");
-                }
                 if (allowDirectWrite)
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(gendered.SubTypeGeneration, getter: true)}.Write{(gendered.SubTypeGeneration.HasBeenSet ? "Nullable" : string.Empty)}");
@@ -170,7 +159,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)} subItem{(needsMasters ? $", {nameof(MasterReferenceReader)} m, {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)} subItem{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -180,8 +169,7 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "subWriter",
                                 translationAccessor: "subTranslMask",
                                 itemAccessor: new Accessor($"subItem"),
-                                errorMaskAccessor: null,
-                                mastersAccessor: "m");
+                                errorMaskAccessor: null);
                         }
                     });
                 }

@@ -117,8 +117,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor mastersAccessor)
+            Accessor translationMaskAccessor)
         {
             var list = typeGen as ListType;
             if (!this.Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
@@ -199,10 +198,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"translationMask: {translationMaskAccessor}");
                 }
-                if (needsMasters)
-                {
-                    args.Add($"masterReferences: {mastersAccessor}");
-                }
                 if (allowDirectWrite)
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: true)}.Write");
@@ -212,7 +207,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName} subItem{(needsMasters ? $", {nameof(MasterReferenceReader)} m, {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName} subItem{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -222,7 +217,6 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "subWriter",
                                 translationAccessor: "listTranslMask",
                                 itemAccessor: new Accessor($"subItem"),
-                                mastersAccessor: "m",
                                 errorMaskAccessor: null);
                         }
                     });
@@ -319,10 +313,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"thread: true");
                     }
-                    if (needsMasters)
-                    {
-                        args.AddPassArg($"masterReferences");
-                    }
                     var subGenTypes = subData.GenerationTypes.ToList();
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
                     if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
@@ -344,7 +334,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add((gen) =>
                         {
-                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}{(needsMasters ? $", {nameof(MasterReferenceReader)} m, {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                             using (new BraceWrapper(gen))
                             {
                                 if (subGenTypes.Count <= 1)
@@ -359,7 +349,6 @@ namespace Mutagen.Bethesda.Generation
                                         retAccessor: "return ",
                                         outItemAccessor: new Accessor("listSubItem"),
                                         asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
-                                        mastersAccessor: "m",
                                         errorMaskAccessor: "listErrMask");
                                 }
                                 else
@@ -386,7 +375,6 @@ namespace Mutagen.Bethesda.Generation
                                                     translationAccessor: "listTranslMask",
                                                     retAccessor: "return ",
                                                     outItemAccessor: new Accessor("listSubItem"),
-                                                    mastersAccessor: "m",
                                                     asyncMode: AsyncMode.Async,
                                                     errorMaskAccessor: $"listErrMask");
                                             }
@@ -415,8 +403,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor mastersAccessor)
+            Accessor translationAccessor)
         {
             throw new NotImplementedException();
         }

@@ -50,11 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
                     new RecordType("SCHR"),
                     new RecordType("SCHD")));
 
-            static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item, MasterReferenceReader masterReferences)
+            static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item)
             {
                 item.MetadataSummary.CopyInFromBinary(
                     frame: frame,
-                    masterReferences: masterReferences,
                     recordTypeConverter: metaConverter);
             }
         }

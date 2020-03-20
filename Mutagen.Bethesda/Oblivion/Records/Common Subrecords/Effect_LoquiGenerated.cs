@@ -783,36 +783,29 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((EffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Effect CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public static Effect CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
 
         public static Effect CreateFromBinary(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Effect();
             ((EffectSetterCommon)((IEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
             return ret;
@@ -1150,12 +1143,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IEffect item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
             CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null);
         }
@@ -1163,12 +1154,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IEffect item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((EffectSetterCommon)((IEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1501,8 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Translation
         protected static void FillBinaryStructs(
             IEffect item,
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+            MutagenFrame frame)
         {
         }
         
@@ -1512,7 +1500,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int? lastParsed,
             RecordType nextRecordType,
             int contentLength,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1523,8 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.MagicEffect) return TryGet<int?>.Failure;
                     EffectBinaryCreateTranslation.FillBinaryEffectInitialCustomPublic(
                         frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        masterReferences: masterReferences);
+                        item: item);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
                 case 0x54494645: // EFIT
@@ -1547,9 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54494353: // SCIT
                 {
-                    item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(
-                        frame: frame,
-                        masterReferences: masterReferences);
+                    item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
                 }
                 default:
@@ -1560,14 +1544,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromBinary(
             IEffect item,
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
                 frame: frame,
                 setFinal: false,
-                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
@@ -2437,37 +2419,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void WriteBinaryEffectInitialCustom(
             MutagenWriter writer,
-            IEffectGetter item,
-            MasterReferenceReader masterReferences);
+            IEffectGetter item);
 
         public static void WriteBinaryEffectInitial(
             MutagenWriter writer,
-            IEffectGetter item,
-            MasterReferenceReader masterReferences)
+            IEffectGetter item)
         {
             WriteBinaryEffectInitialCustom(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
         public static void WriteEmbedded(
             IEffectGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
         }
 
         public static void WriteRecordTypes(
             IEffectGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter,
-            MasterReferenceReader masterReferences)
+            RecordTypeConverter? recordTypeConverter)
         {
             EffectBinaryWriteTranslation.WriteBinaryEffectInitial(
                 writer: writer,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
             if (item.EFITDataTypeState.HasFlag(Effect.EFITDataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Effect_Registration.EFIT_HEADER)))
@@ -2492,37 +2468,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ScriptEffectBinaryWriteTranslation)((IBinaryItem)ScriptEffectItem).BinaryWriteTranslator).Write(
                     item: ScriptEffectItem,
-                    writer: writer,
-                    masterReferences: masterReferences);
+                    writer: writer);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             IEffectGetter item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
                 item: item,
-                writer: writer,
-                masterReferences: masterReferences);
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
                 item: (IEffectGetter)item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2535,18 +2505,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryEffectInitialCustom(
             MutagenFrame frame,
-            IEffect item,
-            MasterReferenceReader masterReferences);
+            IEffect item);
 
         public static void FillBinaryEffectInitialCustomPublic(
             MutagenFrame frame,
-            IEffect item,
-            MasterReferenceReader masterReferences)
+            IEffect item)
         {
             FillBinaryEffectInitialCustom(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences);
+                item: item);
         }
 
     }
@@ -2559,12 +2526,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IEffectGetter item,
-            MutagenWriter writer,
-            MasterReferenceReader masterReferences)
+            MutagenWriter writer)
         {
             ((EffectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }
@@ -2625,12 +2590,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
         {
             ((EffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
-                masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null);
         }

@@ -20,7 +20,6 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse<T>(
             MutagenFrame frame,
             out IEDIDLink<T> item,
-            MasterReferenceReader? masterReferences = null,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
@@ -61,26 +60,13 @@ namespace Mutagen.Bethesda.Binary
         public void Write<T>(
             MutagenWriter writer,
             IEDIDLinkGetter<T> item,
-            RecordType header,
-            bool nullable)
+            RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
             this.Write(
                 writer,
                 item.EDID,
                 header);
-        }
-
-        public void Write<T>(
-            MutagenWriter writer,
-            IEDIDLinkGetter<T> item,
-            MasterReferenceReader masterReferences,
-            bool nullable = false)
-            where T : class, IMajorRecordCommonGetter
-        {
-            Int32BinaryTranslation.Instance.Write(
-                writer,
-                item.EDID.TypeInt);
         }
     }
 }

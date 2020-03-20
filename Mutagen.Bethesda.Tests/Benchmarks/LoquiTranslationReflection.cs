@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             _data[1] = (byte)'M';
             _data[2] = (byte)'M';
             _data[3] = (byte)'O';
-            _frame = new MutagenFrame(new MutagenMemoryReadStream(_data, GameConstants.Oblivion));
+            _frame = new MutagenFrame(new MutagenMemoryReadStream(_data, GameConstants.Oblivion, _masterRefs));
         }
 
         [Benchmark]
@@ -31,7 +31,6 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             _frame.Position = 0;
             return Ammo.CreateFromBinary(
                 frame: _frame,
-                masterReferences: _masterRefs,
                 recordTypeConverter: null);
         }
 
@@ -41,7 +40,6 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             _frame.Position = 0;
             return _create(
                 reader: _frame,
-                masterReferences: _masterRefs,
                 recordTypeConverter: null);
         }
     }

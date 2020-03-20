@@ -18,7 +18,6 @@ namespace Mutagen.Bethesda.Binary
         public static readonly LoquiBinaryTranslation<T> Instance = new LoquiBinaryTranslation<T>();
         public delegate T CREATE_FUNC(
             MutagenFrame reader,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter);
         public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
@@ -31,10 +30,9 @@ namespace Mutagen.Bethesda.Binary
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
-                .Where((methodInfo) => methodInfo.GetParameters().Length == 3)
+                .Where((methodInfo) => methodInfo.GetParameters().Length == 2)
                 .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
-                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(MasterReferenceReader)))
-                .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(RecordTypeConverter)))
+                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(RecordTypeConverter)))
                 .FirstOrDefault();
             if (method != null)
             {
@@ -49,13 +47,11 @@ namespace Mutagen.Bethesda.Binary
         [DebuggerStepThrough]
         public bool Parse(
             MutagenFrame frame,
-            out T item,
-            MasterReferenceReader masterReferences)
+            out T item)
         {
             return Parse(
                 frame: frame,
                 item: out item,
-                masterReferences: masterReferences,
                 recordTypeConverter: null);
         }
 
@@ -63,13 +59,11 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             out T item,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             item = CREATE(
                 reader: frame,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences);
+                recordTypeConverter: recordTypeConverter);
             return true;
         }
         #endregion
@@ -81,7 +75,6 @@ namespace Mutagen.Bethesda.Binary
         public static readonly LoquiBinaryAsyncTranslation<T> Instance = new LoquiBinaryAsyncTranslation<T>();
         public delegate Task<T> CREATE_FUNC(
             MutagenFrame reader,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter);
         public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
@@ -93,10 +86,9 @@ namespace Mutagen.Bethesda.Binary
                 .Where((methodInfo) => methodInfo.Name.Equals("CreateFromBinary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
-                .Where((methodInfo) => methodInfo.GetParameters().Length == 3)
+                .Where((methodInfo) => methodInfo.GetParameters().Length == 2)
                 .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
-                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(MasterReferenceReader)))
-                .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(RecordTypeConverter)))
+                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(RecordTypeConverter)))
                 .FirstOrDefault();
             if (method == null)
             {
@@ -105,9 +97,9 @@ namespace Mutagen.Bethesda.Binary
             if (method.ReturnType == tType)
             {
                 var wrap = LoquiBinaryTranslation<T>.CREATE;
-                return async (MutagenFrame frame, MasterReferenceReader master, RecordTypeConverter? recConv) =>
+                return async (MutagenFrame frame, RecordTypeConverter? recConv) =>
                 {
-                    return wrap(frame, master, recConv);
+                    return wrap(frame, recConv);
                 };
             }
             else
@@ -117,26 +109,21 @@ namespace Mutagen.Bethesda.Binary
         }
 
         [DebuggerStepThrough]
-        public Task<TryGet<T>> Parse(
-            MutagenFrame frame,
-            MasterReferenceReader masterReferences)
+        public Task<TryGet<T>> Parse(MutagenFrame frame)
         {
             return Parse(
                 frame: frame,
-                masterReferences: masterReferences,
                 recordTypeConverter: null);
         }
 
         [DebuggerStepThrough]
         public async Task<TryGet<T>> Parse(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter)
         {
             var item = await CREATE(
                 reader: frame,
-                recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences).ConfigureAwait(false);
+                recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
             return TryGet<T>.Succeed(item);
         }
         #endregion
@@ -148,14 +135,12 @@ namespace Mutagen.Bethesda.Binary
         public static bool Parse<T, B>(
             this LoquiBinaryTranslation<T> loquiTrans,
             MutagenFrame frame,
-            out B item,
-            MasterReferenceReader masterReferences)
+            out B item)
             where T : ILoquiObjectGetter, B
         {
             if (loquiTrans.Parse(
                 frame: frame,
-                item: out T tItem,
-                masterReferences: masterReferences))
+                item: out T tItem))
             {
                 item = tItem;
                 return true;

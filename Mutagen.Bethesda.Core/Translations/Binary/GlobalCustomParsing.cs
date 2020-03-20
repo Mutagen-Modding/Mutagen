@@ -36,8 +36,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static T Create<T>(
             MutagenFrame frame,
-            MasterReferenceReader masterReferences,
-            Func<MutagenFrame, MasterReferenceReader, char, T> getter)
+            Func<MutagenFrame, char, T> getter)
             where T : IMajorRecordCommon, IGlobalCommon
         {
             var initialPos = frame.Position;
@@ -47,7 +46,7 @@ namespace Mutagen.Bethesda.Binary
                 throw new ArgumentException();
             }
             
-            T g = getter(frame, masterReferences, GetGlobalChar(majorMeta));
+            T g = getter(frame, GetGlobalChar(majorMeta));
 
             frame.Reader.Position = initialPos + frame.MetaData.MajorConstants.TypeAndLengthLength;
 

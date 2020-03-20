@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ISkyrimModGetter mod,
                 MutagenWriter writer,
                 ModKey modKey,
-                BinaryWriteParameters param,
-                MasterReferenceReader masterReferences)
+                BinaryWriteParameters param)
             {
                 var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
                 modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
@@ -58,9 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
                     default:
                         throw new NotImplementedException();
                 }
-                modHeader.WriteToBinary(
-                    writer: writer,
-                    masterReferences: masterReferences);
+                modHeader.WriteToBinary(writer);
             }
         }
     }
