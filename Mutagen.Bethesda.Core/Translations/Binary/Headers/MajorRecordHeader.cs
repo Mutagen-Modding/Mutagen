@@ -82,38 +82,38 @@ namespace Mutagen.Bethesda.Binary
     public ref struct MajorRecordFrame
     {
         public MajorRecordHeader Header { get; }
-        public ReadOnlySpan<byte> AllData { get; }
-        public ReadOnlySpan<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
+        public ReadOnlySpan<byte> HeaderAndContentData { get; }
+        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
         public MajorRecordFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta.MajorRecord(span);
-            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         public MajorRecordFrame(MajorRecordHeader meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta;
-            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 
     public ref struct MajorRecordMemoryFrame
     {
         public MajorRecordHeader Header { get; }
-        public ReadOnlyMemorySlice<byte> AllData { get; }
-        public ReadOnlyMemorySlice<byte> Content => AllData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
+        public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
         public MajorRecordMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta.MajorRecord(span);
-            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         public MajorRecordMemoryFrame(MajorRecordHeader meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta;
-            this.AllData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 }
