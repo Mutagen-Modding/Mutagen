@@ -56,12 +56,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void ParsingCustomParse(BinaryMemoryReadStream stream, int offset)
         {
             faceFx = new List<ReadOnlyMemorySlice<byte>>();
-            var subRecord = _package.Meta.GetSubRecord(stream);
+            var subRecord = _package.Meta.GetSubrecord(stream);
             while (subRecord.RecordType == FaceFxPhonemes_Registration.PHWT_HEADER)
             {
                 faceFx.Add(stream.ReadMemory(subRecord.TotalLength));
                 if (stream.Complete) break;
-                subRecord = _package.Meta.GetSubRecord(stream);
+                subRecord = _package.Meta.GetSubrecord(stream);
             }
 
             if (faceFx.Count != 43)

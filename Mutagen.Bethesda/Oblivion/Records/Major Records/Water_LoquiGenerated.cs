@@ -5223,7 +5223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER));
             if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
                 {
                     WaterBinaryWriteTranslation.WriteBinaryNothingCustomLogic(
                         writer: writer,

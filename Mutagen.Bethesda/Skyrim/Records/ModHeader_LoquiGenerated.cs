@@ -3602,7 +3602,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.OverriddenForms = BinaryOverlaySetList<IFormLinkGetter<ISkyrimMajorRecordGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

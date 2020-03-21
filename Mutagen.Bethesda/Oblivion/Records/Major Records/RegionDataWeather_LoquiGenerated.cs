@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x54574452: // RDWT
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Weathers = BinaryOverlaySetList<WeatherChanceBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

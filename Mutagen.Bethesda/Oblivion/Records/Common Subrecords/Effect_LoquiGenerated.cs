@@ -2446,7 +2446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
             if (item.EFITDataTypeState.HasFlag(Effect.EFITDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Effect_Registration.EFIT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Effect_Registration.EFIT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,

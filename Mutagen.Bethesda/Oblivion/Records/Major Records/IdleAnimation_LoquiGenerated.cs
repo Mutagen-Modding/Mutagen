@@ -2736,7 +2736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.RelatedIdleAnimations = BinaryOverlaySetList<IFormLinkGetter<IIdleAnimationGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

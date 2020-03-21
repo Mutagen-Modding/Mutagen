@@ -2773,7 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
             if (item.PKDTDataTypeState.HasFlag(AIPackage.PKDTDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(AIPackage_Registration.PKDT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(AIPackage_Registration.PKDT_HEADER)))
                 {
                     AIPackageBinaryWriteTranslation.WriteBinaryFlags(
                         writer: writer,

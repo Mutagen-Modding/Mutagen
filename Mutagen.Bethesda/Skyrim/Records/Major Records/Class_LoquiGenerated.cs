@@ -4779,7 +4779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(Class.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.Unknown);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(

@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
         {
-            var subMeta = frame.ReadSubRecord();
+            var subMeta = frame.ReadSubrecord();
             if (subMeta.RecordType != PathGrid_Registration.DATA_HEADER)
             {
                 frame.Position -= subMeta.HeaderLength;
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             uint ptCount = frame.Reader.ReadUInt16();
 
-            subMeta = frame.ReadSubRecord();
+            subMeta = frame.ReadSubrecord();
             if (subMeta.RecordType != PGRP)
             {
                 frame.Position -= subMeta.HeaderLength;
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             for (int recAttempt = 0; recAttempt < 2; recAttempt++)
             {
                 if (frame.Reader.Complete) break;
-                subMeta = frame.GetSubRecord();
+                subMeta = frame.GetSubrecord();
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x47414750: //"PGAG":
@@ -116,13 +116,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!item.PointToPointConnections.TryGet(out var ptToPt)) return;
 
-            using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubrecordHeader(writer, PathGrid_Registration.DATA_HEADER))
             {
                 writer.Write((ushort)ptToPt.Count);
             }
 
             bool anyConnections = false;
-            using (HeaderExport.ExportSubRecordHeader(writer, PathGridBinaryCreateTranslation.PGRP))
+            using (HeaderExport.ExportSubrecordHeader(writer, PathGridBinaryCreateTranslation.PGRP))
             {
                 foreach (var pt in ptToPt)
                 {
@@ -140,14 +140,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             if (item.Unknown.TryGet(out var unknown))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
+                using (HeaderExport.ExportSubrecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
                 {
                     writer.Write(unknown);
                 }
             }
 
             if (!anyConnections) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, PathGridBinaryCreateTranslation.PGRR))
+            using (HeaderExport.ExportSubrecordHeader(writer, PathGridBinaryCreateTranslation.PGRR))
             {
                 foreach (var pt in ptToPt)
                 {
@@ -170,10 +170,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
-            var dataFrame = _package.Meta.ReadSubRecordFrame(stream);
+            var dataFrame = _package.Meta.ReadSubrecordFrame(stream);
             uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.Content);
 
-            var pgrpMeta = _package.Meta.GetSubRecord(stream);
+            var pgrpMeta = _package.Meta.GetSubrecord(stream);
             if (pgrpMeta.RecordType != PathGridBinaryCreateTranslation.PGRP) return;
             stream.Position += pgrpMeta.HeaderLength;
             var pointData = stream.ReadMemory(pgrpMeta.ContentLength);
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             for (int recAttempt = 0; recAttempt < 2; recAttempt++)
             {
                 if (stream.Complete) break;
-                var subMeta = _package.Meta.GetSubRecord(stream);
+                var subMeta = _package.Meta.GetSubrecord(stream);
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x47414750: //"PGAG":

@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Binary
             return new HeaderExport(writer, sizePosition, writer.Meta.Constants(type));
         }
 
-        public static HeaderExport ExportSubRecordHeader(
+        public static HeaderExport ExportSubrecordHeader(
             MutagenWriter writer,
             RecordType record)
         {

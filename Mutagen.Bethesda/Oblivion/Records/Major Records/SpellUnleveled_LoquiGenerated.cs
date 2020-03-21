@@ -2658,7 +2658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
             if (item.SPITDataTypeState.HasFlag(SpellUnleveled.SPITDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SpellUnleveled_Registration.SPIT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(SpellUnleveled_Registration.SPIT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Write(
                         writer,

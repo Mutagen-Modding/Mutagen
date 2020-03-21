@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content)";
+            string testString = "xtSubRecordTy";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

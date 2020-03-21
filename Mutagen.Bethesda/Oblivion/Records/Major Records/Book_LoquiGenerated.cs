@@ -3124,7 +3124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(Book.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Book_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Book_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Write(
                         writer,

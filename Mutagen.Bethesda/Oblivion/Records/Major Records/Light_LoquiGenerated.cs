@@ -3410,7 +3410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(Light.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.Time);
                     writer.Write(item.Radius);
@@ -3724,7 +3724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = Light.DATADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x18)
                     {
                         this.DATADataTypeState |= Light.DATADataType.Break0;

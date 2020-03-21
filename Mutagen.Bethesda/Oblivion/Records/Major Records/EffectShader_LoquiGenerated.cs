@@ -7497,7 +7497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(EffectShader_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(EffectShader_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.Flag>.Instance.Write(
                         writer,
@@ -8162,7 +8162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = EffectShader.DATADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x60)
                     {
                         this.DATADataTypeState |= EffectShader.DATADataType.Break0;

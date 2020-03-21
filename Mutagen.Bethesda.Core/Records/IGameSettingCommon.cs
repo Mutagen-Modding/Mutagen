@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda
             {
                 return GetResponse<GameSettingType>.Fail($"EDID was not located");
             }
-            var edidMeta = meta.SubRecordFrame(majorMeta.Content.Slice(edidLoc));
+            var edidMeta = meta.SubrecordFrame(majorMeta.Content.Slice(edidLoc));
             var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.Content);
             if (edid.Length == 0)
             {

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Binary
             TItem? male = default, female = default;
             for (int i = 0; i < 2; i++)
             {
-                var subHeader = frame.GetSubRecord();
+                var subHeader = frame.GetSubrecord();
                 RecordType type = subHeader.RecordType;
                 if (type != maleMarker && type != femaleMarker)
                 {
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Binary
             TItem? male = default, female = default;
             for (int i = 0; i < 2; i++)
             {
-                var subHeader = frame.GetSubRecord();
+                var subHeader = frame.GetSubrecord();
                 RecordType type = subHeader.RecordType;
                 if (type == maleMarker)
                 {
@@ -137,14 +137,14 @@ namespace Mutagen.Bethesda.Binary
             TItem? male = default, female = default;
             for (int i = 0; i < 2; i++)
             {
-                var genderedHeader = frame.GetSubRecord();
+                var genderedHeader = frame.GetSubrecord();
                 RecordType type = genderedHeader.RecordType;
                 if (type != maleMarker && type != femaleMarker)
                 {
                     break;
                 }
                 frame.Position += genderedHeader.TotalLength;
-                var subHeader = frame.GetSubRecord();
+                var subHeader = frame.GetSubrecord();
                 if (contentMarker != subHeader.RecordType)
                 {
                     break;
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Binary
             var male = item.Male;
             if (male != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
+                using (HeaderExport.ExportSubrecordHeader(writer, maleMarker))
                 {
                     transl(writer, male);
                 }
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Binary
             var female = item.Female;
             if (female != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                using (HeaderExport.ExportSubrecordHeader(writer, femaleMarker))
                 {
                     transl(writer, female);
                 }
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Binary
             var male = item.Male;
             if (male != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
+                using (HeaderExport.ExportSubrecordHeader(writer, maleMarker))
                 {
                     if (markerWrap)
                     {
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Binary
             var female = item.Female;
             if (female != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                using (HeaderExport.ExportSubrecordHeader(writer, femaleMarker))
                 {
                     if (markerWrap)
                     {
@@ -277,13 +277,13 @@ namespace Mutagen.Bethesda.Binary
             UtilityTranslation.BinarySubWriteDelegate<T> transl)
         {
             if (item == null) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, markerType))
+            using (HeaderExport.ExportSubrecordHeader(writer, markerType))
             {
             }
             var male = item.Male;
             if (male != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
+                using (HeaderExport.ExportSubrecordHeader(writer, maleMarker))
                 {
                     transl(writer, male);
                 }
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Binary
             var female = item.Female;
             if (female != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                using (HeaderExport.ExportSubrecordHeader(writer, femaleMarker))
                 {
                     transl(writer, female);
                 }
@@ -309,13 +309,13 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (item == null) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, markerType))
+            using (HeaderExport.ExportSubrecordHeader(writer, markerType))
             {
             }
             var male = item.Male;
             if (male != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, maleMarker))
+                using (HeaderExport.ExportSubrecordHeader(writer, maleMarker))
                 {
                     if (markerWrap)
                     {
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Binary
             var female = item.Female;
             if (female != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, femaleMarker))
+                using (HeaderExport.ExportSubrecordHeader(writer, femaleMarker))
                 {
                     if (markerWrap)
                     {
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Binary
             UtilityTranslation.BinarySubWriteDelegate<T> transl)
         {
             if (item == null) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, recordType))
+            using (HeaderExport.ExportSubrecordHeader(writer, recordType))
             {
                 var male = item.Male;
                 if (male != null)
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (item == null) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, recordType))
+            using (HeaderExport.ExportSubrecordHeader(writer, recordType))
             {
                 var male = item.Male;
                 if (male != null)

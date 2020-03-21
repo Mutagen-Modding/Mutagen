@@ -2254,7 +2254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E54: // TNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Types = BinaryOverlaySetList<MapMarker.Type>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

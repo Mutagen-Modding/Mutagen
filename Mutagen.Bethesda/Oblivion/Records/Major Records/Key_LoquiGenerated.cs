@@ -2600,7 +2600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(Key_Registration.SCRI_HEADER));
             if (item.DATADataTypeState.HasFlag(Key.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Key_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Key_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.Value);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(

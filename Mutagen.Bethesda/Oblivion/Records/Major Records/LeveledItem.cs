@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void SpecialParse_Vestigial(ILeveledItemInternal item, MutagenFrame frame)
             {
-                var rec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var length);
+                var rec = HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var length);
                 if (length != 1)
                 {
                     throw new ArgumentException($"Unexpected length: {length}");
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordType type,
                 int? lastParsed)
             {
-                var subMeta = _package.Meta.ReadSubRecord(stream);
+                var subMeta = _package.Meta.ReadSubrecord(stream);
                 if (subMeta.ContentLength != 1)
                 {
                     throw new ArgumentException($"Unexpected length: {subMeta.ContentLength}");

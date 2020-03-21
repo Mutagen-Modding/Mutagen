@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubRecordHeader subMeta = _package.Meta.SubRecord(stream.RemainingSpan);
+                SubrecordHeader subMeta = _package.Meta.Subrecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubRecordHeader subMeta = _package.Meta.SubRecord(stream.RemainingSpan);
+                SubrecordHeader subMeta = _package.Meta.Subrecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!stream.Complete)
             {
-                var subMeta = _package.Meta.GetSubRecord(stream);
+                var subMeta = _package.Meta.GetSubrecord(stream);
                 var recType = subMeta.RecordType;
                 if (!trigger.Contains(recType)) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!stream.Complete)
             {
-                var subMeta = _package.Meta.GetSubRecord(stream);
+                var subMeta = _package.Meta.GetSubrecord(stream);
                 var recType = subMeta.RecordType;
                 if (trigger != recType) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;

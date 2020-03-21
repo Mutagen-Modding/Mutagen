@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item)
             {
-                var subFrame = frame.ReadSubRecordFrame();
+                var subFrame = frame.ReadSubrecordFrame();
                 item.Data = (bool)(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content) != 0);
             }
         }
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
-                using (HeaderExport.ExportSubRecordHeader(writer, GameSettingBool_Registration.DATA_HEADER))
+                using (HeaderExport.ExportSubrecordHeader(writer, GameSettingBool_Registration.DATA_HEADER))
                 {
                     writer.Write(data ? 1 : 0);
                 }

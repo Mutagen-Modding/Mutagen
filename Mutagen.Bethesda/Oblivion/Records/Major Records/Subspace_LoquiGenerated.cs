@@ -2125,7 +2125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
             if (item.DNAMDataTypeState.HasFlag(Subspace.DNAMDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Subspace_Registration.DNAM_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Subspace_Registration.DNAM_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,

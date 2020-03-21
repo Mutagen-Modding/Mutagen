@@ -8274,7 +8274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.NIFT_HEADER));
             if (item.ACBSDataTypeState.HasFlag(Creature.ACBSDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.ACBS_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.ACBS_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Write(
                         writer,
@@ -8310,7 +8310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.SCRI_HEADER));
             if (item.AIDTDataTypeState.HasFlag(Creature.AIDTDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.AIDT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.AIDT_HEADER)))
                 {
                     writer.Write(item.Aggression);
                     writer.Write(item.Confidence);
@@ -8345,7 +8345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 transl: StringBinaryTranslation.Instance.Write);
             if (item.DATADataTypeState.HasFlag(Creature.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Write(
                         writer,
@@ -8869,7 +8869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x5A46494E: // NIFZ
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Models = BinaryOverlaySetList<String>.FactoryByLazyParse(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -8936,7 +8936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x5A46464B: // KFFZ
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Animations = BinaryOverlaySetList<String>.FactoryByLazyParse(
                         mem: stream.RemainingMemory.Slice(0, subLen),

@@ -2609,7 +2609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.ENITDataTypeState.HasFlag(Enchantment.ENITDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
                         writer,

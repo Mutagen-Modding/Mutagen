@@ -3142,7 +3142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.Density);
                     writer.Write(item.MinSlope);

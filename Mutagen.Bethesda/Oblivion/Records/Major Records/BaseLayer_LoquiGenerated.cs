@@ -2038,7 +2038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (item.BTXTDataTypeState.HasFlag(BaseLayer.BTXTDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,

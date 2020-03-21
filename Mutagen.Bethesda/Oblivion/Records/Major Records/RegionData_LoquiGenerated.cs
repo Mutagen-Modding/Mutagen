@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (item.RDATDataTypeState.HasFlag(RegionData.RDATDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Write(
                         writer,

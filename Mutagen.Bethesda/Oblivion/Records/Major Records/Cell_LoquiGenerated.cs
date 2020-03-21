@@ -5228,7 +5228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x524C4358: // XCLR
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Regions = BinaryOverlaySetList<IFormLinkGetter<IRegionGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

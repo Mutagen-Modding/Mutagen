@@ -2978,7 +2978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 });
             if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SigilStone_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(SigilStone_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.Uses);
                     writer.Write(item.Value);

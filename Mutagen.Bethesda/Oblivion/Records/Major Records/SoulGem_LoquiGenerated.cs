@@ -2812,7 +2812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SCRI_HEADER));
             if (item.DATADataTypeState.HasFlag(SoulGem.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SoulGem_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(SoulGem_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.Value);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(

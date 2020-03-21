@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new AIPackageLocationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

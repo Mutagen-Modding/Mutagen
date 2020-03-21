@@ -3134,7 +3134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.XSCL_HEADER));
             if (item.DATADataTypeState.HasFlag(PlacedNpc.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                         writer: writer,

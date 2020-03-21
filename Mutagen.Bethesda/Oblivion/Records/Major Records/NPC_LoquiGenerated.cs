@@ -9631,7 +9631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.ACBSDataTypeState.HasFlag(Npc.ACBSDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.ACBS_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.ACBS_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Npc.NpcFlag>.Instance.Write(
                         writer,
@@ -9693,7 +9693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 });
             if (item.AIDTDataTypeState.HasFlag(Npc.AIDTDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.AIDT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.AIDT_HEADER)))
                 {
                     writer.Write(item.Aggression);
                     writer.Write(item.Confidence);
@@ -9734,7 +9734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.CNAM_HEADER));
             if (item.DATADataTypeState.HasFlag(Npc.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.Armorer);
                     writer.Write(item.Athletics);
@@ -10405,7 +10405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x5A46464B: // KFFZ
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Animations = BinaryOverlaySetList<String>.FactoryByLazyParse(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -10437,7 +10437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E45: // ENAM
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Eyes = BinaryOverlaySetList<IFormLinkGetter<IEyeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

@@ -4206,7 +4206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54435053: // SPCT
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubRecordFrame().Content);
+                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.ActorEffect = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParsePerItem(
                             frame: frame,
@@ -4231,7 +4231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x5A49534B: // KSIZ
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubRecordFrame().Content);
+                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
@@ -8752,7 +8752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54435053: // SPCT
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.ActorEffect = BinaryOverlaySetList<IFormLinkGetter<IASpellGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -8774,7 +8774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x5A49534B: // KSIZ
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -8877,7 +8877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Hairs = BinaryOverlaySetList<IFormLinkGetter<IHairGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -8889,7 +8889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E45: // ENAM
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Eyes = BinaryOverlaySetList<IFormLinkGetter<IEyeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

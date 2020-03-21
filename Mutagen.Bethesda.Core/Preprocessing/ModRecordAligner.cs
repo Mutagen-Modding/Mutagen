@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Preprocessing
 
             public override byte[] GetBytes(IMutagenReadStream inputStream)
             {
-                var subType = HeaderTranslation.ReadNextSubRecordType(
+                var subType = HeaderTranslation.ReadNextSubrecordType(
                     inputStream,
                     out var subLen);
                 if (!subType.Equals(_recordType))
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 }
                 var ret = new byte[subLen + 6];
                 MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), this._gameMode);
-                using (HeaderExport.ExportSubRecordHeader(stream, _recordType))
+                using (HeaderExport.ExportSubrecordHeader(stream, _recordType))
                 {
                     inputStream.WriteTo(stream.BaseStream, subLen);
                 }
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 MutagenWriter stream;
                 while (!inputStream.Complete)
                 {
-                    var subType = HeaderTranslation.ReadNextSubRecordType(
+                    var subType = HeaderTranslation.ReadNextSubrecordType(
                         inputStream,
                         out var subLen);
                     if (!SubTypes.Contains(subType))
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     }
                     var data = new byte[subLen + 6];
                     stream = new MutagenWriter(new MemoryStream(data), this.GameMode);
-                    using (HeaderExport.ExportSubRecordHeader(stream, subType))
+                    using (HeaderExport.ExportSubrecordHeader(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
                     }
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 byte[]? rest = null;
                 while (inputStream.Position < endPos)
                 {
-                    var subType = HeaderTranslation.GetNextSubRecordType(
+                    var subType = HeaderTranslation.GetNextSubrecordType(
                         inputStream,
                         out var subLen);
                     if (stopMarkers?.Contains(subType) ?? false)

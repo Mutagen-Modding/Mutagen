@@ -5084,7 +5084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new RaceDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x7C + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

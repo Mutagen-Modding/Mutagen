@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda
             }
             while (!targetFrame.Complete)
             {
-                var subMeta = targetFrame.GetSubRecord();
+                var subMeta = targetFrame.GetSubrecord();
                 var finalPos = targetFrame.Position + subMeta.TotalLength;
                 var parsed = fillTyped(
                     record: record,
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda
                 frame: frame);
             while (!frame.Complete)
             {
-                var subMeta = frame.GetSubRecord();
+                var subMeta = frame.GetSubrecord();
                 var finalPos = frame.Position + subMeta.TotalLength;
                 var parsed = fillTyped(
                     record: record,
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda
             int? lastParsed = null;
             while (!frame.Complete)
             {
-                var subMeta = frame.GetSubRecord();
+                var subMeta = frame.GetSubrecord();
                 var finalPos = frame.Position + subMeta.TotalLength;
                 var parsed = fillTyped(
                     record: record,
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda
                 frame: frame);
             while (!frame.Complete)
             {
-                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                var nextRecordType = HeaderTranslation.GetNextSubrecordType(
                     reader: frame.Reader,
                     contentLength: out var contentLength);
                 var finalPos = frame.Position + contentLength;
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda
             int loc = 0;
             while (span.Length > loc)
             {
-                var subMeta = meta.SubRecord(span.Slice(loc));
+                var subMeta = meta.Subrecord(span.Slice(loc));
                 var len = subMeta.TotalLength;
                 yield return new KeyValuePair<RecordType, int>(subMeta.RecordType, loc);
                 loc += len;
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda
             int?[] ret = new int?[recordTypes.Length];
             while (data.Length > loc)
             {
-                var subMeta = meta.SubRecord(data.Slice(loc));
+                var subMeta = meta.Subrecord(data.Slice(loc));
                 var recType = subMeta.RecordType;
                 for (int i = 0; i < recordTypes.Length; i++)
                 {
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda
             int?[] ret = new int?[recordTypes.Length];
             while (data.Length > lenParsed)
             {
-                var subMeta = meta.SubRecord(data.Slice(lenParsed));
+                var subMeta = meta.Subrecord(data.Slice(lenParsed));
                 var recType = subMeta.RecordType;
                 bool matchedSomething = false;
                 for (int i = 0; i < recordTypes.Length; i++)
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda
             int loc = 0;
             while (data.Length > loc)
             {
-                var subMeta = meta.SubRecord(data.Slice(loc));
+                var subMeta = meta.Subrecord(data.Slice(loc));
                 if (subMeta.RecordType == recordType) return navigateToContent ? (loc + meta.SubConstants.HeaderLength) : loc;
                 loc += subMeta.TotalLength;
             }
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda
             }
             while (!targetFrame.Complete)
             {
-                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                var nextRecordType = HeaderTranslation.GetNextSubrecordType(
                     targetFrame.Reader,
                     contentLength: out var contentLength);
                 var finalPos = targetFrame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda
                 frame: frame);
             while (!frame.Complete)
             {
-                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                var nextRecordType = HeaderTranslation.GetNextSubrecordType(
                     reader: frame.Reader,
                     contentLength: out var contentLength);
                 var finalPos = frame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda
             int? lastParsed = null;
             while (!frame.Complete)
             {
-                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                var nextRecordType = HeaderTranslation.GetNextSubrecordType(
                     reader: frame.Reader,
                     contentLength: out var contentLength);
                 var finalPos = frame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda
                     frame: frame);
                 while (!frame.Complete)
                 {
-                    var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                    var nextRecordType = HeaderTranslation.GetNextSubrecordType(
                         reader: frame.Reader,
                         contentLength: out var contentLength);
                     var finalPos = frame.Position + contentLength;

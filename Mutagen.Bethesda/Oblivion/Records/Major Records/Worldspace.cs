@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!item.OffsetData.TryGet(out var offset)) return;
                 if (!item.UsingOffsetLength) return;
-                using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
+                using (HeaderExport.ExportSubrecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
                 {
                     writer.Write(offset.Length);
                 }
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (item.UsingOffsetLength) return;
                 if (!item.OffsetData.TryGet(out var offset)) return;
-                using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.OFST_HEADER))
+                using (HeaderExport.ExportSubrecordHeader(writer, Worldspace_Registration.OFST_HEADER))
                 {
                     ByteArrayBinaryTranslation.Instance.Write(writer, offset);
                 }
@@ -129,14 +129,14 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void FillBinaryOffsetLengthCustom(MutagenFrame frame, IWorldspaceInternal item)
             {
                 item.UsingOffsetLength = true;
-                var xxxxMeta = frame.ReadSubRecord();
+                var xxxxMeta = frame.ReadSubrecord();
                 if (xxxxMeta.RecordType != Worldspace_Registration.XXXX_HEADER
                     || xxxxMeta.ContentLength != 4)
                 {
                     throw new ArgumentException();
                 }
                 var contentLen = frame.Reader.ReadInt32();
-                var ofstMeta = frame.ReadSubRecord();
+                var ofstMeta = frame.ReadSubrecord();
                 if (ofstMeta.RecordType != Worldspace_Registration.OFST_HEADER
                     || ofstMeta.ContentLength != 0)
                 {
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void FillBinaryOffsetDataCustom(MutagenFrame frame, IWorldspaceInternal item)
             {
                 if (item.UsingOffsetLength) return;
-                if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
+                if (!HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
                 {
                     throw new ArgumentException();
                 }
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
                 for (int i = 0; i < 3; i++)
                 {
                     if (subFrame.Complete) return;
-                    var subType = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var subLen);
+                    var subType = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var subLen);
                     switch (subType.TypeInt)
                     {
                         case 0x44414F52: // "ROAD":
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Oblivion
                 _OffsetDataLocation = (ushort)(stream.Position - offset);
                 if (this.UsingOffsetLength)
                 {
-                    var offsetLenFrame = _package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
+                    var offsetLenFrame = _package.Meta.SubrecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
                     stream.Position += checked((int)(_package.Meta.SubConstants.HeaderLength + BinaryPrimitives.ReadUInt32LittleEndian(offsetLenFrame.Content)));
                 }
             }
@@ -263,13 +263,13 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!_OffsetDataLocation.HasValue) return null;
                 if (this.UsingOffsetLength)
                 {
-                    var lenFrame = this._package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
+                    var lenFrame = this._package.Meta.SubrecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
                     var len = BinaryPrimitives.ReadInt32LittleEndian(lenFrame.Content);
                     return _data.Slice(_OffsetDataLocation.Value + this._package.Meta.SubConstants.HeaderLength, len);
                 }
                 else
                 {
-                    var spanFrame = this._package.Meta.SubRecordFrame(this._data.Slice(_OffsetDataLocation.Value));
+                    var spanFrame = this._package.Meta.SubrecordFrame(this._data.Slice(_OffsetDataLocation.Value));
                     return spanFrame.Content.ToArray();
                 }
             }

@@ -2709,7 +2709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER));
             if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
                 {
                     writer.Write(item.Spring);
                     writer.Write(item.Summer);

@@ -3086,7 +3086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                         writer,

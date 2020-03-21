@@ -3261,7 +3261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.TNAMDataTypeState.HasFlag(Climate.TNAMDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Climate_Registration.TNAM_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Climate_Registration.TNAM_HEADER)))
                 {
                     ClimateBinaryWriteTranslation.WriteBinarySunriseBegin(
                         writer: writer,
@@ -3587,7 +3587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x54534C57: // WLST
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Weathers = BinaryOverlaySetList<WeatherChanceBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

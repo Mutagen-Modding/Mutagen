@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var nextRecord = HeaderTranslation.GetNextSubRecordType(
+            var nextRecord = HeaderTranslation.GetNextSubrecordType(
                 reader: frame.Reader,
                 contentLength: out var customLen);
             nextRecord = recordTypeConverter.ConvertToCustom(nextRecord);
@@ -2471,7 +2471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var nextRecord = recordTypeConverter.ConvertToCustom(package.Meta.GetSubRecord(stream).RecordType);
+            var nextRecord = recordTypeConverter.ConvertToCustom(package.Meta.GetSubrecord(stream).RecordType);
             switch (nextRecord.TypeInt)
             {
                 case 1413764163: // CTDT
@@ -2486,7 +2486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new ConditionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x18 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

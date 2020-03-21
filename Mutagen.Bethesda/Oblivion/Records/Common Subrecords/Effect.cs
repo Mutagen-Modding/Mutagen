@@ -27,14 +27,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item)
             {
-                var subMeta = frame.ReadSubRecord();
+                var subMeta = frame.ReadSubrecord();
                 if (subMeta.ContentLength != Mutagen.Bethesda.Constants.HEADER_LENGTH)
                 {
                     throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.ContentLength}");
                 }
                 var magicEffName = frame.ReadMemory(4);
 
-                var efitMeta = frame.GetSubRecord();
+                var efitMeta = frame.GetSubrecord();
                 if (efitMeta.RecordType != Effect_Registration.EFIT_HEADER)
                 {
                     throw new ArgumentException("Expected EFIT header.");
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryEffectInitialCustom(MutagenWriter writer, IEffectGetter item)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFID_HEADER))
+                using (HeaderExport.ExportSubrecordHeader(writer, Effect_Registration.EFID_HEADER))
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,

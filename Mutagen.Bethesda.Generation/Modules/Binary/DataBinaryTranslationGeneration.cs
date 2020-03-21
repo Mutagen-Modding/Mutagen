@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Generation
                     if (!generatedStart)
                     {
                         generatedStart = true;
-                        fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).ContentLength;");
+                        fg.AppendLine($"var subLen = _package.Meta.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                     }
                     fg.AppendLine($"if (subLen <= 0x{passedLen.Value.ToString("X")})");
                     using (new BraceWrapper(fg))
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Generation
                     if (!generatedStart)
                     {
                         generatedStart = true;
-                        fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).ContentLength;");
+                        fg.AppendLine($"var subLen = _package.Meta.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                     }
                 }
                 passedLen += typeGen.GetPassedAmount(objGen, item.Field);

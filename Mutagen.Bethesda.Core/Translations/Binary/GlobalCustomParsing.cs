@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException($"Could not find FNAM.");
             }
-            var fnamMeta = frame.Header.Meta.SubRecordFrame(subrecordSpan.Slice(fnamLocation));
+            var fnamMeta = frame.Header.Meta.SubrecordFrame(subrecordSpan.Slice(fnamLocation));
             if (fnamMeta.Content.Length != 1)
             {
                 throw new ArgumentException($"FNAM had non 1 length: {fnamMeta.Content.Length}");

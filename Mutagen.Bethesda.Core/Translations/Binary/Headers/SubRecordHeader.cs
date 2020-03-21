@@ -6,12 +6,12 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public ref struct SubRecordHeader
+    public ref struct SubrecordHeader
     {
         public GameConstants Meta { get; }
         public ReadOnlySpan<byte> Span { get; }
 
-        public SubRecordHeader(GameConstants meta, ReadOnlySpan<byte> span)
+        public SubrecordHeader(GameConstants meta, ReadOnlySpan<byte> span)
         {
             this.Meta = meta;
             this.Span = span.Slice(0, meta.SubConstants.HeaderLength);
@@ -25,38 +25,38 @@ namespace Mutagen.Bethesda.Binary
         public int TotalLength => this.HeaderLength + this.ContentLength;
     }
 
-    public ref struct SubRecordFrame
+    public ref struct SubrecordFrame
     {
-        public SubRecordHeader Header { get; }
+        public SubrecordHeader Header { get; }
         public ReadOnlySpan<byte> HeaderAndContentData { get; }
         public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
-        public SubRecordFrame(GameConstants meta, ReadOnlySpan<byte> span)
+        public SubrecordFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
-            this.Header = meta.SubRecord(span);
+            this.Header = meta.Subrecord(span);
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
-        public SubRecordFrame(SubRecordHeader meta, ReadOnlySpan<byte> span)
+        public SubrecordFrame(SubrecordHeader meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
 
-    public ref struct SubRecordMemoryFrame
+    public ref struct SubrecordMemoryFrame
     {
-        public SubRecordHeader Header { get; }
+        public SubrecordHeader Header { get; }
         public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
         public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
-        public SubRecordMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
+        public SubrecordMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = meta.SubRecord(span);
+            this.Header = meta.Subrecord(span);
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
-        public SubRecordMemoryFrame(SubRecordHeader meta, ReadOnlyMemorySlice<byte> span)
+        public SubrecordMemoryFrame(SubrecordHeader meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));

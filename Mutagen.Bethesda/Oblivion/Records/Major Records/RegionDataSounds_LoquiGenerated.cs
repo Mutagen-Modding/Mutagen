@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44534452: // RDSD
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Sounds = BinaryOverlaySetList<RegionSoundBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

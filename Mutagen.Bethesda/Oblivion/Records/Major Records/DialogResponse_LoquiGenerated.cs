@@ -2385,7 +2385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogResponse_Registration.TRDT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogResponse_Registration.TRDT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
                         writer,

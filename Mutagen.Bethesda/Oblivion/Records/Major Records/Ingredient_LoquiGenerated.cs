@@ -2980,7 +2980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.DATA_HEADER));
             if (item.ENITDataTypeState.HasFlag(Ingredient.ENITDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Ingredient_Registration.ENIT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Ingredient_Registration.ENIT_HEADER)))
                 {
                     writer.Write(item.Value);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientFlag>.Instance.Write(

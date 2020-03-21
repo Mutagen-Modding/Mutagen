@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Generation
         const string AsyncItemKey = "ListAsyncItem";
         const string ThreadKey = "ListThread";
         public const string CounterRecordType = "ListCounterRecordType";
-        public const string CounterSubRecordPerItemType = "ListCounterSubRecordPerItemType";
+        public const string CounterSubrecordPerItemType = "ListCounterSubrecordPerItemType";
         public const string PrependCountType = "ListPrependCountType";
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Generation
             var listType = field as ListType;
             listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
             listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
-            listType.CustomData[CounterSubRecordPerItemType] = node.GetAttribute("counterSubrecordPerItem", false);
+            listType.CustomData[CounterSubrecordPerItemType] = node.GetAttribute("counterSubrecordPerItem", false);
             listType.CustomData[PrependCountType] = node.GetAttribute("prependCount", false);
             var asyncItem = node.GetAttribute<bool>("asyncItems", false);
             if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
                         }
-                        if ((bool)list.CustomData[CounterSubRecordPerItemType])
+                        if ((bool)list.CustomData[CounterSubrecordPerItemType])
                         {
                             args.Add($"subRecordPerItem: true");
                         }
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
                 && counterRecObj is string counterRecType)
             {
-                fg.AppendLine("var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubRecordFrame().Content);");
+                fg.AppendLine("var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);");
             }
             else if (data.MarkerType.HasValue)
             {
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Generation
                 || list.SubTypeGeneration is LoquiType;
 
             bool recordPerItem = false;
-            if (((bool)list.CustomData[CounterSubRecordPerItemType])
+            if (((bool)list.CustomData[CounterSubrecordPerItemType])
                 && listBinaryType == ListBinaryType.CounterRecord)
             {
                 recordPerItem = true;
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     break;
                 case ListBinaryType.Trigger:
-                    fg.AppendLine("var subMeta = _package.Meta.ReadSubRecord(stream);");
+                    fg.AppendLine("var subMeta = _package.Meta.ReadSubrecord(stream);");
                     fg.AppendLine("var subLen = subMeta.ContentLength;");
                     var expectedLen = subGen.ExpectedLength(objGen, list.SubTypeGeneration);
                     if (expectedLen.HasValue)
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("stream.Position += subLen;");
                     break;
                 case ListBinaryType.CounterRecord:
-                    fg.AppendLine("var subMeta = _package.Meta.ReadSubRecord(stream);");
+                    fg.AppendLine("var subMeta = _package.Meta.ReadSubrecord(stream);");
                     fg.AppendLine("var subLen = subMeta.ContentLength;");
                     if (!subData.HasTrigger)
                     {

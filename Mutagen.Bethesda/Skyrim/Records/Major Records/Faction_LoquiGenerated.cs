@@ -5054,7 +5054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.JOUT_HEADER));
             if (item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Faction_Registration.CRVA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Faction_Registration.CRVA_HEADER)))
                 {
                     writer.Write(item.ArrestCrimeValue);
                     writer.Write(item.AttackOnSightCrimeValue);
@@ -5479,7 +5479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _CRVALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.CRVADataTypeState = Faction.CRVADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0xC)
                     {
                         this.CRVADataTypeState |= Faction.CRVADataType.Break0;

@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Tests
             FormID formID)
         {
             stream.Position = subrecordLoc;
-            var subFrame = stream.ReadSubRecordFrame();
+            var subFrame = stream.ReadSubrecordFrame();
             var nullIndex = MemoryExtensions.IndexOf<byte>(subFrame.Content, default(byte));
             if (nullIndex == -1) throw new ArgumentException();
             if (nullIndex == subFrame.Content.Length - 1) return;
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Tests
             if (!doRecordLen) return;
             // Modify Length
             stream.Position = loc;
-            var subMeta = stream.ReadSubRecord();
+            var subMeta = stream.ReadSubrecord();
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(

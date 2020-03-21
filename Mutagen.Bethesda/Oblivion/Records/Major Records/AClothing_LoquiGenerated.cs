@@ -3375,7 +3375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(AClothing_Registration.ANAM_HEADER));
             if (item.BMDTDataTypeState.HasFlag(AClothing.BMDTDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(AClothing_Registration.BMDT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(AClothing_Registration.BMDT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Write(
                         writer,

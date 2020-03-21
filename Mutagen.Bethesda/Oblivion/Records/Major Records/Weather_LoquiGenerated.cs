@@ -5953,7 +5953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 });
             if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -5971,7 +5971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.HNAMDataTypeState.HasFlag(Weather.HNAMDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.HNAM_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.HNAM_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -6019,7 +6019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.DATADataTypeState.HasFlag(Weather.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.WindSpeed);
                     writer.Write(item.CloudSpeedLower);
@@ -6421,7 +6421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.WeatherTypes = BinaryOverlaySetList<WeatherTypeBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

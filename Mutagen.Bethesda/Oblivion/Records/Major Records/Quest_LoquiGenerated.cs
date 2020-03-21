@@ -3173,7 +3173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(Quest.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
                         writer,

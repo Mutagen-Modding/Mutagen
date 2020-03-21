@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (item.OpenByDefault)
                 {
-                    using (HeaderExport.ExportSubRecordHeader(writer, PlacedObject_Registration.ONAM_HEADER))
+                    using (HeaderExport.ExportSubrecordHeader(writer, PlacedObject_Registration.ONAM_HEADER))
                     {
                     }
                 }

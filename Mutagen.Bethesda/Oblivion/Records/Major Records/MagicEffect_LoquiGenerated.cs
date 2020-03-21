@@ -3582,7 +3582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Write(
                         writer,
@@ -3901,7 +3901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = MagicEffect.DATADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x24)
                     {
                         this.DATADataTypeState |= MagicEffect.DATADataType.Break0;
@@ -3910,7 +3910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x45435345: // ESCE
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.CounterEffects = BinaryOverlaySetList<IEDIDLinkGetter<IMagicEffectGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

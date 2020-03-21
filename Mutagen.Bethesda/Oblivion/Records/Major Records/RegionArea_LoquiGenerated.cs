@@ -2115,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x444C5052: // RPLD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPoints) return TryGet<int?>.Failure;
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.RegionPoints = BinaryOverlaySetList<P2Float>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

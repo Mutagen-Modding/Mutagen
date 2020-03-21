@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter)
         {
-            var subRecMeta = frame.GetSubRecord();
+            var subRecMeta = frame.GetSubrecord();
             if (subRecMeta.RecordType != Condition_Registration.CTDA_HEADER)
             {
                 throw new ArgumentException();
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame)
             {
-                var countMeta = frame.ReadSubRecordFrame();
+                var countMeta = frame.ReadSubrecordFrame();
                 if (countMeta.Header.RecordType != Faction_Registration.CITC_HEADER
                     || countMeta.Content.Length != 4)
                 {
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static void WriteConditionsList(IReadOnlyList<IConditionGetter>? condList, MutagenWriter writer)
             {
                 if (condList == null) return;
-                using (HeaderExport.ExportSubRecordHeader(writer, Faction_Registration.CITC_HEADER))
+                using (HeaderExport.ExportSubrecordHeader(writer, Faction_Registration.CITC_HEADER))
                 {
                     writer.Write(condList.Count);
                 }
@@ -157,14 +157,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!(obj is IFunctionConditionDataGetter funcData)) return;
                 if (funcData.ParameterOneString.TryGet(out var param1))
                 {
-                    using (HeaderExport.ExportSubRecordHeader(writer, Condition_Registration.CIS1_HEADER))
+                    using (HeaderExport.ExportSubrecordHeader(writer, Condition_Registration.CIS1_HEADER))
                     {
                         StringBinaryTranslation.WriteString(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
                 if (funcData.ParameterTwoString.TryGet(out var param2))
                 {
-                    using (HeaderExport.ExportSubRecordHeader(writer, Condition_Registration.CIS2_HEADER))
+                    using (HeaderExport.ExportSubrecordHeader(writer, Condition_Registration.CIS2_HEADER))
                     {
                         StringBinaryTranslation.WriteString(writer, param2, StringBinaryType.NullTerminate);
                     }
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static ConditionBinaryOverlay ConditionFactory(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
-                var subRecMeta = package.Meta.GetSubRecordFrame(stream);
+                var subRecMeta = package.Meta.GetSubrecordFrame(stream);
                 if (subRecMeta.Header.RecordType != Condition_Registration.CTDA_HEADER)
                 {
                     throw new ArgumentException();
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
-                var counterMeta = package.Meta.ReadSubRecordFrame(stream);
+                var counterMeta = package.Meta.ReadSubrecordFrame(stream);
                 if (counterMeta.Header.RecordType != Faction_Registration.CITC_HEADER
                     || counterMeta.Content.Length != 4)
                 {

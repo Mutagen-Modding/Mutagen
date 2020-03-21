@@ -23,12 +23,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
         {
-            var rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var rdatType);
+            var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
             while (rdat.Equals(Region_Registration.RDAT_HEADER))
             {
                 ParseRegionData(frame, item);
                 if (frame.Complete) break;
-                rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out rdatType);
+                rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out rdatType);
             }
         }
 
@@ -62,9 +62,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static void ParseRegionData(MutagenFrame frame, IRegionInternal item)
         {
-            var rdatFrame = frame.GetSubRecordFrame();
+            var rdatFrame = frame.GetSubrecordFrame();
             RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-            var subMeta = frame.GetSubRecord(offset: rdatFrame.Header.TotalLength);
+            var subMeta = frame.GetSubrecord(offset: rdatFrame.Header.TotalLength);
             int len = rdatFrame.Header.TotalLength;
             if (IsExpected(dataType, subMeta.RecordType))
             {
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Grasses = RegionDataGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
                 case RegionData.RegionDataType.Sounds:
-                    var nextRec = frame.GetSubRecord(offset: len);
+                    var nextRec = frame.GetSubrecord(offset: len);
                     if (nextRec.RecordType.Equals(RDSD) || nextRec.RecordType.Equals(RDMD))
                     {
                         len += nextRec.TotalLength;
@@ -162,12 +162,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryMemoryReadStream stream,
             int offset)
         {
-            var rdat = this._package.Meta.GetSubRecord(stream);
+            var rdat = this._package.Meta.GetSubrecord(stream);
             while (rdat.RecordType.Equals(Region_Registration.RDAT_HEADER))
             {
                 ParseRegionData(stream, offset);
                 if (stream.Complete) break;
-                rdat = this._package.Meta.GetSubRecord(stream);
+                rdat = this._package.Meta.GetSubrecord(stream);
             }
         }
 
@@ -179,12 +179,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private void ParseRegionData(BinaryMemoryReadStream stream, int offset)
         {
             int loc = stream.Position - offset;
-            var rdatFrame = this._package.Meta.ReadSubRecordFrame(stream);
+            var rdatFrame = this._package.Meta.ReadSubrecordFrame(stream);
             RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
             var len = rdatFrame.Header.TotalLength;
             if (!stream.Complete)
             {
-                var contentMeta = this._package.Meta.GetSubRecord(stream);
+                var contentMeta = this._package.Meta.GetSubrecord(stream);
                 if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
                 {
                     len += contentMeta.TotalLength;
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _GrassesSpan = this._data.Slice(loc, len);
                     break;
                 case RegionData.RegionDataType.Sounds:
-                    var nextRec = this._package.Meta.GetSubRecord(stream);
+                    var nextRec = this._package.Meta.GetSubrecord(stream);
                     if (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSD) || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMD))
                     {
                         len += nextRec.TotalLength;

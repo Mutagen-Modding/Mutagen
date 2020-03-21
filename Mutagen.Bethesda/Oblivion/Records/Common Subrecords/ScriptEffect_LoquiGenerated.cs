@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -2432,7 +2432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _SCITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.SCITDataTypeState = ScriptEffect.SCITDataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x4)
                     {
                         this.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;

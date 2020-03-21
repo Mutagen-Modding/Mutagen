@@ -3035,7 +3035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(Class.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Write(
                         writer: writer,
@@ -3306,7 +3306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = Class.DATADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x30)
                     {
                         this.DATADataTypeState |= Class.DATADataType.Break0;

@@ -2252,7 +2252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
             if (item.DATADataTypeState.HasFlag(Clothing.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Clothing_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Clothing_Registration.DATA_HEADER)))
                 {
                     writer.Write(item.Value);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(

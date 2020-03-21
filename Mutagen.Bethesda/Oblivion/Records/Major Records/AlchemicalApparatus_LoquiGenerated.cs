@@ -2793,7 +2793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.SCRI_HEADER));
             if (item.DATADataTypeState.HasFlag(AlchemicalApparatus.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
                         writer,

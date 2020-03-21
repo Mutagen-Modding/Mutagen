@@ -77,7 +77,7 @@
     <Compile Include="Translations\Binary\Headers\MajorRecordConstants.cs" />
     <Compile Include="Translations\Binary\Headers\ModHeader.cs" />
     <Compile Include="Translations\Binary\Headers\RecordConstants.cs" />
-    <Compile Include="Translations\Binary\Headers\SubRecordHeader.cs" />
+    <Compile Include="Translations\Binary\Headers\SubrecordHeader.cs" />
     <Compile Include="Translations\Binary\Headers\VariableHeader.cs" /> 
     <Compile Include="Translations\Binary\Fields\LoquiBinaryOverlayTranslation.cs" />
     <Compile Include="Translations\Binary\Headers\GameConstants.cs" />

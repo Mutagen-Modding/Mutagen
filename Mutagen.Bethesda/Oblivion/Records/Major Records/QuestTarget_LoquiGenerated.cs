@@ -2150,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (item.QSTADataTypeState.HasFlag(QuestTarget.QSTADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,

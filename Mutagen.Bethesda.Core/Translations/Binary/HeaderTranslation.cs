@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Binary
                 out contentLength);
         }
 
-        public static RecordType ReadNextSubRecordType(
+        public static RecordType ReadNextSubrecordType(
             IMutagenReadStream reader,
             out int contentLength)
         {
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public static RecordType GetNextSubRecordType(
+        public static RecordType GetNextSubrecordType(
             IMutagenReadStream reader,
             out int contentLength,
             int offset = 0)
@@ -293,19 +293,19 @@ namespace Mutagen.Bethesda.Binary
 
         public static ReadOnlySpan<byte> ExtractSubrecordSpan(ReadOnlySpan<byte> span, int loc, GameConstants meta)
         {
-            var subMeta = meta.SubRecord(span.Slice(loc));
+            var subMeta = meta.Subrecord(span.Slice(loc));
             return span.Slice(loc + subMeta.HeaderLength, subMeta.ContentLength);
         }
 
         public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, int loc, GameConstants meta)
         {
-            var subMeta = meta.SubRecord(span.Span.Slice(loc));
+            var subMeta = meta.Subrecord(span.Span.Slice(loc));
             return span.Slice(loc + subMeta.HeaderLength, subMeta.ContentLength);
         }
 
         public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
-            var subMeta = meta.SubRecord(span.Span);
+            var subMeta = meta.Subrecord(span.Span);
             return span.Slice(subMeta.HeaderLength, subMeta.ContentLength);
         }
 

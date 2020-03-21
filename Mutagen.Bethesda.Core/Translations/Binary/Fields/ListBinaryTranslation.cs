@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Binary
                 MutagenFrame subFrame;
                 if (!IsLoqui)
                 {
-                    var subHeader = frame.GetSubRecord();
+                    var subHeader = frame.GetSubrecord();
                     frame.Position += subHeader.HeaderLength;
                     subFrame = frame.ReadAndReframe(subHeader.ContentLength);
                 }
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var subHeader = frame.GetSubRecord();
+            var subHeader = frame.GetSubrecord();
             if (subHeader.RecordType != triggeringRecord)
             {
                 throw new ArgumentException($"Unexpected record encountered.");
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Binary
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {
-                var subHeader = frame.GetSubRecord();
+                var subHeader = frame.GetSubrecord();
                 if (subHeader.RecordType != triggeringRecord)
                 {
                     throw new ArgumentException($"Unexpected record encountered.");
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Binary
             var tasks = new List<Task<TryGet<T>>>();
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                var nextRec = HeaderTranslation.GetNextSubRecordType(
+                var nextRec = HeaderTranslation.GetNextSubrecordType(
                     reader: frame.Reader,
                     contentLength: out var contentLen);
                 if (nextRec != triggeringRecord) break;
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Binary
             var tasks = new List<Task<TryGet<T>>>();
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                var nextRec = HeaderTranslation.GetNextSubRecordType(
+                var nextRec = HeaderTranslation.GetNextSubrecordType(
                     reader: frame.Reader,
                     contentLength: out var contentLen);
                 if (nextRec != triggeringRecord) break;

@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         static partial void FillBinaryPointsCustom(MutagenFrame frame, IRoadInternal item)
         {
-            var subMeta = frame.ReadSubRecord();
+            var subMeta = frame.ReadSubrecord();
             if (subMeta.RecordType != PGRP)
             {
                 frame.Reader.Position -= subMeta.HeaderLength;
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             var pointBytes = frame.Reader.ReadSpan(subMeta.ContentLength);
 
-            subMeta = frame.ReadSubRecord();
+            subMeta = frame.ReadSubrecord();
             switch (subMeta.RecordType.TypeInt)
             {
                 case 0x52524750: // "PGRR":
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void WriteBinaryPointsCustom(MutagenWriter writer, IRoadGetter item)
         {
             bool anyConnections = false;
-            using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRP))
+            using (HeaderExport.ExportSubrecordHeader(writer, RoadBinaryCreateTranslation.PGRP))
             {
                 foreach (var pt in item.Points.TryIterate())
                 {
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
 
             if (!anyConnections) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, RoadBinaryCreateTranslation.PGRR))
+            using (HeaderExport.ExportSubrecordHeader(writer, RoadBinaryCreateTranslation.PGRR))
             {
                 foreach (var pt in item.Points.TryIterate())
                 {
@@ -127,11 +127,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         partial void PointsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
             if (stream.Complete) return;
-            var subMeta = _package.Meta.GetSubRecord(stream);
+            var subMeta = _package.Meta.GetSubrecord(stream);
             if (subMeta.RecordType != Road_Registration.PGRP_HEADER) return;
             stream.Position += subMeta.HeaderLength;
             var pointBytes = stream.ReadMemory(subMeta.ContentLength);
-            subMeta = _package.Meta.GetSubRecord(stream);
+            subMeta = _package.Meta.GetSubrecord(stream);
             switch (subMeta.RecordTypeInt)
             {
                 case 0x52524750: // "PGRR":

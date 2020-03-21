@@ -2900,7 +2900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 });
             if (item.DATADataTypeState.HasFlag(Container.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Container_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Container_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Write(
                         writer,

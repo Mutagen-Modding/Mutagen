@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x53474452: // RDGS
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Grasses = BinaryOverlaySetList<IFormLinkGetter<IGrassGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

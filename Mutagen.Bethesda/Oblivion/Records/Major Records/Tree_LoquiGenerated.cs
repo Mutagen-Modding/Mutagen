@@ -3418,7 +3418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 transl: UInt32BinaryTranslation.Instance.Write);
             if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -3446,7 +3446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.BNAM_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.BNAM_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -3706,7 +3706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    var subMeta = _package.Meta.ReadSubRecord(stream);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.SpeedTreeSeeds = BinaryOverlaySetList<UInt32>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

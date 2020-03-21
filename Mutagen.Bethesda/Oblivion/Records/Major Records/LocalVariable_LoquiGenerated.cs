@@ -2181,7 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (item.SLSDDataTypeState.HasFlag(LocalVariable.SLSDDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SLSD_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SLSD_HEADER)))
                 {
                     writer.Write(item.Index);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(

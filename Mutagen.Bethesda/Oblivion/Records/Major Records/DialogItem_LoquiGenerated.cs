@@ -3668,7 +3668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
             if (item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogItem_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogItem_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogType>.Instance.Write(
                         writer,
@@ -3957,7 +3957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.DATADataTypeState = DialogItem.DATADataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x2)
                     {
                         this.DATADataTypeState |= DialogItem.DATADataType.Break0;

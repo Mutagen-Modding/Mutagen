@@ -41,12 +41,12 @@ namespace Mutagen.Bethesda.Binary
             int? maleLoc = null, femaleLoc = null;
             if (find[0] != null)
             {
-                var subMeta = package.Meta.SubRecord(bytes);
+                var subMeta = package.Meta.Subrecord(bytes);
                 maleLoc = find[0] + subMeta.TotalLength;
             }
             if (find[1] != null)
             {
-                var subMeta = package.Meta.SubRecord(bytes);
+                var subMeta = package.Meta.Subrecord(bytes);
                 femaleLoc = find[1] + subMeta.TotalLength;
             }
             return new GenderedItemBinaryOverlay<T>(

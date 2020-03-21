@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Generation
                 // Skip marker
                 fg.AppendLine("frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength;");
                 // read in target record type.
-                fg.AppendLine("var nextRec = frame.MetaData.GetSubRecord(frame);");
+                fg.AppendLine("var nextRec = frame.MetaData.GetSubrecord(frame);");
                 // Return if it's not there
                 fg.AppendLine($"if (nextRec.RecordType != {obj.RecordTypeHeaderName(data.RecordType.Value)}) throw new ArgumentException(\"Marker was read but not followed by expected subrecord.\");");
                 fg.AppendLine("contentLength = nextRec.RecordLength;");
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"var nextRecord = HeaderTranslation.GetNext{(obj.GetObjectType() == ObjectType.Subrecord ? "Sub" : null)}RecordType"))
+                        $"var nextRecord = HeaderTranslation.GetNext{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "Record")}Type"))
                     {
                         args.Add("reader: frame.Reader");
                         args.Add("contentLength: out var customLen");
@@ -1357,7 +1357,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                                fg.AppendLine($"using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
                                 using (new BraceWrapper(fg))
                                 {
                                     bool isInRange = false;
@@ -1734,7 +1734,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                         {
-                            fg.AppendLine($"var nextRecord = recordTypeConverter.ConvertToCustom(package.Meta.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubRecord" : "MajorRecord")}(stream).RecordType);");
+                            fg.AppendLine($"var nextRecord = recordTypeConverter.ConvertToCustom(package.Meta.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "MajorRecord")}(stream).RecordType);");
                             fg.AppendLine($"switch (nextRecord.TypeInt)");
                             using (new BraceWrapper(fg))
                             {
@@ -1813,7 +1813,7 @@ namespace Mutagen.Bethesda.Generation
                             switch (obj.GetObjectType())
                             {
                                 case ObjectType.Subrecord:
-                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));");
+                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));");
                                     fg.AppendLine($"int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Record:

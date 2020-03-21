@@ -2459,7 +2459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
             if (item.DATADataTypeState.HasFlag(Armor.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Armor_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Armor_Registration.DATA_HEADER)))
                 {
                     ArmorBinaryWriteTranslation.WriteBinaryArmorValue(
                         writer: writer,

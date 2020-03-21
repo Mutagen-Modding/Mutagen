@@ -5551,7 +5551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
             if (item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSTD_HEADER)))
+                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSTD_HEADER)))
                 {
                     writer.Write(item.DodgePercentChance);
                     writer.Write(item.LeftRightPercentChance);
@@ -6052,7 +6052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _CSTDLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.CSTDDataTypeState = CombatStyle.CSTDDataType.Has;
-                    var subLen = _package.Meta.SubRecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x54)
                     {
                         this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
