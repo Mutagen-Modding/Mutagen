@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda
             }
             while (!targetFrame.Complete)
             {
-                var subMeta = frame.MetaData.GetSubRecord(targetFrame);
+                var subMeta = targetFrame.GetSubRecord();
                 var finalPos = targetFrame.Position + subMeta.TotalLength;
                 var parsed = fillTyped(
                     record: record,
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda
                 frame: frame);
             while (!frame.Complete)
             {
-                var subMeta = frame.MetaData.GetSubRecord(frame);
+                var subMeta = frame.GetSubRecord();
                 var finalPos = frame.Position + subMeta.TotalLength;
                 var parsed = fillTyped(
                     record: record,
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda
             int? lastParsed = null;
             while (!frame.Complete)
             {
-                var subMeta = frame.MetaData.GetSubRecord(frame);
+                var subMeta = frame.GetSubRecord();
                 var finalPos = frame.Position + subMeta.TotalLength;
                 var parsed = fillTyped(
                     record: record,
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
         {
-            var groupMeta = frame.MetaData.GetGroup(frame);
+            var groupMeta = frame.GetGroup();
             if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException($"Expected GRUP header was not read in: {frame.Position}");

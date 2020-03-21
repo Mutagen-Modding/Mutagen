@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Tests
 
                 // If complete overall, return
                 if (inputStream.Complete) break;
-                var groupMeta = inputStream.MetaData.GetGroup(inputStream);
+                var groupMeta = inputStream.GetGroup();
                 if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException();
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     while (!frame.Complete)
                     {
-                        var majorMeta = inputStream.MetaData.GetMajorRecord(inputStream);
+                        var majorMeta = inputStream.GetMajorRecord();
                         var bytes = inputStream.ReadBytes(checked((int)majorMeta.TotalLength));
                         var type = majorMeta.RecordType;
                         if (groupRules.Contains(type))
@@ -433,18 +433,18 @@ namespace Mutagen.Bethesda.Tests
                 switch (type.Type)
                 {
                     case "ROAD":
-                        roadStorage = reader.ReadBytes(checked((int)reader.MetaData.GetMajorRecord(reader).TotalLength));
+                        roadStorage = reader.ReadBytes(checked((int)reader.GetMajorRecord().TotalLength));
                         break;
                     case "CELL":
                         if (cellStorage != null)
                         {
                             throw new ArgumentException();
                         }
-                        var cellMajorMeta = reader.MetaData.GetMajorRecord(reader);
+                        var cellMajorMeta = reader.GetMajorRecord();
                         var startPos = reader.Position;
                         reader.Position += cellMajorMeta.HeaderLength;
                         var grupPos = reader.Position;
-                        var cellSubGroupMeta = reader.MetaData.GetGroup(reader);
+                        var cellSubGroupMeta = reader.GetGroup();
                         long cellGroupLen = 0;
                         if (cellSubGroupMeta.IsGroup
                             && cellSubGroupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Tests
                             i = 3; // end loop
                             continue;
                         }
-                        grupBytes.Add(reader.ReadBytes(checked((int)reader.MetaData.GetGroup(reader).TotalLength)));
+                        grupBytes.Add(reader.ReadBytes(checked((int)reader.GetGroup().TotalLength)));
                         break;
                     case "WRLD":
                         i = 3; // end loop

@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             stream.Position = loc.Min;
-            var majorFrame = this.Meta.ReadMajorRecordFrame(stream);
+            var majorFrame = stream.ReadMajorRecordFrame();
             var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, Mutagen.Bethesda.Constants.EditorID);
             if (edidLoc == -1) return;
             ProcessStringTermination(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             stream.Position = loc.Min;
-            var majorMeta = this.Meta.GetMajorRecord(stream);
+            var majorMeta = stream.GetMajorRecord();
             var formID = majorMeta.FormID;
             if (formID.ModID.ID <= this._NumMasters) return;
             // Need to zero out master
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Tests
             FormID formID)
         {
             stream.Position = subrecordLoc;
-            var subFrame = this.Meta.ReadSubRecordFrame(stream);
+            var subFrame = stream.ReadSubRecordFrame();
             var nullIndex = MemoryExtensions.IndexOf<byte>(subFrame.Content, default(byte));
             if (nullIndex == -1) throw new ArgumentException();
             if (nullIndex == subFrame.Content.Length - 1) return;
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Tests
             if (!doRecordLen) return;
             // Modify Length
             stream.Position = loc;
-            var subMeta = this.Meta.ReadSubRecord(stream);
+            var subMeta = stream.ReadSubRecord();
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Tests
             foreach (var loc in this._AlignedFileLocs.GrupLocations)
             {
                 stream.Position = loc;
-                var groupMeta = stream.MetaData.ReadGroup(stream);
+                var groupMeta = stream.ReadGroup();
                 if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
                 this._Instructions.SetRemove(RangeInt64.FactoryFromLength(loc, groupMeta.HeaderLength));
             }

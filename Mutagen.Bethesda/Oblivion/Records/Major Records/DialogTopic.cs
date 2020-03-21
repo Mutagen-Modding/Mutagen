@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
             {
                 if (frame.Reader.Complete) return;
-                GroupHeader groupMeta = frame.MetaData.GetGroup(frame);
+                GroupHeader groupMeta = frame.GetGroup();
                 if (!groupMeta.IsGroup) return;
                 if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                 {

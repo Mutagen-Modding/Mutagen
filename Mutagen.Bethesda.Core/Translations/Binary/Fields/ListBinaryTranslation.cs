@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Binary
                 MutagenFrame subFrame;
                 if (!IsLoqui)
                 {
-                    var subHeader = frame.MetaData.GetSubRecord(frame);
+                    var subHeader = frame.GetSubRecord();
                     frame.Position += subHeader.HeaderLength;
                     subFrame = frame.ReadAndReframe(subHeader.ContentLength);
                 }
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var subHeader = frame.MetaData.GetSubRecord(frame);
+            var subHeader = frame.GetSubRecord();
             if (subHeader.RecordType != triggeringRecord)
             {
                 throw new ArgumentException($"Unexpected record encountered.");
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Binary
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {
-                var subHeader = frame.MetaData.GetSubRecord(frame);
+                var subHeader = frame.GetSubRecord();
                 if (subHeader.RecordType != triggeringRecord)
                 {
                     throw new ArgumentException($"Unexpected record encountered.");

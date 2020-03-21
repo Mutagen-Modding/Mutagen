@@ -77,6 +77,7 @@ namespace Mutagen.Bethesda.Binary
                 headerLength: 6,
                 lengthLength: 2));
 
+        #region Header Factories
         public ModHeader Header(ReadOnlySpan<byte> span) => new ModHeader(this, span);
         public ModHeader GetHeader(IBinaryReadStream stream) => new ModHeader(this, stream.GetSpan(this.ModHeaderLength));
         public ModHeader ReadHeader(IBinaryReadStream stream) => new ModHeader(this, stream.ReadSpan(this.ModHeaderLength));
@@ -236,6 +237,7 @@ namespace Mutagen.Bethesda.Binary
                 return this.MajorConstants.VariableMeta(stream.ReadSpan(this.MajorConstants.HeaderLength));
             }
         }
+        #endregion
 
         public RecordHeaderConstants Constants(ObjectType type)
         {
@@ -270,5 +272,33 @@ namespace Mutagen.Bethesda.Binary
         {
             return Get(mode);
         }
+    }
+
+    public static class GameConstantsExt
+    {
+        public static ModHeader GetHeader(this IMutagenReadStream stream) => stream.MetaData.GetHeader(stream);
+        public static ModHeader ReadHeader(this IMutagenReadStream stream) => stream.MetaData.ReadHeader(stream);
+
+        public static GroupHeader GetGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetGroup(stream, offset);
+        public static GroupFrame GetGroupRecordFrame(IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetGroupRecordFrame(stream, offset);
+        public static GroupHeader ReadGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.ReadGroup(stream, offset);
+        public static GroupFrame ReadGroupRecordFrame(this IMutagenReadStream stream) => stream.MetaData.ReadGroupRecordFrame(stream);
+
+        public static MajorRecordHeader GetMajorRecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetMajorRecord(stream, offset);
+        public static MajorRecordFrame GetMajorRecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetMajorRecordFrame(stream, offset);
+        public static MajorRecordHeader ReadMajorRecord(this IMutagenReadStream stream) => stream.MetaData.ReadMajorRecord(stream);
+        public static MajorRecordFrame ReadMajorRecordFrame(this IMutagenReadStream stream) => stream.MetaData.ReadMajorRecordFrame(stream);
+
+        public static SubRecordHeader GetSubRecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetSubRecord(stream, offset);
+        public static bool TryGetSubrecord(this IMutagenReadStream stream, out SubRecordHeader meta) => stream.MetaData.TryGetSubrecord(stream, out meta);
+        public static SubRecordFrame GetSubRecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetSubRecordFrame(stream, offset);
+        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, out SubRecordFrame frame) => stream.MetaData.TryGetSubrecordFrame(stream, out frame);
+        public static SubRecordHeader ReadSubRecord(this IMutagenReadStream stream) => stream.MetaData.ReadSubRecord(stream);
+        public static bool TryReadSubrecord(this IMutagenReadStream stream, out SubRecordHeader meta) => stream.MetaData.TryReadSubrecord(stream, out meta);
+        public static SubRecordFrame ReadSubRecordFrame(this IMutagenReadStream stream) => stream.MetaData.ReadSubRecordFrame(stream);
+        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, out SubRecordFrame frame) => stream.MetaData.TryReadSubrecordFrame(stream, out frame);
+
+        public static VariableHeader GetNextRecordVariableMeta(this IMutagenReadStream stream) => stream.MetaData.GetNextRecordVariableMeta(stream);
+        public static VariableHeader ReadNextRecordVariableMeta(this IMutagenReadStream stream) => stream.MetaData.ReadNextRecordVariableMeta(stream);
     }
 }

@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         static partial void FillBinaryPointsCustom(MutagenFrame frame, IRoadInternal item)
         {
-            var subMeta = frame.MetaData.ReadSubRecord(frame);
+            var subMeta = frame.ReadSubRecord();
             if (subMeta.RecordType != PGRP)
             {
                 frame.Reader.Position -= subMeta.HeaderLength;
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             var pointBytes = frame.Reader.ReadSpan(subMeta.ContentLength);
 
-            subMeta = frame.MetaData.ReadSubRecord(frame);
+            subMeta = frame.ReadSubRecord();
             switch (subMeta.RecordType.TypeInt)
             {
                 case 0x52524750: // "PGRR":

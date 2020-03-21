@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
         {
-            var subMeta = frame.MetaData.ReadSubRecord(frame);
+            var subMeta = frame.ReadSubRecord();
             if (subMeta.RecordType != PathGrid_Registration.DATA_HEADER)
             {
                 frame.Position -= subMeta.HeaderLength;
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             uint ptCount = frame.Reader.ReadUInt16();
 
-            subMeta = frame.MetaData.ReadSubRecord(frame);
+            subMeta = frame.ReadSubRecord();
             if (subMeta.RecordType != PGRP)
             {
                 frame.Position -= subMeta.HeaderLength;
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             for (int recAttempt = 0; recAttempt < 2; recAttempt++)
             {
                 if (frame.Reader.Complete) break;
-                subMeta = frame.MetaData.GetSubRecord(frame);
+                subMeta = frame.GetSubRecord();
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x47414750: //"PGAG":

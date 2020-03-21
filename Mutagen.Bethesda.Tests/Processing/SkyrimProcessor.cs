@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!GameSetting_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var majorFrame = this.Meta.ReadMajorRecordFrame(stream);
+            var majorFrame = stream.ReadMajorRecordFrame();
             var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, new RecordType("EDID"), navigateToContent: true);
             if (edidLoc == -1) return;
             if ((char)majorFrame.Content[edidLoc] != 'f') return;

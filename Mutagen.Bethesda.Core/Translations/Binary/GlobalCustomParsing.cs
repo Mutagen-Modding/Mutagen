@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Binary
             where T : IMajorRecordCommon, IGlobalCommon
         {
             var initialPos = frame.Position;
-            var majorMeta = frame.MetaData.GetMajorRecordFrame(frame);
+            var majorMeta = frame.GetMajorRecordFrame();
             if (majorMeta.Header.RecordType != GLOB)
             {
                 throw new ArgumentException();

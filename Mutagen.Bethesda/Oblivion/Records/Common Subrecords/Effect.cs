@@ -27,14 +27,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item)
             {
-                var subMeta = frame.MetaData.ReadSubRecord(frame);
+                var subMeta = frame.ReadSubRecord();
                 if (subMeta.ContentLength != Mutagen.Bethesda.Constants.HEADER_LENGTH)
                 {
                     throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.ContentLength}");
                 }
                 var magicEffName = frame.ReadMemory(4);
 
-                var efitMeta = frame.MetaData.GetSubRecord(frame);
+                var efitMeta = frame.GetSubRecord();
                 if (efitMeta.RecordType != Effect_Registration.EFIT_HEADER)
                 {
                     throw new ArgumentException("Expected EFIT header.");

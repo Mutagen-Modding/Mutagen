@@ -4206,7 +4206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54435053: // SPCT
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content);
+                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubRecordFrame().Content);
                     item.ActorEffect = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParsePerItem(
                             frame: frame,
@@ -4231,7 +4231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x5A49534B: // KSIZ
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content);
+                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubRecordFrame().Content);
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public (bool, long) MajorRecordHeaderGetStream()
         {
-            var meta = constants.GetMajorRecord(frame);
+            var meta = frame.GetMajorRecord();
             if (meta.RecordType != type) return (false, -1);
             return (true, meta.ContentLength);
         }

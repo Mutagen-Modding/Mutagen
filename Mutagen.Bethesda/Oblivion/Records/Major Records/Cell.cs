@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj)
             {
                 if (frame.Reader.Complete) return;
-                var groupMeta = frame.MetaData.GetGroup(frame);
+                var groupMeta = frame.GetGroup();
                 if (!groupMeta.IsGroup) return;
                 var formKey = FormKey.Factory(frame.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
                 if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var subFrame = frame.SpawnWithLength(groupMeta.ContentLength);
                 while (!subFrame.Complete)
                 {
-                    var persistGroupMeta = frame.MetaData.GetGroup(frame);
+                    var persistGroupMeta = frame.GetGroup();
                     if (!persistGroupMeta.IsGroup)
                     {
                         throw new ArgumentException();
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
                 IList<IPlaced> coll,
                 bool persistentParse)
             {
-                var groupMeta = frame.MetaData.ReadGroup(frame);
+                var groupMeta = frame.ReadGroup();
                 var formKey = FormKey.Factory(frame.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
                 if (formKey != obj.FormKey)
                 {
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             static bool ParseTemporaryOutliers(MutagenFrame frame, ICellInternal obj)
             {
-                var majorMeta = frame.MetaData.GetMajorRecord(frame);
+                var majorMeta = frame.GetMajorRecord();
                 var nextHeader = majorMeta.RecordType;
                 if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
                 {
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             static void ParseTemporary(MutagenFrame frame, ICellInternal obj)
             {
-                var groupMeta = frame.MetaData.ReadGroup(frame);
+                var groupMeta = frame.ReadGroup();
                 var formKey = FormKey.Factory(frame.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
                 if (formKey != obj.FormKey)
                 {

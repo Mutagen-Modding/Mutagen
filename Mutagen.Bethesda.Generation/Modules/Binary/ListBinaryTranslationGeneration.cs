@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
                 && counterRecObj is string counterRecType)
             {
-                fg.AppendLine("var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.MetaData.ReadSubRecordFrame(frame).Content);");
+                fg.AppendLine("var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubRecordFrame().Content);");
             }
             else if (data.MarkerType.HasValue)
             {

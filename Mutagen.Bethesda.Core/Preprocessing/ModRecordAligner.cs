@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Preprocessing
 
                 // If complete overall, return
                 if (inputStream.Complete) break;
-                var groupMeta = writer.Meta.GetGroup(inputStream);
+                var groupMeta = inputStream.GetGroup();
                 if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException();
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 {
                     while (!frame.Complete)
                     {
-                        var majorMeta = writer.Meta.GetMajorRecord(inputStream);
+                        var majorMeta = inputStream.GetMajorRecord();
                         var bytes = inputStream.ReadBytes(checked((int)majorMeta.TotalLength));
                         var type = majorMeta.RecordType;
                         if (groupRules.Contains(type))
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Preprocessing
             List<byte[]> grupBytes = new List<byte[]>();
             for (int i = 0; i < 3; i++)
             {
-                MajorRecordHeader majorMeta = reader.MetaData.GetMajorRecord(reader);
+                MajorRecordHeader majorMeta = reader.GetMajorRecord();
                 switch (majorMeta.RecordType.Type)
                 {
                     case "ROAD":
@@ -453,9 +453,9 @@ namespace Mutagen.Bethesda.Preprocessing
                             throw new ArgumentException();
                         }
                         var startPos = reader.Position;
-                        var cellMeta = reader.MetaData.GetMajorRecord(reader);
+                        var cellMeta = reader.GetMajorRecord();
                         reader.Position += cellMeta.TotalLength;
-                        var cellGroupMeta = reader.MetaData.GetGroup(reader);
+                        var cellGroupMeta = reader.GetGroup();
                         long cellGrupLen;
                         if (cellGroupMeta.IsGroup
                             && cellGroupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Preprocessing
                             i = 3; // end loop
                             continue;
                         }
-                        var groupMeta = reader.MetaData.GetGroup(reader);
+                        var groupMeta = reader.GetGroup();
                         grupBytes.Add(reader.ReadBytes(checked((int)groupMeta.TotalLength)));
                         break;
                     case "WRLD":

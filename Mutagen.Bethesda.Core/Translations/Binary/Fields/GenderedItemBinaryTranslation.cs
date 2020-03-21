@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Binary
             TItem? male = default, female = default;
             for (int i = 0; i < 2; i++)
             {
-                var subHeader = frame.MetaData.GetSubRecord(frame);
+                var subHeader = frame.GetSubRecord();
                 RecordType type = subHeader.RecordType;
                 if (type != maleMarker && type != femaleMarker)
                 {
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Binary
             TItem? male = default, female = default;
             for (int i = 0; i < 2; i++)
             {
-                var subHeader = frame.MetaData.GetSubRecord(frame);
+                var subHeader = frame.GetSubRecord();
                 RecordType type = subHeader.RecordType;
                 if (type == maleMarker)
                 {
@@ -137,14 +137,14 @@ namespace Mutagen.Bethesda.Binary
             TItem? male = default, female = default;
             for (int i = 0; i < 2; i++)
             {
-                var genderedHeader = frame.MetaData.GetSubRecord(frame);
+                var genderedHeader = frame.GetSubRecord();
                 RecordType type = genderedHeader.RecordType;
                 if (type != maleMarker && type != femaleMarker)
                 {
                     break;
                 }
                 frame.Position += genderedHeader.TotalLength;
-                var subHeader = frame.MetaData.GetSubRecord(frame);
+                var subHeader = frame.GetSubRecord();
                 if (contentMarker != subHeader.RecordType)
                 {
                     break;

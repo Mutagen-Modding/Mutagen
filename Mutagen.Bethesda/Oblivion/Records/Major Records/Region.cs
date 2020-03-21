@@ -62,9 +62,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static void ParseRegionData(MutagenFrame frame, IRegionInternal item)
         {
-            var rdatFrame = frame.MetaData.GetSubRecordFrame(frame);
+            var rdatFrame = frame.GetSubRecordFrame();
             RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-            var subMeta = frame.MetaData.GetSubRecord(frame, offset: rdatFrame.Header.TotalLength);
+            var subMeta = frame.GetSubRecord(offset: rdatFrame.Header.TotalLength);
             int len = rdatFrame.Header.TotalLength;
             if (IsExpected(dataType, subMeta.RecordType))
             {
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Grasses = RegionDataGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
                 case RegionData.RegionDataType.Sounds:
-                    var nextRec = frame.MetaData.GetSubRecord(frame, offset: len);
+                    var nextRec = frame.GetSubRecord(offset: len);
                     if (nextRec.RecordType.Equals(RDSD) || nextRec.RecordType.Equals(RDMD))
                     {
                         len += nextRec.TotalLength;

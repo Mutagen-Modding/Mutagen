@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter)
         {
-            var majorMeta = frame.MetaData.GetMajorRecord(frame);
+            var majorMeta = frame.GetMajorRecord();
             var settingType = GameSettingUtility.GetGameSettingType(frame.GetSpan(checked((int)majorMeta.TotalLength)), frame.MetaData);
             if (settingType.Failed)
             {

@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Preprocessing
                                 // If complete overall, return
                                 if (inputStream.Complete) return;
 
-                                var groupMeta = inputStream.MetaData.GetGroup(inputStream);
+                                var groupMeta = inputStream.GetGroup();
                                 if (!groupMeta.IsGroup)
                                 {
                                     throw new ArgumentException();
@@ -47,12 +47,12 @@ namespace Mutagen.Bethesda.Preprocessing
                                 {
                                     inputStream.WriteTo(writer.BaseStream, meta.GroupConstants.HeaderLength);
                                     locatorStream.Position = grupLoc.Value;
-                                    foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream, gameMode))
+                                    foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                                     {
-                                        MajorRecordHeader majorMeta = meta.GetMajorRecord(inputStream);
+                                        MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
                                         storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)majorMeta.TotalLength)));
                                         if (grupFrame.Complete) continue;
-                                        GroupHeader subGroupMeta = meta.GetGroup(inputStream);
+                                        GroupHeader subGroupMeta = inputStream.GetGroup();
                                         if (subGroupMeta.IsGroup)
                                         {
                                             storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)subGroupMeta.TotalLength)));

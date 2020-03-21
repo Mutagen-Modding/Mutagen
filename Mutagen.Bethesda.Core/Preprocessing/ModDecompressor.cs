@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Preprocessing
                             interest: interest,
                             additionalCriteria: (stream, recType, len) =>
                             {
-                                return GameConstants.Get(gameMode).GetMajorRecord(stream).IsCompressed;
+                                return stream.GetMajorRecord().IsCompressed;
                             });
 
                         // Construct group length container for later use
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Preprocessing
 
                             // If complete overall, return
                             if (inputStream.Complete) break;
-                            var majorMeta = meta.ReadMajorRecord(inputStream);
+                            var majorMeta = inputStream.ReadMajorRecord();
                             var len = majorMeta.ContentLength;
                             using (var frame = MutagenFrame.ByLength(
                                 reader: inputStream,

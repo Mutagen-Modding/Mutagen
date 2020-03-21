@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda
 
         private static void SkipHeader(IMutagenReadStream reader)
         {
-            ModHeader headerMeta = reader.MetaData.GetHeader(reader);
+            ModHeader headerMeta = reader.GetHeader();
             if (!headerMeta.HasContent)
             {
                 reader.Position = reader.Length;
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda
             bool checkOverallGrupType)
         {
             var grupLoc = reader.Position;
-            GroupHeader groupMeta = fileLocs.MetaData.GetGroup(reader);
+            GroupHeader groupMeta = reader.GetGroup();
             if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException();
@@ -232,11 +232,11 @@ namespace Mutagen.Bethesda
             {
                 while (!frame.Complete)
                 {
-                    MajorRecordHeader majorRecordMeta = fileLocs.MetaData.GetMajorRecord(frame.Reader);
+                    MajorRecordHeader majorRecordMeta = frame.GetMajorRecord();
                     var targetRec = majorRecordMeta.RecordType;
                     if (targetRec != grupRec)
                     {
-                        if (IsSubLevelGRUP(fileLocs.MetaData.GetGroup(frame.Reader)))
+                        if (IsSubLevelGRUP(frame.GetGroup()))
                         {
                             parentGroupLocations.Push(grupLoc);
                             HandleSubLevelGRUP(
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda
             Stack<long> parentGroupLocations)
         {
             var grupLoc = frame.Position;
-            GroupHeader groupMeta = fileLocs.MetaData.GetGroup(frame.Reader);
+            GroupHeader groupMeta = frame.GetGroup();
             if (!groupMeta.IsGroup)
             {
                 throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda
             SkipHeader(reader);
             while (!reader.Complete)
             {
-                GroupHeader groupMeta = reader.MetaData.GetGroup(reader);
+                GroupHeader groupMeta = reader.GetGroup();
                 if (!groupMeta.IsGroup)
                 {
                     throw new DataMisalignedException("Group was not read in where expected: 0x" + reader.Position.ToString("X"));
@@ -450,11 +450,9 @@ namespace Mutagen.Bethesda
 
         public static IEnumerable<(FormID FormID, long Position)> ParseTopLevelGRUP(
             IMutagenReadStream reader,
-            GameMode gameMode,
             bool checkOverallGrupType = true)
         {
-            var meta = GameConstants.Get(gameMode);
-            var groupMeta = meta.GetGroup(reader);
+            var groupMeta = reader.GetGroup();
             var grupLoc = reader.Position;
             var targetRec = groupMeta.ContainedRecordType;
             if (!groupMeta.IsGroup)
@@ -469,10 +467,10 @@ namespace Mutagen.Bethesda
                 while (!frame.Complete)
                 {
                     var recordLocation = reader.Position;
-                    MajorRecordHeader majorMeta = meta.GetMajorRecord(reader);
+                    MajorRecordHeader majorMeta = reader.GetMajorRecord();
                     if (majorMeta.RecordType != targetRec)
                     {
-                        var subGroupMeta = meta.GetGroup(reader);
+                        var subGroupMeta = reader.GetGroup();
                         if (IsSubLevelGRUP(subGroupMeta))
                         {
                             reader.Position += subGroupMeta.TotalLength;

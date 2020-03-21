@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryExtraNAM2Custom(MutagenFrame frame, IRaceInternal item)
             {
                 if (frame.Complete) return;
-                var subHeader = frame.MetaData.GetSubRecord(frame);
+                var subHeader = frame.GetSubRecord();
                 if (subHeader.RecordType == Race.NAM2)
                 {
                     item.ExportingExtraNam2 = true;
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int counter = 0;
                 while (!frame.Reader.Complete)
                 {
-                    var subHeader = frame.MetaData.GetSubRecordFrame(frame);
+                    var subHeader = frame.GetSubRecordFrame();
                     if (subHeader.Header.RecordType != Race_Registration.NAME_HEADER) break;
                     BipedObject type = (BipedObject)counter++;
                     var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
