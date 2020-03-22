@@ -141,8 +141,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public bool TryResolveFormKey<M>(ILinkCache<M> package, [MaybeNullWhen(false)] out FormKey formKey)
-            where M : IModGetter
+        bool ILinkGetter.TryResolveFormKey<M>(ILinkCache<M> package, [MaybeNullWhen(false)] out FormKey formKey)
         {
             formKey = this.FormKey;
             return true;
