@@ -21,21 +21,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
         {
-            var subMeta = frame.ReadSubrecord();
-            if (subMeta.RecordType != PathGrid_Registration.DATA_HEADER)
-            {
-                frame.Position -= subMeta.HeaderLength;
-                return;
-            }
+            if (!frame.TryReadSubrecord(PathGrid_Registration.DATA_HEADER, out var subMeta)) return;
 
             uint ptCount = frame.Reader.ReadUInt16();
 
-            subMeta = frame.ReadSubrecord();
-            if (subMeta.RecordType != PGRP)
-            {
-                frame.Position -= subMeta.HeaderLength;
-                return;
-            }
+            if (!frame.Reader.TryReadSubrecord(PGRP, out subMeta)) return;
             var pointDataSpan = frame.Reader.ReadSpan(subMeta.ContentLength);
             var bytePointsNum = pointDataSpan.Length / POINT_LEN;
             if (bytePointsNum != ptCount)

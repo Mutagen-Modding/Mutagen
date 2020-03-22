@@ -40,8 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter)
         {
-            var subRecMeta = frame.GetSubrecord();
-            if (subRecMeta.RecordType != Condition_Registration.CTDA_HEADER)
+            if (!frame.Reader.TryGetSubrecord(Condition_Registration.CTDA_HEADER, out var subRecMeta))
             {
                 throw new ArgumentException();
             }
@@ -84,8 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame)
             {
-                var countMeta = frame.ReadSubrecordFrame();
-                if (countMeta.Header.RecordType != Faction_Registration.CITC_HEADER
+                if (!frame.TryReadSubrecordFrame(Faction_Registration.CITC_HEADER, out var countMeta)
                     || countMeta.Content.Length != 4)
                 {
                     throw new ArgumentException();

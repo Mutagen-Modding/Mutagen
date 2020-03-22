@@ -34,8 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 var magicEffName = frame.ReadMemory(4);
 
-                var efitMeta = frame.GetSubrecord();
-                if (efitMeta.RecordType != Effect_Registration.EFIT_HEADER)
+                if (!frame.Reader.TryGetSubrecord(Effect_Registration.EFIT_HEADER, out var efitMeta))
                 {
                     throw new ArgumentException("Expected EFIT header.");
                 }

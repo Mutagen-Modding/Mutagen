@@ -149,6 +149,16 @@ namespace Mutagen.Bethesda.Binary
             meta = GetSubrecord(stream);
             return true;
         }
+        public bool TryGetSubrecord(IBinaryReadStream stream, RecordType targetType, out SubrecordHeader meta)
+        {
+            if (stream.Remaining < SubConstants.HeaderLength)
+            {
+                meta = default;
+                return false;
+            }
+            meta = GetSubrecord(stream);
+            return targetType == meta.RecordType;
+        }
         public SubrecordFrame GetSubrecordFrame(IBinaryReadStream stream, int offset = 0)
         {
             var meta = GetSubrecord(stream, offset);
@@ -157,6 +167,16 @@ namespace Mutagen.Bethesda.Binary
         public bool TryGetSubrecordFrame(IBinaryReadStream stream, out SubrecordFrame frame)
         {
             if (!TryGetSubrecord(stream, out var meta))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new SubrecordFrame(meta, stream.GetSpan(meta.TotalLength));
+            return true;
+        }
+        public bool TryGetSubrecordFrame(IBinaryReadStream stream, RecordType targetType, out SubrecordFrame frame)
+        {
+            if (!TryGetSubrecord(stream, targetType, out var meta))
             {
                 frame = default;
                 return false;
@@ -180,6 +200,22 @@ namespace Mutagen.Bethesda.Binary
             meta = ReadSubrecord(stream);
             return true;
         }
+        public bool TryReadSubrecord(IBinaryReadStream stream, RecordType targetType, out SubrecordHeader meta)
+        {
+            if (stream.Remaining < SubConstants.HeaderLength)
+            {
+                meta = default;
+                return false;
+            }
+            meta = ReadSubrecord(stream);
+            if (meta.RecordType != targetType)
+            {
+                stream.Position -= meta.HeaderLength;
+                meta = default;
+                return false;
+            }
+            return true;
+        }
         public SubrecordFrame ReadSubrecordFrame(IBinaryReadStream stream)
         {
             var meta = GetSubrecord(stream);
@@ -188,6 +224,16 @@ namespace Mutagen.Bethesda.Binary
         public bool TryReadSubrecordFrame(IBinaryReadStream stream, out SubrecordFrame frame)
         {
             if (!TryGetSubrecord(stream, out var meta))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new SubrecordFrame(meta, stream.ReadSpan(meta.TotalLength));
+            return true;
+        }
+        public bool TryReadSubrecordFrame(IBinaryReadStream stream, RecordType targetType, out SubrecordFrame frame)
+        {
+            if (!TryGetSubrecord(stream, targetType, out var meta))
             {
                 frame = default;
                 return false;
@@ -291,12 +337,16 @@ namespace Mutagen.Bethesda.Binary
 
         public static SubrecordHeader GetSubrecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetSubrecord(stream, offset);
         public static bool TryGetSubrecord(this IMutagenReadStream stream, out SubrecordHeader meta) => stream.MetaData.TryGetSubrecord(stream, out meta);
+        public static bool TryGetSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader meta) => stream.MetaData.TryGetSubrecord(stream, targetType, out meta);
         public static SubrecordFrame GetSubrecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetSubrecordFrame(stream, offset);
         public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame) => stream.MetaData.TryGetSubrecordFrame(stream, out frame);
+        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame) => stream.MetaData.TryGetSubrecordFrame(stream, targetType, out frame);
         public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream) => stream.MetaData.ReadSubrecord(stream);
         public static bool TryReadSubrecord(this IMutagenReadStream stream, out SubrecordHeader meta) => stream.MetaData.TryReadSubrecord(stream, out meta);
+        public static bool TryReadSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader meta) => stream.MetaData.TryReadSubrecord(stream, targetType, out meta);
         public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream) => stream.MetaData.ReadSubrecordFrame(stream);
         public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame) => stream.MetaData.TryReadSubrecordFrame(stream, out frame);
+        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame) => stream.MetaData.TryReadSubrecordFrame(stream, targetType, out frame);
 
         public static VariableHeader GetNextRecordVariableMeta(this IMutagenReadStream stream) => stream.MetaData.GetNextRecordVariableMeta(stream);
         public static VariableHeader ReadNextRecordVariableMeta(this IMutagenReadStream stream) => stream.MetaData.ReadNextRecordVariableMeta(stream);

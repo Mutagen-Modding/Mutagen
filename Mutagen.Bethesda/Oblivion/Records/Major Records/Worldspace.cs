@@ -129,15 +129,13 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void FillBinaryOffsetLengthCustom(MutagenFrame frame, IWorldspaceInternal item)
             {
                 item.UsingOffsetLength = true;
-                var xxxxMeta = frame.ReadSubrecord();
-                if (xxxxMeta.RecordType != Worldspace_Registration.XXXX_HEADER
+                if (!frame.TryReadSubrecord(Worldspace_Registration.XXXX_HEADER, out var xxxxMeta)
                     || xxxxMeta.ContentLength != 4)
                 {
                     throw new ArgumentException();
                 }
                 var contentLen = frame.Reader.ReadInt32();
-                var ofstMeta = frame.ReadSubrecord();
-                if (ofstMeta.RecordType != Worldspace_Registration.OFST_HEADER
+                if (!frame.Reader.TryReadSubrecord(Worldspace_Registration.OFST_HEADER, out var ofstMeta)
                     || ofstMeta.ContentLength != 0)
                 {
                     throw new ArgumentException();

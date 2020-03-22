@@ -37,8 +37,7 @@ namespace Mutagen.Bethesda.Binary
                 MutagenFrame subFrame;
                 if (!IsLoqui)
                 {
-                    var subHeader = frame.GetSubrecord();
-                    frame.Position += subHeader.HeaderLength;
+                    var subHeader = frame.ReadSubrecord();
                     subFrame = frame.ReadAndReframe(subHeader.ContentLength);
                 }
                 else
