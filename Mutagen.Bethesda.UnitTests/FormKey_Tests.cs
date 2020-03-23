@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void Import_String()
         {
             Assert.True(
-                FormKey.TryFactory("00C51AOblivion.esm", out FormKey id));
+                FormKey.TryFactory("00C51A:Oblivion.esm", out FormKey id));
             Assert.Equal(
                 new FormKey(modKey: new ModKey("Oblivion", true), id: 0x00C51A),
                 id);
@@ -25,9 +25,20 @@ namespace Mutagen.Bethesda.UnitTests
         public void Import_String0x()
         {
             Assert.True(
-                FormKey.TryFactory("00C51AOblivion.esm", out FormKey id));
+                FormKey.TryFactory("00C51A:Oblivion.esm", out FormKey id));
             Assert.Equal(
                 new FormKey(modKey: new ModKey("Oblivion", true), id: 0x00C51A),
+                id);
+        }
+
+        [Fact]
+        public void Import_LoopbackString()
+        {
+            var formKey = new FormKey(modKey: new ModKey("Oblivion", true), id: 0x00C51A);
+            Assert.True(
+                FormKey.TryFactory(formKey.ToString(), out FormKey id));
+            Assert.Equal(
+                formKey,
                 id);
         }
 

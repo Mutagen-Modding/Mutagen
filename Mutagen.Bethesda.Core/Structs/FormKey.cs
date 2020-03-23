@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,46 +88,53 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to parse</param>
         /// <param name="formKey">FormKey if successfully converted</param>
         /// <returns>True if conversion successful</returns>
-        public static bool TryFactory(string str, [MaybeNullWhen(false)]out FormKey formKey)
+        public static bool TryFactory(ReadOnlySpan<char> span, [MaybeNullWhen(false)]out FormKey formKey)
         {
-            if (NullStr.Equals(str))
+            // If equal to Null
+            if (NullStr.AsSpan().Equals(span, StringComparison.OrdinalIgnoreCase))
             {
                 formKey = Null;
                 return true;
             }
-            if (string.IsNullOrWhiteSpace(str))
+
+            // Trim whitespace
+            span = span.Trim();
+
+            // If less than ID + delimeter + minimum file suffix + 1, invalid
+            const int shortCircuitSize = 6 + 1 + 4 + 1;
+            if (span.Length < shortCircuitSize)
             {
                 formKey = default!;
                 return false;
             }
 
-            if (str.Length < 6)
+            // If delimeter not in place, invalid
+            if (span[6] != ':')
             {
                 formKey = default!;
                 return false;
             }
 
-            uint id;
-            try
-            {
-                id = Convert.ToUInt32(str.Substring(0, 6), 16);
-            }
-            catch (Exception)
+            // Convert ID section
+            if (!uint.TryParse(span.Slice(0, 6), NumberStyles.HexNumber, null, out var id))
             {
                 formKey = default!;
                 return false;
             }
 
-            var split = str
-                .Substring(6)
-                .Split('.');
-            if (split.Length != 2)
+            // Slice past delimiter
+            span = span.Slice(7);
+
+            // If no period, or more than one
+            var periodIndex = span.IndexOf('.');
+            var lastPeriodIndex = span.LastIndexOf('.');
+            if (periodIndex == -1 || lastPeriodIndex != periodIndex)
             {
                 formKey = default!;
                 return false;
             }
 
-            if (!ModKey.TryFactory(str.Substring(6), out var modKey))
+            if (!ModKey.TryFactory(span, out var modKey))
             {
                 formKey = default!;
                 return false;
@@ -145,11 +153,11 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to parse</param>
         /// <returns>Converted FormKey</returns>
         /// <exception cref="ArgumentException">If string malformed</exception>
-        public static FormKey Factory(string str)
+        public static FormKey Factory(ReadOnlySpan<char> span)
         {
-            if (!TryFactory(str, out var form))
+            if (!TryFactory(span, out var form))
             {
-                throw new ArgumentException("Malformed FormKey string: " + str);
+                throw new ArgumentException($"Malformed FormKey string: {span.ToString()}");
             }
             return form;
         }

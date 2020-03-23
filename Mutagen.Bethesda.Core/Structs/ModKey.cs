@@ -72,28 +72,27 @@ namespace Mutagen.Bethesda
             return string.IsNullOrWhiteSpace(Name) ? "Null" : $"{Name}.{(this.Master ? "esm" : "esp")}";
         }
 
-        public static bool TryFactory(string str, [MaybeNullWhen(false)]out ModKey modKey)
+        public static bool TryFactory(ReadOnlySpan<char> span, [MaybeNullWhen(false)]out ModKey modKey)
         {
-            if (string.IsNullOrWhiteSpace(str))
+            if (span.Length == 0 || span.IsWhiteSpace())
             {
                 modKey = default!;
                 return false;
             }
-            var index = str.LastIndexOf('.');
+            var index = span.LastIndexOf('.');
             if (index == -1
-                || index != str.Length - 4)
+                || index != span.Length - 4)
             {
                 modKey = default!;
                 return false;
             }
-            var modString = str.Substring(0, index);
-            var endString = str.AsSpan(index + 1);
+            var endSpan = span.Slice(index + 1);
             bool master;
-            if (endString.Equals("esm".AsSpan(), StringComparison.OrdinalIgnoreCase))
+            if (endSpan.Equals("esm".AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
                 master = true;
             }
-            else if (endString.Equals("esp".AsSpan(), StringComparison.OrdinalIgnoreCase))
+            else if (endSpan.Equals("esp".AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
                 master = false;
             }
@@ -102,6 +101,7 @@ namespace Mutagen.Bethesda
                 modKey = default!;
                 return false;
             }
+            var modString = span.Slice(0, index).ToString();
             var keyIndex = master ? 0 : 1;
             ModKey[] keyItem;
             lock (cache_)
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda
             return true;
         }
 
-        public static ModKey Factory(string str)
+        public static ModKey Factory(ReadOnlySpan<char> str)
         {
             if (TryFactory(str, out var key))
             {
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static ModKey TryFactoryDummyFallback(string str)
+        public static ModKey TryFactoryDummyFallback(ReadOnlySpan<char> str)
         {
             return ModKey.TryFactory(str, out var modKey) ? modKey : Dummy;
         }

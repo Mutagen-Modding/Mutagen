@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -61,17 +63,18 @@ namespace Mutagen.Bethesda
         {
             this.Raw = idWithModID;
         }
+
         /// <summary>
-        /// Converts a string in hexadecimal format to a FormID
+        /// Converts a char span in hexadecimal format to a FormID
         /// </summary>
-        /// <param name="hexString">String in hexadecimal format: (0x)FFFFFFFF</param>
+        /// <param name="hexSpan">Char span in hexadecimal format: (0x)FFFFFFFF</param>
         /// <returns>Converted FormID</returns>
         /// <exception cref="ArgumentException">Thrown on unconvertable string input</exception>
-        public static FormID Factory(string hexString)
+        public static FormID Factory(ReadOnlySpan<char> hexSpan)
         {
-            if (!TryFactory(hexString, out var result))
+            if (!TryFactory(hexSpan, out var result))
             {
-                throw new ArgumentException($"Invalid FormID hex: {hexString}");
+                throw new ArgumentException($"Invalid FormID hex: {hexSpan.ToString()}");
             }
             return result;
         }
@@ -79,33 +82,29 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Attempts to convert a string in hexadecimal format to a FormID
         /// </summary>
-        /// <param name="hexString">String in hexadecimal format: (0x)FFFFFFFF</param>
+        /// <param name="hexSpan">Char span hexadecimal format: (0x)FFFFFFFF</param>
         /// <param name="id">Converted FormID if successful</param>
         /// <returns>True if successful</returns>
-        public static bool TryFactory(string hexString, [MaybeNullWhen(false)] out FormID id)
+        public static bool TryFactory(ReadOnlySpan<char> hexSpan, [MaybeNullWhen(false)] out FormID id)
         {
-            if (hexString.StartsWith("0x"))
+            if (hexSpan.StartsWith("0x"))
             {
-                hexString = hexString.Substring(2);
+                hexSpan = hexSpan.Slice(2);
             }
 
-            if (hexString.Length != 8)
+            if (hexSpan.Length != 8)
             {
                 id = default;
                 return false;
             }
 
-            try
-            {
-                id = new FormID(
-                    Convert.ToUInt32(hexString, 16));
-                return true;
-            }
-            catch (Exception)
+            if (!uint.TryParse(hexSpan, NumberStyles.HexNumber, null, out var intID))
             {
                 id = default;
                 return false;
             }
+            id = new FormID(intID);
+            return true;
         }
 
         /// <summary>
@@ -114,9 +113,9 @@ namespace Mutagen.Bethesda
         /// <param name="bytes">Input byte array</param>
         /// <returns>Converted FormID</returns>
         /// <exception cref="ArgumentException">Thrown if array size less than 4</exception>
-        public static FormID Factory(byte[] bytes)
+        public static FormID Factory(ReadOnlySpan<byte> bytes)
         {
-            return Factory(BitConverter.ToUInt32(bytes, 0));
+            return Factory(BinaryPrimitives.ReadUInt32LittleEndian(bytes));
         }
 
         /// <summary>
