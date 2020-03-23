@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -68,7 +69,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">Thrown on unconvertable string input</exception>
         public static FormID Factory(string hexString)
         {
-            if (!TryFactory(hexString, out FormID result))
+            if (!TryFactory(hexString, out var result))
             {
                 throw new ArgumentException($"Invalid FormID hex: {hexString}");
             }
@@ -81,25 +82,7 @@ namespace Mutagen.Bethesda
         /// <param name="hexString">String in hexadecimal format: (0x)FFFFFFFF</param>
         /// <param name="id">Converted FormID if successful</param>
         /// <returns>True if successful</returns>
-        public static bool TryFactory(string hexString, out FormID id)
-        {
-            if (TryFactory(hexString, out FormID? idNull))
-            {
-                id = idNull ?? default(FormID);
-                return true;
-            }
-
-            id = default(FormID);
-            return false;
-        }
-
-        /// <summary>
-        /// Attempts to convert a string in hexadecimal format to a FormID
-        /// </summary>
-        /// <param name="hexString">String in hexadecimal format: (0x)FFFFFFFF</param>
-        /// <param name="id">Converted FormID if successful</param>
-        /// <returns>True if successful</returns>
-        public static bool TryFactory(string hexString, out FormID? id)
+        public static bool TryFactory(string hexString, [MaybeNullWhen(false)] out FormID id)
         {
             if (hexString.StartsWith("0x"))
             {
@@ -108,7 +91,7 @@ namespace Mutagen.Bethesda
 
             if (hexString.Length != 8)
             {
-                id = null;
+                id = default;
                 return false;
             }
 
@@ -120,7 +103,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception)
             {
-                id = null;
+                id = default;
                 return false;
             }
         }

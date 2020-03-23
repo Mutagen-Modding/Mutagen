@@ -30,17 +30,15 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         }
 
         [Benchmark]
-        public FormID? ParseFormID()
+        public FormID ParseFormID()
         {
-            Bethesda.FormID.TryFactory(IDString, out FormID? formID);
-            return formID;
+            return Bethesda.FormID.Factory(IDString);
         }
 
         [Benchmark]
-        public FormID? ParseFormID0x()
+        public FormID ParseFormID0x()
         {
-            Bethesda.FormID.TryFactory(IDString0x, out FormID? formID);
-            return formID;
+            return Bethesda.FormID.Factory(IDString0x);
         }
     }
 }
