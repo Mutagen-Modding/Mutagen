@@ -32,9 +32,9 @@ namespace Mutagen.Bethesda
         public readonly uint Raw;
         
         /// <summary>
-        /// The ModID bytes of the FormID
+        /// The ModIndex bytes of the FormID
         /// </summary>
-        public ModIndex ModID => new ModIndex(ModIndex.GetModIDByteFromUInt(this.Raw));
+        public ModIndex ModIndex => new ModIndex(ModIndex.GetModIndexByteFromUInt(this.Raw));
         
         /// <summary>
         /// The ID bytes of a FormID.
@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda
         /// Constructor taking a Mod index and ID as a single uint, as it would be stored on-disk.
         /// Mod index is stored in the upper two bytes of the value.
         /// </summary>
-        /// <param name="idWithModID">Mod index and Record ID to use</param>
-        public FormID(uint idWithModID)
+        /// <param name="idWithModIndex">Mod index and Record ID to use</param>
+        public FormID(uint idWithModIndex)
         {
-            this.Raw = idWithModID;
+            this.Raw = idWithModIndex;
         }
 
         /// <summary>
@@ -125,11 +125,11 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Wrap a uint with a FormID
         /// </summary>
-        /// <param name="idWithModID">Mod index and Record ID to use</param>
+        /// <param name="idWithModIndex">Mod index and Record ID to use</param>
         /// <returns>Converted FormID</returns>
-        public static FormID Factory(uint idWithModID)
+        public static FormID Factory(uint idWithModIndex)
         {
-            return new FormID(idWithModID);
+            return new FormID(idWithModIndex);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda
         /// <returns>Hex string</returns>
         public string ToHex()
         {
-            return $"{ModID}{IDString()}";
+            return $"{ModIndex}{IDString()}";
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda
         /// <returns>Hex string</returns>
         public override string ToString()
         {
-            return $"({ModID}){IDString()}";
+            return $"({ModIndex}){IDString()}";
         }
 
         /// <summary>

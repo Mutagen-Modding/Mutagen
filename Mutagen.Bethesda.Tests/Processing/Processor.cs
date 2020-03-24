@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var majorMeta = stream.GetMajorRecord();
             var formID = majorMeta.FormID;
-            if (formID.ModID.ID <= this._NumMasters) return;
+            if (formID.ModIndex.ID <= this._NumMasters) return;
             // Need to zero out master
             this._Instructions.SetSubstitution(
                 loc.Min + this.Meta.MajorConstants.FormIDLocationOffset + 3,

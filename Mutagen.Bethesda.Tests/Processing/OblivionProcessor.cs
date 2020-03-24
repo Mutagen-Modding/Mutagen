@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Tests
         {
             stream.Position = pos;
             FormID formID = new FormID(stream.ReadUInt32());
-            if (formID.ModID.ID <= this._NumMasters) return;
+            if (formID.ModIndex.ID <= this._NumMasters) return;
             this._Instructions.SetSubstitution(
                 pos + 3,
                 this._NumMasters);

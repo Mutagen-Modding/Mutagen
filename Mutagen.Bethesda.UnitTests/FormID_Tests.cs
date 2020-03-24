@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             byte[] bytes = new byte[4];
             FormID id = FormID.Factory(bytes);
-            Assert.Equal(0, id.ModID.ID);
+            Assert.Equal(0, id.ModIndex.ID);
             Assert.Equal(uint.MinValue, id.ID);
         }
 
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.UnitTests
                 5,
             };
             FormID id = FormID.Factory(bytes);
-            Assert.Equal(5, id.ModID.ID);
+            Assert.Equal(5, id.ModIndex.ID);
             Assert.Equal((uint)0xCBD8, id.ID);
         }
 
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormID id = new FormID(0x12345678);
             Assert.Equal((uint)(0x345678), id.ID);
-            Assert.Equal((byte)(0x12), id.ModID.ID);
+            Assert.Equal((byte)(0x12), id.ModIndex.ID);
             Assert.Equal((uint)0x12345678, id.Raw);
         }
 
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormID id = new FormID(new ModIndex(0x12), 0x00345678);
             Assert.Equal((uint)(0x345678), id.ID);
-            Assert.Equal((byte)(0x12), id.ModID.ID);
+            Assert.Equal((byte)(0x12), id.ModIndex.ID);
             Assert.Equal((uint)0x12345678, id.Raw);
         }
 

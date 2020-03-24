@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="i">uint to retrieve mod index from</param>
         /// <returns>Byte containing the mod index</returns>
-        public static byte GetModIDByteFromUInt(uint i)
+        public static byte GetModIndexByteFromUInt(uint i)
         {
             return (byte)(i >> 24);
         }
