@@ -105,7 +105,7 @@
     <Compile Include="Links\ILinkContainer.cs" />
     <Compile Include="Utility\MasterReferenceReader.cs" />
     <Compile Include="Preprocessing\ModDecompressor.cs" />
-    <Compile Include="Structs\ModID.cs" />
+    <Compile Include="Structs\ModIndex.cs" />
     <Compile Include="Structs\ModKey.cs" />
     <Compile Include="Load Order\ModListing.cs" />
     <Compile Include="Preprocessing\ModRecordSorter.cs" />

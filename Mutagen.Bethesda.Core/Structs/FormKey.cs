@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda
         /// <returns>Converted FormID</returns>
         public static FormKey Factory(MasterReferenceReader masterReferences, uint idWithModID)
         {
-            var modID = ModID.GetModIDByteFromUInt(idWithModID);
+            var modID = ModIndex.GetModIDByteFromUInt(idWithModID);
 
             if (modID >= masterReferences.Masters.Count)
             {

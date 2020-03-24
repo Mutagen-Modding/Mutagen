@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// The ModID bytes of the FormID
         /// </summary>
-        public ModID ModID => new ModID(ModID.GetModIDByteFromUInt(this.Raw));
+        public ModIndex ModID => new ModIndex(ModIndex.GetModIDByteFromUInt(this.Raw));
         
         /// <summary>
         /// The ID bytes of a FormID.
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda
         /// <param name="modID">Mod index to use</param>
         /// <param name="id">Record ID to use.  Must be <= 0x00FFFFFF.</param>
         /// <exception cref="ArgumentException">ID needs to contain no data in upper two bytes, or it will throw.</exception>
-        public FormID(ModID modID, uint id)
+        public FormID(ModIndex modID, uint id)
         {
             this.Raw = (uint)(modID.ID << 24);
             this.Raw += this.Raw + id & 0x00FFFFFF;

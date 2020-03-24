@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     /// <summary>
-    /// A struct representing an index of a master within a mod.
+    /// A struct representing a index of a master within a FormID.
     /// Mods can only reference a byte's worth of masters, so indices must be limited to a byte.
     /// </summary>
-    public struct ModID
+    public struct ModIndex
     {
         /// <summary>
         /// A static readonly singleton ModID with value 0
         /// </summary>
-        public static readonly ModID Zero = new ModID(0);
+        public static readonly ModIndex Zero = new ModIndex(0);
         
         /// <summary>
         /// Index value
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Constructor
         /// </summary>
-        public ModID(byte id)
+        public ModIndex(byte id)
         {
             this.ID = id;
         }
@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda
         /// Default equality operator
         /// </summary>
         /// <param name="obj">object to compare to</param>
-        /// <returns>True if ModID with equal index</returns>
+        /// <returns>True if ModIndex with equal index</returns>
         public override bool Equals(object obj)
         {
-            if (!(obj is ModID)) return false;
-            ModID rhs = (ModID)obj;
+            if (!(obj is ModIndex)) return false;
+            ModIndex rhs = (ModIndex)obj;
             return this.ID == rhs.ID;
         }
 
@@ -59,12 +59,12 @@ namespace Mutagen.Bethesda
             return this.ID.GetHashCode();
         }
 
-        public static bool operator ==(ModID a, ModID b)
+        public static bool operator ==(ModIndex a, ModIndex b)
         {
             return a.ID == b.ID;
         }
 
-        public static bool operator !=(ModID a, ModID b)
+        public static bool operator !=(ModIndex a, ModIndex b)
         {
             return !(a == b);
         }

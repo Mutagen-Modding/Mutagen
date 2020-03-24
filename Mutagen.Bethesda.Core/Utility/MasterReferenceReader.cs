@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Internals
     {
         public static MasterReferenceReader Empty { get; } = new MasterReferenceReader(ModKey.Null);
 
-        private Dictionary<ModKey, ModID> _masterIndices = new Dictionary<ModKey, ModID>();
+        private Dictionary<ModKey, ModIndex> _masterIndices = new Dictionary<ModKey, ModIndex>();
         public IReadOnlyList<IMasterReferenceGetter> Masters { get; private set; } = ListExt.Empty<IMasterReferenceGetter>();
         public ModKey CurrentMod;
 
@@ -47,11 +47,11 @@ namespace Mutagen.Bethesda.Internals
                 {
                     throw new ArgumentException($"Cannot add mod to itself as a master: {this.CurrentMod}");
                 }
-                this._masterIndices[modKey] = new ModID(index++);
+                this._masterIndices[modKey] = new ModIndex(index++);
             }
 
             // Add current mod
-            this._masterIndices[this.CurrentMod] = new ModID(index);
+            this._masterIndices[this.CurrentMod] = new ModIndex(index);
         }
 
         public FormID GetFormID(FormKey key)
