@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -50,6 +50,10 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">ID needs to contain no data in upper two bytes, or it will throw.</exception>
         public FormID(ModIndex modID, uint id)
         {
+            if ((id & 0xFF000000) != 0)
+            {
+                throw new ArgumentException("Data present in Mod index bytes of id");
+            }
             this.Raw = (uint)(modID.ID << 24);
             this.Raw += this.Raw + id & 0x00FFFFFF;
         }

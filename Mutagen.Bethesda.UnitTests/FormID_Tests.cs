@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(
                 FormID.TryFactory("0100C51A", out FormID id));
             Assert.Equal(
-                new FormID(modID: new ModID(1), id: 0x00C51A),
+                new FormID(modID: new ModIndex(1), id: 0x00C51A),
                 id);
         }
 
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(
                 FormID.TryFactory("0x0100C51A", out FormID id));
             Assert.Equal(
-                new FormID(modID: new ModID(1), id: 0x00C51A),
+                new FormID(modID: new ModIndex(1), id: 0x00C51A),
                 id);
         }
 
@@ -65,10 +65,16 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Ctor_WithModID()
         {
-            FormID id = new FormID(new ModID(0x12), 0x99345678);
+            FormID id = new FormID(new ModIndex(0x12), 0x00345678);
             Assert.Equal((uint)(0x345678), id.ID);
             Assert.Equal((byte)(0x12), id.ModID.ID);
             Assert.Equal((uint)0x12345678, id.Raw);
+        }
+
+        [Fact]
+        public void Ctor_WithIncorrectID()
+        {
+            Assert.Throws<ArgumentException>(() => new FormID(new ModIndex(0x12), 0x99345678));
         }
     }
 }
