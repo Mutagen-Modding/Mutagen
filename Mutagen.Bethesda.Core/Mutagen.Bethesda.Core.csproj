@@ -54,7 +54,7 @@
     <Compile Include="Translations\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />
-    <Compile Include="Structs\ModIndex.cs" />
+    <Compile Include="Load Order\LoadOrderIndex.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
     <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Persistance\IFormKeyAllocator.cs" />

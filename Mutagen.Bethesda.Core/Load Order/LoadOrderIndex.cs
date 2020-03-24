@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     /// <summary>
-    /// A struct representing an index of a master.  Outside of a mod represented in binary format,
-    /// a mod can have as many masters as needed and so doesn't have to be limited in number.
+    /// A struct representing an index of a mod in a LoadOrder
     /// </summary>
-    public struct ModIndex
+    public struct LoadOrderIndex
     {
-        public static readonly ModIndex Zero = new ModIndex(0);
+        public static readonly LoadOrderIndex Zero = new LoadOrderIndex(0);
         public readonly int ID;
 
         /// <summary>
-        /// ModIndex constructor.
+        /// Constructor
         /// </summary>
         /// <param name="id">ID to assign.  Cannot be negative</param>
         /// <exception cref="ArgumentException">Will throw if ID given is negative.</exception>
-        public ModIndex(int id)
+        public LoadOrderIndex(int id)
         {
             if (id < 0)
             {
@@ -31,13 +30,13 @@ namespace Mutagen.Bethesda
 
         public override string ToString()
         {
-            return ID.ToString("X2");
+            return ID.ToString("X");
         }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ModIndex)) return false;
-            ModIndex rhs = (ModIndex)obj;
+            if (!(obj is LoadOrderIndex)) return false;
+            LoadOrderIndex rhs = (LoadOrderIndex)obj;
             return this.ID == rhs.ID;
         }
 
@@ -46,19 +45,19 @@ namespace Mutagen.Bethesda
             return this.ID.GetHashCode();
         }
 
-        public static bool operator ==(ModIndex a, ModIndex b)
+        public static bool operator ==(LoadOrderIndex a, LoadOrderIndex b)
         {
             return a.ID == b.ID;
         }
 
-        public static bool operator !=(ModIndex a, ModIndex b)
+        public static bool operator !=(LoadOrderIndex a, LoadOrderIndex b)
         {
             return !(a == b);
         }
 
-        public static implicit operator ModIndex(int i)
+        public static implicit operator LoadOrderIndex(int i)
         {
-            return new ModIndex(i);
+            return new LoadOrderIndex(i);
         }
     }
 }

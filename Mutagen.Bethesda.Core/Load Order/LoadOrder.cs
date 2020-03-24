@@ -78,36 +78,36 @@ namespace Mutagen.Bethesda
 
         public int Count => _modsByLoadOrder.Count;
 
-        public ModListing<TMod> this[ModIndex index] => _modsByLoadOrder[index.ID];
+        public ModListing<TMod> this[LoadOrderIndex index] => _modsByLoadOrder[index.ID];
 
-        public bool TryGetListing(ModKey key, out (ModIndex Index, ModListing<TMod> Listing) result)
+        public bool TryGetListing(ModKey key, out (LoadOrderIndex Index, ModListing<TMod> Listing) result)
         {
             for (int i = 0; i < _modsByLoadOrder.Count; i++)
             {
                 var item = _modsByLoadOrder[i];
                 if (item.Key.Equals(key))
                 {
-                    result = (new ModIndex(i), _modsByLoadOrder[i]);
+                    result = (new LoadOrderIndex(i), _modsByLoadOrder[i]);
                     return true;
                 }
             }
-            result = default(ValueTuple<ModIndex, ModListing<TMod>>);
+            result = default(ValueTuple<LoadOrderIndex, ModListing<TMod>>);
             return false;
         }
 
-        public bool TryGetMod(ModKey key, out (ModIndex Index, TMod Mod) result)
+        public bool TryGetMod(ModKey key, out (LoadOrderIndex Index, TMod Mod) result)
         {
             if (!this.TryGetListing(key, out var listing)
                 || listing.Listing.Mod == null)
             {
-                result = default((ModIndex, TMod));
+                result = default((LoadOrderIndex, TMod));
                 return false;
             }
             result = (listing.Index, listing.Listing.Mod);
             return true;
         }
 
-        public bool TryGetIndex(ModIndex index, [MaybeNullWhen(false)] out ModListing<TMod> result)
+        public bool TryGetIndex(LoadOrderIndex index, [MaybeNullWhen(false)] out ModListing<TMod> result)
         {
             if (!_modsByLoadOrder.InRange(index.ID))
             {
