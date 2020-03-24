@@ -1,5 +1,6 @@
 ﻿using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -144,12 +145,13 @@ namespace Mutagen.Bethesda
         /// <returns>Four character string</returns>
         public static string GetStringType(int typeInt)
         {
-            char[] chars = new char[Length];
-            chars[0] = (char)(typeInt & 0x000000FF);
-            chars[1] = (char)(typeInt >> 8 & 0x000000FF);
-            chars[2] = (char)(typeInt >> 16 & 0x000000FF);
-            chars[3] = (char)(typeInt >> 24 & 0x000000FF);
-            return new string(chars);
+            return string.Create(4, typeInt, (chars, state) =>
+            {
+                chars[0] = (char)(state & 0x000000FF);
+                chars[1] = (char)(state >> 8 & 0x000000FF);
+                chars[2] = (char)(state >> 16 & 0x000000FF);
+                chars[3] = (char)(state >> 24 & 0x000000FF);
+            });
         }
 
         /// <summary>
@@ -164,12 +166,12 @@ namespace Mutagen.Bethesda
             {
                 throw new ArgumentException($"Type String not expected length: {Length}.");
             }
-            byte[] b = new byte[4];
+            Span<byte> b = stackalloc byte[4];
             for (int i = 0; i < Length; i++)
             {
                 b[i] = (byte)typeStr[i];
             }
-            return BitConverter.ToInt32(b, 0);
+            return BinaryPrimitives.ReadInt32LittleEndian(b);
         }
     }
 }
