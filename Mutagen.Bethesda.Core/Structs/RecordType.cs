@@ -49,13 +49,13 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="type">String of four characters</param>
         /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
-        public RecordType(string type)
+        public RecordType(ReadOnlySpan<char> typeStr)
         {
-            if (type.Length != Length)
+            if (typeStr.Length != Length)
             {
-                throw new ArgumentException($"Type String not expected length: {Length}.");
+                throw new ArgumentException($"Type String not expected length: {typeStr.Length} != {Length}.");
             }
-            this.TypeInt = GetTypeInt(type);
+            this.TypeInt = GetTypeInt(typeStr);
         }
 
         /// <summary>
@@ -65,10 +65,9 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to parse</param>
         /// <param name="recType">RecordType if successfully converted</param>
         /// <returns>True if conversion successful</returns>
-        public static bool TryFactory(string? str, out RecordType recType)
+        public static bool TryFactory(ReadOnlySpan<char> str, out RecordType recType)
         {
-            if (str == null
-                || str.Length != Length)
+            if (str.Length != Length)
             {
                 recType = default;
                 return false;
@@ -159,7 +158,7 @@ namespace Mutagen.Bethesda
         /// <param name="typeStr">Four character string to convert</param>
         /// <returns>Integer representing the record type</returns>
         /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
-        public static int GetTypeInt(string typeStr)
+        public static int GetTypeInt(ReadOnlySpan<char> typeStr)
         {
             if (typeStr.Length != Length)
             {
