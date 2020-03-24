@@ -1047,8 +1047,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.13.6" />
-    <PackageReference Include="Loqui" Version="1.0.5-dev-1" />
+    <PackageReference Include="DotNetZip" Version="1.13.7" />
+    <PackageReference Include="Loqui" Version="1.0.5-dev-2" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.3.2" />
   </ItemGroup>
   <ItemGroup>

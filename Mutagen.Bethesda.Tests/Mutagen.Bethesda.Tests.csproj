@@ -16,7 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
-    <PackageReference Include="Loqui" Version="1.0.5-dev-1" />
+    <PackageReference Include="Loqui" Version="1.0.5-dev-2" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.3.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
