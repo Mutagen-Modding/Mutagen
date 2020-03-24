@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda
         /// Default equality operator
         /// </summary>
         /// <param name="obj">object to compare to</param>
-        /// <returns>True if FormKey with equal ModKey and ID value</returns>
+        /// <returns>True if FormKey with equal ModKey and ID values</returns>
         public override bool Equals(object other)
         {
             if (!(other is FormKey key)) return false;
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda
         /// FormKey equality operator
         /// </summary>
         /// <param name="obj">FormKey to compare to</param>
-        /// <returns>True equal ModKey and ID value</returns>
+        /// <returns>True if equal ModKey and ID values</returns>
         public bool Equals(FormKey other)
         {
             if (!this.ModKey.Equals(other.ModKey)) return false;

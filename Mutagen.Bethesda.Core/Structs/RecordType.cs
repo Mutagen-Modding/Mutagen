@@ -8,31 +8,64 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// A struct representing a four character header for a record.
+    /// These are used commonly in the binary format to delineate records and subrecords.
+    /// </summary>
     public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     {
-        public readonly int TypeInt;
+        /// <summary>
+        /// The common length for all RecordTypes
+        /// </summary>
         public const byte HEADER_LENGTH = 4;
+
+        /// <summary>
+        /// A static readonly singleton string representing a null RecordType
+        /// </summary>
+        public static readonly RecordType Null = new RecordType("\0\0\0\0");
+        
+        /// <summary>
+        /// The type as an integer
+        /// </summary>
+        public readonly int TypeInt;
+        
+        /// <summary>
+        /// The type as a four character string
+        /// </summary>
         public string Type => GetStringType(this.TypeInt);
 
-        public static readonly RecordType Null = new RecordType("\0\0\0\0");
-
+        /// <summary>
+        /// Constructor taking in an integer
+        /// </summary>
         [DebuggerStepThrough]
         public RecordType (int type)
         {
             this.TypeInt = type;
         }
         
+        /// <summary>
+        /// Constructor taking in a string
+        /// The integer constructor is preferable in most cases, as it is faster and can never throw an exception.
+        /// </summary>
+        /// <param name="type">String of four characters</param>
+        /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
         public RecordType(string type)
         {
-            if (type == null
-                || type.Length != HEADER_LENGTH)
+            if (type.Length != HEADER_LENGTH)
             {
                 throw new ArgumentException($"Type String not expected length: {HEADER_LENGTH}.");
             }
             this.TypeInt = GetTypeInt(type);
         }
 
-        public static bool TryFactory(string str, out RecordType recType)
+        /// <summary>
+        /// Attempts to construct a RecordType from a string.
+        /// Must be of size 4 to succeed.
+        /// </summary>
+        /// <param name="str">String to parse</param>
+        /// <param name="recType">RecordType if successfully converted</param>
+        /// <returns>True if conversion successful</returns>
+        public static bool TryFactory(string? str, out RecordType recType)
         {
             if (str == null
                 || str.Length != HEADER_LENGTH)
@@ -44,17 +77,32 @@ namespace Mutagen.Bethesda
             return true;
         }
 
+        /// <summary>
+        /// Default equality operator
+        /// </summary>
+        /// <param name="obj">object to compare to</param>
+        /// <returns>True if RecordType with equal TypeInt</returns>
         public override bool Equals(object obj)
         {
             if (!(obj is RecordType rhs)) return false;
             return Equals(rhs);
         }
 
+        /// <summary>
+        /// RecordType equality operator
+        /// </summary>
+        /// <param name="obj">RecordType to compare to</param>
+        /// <returns>True if equal TypeInt value</returns>
         public bool Equals(RecordType other)
         {
             return this.TypeInt == other.TypeInt;
         }
 
+        /// <summary>
+        /// String equality operator
+        /// </summary>
+        /// <param name="obj">String to compare to</param>
+        /// <returns>True if equal Type string value</returns>
         public bool Equals(string other)
         {
             if (string.IsNullOrWhiteSpace(other)) return false;
@@ -72,17 +120,30 @@ namespace Mutagen.Bethesda
             return !r1.Equals(r2);
         }
 
+        /// <summary>
+        /// Hashcode retrieved from TypeInt value.
+        /// </summary>
+        /// <returns>Hashcode retrieved from TypeInt value.</returns>
         public override int GetHashCode()
         {
             return this.TypeInt.GetHashCode();
         }
 
+        /// <summary>
+        /// Converts to a four character string.
+        /// </summary>
+        /// <returns>String representation of RecordType</returns>
         public override string ToString()
         {
             return this.Type;
         }
 
-        public string GetStringType(int typeInt)
+        /// <summary>
+        /// Converts an integer to its string RecordType representation
+        /// </summary>
+        /// <param name="typeInt">Integer to convert</param>
+        /// <returns>Four character string</returns>
+        public static string GetStringType(int typeInt)
         {
             char[] chars = new char[HEADER_LENGTH];
             chars[0] = (char)(typeInt & 0x000000FF);
@@ -92,12 +153,22 @@ namespace Mutagen.Bethesda
             return new string(chars);
         }
 
-        public static int GetTypeInt(string type)
+        /// <summary>
+        /// Converts an string to its int RecordType representation
+        /// </summary>
+        /// <param name="typeStr">Four character string to convert</param>
+        /// <returns>Integer representing the record type</returns>
+        /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
+        public static int GetTypeInt(string typeStr)
         {
+            if (typeStr.Length != HEADER_LENGTH)
+            {
+                throw new ArgumentException($"Type String not expected length: {HEADER_LENGTH}.");
+            }
             byte[] b = new byte[4];
             for (int i = 0; i < HEADER_LENGTH; i++)
             {
-                b[i] = (byte)type[i];
+                b[i] = (byte)typeStr[i];
             }
             return BitConverter.ToInt32(b, 0);
         }

@@ -10,35 +10,46 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     /// <summary>
-    /// ModKey defines a key struct of the name and file type that a mod intends to be stored on-disk with.
+    /// ModKey represents a unique identifier for a mod.  
     /// 
     /// The proper factory format is: [ModName].es[p/m], depending on whether it is a master file or not.
     /// 
     /// A correct ModKey is very important if a mod's contents will ever be added to another mod (as an override).
-    /// Otherwise, records will become mis-linked.
+    /// Otherwise, records will become mis-linked.  The ModKey should typically be the name that the mod intends to be exported
+    /// to disk with.  If a mod is not going to be exported, then any unique name is sufficient.
     /// 
-    /// General practice is:
-    ///  - Use ModKey.TryFactory on a mod's file name when at all possible
-    ///  - Use the Dummy singleton only when it is unknown, and no record cross pollination is planned to occur.
+    /// General practice is to use ModKey.TryFactory on a mod's file name when at all possible
+    /// </summary>
     public class ModKey : IEquatable<ModKey>
     {
+        /// <summary>
+        /// A static readonly singleton representing a null ModKey
+        /// </summary>
         public static readonly ModKey Null = new ModKey(string.Empty, master: false);
+        
+        /// <summary>
+        /// Mod name
+        /// </summary>
         public string Name { get; private set; }
+        
+        /// <summary>
+        /// Master flag
+        /// </summary>
         public bool Master { get; private set; }
+        
+        /// <summary>
+        /// Convenience accessor to get the appropriate file name
+        /// </summary>
         public string FileName => this.ToString();
+        
         private static Dictionary<string, ModKey[]> cache_ = new Dictionary<string, ModKey[]>(StringComparer.OrdinalIgnoreCase);
         private readonly int _hash;
-
-        /// </summary>
-        /// <summary>
-        /// A convenience singleton that represents an unimportant ModKey.
-        /// 
-        /// Refer to ModKey overall docs for when/how it should be used.
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static readonly ModKey Dummy = new ModKey("MutagenDummyKey", master: false);
         
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name">Name of mod</param>
+        /// <param name="master">True if mod is a master</param>
         public ModKey(
             string name,
             bool master)
@@ -50,28 +61,55 @@ namespace Mutagen.Bethesda
                 .CombineHashCode(Master.GetHashCode());
         }
 
+        /// <summary>
+        /// ModKey equality operator
+        /// Name is compared ignoring case
+        /// </summary>
+        /// <param name="obj">ModKey to compare to</param>
+        /// <returns>True equal Name and Master value</returns>
         public bool Equals(ModKey other)
         {
             return this.Master == other.Master
                 && string.Equals(this.Name, other.Name, StringComparison.CurrentCultureIgnoreCase);
         }
 
+        /// <summary>
+        /// Default equality operator
+        /// Name is compared ignoring case
+        /// </summary>
+        /// <param name="obj">object to compare to</param>
+        /// <returns>True if ModKey with equal Name and Master value</returns>
         public override bool Equals(object obj)
         {
             if (!(obj is ModKey key)) return false;
             return Equals(key);
         }
 
+        /// <summary>
+        /// Hashcode retrieved from upper case Name and Master values.
+        /// </summary>
+        /// <returns>Hashcode retrieved from upper case Name and Master values.</returns>
         public override int GetHashCode()
         {
             return _hash;
         }
-
+        
+        /// <summary>
+        /// Converts to a string: MyMod.esp
+        /// </summary>
+        /// <returns>String representation of ModKey</returns>
         public override string ToString()
         {
             return string.IsNullOrWhiteSpace(Name) ? "Null" : $"{Name}.{(this.Master ? "esm" : "esp")}";
         }
 
+        /// <summary>
+        /// Attempts to construct a ModKey from a string:
+        ///   ModName.esp
+        /// </summary>
+        /// <param name="str">String to parse</param>
+        /// <param name="modKey">ModKey if successfully converted</param>
+        /// <returns>True if conversion successful</returns>
         public static bool TryFactory(ReadOnlySpan<char> span, [MaybeNullWhen(false)]out ModKey modKey)
         {
             if (span.Length == 0 || span.IsWhiteSpace())
@@ -128,6 +166,13 @@ namespace Mutagen.Bethesda
             return true;
         }
 
+        /// <summary>
+        /// Constructs a ModKey from a string:
+        ///   ModName.esp
+        /// </summary>
+        /// <param name="str">String to parse</param>
+        /// <returns>Converted ModKey</returns>
+        /// <exception cref="ArgumentException">If string malformed</exception>
         public static ModKey Factory(ReadOnlySpan<char> str)
         {
             if (TryFactory(str, out var key))
@@ -139,19 +184,6 @@ namespace Mutagen.Bethesda
                 return key;
             }
             throw new ArgumentException("Could not construct ModKey.");
-        }
-
-        /// <summary>
-        /// A convenience function that attempts to turn a given string into a ModKey object.
-        /// If it fails, it falls back and uses the Dummy singleton.
-        /// 
-        /// Refer to ModKey overall docs for when/how it should be used.
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static ModKey TryFactoryDummyFallback(ReadOnlySpan<char> str)
-        {
-            return ModKey.TryFactory(str, out var modKey) ? modKey : Dummy;
         }
 
         public static bool operator ==(ModKey? a, ModKey? b)

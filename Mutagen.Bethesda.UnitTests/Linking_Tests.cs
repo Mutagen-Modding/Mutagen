@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.UnitTests
 {
     public class Linking_Tests
     {
-        public static FormKey UnusedFormKey = new FormKey(ModKey.Dummy, 123456);
+        public static FormKey UnusedFormKey = new FormKey(Utility.Dummy, 123456);
         public static string PathToTestFile = "../../../test.esp";
         public static string PathToOverrideFile = "../../../override.esp";
         public static FormKey TestFileFormKey = new FormKey(ModKey.Factory("test.esp"), 0xD62);
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct_Empty()
         {
-            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
+            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(Utility.Dummy));
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct_NoMatch()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             mod.Npcs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
 
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct_Typical()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             var npc1 = mod.Npcs.AddNew();
             var npc2 = mod.Npcs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_NoMatch()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             mod.Npcs.AddNew();
             var loadOrder = new LoadOrder<OblivionMod>();
             loadOrder.Add(mod);
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_Single()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             var npc1 = mod.Npcs.AddNew();
             var npc2 = mod.Npcs.AddNew();
             var loadOrder = new LoadOrder<OblivionMod>();
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_OneInEach()
         {
-            var mod1 = new OblivionMod(ModKey.Dummy);
+            var mod1 = new OblivionMod(Utility.Dummy);
             var mod2 = new OblivionMod(new ModKey("Dummy2", true));
             var npc1 = mod1.Npcs.AddNew();
             var npc2 = mod2.Npcs.AddNew();
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_Overridden()
         {
-            var mod1 = new OblivionMod(ModKey.Dummy);
+            var mod1 = new OblivionMod(Utility.Dummy);
             var mod2 = new OblivionMod(new ModKey("Dummy2", true));
             var unoverriddenNpc = mod1.Npcs.AddNew();
             var overriddenNpc = mod1.Npcs.AddNew();
@@ -356,14 +356,14 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_TryResolve_NoLink()
         {
             FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
-            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
+            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(Utility.Dummy));
             Assert.False(formLink.TryResolve(package, out var link));
         }
 
         [Fact]
         public void FormLink_TryResolve_Linked()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             var npc = mod.Npcs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
@@ -375,14 +375,14 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_Resolve_NoLink()
         {
             FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
-            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
+            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(Utility.Dummy));
             Assert.Null(formLink.Resolve(package));
         }
 
         [Fact]
         public void FormLink_Resolve_Linked()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             var npc = mod.Npcs.AddNew();
             var package = new DirectModLinkCache<OblivionMod>(mod);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EDIDLink_TryResolve_NoLink()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EDIDLink_TryResolve_Linked()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "LINK";
             var package = new DirectModLinkCache<OblivionMod>(mod);
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EDIDLink_Resolve_NoLink()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EDIDLink_Resolve_Linked()
         {
-            var mod = new OblivionMod(ModKey.Dummy);
+            var mod = new OblivionMod(Utility.Dummy);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "LINK";
             var package = new DirectModLinkCache<OblivionMod>(mod);
