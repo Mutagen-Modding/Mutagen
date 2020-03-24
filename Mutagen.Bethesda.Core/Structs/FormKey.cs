@@ -125,15 +125,6 @@ namespace Mutagen.Bethesda
             // Slice past delimiter
             str = str.Slice(7);
 
-            // If no period, or more than one
-            var periodIndex = str.IndexOf('.');
-            var lastPeriodIndex = str.LastIndexOf('.');
-            if (periodIndex == -1 || lastPeriodIndex != periodIndex)
-            {
-                formKey = default!;
-                return false;
-            }
-
             if (!ModKey.TryFactory(str, out var modKey))
             {
                 formKey = default!;
