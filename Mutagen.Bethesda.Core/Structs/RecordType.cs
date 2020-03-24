@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// The common length for all RecordTypes
         /// </summary>
-        public const byte HEADER_LENGTH = 4;
+        public const byte Length = 4;
 
         /// <summary>
         /// A static readonly singleton string representing a null RecordType
@@ -51,9 +51,9 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
         public RecordType(string type)
         {
-            if (type.Length != HEADER_LENGTH)
+            if (type.Length != Length)
             {
-                throw new ArgumentException($"Type String not expected length: {HEADER_LENGTH}.");
+                throw new ArgumentException($"Type String not expected length: {Length}.");
             }
             this.TypeInt = GetTypeInt(type);
         }
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda
         public static bool TryFactory(string? str, out RecordType recType)
         {
             if (str == null
-                || str.Length != HEADER_LENGTH)
+                || str.Length != Length)
             {
                 recType = default;
                 return false;
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda
         /// <returns>Four character string</returns>
         public static string GetStringType(int typeInt)
         {
-            char[] chars = new char[HEADER_LENGTH];
+            char[] chars = new char[Length];
             chars[0] = (char)(typeInt & 0x000000FF);
             chars[1] = (char)(typeInt >> 8 & 0x000000FF);
             chars[2] = (char)(typeInt >> 16 & 0x000000FF);
@@ -161,12 +161,12 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
         public static int GetTypeInt(string typeStr)
         {
-            if (typeStr.Length != HEADER_LENGTH)
+            if (typeStr.Length != Length)
             {
-                throw new ArgumentException($"Type String not expected length: {HEADER_LENGTH}.");
+                throw new ArgumentException($"Type String not expected length: {Length}.");
             }
             byte[] b = new byte[4];
-            for (int i = 0; i < HEADER_LENGTH; i++)
+            for (int i = 0; i < Length; i++)
             {
                 b[i] = (byte)typeStr[i];
             }
