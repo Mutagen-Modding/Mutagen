@@ -110,21 +110,21 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to parse</param>
         /// <param name="modKey">ModKey if successfully converted</param>
         /// <returns>True if conversion successful</returns>
-        public static bool TryFactory(ReadOnlySpan<char> span, [MaybeNullWhen(false)]out ModKey modKey)
+        public static bool TryFactory(ReadOnlySpan<char> str, [MaybeNullWhen(false)]out ModKey modKey)
         {
-            if (span.Length == 0 || span.IsWhiteSpace())
+            if (str.Length == 0 || str.IsWhiteSpace())
             {
                 modKey = default!;
                 return false;
             }
-            var index = span.LastIndexOf('.');
+            var index = str.LastIndexOf('.');
             if (index == -1
-                || index != span.Length - 4)
+                || index != str.Length - 4)
             {
                 modKey = default!;
                 return false;
             }
-            var endSpan = span.Slice(index + 1);
+            var endSpan = str.Slice(index + 1);
             bool master;
             if (endSpan.Equals("esm".AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda
                 modKey = default!;
                 return false;
             }
-            var modString = span.Slice(0, index).ToString();
+            var modString = str.Slice(0, index).ToString();
             var keyIndex = master ? 0 : 1;
             ModKey[] keyItem;
             lock (cache_)

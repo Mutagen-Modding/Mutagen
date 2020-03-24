@@ -88,53 +88,53 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to parse</param>
         /// <param name="formKey">FormKey if successfully converted</param>
         /// <returns>True if conversion successful</returns>
-        public static bool TryFactory(ReadOnlySpan<char> span, [MaybeNullWhen(false)]out FormKey formKey)
+        public static bool TryFactory(ReadOnlySpan<char> str, [MaybeNullWhen(false)]out FormKey formKey)
         {
             // If equal to Null
-            if (NullStr.AsSpan().Equals(span, StringComparison.OrdinalIgnoreCase))
+            if (NullStr.AsSpan().Equals(str, StringComparison.OrdinalIgnoreCase))
             {
                 formKey = Null;
                 return true;
             }
 
             // Trim whitespace
-            span = span.Trim();
+            str = str.Trim();
 
             // If less than ID + delimeter + minimum file suffix + 1, invalid
             const int shortCircuitSize = 6 + 1 + 4 + 1;
-            if (span.Length < shortCircuitSize)
+            if (str.Length < shortCircuitSize)
             {
                 formKey = default!;
                 return false;
             }
 
             // If delimeter not in place, invalid
-            if (span[6] != ':')
+            if (str[6] != ':')
             {
                 formKey = default!;
                 return false;
             }
 
             // Convert ID section
-            if (!uint.TryParse(span.Slice(0, 6), NumberStyles.HexNumber, null, out var id))
+            if (!uint.TryParse(str.Slice(0, 6), NumberStyles.HexNumber, null, out var id))
             {
                 formKey = default!;
                 return false;
             }
 
             // Slice past delimiter
-            span = span.Slice(7);
+            str = str.Slice(7);
 
             // If no period, or more than one
-            var periodIndex = span.IndexOf('.');
-            var lastPeriodIndex = span.LastIndexOf('.');
+            var periodIndex = str.IndexOf('.');
+            var lastPeriodIndex = str.LastIndexOf('.');
             if (periodIndex == -1 || lastPeriodIndex != periodIndex)
             {
                 formKey = default!;
                 return false;
             }
 
-            if (!ModKey.TryFactory(span, out var modKey))
+            if (!ModKey.TryFactory(str, out var modKey))
             {
                 formKey = default!;
                 return false;
@@ -153,11 +153,11 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to parse</param>
         /// <returns>Converted FormKey</returns>
         /// <exception cref="ArgumentException">If string malformed</exception>
-        public static FormKey Factory(ReadOnlySpan<char> span)
+        public static FormKey Factory(ReadOnlySpan<char> str)
         {
-            if (!TryFactory(span, out var form))
+            if (!TryFactory(str, out var form))
             {
-                throw new ArgumentException($"Malformed FormKey string: {span.ToString()}");
+                throw new ArgumentException($"Malformed FormKey string: {str.ToString()}");
             }
             return form;
         }

@@ -71,14 +71,14 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Converts a char span in hexadecimal format to a FormID
         /// </summary>
-        /// <param name="hexSpan">Char span in hexadecimal format: (0x)FFFFFFFF</param>
+        /// <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param>
         /// <returns>Converted FormID</returns>
         /// <exception cref="ArgumentException">Thrown on unconvertable string input</exception>
-        public static FormID Factory(ReadOnlySpan<char> hexSpan)
+        public static FormID Factory(ReadOnlySpan<char> hexStr)
         {
-            if (!TryFactory(hexSpan, out var result))
+            if (!TryFactory(hexStr, out var result))
             {
-                throw new ArgumentException($"Invalid FormID hex: {hexSpan.ToString()}");
+                throw new ArgumentException($"Invalid FormID hex: {hexStr.ToString()}");
             }
             return result;
         }
@@ -86,23 +86,23 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Attempts to convert a string in hexadecimal format to a FormID
         /// </summary>
-        /// <param name="hexSpan">Char span hexadecimal format: (0x)FFFFFFFF</param>
+        /// <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param>
         /// <param name="id">Converted FormID if successful</param>
         /// <returns>True if successful</returns>
-        public static bool TryFactory(ReadOnlySpan<char> hexSpan, [MaybeNullWhen(false)] out FormID id)
+        public static bool TryFactory(ReadOnlySpan<char> hexStr, [MaybeNullWhen(false)] out FormID id)
         {
-            if (hexSpan.StartsWith("0x"))
+            if (hexStr.StartsWith("0x"))
             {
-                hexSpan = hexSpan.Slice(2);
+                hexStr = hexStr.Slice(2);
             }
 
-            if (hexSpan.Length != 8)
+            if (hexStr.Length != 8)
             {
                 id = default;
                 return false;
             }
 
-            if (!uint.TryParse(hexSpan, NumberStyles.HexNumber, null, out var intID))
+            if (!uint.TryParse(hexStr, NumberStyles.HexNumber, null, out var intID))
             {
                 id = default;
                 return false;
