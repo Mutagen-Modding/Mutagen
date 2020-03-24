@@ -98,6 +98,18 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(modKey, modKey2);
             Assert.Equal(modKey.GetHashCode(), modKey2.GetHashCode());
         }
+
+        [Fact]
+        public void LookupCorrectness()
+        {
+            ModKey modKey = new ModKey("Oblivion", true);
+            ModKey modKey2 = new ModKey("OblivioN", true);
+            var set = new HashSet<ModKey>()
+            {
+                modKey
+            };
+            Assert.Contains(modKey2, set);
+        }
         #endregion
     }
 }
