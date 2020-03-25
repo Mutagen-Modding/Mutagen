@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
         protected AMod()
         {
             this.ModKey = ModKey.Null;
-            this.allocator = new SimpleNextIDAllocator(this);
+            this.allocator = new SimpleFormKeyAllocator(this);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
         public AMod(ModKey modKey, IFormKeyAllocator? allocator = null)
         {
             this.ModKey = modKey;
-            this.allocator = allocator ?? new SimpleNextIDAllocator(this);
+            this.allocator = allocator ?? new SimpleFormKeyAllocator(this);
         }
 
         #region NonImplemented IMod

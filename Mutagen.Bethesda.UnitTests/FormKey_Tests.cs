@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         public MasterReferenceReader TypicalMasters() => 
             new MasterReferenceReader(
-                Utility.Dummy,
+                Utility.ModKey,
                 new List<IMasterReferenceGetter>()
                 {
                     new MasterReference()

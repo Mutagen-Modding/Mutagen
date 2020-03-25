@@ -8,10 +8,12 @@ namespace Mutagen.Bethesda.Persistance
     /// A simple FormKey allocator that simply leverages a Mod's NextObjectID tracker to allocate.
     /// No safety checks or syncronization is provided.
     ///
-    /// This class is made thread safe by locking internally on the Mod object.
+    /// This class is thread safe.
     /// </summary>
-    public class SimpleNextIDAllocator : IFormKeyAllocator
+    public class SimpleFormKeyAllocator : IFormKeyAllocator
     {
+        private Dictionary<string, FormKey> _cache = new Dictionary<string, FormKey>();
+
         /// <summary>
         /// Attached Mod that will be used as reference when allocating new keys
         /// </summary>
@@ -20,7 +22,7 @@ namespace Mutagen.Bethesda.Persistance
         /// <summary>
         /// Constructs a new SimpleNextIDAllocator that looks to a given Mod for the next key
         /// </summary>
-        public SimpleNextIDAllocator(IMod mod)
+        public SimpleFormKeyAllocator(IMod mod)
         {
             this.Mod = mod;
         }
@@ -42,6 +44,29 @@ namespace Mutagen.Bethesda.Persistance
             }
         }
 
-        FormKey IFormKeyAllocator.GetNextFormKey(string editorID) => GetNextFormKey();
+        public bool TryRegister(string edid, FormKey formKey)
+        {
+            lock (_cache)
+            {
+                return _cache.TryAdd(edid, formKey);
+            }
+        }
+
+        public void Register(string edid, FormKey formKey)
+        {
+            lock (_cache)
+            {
+                _cache.Add(edid, formKey);
+            }
+        }
+
+        public FormKey GetNextFormKey(string editorID)
+        {
+            lock (_cache)
+            {
+                if (_cache.TryGetValue(editorID, out var id)) return id;
+            }
+            return GetNextFormKey();
+        }
     }
 }

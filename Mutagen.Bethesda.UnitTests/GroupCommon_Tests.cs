@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void AddNew()
         {
-            var mod = new OblivionMod(Utility.Dummy);
+            var mod = new OblivionMod(Utility.ModKey);
             var rec = mod.Npcs.AddNew();
             Assert.Equal(1, mod.Npcs.Count);
             Assert.Same(mod.Npcs.Records.First(), rec);
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void AddNew_DifferentForSecond()
         {
-            var mod = new OblivionMod(Utility.Dummy);
+            var mod = new OblivionMod(Utility.ModKey);
             var rec = mod.Npcs.AddNew();
             var rec2 = mod.Npcs.AddNew();
             Assert.Equal(2, mod.Npcs.Count);

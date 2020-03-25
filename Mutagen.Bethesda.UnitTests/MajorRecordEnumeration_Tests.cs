@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Empty()
         {
-            var mod = new OblivionMod(Utility.Dummy);
+            var mod = new OblivionMod(Utility.ModKey);
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords());
             Assert.Empty(((IOblivionMod)mod).EnumerateMajorRecords());
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommon>());
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateAll()
         {
-            var mod = new OblivionMod(Utility.Dummy);
+            var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
             mod.Ammo.AddNew();
             Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords().Count());
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateAllViaGeneric()
         {
-            var mod = new OblivionMod(Utility.Dummy);
+            var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
             mod.Ammo.AddNew();
             Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommon>().Count());
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateSpecificType_Matched()
         {
-            var mod = new OblivionMod(Utility.Dummy);
+            var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
             mod.Ammo.AddNew();
             Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INpc>());
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateSpecificType_Unmatched()
         {
-            var mod = new OblivionMod(Utility.Dummy);
+            var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmo>());
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmoGetter>());
