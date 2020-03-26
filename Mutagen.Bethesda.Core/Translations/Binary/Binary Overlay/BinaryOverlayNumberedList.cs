@@ -64,11 +64,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     throw new IndexOutOfRangeException();
                 }
-                if (((index + 1) * Length) < this.Memory.Length)
-                {
-                    return this.Getter(new BinaryMemoryReadStream(this.Memory.Slice(index * Length)), this.Package, this.RecordTypeConverter);
-                }
-                return default;
+                return this.Getter(new BinaryMemoryReadStream(this.Memory.Slice(index * Length)), this.Package, this.RecordTypeConverter);
             }
         }
 

@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out RegionData ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate<RegionData>(node, out var ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown RegionData subclass: {node.Name.LocalName}");
             }

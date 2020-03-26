@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out SkyrimMajorRecord ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate<SkyrimMajorRecord>(node, out var ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown SkyrimMajorRecord subclass: {node.Name.LocalName}");
             }

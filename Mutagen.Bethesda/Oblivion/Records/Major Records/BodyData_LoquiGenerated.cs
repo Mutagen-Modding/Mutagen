@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<BodyPart>();
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);

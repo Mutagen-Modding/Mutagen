@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<MasterReference>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             }));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }

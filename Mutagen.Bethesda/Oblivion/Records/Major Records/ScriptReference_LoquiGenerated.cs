@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ScriptReference ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate<ScriptReference>(node, out var ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown ScriptReference subclass: {node.Name.LocalName}");
             }

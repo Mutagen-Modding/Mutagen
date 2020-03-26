@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out GameSetting ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate<GameSetting>(node, out var ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown GameSetting subclass: {node.Name.LocalName}");
             }

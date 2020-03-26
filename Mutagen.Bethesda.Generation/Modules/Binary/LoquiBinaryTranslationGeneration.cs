@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"frame: {readerAccessor}");
                 if (asyncMode == AsyncMode.Off)
                 {
-                    args.Add($"item: out {outItemAccessor.DirectAccess}");
+                    args.Add($"item: out {outItemAccessor.DirectAccess}!");
                 }
                 if (data?.RecordTypeConverter != null
                     && data.RecordTypeConverter.FromConversions.Count > 0)

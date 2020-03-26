@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<HeadPartReference>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<HeadPartReference>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.HeadParts);
@@ -2114,7 +2114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<TintAssets>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<TintAssets>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.TintMasks);

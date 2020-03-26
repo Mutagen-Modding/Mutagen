@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<SoundItem>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<SoundItem>();
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);

@@ -2181,7 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<DialogResponse>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
@@ -2197,7 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);

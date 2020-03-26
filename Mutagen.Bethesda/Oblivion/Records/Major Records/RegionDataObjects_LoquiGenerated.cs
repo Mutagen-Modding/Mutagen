@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<RegionDataObject>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<RegionDataObject>();
                     return TryGet<int?>.Succeed((int)RegionDataObjects_FieldIndex.Objects);

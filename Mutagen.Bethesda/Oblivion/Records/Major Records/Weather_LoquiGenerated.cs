@@ -3487,7 +3487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<WeatherType>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
@@ -3563,7 +3563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<WeatherSound>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<WeatherSound>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);

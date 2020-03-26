@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<LeveledEntry<AItem>>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<LeveledEntry<AItem>>();
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);

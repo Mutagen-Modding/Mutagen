@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<RegionSound>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<RegionSound>();
                     return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.Sounds);

@@ -1614,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<Effect>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<Effect>();
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);

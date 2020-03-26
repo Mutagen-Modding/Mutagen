@@ -12,7 +12,7 @@ using System.Xml.Linq;
 namespace Mutagen.Bethesda.Folder
 {
     public class LoquiXmlFolderTranslation<T>
-        where T : ILoquiObjectGetter
+        where T : class, ILoquiObjectGetter
     {
         public delegate Task<T> CREATE_FUNC(
             XElement? node,

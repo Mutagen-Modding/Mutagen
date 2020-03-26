@@ -2811,7 +2811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<Relation>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<Relation>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
@@ -2912,7 +2912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<Rank>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<Rank>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);

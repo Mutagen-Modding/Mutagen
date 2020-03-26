@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<LogEntry>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<LogEntry>();
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);

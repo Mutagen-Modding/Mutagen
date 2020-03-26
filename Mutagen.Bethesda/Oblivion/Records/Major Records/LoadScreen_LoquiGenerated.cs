@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<LoadScreenLocation>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<LoadScreenLocation>();
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Locations);

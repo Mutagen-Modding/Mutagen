@@ -4328,7 +4328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<Attack>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<Attack>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Attacks);
@@ -4439,7 +4439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<RaceMovementType>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<RaceMovementType>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypes);

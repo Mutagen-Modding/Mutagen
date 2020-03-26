@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<QuestStage>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<QuestStage>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
@@ -1922,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<QuestTarget>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<QuestTarget>();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);

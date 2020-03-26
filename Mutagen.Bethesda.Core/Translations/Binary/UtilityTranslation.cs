@@ -7,6 +7,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,19 +22,19 @@ namespace Mutagen.Bethesda
 
         public delegate bool BinarySubParseDelegate<T>(
             MutagenFrame reader,
-            out T item);
+            [MaybeNullWhen(false)] out T item);
         public delegate bool BinaryMasterParseDelegate<T>(
             MutagenFrame reader,
-            out T item,
+            [MaybeNullWhen(false)] out T item,
             RecordTypeConverter? recordTypeConverter);
         public delegate bool BinarySubParseRecordDelegate<T>(
             MutagenFrame reader,
             RecordType header,
-            out T item);
+            [MaybeNullWhen(false)] out T item);
         public delegate bool BinaryMasterParseRecordDelegate<T>(
             MutagenFrame reader,
             RecordType header,
-            out T item,
+            [MaybeNullWhen(false)] out T item,
             RecordTypeConverter? recordTypeConverter);
         public delegate void BinarySubWriteDelegate<T>(
             MutagenWriter writer,

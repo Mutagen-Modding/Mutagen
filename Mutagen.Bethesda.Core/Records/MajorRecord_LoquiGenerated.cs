@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out MajorRecord ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate<MajorRecord>(node, out var ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown MajorRecord subclass: {node.Name.LocalName}");
             }

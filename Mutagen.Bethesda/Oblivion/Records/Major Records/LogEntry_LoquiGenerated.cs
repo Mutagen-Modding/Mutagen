@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);

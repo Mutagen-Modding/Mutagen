@@ -827,8 +827,8 @@ namespace Mutagen.Bethesda.Generation
                             string enumName = null;
                             for (int i = subField.FieldIndex - 1; i >= 0; i--)
                             {
-                                var prevField = set.SubFields.TryGet(i);
-                                if (!prevField?.IntegrateField ?? true) continue;
+                                if (!set.SubFields.TryGet(i, out var prevField)) continue;
+                                if (!prevField.IntegrateField) continue;
                                 enumName = prevField.IndexEnumName;
                                 break;
                             }

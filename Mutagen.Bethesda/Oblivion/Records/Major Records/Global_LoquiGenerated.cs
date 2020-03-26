@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out Global ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate<Global>(node, out var ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown Global subclass: {node.Name.LocalName}");
             }

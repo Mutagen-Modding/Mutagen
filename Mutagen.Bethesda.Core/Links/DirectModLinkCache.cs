@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Noggog;
 using System;
 using System.Collections;
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to search for</param>
         /// <param name="majorRec">MajorRecord if found</param>
         /// <returns>True if record was found</returns>
-        public bool TryLookup(FormKey formKey, out IMajorRecordCommonGetter majorRec)
+        public bool TryLookup(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
             return _untypedMajorRecords.Value.TryGetValue(formKey, out majorRec);
         }

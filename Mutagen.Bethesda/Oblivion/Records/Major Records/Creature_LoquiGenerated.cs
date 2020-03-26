@@ -4571,7 +4571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<ItemEntry>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
@@ -4635,7 +4635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<RankPlacement>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
@@ -4793,7 +4793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<CreatureSound>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<CreatureSound>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);

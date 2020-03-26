@@ -3150,7 +3150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<RaceRelation>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
@@ -3233,7 +3233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<FacePart>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<FacePart>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);

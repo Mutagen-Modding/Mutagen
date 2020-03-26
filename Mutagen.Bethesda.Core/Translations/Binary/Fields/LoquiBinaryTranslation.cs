@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Internals;
 using Noggog;
@@ -6,6 +6,7 @@ using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda.Binary
 {
     public class LoquiBinaryTranslation<T>
-        where T : ILoquiObjectGetter
+        where T : class, ILoquiObjectGetter
     {
         public static readonly LoquiBinaryTranslation<T> Instance = new LoquiBinaryTranslation<T>();
         public delegate T CREATE_FUNC(
@@ -70,7 +71,7 @@ namespace Mutagen.Bethesda.Binary
     }
 
     public class LoquiBinaryAsyncTranslation<T>
-        where T : ILoquiObjectGetter
+        where T : class, ILoquiObjectGetter
     {
         public static readonly LoquiBinaryAsyncTranslation<T> Instance = new LoquiBinaryAsyncTranslation<T>();
         public delegate Task<T> CREATE_FUNC(
@@ -135,8 +136,8 @@ namespace Mutagen.Bethesda.Binary
         public static bool Parse<T, B>(
             this LoquiBinaryTranslation<T> loquiTrans,
             MutagenFrame frame,
-            out B item)
-            where T : ILoquiObjectGetter, B
+            [MaybeNullWhen(false)] out B item)
+            where T : class, ILoquiObjectGetter, B
         {
             if (loquiTrans.Parse(
                 frame: frame,

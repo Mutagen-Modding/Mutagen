@@ -2,6 +2,7 @@
 using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Mutagen.Bethesda.Binary
@@ -49,7 +50,7 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse<T>(
             MutagenFrame frame,
-            out IFormLink<T> item,
+            [MaybeNullWhen(false)] out IFormLink<T> item,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {

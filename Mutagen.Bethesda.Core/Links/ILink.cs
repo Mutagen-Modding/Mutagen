@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if successful in linking to record</returns>
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkCache<TMod> package, out TMajor majorRecord)
+        public static bool TryResolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkCache<TMod> package, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMod : IModGetter
             where TMajor : IMajorRecordCommonGetter
         {

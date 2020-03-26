@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out NpcSpawn ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate<NpcSpawn>(node, out var ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown NpcSpawn subclass: {node.Name.LocalName}");
             }

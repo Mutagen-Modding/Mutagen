@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     break;
                 }
-                TItem item;
+                TItem? item;
                 if (skipMarker)
                 {
                     frame.Position += subHeader.TotalLength;
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     break;
                 }
-                TItem item;
+                TItem? item;
                 if (skipMarker)
                 {
                     frame.Position += subHeader.TotalLength;

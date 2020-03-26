@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<RegionArea>();
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);

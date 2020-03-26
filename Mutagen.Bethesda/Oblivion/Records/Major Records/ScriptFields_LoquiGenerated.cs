@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<LocalVariable>();
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
@@ -1597,11 +1597,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     case 0x56524353: // SCRV
                                         return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
                                             frame: r,
-                                            item: out listSubItem);
+                                            item: out listSubItem!);
                                     case 0x4F524353: // SCRO
                                         return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
                                             frame: r,
-                                            item: out listSubItem);
+                                            item: out listSubItem!);
                                     default:
                                         throw new NotImplementedException();
                                 }

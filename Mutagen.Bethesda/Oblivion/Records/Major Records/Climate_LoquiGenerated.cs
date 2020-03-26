@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<WeatherChance>();
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);

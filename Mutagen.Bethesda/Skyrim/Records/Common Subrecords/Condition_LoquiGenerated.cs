@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate(node, out Condition ret, errorMask, translationMask))
+            if (!LoquiXmlTranslation.Instance.TryCreate<Condition>(node, out var ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown Condition subclass: {node.Name.LocalName}");
             }

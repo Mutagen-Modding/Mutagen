@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<TintPreset>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<TintPreset>();
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Presets);

@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             {
                                 return LoquiBinaryTranslation<Part>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<Part>();
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);

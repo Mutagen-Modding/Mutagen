@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 return LoquiBinaryTranslation<LeveledEntry<ASpell>>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem);
+                                    item: out listSubItem!);
                             })
                         .ToExtendedList<LeveledEntry<ASpell>>();
                     return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Entries);
