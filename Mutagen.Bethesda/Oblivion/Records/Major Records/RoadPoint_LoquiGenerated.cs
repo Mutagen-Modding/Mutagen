@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class RoadPointMixIn
+    public static partial class RoadPointMixIn
     {
         public static void Clear(this IRoadPoint item)
         {

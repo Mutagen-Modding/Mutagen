@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ConditionDataMixIn
+    public static partial class ConditionDataMixIn
     {
         public static void Clear(this IConditionData item)
         {

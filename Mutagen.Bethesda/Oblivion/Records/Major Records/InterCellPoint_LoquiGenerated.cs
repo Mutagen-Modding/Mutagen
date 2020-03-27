@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class InterCellPointMixIn
+    public static partial class InterCellPointMixIn
     {
         public static void Clear(this IInterCellPoint item)
         {

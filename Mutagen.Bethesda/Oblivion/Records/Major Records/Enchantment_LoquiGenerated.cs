@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class EnchantmentMixIn
+    public static partial class EnchantmentMixIn
     {
         public static void Clear(this IEnchantmentInternal item)
         {

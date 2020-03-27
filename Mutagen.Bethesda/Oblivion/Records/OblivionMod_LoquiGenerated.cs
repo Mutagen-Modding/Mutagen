@@ -4040,7 +4040,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class OblivionModMixIn
+    public static partial class OblivionModMixIn
     {
         public static void Clear(this IOblivionMod item)
         {

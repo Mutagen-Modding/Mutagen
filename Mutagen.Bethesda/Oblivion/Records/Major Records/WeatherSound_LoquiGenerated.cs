@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class WeatherSoundMixIn
+    public static partial class WeatherSoundMixIn
     {
         public static void Clear(this IWeatherSound item)
         {

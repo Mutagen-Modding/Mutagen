@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class BookMixIn
+    public static partial class BookMixIn
     {
         public static void Clear(this IBookInternal item)
         {

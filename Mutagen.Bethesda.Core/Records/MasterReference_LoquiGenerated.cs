@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda
     #endregion
 
     #region Common MixIn
-    public static class MasterReferenceMixIn
+    public static partial class MasterReferenceMixIn
     {
         public static void Clear(this IMasterReference item)
         {

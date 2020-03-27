@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class CreatureSoundMixIn
+    public static partial class CreatureSoundMixIn
     {
         public static void Clear(this ICreatureSound item)
         {

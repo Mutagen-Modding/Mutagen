@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class DialogItemMixIn
+    public static partial class DialogItemMixIn
     {
         public static void Clear(this IDialogItemInternal item)
         {

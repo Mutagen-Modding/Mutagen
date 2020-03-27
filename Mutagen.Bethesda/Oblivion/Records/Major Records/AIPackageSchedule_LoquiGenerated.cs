@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class AIPackageScheduleMixIn
+    public static partial class AIPackageScheduleMixIn
     {
         public static void Clear(this IAIPackageSchedule item)
         {

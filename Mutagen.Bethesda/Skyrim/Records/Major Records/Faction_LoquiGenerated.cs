@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class FactionMixIn
+    public static partial class FactionMixIn
     {
         public static void Clear(this IFactionInternal item)
         {

@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class FurnatureMixIn
+    public static partial class FurnatureMixIn
     {
         public static void Clear(this IFurnatureInternal item)
         {

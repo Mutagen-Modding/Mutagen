@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class DoorMixIn
+    public static partial class DoorMixIn
     {
         public static void Clear(this IDoorInternal item)
         {

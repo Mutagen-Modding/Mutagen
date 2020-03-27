@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class LocalVariableMixIn
+    public static partial class LocalVariableMixIn
     {
         public static void Clear(this ILocalVariable item)
         {

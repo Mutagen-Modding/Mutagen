@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class AttackMixIn
+    public static partial class AttackMixIn
     {
         public static void Clear(this IAttack item)
         {

@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class CellLightingMixIn
+    public static partial class CellLightingMixIn
     {
         public static void Clear(this ICellLighting item)
         {

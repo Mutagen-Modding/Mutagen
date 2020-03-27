@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class PointToReferenceMappingMixIn
+    public static partial class PointToReferenceMappingMixIn
     {
         public static void Clear(this IPointToReferenceMapping item)
         {

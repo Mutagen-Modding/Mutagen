@@ -3113,7 +3113,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class EffectShaderMixIn
+    public static partial class EffectShaderMixIn
     {
         public static void Clear(this IEffectShaderInternal item)
         {

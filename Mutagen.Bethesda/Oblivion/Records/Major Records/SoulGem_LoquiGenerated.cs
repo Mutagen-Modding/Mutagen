@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class SoulGemMixIn
+    public static partial class SoulGemMixIn
     {
         public static void Clear(this ISoulGemInternal item)
         {

@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ObjectBoundsMixIn
+    public static partial class ObjectBoundsMixIn
     {
         public static void Clear(this IObjectBounds item)
         {

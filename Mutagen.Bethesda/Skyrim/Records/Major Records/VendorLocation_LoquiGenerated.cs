@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class VendorLocationMixIn
+    public static partial class VendorLocationMixIn
     {
         public static void Clear(this IVendorLocation item)
         {

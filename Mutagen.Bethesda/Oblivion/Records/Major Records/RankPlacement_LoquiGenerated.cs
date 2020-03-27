@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class RankPlacementMixIn
+    public static partial class RankPlacementMixIn
     {
         public static void Clear(this IRankPlacement item)
         {

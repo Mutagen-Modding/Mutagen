@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class GrassMixIn
+    public static partial class GrassMixIn
     {
         public static void Clear(this IGrassInternal item)
         {

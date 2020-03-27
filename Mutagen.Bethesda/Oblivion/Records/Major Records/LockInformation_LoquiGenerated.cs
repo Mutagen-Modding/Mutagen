@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class LockInformationMixIn
+    public static partial class LockInformationMixIn
     {
         public static void Clear(this ILockInformation item)
         {

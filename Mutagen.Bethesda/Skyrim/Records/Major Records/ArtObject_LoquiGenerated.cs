@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ArtObjectMixIn
+    public static partial class ArtObjectMixIn
     {
         public static void Clear(this IArtObjectInternal item)
         {

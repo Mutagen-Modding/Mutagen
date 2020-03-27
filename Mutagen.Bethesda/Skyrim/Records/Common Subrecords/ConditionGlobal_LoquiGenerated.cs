@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ConditionGlobalMixIn
+    public static partial class ConditionGlobalMixIn
     {
         public static void Clear(this IConditionGlobal item)
         {

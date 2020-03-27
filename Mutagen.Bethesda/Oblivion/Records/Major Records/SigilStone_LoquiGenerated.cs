@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class SigilStoneMixIn
+    public static partial class SigilStoneMixIn
     {
         public static void Clear(this ISigilStoneInternal item)
         {

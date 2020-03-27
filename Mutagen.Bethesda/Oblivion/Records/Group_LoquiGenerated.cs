@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class GroupMixIn
+    public static partial class GroupMixIn
     {
         public static void Clear<T>(this IGroup<T> item)
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem

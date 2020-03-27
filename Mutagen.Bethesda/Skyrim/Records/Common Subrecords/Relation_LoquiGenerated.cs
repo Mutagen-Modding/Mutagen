@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class RelationMixIn
+    public static partial class RelationMixIn
     {
         public static void Clear(this IRelation item)
         {

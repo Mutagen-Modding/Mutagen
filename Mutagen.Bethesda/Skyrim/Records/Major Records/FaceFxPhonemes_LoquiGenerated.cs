@@ -2381,7 +2381,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class FaceFxPhonemesMixIn
+    public static partial class FaceFxPhonemesMixIn
     {
         public static void Clear(this IFaceFxPhonemes item)
         {

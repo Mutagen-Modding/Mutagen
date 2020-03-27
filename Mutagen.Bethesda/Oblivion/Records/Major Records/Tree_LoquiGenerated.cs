@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class TreeMixIn
+    public static partial class TreeMixIn
     {
         public static void Clear(this ITreeInternal item)
         {

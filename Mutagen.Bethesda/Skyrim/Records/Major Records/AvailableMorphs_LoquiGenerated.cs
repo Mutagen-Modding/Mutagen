@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class AvailableMorphsMixIn
+    public static partial class AvailableMorphsMixIn
     {
         public static void Clear(this IAvailableMorphs item)
         {

@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class BirthsignMixIn
+    public static partial class BirthsignMixIn
     {
         public static void Clear(this IBirthsignInternal item)
         {

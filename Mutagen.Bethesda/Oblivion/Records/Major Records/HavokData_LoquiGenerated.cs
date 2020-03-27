@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class HavokDataMixIn
+    public static partial class HavokDataMixIn
     {
         public static void Clear(this IHavokData item)
         {

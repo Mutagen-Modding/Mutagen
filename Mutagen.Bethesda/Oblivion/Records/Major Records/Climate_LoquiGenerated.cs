@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ClimateMixIn
+    public static partial class ClimateMixIn
     {
         public static void Clear(this IClimateInternal item)
         {

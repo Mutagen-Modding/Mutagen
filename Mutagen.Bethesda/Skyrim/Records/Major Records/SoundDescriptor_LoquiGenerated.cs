@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class SoundDescriptorMixIn
+    public static partial class SoundDescriptorMixIn
     {
         public static void Clear(this ISoundDescriptorInternal item)
         {

@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ScriptEffectMixIn
+    public static partial class ScriptEffectMixIn
     {
         public static void Clear(this IScriptEffect item)
         {

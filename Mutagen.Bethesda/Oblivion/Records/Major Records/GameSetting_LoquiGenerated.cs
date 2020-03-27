@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class GameSettingMixIn
+    public static partial class GameSettingMixIn
     {
         public static void Clear(this IGameSettingInternal item)
         {

@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class RegionDataMapNameMixIn
+    public static partial class RegionDataMapNameMixIn
     {
         public static void Clear(this IRegionDataMapNameInternal item)
         {

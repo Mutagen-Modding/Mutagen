@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class SubspaceMixIn
+    public static partial class SubspaceMixIn
     {
         public static void Clear(this ISubspaceInternal item)
         {

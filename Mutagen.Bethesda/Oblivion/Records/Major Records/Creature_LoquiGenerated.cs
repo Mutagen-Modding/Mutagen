@@ -3269,7 +3269,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class CreatureMixIn
+    public static partial class CreatureMixIn
     {
         public static void Clear(this ICreatureInternal item)
         {

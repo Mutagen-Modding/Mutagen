@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class IdleAnimationMixIn
+    public static partial class IdleAnimationMixIn
     {
         public static void Clear(this IIdleAnimationInternal item)
         {

@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class FormListMixIn
+    public static partial class FormListMixIn
     {
         public static void Clear(this IFormListInternal item)
         {

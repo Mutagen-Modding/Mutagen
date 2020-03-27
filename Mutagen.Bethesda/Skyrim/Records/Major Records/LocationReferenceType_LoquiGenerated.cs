@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class LocationReferenceTypeMixIn
+    public static partial class LocationReferenceTypeMixIn
     {
         public static void Clear(this ILocationReferenceTypeInternal item)
         {

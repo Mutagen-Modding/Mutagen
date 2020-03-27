@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class VoiceTypeMixIn
+    public static partial class VoiceTypeMixIn
     {
         public static void Clear(this IVoiceTypeInternal item)
         {

@@ -719,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ActivatorMixIn
+    public static partial class ActivatorMixIn
     {
         public static void Clear(this IActivatorInternal item)
         {

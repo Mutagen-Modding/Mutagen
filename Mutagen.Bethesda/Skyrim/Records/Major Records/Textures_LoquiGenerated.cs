@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class TexturesMixIn
+    public static partial class TexturesMixIn
     {
         public static void Clear(this ITextures item)
         {

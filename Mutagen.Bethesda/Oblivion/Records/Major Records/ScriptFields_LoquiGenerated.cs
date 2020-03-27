@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ScriptFieldsMixIn
+    public static partial class ScriptFieldsMixIn
     {
         public static void Clear(this IScriptFields item)
         {

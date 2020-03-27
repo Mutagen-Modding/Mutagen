@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class TextureSetMixIn
+    public static partial class TextureSetMixIn
     {
         public static void Clear(this ITextureSetInternal item)
         {

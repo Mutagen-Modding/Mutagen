@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class SkyrimModMixIn
+    public static partial class SkyrimModMixIn
     {
         public static void Clear(this ISkyrimMod item)
         {

@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class WaterMixIn
+    public static partial class WaterMixIn
     {
         public static void Clear(this IWaterInternal item)
         {

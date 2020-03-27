@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class QuestStageMixIn
+    public static partial class QuestStageMixIn
     {
         public static void Clear(this IQuestStage item)
         {

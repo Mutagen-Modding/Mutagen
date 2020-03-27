@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class DistantLODDataMixIn
+    public static partial class DistantLODDataMixIn
     {
         public static void Clear(this IDistantLODData item)
         {

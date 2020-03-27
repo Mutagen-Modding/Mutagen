@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class EnableParentMixIn
+    public static partial class EnableParentMixIn
     {
         public static void Clear(this IEnableParent item)
         {

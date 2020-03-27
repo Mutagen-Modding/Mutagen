@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class TintAssetsMixIn
+    public static partial class TintAssetsMixIn
     {
         public static void Clear(this ITintAssets item)
         {

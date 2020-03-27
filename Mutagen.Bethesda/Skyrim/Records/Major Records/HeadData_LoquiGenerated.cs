@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class HeadDataMixIn
+    public static partial class HeadDataMixIn
     {
         public static void Clear(this IHeadData item)
         {

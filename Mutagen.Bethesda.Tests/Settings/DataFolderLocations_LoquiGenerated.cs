@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Common MixIn
-    public static class DataFolderLocationsMixIn
+    public static partial class DataFolderLocationsMixIn
     {
         public static void Clear(this IDataFolderLocations item)
         {

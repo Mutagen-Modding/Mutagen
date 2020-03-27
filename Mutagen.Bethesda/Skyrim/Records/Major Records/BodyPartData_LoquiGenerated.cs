@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class BodyPartDataMixIn
+    public static partial class BodyPartDataMixIn
     {
         public static void Clear(this IBodyPartDataInternal item)
         {

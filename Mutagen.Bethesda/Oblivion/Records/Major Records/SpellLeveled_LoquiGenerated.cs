@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class SpellLeveledMixIn
+    public static partial class SpellLeveledMixIn
     {
         public static void Clear(this ISpellLeveledInternal item)
         {

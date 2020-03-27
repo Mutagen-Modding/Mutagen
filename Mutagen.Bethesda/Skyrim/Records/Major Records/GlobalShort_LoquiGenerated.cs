@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class GlobalShortMixIn
+    public static partial class GlobalShortMixIn
     {
         public static void Clear(this IGlobalShortInternal item)
         {

@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class AnimatedObjectMixIn
+    public static partial class AnimatedObjectMixIn
     {
         public static void Clear(this IAnimatedObjectInternal item)
         {

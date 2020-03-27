@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Common MixIn
-    public static class PassthroughSettingsMixIn
+    public static partial class PassthroughSettingsMixIn
     {
         public static void Clear(this IPassthroughSettings item)
         {

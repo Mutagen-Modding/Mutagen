@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ASpellMixIn
+    public static partial class ASpellMixIn
     {
         public static void Clear(this IASpellInternal item)
         {

@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class IngredientMixIn
+    public static partial class IngredientMixIn
     {
         public static void Clear(this IIngredientInternal item)
         {

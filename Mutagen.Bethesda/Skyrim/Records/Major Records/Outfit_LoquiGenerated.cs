@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class OutfitMixIn
+    public static partial class OutfitMixIn
     {
         public static void Clear(this IOutfitInternal item)
         {

@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ModHeaderMixIn
+    public static partial class ModHeaderMixIn
     {
         public static void Clear(this IModHeader item)
         {

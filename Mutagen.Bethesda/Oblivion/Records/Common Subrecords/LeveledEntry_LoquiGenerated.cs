@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class LeveledEntryMixIn
+    public static partial class LeveledEntryMixIn
     {
         public static void Clear<T>(this ILeveledEntry<T> item)
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem

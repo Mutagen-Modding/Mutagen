@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Common MixIn
-    public static class RecordInterestMixIn
+    public static partial class RecordInterestMixIn
     {
         public static void Clear(this IRecordInterest item)
         {

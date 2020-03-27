@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class LoadScreenMixIn
+    public static partial class LoadScreenMixIn
     {
         public static void Clear(this ILoadScreenInternal item)
         {

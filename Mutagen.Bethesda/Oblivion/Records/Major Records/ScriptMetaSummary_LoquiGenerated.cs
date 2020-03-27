@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ScriptMetaSummaryMixIn
+    public static partial class ScriptMetaSummaryMixIn
     {
         public static void Clear(this IScriptMetaSummary item)
         {

@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class AlchemicalApparatusMixIn
+    public static partial class AlchemicalApparatusMixIn
     {
         public static void Clear(this IAlchemicalApparatusInternal item)
         {

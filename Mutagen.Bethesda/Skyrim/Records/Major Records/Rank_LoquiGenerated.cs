@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class RankMixIn
+    public static partial class RankMixIn
     {
         public static void Clear(this IRank item)
         {

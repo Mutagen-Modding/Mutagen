@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class SpeedOverridesMixIn
+    public static partial class SpeedOverridesMixIn
     {
         public static void Clear(this ISpeedOverrides item)
         {

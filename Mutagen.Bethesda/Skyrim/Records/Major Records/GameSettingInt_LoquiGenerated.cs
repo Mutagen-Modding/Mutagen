@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class GameSettingIntMixIn
+    public static partial class GameSettingIntMixIn
     {
         public static void Clear(this IGameSettingIntInternal item)
         {

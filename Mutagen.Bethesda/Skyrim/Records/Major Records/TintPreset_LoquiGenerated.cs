@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class TintPresetMixIn
+    public static partial class TintPresetMixIn
     {
         public static void Clear(this ITintPreset item)
         {

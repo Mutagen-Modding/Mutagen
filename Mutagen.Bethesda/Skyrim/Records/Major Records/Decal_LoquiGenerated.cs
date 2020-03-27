@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class DecalMixIn
+    public static partial class DecalMixIn
     {
         public static void Clear(this IDecal item)
         {

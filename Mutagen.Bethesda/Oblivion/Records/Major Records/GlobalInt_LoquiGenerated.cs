@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class GlobalIntMixIn
+    public static partial class GlobalIntMixIn
     {
         public static void Clear(this IGlobalIntInternal item)
         {

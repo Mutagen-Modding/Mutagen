@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ASpellMixIn
+    public static partial class ASpellMixIn
     {
         public static void Clear(this IASpellInternal item)
         {

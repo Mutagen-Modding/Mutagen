@@ -724,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class HairMixIn
+    public static partial class HairMixIn
     {
         public static void Clear(this IHairInternal item)
         {

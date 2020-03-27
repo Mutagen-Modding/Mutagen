@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ImpactDataSetMixIn
+    public static partial class ImpactDataSetMixIn
     {
         public static void Clear(this IImpactDataSetInternal item)
         {

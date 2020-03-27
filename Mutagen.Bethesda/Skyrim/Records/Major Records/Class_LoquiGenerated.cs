@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ClassMixIn
+    public static partial class ClassMixIn
     {
         public static void Clear(this IClassInternal item)
         {

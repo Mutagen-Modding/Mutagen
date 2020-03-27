@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class SkillBoostMixIn
+    public static partial class SkillBoostMixIn
     {
         public static void Clear(this ISkillBoost item)
         {

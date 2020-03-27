@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class SkillRecordMixIn
+    public static partial class SkillRecordMixIn
     {
         public static void Clear(this ISkillRecordInternal item)
         {

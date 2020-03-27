@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class PartMixIn
+    public static partial class PartMixIn
     {
         public static void Clear(this IPart item)
         {

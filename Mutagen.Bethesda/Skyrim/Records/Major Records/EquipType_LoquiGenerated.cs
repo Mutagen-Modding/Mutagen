@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class EquipTypeMixIn
+    public static partial class EquipTypeMixIn
     {
         public static void Clear(this IEquipTypeInternal item)
         {

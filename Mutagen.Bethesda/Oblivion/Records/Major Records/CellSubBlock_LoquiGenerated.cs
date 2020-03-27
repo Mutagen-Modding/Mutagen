@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class CellSubBlockMixIn
+    public static partial class CellSubBlockMixIn
     {
         public static void Clear(this ICellSubBlock item)
         {

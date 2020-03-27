@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class MagicEffectSubDataMixIn
+    public static partial class MagicEffectSubDataMixIn
     {
         public static void Clear(this IMagicEffectSubData item)
         {

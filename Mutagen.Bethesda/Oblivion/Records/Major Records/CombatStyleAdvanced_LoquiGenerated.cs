@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class CombatStyleAdvancedMixIn
+    public static partial class CombatStyleAdvancedMixIn
     {
         public static void Clear(this ICombatStyleAdvanced item)
         {

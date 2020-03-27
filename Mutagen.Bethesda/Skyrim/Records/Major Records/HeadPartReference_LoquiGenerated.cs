@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class HeadPartReferenceMixIn
+    public static partial class HeadPartReferenceMixIn
     {
         public static void Clear(this IHeadPartReference item)
         {

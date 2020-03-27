@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ANpcMixIn
+    public static partial class ANpcMixIn
     {
         public static void Clear(this IANpcInternal item)
         {

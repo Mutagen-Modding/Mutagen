@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class FloraMixIn
+    public static partial class FloraMixIn
     {
         public static void Clear(this IFloraInternal item)
         {

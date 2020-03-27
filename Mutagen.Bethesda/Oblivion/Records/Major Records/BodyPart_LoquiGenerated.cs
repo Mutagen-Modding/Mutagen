@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class BodyPartMixIn
+    public static partial class BodyPartMixIn
     {
         public static void Clear(this IBodyPart item)
         {

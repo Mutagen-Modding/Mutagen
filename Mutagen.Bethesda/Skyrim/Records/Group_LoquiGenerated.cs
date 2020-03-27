@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class GroupMixIn
+    public static partial class GroupMixIn
     {
         public static void Clear<T>(this IGroup<T> item)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem

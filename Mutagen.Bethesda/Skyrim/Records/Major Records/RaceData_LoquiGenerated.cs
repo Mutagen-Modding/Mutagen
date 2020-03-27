@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class RaceDataMixIn
+    public static partial class RaceDataMixIn
     {
         public static void Clear(this IRaceData item)
         {

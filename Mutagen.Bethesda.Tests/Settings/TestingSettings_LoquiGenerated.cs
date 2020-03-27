@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Common MixIn
-    public static class TestingSettingsMixIn
+    public static partial class TestingSettingsMixIn
     {
         public static void Clear(this ITestingSettings item)
         {

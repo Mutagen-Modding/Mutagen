@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda
     #endregion
 
     #region Common MixIn
-    public static class MajorRecordMixIn
+    public static partial class MajorRecordMixIn
     {
         public static void Clear(this IMajorRecordInternal item)
         {

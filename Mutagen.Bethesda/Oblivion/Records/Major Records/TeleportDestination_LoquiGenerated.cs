@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class TeleportDestinationMixIn
+    public static partial class TeleportDestinationMixIn
     {
         public static void Clear(this ITeleportDestination item)
         {

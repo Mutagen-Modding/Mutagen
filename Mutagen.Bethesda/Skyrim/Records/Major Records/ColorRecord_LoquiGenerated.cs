@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ColorRecordMixIn
+    public static partial class ColorRecordMixIn
     {
         public static void Clear(this IColorRecordInternal item)
         {

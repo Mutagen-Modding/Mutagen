@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class KeywordMixIn
+    public static partial class KeywordMixIn
     {
         public static void Clear(this IKeywordInternal item)
         {

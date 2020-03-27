@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ClothingMixIn
+    public static partial class ClothingMixIn
     {
         public static void Clear(this IClothingInternal item)
         {

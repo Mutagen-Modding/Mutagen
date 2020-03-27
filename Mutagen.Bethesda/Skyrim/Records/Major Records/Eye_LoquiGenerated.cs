@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class EyeMixIn
+    public static partial class EyeMixIn
     {
         public static void Clear(this IEyeInternal item)
         {

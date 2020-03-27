@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class GenderedFormLinksMixIn
+    public static partial class GenderedFormLinksMixIn
     {
         public static void Clear<T>(this IGenderedFormLinks<T> item)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem

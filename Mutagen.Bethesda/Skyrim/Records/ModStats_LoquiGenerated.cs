@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class ModStatsMixIn
+    public static partial class ModStatsMixIn
     {
         public static void Clear(this IModStats item)
         {

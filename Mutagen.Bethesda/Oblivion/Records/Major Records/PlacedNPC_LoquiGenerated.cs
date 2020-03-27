@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class PlacedNpcMixIn
+    public static partial class PlacedNpcMixIn
     {
         public static void Clear(this IPlacedNpcInternal item)
         {

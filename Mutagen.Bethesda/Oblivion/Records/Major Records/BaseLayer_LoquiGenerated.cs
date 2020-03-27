@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class BaseLayerMixIn
+    public static partial class BaseLayerMixIn
     {
         public static void Clear(this IBaseLayerInternal item)
         {

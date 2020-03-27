@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class LandscapeMixIn
+    public static partial class LandscapeMixIn
     {
         public static void Clear(this ILandscapeInternal item)
         {

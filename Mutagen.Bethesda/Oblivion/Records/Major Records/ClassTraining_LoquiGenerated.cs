@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ClassTrainingMixIn
+    public static partial class ClassTrainingMixIn
     {
         public static void Clear(this IClassTraining item)
         {

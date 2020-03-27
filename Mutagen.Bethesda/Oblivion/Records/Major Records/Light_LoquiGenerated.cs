@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class LightMixIn
+    public static partial class LightMixIn
     {
         public static void Clear(this ILightInternal item)
         {

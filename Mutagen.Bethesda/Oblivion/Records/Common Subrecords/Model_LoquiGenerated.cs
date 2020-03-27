@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ModelMixIn
+    public static partial class ModelMixIn
     {
         public static void Clear(this IModel item)
         {

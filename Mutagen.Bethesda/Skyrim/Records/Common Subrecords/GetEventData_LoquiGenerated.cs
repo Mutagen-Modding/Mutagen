@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class GetEventDataMixIn
+    public static partial class GetEventDataMixIn
     {
         public static void Clear(this IGetEventData item)
         {

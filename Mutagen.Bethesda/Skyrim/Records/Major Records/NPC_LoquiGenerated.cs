@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class NpcMixIn
+    public static partial class NpcMixIn
     {
         public static void Clear(this INpcInternal item)
         {

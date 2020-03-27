@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class CellMixIn
+    public static partial class CellMixIn
     {
         public static void Clear(this ICellInternal item)
         {

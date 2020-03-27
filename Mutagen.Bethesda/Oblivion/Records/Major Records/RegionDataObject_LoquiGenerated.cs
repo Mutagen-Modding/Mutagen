@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class RegionDataObjectMixIn
+    public static partial class RegionDataObjectMixIn
     {
         public static void Clear(this IRegionDataObject item)
         {

@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class SimpleModelMixIn
+    public static partial class SimpleModelMixIn
     {
         public static void Clear(this ISimpleModel item)
         {

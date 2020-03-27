@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class KeyMixIn
+    public static partial class KeyMixIn
     {
         public static void Clear(this IKeyInternal item)
         {

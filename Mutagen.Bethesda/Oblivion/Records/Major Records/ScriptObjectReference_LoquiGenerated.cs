@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class ScriptObjectReferenceMixIn
+    public static partial class ScriptObjectReferenceMixIn
     {
         public static void Clear(this IScriptObjectReference item)
         {

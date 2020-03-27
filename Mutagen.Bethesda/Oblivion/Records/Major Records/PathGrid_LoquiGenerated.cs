@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class PathGridMixIn
+    public static partial class PathGridMixIn
     {
         public static void Clear(this IPathGridInternal item)
         {

@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class WeaponMixIn
+    public static partial class WeaponMixIn
     {
         public static void Clear(this IWeaponInternal item)
         {

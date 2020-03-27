@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class PhonemeTargetMixIn
+    public static partial class PhonemeTargetMixIn
     {
         public static void Clear(this IPhonemeTarget item)
         {

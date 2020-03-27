@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class QuestTargetMixIn
+    public static partial class QuestTargetMixIn
     {
         public static void Clear(this IQuestTarget item)
         {

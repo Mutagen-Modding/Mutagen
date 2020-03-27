@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class StaticMixIn
+    public static partial class StaticMixIn
     {
         public static void Clear(this IStaticInternal item)
         {

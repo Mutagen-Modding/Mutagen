@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class OblivionMajorRecordMixIn
+    public static partial class OblivionMajorRecordMixIn
     {
         public static void Clear(this IOblivionMajorRecordInternal item)
         {

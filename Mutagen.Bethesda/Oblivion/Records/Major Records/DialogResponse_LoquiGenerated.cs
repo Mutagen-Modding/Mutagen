@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class DialogResponseMixIn
+    public static partial class DialogResponseMixIn
     {
         public static void Clear(this IDialogResponse item)
         {

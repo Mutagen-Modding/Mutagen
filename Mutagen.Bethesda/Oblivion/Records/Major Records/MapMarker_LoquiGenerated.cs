@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class MapMarkerMixIn
+    public static partial class MapMarkerMixIn
     {
         public static void Clear(this IMapMarker item)
         {

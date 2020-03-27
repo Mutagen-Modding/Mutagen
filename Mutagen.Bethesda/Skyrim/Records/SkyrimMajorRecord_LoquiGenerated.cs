@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class SkyrimMajorRecordMixIn
+    public static partial class SkyrimMajorRecordMixIn
     {
         public static void Clear(this ISkyrimMajorRecordInternal item)
         {

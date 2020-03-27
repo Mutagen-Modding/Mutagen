@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class MovementTypeMixIn
+    public static partial class MovementTypeMixIn
     {
         public static void Clear(this IMovementTypeInternal item)
         {

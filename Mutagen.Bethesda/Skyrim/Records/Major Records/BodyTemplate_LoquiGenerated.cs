@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class BodyTemplateMixIn
+    public static partial class BodyTemplateMixIn
     {
         public static void Clear(this IBodyTemplate item)
         {

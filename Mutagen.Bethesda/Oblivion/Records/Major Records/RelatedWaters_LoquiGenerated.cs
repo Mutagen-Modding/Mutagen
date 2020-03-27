@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class RelatedWatersMixIn
+    public static partial class RelatedWatersMixIn
     {
         public static void Clear(this IRelatedWaters item)
         {

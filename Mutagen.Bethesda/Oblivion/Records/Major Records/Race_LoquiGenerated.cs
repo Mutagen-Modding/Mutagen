@@ -2162,7 +2162,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class RaceMixIn
+    public static partial class RaceMixIn
     {
         public static void Clear(this IRaceInternal item)
         {

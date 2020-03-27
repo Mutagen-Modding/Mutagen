@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static class VendorValuesMixIn
+    public static partial class VendorValuesMixIn
     {
         public static void Clear(this IVendorValues item)
         {

@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static class LandTextureMixIn
+    public static partial class LandTextureMixIn
     {
         public static void Clear(this ILandTextureInternal item)
         {

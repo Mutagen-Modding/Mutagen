@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Common MixIn
-    public static class TargetGroupMixIn
+    public static partial class TargetGroupMixIn
     {
         public static void Clear(this ITargetGroup item)
         {
