@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    /// <summary>
+    /// An enum for the slots in a biped body in Oblivion
+    /// </summary>
     [Flags]
     public enum BipedFlag
     {

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    /// <summary>
+    /// An enum for the various stats and skills in Oblivion
+    /// </summary>
     public enum ActorValue
     {
         Strength = 0,

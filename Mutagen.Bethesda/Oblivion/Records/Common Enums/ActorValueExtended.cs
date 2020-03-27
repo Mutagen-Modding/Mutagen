@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    /// <summary>
+    /// An enum for the various stats and skills in Oblivion, along with some additional stats that are
+    /// only applicable in certain contexts.
+    /// </summary>
     public enum ActorValueExtended
     {
         Strength = 0,

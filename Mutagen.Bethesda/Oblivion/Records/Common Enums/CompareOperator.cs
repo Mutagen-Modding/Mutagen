@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    /// <summary>
+    /// Different types of numeric comparison styles allowed in Oblivion
+    /// </summary>
     public enum CompareOperator
     {
         EqualTo = 0,

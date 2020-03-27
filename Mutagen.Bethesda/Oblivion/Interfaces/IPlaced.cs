@@ -7,10 +7,16 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    /// <summary>
+    /// An interface for something that can be placed in a Cell/Worldspace
+    /// </summary>
     public interface IPlaced : IMajorRecordInternal, IPlacedGetter
     {
     }
 
+    /// <summary>
+    /// A getter interface for something that can be placed in a Cell/Worldspace
+    /// </summary>
     public interface IPlacedGetter : IMajorRecordGetter, ILoquiObjectGetter
     {
     }
