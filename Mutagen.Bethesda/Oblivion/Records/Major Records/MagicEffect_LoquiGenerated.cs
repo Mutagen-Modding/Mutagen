@@ -2146,6 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CounterEffects = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<MagicEffect>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: RecordTypeBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IEDIDLink<MagicEffect>>();
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);

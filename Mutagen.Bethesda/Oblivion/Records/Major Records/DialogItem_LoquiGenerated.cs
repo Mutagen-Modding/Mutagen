@@ -2167,6 +2167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.NAME_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
@@ -2177,11 +2178,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TRDT_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out DialogResponse listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<DialogResponse>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
@@ -2193,11 +2196,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
@@ -2208,6 +2213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TCLT_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
@@ -2218,6 +2224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogItem_Registration.TCLF_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<DialogTopic>>();
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);

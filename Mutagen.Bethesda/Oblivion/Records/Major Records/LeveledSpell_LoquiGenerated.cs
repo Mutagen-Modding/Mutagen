@@ -1380,11 +1380,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ASpell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LeveledSpell_Registration.LVLO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out LeveledEntry<ASpell> listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LeveledEntry<ASpell>>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<LeveledEntry<ASpell>>();
                     return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Entries);

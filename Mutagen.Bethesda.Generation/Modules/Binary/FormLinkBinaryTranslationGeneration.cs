@@ -52,7 +52,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor converterAccessor)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             FormLinkType linkType = typeGen as FormLinkType;

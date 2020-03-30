@@ -1375,11 +1375,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Conditions);

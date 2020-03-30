@@ -1993,11 +1993,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ModHeader_Registration.MAST_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out MasterReference listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<MasterReference>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             }));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
@@ -2007,6 +2009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OverriddenForms = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);

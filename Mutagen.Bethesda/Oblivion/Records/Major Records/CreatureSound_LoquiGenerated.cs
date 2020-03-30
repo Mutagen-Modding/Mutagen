@@ -1276,11 +1276,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out SoundItem listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<SoundItem>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<SoundItem>();
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);

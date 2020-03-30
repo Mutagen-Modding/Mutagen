@@ -1587,11 +1587,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.InterCellConnections = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out InterCellPoint listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<InterCellPoint>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<InterCellPoint>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
@@ -1602,11 +1604,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: PathGrid_Registration.PGRL_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<PointToReferenceMapping>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);

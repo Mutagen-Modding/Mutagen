@@ -1710,11 +1710,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ModHeader_Registration.MAST_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out MasterReference listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<MasterReference>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             }));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }

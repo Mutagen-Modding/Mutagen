@@ -1043,9 +1043,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 frame: frame,
                                 triggeringRecord: ListGroup<T>.T_RecordType,
                                 thread: true,
+                                recordTypeConverter: recordTypeConverter,
                                 transl: async (MutagenFrame r, RecordTypeConverter? conv) =>
                                 {
-                                    return await LoquiBinaryAsyncTranslation<T>.Instance.Parse(frame: r).ConfigureAwait(false);
+                                    return await LoquiBinaryAsyncTranslation<T>.Instance.Parse(
+                                        frame: r,
+                                        recordTypeConverter: conv).ConfigureAwait(false);
                                 }).ConfigureAwait(false)));
                         return TryGet<int?>.Failure;
                     }

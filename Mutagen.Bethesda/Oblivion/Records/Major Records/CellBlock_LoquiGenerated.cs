@@ -1409,9 +1409,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: CellBlock_Registration.GRUP_HEADER,
                             thread: true,
+                            recordTypeConverter: recordTypeConverter,
                             transl: async (MutagenFrame r, RecordTypeConverter? conv) =>
                             {
-                                return await LoquiBinaryAsyncTranslation<CellSubBlock>.Instance.Parse(frame: r).ConfigureAwait(false);
+                                return await LoquiBinaryAsyncTranslation<CellSubBlock>.Instance.Parse(
+                                    frame: r,
+                                    recordTypeConverter: conv).ConfigureAwait(false);
                             }).ConfigureAwait(false))
                         .ToExtendedList<CellSubBlock>();
                     return TryGet<int?>.Succeed((int)CellBlock_FieldIndex.SubBlocks);

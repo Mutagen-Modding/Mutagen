@@ -1632,6 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, RecordTypeConverter? conv) =>
                             {
                                 switch (header.TypeInt)
@@ -1639,11 +1640,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     case 0x54585442: // BTXT
                                         return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
                                             frame: r,
-                                            item: out listSubItem!);
+                                            item: out listSubItem!,
+                                            recordTypeConverter: conv);
                                     case 0x54585441: // ATXT
                                         return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
                                             frame: r,
-                                            item: out listSubItem!);
+                                            item: out listSubItem!,
+                                            recordTypeConverter: conv);
                                     default:
                                         throw new NotImplementedException();
                                 }
@@ -1657,6 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Textures = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandTexture>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<LandTexture>>();
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);

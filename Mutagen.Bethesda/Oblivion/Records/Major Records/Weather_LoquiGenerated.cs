@@ -3483,11 +3483,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.WeatherTypes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out WeatherType listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<WeatherType>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
@@ -3559,11 +3561,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Weather_Registration.SNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out WeatherSound listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<WeatherSound>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<WeatherSound>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);

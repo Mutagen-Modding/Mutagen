@@ -146,7 +146,27 @@ namespace Mutagen.Bethesda.Binary
                 item = tItem;
                 return true;
             }
-            item = default(B);
+            item = default;
+            return false;
+        }
+
+        [DebuggerStepThrough]
+        public static bool Parse<T, B>(
+            this LoquiBinaryTranslation<T> loquiTrans,
+            MutagenFrame frame,
+            [MaybeNullWhen(false)] out B item,
+            RecordTypeConverter? recordTypeConverter = null)
+            where T : class, ILoquiObjectGetter, B
+        {
+            if (loquiTrans.Parse(
+                frame: frame,
+                item: out T tItem,
+                recordTypeConverter: recordTypeConverter))
+            {
+                item = tItem;
+                return true;
+            }
+            item = default;
             return false;
         }
     }

@@ -1177,11 +1177,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
                             amount: frame.ReadInt32(),
                             frame: frame,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out AlternateTexture listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<AlternateTexture>();
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);

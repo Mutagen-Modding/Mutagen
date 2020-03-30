@@ -1752,11 +1752,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out RegionArea listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<RegionArea>();
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);

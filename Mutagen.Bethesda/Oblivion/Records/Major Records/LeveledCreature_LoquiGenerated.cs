@@ -1482,11 +1482,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NpcSpawn>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out LeveledEntry<NpcSpawn> listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LeveledEntry<NpcSpawn>>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<LeveledEntry<NpcSpawn>>();
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);

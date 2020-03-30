@@ -1456,9 +1456,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<Cell>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: WorldspaceSubBlock_Registration.CELL_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: async (MutagenFrame r, RecordTypeConverter? conv) =>
                             {
-                                return await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(frame: r).ConfigureAwait(false);
+                                return await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
+                                    frame: r,
+                                    recordTypeConverter: conv).ConfigureAwait(false);
                             }).ConfigureAwait(false))
                         .ToExtendedList<Cell>();
                     return TryGet<int?>.Succeed((int)WorldspaceSubBlock_FieldIndex.Items);

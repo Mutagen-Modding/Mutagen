@@ -1713,11 +1713,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Container_Registration.CNTO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out ContainerItem listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<ContainerItem>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<ContainerItem>();
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Items);

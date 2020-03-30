@@ -1439,6 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Birthsign_Registration.SPLO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Spell>>();
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Spells);

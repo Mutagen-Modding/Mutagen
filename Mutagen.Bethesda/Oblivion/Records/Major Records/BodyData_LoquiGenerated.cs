@@ -1276,11 +1276,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out BodyPart listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<BodyPart>();
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);

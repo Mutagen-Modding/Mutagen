@@ -2040,11 +2040,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out HeadPartReference listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<HeadPartReference>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<HeadPartReference>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.HeadParts);
@@ -2062,6 +2064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.RPRM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Npc>>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
@@ -2073,6 +2076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ColorRecord>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.ACHM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<ColorRecord>>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableHairColors);
@@ -2084,6 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<TextureSet>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.FTSM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<TextureSet>>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.FaceDetails);
@@ -2110,11 +2115,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<TintAssets>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: TintAssets_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out TintAssets listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<TintAssets>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<TintAssets>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.TintMasks);

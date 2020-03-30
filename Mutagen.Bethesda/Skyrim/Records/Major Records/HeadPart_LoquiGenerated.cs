@@ -1747,6 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadPart_Registration.HNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<HeadPart>>();
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
@@ -1758,11 +1759,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Part>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Part_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Part listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Part>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<Part>();
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);

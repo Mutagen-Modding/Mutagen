@@ -1874,11 +1874,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Weathers = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out WeatherChance listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<WeatherChance>();
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);

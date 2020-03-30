@@ -2807,11 +2807,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Faction_Registration.XNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Relation listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Relation>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<Relation>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
@@ -2908,11 +2910,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Rank listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Rank>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<Rank>();
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);

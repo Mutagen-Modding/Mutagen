@@ -4212,6 +4212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             amount: amount,
                             triggeringRecord: Race_Registration.SPLO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<ASpell>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.ActorEffect);
@@ -4237,6 +4238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             amount: amount,
                             triggeringRecord: Race_Registration.KWDA_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Keywords);
@@ -4324,11 +4326,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Attack>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Attack listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Attack>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<Attack>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Attacks);
@@ -4349,6 +4353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Hairs = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Hair>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
@@ -4359,6 +4364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Eyes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Eye>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
@@ -4435,11 +4441,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceMovementType>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out RaceMovementType listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RaceMovementType>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<RaceMovementType>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypes);
@@ -4456,6 +4464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.QNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<EquipType>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentSlots);

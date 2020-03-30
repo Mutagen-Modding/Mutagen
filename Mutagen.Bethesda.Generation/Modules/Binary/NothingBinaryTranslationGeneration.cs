@@ -13,7 +13,14 @@ namespace Mutagen.Bethesda.Generation
             return 0;
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor readerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
+        public override void GenerateCopyIn(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen,
+            Accessor readerAccessor, 
+            Accessor itemAccessor, 
+            Accessor errorMaskAccessor,
+            Accessor translationAccessor)
         {
         }
 
@@ -27,7 +34,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor, 
             Accessor outItemAccessor, 
             Accessor errorMaskAccessor, 
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor converterAccessor)
         {
         }
 

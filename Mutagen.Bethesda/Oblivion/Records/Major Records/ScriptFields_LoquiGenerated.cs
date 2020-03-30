@@ -1574,11 +1574,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ScriptFields_Registration.SLSD_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out LocalVariable listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<LocalVariable>();
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
@@ -1590,6 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, RecordTypeConverter? conv) =>
                             {
                                 switch (header.TypeInt)
@@ -1597,11 +1600,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     case 0x56524353: // SCRV
                                         return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
                                             frame: r,
-                                            item: out listSubItem!);
+                                            item: out listSubItem!,
+                                            recordTypeConverter: conv);
                                     case 0x4F524353: // SCRO
                                         return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
                                             frame: r,
-                                            item: out listSubItem!);
+                                            item: out listSubItem!,
+                                            recordTypeConverter: conv);
                                     default:
                                         throw new NotImplementedException();
                                 }

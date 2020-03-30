@@ -4567,11 +4567,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Creature_Registration.CNTO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out ItemEntry listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<ItemEntry>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
@@ -4582,6 +4584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Creature_Registration.SPLO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<ASpell>>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
@@ -4631,11 +4634,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Creature_Registration.SNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out RankPlacement listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<RankPlacement>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
@@ -4680,6 +4685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Creature_Registration.PKID_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<AIPackage>>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
@@ -4789,11 +4795,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out CreatureSound listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<CreatureSound>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<CreatureSound>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);

@@ -1509,11 +1509,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Condition>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<Condition>();
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
@@ -1530,6 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.RelatedIdleAnimations = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<IdleAnimation>>();
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);

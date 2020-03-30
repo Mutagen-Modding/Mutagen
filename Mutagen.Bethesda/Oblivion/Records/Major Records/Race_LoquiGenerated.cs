@@ -3136,6 +3136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.SPLO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Spell>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
@@ -3146,11 +3147,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.XNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out RaceRelation listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<RaceRelation>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
@@ -3229,11 +3232,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out FacePart listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<FacePart>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<FacePart>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
@@ -3254,6 +3259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Hairs = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Hair>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
@@ -3264,6 +3270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Eyes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Eye>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);

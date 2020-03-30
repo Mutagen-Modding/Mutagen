@@ -1752,11 +1752,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Potion_Registration.EFID_HEADER,
+                            recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Effect listSubItem, RecordTypeConverter? conv) =>
                             {
                                 return LoquiBinaryTranslation<Effect>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem!);
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
                             })
                         .ToExtendedList<Effect>();
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Effects);

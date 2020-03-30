@@ -320,6 +320,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"thread: true");
                     }
+                    if (needsMasters)
+                    {
+                        args.AddPassArg($"recordTypeConverter");
+                    }
                     var subGenTypes = subData.GenerationTypes.ToList();
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
                     if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
@@ -356,7 +360,8 @@ namespace Mutagen.Bethesda.Generation
                                         retAccessor: "return ",
                                         outItemAccessor: new Accessor("listSubItem"),
                                         asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
-                                        errorMaskAccessor: "listErrMask");
+                                        errorMaskAccessor: "listErrMask",
+                                        converterAccessor: "conv");
                                 }
                                 else
                                 {
@@ -383,7 +388,8 @@ namespace Mutagen.Bethesda.Generation
                                                     retAccessor: "return ",
                                                     outItemAccessor: new Accessor("listSubItem"),
                                                     asyncMode: AsyncMode.Async,
-                                                    errorMaskAccessor: $"listErrMask");
+                                                    errorMaskAccessor: $"listErrMask",
+                                                    converterAccessor: "conv");
                                             }
                                         }
                                         gen.AppendLine("default:");
@@ -410,7 +416,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor converterAccessor)
         {
             throw new NotImplementedException();
         }
