@@ -15,7 +15,9 @@
     <Fields>
       <Int32 name="RankNumber" recordType="RNAM" />
       <Gendered name="Name" maleMarker="MNAM" femaleMarker="FNAM" >
-        <String />
+        <Fields>
+          <String />
+        </Fields>
       </Gendered>
       <String name="Insignia" recordType="INAM" />
     </Fields>

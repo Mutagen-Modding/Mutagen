@@ -438,7 +438,7 @@
     <xs:complexContent>
       <xs:extension base="Field" >
         <xs:sequence>
-          <xs:group ref="FieldOptions" minOccurs="1" maxOccurs="1" />
+          <xs:element name="Fields" type="SingleFieldOption" minOccurs="0" maxOccurs="1" />
         </xs:sequence>
         <xs:attribute name="maleMarker" type="xs:string" />
         <xs:attribute name="femaleMarker" type="xs:string" />

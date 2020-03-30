@@ -15,18 +15,22 @@
       </List>
       <RefDirect name="Data" refName="RaceData" />
       <Gendered name="SkeletalModel" maleMarker="MNAM" femaleMarker="FNAM">
-        <RefDirect refName="SimpleModel" recordType="ANAM" >
-          <RecordTypeOverrides>
-            <Mapping From="MODL" To="ANAM" />
-          </RecordTypeOverrides>
-        </RefDirect>
+        <Fields>
+          <RefDirect refName="SimpleModel" recordType="ANAM" >
+            <RecordTypeOverrides>
+              <Mapping From="MODL" To="ANAM" />
+            </RecordTypeOverrides>
+          </RefDirect>
+        </Fields>
       </Gendered>
       <Nothing name="NAM2Marker" recordType="NAM2" />
       <List name="MovementTypeNames">
         <String recordType="MTNM" binaryType="Plain" />
       </List>
       <Gendered name="Voices" recordType="VTCK">
-        <FormLink refName="VoiceType" />
+        <Fields>
+          <FormLink refName="VoiceType" />
+        </Fields>
       </Gendered>
       <Ref name="DecapitateArmors" recordType="DNAM">
         <Direct refName="GenderedFormLinks">
@@ -44,7 +48,9 @@
       <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
       <RefList name="Attacks" refName="Attack" />
       <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM">
-        <RefDirect refName="BodyData" />
+        <Fields>
+          <RefDirect refName="BodyData" />
+        </Fields>
       </Gendered>
       <List name="Hairs" recordType="HNAM">
         <FormLink refName="Hair" />
@@ -55,7 +61,9 @@
       <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
       <CustomLogic name="ExtraNAM2" />
       <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM">
-        <RefDirect refName="Model" />
+        <Fields>
+          <RefDirect refName="Model" />
+        </Fields>
       </Gendered>
       <FormLink name="MaterialType" recordType="NAM4" refName="MaterialType" />
       <FormLink name="ImpactDataSet" recordType="NAM5" refName="ImpactDataSet" />
@@ -87,7 +95,9 @@
       <FormLink name="BaseMovementDefaultSneak" refName="MovementType" recordType="SNMV" />
       <FormLink name="BaseMovementDefaultSprint" refName="MovementType" recordType="SPMV" />
       <Gendered name="HeadData" markerType="NAM0" maleMarker="MNAM" femaleMarker="FNAM">
-        <RefDirect refName="HeadData" />
+        <Fields>
+          <RefDirect refName="HeadData" />
+        </Fields>
       </Gendered>
     </Fields>
   </Object>
@@ -109,10 +119,14 @@
       <RefDirect name="SkillBoost6" refName="SkillBoost" />
       <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
       <Gendered name="Height" >
-        <Float />
+        <Fields>
+          <Float />
+        </Fields>
       </Gendered>
       <Gendered name="Weight" >
-        <Float />
+        <Fields>
+          <Float />
+        </Fields>
       </Gendered>
       <Enum name="Flags" enumName="Race.Flag" byteLength="4" />
       <Float name="StartingHealth" />

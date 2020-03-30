@@ -20,29 +20,41 @@
           <RefDirect name="SkillBoost6" refName="SkillBoost" />
           <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
           <Gendered name="Height" >
-            <Float />
+            <Fields>
+              <Float />
+            </Fields>
           </Gendered>
           <Gendered name="Weight" >
-            <Float />
+            <Fields>
+              <Float />
+            </Fields>
           </Gendered>
           <Enum name="Flags" enumName="Race.Flag" byteLength="2" />
         </Fields>
       </Data>
       <Gendered name="Voices" recordType="VNAM">
-        <FormLink refName="Race" />
+        <Fields>
+          <FormLink refName="Race" />
+        </Fields>
       </Gendered>
       <Gendered name="DefaultHair" recordType="DNAM">
-        <FormLink refName="Hair" />
+        <Fields>
+          <FormLink refName="Hair" />
+        </Fields>
       </Gendered>
       <UInt8 name="DefaultHairColor" recordType="CNAM" />
       <Int32 name="FaceGenMainClamp" recordType="PNAM" hasBeenSet="True" />
       <Int32 name="FaceGenFaceClamp" recordType="UNAM" hasBeenSet="True" />
       <Gendered name="RaceStats" recordType="ATTR" >
-        <RefDirect refName="RaceStats" />
+        <Fields>
+          <RefDirect refName="RaceStats" />
+        </Fields>
       </Gendered>
       <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
       <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM">
-        <RefDirect refName="BodyData" />
+        <Fields>
+          <RefDirect refName="BodyData" />
+        </Fields>
       </Gendered>
       <List name="Hairs" recordType="HNAM">
         <FormLink refName="Hair" />
