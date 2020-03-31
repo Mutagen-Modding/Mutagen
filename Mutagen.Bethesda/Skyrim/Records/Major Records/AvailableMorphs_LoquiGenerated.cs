@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Skyrim;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -45,61 +46,49 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region NoseIndex
-        public Int32 NoseIndex { get; set; } = default;
-        #endregion
-        #region NoseData
+        #region Nose
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _NoseData = new byte[32];
-        public Byte[] NoseData
+        private Morph? _Nose;
+        public Morph? Nose
         {
-            get => _NoseData;
-            set => this._NoseData = value ?? new byte[32];
+            get => _Nose;
+            set => _Nose = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IAvailableMorphsGetter.NoseData => this.NoseData;
+        IMorphGetter? IAvailableMorphsGetter.Nose => this.Nose;
         #endregion
-        #region BrowIndex
-        public Int32 BrowIndex { get; set; } = default;
-        #endregion
-        #region BrowData
+        #region Brow
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _BrowData = new byte[32];
-        public Byte[] BrowData
+        private Morph? _Brow;
+        public Morph? Brow
         {
-            get => _BrowData;
-            set => this._BrowData = value ?? new byte[32];
+            get => _Brow;
+            set => _Brow = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IAvailableMorphsGetter.BrowData => this.BrowData;
+        IMorphGetter? IAvailableMorphsGetter.Brow => this.Brow;
         #endregion
-        #region EyeIndex
-        public Int32 EyeIndex { get; set; } = default;
-        #endregion
-        #region EyeData
+        #region Eye
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _EyeData = new byte[32];
-        public Byte[] EyeData
+        private Morph? _Eye;
+        public Morph? Eye
         {
-            get => _EyeData;
-            set => this._EyeData = value ?? new byte[32];
+            get => _Eye;
+            set => _Eye = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IAvailableMorphsGetter.EyeData => this.EyeData;
+        IMorphGetter? IAvailableMorphsGetter.Eye => this.Eye;
         #endregion
-        #region LipIndex
-        public Int32 LipIndex { get; set; } = default;
-        #endregion
-        #region LipData
+        #region Lip
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _LipData = new byte[32];
-        public Byte[] LipData
+        private Morph? _Lip;
+        public Morph? Lip
         {
-            get => _LipData;
-            set => this._LipData = value ?? new byte[32];
+            get => _Lip;
+            set => _Lip = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IAvailableMorphsGetter.LipData => this.LipData;
+        IMorphGetter? IAvailableMorphsGetter.Lip => this.Lip;
         #endregion
 
         #region To String
@@ -271,34 +260,22 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.NoseIndex = initialValue;
-                this.NoseData = initialValue;
-                this.BrowIndex = initialValue;
-                this.BrowData = initialValue;
-                this.EyeIndex = initialValue;
-                this.EyeData = initialValue;
-                this.LipIndex = initialValue;
-                this.LipData = initialValue;
+                this.Nose = new MaskItem<TItem, Morph.Mask<TItem>?>(initialValue, new Morph.Mask<TItem>(initialValue));
+                this.Brow = new MaskItem<TItem, Morph.Mask<TItem>?>(initialValue, new Morph.Mask<TItem>(initialValue));
+                this.Eye = new MaskItem<TItem, Morph.Mask<TItem>?>(initialValue, new Morph.Mask<TItem>(initialValue));
+                this.Lip = new MaskItem<TItem, Morph.Mask<TItem>?>(initialValue, new Morph.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                TItem NoseIndex,
-                TItem NoseData,
-                TItem BrowIndex,
-                TItem BrowData,
-                TItem EyeIndex,
-                TItem EyeData,
-                TItem LipIndex,
-                TItem LipData)
+                TItem Nose,
+                TItem Brow,
+                TItem Eye,
+                TItem Lip)
             {
-                this.NoseIndex = NoseIndex;
-                this.NoseData = NoseData;
-                this.BrowIndex = BrowIndex;
-                this.BrowData = BrowData;
-                this.EyeIndex = EyeIndex;
-                this.EyeData = EyeData;
-                this.LipIndex = LipIndex;
-                this.LipData = LipData;
+                this.Nose = new MaskItem<TItem, Morph.Mask<TItem>?>(Nose, new Morph.Mask<TItem>(Nose));
+                this.Brow = new MaskItem<TItem, Morph.Mask<TItem>?>(Brow, new Morph.Mask<TItem>(Brow));
+                this.Eye = new MaskItem<TItem, Morph.Mask<TItem>?>(Eye, new Morph.Mask<TItem>(Eye));
+                this.Lip = new MaskItem<TItem, Morph.Mask<TItem>?>(Lip, new Morph.Mask<TItem>(Lip));
             }
 
             #pragma warning disable CS8618
@@ -310,14 +287,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem NoseIndex;
-            public TItem NoseData;
-            public TItem BrowIndex;
-            public TItem BrowData;
-            public TItem EyeIndex;
-            public TItem EyeData;
-            public TItem LipIndex;
-            public TItem LipData;
+            public MaskItem<TItem, Morph.Mask<TItem>?>? Nose { get; set; }
+            public MaskItem<TItem, Morph.Mask<TItem>?>? Brow { get; set; }
+            public MaskItem<TItem, Morph.Mask<TItem>?>? Eye { get; set; }
+            public MaskItem<TItem, Morph.Mask<TItem>?>? Lip { get; set; }
             #endregion
 
             #region Equals
@@ -330,27 +303,19 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.NoseIndex, rhs.NoseIndex)) return false;
-                if (!object.Equals(this.NoseData, rhs.NoseData)) return false;
-                if (!object.Equals(this.BrowIndex, rhs.BrowIndex)) return false;
-                if (!object.Equals(this.BrowData, rhs.BrowData)) return false;
-                if (!object.Equals(this.EyeIndex, rhs.EyeIndex)) return false;
-                if (!object.Equals(this.EyeData, rhs.EyeData)) return false;
-                if (!object.Equals(this.LipIndex, rhs.LipIndex)) return false;
-                if (!object.Equals(this.LipData, rhs.LipData)) return false;
+                if (!object.Equals(this.Nose, rhs.Nose)) return false;
+                if (!object.Equals(this.Brow, rhs.Brow)) return false;
+                if (!object.Equals(this.Eye, rhs.Eye)) return false;
+                if (!object.Equals(this.Lip, rhs.Lip)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 int ret = 0;
-                ret = ret.CombineHashCode(this.NoseIndex?.GetHashCode());
-                ret = ret.CombineHashCode(this.NoseData?.GetHashCode());
-                ret = ret.CombineHashCode(this.BrowIndex?.GetHashCode());
-                ret = ret.CombineHashCode(this.BrowData?.GetHashCode());
-                ret = ret.CombineHashCode(this.EyeIndex?.GetHashCode());
-                ret = ret.CombineHashCode(this.EyeData?.GetHashCode());
-                ret = ret.CombineHashCode(this.LipIndex?.GetHashCode());
-                ret = ret.CombineHashCode(this.LipData?.GetHashCode());
+                ret = ret.CombineHashCode(this.Nose?.GetHashCode());
+                ret = ret.CombineHashCode(this.Brow?.GetHashCode());
+                ret = ret.CombineHashCode(this.Eye?.GetHashCode());
+                ret = ret.CombineHashCode(this.Lip?.GetHashCode());
                 return ret;
             }
 
@@ -359,14 +324,26 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.NoseIndex)) return false;
-                if (!eval(this.NoseData)) return false;
-                if (!eval(this.BrowIndex)) return false;
-                if (!eval(this.BrowData)) return false;
-                if (!eval(this.EyeIndex)) return false;
-                if (!eval(this.EyeData)) return false;
-                if (!eval(this.LipIndex)) return false;
-                if (!eval(this.LipData)) return false;
+                if (Nose != null)
+                {
+                    if (!eval(this.Nose.Overall)) return false;
+                    if (this.Nose.Specific != null && !this.Nose.Specific.All(eval)) return false;
+                }
+                if (Brow != null)
+                {
+                    if (!eval(this.Brow.Overall)) return false;
+                    if (this.Brow.Specific != null && !this.Brow.Specific.All(eval)) return false;
+                }
+                if (Eye != null)
+                {
+                    if (!eval(this.Eye.Overall)) return false;
+                    if (this.Eye.Specific != null && !this.Eye.Specific.All(eval)) return false;
+                }
+                if (Lip != null)
+                {
+                    if (!eval(this.Lip.Overall)) return false;
+                    if (this.Lip.Specific != null && !this.Lip.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -374,14 +351,26 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.NoseIndex)) return true;
-                if (eval(this.NoseData)) return true;
-                if (eval(this.BrowIndex)) return true;
-                if (eval(this.BrowData)) return true;
-                if (eval(this.EyeIndex)) return true;
-                if (eval(this.EyeData)) return true;
-                if (eval(this.LipIndex)) return true;
-                if (eval(this.LipData)) return true;
+                if (Nose != null)
+                {
+                    if (eval(this.Nose.Overall)) return true;
+                    if (this.Nose.Specific != null && this.Nose.Specific.Any(eval)) return true;
+                }
+                if (Brow != null)
+                {
+                    if (eval(this.Brow.Overall)) return true;
+                    if (this.Brow.Specific != null && this.Brow.Specific.Any(eval)) return true;
+                }
+                if (Eye != null)
+                {
+                    if (eval(this.Eye.Overall)) return true;
+                    if (this.Eye.Specific != null && this.Eye.Specific.Any(eval)) return true;
+                }
+                if (Lip != null)
+                {
+                    if (eval(this.Lip.Overall)) return true;
+                    if (this.Lip.Specific != null && this.Lip.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -396,14 +385,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.NoseIndex = eval(this.NoseIndex);
-                obj.NoseData = eval(this.NoseData);
-                obj.BrowIndex = eval(this.BrowIndex);
-                obj.BrowData = eval(this.BrowData);
-                obj.EyeIndex = eval(this.EyeIndex);
-                obj.EyeData = eval(this.EyeData);
-                obj.LipIndex = eval(this.LipIndex);
-                obj.LipData = eval(this.LipData);
+                obj.Nose = this.Nose == null ? null : new MaskItem<R, Morph.Mask<R>?>(eval(this.Nose.Overall), this.Nose.Specific?.Translate(eval));
+                obj.Brow = this.Brow == null ? null : new MaskItem<R, Morph.Mask<R>?>(eval(this.Brow.Overall), this.Brow.Specific?.Translate(eval));
+                obj.Eye = this.Eye == null ? null : new MaskItem<R, Morph.Mask<R>?>(eval(this.Eye.Overall), this.Eye.Specific?.Translate(eval));
+                obj.Lip = this.Lip == null ? null : new MaskItem<R, Morph.Mask<R>?>(eval(this.Lip.Overall), this.Lip.Specific?.Translate(eval));
             }
             #endregion
 
@@ -426,37 +411,21 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.NoseIndex ?? true)
+                    if (printMask?.Nose?.Overall ?? true)
                     {
-                        fg.AppendItem(NoseIndex, "NoseIndex");
+                        Nose?.ToString(fg);
                     }
-                    if (printMask?.NoseData ?? true)
+                    if (printMask?.Brow?.Overall ?? true)
                     {
-                        fg.AppendItem(NoseData, "NoseData");
+                        Brow?.ToString(fg);
                     }
-                    if (printMask?.BrowIndex ?? true)
+                    if (printMask?.Eye?.Overall ?? true)
                     {
-                        fg.AppendItem(BrowIndex, "BrowIndex");
+                        Eye?.ToString(fg);
                     }
-                    if (printMask?.BrowData ?? true)
+                    if (printMask?.Lip?.Overall ?? true)
                     {
-                        fg.AppendItem(BrowData, "BrowData");
-                    }
-                    if (printMask?.EyeIndex ?? true)
-                    {
-                        fg.AppendItem(EyeIndex, "EyeIndex");
-                    }
-                    if (printMask?.EyeData ?? true)
-                    {
-                        fg.AppendItem(EyeData, "EyeData");
-                    }
-                    if (printMask?.LipIndex ?? true)
-                    {
-                        fg.AppendItem(LipIndex, "LipIndex");
-                    }
-                    if (printMask?.LipData ?? true)
-                    {
-                        fg.AppendItem(LipData, "LipData");
+                        Lip?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -483,14 +452,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? NoseIndex;
-            public Exception? NoseData;
-            public Exception? BrowIndex;
-            public Exception? BrowData;
-            public Exception? EyeIndex;
-            public Exception? EyeData;
-            public Exception? LipIndex;
-            public Exception? LipData;
+            public MaskItem<Exception?, Morph.ErrorMask?>? Nose;
+            public MaskItem<Exception?, Morph.ErrorMask?>? Brow;
+            public MaskItem<Exception?, Morph.ErrorMask?>? Eye;
+            public MaskItem<Exception?, Morph.ErrorMask?>? Lip;
             #endregion
 
             #region IErrorMask
@@ -499,22 +464,14 @@ namespace Mutagen.Bethesda.Skyrim
                 AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
                 switch (enu)
                 {
-                    case AvailableMorphs_FieldIndex.NoseIndex:
-                        return NoseIndex;
-                    case AvailableMorphs_FieldIndex.NoseData:
-                        return NoseData;
-                    case AvailableMorphs_FieldIndex.BrowIndex:
-                        return BrowIndex;
-                    case AvailableMorphs_FieldIndex.BrowData:
-                        return BrowData;
-                    case AvailableMorphs_FieldIndex.EyeIndex:
-                        return EyeIndex;
-                    case AvailableMorphs_FieldIndex.EyeData:
-                        return EyeData;
-                    case AvailableMorphs_FieldIndex.LipIndex:
-                        return LipIndex;
-                    case AvailableMorphs_FieldIndex.LipData:
-                        return LipData;
+                    case AvailableMorphs_FieldIndex.Nose:
+                        return Nose;
+                    case AvailableMorphs_FieldIndex.Brow:
+                        return Brow;
+                    case AvailableMorphs_FieldIndex.Eye:
+                        return Eye;
+                    case AvailableMorphs_FieldIndex.Lip:
+                        return Lip;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -525,29 +482,17 @@ namespace Mutagen.Bethesda.Skyrim
                 AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
                 switch (enu)
                 {
-                    case AvailableMorphs_FieldIndex.NoseIndex:
-                        this.NoseIndex = ex;
+                    case AvailableMorphs_FieldIndex.Nose:
+                        this.Nose = new MaskItem<Exception?, Morph.ErrorMask?>(ex, null);
                         break;
-                    case AvailableMorphs_FieldIndex.NoseData:
-                        this.NoseData = ex;
+                    case AvailableMorphs_FieldIndex.Brow:
+                        this.Brow = new MaskItem<Exception?, Morph.ErrorMask?>(ex, null);
                         break;
-                    case AvailableMorphs_FieldIndex.BrowIndex:
-                        this.BrowIndex = ex;
+                    case AvailableMorphs_FieldIndex.Eye:
+                        this.Eye = new MaskItem<Exception?, Morph.ErrorMask?>(ex, null);
                         break;
-                    case AvailableMorphs_FieldIndex.BrowData:
-                        this.BrowData = ex;
-                        break;
-                    case AvailableMorphs_FieldIndex.EyeIndex:
-                        this.EyeIndex = ex;
-                        break;
-                    case AvailableMorphs_FieldIndex.EyeData:
-                        this.EyeData = ex;
-                        break;
-                    case AvailableMorphs_FieldIndex.LipIndex:
-                        this.LipIndex = ex;
-                        break;
-                    case AvailableMorphs_FieldIndex.LipData:
-                        this.LipData = ex;
+                    case AvailableMorphs_FieldIndex.Lip:
+                        this.Lip = new MaskItem<Exception?, Morph.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -559,29 +504,17 @@ namespace Mutagen.Bethesda.Skyrim
                 AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
                 switch (enu)
                 {
-                    case AvailableMorphs_FieldIndex.NoseIndex:
-                        this.NoseIndex = (Exception?)obj;
+                    case AvailableMorphs_FieldIndex.Nose:
+                        this.Nose = (MaskItem<Exception?, Morph.ErrorMask?>?)obj;
                         break;
-                    case AvailableMorphs_FieldIndex.NoseData:
-                        this.NoseData = (Exception?)obj;
+                    case AvailableMorphs_FieldIndex.Brow:
+                        this.Brow = (MaskItem<Exception?, Morph.ErrorMask?>?)obj;
                         break;
-                    case AvailableMorphs_FieldIndex.BrowIndex:
-                        this.BrowIndex = (Exception?)obj;
+                    case AvailableMorphs_FieldIndex.Eye:
+                        this.Eye = (MaskItem<Exception?, Morph.ErrorMask?>?)obj;
                         break;
-                    case AvailableMorphs_FieldIndex.BrowData:
-                        this.BrowData = (Exception?)obj;
-                        break;
-                    case AvailableMorphs_FieldIndex.EyeIndex:
-                        this.EyeIndex = (Exception?)obj;
-                        break;
-                    case AvailableMorphs_FieldIndex.EyeData:
-                        this.EyeData = (Exception?)obj;
-                        break;
-                    case AvailableMorphs_FieldIndex.LipIndex:
-                        this.LipIndex = (Exception?)obj;
-                        break;
-                    case AvailableMorphs_FieldIndex.LipData:
-                        this.LipData = (Exception?)obj;
+                    case AvailableMorphs_FieldIndex.Lip:
+                        this.Lip = (MaskItem<Exception?, Morph.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -591,14 +524,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (NoseIndex != null) return true;
-                if (NoseData != null) return true;
-                if (BrowIndex != null) return true;
-                if (BrowData != null) return true;
-                if (EyeIndex != null) return true;
-                if (EyeData != null) return true;
-                if (LipIndex != null) return true;
-                if (LipData != null) return true;
+                if (Nose != null) return true;
+                if (Brow != null) return true;
+                if (Eye != null) return true;
+                if (Lip != null) return true;
                 return false;
             }
             #endregion
@@ -633,14 +562,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(NoseIndex, "NoseIndex");
-                fg.AppendItem(NoseData, "NoseData");
-                fg.AppendItem(BrowIndex, "BrowIndex");
-                fg.AppendItem(BrowData, "BrowData");
-                fg.AppendItem(EyeIndex, "EyeIndex");
-                fg.AppendItem(EyeData, "EyeData");
-                fg.AppendItem(LipIndex, "LipIndex");
-                fg.AppendItem(LipData, "LipData");
+                Nose?.ToString(fg);
+                Brow?.ToString(fg);
+                Eye?.ToString(fg);
+                Lip?.ToString(fg);
             }
             #endregion
 
@@ -649,14 +574,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.NoseIndex = this.NoseIndex.Combine(rhs.NoseIndex);
-                ret.NoseData = this.NoseData.Combine(rhs.NoseData);
-                ret.BrowIndex = this.BrowIndex.Combine(rhs.BrowIndex);
-                ret.BrowData = this.BrowData.Combine(rhs.BrowData);
-                ret.EyeIndex = this.EyeIndex.Combine(rhs.EyeIndex);
-                ret.EyeData = this.EyeData.Combine(rhs.EyeData);
-                ret.LipIndex = this.LipIndex.Combine(rhs.LipIndex);
-                ret.LipData = this.LipData.Combine(rhs.LipData);
+                ret.Nose = this.Nose.Combine(rhs.Nose, (l, r) => l.Combine(r));
+                ret.Brow = this.Brow.Combine(rhs.Brow, (l, r) => l.Combine(r));
+                ret.Eye = this.Eye.Combine(rhs.Eye, (l, r) => l.Combine(r));
+                ret.Lip = this.Lip.Combine(rhs.Lip, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -678,27 +599,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool NoseIndex;
-            public bool NoseData;
-            public bool BrowIndex;
-            public bool BrowData;
-            public bool EyeIndex;
-            public bool EyeData;
-            public bool LipIndex;
-            public bool LipData;
+            public MaskItem<bool, Morph.TranslationMask?> Nose;
+            public MaskItem<bool, Morph.TranslationMask?> Brow;
+            public MaskItem<bool, Morph.TranslationMask?> Eye;
+            public MaskItem<bool, Morph.TranslationMask?> Lip;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.NoseIndex = defaultOn;
-                this.NoseData = defaultOn;
-                this.BrowIndex = defaultOn;
-                this.BrowData = defaultOn;
-                this.EyeIndex = defaultOn;
-                this.EyeData = defaultOn;
-                this.LipIndex = defaultOn;
-                this.LipData = defaultOn;
+                this.Nose = new MaskItem<bool, Morph.TranslationMask?>(defaultOn, null);
+                this.Brow = new MaskItem<bool, Morph.TranslationMask?>(defaultOn, null);
+                this.Eye = new MaskItem<bool, Morph.TranslationMask?>(defaultOn, null);
+                this.Lip = new MaskItem<bool, Morph.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -714,14 +627,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((NoseIndex, null));
-                ret.Add((NoseData, null));
-                ret.Add((BrowIndex, null));
-                ret.Add((BrowData, null));
-                ret.Add((EyeIndex, null));
-                ret.Add((EyeData, null));
-                ret.Add((LipIndex, null));
-                ret.Add((LipData, null));
+                ret.Add((Nose?.Overall ?? true, Nose?.Specific?.GetCrystal()));
+                ret.Add((Brow?.Overall ?? true, Brow?.Specific?.GetCrystal()));
+                ret.Add((Eye?.Overall ?? true, Eye?.Specific?.GetCrystal()));
+                ret.Add((Lip?.Overall ?? true, Lip?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -791,14 +700,10 @@ namespace Mutagen.Bethesda.Skyrim
         IAvailableMorphsGetter,
         ILoquiObjectSetter<IAvailableMorphs>
     {
-        new Int32 NoseIndex { get; set; }
-        new Byte[] NoseData { get; set; }
-        new Int32 BrowIndex { get; set; }
-        new Byte[] BrowData { get; set; }
-        new Int32 EyeIndex { get; set; }
-        new Byte[] EyeData { get; set; }
-        new Int32 LipIndex { get; set; }
-        new Byte[] LipData { get; set; }
+        new Morph? Nose { get; set; }
+        new Morph? Brow { get; set; }
+        new Morph? Eye { get; set; }
+        new Morph? Lip { get; set; }
     }
 
     public partial interface IAvailableMorphsGetter :
@@ -813,14 +718,10 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        Int32 NoseIndex { get; }
-        ReadOnlyMemorySlice<Byte> NoseData { get; }
-        Int32 BrowIndex { get; }
-        ReadOnlyMemorySlice<Byte> BrowData { get; }
-        Int32 EyeIndex { get; }
-        ReadOnlyMemorySlice<Byte> EyeData { get; }
-        Int32 LipIndex { get; }
-        ReadOnlyMemorySlice<Byte> LipData { get; }
+        IMorphGetter? Nose { get; }
+        IMorphGetter? Brow { get; }
+        IMorphGetter? Eye { get; }
+        IMorphGetter? Lip { get; }
 
     }
 
@@ -1127,14 +1028,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum AvailableMorphs_FieldIndex
     {
-        NoseIndex = 0,
-        NoseData = 1,
-        BrowIndex = 2,
-        BrowData = 3,
-        EyeIndex = 4,
-        EyeData = 5,
-        LipIndex = 6,
-        LipData = 7,
+        Nose = 0,
+        Brow = 1,
+        Eye = 2,
+        Lip = 3,
     }
     #endregion
 
@@ -1152,9 +1049,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "43c181c2-3ab3-4a0c-82ce-3eb86e48d09b";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(AvailableMorphs.Mask<>);
 
@@ -1184,22 +1081,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "NOSEINDEX":
-                    return (ushort)AvailableMorphs_FieldIndex.NoseIndex;
-                case "NOSEDATA":
-                    return (ushort)AvailableMorphs_FieldIndex.NoseData;
-                case "BROWINDEX":
-                    return (ushort)AvailableMorphs_FieldIndex.BrowIndex;
-                case "BROWDATA":
-                    return (ushort)AvailableMorphs_FieldIndex.BrowData;
-                case "EYEINDEX":
-                    return (ushort)AvailableMorphs_FieldIndex.EyeIndex;
-                case "EYEDATA":
-                    return (ushort)AvailableMorphs_FieldIndex.EyeData;
-                case "LIPINDEX":
-                    return (ushort)AvailableMorphs_FieldIndex.LipIndex;
-                case "LIPDATA":
-                    return (ushort)AvailableMorphs_FieldIndex.LipData;
+                case "NOSE":
+                    return (ushort)AvailableMorphs_FieldIndex.Nose;
+                case "BROW":
+                    return (ushort)AvailableMorphs_FieldIndex.Brow;
+                case "EYE":
+                    return (ushort)AvailableMorphs_FieldIndex.Eye;
+                case "LIP":
+                    return (ushort)AvailableMorphs_FieldIndex.Lip;
                 default:
                     return null;
             }
@@ -1210,14 +1099,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
             switch (enu)
             {
-                case AvailableMorphs_FieldIndex.NoseIndex:
-                case AvailableMorphs_FieldIndex.NoseData:
-                case AvailableMorphs_FieldIndex.BrowIndex:
-                case AvailableMorphs_FieldIndex.BrowData:
-                case AvailableMorphs_FieldIndex.EyeIndex:
-                case AvailableMorphs_FieldIndex.EyeData:
-                case AvailableMorphs_FieldIndex.LipIndex:
-                case AvailableMorphs_FieldIndex.LipData:
+                case AvailableMorphs_FieldIndex.Nose:
+                case AvailableMorphs_FieldIndex.Brow:
+                case AvailableMorphs_FieldIndex.Eye:
+                case AvailableMorphs_FieldIndex.Lip:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1229,15 +1114,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
             switch (enu)
             {
-                case AvailableMorphs_FieldIndex.NoseIndex:
-                case AvailableMorphs_FieldIndex.NoseData:
-                case AvailableMorphs_FieldIndex.BrowIndex:
-                case AvailableMorphs_FieldIndex.BrowData:
-                case AvailableMorphs_FieldIndex.EyeIndex:
-                case AvailableMorphs_FieldIndex.EyeData:
-                case AvailableMorphs_FieldIndex.LipIndex:
-                case AvailableMorphs_FieldIndex.LipData:
-                    return false;
+                case AvailableMorphs_FieldIndex.Nose:
+                case AvailableMorphs_FieldIndex.Brow:
+                case AvailableMorphs_FieldIndex.Eye:
+                case AvailableMorphs_FieldIndex.Lip:
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1248,14 +1129,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
             switch (enu)
             {
-                case AvailableMorphs_FieldIndex.NoseIndex:
-                case AvailableMorphs_FieldIndex.NoseData:
-                case AvailableMorphs_FieldIndex.BrowIndex:
-                case AvailableMorphs_FieldIndex.BrowData:
-                case AvailableMorphs_FieldIndex.EyeIndex:
-                case AvailableMorphs_FieldIndex.EyeData:
-                case AvailableMorphs_FieldIndex.LipIndex:
-                case AvailableMorphs_FieldIndex.LipData:
+                case AvailableMorphs_FieldIndex.Nose:
+                case AvailableMorphs_FieldIndex.Brow:
+                case AvailableMorphs_FieldIndex.Eye:
+                case AvailableMorphs_FieldIndex.Lip:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1267,22 +1144,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
             switch (enu)
             {
-                case AvailableMorphs_FieldIndex.NoseIndex:
-                    return "NoseIndex";
-                case AvailableMorphs_FieldIndex.NoseData:
-                    return "NoseData";
-                case AvailableMorphs_FieldIndex.BrowIndex:
-                    return "BrowIndex";
-                case AvailableMorphs_FieldIndex.BrowData:
-                    return "BrowData";
-                case AvailableMorphs_FieldIndex.EyeIndex:
-                    return "EyeIndex";
-                case AvailableMorphs_FieldIndex.EyeData:
-                    return "EyeData";
-                case AvailableMorphs_FieldIndex.LipIndex:
-                    return "LipIndex";
-                case AvailableMorphs_FieldIndex.LipData:
-                    return "LipData";
+                case AvailableMorphs_FieldIndex.Nose:
+                    return "Nose";
+                case AvailableMorphs_FieldIndex.Brow:
+                    return "Brow";
+                case AvailableMorphs_FieldIndex.Eye:
+                    return "Eye";
+                case AvailableMorphs_FieldIndex.Lip:
+                    return "Lip";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1293,14 +1162,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
             switch (enu)
             {
-                case AvailableMorphs_FieldIndex.NoseIndex:
-                case AvailableMorphs_FieldIndex.NoseData:
-                case AvailableMorphs_FieldIndex.BrowIndex:
-                case AvailableMorphs_FieldIndex.BrowData:
-                case AvailableMorphs_FieldIndex.EyeIndex:
-                case AvailableMorphs_FieldIndex.EyeData:
-                case AvailableMorphs_FieldIndex.LipIndex:
-                case AvailableMorphs_FieldIndex.LipData:
+                case AvailableMorphs_FieldIndex.Nose:
+                case AvailableMorphs_FieldIndex.Brow:
+                case AvailableMorphs_FieldIndex.Eye:
+                case AvailableMorphs_FieldIndex.Lip:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1312,14 +1177,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
             switch (enu)
             {
-                case AvailableMorphs_FieldIndex.NoseIndex:
-                case AvailableMorphs_FieldIndex.NoseData:
-                case AvailableMorphs_FieldIndex.BrowIndex:
-                case AvailableMorphs_FieldIndex.BrowData:
-                case AvailableMorphs_FieldIndex.EyeIndex:
-                case AvailableMorphs_FieldIndex.EyeData:
-                case AvailableMorphs_FieldIndex.LipIndex:
-                case AvailableMorphs_FieldIndex.LipData:
+                case AvailableMorphs_FieldIndex.Nose:
+                case AvailableMorphs_FieldIndex.Brow:
+                case AvailableMorphs_FieldIndex.Eye:
+                case AvailableMorphs_FieldIndex.Lip:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1331,22 +1192,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
             switch (enu)
             {
-                case AvailableMorphs_FieldIndex.NoseIndex:
-                    return typeof(Int32);
-                case AvailableMorphs_FieldIndex.NoseData:
-                    return typeof(Byte[]);
-                case AvailableMorphs_FieldIndex.BrowIndex:
-                    return typeof(Int32);
-                case AvailableMorphs_FieldIndex.BrowData:
-                    return typeof(Byte[]);
-                case AvailableMorphs_FieldIndex.EyeIndex:
-                    return typeof(Int32);
-                case AvailableMorphs_FieldIndex.EyeData:
-                    return typeof(Byte[]);
-                case AvailableMorphs_FieldIndex.LipIndex:
-                    return typeof(Int32);
-                case AvailableMorphs_FieldIndex.LipData:
-                    return typeof(Byte[]);
+                case AvailableMorphs_FieldIndex.Nose:
+                    return typeof(Morph);
+                case AvailableMorphs_FieldIndex.Brow:
+                    return typeof(Morph);
+                case AvailableMorphs_FieldIndex.Eye:
+                    return typeof(Morph);
+                case AvailableMorphs_FieldIndex.Lip:
+                    return typeof(Morph);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1355,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(AvailableMorphsXmlWriteTranslation);
         public static readonly RecordType MPAI_HEADER = new RecordType("MPAI");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MPAI_HEADER;
-        public const int NumStructFields = 8;
+        public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AvailableMorphsBinaryWriteTranslation);
         #region Interface
@@ -1399,14 +1252,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IAvailableMorphs item)
         {
             ClearPartial();
-            item.NoseIndex = default;
-            item.NoseData = new byte[32];
-            item.BrowIndex = default;
-            item.BrowData = new byte[32];
-            item.EyeIndex = default;
-            item.EyeData = new byte[32];
-            item.LipIndex = default;
-            item.LipData = new byte[32];
+            item.Nose = null;
+            item.Brow = null;
+            item.Eye = null;
+            item.Lip = null;
         }
         
         #region Xml Translation
@@ -1457,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4941504D: // MPAI
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.NoseIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
                     AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustomPublic(
                         frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item);
@@ -1510,14 +1359,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.NoseIndex = item.NoseIndex == rhs.NoseIndex;
-            ret.NoseData = MemoryExtensions.SequenceEqual(item.NoseData.Span, rhs.NoseData.Span);
-            ret.BrowIndex = item.BrowIndex == rhs.BrowIndex;
-            ret.BrowData = MemoryExtensions.SequenceEqual(item.BrowData.Span, rhs.BrowData.Span);
-            ret.EyeIndex = item.EyeIndex == rhs.EyeIndex;
-            ret.EyeData = MemoryExtensions.SequenceEqual(item.EyeData.Span, rhs.EyeData.Span);
-            ret.LipIndex = item.LipIndex == rhs.LipIndex;
-            ret.LipData = MemoryExtensions.SequenceEqual(item.LipData.Span, rhs.LipData.Span);
+            ret.Nose = EqualsMaskHelper.EqualsHelper(
+                item.Nose,
+                rhs.Nose,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Brow = EqualsMaskHelper.EqualsHelper(
+                item.Brow,
+                rhs.Brow,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Eye = EqualsMaskHelper.EqualsHelper(
+                item.Eye,
+                rhs.Eye,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Lip = EqualsMaskHelper.EqualsHelper(
+                item.Lip,
+                rhs.Lip,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
         }
         
         public string ToString(
@@ -1564,37 +1425,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
-            if (printMask?.NoseIndex ?? true)
+            if ((printMask?.Nose?.Overall ?? true)
+                && item.Nose.TryGet(out var NoseItem))
             {
-                fg.AppendItem(item.NoseIndex, "NoseIndex");
+                NoseItem?.ToString(fg, "Nose");
             }
-            if (printMask?.NoseData ?? true)
+            if ((printMask?.Brow?.Overall ?? true)
+                && item.Brow.TryGet(out var BrowItem))
             {
-                fg.AppendLine($"NoseData => {SpanExt.ToHexString(item.NoseData)}");
+                BrowItem?.ToString(fg, "Brow");
             }
-            if (printMask?.BrowIndex ?? true)
+            if ((printMask?.Eye?.Overall ?? true)
+                && item.Eye.TryGet(out var EyeItem))
             {
-                fg.AppendItem(item.BrowIndex, "BrowIndex");
+                EyeItem?.ToString(fg, "Eye");
             }
-            if (printMask?.BrowData ?? true)
+            if ((printMask?.Lip?.Overall ?? true)
+                && item.Lip.TryGet(out var LipItem))
             {
-                fg.AppendLine($"BrowData => {SpanExt.ToHexString(item.BrowData)}");
-            }
-            if (printMask?.EyeIndex ?? true)
-            {
-                fg.AppendItem(item.EyeIndex, "EyeIndex");
-            }
-            if (printMask?.EyeData ?? true)
-            {
-                fg.AppendLine($"EyeData => {SpanExt.ToHexString(item.EyeData)}");
-            }
-            if (printMask?.LipIndex ?? true)
-            {
-                fg.AppendItem(item.LipIndex, "LipIndex");
-            }
-            if (printMask?.LipData ?? true)
-            {
-                fg.AppendLine($"LipData => {SpanExt.ToHexString(item.LipData)}");
+                LipItem?.ToString(fg, "Lip");
             }
         }
         
@@ -1602,6 +1451,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAvailableMorphsGetter item,
             AvailableMorphs.Mask<bool?> checkMask)
         {
+            if (checkMask.Nose?.Overall.HasValue ?? false && checkMask.Nose.Overall.Value != (item.Nose != null)) return false;
+            if (checkMask.Nose?.Specific != null && (item.Nose == null || !item.Nose.HasBeenSet(checkMask.Nose.Specific))) return false;
+            if (checkMask.Brow?.Overall.HasValue ?? false && checkMask.Brow.Overall.Value != (item.Brow != null)) return false;
+            if (checkMask.Brow?.Specific != null && (item.Brow == null || !item.Brow.HasBeenSet(checkMask.Brow.Specific))) return false;
+            if (checkMask.Eye?.Overall.HasValue ?? false && checkMask.Eye.Overall.Value != (item.Eye != null)) return false;
+            if (checkMask.Eye?.Specific != null && (item.Eye == null || !item.Eye.HasBeenSet(checkMask.Eye.Specific))) return false;
+            if (checkMask.Lip?.Overall.HasValue ?? false && checkMask.Lip.Overall.Value != (item.Lip != null)) return false;
+            if (checkMask.Lip?.Specific != null && (item.Lip == null || !item.Lip.HasBeenSet(checkMask.Lip.Specific))) return false;
             return true;
         }
         
@@ -1609,14 +1466,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAvailableMorphsGetter item,
             AvailableMorphs.Mask<bool> mask)
         {
-            mask.NoseIndex = true;
-            mask.NoseData = true;
-            mask.BrowIndex = true;
-            mask.BrowData = true;
-            mask.EyeIndex = true;
-            mask.EyeData = true;
-            mask.LipIndex = true;
-            mask.LipData = true;
+            var itemNose = item.Nose;
+            mask.Nose = new MaskItem<bool, Morph.Mask<bool>?>(itemNose != null, itemNose?.GetHasBeenSetMask());
+            var itemBrow = item.Brow;
+            mask.Brow = new MaskItem<bool, Morph.Mask<bool>?>(itemBrow != null, itemBrow?.GetHasBeenSetMask());
+            var itemEye = item.Eye;
+            mask.Eye = new MaskItem<bool, Morph.Mask<bool>?>(itemEye != null, itemEye?.GetHasBeenSetMask());
+            var itemLip = item.Lip;
+            mask.Lip = new MaskItem<bool, Morph.Mask<bool>?>(itemLip != null, itemLip?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -1626,28 +1483,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.NoseIndex != rhs.NoseIndex) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.NoseData.Span, rhs.NoseData.Span)) return false;
-            if (lhs.BrowIndex != rhs.BrowIndex) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.BrowData.Span, rhs.BrowData.Span)) return false;
-            if (lhs.EyeIndex != rhs.EyeIndex) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.EyeData.Span, rhs.EyeData.Span)) return false;
-            if (lhs.LipIndex != rhs.LipIndex) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.LipData.Span, rhs.LipData.Span)) return false;
+            if (!object.Equals(lhs.Nose, rhs.Nose)) return false;
+            if (!object.Equals(lhs.Brow, rhs.Brow)) return false;
+            if (!object.Equals(lhs.Eye, rhs.Eye)) return false;
+            if (!object.Equals(lhs.Lip, rhs.Lip)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IAvailableMorphsGetter item)
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(item.NoseIndex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NoseData).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BrowIndex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BrowData).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EyeIndex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EyeData).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LipIndex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LipData).CombineHashCode(ret);
+            if (item.Nose.TryGet(out var Noseitem))
+            {
+                ret = HashHelper.GetHashCode(Noseitem).CombineHashCode(ret);
+            }
+            if (item.Brow.TryGet(out var Browitem))
+            {
+                ret = HashHelper.GetHashCode(Browitem).CombineHashCode(ret);
+            }
+            if (item.Eye.TryGet(out var Eyeitem))
+            {
+                ret = HashHelper.GetHashCode(Eyeitem).CombineHashCode(ret);
+            }
+            if (item.Lip.TryGet(out var Lipitem))
+            {
+                ret = HashHelper.GetHashCode(Lipitem).CombineHashCode(ret);
+            }
             return ret;
         }
         
@@ -1679,37 +1540,109 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.NoseIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Nose) ?? true))
             {
-                item.NoseIndex = rhs.NoseIndex;
+                errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Nose);
+                try
+                {
+                    if(rhs.Nose.TryGet(out var rhsNose))
+                    {
+                        item.Nose = rhsNose.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Nose));
+                    }
+                    else
+                    {
+                        item.Nose = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.NoseData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Brow) ?? true))
             {
-                item.NoseData = rhs.NoseData.ToArray();
+                errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Brow);
+                try
+                {
+                    if(rhs.Brow.TryGet(out var rhsBrow))
+                    {
+                        item.Brow = rhsBrow.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Brow));
+                    }
+                    else
+                    {
+                        item.Brow = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.BrowIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Eye) ?? true))
             {
-                item.BrowIndex = rhs.BrowIndex;
+                errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Eye);
+                try
+                {
+                    if(rhs.Eye.TryGet(out var rhsEye))
+                    {
+                        item.Eye = rhsEye.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Eye));
+                    }
+                    else
+                    {
+                        item.Eye = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.BrowData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Lip) ?? true))
             {
-                item.BrowData = rhs.BrowData.ToArray();
-            }
-            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.EyeIndex) ?? true))
-            {
-                item.EyeIndex = rhs.EyeIndex;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.EyeData) ?? true))
-            {
-                item.EyeData = rhs.EyeData.ToArray();
-            }
-            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.LipIndex) ?? true))
-            {
-                item.LipIndex = rhs.LipIndex;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.LipData) ?? true))
-            {
-                item.LipData = rhs.LipData.ToArray();
+                errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Lip);
+                try
+                {
+                    if(rhs.Lip.TryGet(out var rhsLip))
+                    {
+                        item.Lip = rhsLip.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Lip));
+                    }
+                    else
+                    {
+                        item.Lip = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -1800,77 +1733,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.NoseIndex) ?? true))
+            if ((item.Nose != null)
+                && (translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Nose) ?? true))
             {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoseIndex),
-                    item: item.NoseIndex,
-                    fieldIndex: (int)AvailableMorphs_FieldIndex.NoseIndex,
-                    errorMask: errorMask);
+                if (item.Nose.TryGet(out var NoseItem))
+                {
+                    ((MorphXmlWriteTranslation)((IXmlItem)NoseItem).XmlWriteTranslator).Write(
+                        item: NoseItem,
+                        node: node,
+                        name: nameof(item.Nose),
+                        fieldIndex: (int)AvailableMorphs_FieldIndex.Nose,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Nose));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.NoseData) ?? true))
+            if ((item.Brow != null)
+                && (translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Brow) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoseData),
-                    item: item.NoseData,
-                    fieldIndex: (int)AvailableMorphs_FieldIndex.NoseData,
-                    errorMask: errorMask);
+                if (item.Brow.TryGet(out var BrowItem))
+                {
+                    ((MorphXmlWriteTranslation)((IXmlItem)BrowItem).XmlWriteTranslator).Write(
+                        item: BrowItem,
+                        node: node,
+                        name: nameof(item.Brow),
+                        fieldIndex: (int)AvailableMorphs_FieldIndex.Brow,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Brow));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.BrowIndex) ?? true))
+            if ((item.Eye != null)
+                && (translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Eye) ?? true))
             {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BrowIndex),
-                    item: item.BrowIndex,
-                    fieldIndex: (int)AvailableMorphs_FieldIndex.BrowIndex,
-                    errorMask: errorMask);
+                if (item.Eye.TryGet(out var EyeItem))
+                {
+                    ((MorphXmlWriteTranslation)((IXmlItem)EyeItem).XmlWriteTranslator).Write(
+                        item: EyeItem,
+                        node: node,
+                        name: nameof(item.Eye),
+                        fieldIndex: (int)AvailableMorphs_FieldIndex.Eye,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Eye));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.BrowData) ?? true))
+            if ((item.Lip != null)
+                && (translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Lip) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BrowData),
-                    item: item.BrowData,
-                    fieldIndex: (int)AvailableMorphs_FieldIndex.BrowData,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.EyeIndex) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EyeIndex),
-                    item: item.EyeIndex,
-                    fieldIndex: (int)AvailableMorphs_FieldIndex.EyeIndex,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.EyeData) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EyeData),
-                    item: item.EyeData,
-                    fieldIndex: (int)AvailableMorphs_FieldIndex.EyeData,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.LipIndex) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LipIndex),
-                    item: item.LipIndex,
-                    fieldIndex: (int)AvailableMorphs_FieldIndex.LipIndex,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.LipData) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LipData),
-                    item: item.LipData,
-                    fieldIndex: (int)AvailableMorphs_FieldIndex.LipData,
-                    errorMask: errorMask);
+                if (item.Lip.TryGet(out var LipItem))
+                {
+                    ((MorphXmlWriteTranslation)((IXmlItem)LipItem).XmlWriteTranslator).Write(
+                        item: LipItem,
+                        node: node,
+                        name: nameof(item.Lip),
+                        fieldIndex: (int)AvailableMorphs_FieldIndex.Lip,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Lip));
+                }
             }
         }
 
@@ -1978,13 +1895,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "NoseIndex":
-                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.NoseIndex);
+                case "Nose":
+                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Nose);
                     try
                     {
-                        item.NoseIndex = Int32XmlTranslation.Instance.Parse(
+                        item.Nose = LoquiXmlTranslation<Morph>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Nose));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1996,14 +1914,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "NoseData":
-                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.NoseData);
+                case "Brow":
+                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Brow);
                     try
                     {
-                        item.NoseData = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Brow = LoquiXmlTranslation<Morph>.Instance.Parse(
                             node: node,
-                            fallbackLength: 32,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Brow));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2015,13 +1933,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "BrowIndex":
-                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.BrowIndex);
+                case "Eye":
+                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Eye);
                     try
                     {
-                        item.BrowIndex = Int32XmlTranslation.Instance.Parse(
+                        item.Eye = LoquiXmlTranslation<Morph>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Eye));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2033,88 +1952,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "BrowData":
-                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.BrowData);
+                case "Lip":
+                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Lip);
                     try
                     {
-                        item.BrowData = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Lip = LoquiXmlTranslation<Morph>.Instance.Parse(
                             node: node,
-                            fallbackLength: 32,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EyeIndex":
-                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.EyeIndex);
-                    try
-                    {
-                        item.EyeIndex = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EyeData":
-                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.EyeData);
-                    try
-                    {
-                        item.EyeData = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 32,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LipIndex":
-                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.LipIndex);
-                    try
-                    {
-                        item.LipIndex = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LipData":
-                    errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.LipData);
-                    try
-                    {
-                        item.LipData = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 32,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Lip));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2505,7 +2350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4941504D: // MPAI
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.NoseIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
                     ParseCustomParse(
                         stream,
                         offset);

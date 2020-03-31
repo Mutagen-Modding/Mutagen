@@ -1704,33 +1704,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         });
         public static RecordTypeConverter MaleWorldModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODL_HEADER,
+                new RecordType("MODL"),
                 new RecordType("MOD2")),
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODB_HEADER,
+                new RecordType("MODB"),
                 new RecordType("MO2B")),
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODT_HEADER,
+                new RecordType("MODT"),
                 new RecordType("MO2T")));
         public static RecordTypeConverter FemaleBipedModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODL_HEADER,
+                new RecordType("MODL"),
                 new RecordType("MOD3")),
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODB_HEADER,
+                new RecordType("MODB"),
                 new RecordType("MO3B")),
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODT_HEADER,
+                new RecordType("MODT"),
                 new RecordType("MO3T")));
         public static RecordTypeConverter FemaleWorldModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODL_HEADER,
+                new RecordType("MODL"),
                 new RecordType("MOD4")),
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODB_HEADER,
+                new RecordType("MODB"),
                 new RecordType("MO4B")),
             new KeyValuePair<RecordType, RecordType>(
-                Model_Registration.MODT_HEADER,
+                new RecordType("MODT"),
                 new RecordType("MO4T")));
         public const int NumStructFields = 0;
         public const int NumTypedFields = 10;

@@ -5,7 +5,7 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" />
-      <List name="ActorEffect" counterRecType="SPCT" counterSubrecordPerItem="true" >
+      <List name="ActorEffect" counterRecType="SPCT" counterSubrecordPerItem="true">
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />
@@ -32,16 +32,16 @@
           <FormLink refName="VoiceType" />
         </Fields>
       </Gendered>
-      <Ref name="DecapitateArmors" recordType="DNAM">
-        <Direct refName="GenderedFormLinks">
-          <GenericSpecification TypeToSpecify="T" Definition="Armor" />
-        </Direct>
-      </Ref>
-      <Ref name="DefaultHairColors" recordType="HCLF">
-        <Direct refName="GenderedFormLinks">
-          <GenericSpecification TypeToSpecify="T" Definition="ColorRecord" />
-        </Direct>
-      </Ref>
+      <Gendered name="DecapitateArmors" recordType="DNAM">
+        <Fields>
+          <FormLink refName="Armor" />
+        </Fields>
+      </Gendered>
+      <Gendered name="DefaultHairColors" recordType="HCLF">
+        <Fields>
+          <FormLink refName="ColorRecord" />
+        </Fields>
+      </Gendered>
       <UInt16 name="NumberOfTintsInList" recordType="TINL" />
       <Float name="FacegenMainClamp" recordType="PNAM" />
       <Float name="FacegenFaceClamp" recordType="UNAM" />
@@ -84,17 +84,22 @@
         <FormLink recordType="QNAM" refName="EquipType" />
       </List>
       <FormLink name="UnarmedEquipSlot" refName="EquipType" recordType="UNES" />
-      <List name="PhonemeTargetNames">
-        <String recordType="PHTN" />
-      </List>
-      <RefDirect name="FaceFxPhonemes" refName="FaceFxPhonemes" />
+      <CustomLogic name="FaceFxPhonemesListingParsing" recordType="PHTN" />
+      <CustomLogic name="FaceFxPhonemesRawParsing" recordType="PHWT" />
+      <RefDirect name="FaceFxPhonemes" refName="FaceFxPhonemes" binary="NoGeneration" />
       <FormLink name="BaseMovementDefaultWalk" refName="MovementType" recordType="WKMV" />
       <FormLink name="BaseMovementDefaultRun" refName="MovementType" recordType="RNMV" />
       <FormLink name="BaseMovementDefaultSwim" refName="MovementType" recordType="SWMV" />
       <FormLink name="BaseMovementDefaultFly" refName="MovementType" recordType="FLMV" />
       <FormLink name="BaseMovementDefaultSneak" refName="MovementType" recordType="SNMV" />
       <FormLink name="BaseMovementDefaultSprint" refName="MovementType" recordType="SPMV" />
-      <Gendered name="HeadData" markerType="NAM0" maleMarker="MNAM" femaleMarker="FNAM">
+      <Gendered name="HeadData" markerType="NAM0" maleMarker="MNAM" femaleMarker="FNAM" markerPerGender="true">
+        <FemaleTypeOverrides>
+          <Mapping From="RPRM" To="RPRF" />
+          <Mapping From="FTSM" To="FTSF" />
+          <Mapping From="AHCM" To="AHCF" />
+          <Mapping From="DFTM" To="DFTF" />
+        </FemaleTypeOverrides>
         <Fields>
           <RefDirect refName="HeadData" />
         </Fields>
@@ -190,70 +195,70 @@
   </Object>
   <Object name="FaceFxPhonemes" objType="Subrecord" GUID="b965bdb9-1d8c-4efe-8cfa-2f35cd13370a" ID="70">
     <Fields>
-      <CustomLogic name="Parsing" recordType="PHWT" />
-      <RefDirect name="IY" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="IH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="EH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="EY" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="AE" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="AA" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="AW" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="AY" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="AH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="AO" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="OY" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="OW" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="UH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="UW" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="ER" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="AX" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="S" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="SH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="Z" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="ZH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="F" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="TH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="V" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="DH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="M" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="N" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="NG" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="L" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="R" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="W" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="Y" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="HH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="B" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="D" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="JH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="G" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="P" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="T" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="K" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="CH" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="SIL" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="SHOTSIL" refName="PhonemeTarget" binary="DoNothing" />
-      <RefDirect name="FLAP" refName="PhonemeTarget" binary="DoNothing" />
+      <Bool name="LipMode" />
+      <RefDirect name="Aah_LipBigAah" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="BigAah_LipDST" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="BMP_LipEee" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="ChJSh_LipFV" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="DST_LipK" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="Eee_LipL" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="Eh_LipR" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="FV_LipTh" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="I" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="K" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="N" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="Oh" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="OohQ" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="R" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="Th" hasBeenSet="True" refName="Phoneme" />
+      <RefDirect name="W" hasBeenSet="True" refName="Phoneme" />
     </Fields>
   </Object>
-  <Object name="PhonemeTarget" objType="Subrecord" GUID="de2d7619-85dc-497e-b8a2-b955f9340a93" ID="71">
+  <Object name="Phoneme" objType="Subrecord" GUID="de2d7619-85dc-497e-b8a2-b955f9340a93" ID="71">
     <Fields>
-      <Float name="Aah_LipBigAah" />
-      <Float name="BigAah_LipDST" />
-      <Float name="BMP_LipEee" />
-      <Float name="ChJsh_LipFV" />
-      <Float name="DST_LipK" />
-      <Float name="Eee_LipL" />
-      <Float name="Eh_LipR" />
-      <Float name="FV_LipTh" />
-      <Float name="I" />
-      <Float name="K" />
-      <Float name="N" />
-      <Float name="Oh" />
-      <Float name="OohQ" />
-      <Float name="R" />
+      <Float name="IY" />
+      <Float name="IH" />
+      <Float name="EH" />
+      <Float name="EY" />
+      <Float name="AE" />
+      <Float name="AA" />
+      <Float name="AW" />
+      <Float name="AY" />
+      <Float name="AH" />
+      <Float name="AO" />
+      <Float name="OY" />
+      <Float name="OW" />
+      <Float name="UH" />
+      <Float name="UW" />
+      <Float name="ER" />
+      <Float name="AX" />
+      <Float name="S" />
+      <Float name="SH" />
+      <Float name="Z" />
+      <Float name="ZH" />
+      <Float name="F" />
       <Float name="TH" />
+      <Float name="V" />
+      <Float name="DH" />
+      <Float name="M" />
+      <Float name="N" />
+      <Float name="NG" />
+      <Float name="L" />
+      <Float name="R" />
       <Float name="W" />
+      <Float name="Y" />
+      <Float name="HH" />
+      <Float name="B" />
+      <Float name="D" />
+      <Float name="JH" />
+      <Float name="G" />
+      <Float name="P" />
+      <Float name="T" />
+      <Float name="K" />
+      <Float name="CH" />
+      <Float name="SIL" />
+      <Float name="SHOTSIL" />
+      <Float name="FLAP" />
     </Fields>
   </Object>
   <Object name="HeadData" objType="Subrecord" GUID="c0a94c29-c6cd-4b72-b019-b2af3b6b2b34" ID="72">
@@ -264,7 +269,7 @@
         <FormLink refName="Npc" recordType="RPRM" />
       </List>
       <List name="AvailableHairColors">
-        <FormLink refName="ColorRecord" recordType="ACHM" />
+        <FormLink refName="ColorRecord" recordType="AHCM" />
       </List>
       <List name="FaceDetails">
         <FormLink refName="TextureSet" recordType="FTSM" />
@@ -282,18 +287,18 @@
       <FormLink name="Head" refName="HeadPart" recordType="HEAD" />
     </Fields>
   </Object>
-  <!-- ToDo: Decode when there's more interesting flags/members to expose -->
   <Object name="AvailableMorphs" objType="Subrecord" GUID="43c181c2-3ab3-4a0c-82ce-3eb86e48d09b" ID="74">
     <Fields>
       <CustomLogic name="Parse" recordType="MPAI" />
-      <Int32 name="NoseIndex" binary="DoNothing" />
-      <ByteArray name="NoseData" byteLength="32" nullable="NotNull" binary="DoNothing" />
-      <Int32 name="BrowIndex" binary="DoNothing" />
-      <ByteArray name="BrowData" byteLength="32" nullable="NotNull" binary="DoNothing" />
-      <Int32 name="EyeIndex" binary="DoNothing" />
-      <ByteArray name="EyeData" byteLength="32" nullable="NotNull" binary="DoNothing" />
-      <Int32 name="LipIndex" binary="DoNothing" />
-      <ByteArray name="LipData" byteLength="32" nullable="NotNull" binary="DoNothing" />
+      <RefDirect name="Nose" refName="Morph" hasBeenSet="True" binary="DoNothing" />
+      <RefDirect name="Brow" refName="Morph" hasBeenSet="True" binary="DoNothing" />
+      <RefDirect name="Eye" refName="Morph" hasBeenSet="True" binary="DoNothing" />
+      <RefDirect name="Lip" refName="Morph" hasBeenSet="True" binary="DoNothing" />
+    </Fields>
+  </Object>
+  <Object name="Morph" objType="Subrecord" GUID="db314c60-7ba5-4df9-8229-527af27db99a" ID="84">
+    <Fields>
+      <ByteArray name="Data" byteLength="32" nullable="NotNull" />
     </Fields>
   </Object>
   <Object name="TintAssets" objType="Subrecord" GUID="2a4a72e5-c74d-4afd-9783-e4947dc83f79" ID="76">

@@ -17,7 +17,7 @@ namespace Noggog
         /// </summary>
         /// <param name="bytes">Bytes to turn into a string</param>
         /// <returns>string containing a character for every byte in the input span</returns>
-        public unsafe static string ToZString(ReadOnlySpan<byte> bytes)
+        public static string ToZString(ReadOnlySpan<byte> bytes)
         {
             Span<char> chars = stackalloc char[bytes.Length];
             ToZStringBuffer(bytes, chars);

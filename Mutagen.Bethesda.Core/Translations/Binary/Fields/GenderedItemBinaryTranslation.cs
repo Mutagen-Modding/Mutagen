@@ -182,6 +182,49 @@ namespace Mutagen.Bethesda.Binary
             return new GenderedItem<TItem?>(male, female);
         }
 
+        public static GenderedItem<TItem?> ParseMarkerPerItem<TItem>(
+            MutagenFrame frame,
+            RecordType marker,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
+            RecordTypeConverter? femaleRecordConverter = null)
+            where TItem : class
+        {
+            TItem? male = default, female = default;
+            for (int i = 0; i < 2; i++)
+            {
+                var markerHeader = frame.GetSubrecord();
+                if (markerHeader.RecordType != marker) break;
+                frame.Position += markerHeader.TotalLength;
+
+                var genderedHeader = frame.GetSubrecord();
+                RecordType type = genderedHeader.RecordType;
+                if (type != maleMarker && type != femaleMarker)
+                {
+                    break;
+                }
+                frame.Position += genderedHeader.TotalLength;
+                if (!transl(frame, out var item, type == maleMarker ? null : femaleRecordConverter))
+                {
+                    throw new ArgumentException();
+                }
+                if (type == maleMarker)
+                {
+                    male = item;
+                }
+                else if (type == femaleMarker)
+                {
+                    female = item;
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
+            return new GenderedItem<TItem?>(male, female);
+        }
+
         public static void Write<T>(
             MutagenWriter writer,
             IGenderedItemGetter<T>? item,
@@ -340,6 +383,55 @@ namespace Mutagen.Bethesda.Binary
                 if (!markerWrap)
                 {
                     transl(writer, female, recordTypeConverter);
+                }
+            }
+        }
+
+        public static void WriteMarkerPerItem<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            RecordType markerType,
+            RecordType maleMarker,
+            RecordType femaleMarker,
+            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            bool markerWrap = true,
+            RecordTypeConverter? femaleRecordConverter = null)
+        {
+            if (item == null) return;
+            var male = item.Male;
+            if (male != null)
+            {
+                using (HeaderExport.ExportSubrecordHeader(writer, markerType))
+                {
+                }
+                using (HeaderExport.ExportSubrecordHeader(writer, maleMarker))
+                {
+                    if (markerWrap)
+                    {
+                        transl(writer, male, recordTypeConverter: null);
+                    }
+                }
+                if (!markerWrap)
+                {
+                    transl(writer, male, recordTypeConverter: null);
+                }
+            }
+            var female = item.Female;
+            if (female != null)
+            {
+                using (HeaderExport.ExportSubrecordHeader(writer, markerType))
+                {
+                }
+                using (HeaderExport.ExportSubrecordHeader(writer, femaleMarker))
+                {
+                    if (markerWrap)
+                    {
+                        transl(writer, female, femaleRecordConverter);
+                    }
+                }
+                if (!markerWrap)
+                {
+                    transl(writer, female, femaleRecordConverter);
                 }
             }
         }

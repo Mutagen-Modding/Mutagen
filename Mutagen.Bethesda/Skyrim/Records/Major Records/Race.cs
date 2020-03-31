@@ -91,16 +91,19 @@ namespace Mutagen.Bethesda.Skyrim
                 int counter = 0;
                 while (!frame.Reader.Complete)
                 {
-                    if (!frame.TryReadSubrecordFrame(Race_Registration.NAME_HEADER, out var subHeader)) break;
+                    if (!frame.Reader.TryReadSubrecordFrame(Race_Registration.NAME_HEADER, out var subHeader)) break;
                     BipedObject type = (BipedObject)counter++;
                     var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                     if (!string.IsNullOrEmpty(val))
                     {
                         item.BipedObjectNames[type] = val;
                     }
-                    frame.Position += subHeader.Header.TotalLength;
                 }
             }
+
+            static partial void FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+
+            static partial void FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
         }
 
         public partial class RaceBinaryWriteTranslation
@@ -116,11 +119,12 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryBipedObjectNamesCustom(MutagenWriter writer, IRaceGetter item)
             {
                 var bipedObjs = item.BipedObjectNames;
-                for (int i = 0; i < EnumExt.GetSize<BipedObject>(); i++)
+                for (int i = 0; i < 32; i++)
                 {
+                    var bipedObj = (BipedObject)i;
                     using (HeaderExport.ExportSubrecordHeader(writer, Race_Registration.NAME_HEADER))
                     {
-                        if (bipedObjs.TryGetValue((BipedObject)i, out var val))
+                        if (bipedObjs.TryGetValue(bipedObj, out var val))
                         {
                             writer.WriteZString(val);
                         }
@@ -131,12 +135,20 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
+
+            static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(MutagenWriter writer, IRaceGetter item) => FaceFxPhonemesBinaryWriteTranslation.WriteFaceFxPhonemes(writer, item.FaceFxPhonemes);
+
+            static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(MutagenWriter writer, IRaceGetter item)
+            {
+                // Handled by Listing section
+            }
         }
 
         public partial class RaceBinaryOverlay
         {
             public bool ExportingExtraNam2 => throw new NotImplementedException();
             public bool ExportingExtraNam3 => throw new NotImplementedException();
+            public IFaceFxPhonemesGetter FaceFxPhonemes => throw new NotImplementedException();
 
             partial void ExtraNAM2CustomParse(BinaryMemoryReadStream stream, int offset)
             {

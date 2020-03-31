@@ -151,26 +151,12 @@ namespace Mutagen.Bethesda.Skyrim
         IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>>? IRaceGetter.Voices => this.Voices;
         #endregion
         #region DecapitateArmors
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private GenderedFormLinks<Armor>? _DecapitateArmors;
-        public GenderedFormLinks<Armor>? DecapitateArmors
-        {
-            get => _DecapitateArmors;
-            set => _DecapitateArmors = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGenderedFormLinksGetter<IArmorGetter>? IRaceGetter.DecapitateArmors => this.DecapitateArmors;
+        public GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
+        IGenderedItemGetter<IFormLinkGetter<IArmorGetter>>? IRaceGetter.DecapitateArmors => this.DecapitateArmors;
         #endregion
         #region DefaultHairColors
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private GenderedFormLinks<ColorRecord>? _DefaultHairColors;
-        public GenderedFormLinks<ColorRecord>? DefaultHairColors
-        {
-            get => _DefaultHairColors;
-            set => _DefaultHairColors = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGenderedFormLinksGetter<IColorRecordGetter>? IRaceGetter.DefaultHairColors => this.DefaultHairColors;
+        public GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
+        IGenderedItemGetter<IFormLinkGetter<IColorRecordGetter>>? IRaceGetter.DefaultHairColors => this.DefaultHairColors;
         #endregion
         #region NumberOfTintsInList
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -359,30 +345,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IRaceGetter.UnarmedEquipSlot => this.UnarmedEquipSlot;
         #endregion
-        #region PhonemeTargetNames
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String>? _PhonemeTargetNames;
-        public ExtendedList<String>? PhonemeTargetNames
-        {
-            get => this._PhonemeTargetNames;
-            set => this._PhonemeTargetNames = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<String>? IRaceGetter.PhonemeTargetNames => _PhonemeTargetNames;
-        #endregion
-
-        #endregion
         #region FaceFxPhonemes
+        public FaceFxPhonemes FaceFxPhonemes { get; set; } = new FaceFxPhonemes();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private FaceFxPhonemes? _FaceFxPhonemes;
-        public FaceFxPhonemes? FaceFxPhonemes
-        {
-            get => _FaceFxPhonemes;
-            set => _FaceFxPhonemes = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFaceFxPhonemesGetter? IRaceGetter.FaceFxPhonemes => this.FaceFxPhonemes;
+        IFaceFxPhonemesGetter IRaceGetter.FaceFxPhonemes => FaceFxPhonemes;
         #endregion
         #region BaseMovementDefaultWalk
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -610,8 +576,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(initialValue, default);
                 this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
-                this.DecapitateArmors = new MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>(initialValue, new GenderedFormLinks.Mask<TItem>(initialValue));
-                this.DefaultHairColors = new MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>(initialValue, new GenderedFormLinks.Mask<TItem>(initialValue));
+                this.DecapitateArmors = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.DefaultHairColors = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.NumberOfTintsInList = initialValue;
                 this.FacegenMainClamp = initialValue;
                 this.FacegenFaceClamp = initialValue;
@@ -632,7 +598,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EquipmentFlags = initialValue;
                 this.EquipmentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.UnarmedEquipSlot = initialValue;
-                this.PhonemeTargetNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FaceFxPhonemes = new MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>(initialValue, new FaceFxPhonemes.Mask<TItem>(initialValue));
                 this.BaseMovementDefaultWalk = initialValue;
                 this.BaseMovementDefaultRun = initialValue;
@@ -683,7 +648,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EquipmentFlags,
                 TItem EquipmentSlots,
                 TItem UnarmedEquipSlot,
-                TItem PhonemeTargetNames,
                 TItem FaceFxPhonemes,
                 TItem BaseMovementDefaultWalk,
                 TItem BaseMovementDefaultRun,
@@ -711,8 +675,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(SkeletalModel, default);
                 this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(Voices, default);
-                this.DecapitateArmors = new MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>(DecapitateArmors, new GenderedFormLinks.Mask<TItem>(DecapitateArmors));
-                this.DefaultHairColors = new MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>(DefaultHairColors, new GenderedFormLinks.Mask<TItem>(DefaultHairColors));
+                this.DecapitateArmors = new MaskItem<TItem, GenderedItem<TItem>?>(DecapitateArmors, default);
+                this.DefaultHairColors = new MaskItem<TItem, GenderedItem<TItem>?>(DefaultHairColors, default);
                 this.NumberOfTintsInList = NumberOfTintsInList;
                 this.FacegenMainClamp = FacegenMainClamp;
                 this.FacegenFaceClamp = FacegenFaceClamp;
@@ -733,7 +697,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EquipmentFlags = EquipmentFlags;
                 this.EquipmentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(EquipmentSlots, Enumerable.Empty<(int Index, TItem Value)>());
                 this.UnarmedEquipSlot = UnarmedEquipSlot;
-                this.PhonemeTargetNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PhonemeTargetNames, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FaceFxPhonemes = new MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>(FaceFxPhonemes, new FaceFxPhonemes.Mask<TItem>(FaceFxPhonemes));
                 this.BaseMovementDefaultWalk = BaseMovementDefaultWalk;
                 this.BaseMovementDefaultRun = BaseMovementDefaultRun;
@@ -763,8 +726,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>? SkeletalModel;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MovementTypeNames;
             public MaskItem<TItem, GenderedItem<TItem>?>? Voices;
-            public MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>? DecapitateArmors { get; set; }
-            public MaskItem<TItem, GenderedFormLinks.Mask<TItem>?>? DefaultHairColors { get; set; }
+            public MaskItem<TItem, GenderedItem<TItem>?>? DecapitateArmors;
+            public MaskItem<TItem, GenderedItem<TItem>?>? DefaultHairColors;
             public TItem NumberOfTintsInList;
             public TItem FacegenMainClamp;
             public TItem FacegenFaceClamp;
@@ -785,7 +748,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem EquipmentFlags;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? EquipmentSlots;
             public TItem UnarmedEquipSlot;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PhonemeTargetNames;
             public MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>? FaceFxPhonemes { get; set; }
             public TItem BaseMovementDefaultWalk;
             public TItem BaseMovementDefaultRun;
@@ -839,7 +801,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.EquipmentFlags, rhs.EquipmentFlags)) return false;
                 if (!object.Equals(this.EquipmentSlots, rhs.EquipmentSlots)) return false;
                 if (!object.Equals(this.UnarmedEquipSlot, rhs.UnarmedEquipSlot)) return false;
-                if (!object.Equals(this.PhonemeTargetNames, rhs.PhonemeTargetNames)) return false;
                 if (!object.Equals(this.FaceFxPhonemes, rhs.FaceFxPhonemes)) return false;
                 if (!object.Equals(this.BaseMovementDefaultWalk, rhs.BaseMovementDefaultWalk)) return false;
                 if (!object.Equals(this.BaseMovementDefaultRun, rhs.BaseMovementDefaultRun)) return false;
@@ -885,7 +846,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret = ret.CombineHashCode(this.EquipmentFlags?.GetHashCode());
                 ret = ret.CombineHashCode(this.EquipmentSlots?.GetHashCode());
                 ret = ret.CombineHashCode(this.UnarmedEquipSlot?.GetHashCode());
-                ret = ret.CombineHashCode(this.PhonemeTargetNames?.GetHashCode());
                 ret = ret.CombineHashCode(this.FaceFxPhonemes?.GetHashCode());
                 ret = ret.CombineHashCode(this.BaseMovementDefaultWalk?.GetHashCode());
                 ret = ret.CombineHashCode(this.BaseMovementDefaultRun?.GetHashCode());
@@ -956,16 +916,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!GenderedItem.All(
                     this.Voices,
                     eval: eval)) return false;
-                if (DecapitateArmors != null)
-                {
-                    if (!eval(this.DecapitateArmors.Overall)) return false;
-                    if (this.DecapitateArmors.Specific != null && !this.DecapitateArmors.Specific.All(eval)) return false;
-                }
-                if (DefaultHairColors != null)
-                {
-                    if (!eval(this.DefaultHairColors.Overall)) return false;
-                    if (this.DefaultHairColors.Specific != null && !this.DefaultHairColors.Specific.All(eval)) return false;
-                }
+                if (!GenderedItem.All(
+                    this.DecapitateArmors,
+                    eval: eval)) return false;
+                if (!GenderedItem.All(
+                    this.DefaultHairColors,
+                    eval: eval)) return false;
                 if (!eval(this.NumberOfTintsInList)) return false;
                 if (!eval(this.FacegenMainClamp)) return false;
                 if (!eval(this.FacegenFaceClamp)) return false;
@@ -1053,17 +1009,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.UnarmedEquipSlot)) return false;
-                if (this.PhonemeTargetNames != null)
-                {
-                    if (!eval(this.PhonemeTargetNames.Overall)) return false;
-                    if (this.PhonemeTargetNames.Specific != null)
-                    {
-                        foreach (var item in this.PhonemeTargetNames.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
                 if (FaceFxPhonemes != null)
                 {
                     if (!eval(this.FaceFxPhonemes.Overall)) return false;
@@ -1138,16 +1083,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (GenderedItem.Any(
                     this.Voices,
                     eval: eval)) return true;
-                if (DecapitateArmors != null)
-                {
-                    if (eval(this.DecapitateArmors.Overall)) return true;
-                    if (this.DecapitateArmors.Specific != null && this.DecapitateArmors.Specific.Any(eval)) return true;
-                }
-                if (DefaultHairColors != null)
-                {
-                    if (eval(this.DefaultHairColors.Overall)) return true;
-                    if (this.DefaultHairColors.Specific != null && this.DefaultHairColors.Specific.Any(eval)) return true;
-                }
+                if (GenderedItem.Any(
+                    this.DecapitateArmors,
+                    eval: eval)) return true;
+                if (GenderedItem.Any(
+                    this.DefaultHairColors,
+                    eval: eval)) return true;
                 if (eval(this.NumberOfTintsInList)) return true;
                 if (eval(this.FacegenMainClamp)) return true;
                 if (eval(this.FacegenFaceClamp)) return true;
@@ -1235,17 +1176,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.UnarmedEquipSlot)) return true;
-                if (this.PhonemeTargetNames != null)
-                {
-                    if (eval(this.PhonemeTargetNames.Overall)) return true;
-                    if (this.PhonemeTargetNames.Specific != null)
-                    {
-                        foreach (var item in this.PhonemeTargetNames.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
                 if (FaceFxPhonemes != null)
                 {
                     if (eval(this.FaceFxPhonemes.Overall)) return true;
@@ -1329,8 +1259,12 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Voices = GenderedItem.TranslateHelper(
                     this.Voices,
                     eval);
-                obj.DecapitateArmors = this.DecapitateArmors == null ? null : new MaskItem<R, GenderedFormLinks.Mask<R>?>(eval(this.DecapitateArmors.Overall), this.DecapitateArmors.Specific?.Translate(eval));
-                obj.DefaultHairColors = this.DefaultHairColors == null ? null : new MaskItem<R, GenderedFormLinks.Mask<R>?>(eval(this.DefaultHairColors.Overall), this.DefaultHairColors.Specific?.Translate(eval));
+                obj.DecapitateArmors = GenderedItem.TranslateHelper(
+                    this.DecapitateArmors,
+                    eval);
+                obj.DefaultHairColors = GenderedItem.TranslateHelper(
+                    this.DefaultHairColors,
+                    eval);
                 obj.NumberOfTintsInList = eval(this.NumberOfTintsInList);
                 obj.FacegenMainClamp = eval(this.FacegenMainClamp);
                 obj.FacegenFaceClamp = eval(this.FacegenFaceClamp);
@@ -1438,20 +1372,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.UnarmedEquipSlot = eval(this.UnarmedEquipSlot);
-                if (PhonemeTargetNames != null)
-                {
-                    obj.PhonemeTargetNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PhonemeTargetNames.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (PhonemeTargetNames.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.PhonemeTargetNames.Specific = l;
-                        foreach (var item in PhonemeTargetNames.Specific.WithIndex())
-                        {
-                            R mask = eval(item.Item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
                 obj.FaceFxPhonemes = this.FaceFxPhonemes == null ? null : new MaskItem<R, FaceFxPhonemes.Mask<R>?>(eval(this.FaceFxPhonemes.Overall), this.FaceFxPhonemes.Specific?.Translate(eval));
                 obj.BaseMovementDefaultWalk = eval(this.BaseMovementDefaultWalk);
                 obj.BaseMovementDefaultRun = eval(this.BaseMovementDefaultRun);
@@ -1584,13 +1504,15 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendLine($"Voices => {Voices}");
                     }
-                    if (printMask?.DecapitateArmors?.Overall ?? true)
+                    if (DecapitateArmors != null
+                        && (printMask?.DecapitateArmors?.Overall ?? true))
                     {
-                        DecapitateArmors?.ToString(fg);
+                        fg.AppendLine($"DecapitateArmors => {DecapitateArmors}");
                     }
-                    if (printMask?.DefaultHairColors?.Overall ?? true)
+                    if (DefaultHairColors != null
+                        && (printMask?.DefaultHairColors?.Overall ?? true))
                     {
-                        DefaultHairColors?.ToString(fg);
+                        fg.AppendLine($"DefaultHairColors => {DefaultHairColors}");
                     }
                     if (printMask?.NumberOfTintsInList ?? true)
                     {
@@ -1804,29 +1726,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(UnarmedEquipSlot, "UnarmedEquipSlot");
                     }
-                    if ((printMask?.PhonemeTargetNames?.Overall ?? true)
-                        && PhonemeTargetNames.TryGet(out var PhonemeTargetNamesItem))
-                    {
-                        fg.AppendLine("PhonemeTargetNames =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(PhonemeTargetNamesItem.Overall);
-                            if (PhonemeTargetNamesItem.Specific != null)
-                            {
-                                foreach (var subItem in PhonemeTargetNamesItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendItem(subItem);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
-                    }
                     if (printMask?.FaceFxPhonemes?.Overall ?? true)
                     {
                         FaceFxPhonemes?.ToString(fg);
@@ -1882,8 +1781,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, GenderedItem<Exception?>?>? SkeletalModel;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MovementTypeNames;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Voices;
-            public MaskItem<Exception?, GenderedFormLinks.ErrorMask<Armor.ErrorMask>?>? DecapitateArmors;
-            public MaskItem<Exception?, GenderedFormLinks.ErrorMask<ColorRecord.ErrorMask>?>? DefaultHairColors;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? DecapitateArmors;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? DefaultHairColors;
             public Exception? NumberOfTintsInList;
             public Exception? FacegenMainClamp;
             public Exception? FacegenFaceClamp;
@@ -1904,7 +1803,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? EquipmentFlags;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? EquipmentSlots;
             public Exception? UnarmedEquipSlot;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PhonemeTargetNames;
             public MaskItem<Exception?, FaceFxPhonemes.ErrorMask?>? FaceFxPhonemes;
             public Exception? BaseMovementDefaultWalk;
             public Exception? BaseMovementDefaultRun;
@@ -1985,8 +1883,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return EquipmentSlots;
                     case Race_FieldIndex.UnarmedEquipSlot:
                         return UnarmedEquipSlot;
-                    case Race_FieldIndex.PhonemeTargetNames:
-                        return PhonemeTargetNames;
                     case Race_FieldIndex.FaceFxPhonemes:
                         return FaceFxPhonemes;
                     case Race_FieldIndex.BaseMovementDefaultWalk:
@@ -2044,10 +1940,10 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.DecapitateArmors:
-                        this.DecapitateArmors = new MaskItem<Exception?, GenderedFormLinks.ErrorMask<Armor.ErrorMask>?>(ex, null);
+                        this.DecapitateArmors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.DefaultHairColors:
-                        this.DefaultHairColors = new MaskItem<Exception?, GenderedFormLinks.ErrorMask<ColorRecord.ErrorMask>?>(ex, null);
+                        this.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.NumberOfTintsInList:
                         this.NumberOfTintsInList = ex;
@@ -2108,9 +2004,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Race_FieldIndex.UnarmedEquipSlot:
                         this.UnarmedEquipSlot = ex;
-                        break;
-                    case Race_FieldIndex.PhonemeTargetNames:
-                        this.PhonemeTargetNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Race_FieldIndex.FaceFxPhonemes:
                         this.FaceFxPhonemes = new MaskItem<Exception?, FaceFxPhonemes.ErrorMask?>(ex, null);
@@ -2178,10 +2071,10 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Voices = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.DecapitateArmors:
-                        this.DecapitateArmors = (MaskItem<Exception?, GenderedFormLinks.ErrorMask<Armor.ErrorMask>?>?)obj;
+                        this.DecapitateArmors = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.DefaultHairColors:
-                        this.DefaultHairColors = (MaskItem<Exception?, GenderedFormLinks.ErrorMask<ColorRecord.ErrorMask>?>?)obj;
+                        this.DefaultHairColors = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.NumberOfTintsInList:
                         this.NumberOfTintsInList = (Exception?)obj;
@@ -2242,9 +2135,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Race_FieldIndex.UnarmedEquipSlot:
                         this.UnarmedEquipSlot = (Exception?)obj;
-                        break;
-                    case Race_FieldIndex.PhonemeTargetNames:
-                        this.PhonemeTargetNames = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Race_FieldIndex.FaceFxPhonemes:
                         this.FaceFxPhonemes = (MaskItem<Exception?, FaceFxPhonemes.ErrorMask?>?)obj;
@@ -2311,7 +2201,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (EquipmentFlags != null) return true;
                 if (EquipmentSlots != null) return true;
                 if (UnarmedEquipSlot != null) return true;
-                if (PhonemeTargetNames != null) return true;
                 if (FaceFxPhonemes != null) return true;
                 if (BaseMovementDefaultWalk != null) return true;
                 if (BaseMovementDefaultRun != null) return true;
@@ -2434,8 +2323,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     fg.AppendLine($"Voices => {Voices}");
                 }
-                DecapitateArmors?.ToString(fg);
-                DefaultHairColors?.ToString(fg);
+                if (DecapitateArmors != null)
+                {
+                    fg.AppendLine($"DecapitateArmors => {DecapitateArmors}");
+                }
+                if (DefaultHairColors != null)
+                {
+                    fg.AppendLine($"DefaultHairColors => {DefaultHairColors}");
+                }
                 fg.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
                 fg.AppendItem(FacegenMainClamp, "FacegenMainClamp");
                 fg.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
@@ -2602,28 +2497,6 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(UnarmedEquipSlot, "UnarmedEquipSlot");
-                if (PhonemeTargetNames.TryGet(out var PhonemeTargetNamesItem))
-                {
-                    fg.AppendLine("PhonemeTargetNames =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(PhonemeTargetNamesItem.Overall);
-                        if (PhonemeTargetNamesItem.Specific != null)
-                        {
-                            foreach (var subItem in PhonemeTargetNamesItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    fg.AppendItem(subItem);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
                 FaceFxPhonemes?.ToString(fg);
                 fg.AppendItem(BaseMovementDefaultWalk, "BaseMovementDefaultWalk");
                 fg.AppendItem(BaseMovementDefaultRun, "BaseMovementDefaultRun");
@@ -2653,8 +2526,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkeletalModel?.Overall, rhs.SkeletalModel?.Overall), GenderedItem.Combine(this.SkeletalModel?.Specific, rhs.SkeletalModel?.Specific));
                 ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
                 ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
-                ret.DecapitateArmors = this.DecapitateArmors.Combine(rhs.DecapitateArmors, (l, r) => l.Combine(r));
-                ret.DefaultHairColors = this.DefaultHairColors.Combine(rhs.DefaultHairColors, (l, r) => l.Combine(r));
+                ret.DecapitateArmors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DecapitateArmors?.Overall, rhs.DecapitateArmors?.Overall), GenderedItem.Combine(this.DecapitateArmors?.Specific, rhs.DecapitateArmors?.Specific));
+                ret.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DefaultHairColors?.Overall, rhs.DefaultHairColors?.Overall), GenderedItem.Combine(this.DefaultHairColors?.Specific, rhs.DefaultHairColors?.Specific));
                 ret.NumberOfTintsInList = this.NumberOfTintsInList.Combine(rhs.NumberOfTintsInList);
                 ret.FacegenMainClamp = this.FacegenMainClamp.Combine(rhs.FacegenMainClamp);
                 ret.FacegenFaceClamp = this.FacegenFaceClamp.Combine(rhs.FacegenFaceClamp);
@@ -2675,7 +2548,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.EquipmentFlags = this.EquipmentFlags.Combine(rhs.EquipmentFlags);
                 ret.EquipmentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.EquipmentSlots?.Overall, rhs.EquipmentSlots?.Overall), ExceptionExt.Combine(this.EquipmentSlots?.Specific, rhs.EquipmentSlots?.Specific));
                 ret.UnarmedEquipSlot = this.UnarmedEquipSlot.Combine(rhs.UnarmedEquipSlot);
-                ret.PhonemeTargetNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PhonemeTargetNames?.Overall, rhs.PhonemeTargetNames?.Overall), ExceptionExt.Combine(this.PhonemeTargetNames?.Specific, rhs.PhonemeTargetNames?.Specific));
                 ret.FaceFxPhonemes = this.FaceFxPhonemes.Combine(rhs.FaceFxPhonemes, (l, r) => l.Combine(r));
                 ret.BaseMovementDefaultWalk = this.BaseMovementDefaultWalk.Combine(rhs.BaseMovementDefaultWalk);
                 ret.BaseMovementDefaultRun = this.BaseMovementDefaultRun.Combine(rhs.BaseMovementDefaultRun);
@@ -2716,8 +2588,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, GenderedItem<SimpleModel.TranslationMask?>?> SkeletalModel;
             public bool MovementTypeNames;
             public MaskItem<bool, GenderedItem<bool>?> Voices;
-            public MaskItem<bool, GenderedFormLinks.TranslationMask<Armor.TranslationMask>?> DecapitateArmors;
-            public MaskItem<bool, GenderedFormLinks.TranslationMask<ColorRecord.TranslationMask>?> DefaultHairColors;
+            public MaskItem<bool, GenderedItem<bool>?> DecapitateArmors;
+            public MaskItem<bool, GenderedItem<bool>?> DefaultHairColors;
             public bool NumberOfTintsInList;
             public bool FacegenMainClamp;
             public bool FacegenFaceClamp;
@@ -2738,7 +2610,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool EquipmentFlags;
             public bool EquipmentSlots;
             public bool UnarmedEquipSlot;
-            public bool PhonemeTargetNames;
             public MaskItem<bool, FaceFxPhonemes.TranslationMask?> FaceFxPhonemes;
             public bool BaseMovementDefaultWalk;
             public bool BaseMovementDefaultRun;
@@ -2763,8 +2634,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkeletalModel = new MaskItem<bool, GenderedItem<SimpleModel.TranslationMask?>?>(defaultOn, default);
                 this.MovementTypeNames = defaultOn;
                 this.Voices = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
-                this.DecapitateArmors = new MaskItem<bool, GenderedFormLinks.TranslationMask<Armor.TranslationMask>?>(defaultOn, null);
-                this.DefaultHairColors = new MaskItem<bool, GenderedFormLinks.TranslationMask<ColorRecord.TranslationMask>?>(defaultOn, null);
+                this.DecapitateArmors = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.DefaultHairColors = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.NumberOfTintsInList = defaultOn;
                 this.FacegenMainClamp = defaultOn;
                 this.FacegenFaceClamp = defaultOn;
@@ -2785,7 +2656,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EquipmentFlags = defaultOn;
                 this.EquipmentSlots = defaultOn;
                 this.UnarmedEquipSlot = defaultOn;
-                this.PhonemeTargetNames = defaultOn;
                 this.FaceFxPhonemes = new MaskItem<bool, FaceFxPhonemes.TranslationMask?>(defaultOn, null);
                 this.BaseMovementDefaultWalk = defaultOn;
                 this.BaseMovementDefaultRun = defaultOn;
@@ -2811,8 +2681,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SkeletalModel?.Overall ?? true, null));
                 ret.Add((MovementTypeNames, null));
                 ret.Add((Voices?.Overall ?? true, null));
-                ret.Add((DecapitateArmors?.Overall ?? true, DecapitateArmors?.Specific?.GetCrystal()));
-                ret.Add((DefaultHairColors?.Overall ?? true, DefaultHairColors?.Specific?.GetCrystal()));
+                ret.Add((DecapitateArmors?.Overall ?? true, null));
+                ret.Add((DefaultHairColors?.Overall ?? true, null));
                 ret.Add((NumberOfTintsInList, null));
                 ret.Add((FacegenMainClamp, null));
                 ret.Add((FacegenFaceClamp, null));
@@ -2833,7 +2703,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EquipmentFlags, null));
                 ret.Add((EquipmentSlots, null));
                 ret.Add((UnarmedEquipSlot, null));
-                ret.Add((PhonemeTargetNames, null));
                 ret.Add((FaceFxPhonemes?.Overall ?? true, FaceFxPhonemes?.Specific?.GetCrystal()));
                 ret.Add((BaseMovementDefaultWalk, null));
                 ret.Add((BaseMovementDefaultRun, null));
@@ -2939,8 +2808,8 @@ namespace Mutagen.Bethesda.Skyrim
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
         new ExtendedList<String>? MovementTypeNames { get; set; }
         new GenderedItem<IFormLink<VoiceType>>? Voices { get; set; }
-        new GenderedFormLinks<Armor>? DecapitateArmors { get; set; }
-        new GenderedFormLinks<ColorRecord>? DefaultHairColors { get; set; }
+        new GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
+        new GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
         new UInt16? NumberOfTintsInList { get; set; }
         new Single? FacegenMainClamp { get; set; }
         new Single? FacegenFaceClamp { get; set; }
@@ -2961,8 +2830,7 @@ namespace Mutagen.Bethesda.Skyrim
         new EquipTypeFlag? EquipmentFlags { get; set; }
         new ExtendedList<IFormLink<EquipType>>? EquipmentSlots { get; set; }
         new IFormLinkNullable<EquipType> UnarmedEquipSlot { get; }
-        new ExtendedList<String>? PhonemeTargetNames { get; set; }
-        new FaceFxPhonemes? FaceFxPhonemes { get; set; }
+        new FaceFxPhonemes FaceFxPhonemes { get; set; }
         new IFormLinkNullable<MovementType> BaseMovementDefaultWalk { get; }
         new IFormLinkNullable<MovementType> BaseMovementDefaultRun { get; }
         new IFormLinkNullable<MovementType> BaseMovementDefaultSwim { get; }
@@ -2979,6 +2847,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
         new GenderedItem<IFormLink<VoiceType>>? Voices { get; set; }
+        new GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
+        new GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
         new GenderedItem<Model?>? BehaviorGraph { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
@@ -3002,8 +2872,8 @@ namespace Mutagen.Bethesda.Skyrim
         IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel { get; }
         IReadOnlyList<String>? MovementTypeNames { get; }
         IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>>? Voices { get; }
-        IGenderedFormLinksGetter<IArmorGetter>? DecapitateArmors { get; }
-        IGenderedFormLinksGetter<IColorRecordGetter>? DefaultHairColors { get; }
+        IGenderedItemGetter<IFormLinkGetter<IArmorGetter>>? DecapitateArmors { get; }
+        IGenderedItemGetter<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors { get; }
         UInt16? NumberOfTintsInList { get; }
         Single? FacegenMainClamp { get; }
         Single? FacegenFaceClamp { get; }
@@ -3024,8 +2894,7 @@ namespace Mutagen.Bethesda.Skyrim
         EquipTypeFlag? EquipmentFlags { get; }
         IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? EquipmentSlots { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot { get; }
-        IReadOnlyList<String>? PhonemeTargetNames { get; }
-        IFaceFxPhonemesGetter? FaceFxPhonemes { get; }
+        IFaceFxPhonemesGetter FaceFxPhonemes { get; }
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultWalk { get; }
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultRun { get; }
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim { get; }
@@ -3366,15 +3235,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EquipmentFlags = 36,
         EquipmentSlots = 37,
         UnarmedEquipSlot = 38,
-        PhonemeTargetNames = 39,
-        FaceFxPhonemes = 40,
-        BaseMovementDefaultWalk = 41,
-        BaseMovementDefaultRun = 42,
-        BaseMovementDefaultSwim = 43,
-        BaseMovementDefaultFly = 44,
-        BaseMovementDefaultSneak = 45,
-        BaseMovementDefaultSprint = 46,
-        HeadData = 47,
+        FaceFxPhonemes = 39,
+        BaseMovementDefaultWalk = 40,
+        BaseMovementDefaultRun = 41,
+        BaseMovementDefaultSwim = 42,
+        BaseMovementDefaultFly = 43,
+        BaseMovementDefaultSneak = 44,
+        BaseMovementDefaultSprint = 45,
+        HeadData = 46,
     }
     #endregion
 
@@ -3392,9 +3260,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "54b1dfac-1494-41b6-b6d3-653bc47987eb";
 
-        public const ushort AdditionalFieldCount = 41;
+        public const ushort AdditionalFieldCount = 40;
 
-        public const ushort FieldCount = 48;
+        public const ushort FieldCount = 47;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -3488,8 +3356,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Race_FieldIndex.EquipmentSlots;
                 case "UNARMEDEQUIPSLOT":
                     return (ushort)Race_FieldIndex.UnarmedEquipSlot;
-                case "PHONEMETARGETNAMES":
-                    return (ushort)Race_FieldIndex.PhonemeTargetNames;
                 case "FACEFXPHONEMES":
                     return (ushort)Race_FieldIndex.FaceFxPhonemes;
                 case "BASEMOVEMENTDEFAULTWALK":
@@ -3524,7 +3390,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Eyes:
                 case Race_FieldIndex.MovementTypes:
                 case Race_FieldIndex.EquipmentSlots:
-                case Race_FieldIndex.PhonemeTargetNames:
                     return true;
                 case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
@@ -3572,8 +3437,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BodyTemplate:
                 case Race_FieldIndex.Data:
                 case Race_FieldIndex.SkeletalModel:
-                case Race_FieldIndex.DecapitateArmors:
-                case Race_FieldIndex.DefaultHairColors:
                 case Race_FieldIndex.Attacks:
                 case Race_FieldIndex.BodyData:
                 case Race_FieldIndex.BehaviorGraph:
@@ -3588,6 +3451,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Keywords:
                 case Race_FieldIndex.MovementTypeNames:
                 case Race_FieldIndex.Voices:
+                case Race_FieldIndex.DecapitateArmors:
+                case Race_FieldIndex.DefaultHairColors:
                 case Race_FieldIndex.NumberOfTintsInList:
                 case Race_FieldIndex.FacegenMainClamp:
                 case Race_FieldIndex.FacegenFaceClamp:
@@ -3604,7 +3469,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.EquipmentFlags:
                 case Race_FieldIndex.EquipmentSlots:
                 case Race_FieldIndex.UnarmedEquipSlot:
-                case Race_FieldIndex.PhonemeTargetNames:
                 case Race_FieldIndex.BaseMovementDefaultWalk:
                 case Race_FieldIndex.BaseMovementDefaultRun:
                 case Race_FieldIndex.BaseMovementDefaultSwim:
@@ -3654,7 +3518,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.EquipmentFlags:
                 case Race_FieldIndex.EquipmentSlots:
                 case Race_FieldIndex.UnarmedEquipSlot:
-                case Race_FieldIndex.PhonemeTargetNames:
                 case Race_FieldIndex.FaceFxPhonemes:
                 case Race_FieldIndex.BaseMovementDefaultWalk:
                 case Race_FieldIndex.BaseMovementDefaultRun:
@@ -3738,8 +3601,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "EquipmentSlots";
                 case Race_FieldIndex.UnarmedEquipSlot:
                     return "UnarmedEquipSlot";
-                case Race_FieldIndex.PhonemeTargetNames:
-                    return "PhonemeTargetNames";
                 case Race_FieldIndex.FaceFxPhonemes:
                     return "FaceFxPhonemes";
                 case Race_FieldIndex.BaseMovementDefaultWalk:
@@ -3798,7 +3659,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.EquipmentFlags:
                 case Race_FieldIndex.EquipmentSlots:
                 case Race_FieldIndex.UnarmedEquipSlot:
-                case Race_FieldIndex.PhonemeTargetNames:
                 case Race_FieldIndex.FaceFxPhonemes:
                 case Race_FieldIndex.BaseMovementDefaultWalk:
                 case Race_FieldIndex.BaseMovementDefaultRun:
@@ -3850,7 +3710,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.EquipmentFlags:
                 case Race_FieldIndex.EquipmentSlots:
                 case Race_FieldIndex.UnarmedEquipSlot:
-                case Race_FieldIndex.PhonemeTargetNames:
                 case Race_FieldIndex.FaceFxPhonemes:
                 case Race_FieldIndex.BaseMovementDefaultWalk:
                 case Race_FieldIndex.BaseMovementDefaultRun:
@@ -3891,9 +3750,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Voices:
                     return typeof(GenderedItem<IFormLink<VoiceType>>);
                 case Race_FieldIndex.DecapitateArmors:
-                    return typeof(GenderedFormLinks<Armor>);
+                    return typeof(GenderedItem<IFormLink<Armor>>);
                 case Race_FieldIndex.DefaultHairColors:
-                    return typeof(GenderedFormLinks<ColorRecord>);
+                    return typeof(GenderedItem<IFormLink<ColorRecord>>);
                 case Race_FieldIndex.NumberOfTintsInList:
                     return typeof(UInt16);
                 case Race_FieldIndex.FacegenMainClamp:
@@ -3934,8 +3793,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<IFormLink<EquipType>>);
                 case Race_FieldIndex.UnarmedEquipSlot:
                     return typeof(IFormLinkNullable<EquipType>);
-                case Race_FieldIndex.PhonemeTargetNames:
-                    return typeof(ExtendedList<String>);
                 case Race_FieldIndex.FaceFxPhonemes:
                     return typeof(FaceFxPhonemes);
                 case Race_FieldIndex.BaseMovementDefaultWalk:
@@ -4010,11 +3867,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = RACE_HEADER;
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                SimpleModel_Registration.MODL_HEADER,
+                new RecordType("MODL"),
                 new RecordType("ANAM")));
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 41;
+        public const int NumTypedFields = 39;
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
+        public static RecordTypeConverter HeadDataFemaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("RPRM"),
+                new RecordType("RPRF")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("FTSM"),
+                new RecordType("FTSF")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("AHCM"),
+                new RecordType("AHCF")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("DFTM"),
+                new RecordType("DFTF")));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -4088,8 +3958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EquipmentFlags = default;
             item.EquipmentSlots = null;
             item.UnarmedEquipSlot.FormKey = null;
-            item.PhonemeTargetNames = null;
-            item.FaceFxPhonemes = null;
+            item.FaceFxPhonemes.Clear();
             item.BaseMovementDefaultWalk.FormKey = null;
             item.BaseMovementDefaultRun.FormKey = null;
             item.BaseMovementDefaultSwim.FormKey = null;
@@ -4285,12 +4154,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    item.DecapitateArmors = Mutagen.Bethesda.Skyrim.GenderedFormLinks<Armor>.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.DecapitateArmors = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Armor>>(
+                        frame: frame,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DecapitateArmors);
                 }
                 case 0x464C4348: // HCLF
                 {
-                    item.DefaultHairColors = Mutagen.Bethesda.Skyrim.GenderedFormLinks<ColorRecord>.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.DefaultHairColors = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<ColorRecord>>(
+                        frame: frame,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColors);
                 }
                 case 0x4C4E4954: // TINL
@@ -4479,18 +4354,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E544850: // PHTN
                 {
-                    item.PhonemeTargetNames = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Race_Registration.PHTN_HEADER,
-                            transl: StringBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<String>();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.PhonemeTargetNames);
+                    RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
                 }
                 case 0x54574850: // PHWT
                 {
-                    item.FaceFxPhonemes = Mutagen.Bethesda.Skyrim.FaceFxPhonemes.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceFxPhonemes);
+                    RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
                 }
                 case 0x564D4B57: // WKMV
                 {
@@ -4542,11 +4416,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
-                    item.HeadData = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<HeadData>(
+                    item.HeadData = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
                         frame: frame,
                         maleMarker: Race_Registration.MNAM_HEADER,
                         femaleMarker: Race_Registration.FNAM_HEADER,
+                        marker: Race_Registration.NAM0_HEADER,
+                        femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
                         transl: LoquiBinaryTranslation<HeadData>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.HeadData);
                 }
@@ -4637,16 +4512,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs: rhs.Voices,
                 maskGetter: (l, r, i) => EqualityComparer<IFormLinkGetter<IVoiceTypeGetter>>.Default.Equals(l, r),
                 include: include);
-            ret.DecapitateArmors = EqualsMaskHelper.EqualsHelper(
-                item.DecapitateArmors,
-                rhs.DecapitateArmors,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.DefaultHairColors = EqualsMaskHelper.EqualsHelper(
-                item.DefaultHairColors,
-                rhs.DefaultHairColors,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.DecapitateArmors = GenderedItem.EqualityMaskHelper(
+                lhs: item.DecapitateArmors,
+                rhs: rhs.DecapitateArmors,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkGetter<IArmorGetter>>.Default.Equals(l, r),
+                include: include);
+            ret.DefaultHairColors = GenderedItem.EqualityMaskHelper(
+                lhs: item.DefaultHairColors,
+                rhs: rhs.DefaultHairColors,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkGetter<IColorRecordGetter>>.Default.Equals(l, r),
+                include: include);
             ret.NumberOfTintsInList = item.NumberOfTintsInList == rhs.NumberOfTintsInList;
             ret.FacegenMainClamp = item.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp);
             ret.FacegenFaceClamp = item.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp);
@@ -4693,15 +4568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (l, r) => object.Equals(l, r),
                 include);
             ret.UnarmedEquipSlot = object.Equals(item.UnarmedEquipSlot, rhs.UnarmedEquipSlot);
-            ret.PhonemeTargetNames = item.PhonemeTargetNames.CollectionEqualsHelper(
-                rhs.PhonemeTargetNames,
-                (l, r) => string.Equals(l, r),
-                include);
-            ret.FaceFxPhonemes = EqualsMaskHelper.EqualsHelper(
-                item.FaceFxPhonemes,
-                rhs.FaceFxPhonemes,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.FaceFxPhonemes = MaskItemExt.Factory(item.FaceFxPhonemes.GetEqualsMask(rhs.FaceFxPhonemes, include), include);
             ret.BaseMovementDefaultWalk = object.Equals(item.BaseMovementDefaultWalk, rhs.BaseMovementDefaultWalk);
             ret.BaseMovementDefaultRun = object.Equals(item.BaseMovementDefaultRun, rhs.BaseMovementDefaultRun);
             ret.BaseMovementDefaultSwim = object.Equals(item.BaseMovementDefaultSwim, rhs.BaseMovementDefaultSwim);
@@ -5051,29 +4918,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(UnarmedEquipSlotItem, "UnarmedEquipSlot");
             }
-            if ((printMask?.PhonemeTargetNames?.Overall ?? true)
-                && item.PhonemeTargetNames.TryGet(out var PhonemeTargetNamesItem))
+            if (printMask?.FaceFxPhonemes?.Overall ?? true)
             {
-                fg.AppendLine("PhonemeTargetNames =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in PhonemeTargetNamesItem)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(subItem);
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if ((printMask?.FaceFxPhonemes?.Overall ?? true)
-                && item.FaceFxPhonemes.TryGet(out var FaceFxPhonemesItem))
-            {
-                FaceFxPhonemesItem?.ToString(fg, "FaceFxPhonemes");
+                item.FaceFxPhonemes?.ToString(fg, "FaceFxPhonemes");
             }
             if ((printMask?.BaseMovementDefaultWalk ?? true)
                 && item.BaseMovementDefaultWalk.TryGet(out var BaseMovementDefaultWalkItem))
@@ -5128,10 +4975,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.SkeletalModel?.Overall ?? false) return false;
             if (checkMask.MovementTypeNames?.Overall.HasValue ?? false && checkMask.MovementTypeNames!.Overall.Value != (item.MovementTypeNames != null)) return false;
             if (checkMask.Voices?.Overall ?? false) return false;
-            if (checkMask.DecapitateArmors?.Overall.HasValue ?? false && checkMask.DecapitateArmors.Overall.Value != (item.DecapitateArmors != null)) return false;
-            if (checkMask.DecapitateArmors?.Specific != null && (item.DecapitateArmors == null || !item.DecapitateArmors.HasBeenSet(checkMask.DecapitateArmors.Specific))) return false;
-            if (checkMask.DefaultHairColors?.Overall.HasValue ?? false && checkMask.DefaultHairColors.Overall.Value != (item.DefaultHairColors != null)) return false;
-            if (checkMask.DefaultHairColors?.Specific != null && (item.DefaultHairColors == null || !item.DefaultHairColors.HasBeenSet(checkMask.DefaultHairColors.Specific))) return false;
+            if (checkMask.DecapitateArmors?.Overall ?? false) return false;
+            if (checkMask.DefaultHairColors?.Overall ?? false) return false;
             if (checkMask.NumberOfTintsInList.HasValue && checkMask.NumberOfTintsInList.Value != (item.NumberOfTintsInList != null)) return false;
             if (checkMask.FacegenMainClamp.HasValue && checkMask.FacegenMainClamp.Value != (item.FacegenMainClamp != null)) return false;
             if (checkMask.FacegenFaceClamp.HasValue && checkMask.FacegenFaceClamp.Value != (item.FacegenFaceClamp != null)) return false;
@@ -5152,9 +4997,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.EquipmentFlags.HasValue && checkMask.EquipmentFlags.Value != (item.EquipmentFlags != null)) return false;
             if (checkMask.EquipmentSlots?.Overall.HasValue ?? false && checkMask.EquipmentSlots!.Overall.Value != (item.EquipmentSlots != null)) return false;
             if (checkMask.UnarmedEquipSlot.HasValue && checkMask.UnarmedEquipSlot.Value != (item.UnarmedEquipSlot.FormKey != null)) return false;
-            if (checkMask.PhonemeTargetNames?.Overall.HasValue ?? false && checkMask.PhonemeTargetNames!.Overall.Value != (item.PhonemeTargetNames != null)) return false;
-            if (checkMask.FaceFxPhonemes?.Overall.HasValue ?? false && checkMask.FaceFxPhonemes.Overall.Value != (item.FaceFxPhonemes != null)) return false;
-            if (checkMask.FaceFxPhonemes?.Specific != null && (item.FaceFxPhonemes == null || !item.FaceFxPhonemes.HasBeenSet(checkMask.FaceFxPhonemes.Specific))) return false;
             if (checkMask.BaseMovementDefaultWalk.HasValue && checkMask.BaseMovementDefaultWalk.Value != (item.BaseMovementDefaultWalk.FormKey != null)) return false;
             if (checkMask.BaseMovementDefaultRun.HasValue && checkMask.BaseMovementDefaultRun.Value != (item.BaseMovementDefaultRun.FormKey != null)) return false;
             if (checkMask.BaseMovementDefaultSwim.HasValue && checkMask.BaseMovementDefaultSwim.Value != (item.BaseMovementDefaultSwim.FormKey != null)) return false;
@@ -5185,10 +5027,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (i) => i?.GetHasBeenSetMask());
             mask.MovementTypeNames = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.MovementTypeNames != null), default);
             mask.Voices = item.Voices == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
-            var itemDecapitateArmors = item.DecapitateArmors;
-            mask.DecapitateArmors = new MaskItem<bool, GenderedFormLinks.Mask<bool>?>(itemDecapitateArmors != null, itemDecapitateArmors?.GetHasBeenSetMask());
-            var itemDefaultHairColors = item.DefaultHairColors;
-            mask.DefaultHairColors = new MaskItem<bool, GenderedFormLinks.Mask<bool>?>(itemDefaultHairColors != null, itemDefaultHairColors?.GetHasBeenSetMask());
+            mask.DecapitateArmors = item.DecapitateArmors == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
+            mask.DefaultHairColors = item.DefaultHairColors == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
             mask.NumberOfTintsInList = (item.NumberOfTintsInList != null);
             mask.FacegenMainClamp = (item.FacegenMainClamp != null);
             mask.FacegenFaceClamp = (item.FacegenFaceClamp != null);
@@ -5219,9 +5059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.EquipmentFlags = (item.EquipmentFlags != null);
             mask.EquipmentSlots = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.EquipmentSlots != null), default);
             mask.UnarmedEquipSlot = (item.UnarmedEquipSlot.FormKey != null);
-            mask.PhonemeTargetNames = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.PhonemeTargetNames != null), default);
-            var itemFaceFxPhonemes = item.FaceFxPhonemes;
-            mask.FaceFxPhonemes = new MaskItem<bool, FaceFxPhonemes.Mask<bool>?>(itemFaceFxPhonemes != null, itemFaceFxPhonemes?.GetHasBeenSetMask());
+            mask.FaceFxPhonemes = new MaskItem<bool, FaceFxPhonemes.Mask<bool>?>(true, item.FaceFxPhonemes?.GetHasBeenSetMask());
             mask.BaseMovementDefaultWalk = (item.BaseMovementDefaultWalk.FormKey != null);
             mask.BaseMovementDefaultRun = (item.BaseMovementDefaultRun.FormKey != null);
             mask.BaseMovementDefaultSwim = (item.BaseMovementDefaultSwim.FormKey != null);
@@ -5294,8 +5132,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
             if (!lhs.MovementTypeNames.SequenceEqual(rhs.MovementTypeNames)) return false;
             if (!Equals(lhs.Voices, rhs.Voices)) return false;
-            if (!object.Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
-            if (!object.Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
+            if (!Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
+            if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
             if (lhs.NumberOfTintsInList != rhs.NumberOfTintsInList) return false;
             if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
             if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
@@ -5316,7 +5154,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
             if (!lhs.EquipmentSlots.SequenceEqual(rhs.EquipmentSlots)) return false;
             if (!lhs.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot)) return false;
-            if (!lhs.PhonemeTargetNames.SequenceEqual(rhs.PhonemeTargetNames)) return false;
             if (!object.Equals(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes)) return false;
             if (!lhs.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk)) return false;
             if (!lhs.BaseMovementDefaultRun.Equals(rhs.BaseMovementDefaultRun)) return false;
@@ -5382,11 +5219,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (item.DecapitateArmors.TryGet(out var DecapitateArmorsitem))
             {
-                ret = HashHelper.GetHashCode(DecapitateArmorsitem).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(DecapitateArmorsitem.Male, DecapitateArmorsitem.Female).CombineHashCode(ret);
             }
             if (item.DefaultHairColors.TryGet(out var DefaultHairColorsitem))
             {
-                ret = HashHelper.GetHashCode(DefaultHairColorsitem).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(DefaultHairColorsitem.Male, DefaultHairColorsitem.Female).CombineHashCode(ret);
             }
             if (item.NumberOfTintsInList.TryGet(out var NumberOfTintsInListitem))
             {
@@ -5450,11 +5287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ret = HashHelper.GetHashCode(UnarmedEquipSlotitem).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(item.PhonemeTargetNames).CombineHashCode(ret);
-            if (item.FaceFxPhonemes.TryGet(out var FaceFxPhonemesitem))
-            {
-                ret = HashHelper.GetHashCode(FaceFxPhonemesitem).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(item.FaceFxPhonemes).CombineHashCode(ret);
             if (item.BaseMovementDefaultWalk.TryGet(out var BaseMovementDefaultWalkitem))
             {
                 ret = HashHelper.GetHashCode(BaseMovementDefaultWalkitem).CombineHashCode(ret);
@@ -5523,20 +5356,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Keywords != null)
             {
                 foreach (var item in obj.Keywords)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DecapitateArmors != null)
-            {
-                foreach (var item in obj.DecapitateArmors.Links)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DefaultHairColors != null)
-            {
-                foreach (var item in obj.DefaultHairColors.Links)
                 {
                     yield return item;
                 }
@@ -5841,15 +5660,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.DecapitateArmors);
                 try
                 {
-                    if(rhs.DecapitateArmors.TryGet(out var rhsDecapitateArmors))
+                    if (!rhs.DecapitateArmors.TryGet(out var rhsDecapitateArmorsitem))
                     {
-                        item.DecapitateArmors = rhsDecapitateArmors.DeepCopy<Armor, IArmorGetter, Armor.TranslationMask>(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Race_FieldIndex.DecapitateArmors));
+                        item.DecapitateArmors = null;
                     }
                     else
                     {
-                        item.DecapitateArmors = default;
+                        item.DecapitateArmors = new GenderedItem<IFormLink<Armor>>(
+                            male: new FormLink<Armor>(rhsDecapitateArmorsitem.Male.FormKey),
+                            female: new FormLink<Armor>(rhsDecapitateArmorsitem.Female.FormKey));
                     }
                 }
                 catch (Exception ex)
@@ -5867,15 +5686,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColors);
                 try
                 {
-                    if(rhs.DefaultHairColors.TryGet(out var rhsDefaultHairColors))
+                    if (!rhs.DefaultHairColors.TryGet(out var rhsDefaultHairColorsitem))
                     {
-                        item.DefaultHairColors = rhsDefaultHairColors.DeepCopy<ColorRecord, IColorRecordGetter, ColorRecord.TranslationMask>(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHairColors));
+                        item.DefaultHairColors = null;
                     }
                     else
                     {
-                        item.DefaultHairColors = default;
+                        item.DefaultHairColors = new GenderedItem<IFormLink<ColorRecord>>(
+                            male: new FormLink<ColorRecord>(rhsDefaultHairColorsitem.Male.FormKey),
+                            female: new FormLink<ColorRecord>(rhsDefaultHairColorsitem.Female.FormKey));
                     }
                 }
                 catch (Exception ex)
@@ -6158,46 +5977,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.UnarmedEquipSlot.FormKey = rhs.UnarmedEquipSlot.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.PhonemeTargetNames) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.PhonemeTargetNames);
-                try
-                {
-                    if ((rhs.PhonemeTargetNames != null))
-                    {
-                        item.PhonemeTargetNames = 
-                            rhs.PhonemeTargetNames
-                            .ToExtendedList<String>();
-                    }
-                    else
-                    {
-                        item.PhonemeTargetNames = null;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceFxPhonemes);
                 try
                 {
-                    if(rhs.FaceFxPhonemes.TryGet(out var rhsFaceFxPhonemes))
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
                     {
-                        item.FaceFxPhonemes = rhsFaceFxPhonemes.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes));
-                    }
-                    else
-                    {
-                        item.FaceFxPhonemes = default;
+                        item.FaceFxPhonemes = rhs.FaceFxPhonemes.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -6568,29 +6357,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.DecapitateArmors != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
             {
-                if (item.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
                 {
-                    ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)DecapitateArmorsItem).XmlWriteTranslator).Write<IArmorGetter>(
-                        item: DecapitateArmorsItem,
+                    FormKeyXmlTranslation.Instance.Write(
                         node: node,
                         name: nameof(item.DecapitateArmors),
-                        fieldIndex: (int)Race_FieldIndex.DecapitateArmors,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DecapitateArmors));
+                        item: item.DecapitateArmors.Male.FormKey,
+                        errorMask: errorMask);
+                }
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.DecapitateArmors),
+                        item: item.DecapitateArmors.Female.FormKey,
+                        errorMask: errorMask);
                 }
             }
             if ((item.DefaultHairColors != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
-                if (item.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
                 {
-                    ((GenderedFormLinksXmlWriteTranslation)((IXmlItem)DefaultHairColorsItem).XmlWriteTranslator).Write<IColorRecordGetter>(
-                        item: DefaultHairColorsItem,
+                    FormKeyXmlTranslation.Instance.Write(
                         node: node,
                         name: nameof(item.DefaultHairColors),
-                        fieldIndex: (int)Race_FieldIndex.DefaultHairColors,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHairColors));
+                        item: item.DefaultHairColors.Male.FormKey,
+                        errorMask: errorMask);
+                }
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.DefaultHairColors),
+                        item: item.DefaultHairColors.Female.FormKey,
+                        errorMask: errorMask);
                 }
             }
             if ((item.NumberOfTintsInList != null)
@@ -6895,38 +6692,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Race_FieldIndex.UnarmedEquipSlot,
                     errorMask: errorMask);
             }
-            if ((item.PhonemeTargetNames != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.PhonemeTargetNames) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
             {
-                ListXmlTranslation<String>.Instance.Write(
+                var FaceFxPhonemesItem = item.FaceFxPhonemes;
+                ((FaceFxPhonemesXmlWriteTranslation)((IXmlItem)FaceFxPhonemesItem).XmlWriteTranslator).Write(
+                    item: FaceFxPhonemesItem,
                     node: node,
-                    name: nameof(item.PhonemeTargetNames),
-                    item: item.PhonemeTargetNames,
-                    fieldIndex: (int)Race_FieldIndex.PhonemeTargetNames,
+                    name: nameof(item.FaceFxPhonemes),
+                    fieldIndex: (int)Race_FieldIndex.FaceFxPhonemes,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.PhonemeTargetNames),
-                    transl: (XElement subNode, String subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.FaceFxPhonemes != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
-            {
-                if (item.FaceFxPhonemes.TryGet(out var FaceFxPhonemesItem))
-                {
-                    ((FaceFxPhonemesXmlWriteTranslation)((IXmlItem)FaceFxPhonemesItem).XmlWriteTranslator).Write(
-                        item: FaceFxPhonemesItem,
-                        node: node,
-                        name: nameof(item.FaceFxPhonemes),
-                        fieldIndex: (int)Race_FieldIndex.FaceFxPhonemes,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes));
-                }
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes));
             }
             if ((item.BaseMovementDefaultWalk.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
@@ -7347,10 +7122,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Race_FieldIndex.DecapitateArmors);
                     try
                     {
-                        item.DecapitateArmors = LoquiXmlTranslation<GenderedFormLinks<Armor>>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DecapitateArmors));
+                        item.DecapitateArmors = new GenderedItem<IFormLink<Armor>>(
+                            male: new FormLink<Armor>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)),
+                            female: new FormLink<Armor>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -7366,10 +7144,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColors);
                     try
                     {
-                        item.DefaultHairColors = LoquiXmlTranslation<GenderedFormLinks<ColorRecord>>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHairColors));
+                        item.DefaultHairColors = new GenderedItem<IFormLink<ColorRecord>>(
+                            male: new FormLink<ColorRecord>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)),
+                            female: new FormLink<ColorRecord>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -7795,34 +7576,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "PhonemeTargetNames":
-                    errorMask?.PushIndex((int)Race_FieldIndex.PhonemeTargetNames);
-                    try
-                    {
-                        if (ListXmlTranslation<String>.Instance.Parse(
-                            node: node,
-                            enumer: out var PhonemeTargetNamesItem,
-                            transl: StringXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.PhonemeTargetNames = PhonemeTargetNamesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.PhonemeTargetNames = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "FaceFxPhonemes":
                     errorMask?.PushIndex((int)Race_FieldIndex.FaceFxPhonemes);
                     try
@@ -8086,6 +7839,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
+        static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFaceFxPhonemesListingParsing(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFaceFxPhonemesListingParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFaceFxPhonemesRawParsing(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFaceFxPhonemesRawParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IRaceGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            RaceBinaryWriteTranslation.WriteBinaryExtraNAM2(
+                writer: writer,
+                item: item);
+        }
+
         public static void WriteRecordTypes(
             IRaceGetter item,
             MutagenWriter writer,
@@ -8157,7 +7948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ((SimpleModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            recordTypeConverter: conv);
+                            recordTypeConverter: Race_Registration.SkeletalModelConverter);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
@@ -8181,18 +7972,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            if (item.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
-            {
-                ((GenderedFormLinksBinaryWriteTranslation)((IBinaryItem)DecapitateArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
-                    item: DecapitateArmorsItem,
-                    writer: writer);
-            }
-            if (item.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
-            {
-                ((GenderedFormLinksBinaryWriteTranslation)((IBinaryItem)DefaultHairColorsItem).BinaryWriteTranslator).Write<IColorRecordGetter>(
-                    item: DefaultHairColorsItem,
-                    writer: writer);
-            }
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.DecapitateArmors,
+                recordType: Race_Registration.DNAM_HEADER,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IArmorGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.DefaultHairColors,
+                recordType: Race_Registration.HCLF_HEADER,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NumberOfTintsInList,
@@ -8335,17 +8134,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.UnarmedEquipSlot,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.UNES_HEADER));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.WritePerItem(
+            RaceBinaryWriteTranslation.WriteBinaryFaceFxPhonemesListingParsing(
                 writer: writer,
-                items: item.PhonemeTargetNames,
-                recordType: Race_Registration.PHTN_HEADER,
-                transl: StringBinaryTranslation.Instance.Write);
-            if (item.FaceFxPhonemes.TryGet(out var FaceFxPhonemesItem))
-            {
-                ((FaceFxPhonemesBinaryWriteTranslation)((IBinaryItem)FaceFxPhonemesItem).BinaryWriteTranslator).Write(
-                    item: FaceFxPhonemesItem,
-                    writer: writer);
-            }
+                item: item);
+            RaceBinaryWriteTranslation.WriteBinaryFaceFxPhonemesRawParsing(
+                writer: writer,
+                item: item);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BaseMovementDefaultWalk,
@@ -8370,13 +8164,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.BaseMovementDefaultSprint,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.SPMV_HEADER));
-            GenderedItemBinaryTranslation.Write(
+            GenderedItemBinaryTranslation.WriteMarkerPerItem(
                 writer: writer,
                 item: item.HeadData,
                 markerType: Race_Registration.NAM0_HEADER,
                 maleMarker: Race_Registration.MNAM_HEADER,
                 femaleMarker: Race_Registration.FNAM_HEADER,
                 markerWrap: false,
+                femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
                 transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
@@ -8399,7 +8194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: Race_Registration.RACE_HEADER,
                 type: ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -8470,6 +8265,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRaceInternal item)
         {
             FillBinaryBipedObjectNamesCustom(
+                frame: frame,
+                item: item);
+        }
+
+        static partial void FillBinaryFaceFxPhonemesListingParsingCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static void FillBinaryFaceFxPhonemesListingParsingCustomPublic(
+            MutagenFrame frame,
+            IRaceInternal item)
+        {
+            FillBinaryFaceFxPhonemesListingParsingCustom(
+                frame: frame,
+                item: item);
+        }
+
+        static partial void FillBinaryFaceFxPhonemesRawParsingCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static void FillBinaryFaceFxPhonemesRawParsingCustomPublic(
+            MutagenFrame frame,
+            IRaceInternal item)
+        {
+            FillBinaryFaceFxPhonemesRawParsingCustom(
                 frame: frame,
                 item: item);
         }
@@ -8583,12 +8404,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #endregion
         #region DecapitateArmors
-        public IGenderedFormLinksGetter<IArmorGetter>? DecapitateArmors { get; private set; }
-        public bool DecapitateArmors_IsSet => DecapitateArmors != null;
+        private int? _DecapitateArmorsLocation;
+        public IGenderedItemGetter<IFormLinkGetter<IArmorGetter>>? DecapitateArmors
+        {
+            get
+            {
+                if (!_DecapitateArmorsLocation.HasValue) return default;
+                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DecapitateArmorsLocation.Value, _package.Meta);
+                return new GenderedItem<IFormLinkGetter<IArmorGetter>>(
+                    new FormLink<IArmorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
+                    new FormLink<IArmorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+            }
+        }
         #endregion
         #region DefaultHairColors
-        public IGenderedFormLinksGetter<IColorRecordGetter>? DefaultHairColors { get; private set; }
-        public bool DefaultHairColors_IsSet => DefaultHairColors != null;
+        private int? _DefaultHairColorsLocation;
+        public IGenderedItemGetter<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors
+        {
+            get
+            {
+                if (!_DefaultHairColorsLocation.HasValue) return default;
+                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultHairColorsLocation.Value, _package.Meta);
+                return new GenderedItem<IFormLinkGetter<IColorRecordGetter>>(
+                    new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
+                    new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+            }
+        }
         #endregion
         #region NumberOfTintsInList
         private int? _NumberOfTintsInListLocation;
@@ -8665,10 +8506,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool UnarmedEquipSlot_IsSet => _UnarmedEquipSlotLocation.HasValue;
         public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => _UnarmedEquipSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnarmedEquipSlotLocation.Value, _package.Meta)))) : FormLinkNullable<IEquipTypeGetter>.Empty;
         #endregion
-        public IReadOnlyList<String>? PhonemeTargetNames { get; private set; }
-        #region FaceFxPhonemes
-        public IFaceFxPhonemesGetter? FaceFxPhonemes { get; private set; }
-        public bool FaceFxPhonemes_IsSet => FaceFxPhonemes != null;
+        #region FaceFxPhonemesListingParsing
+        partial void FaceFxPhonemesListingParsingCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        #region FaceFxPhonemesRawParsing
+        partial void FaceFxPhonemesRawParsingCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
         #endregion
         #region BaseMovementDefaultWalk
         private int? _BaseMovementDefaultWalkLocation;
@@ -8835,18 +8681,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    this.DecapitateArmors = GenderedFormLinksBinaryOverlay<IArmorGetter>.GenderedFormLinksFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _DecapitateArmorsLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DecapitateArmors);
                 }
                 case 0x464C4348: // HCLF
                 {
-                    this.DefaultHairColors = GenderedFormLinksBinaryOverlay<IColorRecordGetter>.GenderedFormLinksFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _DefaultHairColorsLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColors);
                 }
                 case 0x4C4E4954: // TINL
@@ -8997,25 +8837,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E544850: // PHTN
                 {
-                    this.PhonemeTargetNames = BinaryOverlaySetList<String>.FactoryByArray(
-                        mem: stream.RemainingMemory,
-                        package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(s),
-                        locs: ParseRecordLocations(
-                            stream: stream,
-                            finalPos: finalPos,
-                            constants: _package.Meta.SubConstants,
-                            trigger: type,
-                            skipHeader: true));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.PhonemeTargetNames);
+                    FaceFxPhonemesListingParsingCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
                 }
                 case 0x54574850: // PHWT
                 {
-                    this.FaceFxPhonemes = FaceFxPhonemesBinaryOverlay.FaceFxPhonemesFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceFxPhonemes);
+                    FaceFxPhonemesRawParsingCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
                 }
                 case 0x564D4B57: // WKMV
                 {

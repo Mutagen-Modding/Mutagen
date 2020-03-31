@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType HEAD_HEADER = new RecordType("HEAD");
         public static readonly RecordType MPAI_HEADER = new RecordType("MPAI");
         public static readonly RecordType RPRM_HEADER = new RecordType("RPRM");
-        public static readonly RecordType ACHM_HEADER = new RecordType("ACHM");
+        public static readonly RecordType AHCM_HEADER = new RecordType("AHCM");
         public static readonly RecordType FTSM_HEADER = new RecordType("FTSM");
         public static readonly RecordType DFTM_HEADER = new RecordType("DFTM");
         public static readonly RecordType TINI_HEADER = new RecordType("TINI");
@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         HEAD_HEADER,
                         MPAI_HEADER,
                         RPRM_HEADER,
-                        ACHM_HEADER,
+                        AHCM_HEADER,
                         FTSM_HEADER,
                         DFTM_HEADER,
                         TINI_HEADER,
@@ -2069,13 +2069,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         .ToExtendedList<IFormLink<Npc>>();
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
                 }
-                case 0x4D484341: // ACHM
+                case 0x4D434841: // AHCM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return TryGet<int?>.Failure;
                     item.AvailableHairColors = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ColorRecord>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: HeadData_Registration.ACHM_HEADER,
+                            triggeringRecord: HeadData_Registration.AHCM_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<ColorRecord>>();
@@ -3575,7 +3575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.ACHM_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.AHCM_HEADER));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Write(
                 writer: writer,
@@ -3840,7 +3840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: true));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
                 }
-                case 0x4D484341: // ACHM
+                case 0x4D434841: // AHCM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return TryGet<int?>.Failure;
                     this.AvailableHairColors = BinaryOverlaySetList<IFormLinkGetter<IColorRecordGetter>>.FactoryByArray(

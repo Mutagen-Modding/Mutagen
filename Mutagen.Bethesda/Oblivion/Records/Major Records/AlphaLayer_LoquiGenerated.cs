@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRIGGERING_RECORD_TYPE = ATXT_HEADER;
         public static RecordTypeConverter BaseConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                BaseLayer_Registration.BTXT_HEADER,
+                new RecordType("BTXT"),
                 new RecordType("ATXT")));
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;

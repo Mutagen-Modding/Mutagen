@@ -19,9 +19,11 @@ namespace Mutagen.Bethesda.Generation
         public override bool IsClass => true;
         public bool ItemHasBeenSet => MaleMarker.HasValue;
         public override bool CanBeNullable(bool getter) => true;
+        public RecordTypeConverter FemaleConversions;
 
         public RecordType? MaleMarker;
         public RecordType? FemaleMarker;
+        public bool MarkerPerGender;
 
         public override void GenerateClear(FileGeneration fg, Accessor accessorPrefix)
         {
@@ -295,10 +297,20 @@ namespace Mutagen.Bethesda.Generation
                 throw new ArgumentException("Both submarkers must be set at once.");
             }
 
+            this.MarkerPerGender = node.GetAttribute<bool>("markerPerGender");
+
             if (MaleMarker.HasValue)
             {
                 this.SubTypeGeneration.HasBeenSetProperty.OnNext((true, true));
             }
+
+            FemaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("FemaleTypeOverrides", LoquiGenerator.Namespace)));
+        }
+
+        public override void GenerateInRegistration(FileGeneration fg)
+        {
+            base.GenerateInRegistration(fg);
+            RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.FemaleConversions, $"{this.Name}Female");
         }
     }
 }

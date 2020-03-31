@@ -754,9 +754,6 @@
     <Compile Include="Skyrim\Records\Common Subrecords\FunctionConditionData_LoquiGenerated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\GenderedFormLinks_LoquiGenerated.cs">
-      <DependentUpon>GenderedFormLinks.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\GetEventData_LoquiGenerated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -934,7 +931,7 @@
     <Compile Include="Skyrim\Records\Major Records\Part_LoquiGenerated.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\PhonemeTarget_LoquiGenerated.cs">
+    <Compile Include="Skyrim\Records\Major Records\Phoneme.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedObject_LoquiGenerated.cs">
@@ -1043,6 +1040,12 @@
       <DependentUpon>PlacedNpc.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\BodyTemplate_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Phoneme_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Morph_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
   </ItemGroup>

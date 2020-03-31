@@ -112,14 +112,14 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"item: {itemAccessor}");
                         args.Add($"writer: {writerAccessor}");
-                        if (converterAccessor != null)
-                        {
-                            args.Add($"recordTypeConverter: {converterAccessor}");
-                        }
-                        else if (data?.RecordTypeConverter != null
+                        if (data?.RecordTypeConverter != null
                             && data.RecordTypeConverter.FromConversions.Count > 0)
                         {
                             args.Add($"recordTypeConverter: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                        }
+                        else if (converterAccessor != null)
+                        {
+                            args.Add($"recordTypeConverter: {converterAccessor}");
                         }
                     }
                 }

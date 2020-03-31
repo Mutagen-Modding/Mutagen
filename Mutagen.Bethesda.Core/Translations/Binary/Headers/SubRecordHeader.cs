@@ -23,6 +23,11 @@ namespace Mutagen.Bethesda.Binary
         public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4));
         public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
         public int TotalLength => this.HeaderLength + this.ContentLength;
+
+        public override string ToString()
+        {
+            return $"{RecordType} => {ContentLength}";
+        }
     }
 
     public ref struct SubrecordFrame
@@ -42,6 +47,11 @@ namespace Mutagen.Bethesda.Binary
             this.Header = meta;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
+
+        public override string ToString()
+        {
+            return $"{Header.RecordType} => {Header.ContentLength}";
+        }
     }
 
     public ref struct SubrecordMemoryFrame
@@ -60,6 +70,11 @@ namespace Mutagen.Bethesda.Binary
         {
             this.Header = meta;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+        }
+
+        public override string ToString()
+        {
+            return $"{Header.RecordType} => {Header.ContentLength}";
         }
     }
 }

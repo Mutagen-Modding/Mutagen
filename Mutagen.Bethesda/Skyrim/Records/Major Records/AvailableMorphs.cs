@@ -4,6 +4,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
+using static Mutagen.Bethesda.Skyrim.Internals.AvailableMorphsBinaryCreateTranslation;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -14,48 +15,96 @@ namespace Mutagen.Bethesda.Skyrim
             public static readonly RecordType MPAV_HEADER = new RecordType("MPAV");
         }
 
+        public partial class AvailableMorphsBinaryCreateTranslation
+        {
+            public enum MorphEnum
+            {
+                Nose = 0,
+                Brow = 1,
+                Eye = 2,
+                Lip = 3,
+            }
+
+            static partial void FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (!frame.Reader.TryReadSubrecordFrame(AvailableMorphs_Registration.MPAI_HEADER, out var indexFrame)) break;
+                    if (indexFrame.Content.Length != 4)
+                    {
+                        throw new ArgumentException($"Unexpected Morphs index length: {indexFrame.Content.Length} != 4");
+                    }
+                    if (!frame.Reader.TryReadSubrecordFrame(AvailableMorphs_Registration.MPAV_HEADER, out var dataFrame))
+                    {
+                        throw new ArgumentException($"Did not read in expected morph data record MPAI");
+                    }
+                    if (dataFrame.Content.Length != 32)
+                    {
+                        throw new ArgumentException($"Morph data length unexpected: {dataFrame.Content.Length} != 32");
+                    }
+                    var index = (MorphEnum)BinaryPrimitives.ReadInt32LittleEndian(indexFrame.Content);
+                    var morph = new Morph()
+                    {
+                        Data = dataFrame.Content.ToArray()
+                    };
+                    switch (index)
+                    {
+                        case MorphEnum.Nose:
+                            item.Nose = morph;
+                            break;
+                        case MorphEnum.Brow:
+                            item.Brow = morph;
+                            break;
+                        case MorphEnum.Eye:
+                            item.Eye = morph;
+                            break;
+                        case MorphEnum.Lip:
+                            item.Lip = morph;
+                            break;
+                        default:
+                            throw new ArgumentException($"Unexpected morph index: {index}");
+                    }
+                }
+            }
+        }
+
+        public partial class AvailableMorphsBinaryWriteTranslation
+        {
+            static void WriteMorph(MutagenWriter writer, MorphEnum e, IMorphGetter? morph)
+            {
+                if (morph == null) return;
+                using (HeaderExport.ExportSubrecordHeader(writer, AvailableMorphs_Registration.MPAI_HEADER))
+                {
+                    writer.Write((int)e);
+                }
+                using (HeaderExport.ExportSubrecordHeader(writer, AvailableMorphs_Registration.MPAV_HEADER))
+                {
+                    writer.Write(morph.Data);
+                }
+            }
+
+            static partial void WriteBinaryParseCustom(MutagenWriter writer, IAvailableMorphsGetter item)
+            {
+                WriteMorph(writer, MorphEnum.Nose, item.Nose);
+                WriteMorph(writer, MorphEnum.Brow, item.Brow);
+                WriteMorph(writer, MorphEnum.Eye, item.Eye);
+                WriteMorph(writer, MorphEnum.Lip, item.Lip);
+            }
+        }
+
         public partial class AvailableMorphsBinaryOverlay
         {
-            public int NoseNumber => 0;
+            public IMorphGetter? Nose => throw new NotImplementedException();
 
-            private int noseDataLocation;
-            private int browDataLocation;
-            private int eyeDataLocation;
-            private int lipDataLocation;
+            public IMorphGetter? Brow => throw new NotImplementedException();
 
-            public int NoseIndex => 0;
-            public ReadOnlyMemorySlice<byte> NoseData => HeaderTranslation.ExtractSubrecordMemory(_data.Slice(noseDataLocation), _package.Meta);
-            public int BrowIndex => 1;
-            public ReadOnlyMemorySlice<byte> BrowData => HeaderTranslation.ExtractSubrecordMemory(_data.Slice(browDataLocation), _package.Meta);
-            public int EyeIndex => 2;
-            public ReadOnlyMemorySlice<byte> EyeData => HeaderTranslation.ExtractSubrecordMemory(_data.Slice(eyeDataLocation), _package.Meta);
-            public int LipIndex => 3;
-            public ReadOnlyMemorySlice<byte> LipData => HeaderTranslation.ExtractSubrecordMemory(_data.Slice(lipDataLocation), _package.Meta);
+            public IMorphGetter? Eye => throw new NotImplementedException();
+
+            public IMorphGetter? Lip => throw new NotImplementedException();
 
             partial void ParseCustomParse(BinaryMemoryReadStream stream, int offset)
             {
                 throw new NotImplementedException();
-                for (int i = 0; i < 4; i++)
-                {
-                    var subFrame = _package.Meta.ReadSubrecordFrame(stream);
-                    if (subFrame.Header.RecordType != AvailableMorphs_Registration.MPAI_HEADER
-                        || subFrame.Header.ContentLength != 4)
-                    {
-                        throw new ArgumentException();
-                    }
-
-                    var contentFrame = _package.Meta.ReadSubrecordFrame(stream);
-                    if (contentFrame.Header.RecordType != AvailableMorphs_Registration.MPAV_HEADER
-                        || contentFrame.Header.ContentLength != 32)
-                    {
-                        throw new ArgumentException();
-                    }
-
-                    var index = BinaryPrimitives.ReadInt32LittleEndian(subFrame.Content);
-                    switch (index)
-                    {
-                    }
-                }
             }
         }
     }

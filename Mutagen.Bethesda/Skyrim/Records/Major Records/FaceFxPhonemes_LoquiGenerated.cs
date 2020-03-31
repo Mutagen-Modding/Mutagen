@@ -46,220 +46,184 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region IY
-        public PhonemeTarget IY { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.IY => IY;
+        #region LipMode
+        public Boolean LipMode { get; set; } = default;
         #endregion
-        #region IH
-        public PhonemeTarget IH { get; set; } = new PhonemeTarget();
+        #region Aah_LipBigAah
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.IH => IH;
+        private Phoneme? _Aah_LipBigAah;
+        public Phoneme? Aah_LipBigAah
+        {
+            get => _Aah_LipBigAah;
+            set => _Aah_LipBigAah = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.Aah_LipBigAah => this.Aah_LipBigAah;
         #endregion
-        #region EH
-        public PhonemeTarget EH { get; set; } = new PhonemeTarget();
+        #region BigAah_LipDST
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.EH => EH;
+        private Phoneme? _BigAah_LipDST;
+        public Phoneme? BigAah_LipDST
+        {
+            get => _BigAah_LipDST;
+            set => _BigAah_LipDST = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.BigAah_LipDST => this.BigAah_LipDST;
         #endregion
-        #region EY
-        public PhonemeTarget EY { get; set; } = new PhonemeTarget();
+        #region BMP_LipEee
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.EY => EY;
+        private Phoneme? _BMP_LipEee;
+        public Phoneme? BMP_LipEee
+        {
+            get => _BMP_LipEee;
+            set => _BMP_LipEee = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.BMP_LipEee => this.BMP_LipEee;
         #endregion
-        #region AE
-        public PhonemeTarget AE { get; set; } = new PhonemeTarget();
+        #region ChJSh_LipFV
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.AE => AE;
+        private Phoneme? _ChJSh_LipFV;
+        public Phoneme? ChJSh_LipFV
+        {
+            get => _ChJSh_LipFV;
+            set => _ChJSh_LipFV = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.ChJSh_LipFV => this.ChJSh_LipFV;
         #endregion
-        #region AA
-        public PhonemeTarget AA { get; set; } = new PhonemeTarget();
+        #region DST_LipK
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.AA => AA;
+        private Phoneme? _DST_LipK;
+        public Phoneme? DST_LipK
+        {
+            get => _DST_LipK;
+            set => _DST_LipK = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.DST_LipK => this.DST_LipK;
         #endregion
-        #region AW
-        public PhonemeTarget AW { get; set; } = new PhonemeTarget();
+        #region Eee_LipL
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.AW => AW;
+        private Phoneme? _Eee_LipL;
+        public Phoneme? Eee_LipL
+        {
+            get => _Eee_LipL;
+            set => _Eee_LipL = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.Eee_LipL => this.Eee_LipL;
         #endregion
-        #region AY
-        public PhonemeTarget AY { get; set; } = new PhonemeTarget();
+        #region Eh_LipR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.AY => AY;
+        private Phoneme? _Eh_LipR;
+        public Phoneme? Eh_LipR
+        {
+            get => _Eh_LipR;
+            set => _Eh_LipR = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.Eh_LipR => this.Eh_LipR;
         #endregion
-        #region AH
-        public PhonemeTarget AH { get; set; } = new PhonemeTarget();
+        #region FV_LipTh
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.AH => AH;
+        private Phoneme? _FV_LipTh;
+        public Phoneme? FV_LipTh
+        {
+            get => _FV_LipTh;
+            set => _FV_LipTh = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.FV_LipTh => this.FV_LipTh;
         #endregion
-        #region AO
-        public PhonemeTarget AO { get; set; } = new PhonemeTarget();
+        #region I
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.AO => AO;
-        #endregion
-        #region OY
-        public PhonemeTarget OY { get; set; } = new PhonemeTarget();
+        private Phoneme? _I;
+        public Phoneme? I
+        {
+            get => _I;
+            set => _I = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.OY => OY;
-        #endregion
-        #region OW
-        public PhonemeTarget OW { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.OW => OW;
-        #endregion
-        #region UH
-        public PhonemeTarget UH { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.UH => UH;
-        #endregion
-        #region UW
-        public PhonemeTarget UW { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.UW => UW;
-        #endregion
-        #region ER
-        public PhonemeTarget ER { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.ER => ER;
-        #endregion
-        #region AX
-        public PhonemeTarget AX { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.AX => AX;
-        #endregion
-        #region S
-        public PhonemeTarget S { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.S => S;
-        #endregion
-        #region SH
-        public PhonemeTarget SH { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.SH => SH;
-        #endregion
-        #region Z
-        public PhonemeTarget Z { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.Z => Z;
-        #endregion
-        #region ZH
-        public PhonemeTarget ZH { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.ZH => ZH;
-        #endregion
-        #region F
-        public PhonemeTarget F { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.F => F;
-        #endregion
-        #region TH
-        public PhonemeTarget TH { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.TH => TH;
-        #endregion
-        #region V
-        public PhonemeTarget V { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.V => V;
-        #endregion
-        #region DH
-        public PhonemeTarget DH { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.DH => DH;
-        #endregion
-        #region M
-        public PhonemeTarget M { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.M => M;
-        #endregion
-        #region N
-        public PhonemeTarget N { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.N => N;
-        #endregion
-        #region NG
-        public PhonemeTarget NG { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.NG => NG;
-        #endregion
-        #region L
-        public PhonemeTarget L { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.L => L;
-        #endregion
-        #region R
-        public PhonemeTarget R { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.R => R;
-        #endregion
-        #region W
-        public PhonemeTarget W { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.W => W;
-        #endregion
-        #region Y
-        public PhonemeTarget Y { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.Y => Y;
-        #endregion
-        #region HH
-        public PhonemeTarget HH { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.HH => HH;
-        #endregion
-        #region B
-        public PhonemeTarget B { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.B => B;
-        #endregion
-        #region D
-        public PhonemeTarget D { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.D => D;
-        #endregion
-        #region JH
-        public PhonemeTarget JH { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.JH => JH;
-        #endregion
-        #region G
-        public PhonemeTarget G { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.G => G;
-        #endregion
-        #region P
-        public PhonemeTarget P { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.P => P;
-        #endregion
-        #region T
-        public PhonemeTarget T { get; set; } = new PhonemeTarget();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.T => T;
+        IPhonemeGetter? IFaceFxPhonemesGetter.I => this.I;
         #endregion
         #region K
-        public PhonemeTarget K { get; set; } = new PhonemeTarget();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.K => K;
+        private Phoneme? _K;
+        public Phoneme? K
+        {
+            get => _K;
+            set => _K = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.K => this.K;
         #endregion
-        #region CH
-        public PhonemeTarget CH { get; set; } = new PhonemeTarget();
+        #region N
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.CH => CH;
+        private Phoneme? _N;
+        public Phoneme? N
+        {
+            get => _N;
+            set => _N = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.N => this.N;
         #endregion
-        #region SIL
-        public PhonemeTarget SIL { get; set; } = new PhonemeTarget();
+        #region Oh
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.SIL => SIL;
+        private Phoneme? _Oh;
+        public Phoneme? Oh
+        {
+            get => _Oh;
+            set => _Oh = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.Oh => this.Oh;
         #endregion
-        #region SHOTSIL
-        public PhonemeTarget SHOTSIL { get; set; } = new PhonemeTarget();
+        #region OohQ
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.SHOTSIL => SHOTSIL;
+        private Phoneme? _OohQ;
+        public Phoneme? OohQ
+        {
+            get => _OohQ;
+            set => _OohQ = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.OohQ => this.OohQ;
         #endregion
-        #region FLAP
-        public PhonemeTarget FLAP { get; set; } = new PhonemeTarget();
+        #region R
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPhonemeTargetGetter IFaceFxPhonemesGetter.FLAP => FLAP;
+        private Phoneme? _R;
+        public Phoneme? R
+        {
+            get => _R;
+            set => _R = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.R => this.R;
+        #endregion
+        #region Th
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Phoneme? _Th;
+        public Phoneme? Th
+        {
+            get => _Th;
+            set => _Th = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.Th => this.Th;
+        #endregion
+        #region W
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Phoneme? _W;
+        public Phoneme? W
+        {
+            get => _W;
+            set => _W = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPhonemeGetter? IFaceFxPhonemesGetter.W => this.W;
         #endregion
 
         #region To String
@@ -431,139 +395,61 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.IY = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.IH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.EH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.EY = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.AE = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.AA = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.AW = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.AY = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.AH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.AO = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.OY = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.OW = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.UH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.UW = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.ER = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.AX = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.S = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.SH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.Z = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.ZH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.F = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.TH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.V = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.DH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.M = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.N = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.NG = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.L = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.R = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.W = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.Y = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.HH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.B = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.D = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.JH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.G = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.P = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.T = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.K = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.CH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.SIL = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.SHOTSIL = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
-                this.FLAP = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(initialValue, new PhonemeTarget.Mask<TItem>(initialValue));
+                this.LipMode = initialValue;
+                this.Aah_LipBigAah = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.BigAah_LipDST = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.BMP_LipEee = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.ChJSh_LipFV = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.DST_LipK = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.Eee_LipL = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.Eh_LipR = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.FV_LipTh = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.I = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.K = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.N = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.Oh = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.OohQ = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.R = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.Th = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
+                this.W = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                TItem IY,
-                TItem IH,
-                TItem EH,
-                TItem EY,
-                TItem AE,
-                TItem AA,
-                TItem AW,
-                TItem AY,
-                TItem AH,
-                TItem AO,
-                TItem OY,
-                TItem OW,
-                TItem UH,
-                TItem UW,
-                TItem ER,
-                TItem AX,
-                TItem S,
-                TItem SH,
-                TItem Z,
-                TItem ZH,
-                TItem F,
-                TItem TH,
-                TItem V,
-                TItem DH,
-                TItem M,
-                TItem N,
-                TItem NG,
-                TItem L,
-                TItem R,
-                TItem W,
-                TItem Y,
-                TItem HH,
-                TItem B,
-                TItem D,
-                TItem JH,
-                TItem G,
-                TItem P,
-                TItem T,
+                TItem LipMode,
+                TItem Aah_LipBigAah,
+                TItem BigAah_LipDST,
+                TItem BMP_LipEee,
+                TItem ChJSh_LipFV,
+                TItem DST_LipK,
+                TItem Eee_LipL,
+                TItem Eh_LipR,
+                TItem FV_LipTh,
+                TItem I,
                 TItem K,
-                TItem CH,
-                TItem SIL,
-                TItem SHOTSIL,
-                TItem FLAP)
+                TItem N,
+                TItem Oh,
+                TItem OohQ,
+                TItem R,
+                TItem Th,
+                TItem W)
             {
-                this.IY = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(IY, new PhonemeTarget.Mask<TItem>(IY));
-                this.IH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(IH, new PhonemeTarget.Mask<TItem>(IH));
-                this.EH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(EH, new PhonemeTarget.Mask<TItem>(EH));
-                this.EY = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(EY, new PhonemeTarget.Mask<TItem>(EY));
-                this.AE = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(AE, new PhonemeTarget.Mask<TItem>(AE));
-                this.AA = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(AA, new PhonemeTarget.Mask<TItem>(AA));
-                this.AW = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(AW, new PhonemeTarget.Mask<TItem>(AW));
-                this.AY = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(AY, new PhonemeTarget.Mask<TItem>(AY));
-                this.AH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(AH, new PhonemeTarget.Mask<TItem>(AH));
-                this.AO = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(AO, new PhonemeTarget.Mask<TItem>(AO));
-                this.OY = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(OY, new PhonemeTarget.Mask<TItem>(OY));
-                this.OW = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(OW, new PhonemeTarget.Mask<TItem>(OW));
-                this.UH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(UH, new PhonemeTarget.Mask<TItem>(UH));
-                this.UW = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(UW, new PhonemeTarget.Mask<TItem>(UW));
-                this.ER = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(ER, new PhonemeTarget.Mask<TItem>(ER));
-                this.AX = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(AX, new PhonemeTarget.Mask<TItem>(AX));
-                this.S = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(S, new PhonemeTarget.Mask<TItem>(S));
-                this.SH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(SH, new PhonemeTarget.Mask<TItem>(SH));
-                this.Z = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(Z, new PhonemeTarget.Mask<TItem>(Z));
-                this.ZH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(ZH, new PhonemeTarget.Mask<TItem>(ZH));
-                this.F = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(F, new PhonemeTarget.Mask<TItem>(F));
-                this.TH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(TH, new PhonemeTarget.Mask<TItem>(TH));
-                this.V = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(V, new PhonemeTarget.Mask<TItem>(V));
-                this.DH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(DH, new PhonemeTarget.Mask<TItem>(DH));
-                this.M = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(M, new PhonemeTarget.Mask<TItem>(M));
-                this.N = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(N, new PhonemeTarget.Mask<TItem>(N));
-                this.NG = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(NG, new PhonemeTarget.Mask<TItem>(NG));
-                this.L = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(L, new PhonemeTarget.Mask<TItem>(L));
-                this.R = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(R, new PhonemeTarget.Mask<TItem>(R));
-                this.W = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(W, new PhonemeTarget.Mask<TItem>(W));
-                this.Y = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(Y, new PhonemeTarget.Mask<TItem>(Y));
-                this.HH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(HH, new PhonemeTarget.Mask<TItem>(HH));
-                this.B = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(B, new PhonemeTarget.Mask<TItem>(B));
-                this.D = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(D, new PhonemeTarget.Mask<TItem>(D));
-                this.JH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(JH, new PhonemeTarget.Mask<TItem>(JH));
-                this.G = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(G, new PhonemeTarget.Mask<TItem>(G));
-                this.P = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(P, new PhonemeTarget.Mask<TItem>(P));
-                this.T = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(T, new PhonemeTarget.Mask<TItem>(T));
-                this.K = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(K, new PhonemeTarget.Mask<TItem>(K));
-                this.CH = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(CH, new PhonemeTarget.Mask<TItem>(CH));
-                this.SIL = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(SIL, new PhonemeTarget.Mask<TItem>(SIL));
-                this.SHOTSIL = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(SHOTSIL, new PhonemeTarget.Mask<TItem>(SHOTSIL));
-                this.FLAP = new MaskItem<TItem, PhonemeTarget.Mask<TItem>?>(FLAP, new PhonemeTarget.Mask<TItem>(FLAP));
+                this.LipMode = LipMode;
+                this.Aah_LipBigAah = new MaskItem<TItem, Phoneme.Mask<TItem>?>(Aah_LipBigAah, new Phoneme.Mask<TItem>(Aah_LipBigAah));
+                this.BigAah_LipDST = new MaskItem<TItem, Phoneme.Mask<TItem>?>(BigAah_LipDST, new Phoneme.Mask<TItem>(BigAah_LipDST));
+                this.BMP_LipEee = new MaskItem<TItem, Phoneme.Mask<TItem>?>(BMP_LipEee, new Phoneme.Mask<TItem>(BMP_LipEee));
+                this.ChJSh_LipFV = new MaskItem<TItem, Phoneme.Mask<TItem>?>(ChJSh_LipFV, new Phoneme.Mask<TItem>(ChJSh_LipFV));
+                this.DST_LipK = new MaskItem<TItem, Phoneme.Mask<TItem>?>(DST_LipK, new Phoneme.Mask<TItem>(DST_LipK));
+                this.Eee_LipL = new MaskItem<TItem, Phoneme.Mask<TItem>?>(Eee_LipL, new Phoneme.Mask<TItem>(Eee_LipL));
+                this.Eh_LipR = new MaskItem<TItem, Phoneme.Mask<TItem>?>(Eh_LipR, new Phoneme.Mask<TItem>(Eh_LipR));
+                this.FV_LipTh = new MaskItem<TItem, Phoneme.Mask<TItem>?>(FV_LipTh, new Phoneme.Mask<TItem>(FV_LipTh));
+                this.I = new MaskItem<TItem, Phoneme.Mask<TItem>?>(I, new Phoneme.Mask<TItem>(I));
+                this.K = new MaskItem<TItem, Phoneme.Mask<TItem>?>(K, new Phoneme.Mask<TItem>(K));
+                this.N = new MaskItem<TItem, Phoneme.Mask<TItem>?>(N, new Phoneme.Mask<TItem>(N));
+                this.Oh = new MaskItem<TItem, Phoneme.Mask<TItem>?>(Oh, new Phoneme.Mask<TItem>(Oh));
+                this.OohQ = new MaskItem<TItem, Phoneme.Mask<TItem>?>(OohQ, new Phoneme.Mask<TItem>(OohQ));
+                this.R = new MaskItem<TItem, Phoneme.Mask<TItem>?>(R, new Phoneme.Mask<TItem>(R));
+                this.Th = new MaskItem<TItem, Phoneme.Mask<TItem>?>(Th, new Phoneme.Mask<TItem>(Th));
+                this.W = new MaskItem<TItem, Phoneme.Mask<TItem>?>(W, new Phoneme.Mask<TItem>(W));
             }
 
             #pragma warning disable CS8618
@@ -575,49 +461,23 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? IY { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? IH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? EH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? EY { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? AE { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? AA { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? AW { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? AY { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? AH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? AO { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? OY { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? OW { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? UH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? UW { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? ER { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? AX { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? S { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? SH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? Z { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? ZH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? F { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? TH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? V { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? DH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? M { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? N { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? NG { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? L { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? R { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? W { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? Y { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? HH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? B { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? D { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? JH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? G { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? P { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? T { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? K { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? CH { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? SIL { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? SHOTSIL { get; set; }
-            public MaskItem<TItem, PhonemeTarget.Mask<TItem>?>? FLAP { get; set; }
+            public TItem LipMode;
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? Aah_LipBigAah { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? BigAah_LipDST { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? BMP_LipEee { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? ChJSh_LipFV { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? DST_LipK { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? Eee_LipL { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? Eh_LipR { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? FV_LipTh { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? I { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? K { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? N { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? Oh { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? OohQ { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? R { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? Th { get; set; }
+            public MaskItem<TItem, Phoneme.Mask<TItem>?>? W { get; set; }
             #endregion
 
             #region Equals
@@ -630,97 +490,45 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.IY, rhs.IY)) return false;
-                if (!object.Equals(this.IH, rhs.IH)) return false;
-                if (!object.Equals(this.EH, rhs.EH)) return false;
-                if (!object.Equals(this.EY, rhs.EY)) return false;
-                if (!object.Equals(this.AE, rhs.AE)) return false;
-                if (!object.Equals(this.AA, rhs.AA)) return false;
-                if (!object.Equals(this.AW, rhs.AW)) return false;
-                if (!object.Equals(this.AY, rhs.AY)) return false;
-                if (!object.Equals(this.AH, rhs.AH)) return false;
-                if (!object.Equals(this.AO, rhs.AO)) return false;
-                if (!object.Equals(this.OY, rhs.OY)) return false;
-                if (!object.Equals(this.OW, rhs.OW)) return false;
-                if (!object.Equals(this.UH, rhs.UH)) return false;
-                if (!object.Equals(this.UW, rhs.UW)) return false;
-                if (!object.Equals(this.ER, rhs.ER)) return false;
-                if (!object.Equals(this.AX, rhs.AX)) return false;
-                if (!object.Equals(this.S, rhs.S)) return false;
-                if (!object.Equals(this.SH, rhs.SH)) return false;
-                if (!object.Equals(this.Z, rhs.Z)) return false;
-                if (!object.Equals(this.ZH, rhs.ZH)) return false;
-                if (!object.Equals(this.F, rhs.F)) return false;
-                if (!object.Equals(this.TH, rhs.TH)) return false;
-                if (!object.Equals(this.V, rhs.V)) return false;
-                if (!object.Equals(this.DH, rhs.DH)) return false;
-                if (!object.Equals(this.M, rhs.M)) return false;
-                if (!object.Equals(this.N, rhs.N)) return false;
-                if (!object.Equals(this.NG, rhs.NG)) return false;
-                if (!object.Equals(this.L, rhs.L)) return false;
-                if (!object.Equals(this.R, rhs.R)) return false;
-                if (!object.Equals(this.W, rhs.W)) return false;
-                if (!object.Equals(this.Y, rhs.Y)) return false;
-                if (!object.Equals(this.HH, rhs.HH)) return false;
-                if (!object.Equals(this.B, rhs.B)) return false;
-                if (!object.Equals(this.D, rhs.D)) return false;
-                if (!object.Equals(this.JH, rhs.JH)) return false;
-                if (!object.Equals(this.G, rhs.G)) return false;
-                if (!object.Equals(this.P, rhs.P)) return false;
-                if (!object.Equals(this.T, rhs.T)) return false;
+                if (!object.Equals(this.LipMode, rhs.LipMode)) return false;
+                if (!object.Equals(this.Aah_LipBigAah, rhs.Aah_LipBigAah)) return false;
+                if (!object.Equals(this.BigAah_LipDST, rhs.BigAah_LipDST)) return false;
+                if (!object.Equals(this.BMP_LipEee, rhs.BMP_LipEee)) return false;
+                if (!object.Equals(this.ChJSh_LipFV, rhs.ChJSh_LipFV)) return false;
+                if (!object.Equals(this.DST_LipK, rhs.DST_LipK)) return false;
+                if (!object.Equals(this.Eee_LipL, rhs.Eee_LipL)) return false;
+                if (!object.Equals(this.Eh_LipR, rhs.Eh_LipR)) return false;
+                if (!object.Equals(this.FV_LipTh, rhs.FV_LipTh)) return false;
+                if (!object.Equals(this.I, rhs.I)) return false;
                 if (!object.Equals(this.K, rhs.K)) return false;
-                if (!object.Equals(this.CH, rhs.CH)) return false;
-                if (!object.Equals(this.SIL, rhs.SIL)) return false;
-                if (!object.Equals(this.SHOTSIL, rhs.SHOTSIL)) return false;
-                if (!object.Equals(this.FLAP, rhs.FLAP)) return false;
+                if (!object.Equals(this.N, rhs.N)) return false;
+                if (!object.Equals(this.Oh, rhs.Oh)) return false;
+                if (!object.Equals(this.OohQ, rhs.OohQ)) return false;
+                if (!object.Equals(this.R, rhs.R)) return false;
+                if (!object.Equals(this.Th, rhs.Th)) return false;
+                if (!object.Equals(this.W, rhs.W)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 int ret = 0;
-                ret = ret.CombineHashCode(this.IY?.GetHashCode());
-                ret = ret.CombineHashCode(this.IH?.GetHashCode());
-                ret = ret.CombineHashCode(this.EH?.GetHashCode());
-                ret = ret.CombineHashCode(this.EY?.GetHashCode());
-                ret = ret.CombineHashCode(this.AE?.GetHashCode());
-                ret = ret.CombineHashCode(this.AA?.GetHashCode());
-                ret = ret.CombineHashCode(this.AW?.GetHashCode());
-                ret = ret.CombineHashCode(this.AY?.GetHashCode());
-                ret = ret.CombineHashCode(this.AH?.GetHashCode());
-                ret = ret.CombineHashCode(this.AO?.GetHashCode());
-                ret = ret.CombineHashCode(this.OY?.GetHashCode());
-                ret = ret.CombineHashCode(this.OW?.GetHashCode());
-                ret = ret.CombineHashCode(this.UH?.GetHashCode());
-                ret = ret.CombineHashCode(this.UW?.GetHashCode());
-                ret = ret.CombineHashCode(this.ER?.GetHashCode());
-                ret = ret.CombineHashCode(this.AX?.GetHashCode());
-                ret = ret.CombineHashCode(this.S?.GetHashCode());
-                ret = ret.CombineHashCode(this.SH?.GetHashCode());
-                ret = ret.CombineHashCode(this.Z?.GetHashCode());
-                ret = ret.CombineHashCode(this.ZH?.GetHashCode());
-                ret = ret.CombineHashCode(this.F?.GetHashCode());
-                ret = ret.CombineHashCode(this.TH?.GetHashCode());
-                ret = ret.CombineHashCode(this.V?.GetHashCode());
-                ret = ret.CombineHashCode(this.DH?.GetHashCode());
-                ret = ret.CombineHashCode(this.M?.GetHashCode());
-                ret = ret.CombineHashCode(this.N?.GetHashCode());
-                ret = ret.CombineHashCode(this.NG?.GetHashCode());
-                ret = ret.CombineHashCode(this.L?.GetHashCode());
-                ret = ret.CombineHashCode(this.R?.GetHashCode());
-                ret = ret.CombineHashCode(this.W?.GetHashCode());
-                ret = ret.CombineHashCode(this.Y?.GetHashCode());
-                ret = ret.CombineHashCode(this.HH?.GetHashCode());
-                ret = ret.CombineHashCode(this.B?.GetHashCode());
-                ret = ret.CombineHashCode(this.D?.GetHashCode());
-                ret = ret.CombineHashCode(this.JH?.GetHashCode());
-                ret = ret.CombineHashCode(this.G?.GetHashCode());
-                ret = ret.CombineHashCode(this.P?.GetHashCode());
-                ret = ret.CombineHashCode(this.T?.GetHashCode());
+                ret = ret.CombineHashCode(this.LipMode?.GetHashCode());
+                ret = ret.CombineHashCode(this.Aah_LipBigAah?.GetHashCode());
+                ret = ret.CombineHashCode(this.BigAah_LipDST?.GetHashCode());
+                ret = ret.CombineHashCode(this.BMP_LipEee?.GetHashCode());
+                ret = ret.CombineHashCode(this.ChJSh_LipFV?.GetHashCode());
+                ret = ret.CombineHashCode(this.DST_LipK?.GetHashCode());
+                ret = ret.CombineHashCode(this.Eee_LipL?.GetHashCode());
+                ret = ret.CombineHashCode(this.Eh_LipR?.GetHashCode());
+                ret = ret.CombineHashCode(this.FV_LipTh?.GetHashCode());
+                ret = ret.CombineHashCode(this.I?.GetHashCode());
                 ret = ret.CombineHashCode(this.K?.GetHashCode());
-                ret = ret.CombineHashCode(this.CH?.GetHashCode());
-                ret = ret.CombineHashCode(this.SIL?.GetHashCode());
-                ret = ret.CombineHashCode(this.SHOTSIL?.GetHashCode());
-                ret = ret.CombineHashCode(this.FLAP?.GetHashCode());
+                ret = ret.CombineHashCode(this.N?.GetHashCode());
+                ret = ret.CombineHashCode(this.Oh?.GetHashCode());
+                ret = ret.CombineHashCode(this.OohQ?.GetHashCode());
+                ret = ret.CombineHashCode(this.R?.GetHashCode());
+                ret = ret.CombineHashCode(this.Th?.GetHashCode());
+                ret = ret.CombineHashCode(this.W?.GetHashCode());
                 return ret;
             }
 
@@ -729,220 +537,86 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (IY != null)
+                if (!eval(this.LipMode)) return false;
+                if (Aah_LipBigAah != null)
                 {
-                    if (!eval(this.IY.Overall)) return false;
-                    if (this.IY.Specific != null && !this.IY.Specific.All(eval)) return false;
+                    if (!eval(this.Aah_LipBigAah.Overall)) return false;
+                    if (this.Aah_LipBigAah.Specific != null && !this.Aah_LipBigAah.Specific.All(eval)) return false;
                 }
-                if (IH != null)
+                if (BigAah_LipDST != null)
                 {
-                    if (!eval(this.IH.Overall)) return false;
-                    if (this.IH.Specific != null && !this.IH.Specific.All(eval)) return false;
+                    if (!eval(this.BigAah_LipDST.Overall)) return false;
+                    if (this.BigAah_LipDST.Specific != null && !this.BigAah_LipDST.Specific.All(eval)) return false;
                 }
-                if (EH != null)
+                if (BMP_LipEee != null)
                 {
-                    if (!eval(this.EH.Overall)) return false;
-                    if (this.EH.Specific != null && !this.EH.Specific.All(eval)) return false;
+                    if (!eval(this.BMP_LipEee.Overall)) return false;
+                    if (this.BMP_LipEee.Specific != null && !this.BMP_LipEee.Specific.All(eval)) return false;
                 }
-                if (EY != null)
+                if (ChJSh_LipFV != null)
                 {
-                    if (!eval(this.EY.Overall)) return false;
-                    if (this.EY.Specific != null && !this.EY.Specific.All(eval)) return false;
+                    if (!eval(this.ChJSh_LipFV.Overall)) return false;
+                    if (this.ChJSh_LipFV.Specific != null && !this.ChJSh_LipFV.Specific.All(eval)) return false;
                 }
-                if (AE != null)
+                if (DST_LipK != null)
                 {
-                    if (!eval(this.AE.Overall)) return false;
-                    if (this.AE.Specific != null && !this.AE.Specific.All(eval)) return false;
+                    if (!eval(this.DST_LipK.Overall)) return false;
+                    if (this.DST_LipK.Specific != null && !this.DST_LipK.Specific.All(eval)) return false;
                 }
-                if (AA != null)
+                if (Eee_LipL != null)
                 {
-                    if (!eval(this.AA.Overall)) return false;
-                    if (this.AA.Specific != null && !this.AA.Specific.All(eval)) return false;
+                    if (!eval(this.Eee_LipL.Overall)) return false;
+                    if (this.Eee_LipL.Specific != null && !this.Eee_LipL.Specific.All(eval)) return false;
                 }
-                if (AW != null)
+                if (Eh_LipR != null)
                 {
-                    if (!eval(this.AW.Overall)) return false;
-                    if (this.AW.Specific != null && !this.AW.Specific.All(eval)) return false;
+                    if (!eval(this.Eh_LipR.Overall)) return false;
+                    if (this.Eh_LipR.Specific != null && !this.Eh_LipR.Specific.All(eval)) return false;
                 }
-                if (AY != null)
+                if (FV_LipTh != null)
                 {
-                    if (!eval(this.AY.Overall)) return false;
-                    if (this.AY.Specific != null && !this.AY.Specific.All(eval)) return false;
+                    if (!eval(this.FV_LipTh.Overall)) return false;
+                    if (this.FV_LipTh.Specific != null && !this.FV_LipTh.Specific.All(eval)) return false;
                 }
-                if (AH != null)
+                if (I != null)
                 {
-                    if (!eval(this.AH.Overall)) return false;
-                    if (this.AH.Specific != null && !this.AH.Specific.All(eval)) return false;
-                }
-                if (AO != null)
-                {
-                    if (!eval(this.AO.Overall)) return false;
-                    if (this.AO.Specific != null && !this.AO.Specific.All(eval)) return false;
-                }
-                if (OY != null)
-                {
-                    if (!eval(this.OY.Overall)) return false;
-                    if (this.OY.Specific != null && !this.OY.Specific.All(eval)) return false;
-                }
-                if (OW != null)
-                {
-                    if (!eval(this.OW.Overall)) return false;
-                    if (this.OW.Specific != null && !this.OW.Specific.All(eval)) return false;
-                }
-                if (UH != null)
-                {
-                    if (!eval(this.UH.Overall)) return false;
-                    if (this.UH.Specific != null && !this.UH.Specific.All(eval)) return false;
-                }
-                if (UW != null)
-                {
-                    if (!eval(this.UW.Overall)) return false;
-                    if (this.UW.Specific != null && !this.UW.Specific.All(eval)) return false;
-                }
-                if (ER != null)
-                {
-                    if (!eval(this.ER.Overall)) return false;
-                    if (this.ER.Specific != null && !this.ER.Specific.All(eval)) return false;
-                }
-                if (AX != null)
-                {
-                    if (!eval(this.AX.Overall)) return false;
-                    if (this.AX.Specific != null && !this.AX.Specific.All(eval)) return false;
-                }
-                if (S != null)
-                {
-                    if (!eval(this.S.Overall)) return false;
-                    if (this.S.Specific != null && !this.S.Specific.All(eval)) return false;
-                }
-                if (SH != null)
-                {
-                    if (!eval(this.SH.Overall)) return false;
-                    if (this.SH.Specific != null && !this.SH.Specific.All(eval)) return false;
-                }
-                if (Z != null)
-                {
-                    if (!eval(this.Z.Overall)) return false;
-                    if (this.Z.Specific != null && !this.Z.Specific.All(eval)) return false;
-                }
-                if (ZH != null)
-                {
-                    if (!eval(this.ZH.Overall)) return false;
-                    if (this.ZH.Specific != null && !this.ZH.Specific.All(eval)) return false;
-                }
-                if (F != null)
-                {
-                    if (!eval(this.F.Overall)) return false;
-                    if (this.F.Specific != null && !this.F.Specific.All(eval)) return false;
-                }
-                if (TH != null)
-                {
-                    if (!eval(this.TH.Overall)) return false;
-                    if (this.TH.Specific != null && !this.TH.Specific.All(eval)) return false;
-                }
-                if (V != null)
-                {
-                    if (!eval(this.V.Overall)) return false;
-                    if (this.V.Specific != null && !this.V.Specific.All(eval)) return false;
-                }
-                if (DH != null)
-                {
-                    if (!eval(this.DH.Overall)) return false;
-                    if (this.DH.Specific != null && !this.DH.Specific.All(eval)) return false;
-                }
-                if (M != null)
-                {
-                    if (!eval(this.M.Overall)) return false;
-                    if (this.M.Specific != null && !this.M.Specific.All(eval)) return false;
-                }
-                if (N != null)
-                {
-                    if (!eval(this.N.Overall)) return false;
-                    if (this.N.Specific != null && !this.N.Specific.All(eval)) return false;
-                }
-                if (NG != null)
-                {
-                    if (!eval(this.NG.Overall)) return false;
-                    if (this.NG.Specific != null && !this.NG.Specific.All(eval)) return false;
-                }
-                if (L != null)
-                {
-                    if (!eval(this.L.Overall)) return false;
-                    if (this.L.Specific != null && !this.L.Specific.All(eval)) return false;
-                }
-                if (R != null)
-                {
-                    if (!eval(this.R.Overall)) return false;
-                    if (this.R.Specific != null && !this.R.Specific.All(eval)) return false;
-                }
-                if (W != null)
-                {
-                    if (!eval(this.W.Overall)) return false;
-                    if (this.W.Specific != null && !this.W.Specific.All(eval)) return false;
-                }
-                if (Y != null)
-                {
-                    if (!eval(this.Y.Overall)) return false;
-                    if (this.Y.Specific != null && !this.Y.Specific.All(eval)) return false;
-                }
-                if (HH != null)
-                {
-                    if (!eval(this.HH.Overall)) return false;
-                    if (this.HH.Specific != null && !this.HH.Specific.All(eval)) return false;
-                }
-                if (B != null)
-                {
-                    if (!eval(this.B.Overall)) return false;
-                    if (this.B.Specific != null && !this.B.Specific.All(eval)) return false;
-                }
-                if (D != null)
-                {
-                    if (!eval(this.D.Overall)) return false;
-                    if (this.D.Specific != null && !this.D.Specific.All(eval)) return false;
-                }
-                if (JH != null)
-                {
-                    if (!eval(this.JH.Overall)) return false;
-                    if (this.JH.Specific != null && !this.JH.Specific.All(eval)) return false;
-                }
-                if (G != null)
-                {
-                    if (!eval(this.G.Overall)) return false;
-                    if (this.G.Specific != null && !this.G.Specific.All(eval)) return false;
-                }
-                if (P != null)
-                {
-                    if (!eval(this.P.Overall)) return false;
-                    if (this.P.Specific != null && !this.P.Specific.All(eval)) return false;
-                }
-                if (T != null)
-                {
-                    if (!eval(this.T.Overall)) return false;
-                    if (this.T.Specific != null && !this.T.Specific.All(eval)) return false;
+                    if (!eval(this.I.Overall)) return false;
+                    if (this.I.Specific != null && !this.I.Specific.All(eval)) return false;
                 }
                 if (K != null)
                 {
                     if (!eval(this.K.Overall)) return false;
                     if (this.K.Specific != null && !this.K.Specific.All(eval)) return false;
                 }
-                if (CH != null)
+                if (N != null)
                 {
-                    if (!eval(this.CH.Overall)) return false;
-                    if (this.CH.Specific != null && !this.CH.Specific.All(eval)) return false;
+                    if (!eval(this.N.Overall)) return false;
+                    if (this.N.Specific != null && !this.N.Specific.All(eval)) return false;
                 }
-                if (SIL != null)
+                if (Oh != null)
                 {
-                    if (!eval(this.SIL.Overall)) return false;
-                    if (this.SIL.Specific != null && !this.SIL.Specific.All(eval)) return false;
+                    if (!eval(this.Oh.Overall)) return false;
+                    if (this.Oh.Specific != null && !this.Oh.Specific.All(eval)) return false;
                 }
-                if (SHOTSIL != null)
+                if (OohQ != null)
                 {
-                    if (!eval(this.SHOTSIL.Overall)) return false;
-                    if (this.SHOTSIL.Specific != null && !this.SHOTSIL.Specific.All(eval)) return false;
+                    if (!eval(this.OohQ.Overall)) return false;
+                    if (this.OohQ.Specific != null && !this.OohQ.Specific.All(eval)) return false;
                 }
-                if (FLAP != null)
+                if (R != null)
                 {
-                    if (!eval(this.FLAP.Overall)) return false;
-                    if (this.FLAP.Specific != null && !this.FLAP.Specific.All(eval)) return false;
+                    if (!eval(this.R.Overall)) return false;
+                    if (this.R.Specific != null && !this.R.Specific.All(eval)) return false;
+                }
+                if (Th != null)
+                {
+                    if (!eval(this.Th.Overall)) return false;
+                    if (this.Th.Specific != null && !this.Th.Specific.All(eval)) return false;
+                }
+                if (W != null)
+                {
+                    if (!eval(this.W.Overall)) return false;
+                    if (this.W.Specific != null && !this.W.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -951,220 +625,86 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (IY != null)
+                if (eval(this.LipMode)) return true;
+                if (Aah_LipBigAah != null)
                 {
-                    if (eval(this.IY.Overall)) return true;
-                    if (this.IY.Specific != null && this.IY.Specific.Any(eval)) return true;
+                    if (eval(this.Aah_LipBigAah.Overall)) return true;
+                    if (this.Aah_LipBigAah.Specific != null && this.Aah_LipBigAah.Specific.Any(eval)) return true;
                 }
-                if (IH != null)
+                if (BigAah_LipDST != null)
                 {
-                    if (eval(this.IH.Overall)) return true;
-                    if (this.IH.Specific != null && this.IH.Specific.Any(eval)) return true;
+                    if (eval(this.BigAah_LipDST.Overall)) return true;
+                    if (this.BigAah_LipDST.Specific != null && this.BigAah_LipDST.Specific.Any(eval)) return true;
                 }
-                if (EH != null)
+                if (BMP_LipEee != null)
                 {
-                    if (eval(this.EH.Overall)) return true;
-                    if (this.EH.Specific != null && this.EH.Specific.Any(eval)) return true;
+                    if (eval(this.BMP_LipEee.Overall)) return true;
+                    if (this.BMP_LipEee.Specific != null && this.BMP_LipEee.Specific.Any(eval)) return true;
                 }
-                if (EY != null)
+                if (ChJSh_LipFV != null)
                 {
-                    if (eval(this.EY.Overall)) return true;
-                    if (this.EY.Specific != null && this.EY.Specific.Any(eval)) return true;
+                    if (eval(this.ChJSh_LipFV.Overall)) return true;
+                    if (this.ChJSh_LipFV.Specific != null && this.ChJSh_LipFV.Specific.Any(eval)) return true;
                 }
-                if (AE != null)
+                if (DST_LipK != null)
                 {
-                    if (eval(this.AE.Overall)) return true;
-                    if (this.AE.Specific != null && this.AE.Specific.Any(eval)) return true;
+                    if (eval(this.DST_LipK.Overall)) return true;
+                    if (this.DST_LipK.Specific != null && this.DST_LipK.Specific.Any(eval)) return true;
                 }
-                if (AA != null)
+                if (Eee_LipL != null)
                 {
-                    if (eval(this.AA.Overall)) return true;
-                    if (this.AA.Specific != null && this.AA.Specific.Any(eval)) return true;
+                    if (eval(this.Eee_LipL.Overall)) return true;
+                    if (this.Eee_LipL.Specific != null && this.Eee_LipL.Specific.Any(eval)) return true;
                 }
-                if (AW != null)
+                if (Eh_LipR != null)
                 {
-                    if (eval(this.AW.Overall)) return true;
-                    if (this.AW.Specific != null && this.AW.Specific.Any(eval)) return true;
+                    if (eval(this.Eh_LipR.Overall)) return true;
+                    if (this.Eh_LipR.Specific != null && this.Eh_LipR.Specific.Any(eval)) return true;
                 }
-                if (AY != null)
+                if (FV_LipTh != null)
                 {
-                    if (eval(this.AY.Overall)) return true;
-                    if (this.AY.Specific != null && this.AY.Specific.Any(eval)) return true;
+                    if (eval(this.FV_LipTh.Overall)) return true;
+                    if (this.FV_LipTh.Specific != null && this.FV_LipTh.Specific.Any(eval)) return true;
                 }
-                if (AH != null)
+                if (I != null)
                 {
-                    if (eval(this.AH.Overall)) return true;
-                    if (this.AH.Specific != null && this.AH.Specific.Any(eval)) return true;
-                }
-                if (AO != null)
-                {
-                    if (eval(this.AO.Overall)) return true;
-                    if (this.AO.Specific != null && this.AO.Specific.Any(eval)) return true;
-                }
-                if (OY != null)
-                {
-                    if (eval(this.OY.Overall)) return true;
-                    if (this.OY.Specific != null && this.OY.Specific.Any(eval)) return true;
-                }
-                if (OW != null)
-                {
-                    if (eval(this.OW.Overall)) return true;
-                    if (this.OW.Specific != null && this.OW.Specific.Any(eval)) return true;
-                }
-                if (UH != null)
-                {
-                    if (eval(this.UH.Overall)) return true;
-                    if (this.UH.Specific != null && this.UH.Specific.Any(eval)) return true;
-                }
-                if (UW != null)
-                {
-                    if (eval(this.UW.Overall)) return true;
-                    if (this.UW.Specific != null && this.UW.Specific.Any(eval)) return true;
-                }
-                if (ER != null)
-                {
-                    if (eval(this.ER.Overall)) return true;
-                    if (this.ER.Specific != null && this.ER.Specific.Any(eval)) return true;
-                }
-                if (AX != null)
-                {
-                    if (eval(this.AX.Overall)) return true;
-                    if (this.AX.Specific != null && this.AX.Specific.Any(eval)) return true;
-                }
-                if (S != null)
-                {
-                    if (eval(this.S.Overall)) return true;
-                    if (this.S.Specific != null && this.S.Specific.Any(eval)) return true;
-                }
-                if (SH != null)
-                {
-                    if (eval(this.SH.Overall)) return true;
-                    if (this.SH.Specific != null && this.SH.Specific.Any(eval)) return true;
-                }
-                if (Z != null)
-                {
-                    if (eval(this.Z.Overall)) return true;
-                    if (this.Z.Specific != null && this.Z.Specific.Any(eval)) return true;
-                }
-                if (ZH != null)
-                {
-                    if (eval(this.ZH.Overall)) return true;
-                    if (this.ZH.Specific != null && this.ZH.Specific.Any(eval)) return true;
-                }
-                if (F != null)
-                {
-                    if (eval(this.F.Overall)) return true;
-                    if (this.F.Specific != null && this.F.Specific.Any(eval)) return true;
-                }
-                if (TH != null)
-                {
-                    if (eval(this.TH.Overall)) return true;
-                    if (this.TH.Specific != null && this.TH.Specific.Any(eval)) return true;
-                }
-                if (V != null)
-                {
-                    if (eval(this.V.Overall)) return true;
-                    if (this.V.Specific != null && this.V.Specific.Any(eval)) return true;
-                }
-                if (DH != null)
-                {
-                    if (eval(this.DH.Overall)) return true;
-                    if (this.DH.Specific != null && this.DH.Specific.Any(eval)) return true;
-                }
-                if (M != null)
-                {
-                    if (eval(this.M.Overall)) return true;
-                    if (this.M.Specific != null && this.M.Specific.Any(eval)) return true;
-                }
-                if (N != null)
-                {
-                    if (eval(this.N.Overall)) return true;
-                    if (this.N.Specific != null && this.N.Specific.Any(eval)) return true;
-                }
-                if (NG != null)
-                {
-                    if (eval(this.NG.Overall)) return true;
-                    if (this.NG.Specific != null && this.NG.Specific.Any(eval)) return true;
-                }
-                if (L != null)
-                {
-                    if (eval(this.L.Overall)) return true;
-                    if (this.L.Specific != null && this.L.Specific.Any(eval)) return true;
-                }
-                if (R != null)
-                {
-                    if (eval(this.R.Overall)) return true;
-                    if (this.R.Specific != null && this.R.Specific.Any(eval)) return true;
-                }
-                if (W != null)
-                {
-                    if (eval(this.W.Overall)) return true;
-                    if (this.W.Specific != null && this.W.Specific.Any(eval)) return true;
-                }
-                if (Y != null)
-                {
-                    if (eval(this.Y.Overall)) return true;
-                    if (this.Y.Specific != null && this.Y.Specific.Any(eval)) return true;
-                }
-                if (HH != null)
-                {
-                    if (eval(this.HH.Overall)) return true;
-                    if (this.HH.Specific != null && this.HH.Specific.Any(eval)) return true;
-                }
-                if (B != null)
-                {
-                    if (eval(this.B.Overall)) return true;
-                    if (this.B.Specific != null && this.B.Specific.Any(eval)) return true;
-                }
-                if (D != null)
-                {
-                    if (eval(this.D.Overall)) return true;
-                    if (this.D.Specific != null && this.D.Specific.Any(eval)) return true;
-                }
-                if (JH != null)
-                {
-                    if (eval(this.JH.Overall)) return true;
-                    if (this.JH.Specific != null && this.JH.Specific.Any(eval)) return true;
-                }
-                if (G != null)
-                {
-                    if (eval(this.G.Overall)) return true;
-                    if (this.G.Specific != null && this.G.Specific.Any(eval)) return true;
-                }
-                if (P != null)
-                {
-                    if (eval(this.P.Overall)) return true;
-                    if (this.P.Specific != null && this.P.Specific.Any(eval)) return true;
-                }
-                if (T != null)
-                {
-                    if (eval(this.T.Overall)) return true;
-                    if (this.T.Specific != null && this.T.Specific.Any(eval)) return true;
+                    if (eval(this.I.Overall)) return true;
+                    if (this.I.Specific != null && this.I.Specific.Any(eval)) return true;
                 }
                 if (K != null)
                 {
                     if (eval(this.K.Overall)) return true;
                     if (this.K.Specific != null && this.K.Specific.Any(eval)) return true;
                 }
-                if (CH != null)
+                if (N != null)
                 {
-                    if (eval(this.CH.Overall)) return true;
-                    if (this.CH.Specific != null && this.CH.Specific.Any(eval)) return true;
+                    if (eval(this.N.Overall)) return true;
+                    if (this.N.Specific != null && this.N.Specific.Any(eval)) return true;
                 }
-                if (SIL != null)
+                if (Oh != null)
                 {
-                    if (eval(this.SIL.Overall)) return true;
-                    if (this.SIL.Specific != null && this.SIL.Specific.Any(eval)) return true;
+                    if (eval(this.Oh.Overall)) return true;
+                    if (this.Oh.Specific != null && this.Oh.Specific.Any(eval)) return true;
                 }
-                if (SHOTSIL != null)
+                if (OohQ != null)
                 {
-                    if (eval(this.SHOTSIL.Overall)) return true;
-                    if (this.SHOTSIL.Specific != null && this.SHOTSIL.Specific.Any(eval)) return true;
+                    if (eval(this.OohQ.Overall)) return true;
+                    if (this.OohQ.Specific != null && this.OohQ.Specific.Any(eval)) return true;
                 }
-                if (FLAP != null)
+                if (R != null)
                 {
-                    if (eval(this.FLAP.Overall)) return true;
-                    if (this.FLAP.Specific != null && this.FLAP.Specific.Any(eval)) return true;
+                    if (eval(this.R.Overall)) return true;
+                    if (this.R.Specific != null && this.R.Specific.Any(eval)) return true;
+                }
+                if (Th != null)
+                {
+                    if (eval(this.Th.Overall)) return true;
+                    if (this.Th.Specific != null && this.Th.Specific.Any(eval)) return true;
+                }
+                if (W != null)
+                {
+                    if (eval(this.W.Overall)) return true;
+                    if (this.W.Specific != null && this.W.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -1180,49 +720,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.IY = this.IY == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.IY.Overall), this.IY.Specific?.Translate(eval));
-                obj.IH = this.IH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.IH.Overall), this.IH.Specific?.Translate(eval));
-                obj.EH = this.EH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.EH.Overall), this.EH.Specific?.Translate(eval));
-                obj.EY = this.EY == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.EY.Overall), this.EY.Specific?.Translate(eval));
-                obj.AE = this.AE == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.AE.Overall), this.AE.Specific?.Translate(eval));
-                obj.AA = this.AA == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.AA.Overall), this.AA.Specific?.Translate(eval));
-                obj.AW = this.AW == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.AW.Overall), this.AW.Specific?.Translate(eval));
-                obj.AY = this.AY == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.AY.Overall), this.AY.Specific?.Translate(eval));
-                obj.AH = this.AH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.AH.Overall), this.AH.Specific?.Translate(eval));
-                obj.AO = this.AO == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.AO.Overall), this.AO.Specific?.Translate(eval));
-                obj.OY = this.OY == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.OY.Overall), this.OY.Specific?.Translate(eval));
-                obj.OW = this.OW == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.OW.Overall), this.OW.Specific?.Translate(eval));
-                obj.UH = this.UH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.UH.Overall), this.UH.Specific?.Translate(eval));
-                obj.UW = this.UW == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.UW.Overall), this.UW.Specific?.Translate(eval));
-                obj.ER = this.ER == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.ER.Overall), this.ER.Specific?.Translate(eval));
-                obj.AX = this.AX == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.AX.Overall), this.AX.Specific?.Translate(eval));
-                obj.S = this.S == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.S.Overall), this.S.Specific?.Translate(eval));
-                obj.SH = this.SH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.SH.Overall), this.SH.Specific?.Translate(eval));
-                obj.Z = this.Z == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.Z.Overall), this.Z.Specific?.Translate(eval));
-                obj.ZH = this.ZH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.ZH.Overall), this.ZH.Specific?.Translate(eval));
-                obj.F = this.F == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.F.Overall), this.F.Specific?.Translate(eval));
-                obj.TH = this.TH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.TH.Overall), this.TH.Specific?.Translate(eval));
-                obj.V = this.V == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.V.Overall), this.V.Specific?.Translate(eval));
-                obj.DH = this.DH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.DH.Overall), this.DH.Specific?.Translate(eval));
-                obj.M = this.M == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.M.Overall), this.M.Specific?.Translate(eval));
-                obj.N = this.N == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.N.Overall), this.N.Specific?.Translate(eval));
-                obj.NG = this.NG == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.NG.Overall), this.NG.Specific?.Translate(eval));
-                obj.L = this.L == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.L.Overall), this.L.Specific?.Translate(eval));
-                obj.R = this.R == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.R.Overall), this.R.Specific?.Translate(eval));
-                obj.W = this.W == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.W.Overall), this.W.Specific?.Translate(eval));
-                obj.Y = this.Y == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.Y.Overall), this.Y.Specific?.Translate(eval));
-                obj.HH = this.HH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.HH.Overall), this.HH.Specific?.Translate(eval));
-                obj.B = this.B == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.B.Overall), this.B.Specific?.Translate(eval));
-                obj.D = this.D == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.D.Overall), this.D.Specific?.Translate(eval));
-                obj.JH = this.JH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.JH.Overall), this.JH.Specific?.Translate(eval));
-                obj.G = this.G == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.G.Overall), this.G.Specific?.Translate(eval));
-                obj.P = this.P == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.P.Overall), this.P.Specific?.Translate(eval));
-                obj.T = this.T == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.T.Overall), this.T.Specific?.Translate(eval));
-                obj.K = this.K == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.K.Overall), this.K.Specific?.Translate(eval));
-                obj.CH = this.CH == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.CH.Overall), this.CH.Specific?.Translate(eval));
-                obj.SIL = this.SIL == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.SIL.Overall), this.SIL.Specific?.Translate(eval));
-                obj.SHOTSIL = this.SHOTSIL == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.SHOTSIL.Overall), this.SHOTSIL.Specific?.Translate(eval));
-                obj.FLAP = this.FLAP == null ? null : new MaskItem<R, PhonemeTarget.Mask<R>?>(eval(this.FLAP.Overall), this.FLAP.Specific?.Translate(eval));
+                obj.LipMode = eval(this.LipMode);
+                obj.Aah_LipBigAah = this.Aah_LipBigAah == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.Aah_LipBigAah.Overall), this.Aah_LipBigAah.Specific?.Translate(eval));
+                obj.BigAah_LipDST = this.BigAah_LipDST == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.BigAah_LipDST.Overall), this.BigAah_LipDST.Specific?.Translate(eval));
+                obj.BMP_LipEee = this.BMP_LipEee == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.BMP_LipEee.Overall), this.BMP_LipEee.Specific?.Translate(eval));
+                obj.ChJSh_LipFV = this.ChJSh_LipFV == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.ChJSh_LipFV.Overall), this.ChJSh_LipFV.Specific?.Translate(eval));
+                obj.DST_LipK = this.DST_LipK == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.DST_LipK.Overall), this.DST_LipK.Specific?.Translate(eval));
+                obj.Eee_LipL = this.Eee_LipL == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.Eee_LipL.Overall), this.Eee_LipL.Specific?.Translate(eval));
+                obj.Eh_LipR = this.Eh_LipR == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.Eh_LipR.Overall), this.Eh_LipR.Specific?.Translate(eval));
+                obj.FV_LipTh = this.FV_LipTh == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.FV_LipTh.Overall), this.FV_LipTh.Specific?.Translate(eval));
+                obj.I = this.I == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.I.Overall), this.I.Specific?.Translate(eval));
+                obj.K = this.K == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.K.Overall), this.K.Specific?.Translate(eval));
+                obj.N = this.N == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.N.Overall), this.N.Specific?.Translate(eval));
+                obj.Oh = this.Oh == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.Oh.Overall), this.Oh.Specific?.Translate(eval));
+                obj.OohQ = this.OohQ == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.OohQ.Overall), this.OohQ.Specific?.Translate(eval));
+                obj.R = this.R == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.R.Overall), this.R.Specific?.Translate(eval));
+                obj.Th = this.Th == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.Th.Overall), this.Th.Specific?.Translate(eval));
+                obj.W = this.W == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.W.Overall), this.W.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1245,177 +759,73 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.IY?.Overall ?? true)
+                    if (printMask?.LipMode ?? true)
                     {
-                        IY?.ToString(fg);
+                        fg.AppendItem(LipMode, "LipMode");
                     }
-                    if (printMask?.IH?.Overall ?? true)
+                    if (printMask?.Aah_LipBigAah?.Overall ?? true)
                     {
-                        IH?.ToString(fg);
+                        Aah_LipBigAah?.ToString(fg);
                     }
-                    if (printMask?.EH?.Overall ?? true)
+                    if (printMask?.BigAah_LipDST?.Overall ?? true)
                     {
-                        EH?.ToString(fg);
+                        BigAah_LipDST?.ToString(fg);
                     }
-                    if (printMask?.EY?.Overall ?? true)
+                    if (printMask?.BMP_LipEee?.Overall ?? true)
                     {
-                        EY?.ToString(fg);
+                        BMP_LipEee?.ToString(fg);
                     }
-                    if (printMask?.AE?.Overall ?? true)
+                    if (printMask?.ChJSh_LipFV?.Overall ?? true)
                     {
-                        AE?.ToString(fg);
+                        ChJSh_LipFV?.ToString(fg);
                     }
-                    if (printMask?.AA?.Overall ?? true)
+                    if (printMask?.DST_LipK?.Overall ?? true)
                     {
-                        AA?.ToString(fg);
+                        DST_LipK?.ToString(fg);
                     }
-                    if (printMask?.AW?.Overall ?? true)
+                    if (printMask?.Eee_LipL?.Overall ?? true)
                     {
-                        AW?.ToString(fg);
+                        Eee_LipL?.ToString(fg);
                     }
-                    if (printMask?.AY?.Overall ?? true)
+                    if (printMask?.Eh_LipR?.Overall ?? true)
                     {
-                        AY?.ToString(fg);
+                        Eh_LipR?.ToString(fg);
                     }
-                    if (printMask?.AH?.Overall ?? true)
+                    if (printMask?.FV_LipTh?.Overall ?? true)
                     {
-                        AH?.ToString(fg);
+                        FV_LipTh?.ToString(fg);
                     }
-                    if (printMask?.AO?.Overall ?? true)
+                    if (printMask?.I?.Overall ?? true)
                     {
-                        AO?.ToString(fg);
-                    }
-                    if (printMask?.OY?.Overall ?? true)
-                    {
-                        OY?.ToString(fg);
-                    }
-                    if (printMask?.OW?.Overall ?? true)
-                    {
-                        OW?.ToString(fg);
-                    }
-                    if (printMask?.UH?.Overall ?? true)
-                    {
-                        UH?.ToString(fg);
-                    }
-                    if (printMask?.UW?.Overall ?? true)
-                    {
-                        UW?.ToString(fg);
-                    }
-                    if (printMask?.ER?.Overall ?? true)
-                    {
-                        ER?.ToString(fg);
-                    }
-                    if (printMask?.AX?.Overall ?? true)
-                    {
-                        AX?.ToString(fg);
-                    }
-                    if (printMask?.S?.Overall ?? true)
-                    {
-                        S?.ToString(fg);
-                    }
-                    if (printMask?.SH?.Overall ?? true)
-                    {
-                        SH?.ToString(fg);
-                    }
-                    if (printMask?.Z?.Overall ?? true)
-                    {
-                        Z?.ToString(fg);
-                    }
-                    if (printMask?.ZH?.Overall ?? true)
-                    {
-                        ZH?.ToString(fg);
-                    }
-                    if (printMask?.F?.Overall ?? true)
-                    {
-                        F?.ToString(fg);
-                    }
-                    if (printMask?.TH?.Overall ?? true)
-                    {
-                        TH?.ToString(fg);
-                    }
-                    if (printMask?.V?.Overall ?? true)
-                    {
-                        V?.ToString(fg);
-                    }
-                    if (printMask?.DH?.Overall ?? true)
-                    {
-                        DH?.ToString(fg);
-                    }
-                    if (printMask?.M?.Overall ?? true)
-                    {
-                        M?.ToString(fg);
-                    }
-                    if (printMask?.N?.Overall ?? true)
-                    {
-                        N?.ToString(fg);
-                    }
-                    if (printMask?.NG?.Overall ?? true)
-                    {
-                        NG?.ToString(fg);
-                    }
-                    if (printMask?.L?.Overall ?? true)
-                    {
-                        L?.ToString(fg);
-                    }
-                    if (printMask?.R?.Overall ?? true)
-                    {
-                        R?.ToString(fg);
-                    }
-                    if (printMask?.W?.Overall ?? true)
-                    {
-                        W?.ToString(fg);
-                    }
-                    if (printMask?.Y?.Overall ?? true)
-                    {
-                        Y?.ToString(fg);
-                    }
-                    if (printMask?.HH?.Overall ?? true)
-                    {
-                        HH?.ToString(fg);
-                    }
-                    if (printMask?.B?.Overall ?? true)
-                    {
-                        B?.ToString(fg);
-                    }
-                    if (printMask?.D?.Overall ?? true)
-                    {
-                        D?.ToString(fg);
-                    }
-                    if (printMask?.JH?.Overall ?? true)
-                    {
-                        JH?.ToString(fg);
-                    }
-                    if (printMask?.G?.Overall ?? true)
-                    {
-                        G?.ToString(fg);
-                    }
-                    if (printMask?.P?.Overall ?? true)
-                    {
-                        P?.ToString(fg);
-                    }
-                    if (printMask?.T?.Overall ?? true)
-                    {
-                        T?.ToString(fg);
+                        I?.ToString(fg);
                     }
                     if (printMask?.K?.Overall ?? true)
                     {
                         K?.ToString(fg);
                     }
-                    if (printMask?.CH?.Overall ?? true)
+                    if (printMask?.N?.Overall ?? true)
                     {
-                        CH?.ToString(fg);
+                        N?.ToString(fg);
                     }
-                    if (printMask?.SIL?.Overall ?? true)
+                    if (printMask?.Oh?.Overall ?? true)
                     {
-                        SIL?.ToString(fg);
+                        Oh?.ToString(fg);
                     }
-                    if (printMask?.SHOTSIL?.Overall ?? true)
+                    if (printMask?.OohQ?.Overall ?? true)
                     {
-                        SHOTSIL?.ToString(fg);
+                        OohQ?.ToString(fg);
                     }
-                    if (printMask?.FLAP?.Overall ?? true)
+                    if (printMask?.R?.Overall ?? true)
                     {
-                        FLAP?.ToString(fg);
+                        R?.ToString(fg);
+                    }
+                    if (printMask?.Th?.Overall ?? true)
+                    {
+                        Th?.ToString(fg);
+                    }
+                    if (printMask?.W?.Overall ?? true)
+                    {
+                        W?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -1442,49 +852,23 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? IY;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? IH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? EH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? EY;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? AE;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? AA;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? AW;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? AY;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? AH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? AO;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? OY;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? OW;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? UH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? UW;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? ER;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? AX;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? S;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? SH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? Z;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? ZH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? F;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? TH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? V;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? DH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? M;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? N;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? NG;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? L;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? R;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? W;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? Y;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? HH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? B;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? D;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? JH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? G;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? P;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? T;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? K;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? CH;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? SIL;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? SHOTSIL;
-            public MaskItem<Exception?, PhonemeTarget.ErrorMask?>? FLAP;
+            public Exception? LipMode;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? Aah_LipBigAah;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? BigAah_LipDST;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? BMP_LipEee;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? ChJSh_LipFV;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? DST_LipK;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? Eee_LipL;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? Eh_LipR;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? FV_LipTh;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? I;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? K;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? N;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? Oh;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? OohQ;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? R;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? Th;
+            public MaskItem<Exception?, Phoneme.ErrorMask?>? W;
             #endregion
 
             #region IErrorMask
@@ -1493,92 +877,40 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.IY:
-                        return IY;
-                    case FaceFxPhonemes_FieldIndex.IH:
-                        return IH;
-                    case FaceFxPhonemes_FieldIndex.EH:
-                        return EH;
-                    case FaceFxPhonemes_FieldIndex.EY:
-                        return EY;
-                    case FaceFxPhonemes_FieldIndex.AE:
-                        return AE;
-                    case FaceFxPhonemes_FieldIndex.AA:
-                        return AA;
-                    case FaceFxPhonemes_FieldIndex.AW:
-                        return AW;
-                    case FaceFxPhonemes_FieldIndex.AY:
-                        return AY;
-                    case FaceFxPhonemes_FieldIndex.AH:
-                        return AH;
-                    case FaceFxPhonemes_FieldIndex.AO:
-                        return AO;
-                    case FaceFxPhonemes_FieldIndex.OY:
-                        return OY;
-                    case FaceFxPhonemes_FieldIndex.OW:
-                        return OW;
-                    case FaceFxPhonemes_FieldIndex.UH:
-                        return UH;
-                    case FaceFxPhonemes_FieldIndex.UW:
-                        return UW;
-                    case FaceFxPhonemes_FieldIndex.ER:
-                        return ER;
-                    case FaceFxPhonemes_FieldIndex.AX:
-                        return AX;
-                    case FaceFxPhonemes_FieldIndex.S:
-                        return S;
-                    case FaceFxPhonemes_FieldIndex.SH:
-                        return SH;
-                    case FaceFxPhonemes_FieldIndex.Z:
-                        return Z;
-                    case FaceFxPhonemes_FieldIndex.ZH:
-                        return ZH;
-                    case FaceFxPhonemes_FieldIndex.F:
-                        return F;
-                    case FaceFxPhonemes_FieldIndex.TH:
-                        return TH;
-                    case FaceFxPhonemes_FieldIndex.V:
-                        return V;
-                    case FaceFxPhonemes_FieldIndex.DH:
-                        return DH;
-                    case FaceFxPhonemes_FieldIndex.M:
-                        return M;
-                    case FaceFxPhonemes_FieldIndex.N:
-                        return N;
-                    case FaceFxPhonemes_FieldIndex.NG:
-                        return NG;
-                    case FaceFxPhonemes_FieldIndex.L:
-                        return L;
-                    case FaceFxPhonemes_FieldIndex.R:
-                        return R;
-                    case FaceFxPhonemes_FieldIndex.W:
-                        return W;
-                    case FaceFxPhonemes_FieldIndex.Y:
-                        return Y;
-                    case FaceFxPhonemes_FieldIndex.HH:
-                        return HH;
-                    case FaceFxPhonemes_FieldIndex.B:
-                        return B;
-                    case FaceFxPhonemes_FieldIndex.D:
-                        return D;
-                    case FaceFxPhonemes_FieldIndex.JH:
-                        return JH;
-                    case FaceFxPhonemes_FieldIndex.G:
-                        return G;
-                    case FaceFxPhonemes_FieldIndex.P:
-                        return P;
-                    case FaceFxPhonemes_FieldIndex.T:
-                        return T;
+                    case FaceFxPhonemes_FieldIndex.LipMode:
+                        return LipMode;
+                    case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                        return Aah_LipBigAah;
+                    case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                        return BigAah_LipDST;
+                    case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                        return BMP_LipEee;
+                    case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                        return ChJSh_LipFV;
+                    case FaceFxPhonemes_FieldIndex.DST_LipK:
+                        return DST_LipK;
+                    case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                        return Eee_LipL;
+                    case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                        return Eh_LipR;
+                    case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                        return FV_LipTh;
+                    case FaceFxPhonemes_FieldIndex.I:
+                        return I;
                     case FaceFxPhonemes_FieldIndex.K:
                         return K;
-                    case FaceFxPhonemes_FieldIndex.CH:
-                        return CH;
-                    case FaceFxPhonemes_FieldIndex.SIL:
-                        return SIL;
-                    case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                        return SHOTSIL;
-                    case FaceFxPhonemes_FieldIndex.FLAP:
-                        return FLAP;
+                    case FaceFxPhonemes_FieldIndex.N:
+                        return N;
+                    case FaceFxPhonemes_FieldIndex.Oh:
+                        return Oh;
+                    case FaceFxPhonemes_FieldIndex.OohQ:
+                        return OohQ;
+                    case FaceFxPhonemes_FieldIndex.R:
+                        return R;
+                    case FaceFxPhonemes_FieldIndex.Th:
+                        return Th;
+                    case FaceFxPhonemes_FieldIndex.W:
+                        return W;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1589,134 +921,56 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.IY:
-                        this.IY = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.LipMode:
+                        this.LipMode = ex;
                         break;
-                    case FaceFxPhonemes_FieldIndex.IH:
-                        this.IH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                        this.Aah_LipBigAah = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.EH:
-                        this.EH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                        this.BigAah_LipDST = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.EY:
-                        this.EY = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                        this.BMP_LipEee = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.AE:
-                        this.AE = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                        this.ChJSh_LipFV = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.AA:
-                        this.AA = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.DST_LipK:
+                        this.DST_LipK = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.AW:
-                        this.AW = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                        this.Eee_LipL = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.AY:
-                        this.AY = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                        this.Eh_LipR = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.AH:
-                        this.AH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                        this.FV_LipTh = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.AO:
-                        this.AO = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.OY:
-                        this.OY = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.OW:
-                        this.OW = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.UH:
-                        this.UH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.UW:
-                        this.UW = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.ER:
-                        this.ER = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.AX:
-                        this.AX = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.S:
-                        this.S = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.SH:
-                        this.SH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.Z:
-                        this.Z = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.ZH:
-                        this.ZH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.F:
-                        this.F = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.TH:
-                        this.TH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.V:
-                        this.V = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.DH:
-                        this.DH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.M:
-                        this.M = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.N:
-                        this.N = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.NG:
-                        this.NG = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.L:
-                        this.L = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.R:
-                        this.R = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.W:
-                        this.W = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.Y:
-                        this.Y = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.HH:
-                        this.HH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.B:
-                        this.B = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.D:
-                        this.D = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.JH:
-                        this.JH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.G:
-                        this.G = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.P:
-                        this.P = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
-                        break;
-                    case FaceFxPhonemes_FieldIndex.T:
-                        this.T = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.I:
+                        this.I = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
                     case FaceFxPhonemes_FieldIndex.K:
-                        this.K = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                        this.K = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.CH:
-                        this.CH = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.N:
+                        this.N = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.SIL:
-                        this.SIL = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.Oh:
+                        this.Oh = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                        this.SHOTSIL = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.OohQ:
+                        this.OohQ = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
-                    case FaceFxPhonemes_FieldIndex.FLAP:
-                        this.FLAP = new MaskItem<Exception?, PhonemeTarget.ErrorMask?>(ex, null);
+                    case FaceFxPhonemes_FieldIndex.R:
+                        this.R = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
+                        break;
+                    case FaceFxPhonemes_FieldIndex.Th:
+                        this.Th = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
+                        break;
+                    case FaceFxPhonemes_FieldIndex.W:
+                        this.W = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1728,134 +982,56 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.IY:
-                        this.IY = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.LipMode:
+                        this.LipMode = (Exception?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.IH:
-                        this.IH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                        this.Aah_LipBigAah = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.EH:
-                        this.EH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                        this.BigAah_LipDST = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.EY:
-                        this.EY = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                        this.BMP_LipEee = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.AE:
-                        this.AE = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                        this.ChJSh_LipFV = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.AA:
-                        this.AA = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.DST_LipK:
+                        this.DST_LipK = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.AW:
-                        this.AW = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                        this.Eee_LipL = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.AY:
-                        this.AY = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                        this.Eh_LipR = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.AH:
-                        this.AH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                        this.FV_LipTh = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.AO:
-                        this.AO = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.OY:
-                        this.OY = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.OW:
-                        this.OW = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.UH:
-                        this.UH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.UW:
-                        this.UW = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.ER:
-                        this.ER = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.AX:
-                        this.AX = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.S:
-                        this.S = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.SH:
-                        this.SH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.Z:
-                        this.Z = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.ZH:
-                        this.ZH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.F:
-                        this.F = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.TH:
-                        this.TH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.V:
-                        this.V = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.DH:
-                        this.DH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.M:
-                        this.M = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.N:
-                        this.N = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.NG:
-                        this.NG = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.L:
-                        this.L = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.R:
-                        this.R = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.W:
-                        this.W = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.Y:
-                        this.Y = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.HH:
-                        this.HH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.B:
-                        this.B = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.D:
-                        this.D = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.JH:
-                        this.JH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.G:
-                        this.G = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.P:
-                        this.P = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
-                        break;
-                    case FaceFxPhonemes_FieldIndex.T:
-                        this.T = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.I:
+                        this.I = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
                     case FaceFxPhonemes_FieldIndex.K:
-                        this.K = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                        this.K = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.CH:
-                        this.CH = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.N:
+                        this.N = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.SIL:
-                        this.SIL = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.Oh:
+                        this.Oh = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                        this.SHOTSIL = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.OohQ:
+                        this.OohQ = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
-                    case FaceFxPhonemes_FieldIndex.FLAP:
-                        this.FLAP = (MaskItem<Exception?, PhonemeTarget.ErrorMask?>?)obj;
+                    case FaceFxPhonemes_FieldIndex.R:
+                        this.R = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
+                        break;
+                    case FaceFxPhonemes_FieldIndex.Th:
+                        this.Th = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
+                        break;
+                    case FaceFxPhonemes_FieldIndex.W:
+                        this.W = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1865,49 +1041,23 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (IY != null) return true;
-                if (IH != null) return true;
-                if (EH != null) return true;
-                if (EY != null) return true;
-                if (AE != null) return true;
-                if (AA != null) return true;
-                if (AW != null) return true;
-                if (AY != null) return true;
-                if (AH != null) return true;
-                if (AO != null) return true;
-                if (OY != null) return true;
-                if (OW != null) return true;
-                if (UH != null) return true;
-                if (UW != null) return true;
-                if (ER != null) return true;
-                if (AX != null) return true;
-                if (S != null) return true;
-                if (SH != null) return true;
-                if (Z != null) return true;
-                if (ZH != null) return true;
-                if (F != null) return true;
-                if (TH != null) return true;
-                if (V != null) return true;
-                if (DH != null) return true;
-                if (M != null) return true;
-                if (N != null) return true;
-                if (NG != null) return true;
-                if (L != null) return true;
-                if (R != null) return true;
-                if (W != null) return true;
-                if (Y != null) return true;
-                if (HH != null) return true;
-                if (B != null) return true;
-                if (D != null) return true;
-                if (JH != null) return true;
-                if (G != null) return true;
-                if (P != null) return true;
-                if (T != null) return true;
+                if (LipMode != null) return true;
+                if (Aah_LipBigAah != null) return true;
+                if (BigAah_LipDST != null) return true;
+                if (BMP_LipEee != null) return true;
+                if (ChJSh_LipFV != null) return true;
+                if (DST_LipK != null) return true;
+                if (Eee_LipL != null) return true;
+                if (Eh_LipR != null) return true;
+                if (FV_LipTh != null) return true;
+                if (I != null) return true;
                 if (K != null) return true;
-                if (CH != null) return true;
-                if (SIL != null) return true;
-                if (SHOTSIL != null) return true;
-                if (FLAP != null) return true;
+                if (N != null) return true;
+                if (Oh != null) return true;
+                if (OohQ != null) return true;
+                if (R != null) return true;
+                if (Th != null) return true;
+                if (W != null) return true;
                 return false;
             }
             #endregion
@@ -1942,49 +1092,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                IY?.ToString(fg);
-                IH?.ToString(fg);
-                EH?.ToString(fg);
-                EY?.ToString(fg);
-                AE?.ToString(fg);
-                AA?.ToString(fg);
-                AW?.ToString(fg);
-                AY?.ToString(fg);
-                AH?.ToString(fg);
-                AO?.ToString(fg);
-                OY?.ToString(fg);
-                OW?.ToString(fg);
-                UH?.ToString(fg);
-                UW?.ToString(fg);
-                ER?.ToString(fg);
-                AX?.ToString(fg);
-                S?.ToString(fg);
-                SH?.ToString(fg);
-                Z?.ToString(fg);
-                ZH?.ToString(fg);
-                F?.ToString(fg);
-                TH?.ToString(fg);
-                V?.ToString(fg);
-                DH?.ToString(fg);
-                M?.ToString(fg);
-                N?.ToString(fg);
-                NG?.ToString(fg);
-                L?.ToString(fg);
-                R?.ToString(fg);
-                W?.ToString(fg);
-                Y?.ToString(fg);
-                HH?.ToString(fg);
-                B?.ToString(fg);
-                D?.ToString(fg);
-                JH?.ToString(fg);
-                G?.ToString(fg);
-                P?.ToString(fg);
-                T?.ToString(fg);
+                fg.AppendItem(LipMode, "LipMode");
+                Aah_LipBigAah?.ToString(fg);
+                BigAah_LipDST?.ToString(fg);
+                BMP_LipEee?.ToString(fg);
+                ChJSh_LipFV?.ToString(fg);
+                DST_LipK?.ToString(fg);
+                Eee_LipL?.ToString(fg);
+                Eh_LipR?.ToString(fg);
+                FV_LipTh?.ToString(fg);
+                I?.ToString(fg);
                 K?.ToString(fg);
-                CH?.ToString(fg);
-                SIL?.ToString(fg);
-                SHOTSIL?.ToString(fg);
-                FLAP?.ToString(fg);
+                N?.ToString(fg);
+                Oh?.ToString(fg);
+                OohQ?.ToString(fg);
+                R?.ToString(fg);
+                Th?.ToString(fg);
+                W?.ToString(fg);
             }
             #endregion
 
@@ -1993,49 +1117,23 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.IY = this.IY.Combine(rhs.IY, (l, r) => l.Combine(r));
-                ret.IH = this.IH.Combine(rhs.IH, (l, r) => l.Combine(r));
-                ret.EH = this.EH.Combine(rhs.EH, (l, r) => l.Combine(r));
-                ret.EY = this.EY.Combine(rhs.EY, (l, r) => l.Combine(r));
-                ret.AE = this.AE.Combine(rhs.AE, (l, r) => l.Combine(r));
-                ret.AA = this.AA.Combine(rhs.AA, (l, r) => l.Combine(r));
-                ret.AW = this.AW.Combine(rhs.AW, (l, r) => l.Combine(r));
-                ret.AY = this.AY.Combine(rhs.AY, (l, r) => l.Combine(r));
-                ret.AH = this.AH.Combine(rhs.AH, (l, r) => l.Combine(r));
-                ret.AO = this.AO.Combine(rhs.AO, (l, r) => l.Combine(r));
-                ret.OY = this.OY.Combine(rhs.OY, (l, r) => l.Combine(r));
-                ret.OW = this.OW.Combine(rhs.OW, (l, r) => l.Combine(r));
-                ret.UH = this.UH.Combine(rhs.UH, (l, r) => l.Combine(r));
-                ret.UW = this.UW.Combine(rhs.UW, (l, r) => l.Combine(r));
-                ret.ER = this.ER.Combine(rhs.ER, (l, r) => l.Combine(r));
-                ret.AX = this.AX.Combine(rhs.AX, (l, r) => l.Combine(r));
-                ret.S = this.S.Combine(rhs.S, (l, r) => l.Combine(r));
-                ret.SH = this.SH.Combine(rhs.SH, (l, r) => l.Combine(r));
-                ret.Z = this.Z.Combine(rhs.Z, (l, r) => l.Combine(r));
-                ret.ZH = this.ZH.Combine(rhs.ZH, (l, r) => l.Combine(r));
-                ret.F = this.F.Combine(rhs.F, (l, r) => l.Combine(r));
-                ret.TH = this.TH.Combine(rhs.TH, (l, r) => l.Combine(r));
-                ret.V = this.V.Combine(rhs.V, (l, r) => l.Combine(r));
-                ret.DH = this.DH.Combine(rhs.DH, (l, r) => l.Combine(r));
-                ret.M = this.M.Combine(rhs.M, (l, r) => l.Combine(r));
-                ret.N = this.N.Combine(rhs.N, (l, r) => l.Combine(r));
-                ret.NG = this.NG.Combine(rhs.NG, (l, r) => l.Combine(r));
-                ret.L = this.L.Combine(rhs.L, (l, r) => l.Combine(r));
-                ret.R = this.R.Combine(rhs.R, (l, r) => l.Combine(r));
-                ret.W = this.W.Combine(rhs.W, (l, r) => l.Combine(r));
-                ret.Y = this.Y.Combine(rhs.Y, (l, r) => l.Combine(r));
-                ret.HH = this.HH.Combine(rhs.HH, (l, r) => l.Combine(r));
-                ret.B = this.B.Combine(rhs.B, (l, r) => l.Combine(r));
-                ret.D = this.D.Combine(rhs.D, (l, r) => l.Combine(r));
-                ret.JH = this.JH.Combine(rhs.JH, (l, r) => l.Combine(r));
-                ret.G = this.G.Combine(rhs.G, (l, r) => l.Combine(r));
-                ret.P = this.P.Combine(rhs.P, (l, r) => l.Combine(r));
-                ret.T = this.T.Combine(rhs.T, (l, r) => l.Combine(r));
+                ret.LipMode = this.LipMode.Combine(rhs.LipMode);
+                ret.Aah_LipBigAah = this.Aah_LipBigAah.Combine(rhs.Aah_LipBigAah, (l, r) => l.Combine(r));
+                ret.BigAah_LipDST = this.BigAah_LipDST.Combine(rhs.BigAah_LipDST, (l, r) => l.Combine(r));
+                ret.BMP_LipEee = this.BMP_LipEee.Combine(rhs.BMP_LipEee, (l, r) => l.Combine(r));
+                ret.ChJSh_LipFV = this.ChJSh_LipFV.Combine(rhs.ChJSh_LipFV, (l, r) => l.Combine(r));
+                ret.DST_LipK = this.DST_LipK.Combine(rhs.DST_LipK, (l, r) => l.Combine(r));
+                ret.Eee_LipL = this.Eee_LipL.Combine(rhs.Eee_LipL, (l, r) => l.Combine(r));
+                ret.Eh_LipR = this.Eh_LipR.Combine(rhs.Eh_LipR, (l, r) => l.Combine(r));
+                ret.FV_LipTh = this.FV_LipTh.Combine(rhs.FV_LipTh, (l, r) => l.Combine(r));
+                ret.I = this.I.Combine(rhs.I, (l, r) => l.Combine(r));
                 ret.K = this.K.Combine(rhs.K, (l, r) => l.Combine(r));
-                ret.CH = this.CH.Combine(rhs.CH, (l, r) => l.Combine(r));
-                ret.SIL = this.SIL.Combine(rhs.SIL, (l, r) => l.Combine(r));
-                ret.SHOTSIL = this.SHOTSIL.Combine(rhs.SHOTSIL, (l, r) => l.Combine(r));
-                ret.FLAP = this.FLAP.Combine(rhs.FLAP, (l, r) => l.Combine(r));
+                ret.N = this.N.Combine(rhs.N, (l, r) => l.Combine(r));
+                ret.Oh = this.Oh.Combine(rhs.Oh, (l, r) => l.Combine(r));
+                ret.OohQ = this.OohQ.Combine(rhs.OohQ, (l, r) => l.Combine(r));
+                ret.R = this.R.Combine(rhs.R, (l, r) => l.Combine(r));
+                ret.Th = this.Th.Combine(rhs.Th, (l, r) => l.Combine(r));
+                ret.W = this.W.Combine(rhs.W, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2057,97 +1155,45 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> IY;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> IH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> EH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> EY;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> AE;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> AA;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> AW;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> AY;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> AH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> AO;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> OY;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> OW;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> UH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> UW;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> ER;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> AX;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> S;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> SH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> Z;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> ZH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> F;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> TH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> V;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> DH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> M;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> N;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> NG;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> L;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> R;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> W;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> Y;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> HH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> B;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> D;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> JH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> G;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> P;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> T;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> K;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> CH;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> SIL;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> SHOTSIL;
-            public MaskItem<bool, PhonemeTarget.TranslationMask?> FLAP;
+            public bool LipMode;
+            public MaskItem<bool, Phoneme.TranslationMask?> Aah_LipBigAah;
+            public MaskItem<bool, Phoneme.TranslationMask?> BigAah_LipDST;
+            public MaskItem<bool, Phoneme.TranslationMask?> BMP_LipEee;
+            public MaskItem<bool, Phoneme.TranslationMask?> ChJSh_LipFV;
+            public MaskItem<bool, Phoneme.TranslationMask?> DST_LipK;
+            public MaskItem<bool, Phoneme.TranslationMask?> Eee_LipL;
+            public MaskItem<bool, Phoneme.TranslationMask?> Eh_LipR;
+            public MaskItem<bool, Phoneme.TranslationMask?> FV_LipTh;
+            public MaskItem<bool, Phoneme.TranslationMask?> I;
+            public MaskItem<bool, Phoneme.TranslationMask?> K;
+            public MaskItem<bool, Phoneme.TranslationMask?> N;
+            public MaskItem<bool, Phoneme.TranslationMask?> Oh;
+            public MaskItem<bool, Phoneme.TranslationMask?> OohQ;
+            public MaskItem<bool, Phoneme.TranslationMask?> R;
+            public MaskItem<bool, Phoneme.TranslationMask?> Th;
+            public MaskItem<bool, Phoneme.TranslationMask?> W;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.IY = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.IH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.EH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.EY = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.AE = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.AA = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.AW = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.AY = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.AH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.AO = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.OY = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.OW = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.UH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.UW = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.ER = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.AX = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.S = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.SH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.Z = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.ZH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.F = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.TH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.V = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.DH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.M = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.N = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.NG = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.L = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.R = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.W = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.Y = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.HH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.B = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.D = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.JH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.G = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.P = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.T = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.K = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.CH = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.SIL = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.SHOTSIL = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
-                this.FLAP = new MaskItem<bool, PhonemeTarget.TranslationMask?>(defaultOn, null);
+                this.LipMode = defaultOn;
+                this.Aah_LipBigAah = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.BigAah_LipDST = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.BMP_LipEee = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.ChJSh_LipFV = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.DST_LipK = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.Eee_LipL = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.Eh_LipR = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.FV_LipTh = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.I = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.K = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.N = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.Oh = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.OohQ = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.R = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.Th = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
+                this.W = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -2163,55 +1209,25 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((IY?.Overall ?? true, IY?.Specific?.GetCrystal()));
-                ret.Add((IH?.Overall ?? true, IH?.Specific?.GetCrystal()));
-                ret.Add((EH?.Overall ?? true, EH?.Specific?.GetCrystal()));
-                ret.Add((EY?.Overall ?? true, EY?.Specific?.GetCrystal()));
-                ret.Add((AE?.Overall ?? true, AE?.Specific?.GetCrystal()));
-                ret.Add((AA?.Overall ?? true, AA?.Specific?.GetCrystal()));
-                ret.Add((AW?.Overall ?? true, AW?.Specific?.GetCrystal()));
-                ret.Add((AY?.Overall ?? true, AY?.Specific?.GetCrystal()));
-                ret.Add((AH?.Overall ?? true, AH?.Specific?.GetCrystal()));
-                ret.Add((AO?.Overall ?? true, AO?.Specific?.GetCrystal()));
-                ret.Add((OY?.Overall ?? true, OY?.Specific?.GetCrystal()));
-                ret.Add((OW?.Overall ?? true, OW?.Specific?.GetCrystal()));
-                ret.Add((UH?.Overall ?? true, UH?.Specific?.GetCrystal()));
-                ret.Add((UW?.Overall ?? true, UW?.Specific?.GetCrystal()));
-                ret.Add((ER?.Overall ?? true, ER?.Specific?.GetCrystal()));
-                ret.Add((AX?.Overall ?? true, AX?.Specific?.GetCrystal()));
-                ret.Add((S?.Overall ?? true, S?.Specific?.GetCrystal()));
-                ret.Add((SH?.Overall ?? true, SH?.Specific?.GetCrystal()));
-                ret.Add((Z?.Overall ?? true, Z?.Specific?.GetCrystal()));
-                ret.Add((ZH?.Overall ?? true, ZH?.Specific?.GetCrystal()));
-                ret.Add((F?.Overall ?? true, F?.Specific?.GetCrystal()));
-                ret.Add((TH?.Overall ?? true, TH?.Specific?.GetCrystal()));
-                ret.Add((V?.Overall ?? true, V?.Specific?.GetCrystal()));
-                ret.Add((DH?.Overall ?? true, DH?.Specific?.GetCrystal()));
-                ret.Add((M?.Overall ?? true, M?.Specific?.GetCrystal()));
-                ret.Add((N?.Overall ?? true, N?.Specific?.GetCrystal()));
-                ret.Add((NG?.Overall ?? true, NG?.Specific?.GetCrystal()));
-                ret.Add((L?.Overall ?? true, L?.Specific?.GetCrystal()));
-                ret.Add((R?.Overall ?? true, R?.Specific?.GetCrystal()));
-                ret.Add((W?.Overall ?? true, W?.Specific?.GetCrystal()));
-                ret.Add((Y?.Overall ?? true, Y?.Specific?.GetCrystal()));
-                ret.Add((HH?.Overall ?? true, HH?.Specific?.GetCrystal()));
-                ret.Add((B?.Overall ?? true, B?.Specific?.GetCrystal()));
-                ret.Add((D?.Overall ?? true, D?.Specific?.GetCrystal()));
-                ret.Add((JH?.Overall ?? true, JH?.Specific?.GetCrystal()));
-                ret.Add((G?.Overall ?? true, G?.Specific?.GetCrystal()));
-                ret.Add((P?.Overall ?? true, P?.Specific?.GetCrystal()));
-                ret.Add((T?.Overall ?? true, T?.Specific?.GetCrystal()));
+                ret.Add((LipMode, null));
+                ret.Add((Aah_LipBigAah?.Overall ?? true, Aah_LipBigAah?.Specific?.GetCrystal()));
+                ret.Add((BigAah_LipDST?.Overall ?? true, BigAah_LipDST?.Specific?.GetCrystal()));
+                ret.Add((BMP_LipEee?.Overall ?? true, BMP_LipEee?.Specific?.GetCrystal()));
+                ret.Add((ChJSh_LipFV?.Overall ?? true, ChJSh_LipFV?.Specific?.GetCrystal()));
+                ret.Add((DST_LipK?.Overall ?? true, DST_LipK?.Specific?.GetCrystal()));
+                ret.Add((Eee_LipL?.Overall ?? true, Eee_LipL?.Specific?.GetCrystal()));
+                ret.Add((Eh_LipR?.Overall ?? true, Eh_LipR?.Specific?.GetCrystal()));
+                ret.Add((FV_LipTh?.Overall ?? true, FV_LipTh?.Specific?.GetCrystal()));
+                ret.Add((I?.Overall ?? true, I?.Specific?.GetCrystal()));
                 ret.Add((K?.Overall ?? true, K?.Specific?.GetCrystal()));
-                ret.Add((CH?.Overall ?? true, CH?.Specific?.GetCrystal()));
-                ret.Add((SIL?.Overall ?? true, SIL?.Specific?.GetCrystal()));
-                ret.Add((SHOTSIL?.Overall ?? true, SHOTSIL?.Specific?.GetCrystal()));
-                ret.Add((FLAP?.Overall ?? true, FLAP?.Specific?.GetCrystal()));
+                ret.Add((N?.Overall ?? true, N?.Specific?.GetCrystal()));
+                ret.Add((Oh?.Overall ?? true, Oh?.Specific?.GetCrystal()));
+                ret.Add((OohQ?.Overall ?? true, OohQ?.Specific?.GetCrystal()));
+                ret.Add((R?.Overall ?? true, R?.Specific?.GetCrystal()));
+                ret.Add((Th?.Overall ?? true, Th?.Specific?.GetCrystal()));
+                ret.Add((W?.Overall ?? true, W?.Specific?.GetCrystal()));
             }
         }
-        #endregion
-
-        #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = FaceFxPhonemes_Registration.TRIGGERING_RECORD_TYPE;
         #endregion
 
         #region Binary Translation
@@ -2275,49 +1291,23 @@ namespace Mutagen.Bethesda.Skyrim
         IFaceFxPhonemesGetter,
         ILoquiObjectSetter<IFaceFxPhonemes>
     {
-        new PhonemeTarget IY { get; set; }
-        new PhonemeTarget IH { get; set; }
-        new PhonemeTarget EH { get; set; }
-        new PhonemeTarget EY { get; set; }
-        new PhonemeTarget AE { get; set; }
-        new PhonemeTarget AA { get; set; }
-        new PhonemeTarget AW { get; set; }
-        new PhonemeTarget AY { get; set; }
-        new PhonemeTarget AH { get; set; }
-        new PhonemeTarget AO { get; set; }
-        new PhonemeTarget OY { get; set; }
-        new PhonemeTarget OW { get; set; }
-        new PhonemeTarget UH { get; set; }
-        new PhonemeTarget UW { get; set; }
-        new PhonemeTarget ER { get; set; }
-        new PhonemeTarget AX { get; set; }
-        new PhonemeTarget S { get; set; }
-        new PhonemeTarget SH { get; set; }
-        new PhonemeTarget Z { get; set; }
-        new PhonemeTarget ZH { get; set; }
-        new PhonemeTarget F { get; set; }
-        new PhonemeTarget TH { get; set; }
-        new PhonemeTarget V { get; set; }
-        new PhonemeTarget DH { get; set; }
-        new PhonemeTarget M { get; set; }
-        new PhonemeTarget N { get; set; }
-        new PhonemeTarget NG { get; set; }
-        new PhonemeTarget L { get; set; }
-        new PhonemeTarget R { get; set; }
-        new PhonemeTarget W { get; set; }
-        new PhonemeTarget Y { get; set; }
-        new PhonemeTarget HH { get; set; }
-        new PhonemeTarget B { get; set; }
-        new PhonemeTarget D { get; set; }
-        new PhonemeTarget JH { get; set; }
-        new PhonemeTarget G { get; set; }
-        new PhonemeTarget P { get; set; }
-        new PhonemeTarget T { get; set; }
-        new PhonemeTarget K { get; set; }
-        new PhonemeTarget CH { get; set; }
-        new PhonemeTarget SIL { get; set; }
-        new PhonemeTarget SHOTSIL { get; set; }
-        new PhonemeTarget FLAP { get; set; }
+        new Boolean LipMode { get; set; }
+        new Phoneme? Aah_LipBigAah { get; set; }
+        new Phoneme? BigAah_LipDST { get; set; }
+        new Phoneme? BMP_LipEee { get; set; }
+        new Phoneme? ChJSh_LipFV { get; set; }
+        new Phoneme? DST_LipK { get; set; }
+        new Phoneme? Eee_LipL { get; set; }
+        new Phoneme? Eh_LipR { get; set; }
+        new Phoneme? FV_LipTh { get; set; }
+        new Phoneme? I { get; set; }
+        new Phoneme? K { get; set; }
+        new Phoneme? N { get; set; }
+        new Phoneme? Oh { get; set; }
+        new Phoneme? OohQ { get; set; }
+        new Phoneme? R { get; set; }
+        new Phoneme? Th { get; set; }
+        new Phoneme? W { get; set; }
     }
 
     public partial interface IFaceFxPhonemesGetter :
@@ -2332,49 +1322,23 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IPhonemeTargetGetter IY { get; }
-        IPhonemeTargetGetter IH { get; }
-        IPhonemeTargetGetter EH { get; }
-        IPhonemeTargetGetter EY { get; }
-        IPhonemeTargetGetter AE { get; }
-        IPhonemeTargetGetter AA { get; }
-        IPhonemeTargetGetter AW { get; }
-        IPhonemeTargetGetter AY { get; }
-        IPhonemeTargetGetter AH { get; }
-        IPhonemeTargetGetter AO { get; }
-        IPhonemeTargetGetter OY { get; }
-        IPhonemeTargetGetter OW { get; }
-        IPhonemeTargetGetter UH { get; }
-        IPhonemeTargetGetter UW { get; }
-        IPhonemeTargetGetter ER { get; }
-        IPhonemeTargetGetter AX { get; }
-        IPhonemeTargetGetter S { get; }
-        IPhonemeTargetGetter SH { get; }
-        IPhonemeTargetGetter Z { get; }
-        IPhonemeTargetGetter ZH { get; }
-        IPhonemeTargetGetter F { get; }
-        IPhonemeTargetGetter TH { get; }
-        IPhonemeTargetGetter V { get; }
-        IPhonemeTargetGetter DH { get; }
-        IPhonemeTargetGetter M { get; }
-        IPhonemeTargetGetter N { get; }
-        IPhonemeTargetGetter NG { get; }
-        IPhonemeTargetGetter L { get; }
-        IPhonemeTargetGetter R { get; }
-        IPhonemeTargetGetter W { get; }
-        IPhonemeTargetGetter Y { get; }
-        IPhonemeTargetGetter HH { get; }
-        IPhonemeTargetGetter B { get; }
-        IPhonemeTargetGetter D { get; }
-        IPhonemeTargetGetter JH { get; }
-        IPhonemeTargetGetter G { get; }
-        IPhonemeTargetGetter P { get; }
-        IPhonemeTargetGetter T { get; }
-        IPhonemeTargetGetter K { get; }
-        IPhonemeTargetGetter CH { get; }
-        IPhonemeTargetGetter SIL { get; }
-        IPhonemeTargetGetter SHOTSIL { get; }
-        IPhonemeTargetGetter FLAP { get; }
+        Boolean LipMode { get; }
+        IPhonemeGetter? Aah_LipBigAah { get; }
+        IPhonemeGetter? BigAah_LipDST { get; }
+        IPhonemeGetter? BMP_LipEee { get; }
+        IPhonemeGetter? ChJSh_LipFV { get; }
+        IPhonemeGetter? DST_LipK { get; }
+        IPhonemeGetter? Eee_LipL { get; }
+        IPhonemeGetter? Eh_LipR { get; }
+        IPhonemeGetter? FV_LipTh { get; }
+        IPhonemeGetter? I { get; }
+        IPhonemeGetter? K { get; }
+        IPhonemeGetter? N { get; }
+        IPhonemeGetter? Oh { get; }
+        IPhonemeGetter? OohQ { get; }
+        IPhonemeGetter? R { get; }
+        IPhonemeGetter? Th { get; }
+        IPhonemeGetter? W { get; }
 
     }
 
@@ -2681,49 +1645,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum FaceFxPhonemes_FieldIndex
     {
-        IY = 0,
-        IH = 1,
-        EH = 2,
-        EY = 3,
-        AE = 4,
-        AA = 5,
-        AW = 6,
-        AY = 7,
-        AH = 8,
-        AO = 9,
-        OY = 10,
-        OW = 11,
-        UH = 12,
-        UW = 13,
-        ER = 14,
-        AX = 15,
-        S = 16,
-        SH = 17,
-        Z = 18,
-        ZH = 19,
-        F = 20,
-        TH = 21,
-        V = 22,
-        DH = 23,
-        M = 24,
-        N = 25,
-        NG = 26,
-        L = 27,
-        R = 28,
-        W = 29,
-        Y = 30,
-        HH = 31,
-        B = 32,
-        D = 33,
-        JH = 34,
-        G = 35,
-        P = 36,
-        T = 37,
-        K = 38,
-        CH = 39,
-        SIL = 40,
-        SHOTSIL = 41,
-        FLAP = 42,
+        LipMode = 0,
+        Aah_LipBigAah = 1,
+        BigAah_LipDST = 2,
+        BMP_LipEee = 3,
+        ChJSh_LipFV = 4,
+        DST_LipK = 5,
+        Eee_LipL = 6,
+        Eh_LipR = 7,
+        FV_LipTh = 8,
+        I = 9,
+        K = 10,
+        N = 11,
+        Oh = 12,
+        OohQ = 13,
+        R = 14,
+        Th = 15,
+        W = 16,
     }
     #endregion
 
@@ -2741,9 +1679,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "b965bdb9-1d8c-4efe-8cfa-2f35cd13370a";
 
-        public const ushort AdditionalFieldCount = 43;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(FaceFxPhonemes.Mask<>);
 
@@ -2773,92 +1711,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "IY":
-                    return (ushort)FaceFxPhonemes_FieldIndex.IY;
-                case "IH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.IH;
-                case "EH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.EH;
-                case "EY":
-                    return (ushort)FaceFxPhonemes_FieldIndex.EY;
-                case "AE":
-                    return (ushort)FaceFxPhonemes_FieldIndex.AE;
-                case "AA":
-                    return (ushort)FaceFxPhonemes_FieldIndex.AA;
-                case "AW":
-                    return (ushort)FaceFxPhonemes_FieldIndex.AW;
-                case "AY":
-                    return (ushort)FaceFxPhonemes_FieldIndex.AY;
-                case "AH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.AH;
-                case "AO":
-                    return (ushort)FaceFxPhonemes_FieldIndex.AO;
-                case "OY":
-                    return (ushort)FaceFxPhonemes_FieldIndex.OY;
-                case "OW":
-                    return (ushort)FaceFxPhonemes_FieldIndex.OW;
-                case "UH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.UH;
-                case "UW":
-                    return (ushort)FaceFxPhonemes_FieldIndex.UW;
-                case "ER":
-                    return (ushort)FaceFxPhonemes_FieldIndex.ER;
-                case "AX":
-                    return (ushort)FaceFxPhonemes_FieldIndex.AX;
-                case "S":
-                    return (ushort)FaceFxPhonemes_FieldIndex.S;
-                case "SH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.SH;
-                case "Z":
-                    return (ushort)FaceFxPhonemes_FieldIndex.Z;
-                case "ZH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.ZH;
-                case "F":
-                    return (ushort)FaceFxPhonemes_FieldIndex.F;
-                case "TH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.TH;
-                case "V":
-                    return (ushort)FaceFxPhonemes_FieldIndex.V;
-                case "DH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.DH;
-                case "M":
-                    return (ushort)FaceFxPhonemes_FieldIndex.M;
-                case "N":
-                    return (ushort)FaceFxPhonemes_FieldIndex.N;
-                case "NG":
-                    return (ushort)FaceFxPhonemes_FieldIndex.NG;
-                case "L":
-                    return (ushort)FaceFxPhonemes_FieldIndex.L;
-                case "R":
-                    return (ushort)FaceFxPhonemes_FieldIndex.R;
-                case "W":
-                    return (ushort)FaceFxPhonemes_FieldIndex.W;
-                case "Y":
-                    return (ushort)FaceFxPhonemes_FieldIndex.Y;
-                case "HH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.HH;
-                case "B":
-                    return (ushort)FaceFxPhonemes_FieldIndex.B;
-                case "D":
-                    return (ushort)FaceFxPhonemes_FieldIndex.D;
-                case "JH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.JH;
-                case "G":
-                    return (ushort)FaceFxPhonemes_FieldIndex.G;
-                case "P":
-                    return (ushort)FaceFxPhonemes_FieldIndex.P;
-                case "T":
-                    return (ushort)FaceFxPhonemes_FieldIndex.T;
+                case "LIPMODE":
+                    return (ushort)FaceFxPhonemes_FieldIndex.LipMode;
+                case "AAH_LIPBIGAAH":
+                    return (ushort)FaceFxPhonemes_FieldIndex.Aah_LipBigAah;
+                case "BIGAAH_LIPDST":
+                    return (ushort)FaceFxPhonemes_FieldIndex.BigAah_LipDST;
+                case "BMP_LIPEEE":
+                    return (ushort)FaceFxPhonemes_FieldIndex.BMP_LipEee;
+                case "CHJSH_LIPFV":
+                    return (ushort)FaceFxPhonemes_FieldIndex.ChJSh_LipFV;
+                case "DST_LIPK":
+                    return (ushort)FaceFxPhonemes_FieldIndex.DST_LipK;
+                case "EEE_LIPL":
+                    return (ushort)FaceFxPhonemes_FieldIndex.Eee_LipL;
+                case "EH_LIPR":
+                    return (ushort)FaceFxPhonemes_FieldIndex.Eh_LipR;
+                case "FV_LIPTH":
+                    return (ushort)FaceFxPhonemes_FieldIndex.FV_LipTh;
+                case "I":
+                    return (ushort)FaceFxPhonemes_FieldIndex.I;
                 case "K":
                     return (ushort)FaceFxPhonemes_FieldIndex.K;
-                case "CH":
-                    return (ushort)FaceFxPhonemes_FieldIndex.CH;
-                case "SIL":
-                    return (ushort)FaceFxPhonemes_FieldIndex.SIL;
-                case "SHOTSIL":
-                    return (ushort)FaceFxPhonemes_FieldIndex.SHOTSIL;
-                case "FLAP":
-                    return (ushort)FaceFxPhonemes_FieldIndex.FLAP;
+                case "N":
+                    return (ushort)FaceFxPhonemes_FieldIndex.N;
+                case "OH":
+                    return (ushort)FaceFxPhonemes_FieldIndex.Oh;
+                case "OOHQ":
+                    return (ushort)FaceFxPhonemes_FieldIndex.OohQ;
+                case "R":
+                    return (ushort)FaceFxPhonemes_FieldIndex.R;
+                case "TH":
+                    return (ushort)FaceFxPhonemes_FieldIndex.Th;
+                case "W":
+                    return (ushort)FaceFxPhonemes_FieldIndex.W;
                 default:
                     return null;
             }
@@ -2869,49 +1755,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.IY:
-                case FaceFxPhonemes_FieldIndex.IH:
-                case FaceFxPhonemes_FieldIndex.EH:
-                case FaceFxPhonemes_FieldIndex.EY:
-                case FaceFxPhonemes_FieldIndex.AE:
-                case FaceFxPhonemes_FieldIndex.AA:
-                case FaceFxPhonemes_FieldIndex.AW:
-                case FaceFxPhonemes_FieldIndex.AY:
-                case FaceFxPhonemes_FieldIndex.AH:
-                case FaceFxPhonemes_FieldIndex.AO:
-                case FaceFxPhonemes_FieldIndex.OY:
-                case FaceFxPhonemes_FieldIndex.OW:
-                case FaceFxPhonemes_FieldIndex.UH:
-                case FaceFxPhonemes_FieldIndex.UW:
-                case FaceFxPhonemes_FieldIndex.ER:
-                case FaceFxPhonemes_FieldIndex.AX:
-                case FaceFxPhonemes_FieldIndex.S:
-                case FaceFxPhonemes_FieldIndex.SH:
-                case FaceFxPhonemes_FieldIndex.Z:
-                case FaceFxPhonemes_FieldIndex.ZH:
-                case FaceFxPhonemes_FieldIndex.F:
-                case FaceFxPhonemes_FieldIndex.TH:
-                case FaceFxPhonemes_FieldIndex.V:
-                case FaceFxPhonemes_FieldIndex.DH:
-                case FaceFxPhonemes_FieldIndex.M:
-                case FaceFxPhonemes_FieldIndex.N:
-                case FaceFxPhonemes_FieldIndex.NG:
-                case FaceFxPhonemes_FieldIndex.L:
-                case FaceFxPhonemes_FieldIndex.R:
-                case FaceFxPhonemes_FieldIndex.W:
-                case FaceFxPhonemes_FieldIndex.Y:
-                case FaceFxPhonemes_FieldIndex.HH:
-                case FaceFxPhonemes_FieldIndex.B:
-                case FaceFxPhonemes_FieldIndex.D:
-                case FaceFxPhonemes_FieldIndex.JH:
-                case FaceFxPhonemes_FieldIndex.G:
-                case FaceFxPhonemes_FieldIndex.P:
-                case FaceFxPhonemes_FieldIndex.T:
+                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                case FaceFxPhonemes_FieldIndex.DST_LipK:
+                case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                case FaceFxPhonemes_FieldIndex.I:
                 case FaceFxPhonemes_FieldIndex.K:
-                case FaceFxPhonemes_FieldIndex.CH:
-                case FaceFxPhonemes_FieldIndex.SIL:
-                case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                case FaceFxPhonemes_FieldIndex.FLAP:
+                case FaceFxPhonemes_FieldIndex.N:
+                case FaceFxPhonemes_FieldIndex.Oh:
+                case FaceFxPhonemes_FieldIndex.OohQ:
+                case FaceFxPhonemes_FieldIndex.R:
+                case FaceFxPhonemes_FieldIndex.Th:
+                case FaceFxPhonemes_FieldIndex.W:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2923,50 +1783,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.IY:
-                case FaceFxPhonemes_FieldIndex.IH:
-                case FaceFxPhonemes_FieldIndex.EH:
-                case FaceFxPhonemes_FieldIndex.EY:
-                case FaceFxPhonemes_FieldIndex.AE:
-                case FaceFxPhonemes_FieldIndex.AA:
-                case FaceFxPhonemes_FieldIndex.AW:
-                case FaceFxPhonemes_FieldIndex.AY:
-                case FaceFxPhonemes_FieldIndex.AH:
-                case FaceFxPhonemes_FieldIndex.AO:
-                case FaceFxPhonemes_FieldIndex.OY:
-                case FaceFxPhonemes_FieldIndex.OW:
-                case FaceFxPhonemes_FieldIndex.UH:
-                case FaceFxPhonemes_FieldIndex.UW:
-                case FaceFxPhonemes_FieldIndex.ER:
-                case FaceFxPhonemes_FieldIndex.AX:
-                case FaceFxPhonemes_FieldIndex.S:
-                case FaceFxPhonemes_FieldIndex.SH:
-                case FaceFxPhonemes_FieldIndex.Z:
-                case FaceFxPhonemes_FieldIndex.ZH:
-                case FaceFxPhonemes_FieldIndex.F:
-                case FaceFxPhonemes_FieldIndex.TH:
-                case FaceFxPhonemes_FieldIndex.V:
-                case FaceFxPhonemes_FieldIndex.DH:
-                case FaceFxPhonemes_FieldIndex.M:
-                case FaceFxPhonemes_FieldIndex.N:
-                case FaceFxPhonemes_FieldIndex.NG:
-                case FaceFxPhonemes_FieldIndex.L:
-                case FaceFxPhonemes_FieldIndex.R:
-                case FaceFxPhonemes_FieldIndex.W:
-                case FaceFxPhonemes_FieldIndex.Y:
-                case FaceFxPhonemes_FieldIndex.HH:
-                case FaceFxPhonemes_FieldIndex.B:
-                case FaceFxPhonemes_FieldIndex.D:
-                case FaceFxPhonemes_FieldIndex.JH:
-                case FaceFxPhonemes_FieldIndex.G:
-                case FaceFxPhonemes_FieldIndex.P:
-                case FaceFxPhonemes_FieldIndex.T:
+                case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                case FaceFxPhonemes_FieldIndex.DST_LipK:
+                case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                case FaceFxPhonemes_FieldIndex.I:
                 case FaceFxPhonemes_FieldIndex.K:
-                case FaceFxPhonemes_FieldIndex.CH:
-                case FaceFxPhonemes_FieldIndex.SIL:
-                case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                case FaceFxPhonemes_FieldIndex.FLAP:
+                case FaceFxPhonemes_FieldIndex.N:
+                case FaceFxPhonemes_FieldIndex.Oh:
+                case FaceFxPhonemes_FieldIndex.OohQ:
+                case FaceFxPhonemes_FieldIndex.R:
+                case FaceFxPhonemes_FieldIndex.Th:
+                case FaceFxPhonemes_FieldIndex.W:
                     return true;
+                case FaceFxPhonemes_FieldIndex.LipMode:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2977,49 +1812,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.IY:
-                case FaceFxPhonemes_FieldIndex.IH:
-                case FaceFxPhonemes_FieldIndex.EH:
-                case FaceFxPhonemes_FieldIndex.EY:
-                case FaceFxPhonemes_FieldIndex.AE:
-                case FaceFxPhonemes_FieldIndex.AA:
-                case FaceFxPhonemes_FieldIndex.AW:
-                case FaceFxPhonemes_FieldIndex.AY:
-                case FaceFxPhonemes_FieldIndex.AH:
-                case FaceFxPhonemes_FieldIndex.AO:
-                case FaceFxPhonemes_FieldIndex.OY:
-                case FaceFxPhonemes_FieldIndex.OW:
-                case FaceFxPhonemes_FieldIndex.UH:
-                case FaceFxPhonemes_FieldIndex.UW:
-                case FaceFxPhonemes_FieldIndex.ER:
-                case FaceFxPhonemes_FieldIndex.AX:
-                case FaceFxPhonemes_FieldIndex.S:
-                case FaceFxPhonemes_FieldIndex.SH:
-                case FaceFxPhonemes_FieldIndex.Z:
-                case FaceFxPhonemes_FieldIndex.ZH:
-                case FaceFxPhonemes_FieldIndex.F:
-                case FaceFxPhonemes_FieldIndex.TH:
-                case FaceFxPhonemes_FieldIndex.V:
-                case FaceFxPhonemes_FieldIndex.DH:
-                case FaceFxPhonemes_FieldIndex.M:
-                case FaceFxPhonemes_FieldIndex.N:
-                case FaceFxPhonemes_FieldIndex.NG:
-                case FaceFxPhonemes_FieldIndex.L:
-                case FaceFxPhonemes_FieldIndex.R:
-                case FaceFxPhonemes_FieldIndex.W:
-                case FaceFxPhonemes_FieldIndex.Y:
-                case FaceFxPhonemes_FieldIndex.HH:
-                case FaceFxPhonemes_FieldIndex.B:
-                case FaceFxPhonemes_FieldIndex.D:
-                case FaceFxPhonemes_FieldIndex.JH:
-                case FaceFxPhonemes_FieldIndex.G:
-                case FaceFxPhonemes_FieldIndex.P:
-                case FaceFxPhonemes_FieldIndex.T:
+                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                case FaceFxPhonemes_FieldIndex.DST_LipK:
+                case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                case FaceFxPhonemes_FieldIndex.I:
                 case FaceFxPhonemes_FieldIndex.K:
-                case FaceFxPhonemes_FieldIndex.CH:
-                case FaceFxPhonemes_FieldIndex.SIL:
-                case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                case FaceFxPhonemes_FieldIndex.FLAP:
+                case FaceFxPhonemes_FieldIndex.N:
+                case FaceFxPhonemes_FieldIndex.Oh:
+                case FaceFxPhonemes_FieldIndex.OohQ:
+                case FaceFxPhonemes_FieldIndex.R:
+                case FaceFxPhonemes_FieldIndex.Th:
+                case FaceFxPhonemes_FieldIndex.W:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3031,92 +1840,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.IY:
-                    return "IY";
-                case FaceFxPhonemes_FieldIndex.IH:
-                    return "IH";
-                case FaceFxPhonemes_FieldIndex.EH:
-                    return "EH";
-                case FaceFxPhonemes_FieldIndex.EY:
-                    return "EY";
-                case FaceFxPhonemes_FieldIndex.AE:
-                    return "AE";
-                case FaceFxPhonemes_FieldIndex.AA:
-                    return "AA";
-                case FaceFxPhonemes_FieldIndex.AW:
-                    return "AW";
-                case FaceFxPhonemes_FieldIndex.AY:
-                    return "AY";
-                case FaceFxPhonemes_FieldIndex.AH:
-                    return "AH";
-                case FaceFxPhonemes_FieldIndex.AO:
-                    return "AO";
-                case FaceFxPhonemes_FieldIndex.OY:
-                    return "OY";
-                case FaceFxPhonemes_FieldIndex.OW:
-                    return "OW";
-                case FaceFxPhonemes_FieldIndex.UH:
-                    return "UH";
-                case FaceFxPhonemes_FieldIndex.UW:
-                    return "UW";
-                case FaceFxPhonemes_FieldIndex.ER:
-                    return "ER";
-                case FaceFxPhonemes_FieldIndex.AX:
-                    return "AX";
-                case FaceFxPhonemes_FieldIndex.S:
-                    return "S";
-                case FaceFxPhonemes_FieldIndex.SH:
-                    return "SH";
-                case FaceFxPhonemes_FieldIndex.Z:
-                    return "Z";
-                case FaceFxPhonemes_FieldIndex.ZH:
-                    return "ZH";
-                case FaceFxPhonemes_FieldIndex.F:
-                    return "F";
-                case FaceFxPhonemes_FieldIndex.TH:
-                    return "TH";
-                case FaceFxPhonemes_FieldIndex.V:
-                    return "V";
-                case FaceFxPhonemes_FieldIndex.DH:
-                    return "DH";
-                case FaceFxPhonemes_FieldIndex.M:
-                    return "M";
-                case FaceFxPhonemes_FieldIndex.N:
-                    return "N";
-                case FaceFxPhonemes_FieldIndex.NG:
-                    return "NG";
-                case FaceFxPhonemes_FieldIndex.L:
-                    return "L";
-                case FaceFxPhonemes_FieldIndex.R:
-                    return "R";
-                case FaceFxPhonemes_FieldIndex.W:
-                    return "W";
-                case FaceFxPhonemes_FieldIndex.Y:
-                    return "Y";
-                case FaceFxPhonemes_FieldIndex.HH:
-                    return "HH";
-                case FaceFxPhonemes_FieldIndex.B:
-                    return "B";
-                case FaceFxPhonemes_FieldIndex.D:
-                    return "D";
-                case FaceFxPhonemes_FieldIndex.JH:
-                    return "JH";
-                case FaceFxPhonemes_FieldIndex.G:
-                    return "G";
-                case FaceFxPhonemes_FieldIndex.P:
-                    return "P";
-                case FaceFxPhonemes_FieldIndex.T:
-                    return "T";
+                case FaceFxPhonemes_FieldIndex.LipMode:
+                    return "LipMode";
+                case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                    return "Aah_LipBigAah";
+                case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                    return "BigAah_LipDST";
+                case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                    return "BMP_LipEee";
+                case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                    return "ChJSh_LipFV";
+                case FaceFxPhonemes_FieldIndex.DST_LipK:
+                    return "DST_LipK";
+                case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                    return "Eee_LipL";
+                case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                    return "Eh_LipR";
+                case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                    return "FV_LipTh";
+                case FaceFxPhonemes_FieldIndex.I:
+                    return "I";
                 case FaceFxPhonemes_FieldIndex.K:
                     return "K";
-                case FaceFxPhonemes_FieldIndex.CH:
-                    return "CH";
-                case FaceFxPhonemes_FieldIndex.SIL:
-                    return "SIL";
-                case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                    return "SHOTSIL";
-                case FaceFxPhonemes_FieldIndex.FLAP:
-                    return "FLAP";
+                case FaceFxPhonemes_FieldIndex.N:
+                    return "N";
+                case FaceFxPhonemes_FieldIndex.Oh:
+                    return "Oh";
+                case FaceFxPhonemes_FieldIndex.OohQ:
+                    return "OohQ";
+                case FaceFxPhonemes_FieldIndex.R:
+                    return "R";
+                case FaceFxPhonemes_FieldIndex.Th:
+                    return "Th";
+                case FaceFxPhonemes_FieldIndex.W:
+                    return "W";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3127,49 +1884,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.IY:
-                case FaceFxPhonemes_FieldIndex.IH:
-                case FaceFxPhonemes_FieldIndex.EH:
-                case FaceFxPhonemes_FieldIndex.EY:
-                case FaceFxPhonemes_FieldIndex.AE:
-                case FaceFxPhonemes_FieldIndex.AA:
-                case FaceFxPhonemes_FieldIndex.AW:
-                case FaceFxPhonemes_FieldIndex.AY:
-                case FaceFxPhonemes_FieldIndex.AH:
-                case FaceFxPhonemes_FieldIndex.AO:
-                case FaceFxPhonemes_FieldIndex.OY:
-                case FaceFxPhonemes_FieldIndex.OW:
-                case FaceFxPhonemes_FieldIndex.UH:
-                case FaceFxPhonemes_FieldIndex.UW:
-                case FaceFxPhonemes_FieldIndex.ER:
-                case FaceFxPhonemes_FieldIndex.AX:
-                case FaceFxPhonemes_FieldIndex.S:
-                case FaceFxPhonemes_FieldIndex.SH:
-                case FaceFxPhonemes_FieldIndex.Z:
-                case FaceFxPhonemes_FieldIndex.ZH:
-                case FaceFxPhonemes_FieldIndex.F:
-                case FaceFxPhonemes_FieldIndex.TH:
-                case FaceFxPhonemes_FieldIndex.V:
-                case FaceFxPhonemes_FieldIndex.DH:
-                case FaceFxPhonemes_FieldIndex.M:
-                case FaceFxPhonemes_FieldIndex.N:
-                case FaceFxPhonemes_FieldIndex.NG:
-                case FaceFxPhonemes_FieldIndex.L:
-                case FaceFxPhonemes_FieldIndex.R:
-                case FaceFxPhonemes_FieldIndex.W:
-                case FaceFxPhonemes_FieldIndex.Y:
-                case FaceFxPhonemes_FieldIndex.HH:
-                case FaceFxPhonemes_FieldIndex.B:
-                case FaceFxPhonemes_FieldIndex.D:
-                case FaceFxPhonemes_FieldIndex.JH:
-                case FaceFxPhonemes_FieldIndex.G:
-                case FaceFxPhonemes_FieldIndex.P:
-                case FaceFxPhonemes_FieldIndex.T:
+                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                case FaceFxPhonemes_FieldIndex.DST_LipK:
+                case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                case FaceFxPhonemes_FieldIndex.I:
                 case FaceFxPhonemes_FieldIndex.K:
-                case FaceFxPhonemes_FieldIndex.CH:
-                case FaceFxPhonemes_FieldIndex.SIL:
-                case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                case FaceFxPhonemes_FieldIndex.FLAP:
+                case FaceFxPhonemes_FieldIndex.N:
+                case FaceFxPhonemes_FieldIndex.Oh:
+                case FaceFxPhonemes_FieldIndex.OohQ:
+                case FaceFxPhonemes_FieldIndex.R:
+                case FaceFxPhonemes_FieldIndex.Th:
+                case FaceFxPhonemes_FieldIndex.W:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3181,49 +1912,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.IY:
-                case FaceFxPhonemes_FieldIndex.IH:
-                case FaceFxPhonemes_FieldIndex.EH:
-                case FaceFxPhonemes_FieldIndex.EY:
-                case FaceFxPhonemes_FieldIndex.AE:
-                case FaceFxPhonemes_FieldIndex.AA:
-                case FaceFxPhonemes_FieldIndex.AW:
-                case FaceFxPhonemes_FieldIndex.AY:
-                case FaceFxPhonemes_FieldIndex.AH:
-                case FaceFxPhonemes_FieldIndex.AO:
-                case FaceFxPhonemes_FieldIndex.OY:
-                case FaceFxPhonemes_FieldIndex.OW:
-                case FaceFxPhonemes_FieldIndex.UH:
-                case FaceFxPhonemes_FieldIndex.UW:
-                case FaceFxPhonemes_FieldIndex.ER:
-                case FaceFxPhonemes_FieldIndex.AX:
-                case FaceFxPhonemes_FieldIndex.S:
-                case FaceFxPhonemes_FieldIndex.SH:
-                case FaceFxPhonemes_FieldIndex.Z:
-                case FaceFxPhonemes_FieldIndex.ZH:
-                case FaceFxPhonemes_FieldIndex.F:
-                case FaceFxPhonemes_FieldIndex.TH:
-                case FaceFxPhonemes_FieldIndex.V:
-                case FaceFxPhonemes_FieldIndex.DH:
-                case FaceFxPhonemes_FieldIndex.M:
-                case FaceFxPhonemes_FieldIndex.N:
-                case FaceFxPhonemes_FieldIndex.NG:
-                case FaceFxPhonemes_FieldIndex.L:
-                case FaceFxPhonemes_FieldIndex.R:
-                case FaceFxPhonemes_FieldIndex.W:
-                case FaceFxPhonemes_FieldIndex.Y:
-                case FaceFxPhonemes_FieldIndex.HH:
-                case FaceFxPhonemes_FieldIndex.B:
-                case FaceFxPhonemes_FieldIndex.D:
-                case FaceFxPhonemes_FieldIndex.JH:
-                case FaceFxPhonemes_FieldIndex.G:
-                case FaceFxPhonemes_FieldIndex.P:
-                case FaceFxPhonemes_FieldIndex.T:
+                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                case FaceFxPhonemes_FieldIndex.DST_LipK:
+                case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                case FaceFxPhonemes_FieldIndex.I:
                 case FaceFxPhonemes_FieldIndex.K:
-                case FaceFxPhonemes_FieldIndex.CH:
-                case FaceFxPhonemes_FieldIndex.SIL:
-                case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                case FaceFxPhonemes_FieldIndex.FLAP:
+                case FaceFxPhonemes_FieldIndex.N:
+                case FaceFxPhonemes_FieldIndex.Oh:
+                case FaceFxPhonemes_FieldIndex.OohQ:
+                case FaceFxPhonemes_FieldIndex.R:
+                case FaceFxPhonemes_FieldIndex.Th:
+                case FaceFxPhonemes_FieldIndex.W:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3235,101 +1940,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.IY:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.IH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.EH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.EY:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.AE:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.AA:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.AW:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.AY:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.AH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.AO:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.OY:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.OW:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.UH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.UW:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.ER:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.AX:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.S:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.SH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.Z:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.ZH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.F:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.TH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.V:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.DH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.M:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.N:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.NG:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.L:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.R:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.W:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.Y:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.HH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.B:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.D:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.JH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.G:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.P:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.T:
-                    return typeof(PhonemeTarget);
+                case FaceFxPhonemes_FieldIndex.LipMode:
+                    return typeof(Boolean);
+                case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.BMP_LipEee:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.ChJSh_LipFV:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.DST_LipK:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.Eee_LipL:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.Eh_LipR:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.FV_LipTh:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.I:
+                    return typeof(Phoneme);
                 case FaceFxPhonemes_FieldIndex.K:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.CH:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.SIL:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.SHOTSIL:
-                    return typeof(PhonemeTarget);
-                case FaceFxPhonemes_FieldIndex.FLAP:
-                    return typeof(PhonemeTarget);
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.N:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.Oh:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.OohQ:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.R:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.Th:
+                    return typeof(Phoneme);
+                case FaceFxPhonemes_FieldIndex.W:
+                    return typeof(Phoneme);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FaceFxPhonemesXmlWriteTranslation);
-        public static readonly RecordType PHWT_HEADER = new RecordType("PHWT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = PHWT_HEADER;
-        public const int NumStructFields = 43;
+        public const int NumStructFields = 17;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(FaceFxPhonemesBinaryWriteTranslation);
         #region Interface
@@ -3373,49 +2024,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFaceFxPhonemes item)
         {
             ClearPartial();
-            item.IY.Clear();
-            item.IH.Clear();
-            item.EH.Clear();
-            item.EY.Clear();
-            item.AE.Clear();
-            item.AA.Clear();
-            item.AW.Clear();
-            item.AY.Clear();
-            item.AH.Clear();
-            item.AO.Clear();
-            item.OY.Clear();
-            item.OW.Clear();
-            item.UH.Clear();
-            item.UW.Clear();
-            item.ER.Clear();
-            item.AX.Clear();
-            item.S.Clear();
-            item.SH.Clear();
-            item.Z.Clear();
-            item.ZH.Clear();
-            item.F.Clear();
-            item.TH.Clear();
-            item.V.Clear();
-            item.DH.Clear();
-            item.M.Clear();
-            item.N.Clear();
-            item.NG.Clear();
-            item.L.Clear();
-            item.R.Clear();
-            item.W.Clear();
-            item.Y.Clear();
-            item.HH.Clear();
-            item.B.Clear();
-            item.D.Clear();
-            item.JH.Clear();
-            item.G.Clear();
-            item.P.Clear();
-            item.T.Clear();
-            item.K.Clear();
-            item.CH.Clear();
-            item.SIL.Clear();
-            item.SHOTSIL.Clear();
-            item.FLAP.Clear();
+            item.LipMode = default;
+            item.Aah_LipBigAah = null;
+            item.BigAah_LipDST = null;
+            item.BMP_LipEee = null;
+            item.ChJSh_LipFV = null;
+            item.DST_LipK = null;
+            item.Eee_LipL = null;
+            item.Eh_LipR = null;
+            item.FV_LipTh = null;
+            item.I = null;
+            item.K = null;
+            item.N = null;
+            item.Oh = null;
+            item.OohQ = null;
+            item.R = null;
+            item.Th = null;
+            item.W = null;
         }
         
         #region Xml Translation
@@ -3451,30 +2076,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFaceFxPhonemes item,
             MutagenFrame frame)
         {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IFaceFxPhonemes item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54574850: // PHWT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceFxPhonemes_FieldIndex.IY) return TryGet<int?>.Failure;
-                    FaceFxPhonemesBinaryCreateTranslation.FillBinaryParsingCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
+            item.LipMode = frame.ReadBoolean();
+            if (frame.Complete) return;
+            item.Aah_LipBigAah = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.BigAah_LipDST = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.BMP_LipEee = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.ChJSh_LipFV = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.DST_LipK = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.Eee_LipL = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.Eh_LipR = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.FV_LipTh = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.I = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.K = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.N = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.Oh = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.OohQ = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.R = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.Th = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.W = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -3487,8 +2121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 setFinal: false,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FillBinaryStructs);
         }
         
         #endregion
@@ -3519,49 +2152,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.IY = MaskItemExt.Factory(item.IY.GetEqualsMask(rhs.IY, include), include);
-            ret.IH = MaskItemExt.Factory(item.IH.GetEqualsMask(rhs.IH, include), include);
-            ret.EH = MaskItemExt.Factory(item.EH.GetEqualsMask(rhs.EH, include), include);
-            ret.EY = MaskItemExt.Factory(item.EY.GetEqualsMask(rhs.EY, include), include);
-            ret.AE = MaskItemExt.Factory(item.AE.GetEqualsMask(rhs.AE, include), include);
-            ret.AA = MaskItemExt.Factory(item.AA.GetEqualsMask(rhs.AA, include), include);
-            ret.AW = MaskItemExt.Factory(item.AW.GetEqualsMask(rhs.AW, include), include);
-            ret.AY = MaskItemExt.Factory(item.AY.GetEqualsMask(rhs.AY, include), include);
-            ret.AH = MaskItemExt.Factory(item.AH.GetEqualsMask(rhs.AH, include), include);
-            ret.AO = MaskItemExt.Factory(item.AO.GetEqualsMask(rhs.AO, include), include);
-            ret.OY = MaskItemExt.Factory(item.OY.GetEqualsMask(rhs.OY, include), include);
-            ret.OW = MaskItemExt.Factory(item.OW.GetEqualsMask(rhs.OW, include), include);
-            ret.UH = MaskItemExt.Factory(item.UH.GetEqualsMask(rhs.UH, include), include);
-            ret.UW = MaskItemExt.Factory(item.UW.GetEqualsMask(rhs.UW, include), include);
-            ret.ER = MaskItemExt.Factory(item.ER.GetEqualsMask(rhs.ER, include), include);
-            ret.AX = MaskItemExt.Factory(item.AX.GetEqualsMask(rhs.AX, include), include);
-            ret.S = MaskItemExt.Factory(item.S.GetEqualsMask(rhs.S, include), include);
-            ret.SH = MaskItemExt.Factory(item.SH.GetEqualsMask(rhs.SH, include), include);
-            ret.Z = MaskItemExt.Factory(item.Z.GetEqualsMask(rhs.Z, include), include);
-            ret.ZH = MaskItemExt.Factory(item.ZH.GetEqualsMask(rhs.ZH, include), include);
-            ret.F = MaskItemExt.Factory(item.F.GetEqualsMask(rhs.F, include), include);
-            ret.TH = MaskItemExt.Factory(item.TH.GetEqualsMask(rhs.TH, include), include);
-            ret.V = MaskItemExt.Factory(item.V.GetEqualsMask(rhs.V, include), include);
-            ret.DH = MaskItemExt.Factory(item.DH.GetEqualsMask(rhs.DH, include), include);
-            ret.M = MaskItemExt.Factory(item.M.GetEqualsMask(rhs.M, include), include);
-            ret.N = MaskItemExt.Factory(item.N.GetEqualsMask(rhs.N, include), include);
-            ret.NG = MaskItemExt.Factory(item.NG.GetEqualsMask(rhs.NG, include), include);
-            ret.L = MaskItemExt.Factory(item.L.GetEqualsMask(rhs.L, include), include);
-            ret.R = MaskItemExt.Factory(item.R.GetEqualsMask(rhs.R, include), include);
-            ret.W = MaskItemExt.Factory(item.W.GetEqualsMask(rhs.W, include), include);
-            ret.Y = MaskItemExt.Factory(item.Y.GetEqualsMask(rhs.Y, include), include);
-            ret.HH = MaskItemExt.Factory(item.HH.GetEqualsMask(rhs.HH, include), include);
-            ret.B = MaskItemExt.Factory(item.B.GetEqualsMask(rhs.B, include), include);
-            ret.D = MaskItemExt.Factory(item.D.GetEqualsMask(rhs.D, include), include);
-            ret.JH = MaskItemExt.Factory(item.JH.GetEqualsMask(rhs.JH, include), include);
-            ret.G = MaskItemExt.Factory(item.G.GetEqualsMask(rhs.G, include), include);
-            ret.P = MaskItemExt.Factory(item.P.GetEqualsMask(rhs.P, include), include);
-            ret.T = MaskItemExt.Factory(item.T.GetEqualsMask(rhs.T, include), include);
-            ret.K = MaskItemExt.Factory(item.K.GetEqualsMask(rhs.K, include), include);
-            ret.CH = MaskItemExt.Factory(item.CH.GetEqualsMask(rhs.CH, include), include);
-            ret.SIL = MaskItemExt.Factory(item.SIL.GetEqualsMask(rhs.SIL, include), include);
-            ret.SHOTSIL = MaskItemExt.Factory(item.SHOTSIL.GetEqualsMask(rhs.SHOTSIL, include), include);
-            ret.FLAP = MaskItemExt.Factory(item.FLAP.GetEqualsMask(rhs.FLAP, include), include);
+            ret.LipMode = item.LipMode == rhs.LipMode;
+            ret.Aah_LipBigAah = EqualsMaskHelper.EqualsHelper(
+                item.Aah_LipBigAah,
+                rhs.Aah_LipBigAah,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.BigAah_LipDST = EqualsMaskHelper.EqualsHelper(
+                item.BigAah_LipDST,
+                rhs.BigAah_LipDST,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.BMP_LipEee = EqualsMaskHelper.EqualsHelper(
+                item.BMP_LipEee,
+                rhs.BMP_LipEee,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ChJSh_LipFV = EqualsMaskHelper.EqualsHelper(
+                item.ChJSh_LipFV,
+                rhs.ChJSh_LipFV,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DST_LipK = EqualsMaskHelper.EqualsHelper(
+                item.DST_LipK,
+                rhs.DST_LipK,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Eee_LipL = EqualsMaskHelper.EqualsHelper(
+                item.Eee_LipL,
+                rhs.Eee_LipL,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Eh_LipR = EqualsMaskHelper.EqualsHelper(
+                item.Eh_LipR,
+                rhs.Eh_LipR,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.FV_LipTh = EqualsMaskHelper.EqualsHelper(
+                item.FV_LipTh,
+                rhs.FV_LipTh,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.I = EqualsMaskHelper.EqualsHelper(
+                item.I,
+                rhs.I,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.K = EqualsMaskHelper.EqualsHelper(
+                item.K,
+                rhs.K,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.N = EqualsMaskHelper.EqualsHelper(
+                item.N,
+                rhs.N,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Oh = EqualsMaskHelper.EqualsHelper(
+                item.Oh,
+                rhs.Oh,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.OohQ = EqualsMaskHelper.EqualsHelper(
+                item.OohQ,
+                rhs.OohQ,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.R = EqualsMaskHelper.EqualsHelper(
+                item.R,
+                rhs.R,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Th = EqualsMaskHelper.EqualsHelper(
+                item.Th,
+                rhs.Th,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.W = EqualsMaskHelper.EqualsHelper(
+                item.W,
+                rhs.W,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
         }
         
         public string ToString(
@@ -3608,177 +2279,89 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
-            if (printMask?.IY?.Overall ?? true)
+            if (printMask?.LipMode ?? true)
             {
-                item.IY?.ToString(fg, "IY");
+                fg.AppendItem(item.LipMode, "LipMode");
             }
-            if (printMask?.IH?.Overall ?? true)
+            if ((printMask?.Aah_LipBigAah?.Overall ?? true)
+                && item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
             {
-                item.IH?.ToString(fg, "IH");
+                Aah_LipBigAahItem?.ToString(fg, "Aah_LipBigAah");
             }
-            if (printMask?.EH?.Overall ?? true)
+            if ((printMask?.BigAah_LipDST?.Overall ?? true)
+                && item.BigAah_LipDST.TryGet(out var BigAah_LipDSTItem))
             {
-                item.EH?.ToString(fg, "EH");
+                BigAah_LipDSTItem?.ToString(fg, "BigAah_LipDST");
             }
-            if (printMask?.EY?.Overall ?? true)
+            if ((printMask?.BMP_LipEee?.Overall ?? true)
+                && item.BMP_LipEee.TryGet(out var BMP_LipEeeItem))
             {
-                item.EY?.ToString(fg, "EY");
+                BMP_LipEeeItem?.ToString(fg, "BMP_LipEee");
             }
-            if (printMask?.AE?.Overall ?? true)
+            if ((printMask?.ChJSh_LipFV?.Overall ?? true)
+                && item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVItem))
             {
-                item.AE?.ToString(fg, "AE");
+                ChJSh_LipFVItem?.ToString(fg, "ChJSh_LipFV");
             }
-            if (printMask?.AA?.Overall ?? true)
+            if ((printMask?.DST_LipK?.Overall ?? true)
+                && item.DST_LipK.TryGet(out var DST_LipKItem))
             {
-                item.AA?.ToString(fg, "AA");
+                DST_LipKItem?.ToString(fg, "DST_LipK");
             }
-            if (printMask?.AW?.Overall ?? true)
+            if ((printMask?.Eee_LipL?.Overall ?? true)
+                && item.Eee_LipL.TryGet(out var Eee_LipLItem))
             {
-                item.AW?.ToString(fg, "AW");
+                Eee_LipLItem?.ToString(fg, "Eee_LipL");
             }
-            if (printMask?.AY?.Overall ?? true)
+            if ((printMask?.Eh_LipR?.Overall ?? true)
+                && item.Eh_LipR.TryGet(out var Eh_LipRItem))
             {
-                item.AY?.ToString(fg, "AY");
+                Eh_LipRItem?.ToString(fg, "Eh_LipR");
             }
-            if (printMask?.AH?.Overall ?? true)
+            if ((printMask?.FV_LipTh?.Overall ?? true)
+                && item.FV_LipTh.TryGet(out var FV_LipThItem))
             {
-                item.AH?.ToString(fg, "AH");
+                FV_LipThItem?.ToString(fg, "FV_LipTh");
             }
-            if (printMask?.AO?.Overall ?? true)
+            if ((printMask?.I?.Overall ?? true)
+                && item.I.TryGet(out var IItem))
             {
-                item.AO?.ToString(fg, "AO");
+                IItem?.ToString(fg, "I");
             }
-            if (printMask?.OY?.Overall ?? true)
+            if ((printMask?.K?.Overall ?? true)
+                && item.K.TryGet(out var KItem))
             {
-                item.OY?.ToString(fg, "OY");
+                KItem?.ToString(fg, "K");
             }
-            if (printMask?.OW?.Overall ?? true)
+            if ((printMask?.N?.Overall ?? true)
+                && item.N.TryGet(out var NItem))
             {
-                item.OW?.ToString(fg, "OW");
+                NItem?.ToString(fg, "N");
             }
-            if (printMask?.UH?.Overall ?? true)
+            if ((printMask?.Oh?.Overall ?? true)
+                && item.Oh.TryGet(out var OhItem))
             {
-                item.UH?.ToString(fg, "UH");
+                OhItem?.ToString(fg, "Oh");
             }
-            if (printMask?.UW?.Overall ?? true)
+            if ((printMask?.OohQ?.Overall ?? true)
+                && item.OohQ.TryGet(out var OohQItem))
             {
-                item.UW?.ToString(fg, "UW");
+                OohQItem?.ToString(fg, "OohQ");
             }
-            if (printMask?.ER?.Overall ?? true)
+            if ((printMask?.R?.Overall ?? true)
+                && item.R.TryGet(out var RItem))
             {
-                item.ER?.ToString(fg, "ER");
+                RItem?.ToString(fg, "R");
             }
-            if (printMask?.AX?.Overall ?? true)
+            if ((printMask?.Th?.Overall ?? true)
+                && item.Th.TryGet(out var ThItem))
             {
-                item.AX?.ToString(fg, "AX");
+                ThItem?.ToString(fg, "Th");
             }
-            if (printMask?.S?.Overall ?? true)
+            if ((printMask?.W?.Overall ?? true)
+                && item.W.TryGet(out var WItem))
             {
-                item.S?.ToString(fg, "S");
-            }
-            if (printMask?.SH?.Overall ?? true)
-            {
-                item.SH?.ToString(fg, "SH");
-            }
-            if (printMask?.Z?.Overall ?? true)
-            {
-                item.Z?.ToString(fg, "Z");
-            }
-            if (printMask?.ZH?.Overall ?? true)
-            {
-                item.ZH?.ToString(fg, "ZH");
-            }
-            if (printMask?.F?.Overall ?? true)
-            {
-                item.F?.ToString(fg, "F");
-            }
-            if (printMask?.TH?.Overall ?? true)
-            {
-                item.TH?.ToString(fg, "TH");
-            }
-            if (printMask?.V?.Overall ?? true)
-            {
-                item.V?.ToString(fg, "V");
-            }
-            if (printMask?.DH?.Overall ?? true)
-            {
-                item.DH?.ToString(fg, "DH");
-            }
-            if (printMask?.M?.Overall ?? true)
-            {
-                item.M?.ToString(fg, "M");
-            }
-            if (printMask?.N?.Overall ?? true)
-            {
-                item.N?.ToString(fg, "N");
-            }
-            if (printMask?.NG?.Overall ?? true)
-            {
-                item.NG?.ToString(fg, "NG");
-            }
-            if (printMask?.L?.Overall ?? true)
-            {
-                item.L?.ToString(fg, "L");
-            }
-            if (printMask?.R?.Overall ?? true)
-            {
-                item.R?.ToString(fg, "R");
-            }
-            if (printMask?.W?.Overall ?? true)
-            {
-                item.W?.ToString(fg, "W");
-            }
-            if (printMask?.Y?.Overall ?? true)
-            {
-                item.Y?.ToString(fg, "Y");
-            }
-            if (printMask?.HH?.Overall ?? true)
-            {
-                item.HH?.ToString(fg, "HH");
-            }
-            if (printMask?.B?.Overall ?? true)
-            {
-                item.B?.ToString(fg, "B");
-            }
-            if (printMask?.D?.Overall ?? true)
-            {
-                item.D?.ToString(fg, "D");
-            }
-            if (printMask?.JH?.Overall ?? true)
-            {
-                item.JH?.ToString(fg, "JH");
-            }
-            if (printMask?.G?.Overall ?? true)
-            {
-                item.G?.ToString(fg, "G");
-            }
-            if (printMask?.P?.Overall ?? true)
-            {
-                item.P?.ToString(fg, "P");
-            }
-            if (printMask?.T?.Overall ?? true)
-            {
-                item.T?.ToString(fg, "T");
-            }
-            if (printMask?.K?.Overall ?? true)
-            {
-                item.K?.ToString(fg, "K");
-            }
-            if (printMask?.CH?.Overall ?? true)
-            {
-                item.CH?.ToString(fg, "CH");
-            }
-            if (printMask?.SIL?.Overall ?? true)
-            {
-                item.SIL?.ToString(fg, "SIL");
-            }
-            if (printMask?.SHOTSIL?.Overall ?? true)
-            {
-                item.SHOTSIL?.ToString(fg, "SHOTSIL");
-            }
-            if (printMask?.FLAP?.Overall ?? true)
-            {
-                item.FLAP?.ToString(fg, "FLAP");
+                WItem?.ToString(fg, "W");
             }
         }
         
@@ -3786,6 +2369,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFaceFxPhonemesGetter item,
             FaceFxPhonemes.Mask<bool?> checkMask)
         {
+            if (checkMask.Aah_LipBigAah?.Overall.HasValue ?? false && checkMask.Aah_LipBigAah.Overall.Value != (item.Aah_LipBigAah != null)) return false;
+            if (checkMask.Aah_LipBigAah?.Specific != null && (item.Aah_LipBigAah == null || !item.Aah_LipBigAah.HasBeenSet(checkMask.Aah_LipBigAah.Specific))) return false;
+            if (checkMask.BigAah_LipDST?.Overall.HasValue ?? false && checkMask.BigAah_LipDST.Overall.Value != (item.BigAah_LipDST != null)) return false;
+            if (checkMask.BigAah_LipDST?.Specific != null && (item.BigAah_LipDST == null || !item.BigAah_LipDST.HasBeenSet(checkMask.BigAah_LipDST.Specific))) return false;
+            if (checkMask.BMP_LipEee?.Overall.HasValue ?? false && checkMask.BMP_LipEee.Overall.Value != (item.BMP_LipEee != null)) return false;
+            if (checkMask.BMP_LipEee?.Specific != null && (item.BMP_LipEee == null || !item.BMP_LipEee.HasBeenSet(checkMask.BMP_LipEee.Specific))) return false;
+            if (checkMask.ChJSh_LipFV?.Overall.HasValue ?? false && checkMask.ChJSh_LipFV.Overall.Value != (item.ChJSh_LipFV != null)) return false;
+            if (checkMask.ChJSh_LipFV?.Specific != null && (item.ChJSh_LipFV == null || !item.ChJSh_LipFV.HasBeenSet(checkMask.ChJSh_LipFV.Specific))) return false;
+            if (checkMask.DST_LipK?.Overall.HasValue ?? false && checkMask.DST_LipK.Overall.Value != (item.DST_LipK != null)) return false;
+            if (checkMask.DST_LipK?.Specific != null && (item.DST_LipK == null || !item.DST_LipK.HasBeenSet(checkMask.DST_LipK.Specific))) return false;
+            if (checkMask.Eee_LipL?.Overall.HasValue ?? false && checkMask.Eee_LipL.Overall.Value != (item.Eee_LipL != null)) return false;
+            if (checkMask.Eee_LipL?.Specific != null && (item.Eee_LipL == null || !item.Eee_LipL.HasBeenSet(checkMask.Eee_LipL.Specific))) return false;
+            if (checkMask.Eh_LipR?.Overall.HasValue ?? false && checkMask.Eh_LipR.Overall.Value != (item.Eh_LipR != null)) return false;
+            if (checkMask.Eh_LipR?.Specific != null && (item.Eh_LipR == null || !item.Eh_LipR.HasBeenSet(checkMask.Eh_LipR.Specific))) return false;
+            if (checkMask.FV_LipTh?.Overall.HasValue ?? false && checkMask.FV_LipTh.Overall.Value != (item.FV_LipTh != null)) return false;
+            if (checkMask.FV_LipTh?.Specific != null && (item.FV_LipTh == null || !item.FV_LipTh.HasBeenSet(checkMask.FV_LipTh.Specific))) return false;
+            if (checkMask.I?.Overall.HasValue ?? false && checkMask.I.Overall.Value != (item.I != null)) return false;
+            if (checkMask.I?.Specific != null && (item.I == null || !item.I.HasBeenSet(checkMask.I.Specific))) return false;
+            if (checkMask.K?.Overall.HasValue ?? false && checkMask.K.Overall.Value != (item.K != null)) return false;
+            if (checkMask.K?.Specific != null && (item.K == null || !item.K.HasBeenSet(checkMask.K.Specific))) return false;
+            if (checkMask.N?.Overall.HasValue ?? false && checkMask.N.Overall.Value != (item.N != null)) return false;
+            if (checkMask.N?.Specific != null && (item.N == null || !item.N.HasBeenSet(checkMask.N.Specific))) return false;
+            if (checkMask.Oh?.Overall.HasValue ?? false && checkMask.Oh.Overall.Value != (item.Oh != null)) return false;
+            if (checkMask.Oh?.Specific != null && (item.Oh == null || !item.Oh.HasBeenSet(checkMask.Oh.Specific))) return false;
+            if (checkMask.OohQ?.Overall.HasValue ?? false && checkMask.OohQ.Overall.Value != (item.OohQ != null)) return false;
+            if (checkMask.OohQ?.Specific != null && (item.OohQ == null || !item.OohQ.HasBeenSet(checkMask.OohQ.Specific))) return false;
+            if (checkMask.R?.Overall.HasValue ?? false && checkMask.R.Overall.Value != (item.R != null)) return false;
+            if (checkMask.R?.Specific != null && (item.R == null || !item.R.HasBeenSet(checkMask.R.Specific))) return false;
+            if (checkMask.Th?.Overall.HasValue ?? false && checkMask.Th.Overall.Value != (item.Th != null)) return false;
+            if (checkMask.Th?.Specific != null && (item.Th == null || !item.Th.HasBeenSet(checkMask.Th.Specific))) return false;
+            if (checkMask.W?.Overall.HasValue ?? false && checkMask.W.Overall.Value != (item.W != null)) return false;
+            if (checkMask.W?.Specific != null && (item.W == null || !item.W.HasBeenSet(checkMask.W.Specific))) return false;
             return true;
         }
         
@@ -3793,49 +2408,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFaceFxPhonemesGetter item,
             FaceFxPhonemes.Mask<bool> mask)
         {
-            mask.IY = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.IY?.GetHasBeenSetMask());
-            mask.IH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.IH?.GetHasBeenSetMask());
-            mask.EH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.EH?.GetHasBeenSetMask());
-            mask.EY = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.EY?.GetHasBeenSetMask());
-            mask.AE = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.AE?.GetHasBeenSetMask());
-            mask.AA = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.AA?.GetHasBeenSetMask());
-            mask.AW = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.AW?.GetHasBeenSetMask());
-            mask.AY = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.AY?.GetHasBeenSetMask());
-            mask.AH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.AH?.GetHasBeenSetMask());
-            mask.AO = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.AO?.GetHasBeenSetMask());
-            mask.OY = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.OY?.GetHasBeenSetMask());
-            mask.OW = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.OW?.GetHasBeenSetMask());
-            mask.UH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.UH?.GetHasBeenSetMask());
-            mask.UW = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.UW?.GetHasBeenSetMask());
-            mask.ER = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.ER?.GetHasBeenSetMask());
-            mask.AX = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.AX?.GetHasBeenSetMask());
-            mask.S = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.S?.GetHasBeenSetMask());
-            mask.SH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.SH?.GetHasBeenSetMask());
-            mask.Z = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.Z?.GetHasBeenSetMask());
-            mask.ZH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.ZH?.GetHasBeenSetMask());
-            mask.F = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.F?.GetHasBeenSetMask());
-            mask.TH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.TH?.GetHasBeenSetMask());
-            mask.V = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.V?.GetHasBeenSetMask());
-            mask.DH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.DH?.GetHasBeenSetMask());
-            mask.M = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.M?.GetHasBeenSetMask());
-            mask.N = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.N?.GetHasBeenSetMask());
-            mask.NG = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.NG?.GetHasBeenSetMask());
-            mask.L = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.L?.GetHasBeenSetMask());
-            mask.R = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.R?.GetHasBeenSetMask());
-            mask.W = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.W?.GetHasBeenSetMask());
-            mask.Y = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.Y?.GetHasBeenSetMask());
-            mask.HH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.HH?.GetHasBeenSetMask());
-            mask.B = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.B?.GetHasBeenSetMask());
-            mask.D = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.D?.GetHasBeenSetMask());
-            mask.JH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.JH?.GetHasBeenSetMask());
-            mask.G = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.G?.GetHasBeenSetMask());
-            mask.P = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.P?.GetHasBeenSetMask());
-            mask.T = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.T?.GetHasBeenSetMask());
-            mask.K = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.K?.GetHasBeenSetMask());
-            mask.CH = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.CH?.GetHasBeenSetMask());
-            mask.SIL = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.SIL?.GetHasBeenSetMask());
-            mask.SHOTSIL = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.SHOTSIL?.GetHasBeenSetMask());
-            mask.FLAP = new MaskItem<bool, PhonemeTarget.Mask<bool>?>(true, item.FLAP?.GetHasBeenSetMask());
+            mask.LipMode = true;
+            var itemAah_LipBigAah = item.Aah_LipBigAah;
+            mask.Aah_LipBigAah = new MaskItem<bool, Phoneme.Mask<bool>?>(itemAah_LipBigAah != null, itemAah_LipBigAah?.GetHasBeenSetMask());
+            var itemBigAah_LipDST = item.BigAah_LipDST;
+            mask.BigAah_LipDST = new MaskItem<bool, Phoneme.Mask<bool>?>(itemBigAah_LipDST != null, itemBigAah_LipDST?.GetHasBeenSetMask());
+            var itemBMP_LipEee = item.BMP_LipEee;
+            mask.BMP_LipEee = new MaskItem<bool, Phoneme.Mask<bool>?>(itemBMP_LipEee != null, itemBMP_LipEee?.GetHasBeenSetMask());
+            var itemChJSh_LipFV = item.ChJSh_LipFV;
+            mask.ChJSh_LipFV = new MaskItem<bool, Phoneme.Mask<bool>?>(itemChJSh_LipFV != null, itemChJSh_LipFV?.GetHasBeenSetMask());
+            var itemDST_LipK = item.DST_LipK;
+            mask.DST_LipK = new MaskItem<bool, Phoneme.Mask<bool>?>(itemDST_LipK != null, itemDST_LipK?.GetHasBeenSetMask());
+            var itemEee_LipL = item.Eee_LipL;
+            mask.Eee_LipL = new MaskItem<bool, Phoneme.Mask<bool>?>(itemEee_LipL != null, itemEee_LipL?.GetHasBeenSetMask());
+            var itemEh_LipR = item.Eh_LipR;
+            mask.Eh_LipR = new MaskItem<bool, Phoneme.Mask<bool>?>(itemEh_LipR != null, itemEh_LipR?.GetHasBeenSetMask());
+            var itemFV_LipTh = item.FV_LipTh;
+            mask.FV_LipTh = new MaskItem<bool, Phoneme.Mask<bool>?>(itemFV_LipTh != null, itemFV_LipTh?.GetHasBeenSetMask());
+            var itemI = item.I;
+            mask.I = new MaskItem<bool, Phoneme.Mask<bool>?>(itemI != null, itemI?.GetHasBeenSetMask());
+            var itemK = item.K;
+            mask.K = new MaskItem<bool, Phoneme.Mask<bool>?>(itemK != null, itemK?.GetHasBeenSetMask());
+            var itemN = item.N;
+            mask.N = new MaskItem<bool, Phoneme.Mask<bool>?>(itemN != null, itemN?.GetHasBeenSetMask());
+            var itemOh = item.Oh;
+            mask.Oh = new MaskItem<bool, Phoneme.Mask<bool>?>(itemOh != null, itemOh?.GetHasBeenSetMask());
+            var itemOohQ = item.OohQ;
+            mask.OohQ = new MaskItem<bool, Phoneme.Mask<bool>?>(itemOohQ != null, itemOohQ?.GetHasBeenSetMask());
+            var itemR = item.R;
+            mask.R = new MaskItem<bool, Phoneme.Mask<bool>?>(itemR != null, itemR?.GetHasBeenSetMask());
+            var itemTh = item.Th;
+            mask.Th = new MaskItem<bool, Phoneme.Mask<bool>?>(itemTh != null, itemTh?.GetHasBeenSetMask());
+            var itemW = item.W;
+            mask.W = new MaskItem<bool, Phoneme.Mask<bool>?>(itemW != null, itemW?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -3845,98 +2450,94 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.IY, rhs.IY)) return false;
-            if (!object.Equals(lhs.IH, rhs.IH)) return false;
-            if (!object.Equals(lhs.EH, rhs.EH)) return false;
-            if (!object.Equals(lhs.EY, rhs.EY)) return false;
-            if (!object.Equals(lhs.AE, rhs.AE)) return false;
-            if (!object.Equals(lhs.AA, rhs.AA)) return false;
-            if (!object.Equals(lhs.AW, rhs.AW)) return false;
-            if (!object.Equals(lhs.AY, rhs.AY)) return false;
-            if (!object.Equals(lhs.AH, rhs.AH)) return false;
-            if (!object.Equals(lhs.AO, rhs.AO)) return false;
-            if (!object.Equals(lhs.OY, rhs.OY)) return false;
-            if (!object.Equals(lhs.OW, rhs.OW)) return false;
-            if (!object.Equals(lhs.UH, rhs.UH)) return false;
-            if (!object.Equals(lhs.UW, rhs.UW)) return false;
-            if (!object.Equals(lhs.ER, rhs.ER)) return false;
-            if (!object.Equals(lhs.AX, rhs.AX)) return false;
-            if (!object.Equals(lhs.S, rhs.S)) return false;
-            if (!object.Equals(lhs.SH, rhs.SH)) return false;
-            if (!object.Equals(lhs.Z, rhs.Z)) return false;
-            if (!object.Equals(lhs.ZH, rhs.ZH)) return false;
-            if (!object.Equals(lhs.F, rhs.F)) return false;
-            if (!object.Equals(lhs.TH, rhs.TH)) return false;
-            if (!object.Equals(lhs.V, rhs.V)) return false;
-            if (!object.Equals(lhs.DH, rhs.DH)) return false;
-            if (!object.Equals(lhs.M, rhs.M)) return false;
-            if (!object.Equals(lhs.N, rhs.N)) return false;
-            if (!object.Equals(lhs.NG, rhs.NG)) return false;
-            if (!object.Equals(lhs.L, rhs.L)) return false;
-            if (!object.Equals(lhs.R, rhs.R)) return false;
-            if (!object.Equals(lhs.W, rhs.W)) return false;
-            if (!object.Equals(lhs.Y, rhs.Y)) return false;
-            if (!object.Equals(lhs.HH, rhs.HH)) return false;
-            if (!object.Equals(lhs.B, rhs.B)) return false;
-            if (!object.Equals(lhs.D, rhs.D)) return false;
-            if (!object.Equals(lhs.JH, rhs.JH)) return false;
-            if (!object.Equals(lhs.G, rhs.G)) return false;
-            if (!object.Equals(lhs.P, rhs.P)) return false;
-            if (!object.Equals(lhs.T, rhs.T)) return false;
+            if (lhs.LipMode != rhs.LipMode) return false;
+            if (!object.Equals(lhs.Aah_LipBigAah, rhs.Aah_LipBigAah)) return false;
+            if (!object.Equals(lhs.BigAah_LipDST, rhs.BigAah_LipDST)) return false;
+            if (!object.Equals(lhs.BMP_LipEee, rhs.BMP_LipEee)) return false;
+            if (!object.Equals(lhs.ChJSh_LipFV, rhs.ChJSh_LipFV)) return false;
+            if (!object.Equals(lhs.DST_LipK, rhs.DST_LipK)) return false;
+            if (!object.Equals(lhs.Eee_LipL, rhs.Eee_LipL)) return false;
+            if (!object.Equals(lhs.Eh_LipR, rhs.Eh_LipR)) return false;
+            if (!object.Equals(lhs.FV_LipTh, rhs.FV_LipTh)) return false;
+            if (!object.Equals(lhs.I, rhs.I)) return false;
             if (!object.Equals(lhs.K, rhs.K)) return false;
-            if (!object.Equals(lhs.CH, rhs.CH)) return false;
-            if (!object.Equals(lhs.SIL, rhs.SIL)) return false;
-            if (!object.Equals(lhs.SHOTSIL, rhs.SHOTSIL)) return false;
-            if (!object.Equals(lhs.FLAP, rhs.FLAP)) return false;
+            if (!object.Equals(lhs.N, rhs.N)) return false;
+            if (!object.Equals(lhs.Oh, rhs.Oh)) return false;
+            if (!object.Equals(lhs.OohQ, rhs.OohQ)) return false;
+            if (!object.Equals(lhs.R, rhs.R)) return false;
+            if (!object.Equals(lhs.Th, rhs.Th)) return false;
+            if (!object.Equals(lhs.W, rhs.W)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IFaceFxPhonemesGetter item)
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(item.IY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.IH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AE).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AA).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AW).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AO).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.OY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.OW).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UW).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ER).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AX).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.S).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Z).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ZH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.F).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.V).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.M).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.N).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NG).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.L).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.R).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.W).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Y).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.B).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.D).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.JH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.G).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.P).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.T).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.K).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CH).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SIL).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SHOTSIL).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FLAP).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.LipMode).CombineHashCode(ret);
+            if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahitem))
+            {
+                ret = HashHelper.GetHashCode(Aah_LipBigAahitem).CombineHashCode(ret);
+            }
+            if (item.BigAah_LipDST.TryGet(out var BigAah_LipDSTitem))
+            {
+                ret = HashHelper.GetHashCode(BigAah_LipDSTitem).CombineHashCode(ret);
+            }
+            if (item.BMP_LipEee.TryGet(out var BMP_LipEeeitem))
+            {
+                ret = HashHelper.GetHashCode(BMP_LipEeeitem).CombineHashCode(ret);
+            }
+            if (item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVitem))
+            {
+                ret = HashHelper.GetHashCode(ChJSh_LipFVitem).CombineHashCode(ret);
+            }
+            if (item.DST_LipK.TryGet(out var DST_LipKitem))
+            {
+                ret = HashHelper.GetHashCode(DST_LipKitem).CombineHashCode(ret);
+            }
+            if (item.Eee_LipL.TryGet(out var Eee_LipLitem))
+            {
+                ret = HashHelper.GetHashCode(Eee_LipLitem).CombineHashCode(ret);
+            }
+            if (item.Eh_LipR.TryGet(out var Eh_LipRitem))
+            {
+                ret = HashHelper.GetHashCode(Eh_LipRitem).CombineHashCode(ret);
+            }
+            if (item.FV_LipTh.TryGet(out var FV_LipThitem))
+            {
+                ret = HashHelper.GetHashCode(FV_LipThitem).CombineHashCode(ret);
+            }
+            if (item.I.TryGet(out var Iitem))
+            {
+                ret = HashHelper.GetHashCode(Iitem).CombineHashCode(ret);
+            }
+            if (item.K.TryGet(out var Kitem))
+            {
+                ret = HashHelper.GetHashCode(Kitem).CombineHashCode(ret);
+            }
+            if (item.N.TryGet(out var Nitem))
+            {
+                ret = HashHelper.GetHashCode(Nitem).CombineHashCode(ret);
+            }
+            if (item.Oh.TryGet(out var Ohitem))
+            {
+                ret = HashHelper.GetHashCode(Ohitem).CombineHashCode(ret);
+            }
+            if (item.OohQ.TryGet(out var OohQitem))
+            {
+                ret = HashHelper.GetHashCode(OohQitem).CombineHashCode(ret);
+            }
+            if (item.R.TryGet(out var Ritem))
+            {
+                ret = HashHelper.GetHashCode(Ritem).CombineHashCode(ret);
+            }
+            if (item.Th.TryGet(out var Thitem))
+            {
+                ret = HashHelper.GetHashCode(Thitem).CombineHashCode(ret);
+            }
+            if (item.W.TryGet(out var Witem))
+            {
+                ret = HashHelper.GetHashCode(Witem).CombineHashCode(ret);
+            }
             return ret;
         }
         
@@ -3968,16 +2569,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.IY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.LipMode) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.IY);
+                item.LipMode = rhs.LipMode;
+            }
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah) ?? true))
+            {
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.IY) ?? true))
+                    if(rhs.Aah_LipBigAah.TryGet(out var rhsAah_LipBigAah))
                     {
-                        item.IY = rhs.IY.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.IY),
-                            errorMask: errorMask);
+                        item.Aah_LipBigAah = rhsAah_LipBigAah.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah));
+                    }
+                    else
+                    {
+                        item.Aah_LipBigAah = default;
                     }
                 }
                 catch (Exception ex)
@@ -3990,16 +2599,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.IH) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.IH);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.IH) ?? true))
+                    if(rhs.BigAah_LipDST.TryGet(out var rhsBigAah_LipDST))
                     {
-                        item.IH = rhs.IH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.IH),
-                            errorMask: errorMask);
+                        item.BigAah_LipDST = rhsBigAah_LipDST.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST));
+                    }
+                    else
+                    {
+                        item.BigAah_LipDST = default;
                     }
                 }
                 catch (Exception ex)
@@ -4012,16 +2625,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.EH) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BMP_LipEee) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.EH);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.BMP_LipEee);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.EH) ?? true))
+                    if(rhs.BMP_LipEee.TryGet(out var rhsBMP_LipEee))
                     {
-                        item.EH = rhs.EH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.EH),
-                            errorMask: errorMask);
+                        item.BMP_LipEee = rhsBMP_LipEee.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BMP_LipEee));
+                    }
+                    else
+                    {
+                        item.BMP_LipEee = default;
                     }
                 }
                 catch (Exception ex)
@@ -4034,16 +2651,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.EY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.EY);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.EY) ?? true))
+                    if(rhs.ChJSh_LipFV.TryGet(out var rhsChJSh_LipFV))
                     {
-                        item.EY = rhs.EY.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.EY),
-                            errorMask: errorMask);
+                        item.ChJSh_LipFV = rhsChJSh_LipFV.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV));
+                    }
+                    else
+                    {
+                        item.ChJSh_LipFV = default;
                     }
                 }
                 catch (Exception ex)
@@ -4056,16 +2677,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AE) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DST_LipK) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AE);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.DST_LipK);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AE) ?? true))
+                    if(rhs.DST_LipK.TryGet(out var rhsDST_LipK))
                     {
-                        item.AE = rhs.AE.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AE),
-                            errorMask: errorMask);
+                        item.DST_LipK = rhsDST_LipK.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DST_LipK));
+                    }
+                    else
+                    {
+                        item.DST_LipK = default;
                     }
                 }
                 catch (Exception ex)
@@ -4078,16 +2703,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AA) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eee_LipL) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AA);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Eee_LipL);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AA) ?? true))
+                    if(rhs.Eee_LipL.TryGet(out var rhsEee_LipL))
                     {
-                        item.AA = rhs.AA.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AA),
-                            errorMask: errorMask);
+                        item.Eee_LipL = rhsEee_LipL.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eee_LipL));
+                    }
+                    else
+                    {
+                        item.Eee_LipL = default;
                     }
                 }
                 catch (Exception ex)
@@ -4100,16 +2729,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AW) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eh_LipR) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AW);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Eh_LipR);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AW) ?? true))
+                    if(rhs.Eh_LipR.TryGet(out var rhsEh_LipR))
                     {
-                        item.AW = rhs.AW.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AW),
-                            errorMask: errorMask);
+                        item.Eh_LipR = rhsEh_LipR.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eh_LipR));
+                    }
+                    else
+                    {
+                        item.Eh_LipR = default;
                     }
                 }
                 catch (Exception ex)
@@ -4122,16 +2755,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FV_LipTh) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AY);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.FV_LipTh);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AY) ?? true))
+                    if(rhs.FV_LipTh.TryGet(out var rhsFV_LipTh))
                     {
-                        item.AY = rhs.AY.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AY),
-                            errorMask: errorMask);
+                        item.FV_LipTh = rhsFV_LipTh.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FV_LipTh));
+                    }
+                    else
+                    {
+                        item.FV_LipTh = default;
                     }
                 }
                 catch (Exception ex)
@@ -4144,654 +2781,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AH) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.I) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AH);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.I);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AH) ?? true))
+                    if(rhs.I.TryGet(out var rhsI))
                     {
-                        item.AH = rhs.AH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AH),
-                            errorMask: errorMask);
+                        item.I = rhsI.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.I));
                     }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AO) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AO);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AO) ?? true))
+                    else
                     {
-                        item.AO = rhs.AO.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AO),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OY) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.OY);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OY) ?? true))
-                    {
-                        item.OY = rhs.OY.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OY),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OW) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.OW);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OW) ?? true))
-                    {
-                        item.OW = rhs.OW.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OW),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.UH) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.UH);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.UH) ?? true))
-                    {
-                        item.UH = rhs.UH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.UH),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.UW) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.UW);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.UW) ?? true))
-                    {
-                        item.UW = rhs.UW.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.UW),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ER) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ER);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ER) ?? true))
-                    {
-                        item.ER = rhs.ER.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ER),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AX) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AX);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AX) ?? true))
-                    {
-                        item.AX = rhs.AX.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AX),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.S) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.S);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.S) ?? true))
-                    {
-                        item.S = rhs.S.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.S),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SH) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.SH);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SH) ?? true))
-                    {
-                        item.SH = rhs.SH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SH),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Z) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Z);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Z) ?? true))
-                    {
-                        item.Z = rhs.Z.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Z),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ZH) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ZH);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ZH) ?? true))
-                    {
-                        item.ZH = rhs.ZH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ZH),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.F) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.F);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.F) ?? true))
-                    {
-                        item.F = rhs.F.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.F),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.TH) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.TH);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.TH) ?? true))
-                    {
-                        item.TH = rhs.TH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.TH),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.V) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.V);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.V) ?? true))
-                    {
-                        item.V = rhs.V.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.V),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DH) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.DH);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DH) ?? true))
-                    {
-                        item.DH = rhs.DH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DH),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.M) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.M);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.M) ?? true))
-                    {
-                        item.M = rhs.M.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.M),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.N);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
-                    {
-                        item.N = rhs.N.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.NG) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.NG);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.NG) ?? true))
-                    {
-                        item.NG = rhs.NG.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.NG),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.L) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.L);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.L) ?? true))
-                    {
-                        item.L = rhs.L.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.L),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.R);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
-                    {
-                        item.R = rhs.R.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.W);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
-                    {
-                        item.W = rhs.W.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Y) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Y);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Y) ?? true))
-                    {
-                        item.Y = rhs.Y.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Y),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.HH) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.HH);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.HH) ?? true))
-                    {
-                        item.HH = rhs.HH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.HH),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.B) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.B);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.B) ?? true))
-                    {
-                        item.B = rhs.B.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.B),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.D) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.D);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.D) ?? true))
-                    {
-                        item.D = rhs.D.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.D),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.JH) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.JH);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.JH) ?? true))
-                    {
-                        item.JH = rhs.JH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.JH),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.G) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.G);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.G) ?? true))
-                    {
-                        item.G = rhs.G.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.G),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.P) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.P);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.P) ?? true))
-                    {
-                        item.P = rhs.P.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.P),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.T) ?? true))
-            {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.T);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.T) ?? true))
-                    {
-                        item.T = rhs.T.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.T),
-                            errorMask: errorMask);
+                        item.I = default;
                     }
                 }
                 catch (Exception ex)
@@ -4809,11 +2812,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.K);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.K) ?? true))
+                    if(rhs.K.TryGet(out var rhsK))
                     {
-                        item.K = rhs.K.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K),
-                            errorMask: errorMask);
+                        item.K = rhsK.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K));
+                    }
+                    else
+                    {
+                        item.K = default;
                     }
                 }
                 catch (Exception ex)
@@ -4826,16 +2833,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.CH) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.CH);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.N);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.CH) ?? true))
+                    if(rhs.N.TryGet(out var rhsN))
                     {
-                        item.CH = rhs.CH.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.CH),
-                            errorMask: errorMask);
+                        item.N = rhsN.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N));
+                    }
+                    else
+                    {
+                        item.N = default;
                     }
                 }
                 catch (Exception ex)
@@ -4848,16 +2859,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SIL) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Oh) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.SIL);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Oh);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SIL) ?? true))
+                    if(rhs.Oh.TryGet(out var rhsOh))
                     {
-                        item.SIL = rhs.SIL.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SIL),
-                            errorMask: errorMask);
+                        item.Oh = rhsOh.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Oh));
+                    }
+                    else
+                    {
+                        item.Oh = default;
                     }
                 }
                 catch (Exception ex)
@@ -4870,16 +2885,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SHOTSIL) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OohQ) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.SHOTSIL);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.OohQ);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SHOTSIL) ?? true))
+                    if(rhs.OohQ.TryGet(out var rhsOohQ))
                     {
-                        item.SHOTSIL = rhs.SHOTSIL.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SHOTSIL),
-                            errorMask: errorMask);
+                        item.OohQ = rhsOohQ.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OohQ));
+                    }
+                    else
+                    {
+                        item.OohQ = default;
                     }
                 }
                 catch (Exception ex)
@@ -4892,16 +2911,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FLAP) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
             {
-                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.FLAP);
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.R);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FLAP) ?? true))
+                    if(rhs.R.TryGet(out var rhsR))
                     {
-                        item.FLAP = rhs.FLAP.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FLAP),
-                            errorMask: errorMask);
+                        item.R = rhsR.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R));
+                    }
+                    else
+                    {
+                        item.R = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Th) ?? true))
+            {
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Th);
+                try
+                {
+                    if(rhs.Th.TryGet(out var rhsTh))
+                    {
+                        item.Th = rhsTh.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Th));
+                    }
+                    else
+                    {
+                        item.Th = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
+            {
+                errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.W);
+                try
+                {
+                    if(rhs.W.TryGet(out var rhsW))
+                    {
+                        item.W = rhsW.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W));
+                    }
+                    else
+                    {
+                        item.W = default;
                     }
                 }
                 catch (Exception ex)
@@ -5003,478 +3078,238 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.IY) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.LipMode) ?? true))
             {
-                var IYItem = item.IY;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)IYItem).XmlWriteTranslator).Write(
-                    item: IYItem,
+                BooleanXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.IY),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.IY,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.IY));
+                    name: nameof(item.LipMode),
+                    item: item.LipMode,
+                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.LipMode,
+                    errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.IH) ?? true))
+            if ((item.Aah_LipBigAah != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah) ?? true))
             {
-                var IHItem = item.IH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)IHItem).XmlWriteTranslator).Write(
-                    item: IHItem,
-                    node: node,
-                    name: nameof(item.IH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.IH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.IH));
+                if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)Aah_LipBigAahItem).XmlWriteTranslator).Write(
+                        item: Aah_LipBigAahItem,
+                        node: node,
+                        name: nameof(item.Aah_LipBigAah),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.EH) ?? true))
+            if ((item.BigAah_LipDST != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST) ?? true))
             {
-                var EHItem = item.EH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)EHItem).XmlWriteTranslator).Write(
-                    item: EHItem,
-                    node: node,
-                    name: nameof(item.EH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.EH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.EH));
+                if (item.BigAah_LipDST.TryGet(out var BigAah_LipDSTItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)BigAah_LipDSTItem).XmlWriteTranslator).Write(
+                        item: BigAah_LipDSTItem,
+                        node: node,
+                        name: nameof(item.BigAah_LipDST),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.BigAah_LipDST,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.EY) ?? true))
+            if ((item.BMP_LipEee != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BMP_LipEee) ?? true))
             {
-                var EYItem = item.EY;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)EYItem).XmlWriteTranslator).Write(
-                    item: EYItem,
-                    node: node,
-                    name: nameof(item.EY),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.EY,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.EY));
+                if (item.BMP_LipEee.TryGet(out var BMP_LipEeeItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)BMP_LipEeeItem).XmlWriteTranslator).Write(
+                        item: BMP_LipEeeItem,
+                        node: node,
+                        name: nameof(item.BMP_LipEee),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.BMP_LipEee,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BMP_LipEee));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AE) ?? true))
+            if ((item.ChJSh_LipFV != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV) ?? true))
             {
-                var AEItem = item.AE;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)AEItem).XmlWriteTranslator).Write(
-                    item: AEItem,
-                    node: node,
-                    name: nameof(item.AE),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.AE,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AE));
+                if (item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)ChJSh_LipFVItem).XmlWriteTranslator).Write(
+                        item: ChJSh_LipFVItem,
+                        node: node,
+                        name: nameof(item.ChJSh_LipFV),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AA) ?? true))
+            if ((item.DST_LipK != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DST_LipK) ?? true))
             {
-                var AAItem = item.AA;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)AAItem).XmlWriteTranslator).Write(
-                    item: AAItem,
-                    node: node,
-                    name: nameof(item.AA),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.AA,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AA));
+                if (item.DST_LipK.TryGet(out var DST_LipKItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)DST_LipKItem).XmlWriteTranslator).Write(
+                        item: DST_LipKItem,
+                        node: node,
+                        name: nameof(item.DST_LipK),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.DST_LipK,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DST_LipK));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AW) ?? true))
+            if ((item.Eee_LipL != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eee_LipL) ?? true))
             {
-                var AWItem = item.AW;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)AWItem).XmlWriteTranslator).Write(
-                    item: AWItem,
-                    node: node,
-                    name: nameof(item.AW),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.AW,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AW));
+                if (item.Eee_LipL.TryGet(out var Eee_LipLItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)Eee_LipLItem).XmlWriteTranslator).Write(
+                        item: Eee_LipLItem,
+                        node: node,
+                        name: nameof(item.Eee_LipL),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Eee_LipL,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eee_LipL));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AY) ?? true))
+            if ((item.Eh_LipR != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eh_LipR) ?? true))
             {
-                var AYItem = item.AY;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)AYItem).XmlWriteTranslator).Write(
-                    item: AYItem,
-                    node: node,
-                    name: nameof(item.AY),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.AY,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AY));
+                if (item.Eh_LipR.TryGet(out var Eh_LipRItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)Eh_LipRItem).XmlWriteTranslator).Write(
+                        item: Eh_LipRItem,
+                        node: node,
+                        name: nameof(item.Eh_LipR),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Eh_LipR,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eh_LipR));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AH) ?? true))
+            if ((item.FV_LipTh != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FV_LipTh) ?? true))
             {
-                var AHItem = item.AH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)AHItem).XmlWriteTranslator).Write(
-                    item: AHItem,
-                    node: node,
-                    name: nameof(item.AH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.AH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AH));
+                if (item.FV_LipTh.TryGet(out var FV_LipThItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)FV_LipThItem).XmlWriteTranslator).Write(
+                        item: FV_LipThItem,
+                        node: node,
+                        name: nameof(item.FV_LipTh),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.FV_LipTh,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FV_LipTh));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AO) ?? true))
+            if ((item.I != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.I) ?? true))
             {
-                var AOItem = item.AO;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)AOItem).XmlWriteTranslator).Write(
-                    item: AOItem,
-                    node: node,
-                    name: nameof(item.AO),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.AO,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AO));
+                if (item.I.TryGet(out var IItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)IItem).XmlWriteTranslator).Write(
+                        item: IItem,
+                        node: node,
+                        name: nameof(item.I),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.I,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.I));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OY) ?? true))
+            if ((item.K != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.K) ?? true))
             {
-                var OYItem = item.OY;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)OYItem).XmlWriteTranslator).Write(
-                    item: OYItem,
-                    node: node,
-                    name: nameof(item.OY),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.OY,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OY));
+                if (item.K.TryGet(out var KItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)KItem).XmlWriteTranslator).Write(
+                        item: KItem,
+                        node: node,
+                        name: nameof(item.K),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.K,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OW) ?? true))
+            if ((item.N != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
             {
-                var OWItem = item.OW;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)OWItem).XmlWriteTranslator).Write(
-                    item: OWItem,
-                    node: node,
-                    name: nameof(item.OW),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.OW,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OW));
+                if (item.N.TryGet(out var NItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)NItem).XmlWriteTranslator).Write(
+                        item: NItem,
+                        node: node,
+                        name: nameof(item.N),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.N,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.UH) ?? true))
+            if ((item.Oh != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Oh) ?? true))
             {
-                var UHItem = item.UH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)UHItem).XmlWriteTranslator).Write(
-                    item: UHItem,
-                    node: node,
-                    name: nameof(item.UH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.UH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.UH));
+                if (item.Oh.TryGet(out var OhItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)OhItem).XmlWriteTranslator).Write(
+                        item: OhItem,
+                        node: node,
+                        name: nameof(item.Oh),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Oh,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Oh));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.UW) ?? true))
+            if ((item.OohQ != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OohQ) ?? true))
             {
-                var UWItem = item.UW;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)UWItem).XmlWriteTranslator).Write(
-                    item: UWItem,
-                    node: node,
-                    name: nameof(item.UW),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.UW,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.UW));
+                if (item.OohQ.TryGet(out var OohQItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)OohQItem).XmlWriteTranslator).Write(
+                        item: OohQItem,
+                        node: node,
+                        name: nameof(item.OohQ),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.OohQ,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OohQ));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ER) ?? true))
+            if ((item.R != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
             {
-                var ERItem = item.ER;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)ERItem).XmlWriteTranslator).Write(
-                    item: ERItem,
-                    node: node,
-                    name: nameof(item.ER),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.ER,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ER));
+                if (item.R.TryGet(out var RItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)RItem).XmlWriteTranslator).Write(
+                        item: RItem,
+                        node: node,
+                        name: nameof(item.R),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.R,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.AX) ?? true))
+            if ((item.Th != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Th) ?? true))
             {
-                var AXItem = item.AX;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)AXItem).XmlWriteTranslator).Write(
-                    item: AXItem,
-                    node: node,
-                    name: nameof(item.AX),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.AX,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AX));
+                if (item.Th.TryGet(out var ThItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)ThItem).XmlWriteTranslator).Write(
+                        item: ThItem,
+                        node: node,
+                        name: nameof(item.Th),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Th,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Th));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.S) ?? true))
+            if ((item.W != null)
+                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
             {
-                var SItem = item.S;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)SItem).XmlWriteTranslator).Write(
-                    item: SItem,
-                    node: node,
-                    name: nameof(item.S),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.S,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.S));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SH) ?? true))
-            {
-                var SHItem = item.SH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)SHItem).XmlWriteTranslator).Write(
-                    item: SHItem,
-                    node: node,
-                    name: nameof(item.SH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.SH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SH));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Z) ?? true))
-            {
-                var ZItem = item.Z;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)ZItem).XmlWriteTranslator).Write(
-                    item: ZItem,
-                    node: node,
-                    name: nameof(item.Z),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.Z,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Z));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ZH) ?? true))
-            {
-                var ZHItem = item.ZH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)ZHItem).XmlWriteTranslator).Write(
-                    item: ZHItem,
-                    node: node,
-                    name: nameof(item.ZH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.ZH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ZH));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.F) ?? true))
-            {
-                var FItem = item.F;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)FItem).XmlWriteTranslator).Write(
-                    item: FItem,
-                    node: node,
-                    name: nameof(item.F),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.F,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.F));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.TH) ?? true))
-            {
-                var THItem = item.TH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)THItem).XmlWriteTranslator).Write(
-                    item: THItem,
-                    node: node,
-                    name: nameof(item.TH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.TH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.TH));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.V) ?? true))
-            {
-                var VItem = item.V;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)VItem).XmlWriteTranslator).Write(
-                    item: VItem,
-                    node: node,
-                    name: nameof(item.V),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.V,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.V));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DH) ?? true))
-            {
-                var DHItem = item.DH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)DHItem).XmlWriteTranslator).Write(
-                    item: DHItem,
-                    node: node,
-                    name: nameof(item.DH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.DH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DH));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.M) ?? true))
-            {
-                var MItem = item.M;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)MItem).XmlWriteTranslator).Write(
-                    item: MItem,
-                    node: node,
-                    name: nameof(item.M),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.M,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.M));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
-            {
-                var NItem = item.N;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)NItem).XmlWriteTranslator).Write(
-                    item: NItem,
-                    node: node,
-                    name: nameof(item.N),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.N,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.NG) ?? true))
-            {
-                var NGItem = item.NG;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)NGItem).XmlWriteTranslator).Write(
-                    item: NGItem,
-                    node: node,
-                    name: nameof(item.NG),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.NG,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.NG));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.L) ?? true))
-            {
-                var LItem = item.L;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)LItem).XmlWriteTranslator).Write(
-                    item: LItem,
-                    node: node,
-                    name: nameof(item.L),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.L,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.L));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
-            {
-                var RItem = item.R;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)RItem).XmlWriteTranslator).Write(
-                    item: RItem,
-                    node: node,
-                    name: nameof(item.R),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.R,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
-            {
-                var WItem = item.W;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)WItem).XmlWriteTranslator).Write(
-                    item: WItem,
-                    node: node,
-                    name: nameof(item.W),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.W,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Y) ?? true))
-            {
-                var YItem = item.Y;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)YItem).XmlWriteTranslator).Write(
-                    item: YItem,
-                    node: node,
-                    name: nameof(item.Y),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.Y,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Y));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.HH) ?? true))
-            {
-                var HHItem = item.HH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)HHItem).XmlWriteTranslator).Write(
-                    item: HHItem,
-                    node: node,
-                    name: nameof(item.HH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.HH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.HH));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.B) ?? true))
-            {
-                var BItem = item.B;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)BItem).XmlWriteTranslator).Write(
-                    item: BItem,
-                    node: node,
-                    name: nameof(item.B),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.B,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.B));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.D) ?? true))
-            {
-                var DItem = item.D;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)DItem).XmlWriteTranslator).Write(
-                    item: DItem,
-                    node: node,
-                    name: nameof(item.D),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.D,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.D));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.JH) ?? true))
-            {
-                var JHItem = item.JH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)JHItem).XmlWriteTranslator).Write(
-                    item: JHItem,
-                    node: node,
-                    name: nameof(item.JH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.JH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.JH));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.G) ?? true))
-            {
-                var GItem = item.G;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)GItem).XmlWriteTranslator).Write(
-                    item: GItem,
-                    node: node,
-                    name: nameof(item.G),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.G,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.G));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.P) ?? true))
-            {
-                var PItem = item.P;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)PItem).XmlWriteTranslator).Write(
-                    item: PItem,
-                    node: node,
-                    name: nameof(item.P),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.P,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.P));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.T) ?? true))
-            {
-                var TItem = item.T;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)TItem).XmlWriteTranslator).Write(
-                    item: TItem,
-                    node: node,
-                    name: nameof(item.T),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.T,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.T));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.K) ?? true))
-            {
-                var KItem = item.K;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)KItem).XmlWriteTranslator).Write(
-                    item: KItem,
-                    node: node,
-                    name: nameof(item.K),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.K,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.CH) ?? true))
-            {
-                var CHItem = item.CH;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)CHItem).XmlWriteTranslator).Write(
-                    item: CHItem,
-                    node: node,
-                    name: nameof(item.CH),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.CH,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.CH));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SIL) ?? true))
-            {
-                var SILItem = item.SIL;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)SILItem).XmlWriteTranslator).Write(
-                    item: SILItem,
-                    node: node,
-                    name: nameof(item.SIL),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.SIL,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SIL));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.SHOTSIL) ?? true))
-            {
-                var SHOTSILItem = item.SHOTSIL;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)SHOTSILItem).XmlWriteTranslator).Write(
-                    item: SHOTSILItem,
-                    node: node,
-                    name: nameof(item.SHOTSIL),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.SHOTSIL,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SHOTSIL));
-            }
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FLAP) ?? true))
-            {
-                var FLAPItem = item.FLAP;
-                ((PhonemeTargetXmlWriteTranslation)((IXmlItem)FLAPItem).XmlWriteTranslator).Write(
-                    item: FLAPItem,
-                    node: node,
-                    name: nameof(item.FLAP),
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.FLAP,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FLAP));
+                if (item.W.TryGet(out var WItem))
+                {
+                    ((PhonemeXmlWriteTranslation)((IXmlItem)WItem).XmlWriteTranslator).Write(
+                        item: WItem,
+                        node: node,
+                        name: nameof(item.W),
+                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.W,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W));
+                }
             }
         }
 
@@ -5582,14 +3417,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "IY":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.IY);
+                case "LipMode":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.LipMode);
                     try
                     {
-                        item.IY = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.LipMode = BooleanXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.IY));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5601,14 +3435,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "IH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.IH);
+                case "Aah_LipBigAah":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah);
                     try
                     {
-                        item.IH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.Aah_LipBigAah = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.IH));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5620,14 +3454,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "EH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.EH);
+                case "BigAah_LipDST":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST);
                     try
                     {
-                        item.EH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.BigAah_LipDST = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.EH));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5639,14 +3473,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "EY":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.EY);
+                case "BMP_LipEee":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.BMP_LipEee);
                     try
                     {
-                        item.EY = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.BMP_LipEee = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.EY));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BMP_LipEee));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5658,14 +3492,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "AE":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AE);
+                case "ChJSh_LipFV":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV);
                     try
                     {
-                        item.AE = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.ChJSh_LipFV = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AE));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5677,14 +3511,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "AA":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AA);
+                case "DST_LipK":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.DST_LipK);
                     try
                     {
-                        item.AA = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.DST_LipK = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AA));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DST_LipK));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5696,14 +3530,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "AW":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AW);
+                case "Eee_LipL":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Eee_LipL);
                     try
                     {
-                        item.AW = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.Eee_LipL = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AW));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eee_LipL));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5715,14 +3549,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "AY":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AY);
+                case "Eh_LipR":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Eh_LipR);
                     try
                     {
-                        item.AY = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.Eh_LipR = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AY));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eh_LipR));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5734,14 +3568,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "AH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AH);
+                case "FV_LipTh":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.FV_LipTh);
                     try
                     {
-                        item.AH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.FV_LipTh = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AH));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FV_LipTh));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5753,546 +3587,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "AO":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AO);
+                case "I":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.I);
                     try
                     {
-                        item.AO = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.I = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AO));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OY":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.OY);
-                    try
-                    {
-                        item.OY = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OY));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OW":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.OW);
-                    try
-                    {
-                        item.OW = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OW));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.UH);
-                    try
-                    {
-                        item.UH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.UH));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UW":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.UW);
-                    try
-                    {
-                        item.UW = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.UW));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ER":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ER);
-                    try
-                    {
-                        item.ER = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ER));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AX":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.AX);
-                    try
-                    {
-                        item.AX = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.AX));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "S":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.S);
-                    try
-                    {
-                        item.S = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.S));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.SH);
-                    try
-                    {
-                        item.SH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SH));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Z":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Z);
-                    try
-                    {
-                        item.Z = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Z));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ZH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ZH);
-                    try
-                    {
-                        item.ZH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ZH));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "F":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.F);
-                    try
-                    {
-                        item.F = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.F));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.TH);
-                    try
-                    {
-                        item.TH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.TH));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "V":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.V);
-                    try
-                    {
-                        item.V = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.V));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.DH);
-                    try
-                    {
-                        item.DH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DH));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "M":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.M);
-                    try
-                    {
-                        item.M = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.M));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "N":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.N);
-                    try
-                    {
-                        item.N = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NG":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.NG);
-                    try
-                    {
-                        item.NG = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.NG));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "L":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.L);
-                    try
-                    {
-                        item.L = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.L));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "R":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.R);
-                    try
-                    {
-                        item.R = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "W":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.W);
-                    try
-                    {
-                        item.W = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Y":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Y);
-                    try
-                    {
-                        item.Y = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Y));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.HH);
-                    try
-                    {
-                        item.HH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.HH));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "B":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.B);
-                    try
-                    {
-                        item.B = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.B));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "D":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.D);
-                    try
-                    {
-                        item.D = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.D));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "JH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.JH);
-                    try
-                    {
-                        item.JH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.JH));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "G":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.G);
-                    try
-                    {
-                        item.G = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.G));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "P":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.P);
-                    try
-                    {
-                        item.P = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.P));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "T":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.T);
-                    try
-                    {
-                        item.T = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.T));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.I));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -6308,7 +3610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.K);
                     try
                     {
-                        item.K = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.K = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K));
@@ -6323,14 +3625,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "CH":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.CH);
+                case "N":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.N);
                     try
                     {
-                        item.CH = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.N = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.CH));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -6342,14 +3644,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "SIL":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.SIL);
+                case "Oh":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Oh);
                     try
                     {
-                        item.SIL = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.Oh = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SIL));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Oh));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -6361,14 +3663,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "SHOTSIL":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.SHOTSIL);
+                case "OohQ":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.OohQ);
                     try
                     {
-                        item.SHOTSIL = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.OohQ = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.SHOTSIL));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OohQ));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -6380,14 +3682,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "FLAP":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.FLAP);
+                case "R":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.R);
                     try
                     {
-                        item.FLAP = LoquiXmlTranslation<PhonemeTarget>.Instance.Parse(
+                        item.R = LoquiXmlTranslation<Phoneme>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FLAP));
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Th":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Th);
+                    try
+                    {
+                        item.Th = LoquiXmlTranslation<Phoneme>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Th));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "W":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.W);
+                    try
+                    {
+                        item.W = LoquiXmlTranslation<Phoneme>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -6570,33 +3910,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static FaceFxPhonemesBinaryWriteTranslation Instance = new FaceFxPhonemesBinaryWriteTranslation();
 
-        static partial void WriteBinaryParsingCustom(
-            MutagenWriter writer,
-            IFaceFxPhonemesGetter item);
-
-        public static void WriteBinaryParsing(
-            MutagenWriter writer,
-            IFaceFxPhonemesGetter item)
-        {
-            WriteBinaryParsingCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IFaceFxPhonemesGetter item,
             MutagenWriter writer)
         {
-        }
-
-        public static void WriteRecordTypes(
-            IFaceFxPhonemesGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            FaceFxPhonemesBinaryWriteTranslation.WriteBinaryParsing(
-                writer: writer,
-                item: item);
+            writer.Write(item.LipMode);
+            if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)Aah_LipBigAahItem).BinaryWriteTranslator).Write(
+                    item: Aah_LipBigAahItem,
+                    writer: writer);
+            }
+            if (item.BigAah_LipDST.TryGet(out var BigAah_LipDSTItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)BigAah_LipDSTItem).BinaryWriteTranslator).Write(
+                    item: BigAah_LipDSTItem,
+                    writer: writer);
+            }
+            if (item.BMP_LipEee.TryGet(out var BMP_LipEeeItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)BMP_LipEeeItem).BinaryWriteTranslator).Write(
+                    item: BMP_LipEeeItem,
+                    writer: writer);
+            }
+            if (item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)ChJSh_LipFVItem).BinaryWriteTranslator).Write(
+                    item: ChJSh_LipFVItem,
+                    writer: writer);
+            }
+            if (item.DST_LipK.TryGet(out var DST_LipKItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)DST_LipKItem).BinaryWriteTranslator).Write(
+                    item: DST_LipKItem,
+                    writer: writer);
+            }
+            if (item.Eee_LipL.TryGet(out var Eee_LipLItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)Eee_LipLItem).BinaryWriteTranslator).Write(
+                    item: Eee_LipLItem,
+                    writer: writer);
+            }
+            if (item.Eh_LipR.TryGet(out var Eh_LipRItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)Eh_LipRItem).BinaryWriteTranslator).Write(
+                    item: Eh_LipRItem,
+                    writer: writer);
+            }
+            if (item.FV_LipTh.TryGet(out var FV_LipThItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)FV_LipThItem).BinaryWriteTranslator).Write(
+                    item: FV_LipThItem,
+                    writer: writer);
+            }
+            if (item.I.TryGet(out var IItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)IItem).BinaryWriteTranslator).Write(
+                    item: IItem,
+                    writer: writer);
+            }
+            if (item.K.TryGet(out var KItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)KItem).BinaryWriteTranslator).Write(
+                    item: KItem,
+                    writer: writer);
+            }
+            if (item.N.TryGet(out var NItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)NItem).BinaryWriteTranslator).Write(
+                    item: NItem,
+                    writer: writer);
+            }
+            if (item.Oh.TryGet(out var OhItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)OhItem).BinaryWriteTranslator).Write(
+                    item: OhItem,
+                    writer: writer);
+            }
+            if (item.OohQ.TryGet(out var OohQItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)OohQItem).BinaryWriteTranslator).Write(
+                    item: OohQItem,
+                    writer: writer);
+            }
+            if (item.R.TryGet(out var RItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)RItem).BinaryWriteTranslator).Write(
+                    item: RItem,
+                    writer: writer);
+            }
+            if (item.Th.TryGet(out var ThItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)ThItem).BinaryWriteTranslator).Write(
+                    item: ThItem,
+                    writer: writer);
+            }
+            if (item.W.TryGet(out var WItem))
+            {
+                ((PhonemeBinaryWriteTranslation)((IBinaryItem)WItem).BinaryWriteTranslator).Write(
+                    item: WItem,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -6607,10 +4021,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            WriteRecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
@@ -6629,19 +4039,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class FaceFxPhonemesBinaryCreateTranslation
     {
         public readonly static FaceFxPhonemesBinaryCreateTranslation Instance = new FaceFxPhonemesBinaryCreateTranslation();
-
-        static partial void FillBinaryParsingCustom(
-            MutagenFrame frame,
-            IFaceFxPhonemes item);
-
-        public static void FillBinaryParsingCustomPublic(
-            MutagenFrame frame,
-            IFaceFxPhonemes item)
-        {
-            FillBinaryParsingCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 
@@ -6724,11 +4121,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        #region Parsing
-        partial void ParsingCustomParse(
-            BinaryMemoryReadStream stream,
-            int offset);
-        #endregion
+        public Boolean LipMode => _data.Span.Slice(0, 1)[0] == 1;
+        public IPhonemeGetter Aah_LipBigAah => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter BigAah_LipDST => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(173)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter BMP_LipEee => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(345)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter ChJSh_LipFV => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(517)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter DST_LipK => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(689)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter Eee_LipL => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(861)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter Eh_LipR => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1033)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter FV_LipTh => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1205)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter I => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1377)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter K => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1549)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter N => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1721)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter Oh => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1893)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter OohQ => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(2065)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter R => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(2237)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter Th => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(2409)), _package, default(RecordTypeConverter));
+        public IPhonemeGetter W => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(2581)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -6749,45 +4158,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new FaceFxPhonemesBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                bytes: stream.RemainingMemory.Slice(0, 2753),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: 0);
-            ret.FillTypelessSubrecordTypes(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case 0x54574850: // PHWT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceFxPhonemes_FieldIndex.IY) return TryGet<int?>.Failure;
-                    ParsingCustomParse(
-                        stream,
-                        offset);
-                    return TryGet<int?>.Succeed(lastParsed);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
     }
 
 }

@@ -26,7 +26,14 @@ namespace Mutagen.Bethesda.Generation
             return expected.Value * 2;
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor readerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
+        public override void GenerateCopyIn(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor readerAccessor,
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor, 
+            Accessor translationAccessor)
         {
             GenderedType gender = typeGen as GenderedType;
             var data = typeGen.GetFieldData();
@@ -40,19 +47,23 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
-            else if (data.MarkerType.HasValue)
+            else if (data.MarkerType.HasValue && !gender.MarkerPerGender)
             {
                 fg.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)} + contentLength; // Skip marker");
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{itemAccessor} = {this.Namespace}GenderedItemBinaryTranslation.Parse<{gender.SubTypeGeneration.TypeName(getter: false)}>"))
+                $"{itemAccessor} = {this.Namespace}GenderedItemBinaryTranslation.Parse{(gender.MarkerPerGender ? "MarkerPerItem" : null)}<{gender.SubTypeGeneration.TypeName(getter: false)}>"))
             {
                 args.AddPassArg($"frame");
                 if (gender.MaleMarker.HasValue)
                 {
                     args.Add($"maleMarker: {objGen.RecordTypeHeaderName(gender.MaleMarker.Value)}");
                     args.Add($"femaleMarker: {objGen.RecordTypeHeaderName(gender.FemaleMarker.Value)}");
+                }
+                if (data.MarkerType.HasValue && gender.MarkerPerGender)
+                {
+                    args.Add($"marker: {objGen.RecordTypeHeaderName(data.MarkerType.Value)}");
                 }
                 var subData = gender.SubTypeGeneration.GetFieldData();
                 if (subData.RecordType.HasValue
@@ -68,6 +79,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                     }
+                }
+                if (gender.FemaleConversions != null)
+                {
+                    args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
                 }
                 if (loqui != null
                     && !loqui.CanStronglyType)
@@ -127,7 +142,7 @@ namespace Mutagen.Bethesda.Generation
                 typeName = loqui.TypeName(getter: true, internalInterface: true);
             }
             using (var args = new ArgsWrapper(fg,
-                $"GenderedItemBinaryTranslation.Write"))
+                $"GenderedItemBinaryTranslation.Write{(gendered.MarkerPerGender ? "MarkerPerItem" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor}");
@@ -151,6 +166,10 @@ namespace Mutagen.Bethesda.Generation
                     && loqui != null)
                 {
                     args.Add("markerWrap: false");
+                }
+                if (gendered.FemaleConversions != null)
+                {
+                    args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
                 }
                 if (allowDirectWrite)
                 {

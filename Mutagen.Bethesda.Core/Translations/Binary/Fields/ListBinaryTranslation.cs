@@ -95,6 +95,7 @@ namespace Mutagen.Bethesda.Binary
             while (!frame.Complete)
             {
                 var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                nextRecord = recordTypeConverter.ConvertToStandard(nextRecord);
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
@@ -122,6 +123,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new List<T>();
+            triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
             while (!frame.Complete && !frame.Reader.Complete)
             {
                 if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;

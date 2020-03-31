@@ -13,21 +13,25 @@ namespace Mutagen.Bethesda.Generation
 {
     public class RecordTypeConverterModule : GenerationModule
     {
-        public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
+        public static RecordTypeConverter GetConverter(XElement node)
         {
-            if (!(field is LoquiType loquiType)) return;
-            var recTypeOverrides = node.Element(XName.Get("RecordTypeOverrides", LoquiGenerator.Namespace));
-            if (recTypeOverrides == null) return;
-            var recConversions = recTypeOverrides.Elements(XName.Get("Mapping", LoquiGenerator.Namespace));
-            if (recConversions == null || !recConversions.Any()) return;
-            var data = loquiType.GetFieldData();
-            data.RecordTypeConverter = new RecordTypeConverter(
+            if (node == null) return null;
+            var recConversions = node.Elements(XName.Get("Mapping", LoquiGenerator.Namespace));
+            if (recConversions == null || !recConversions.Any()) return null;
+            return new RecordTypeConverter(
                 recConversions.Select((n) =>
                 {
                     return new KeyValuePair<RecordType, RecordType>(
                         new RecordType(n.GetAttribute("From")),
                         new RecordType(n.GetAttribute("To")));
                 }).ToArray());
+        }
+
+        public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
+        {
+            if (!(field is LoquiType loquiType)) return;
+            var data = loquiType.GetFieldData();
+            data.RecordTypeConverter = GetConverter(node.Element(XName.Get("RecordTypeOverrides", LoquiGenerator.Namespace)));
         }
 
         public override async Task PreLoad(ObjectGeneration obj)
@@ -50,25 +54,7 @@ namespace Mutagen.Bethesda.Generation
         public override Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
             var objData = obj.GetObjectData();
-            if (objData.BaseRecordTypeConverter?.FromConversions.Count > 0)
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"public static RecordTypeConverter BaseConverter = new RecordTypeConverter"))
-                {
-                    foreach (var conv in objData.BaseRecordTypeConverter.FromConversions)
-                    {
-                        args.Add((gen) =>
-                        {
-                            using (var args2 = new FunctionWrapper(gen,
-                                "new KeyValuePair<RecordType, RecordType>"))
-                            {
-                                args2.Add($"{obj.BaseClass.RecordTypeHeaderName(conv.Key)}");
-                                args2.Add($"new RecordType(\"{conv.Value.Type}\")");
-                            }
-                        });
-                    }
-                }
-            }
+            GenerateConverterMember(fg, obj.BaseClass, objData.BaseRecordTypeConverter, "Base");
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
                 LoquiType loquiType = field as LoquiType;
@@ -85,25 +71,30 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 var fieldData = loquiType.GetFieldData();
-                if (fieldData.RecordTypeConverter == null || fieldData.RecordTypeConverter.FromConversions.Count == 0) continue;
-                using (var args = new ArgsWrapper(fg,
-                    $"public static RecordTypeConverter {field.Name}Converter = new RecordTypeConverter"))
-                {
-                    foreach (var conv in fieldData.RecordTypeConverter.FromConversions)
-                    {
-                        args.Add((gen) =>
-                        {
-                            using (var args2 = new FunctionWrapper(gen,
-                                "new KeyValuePair<RecordType, RecordType>"))
-                            {
-                                args2.Add($"{loquiType.TargetObjectGeneration.RecordTypeHeaderName(conv.Key)}");
-                                args2.Add($"new RecordType(\"{conv.Value.Type}\")");
-                            }
-                        });
-                    }
-                }
+                GenerateConverterMember(fg, loquiType.TargetObjectGeneration, fieldData.RecordTypeConverter, field.Name);
             }
             return base.GenerateInRegistration(obj, fg);
+        }
+
+        public static void GenerateConverterMember(FileGeneration fg, ObjectGeneration objGen, RecordTypeConverter recordTypeConverter, string nickName)
+        {
+            if (recordTypeConverter == null || recordTypeConverter.FromConversions.Count == 0) return;
+            using (var args = new ArgsWrapper(fg,
+                $"public static RecordTypeConverter {nickName}Converter = new RecordTypeConverter"))
+            {
+                foreach (var conv in recordTypeConverter.FromConversions)
+                {
+                    args.Add((gen) =>
+                    {
+                        using (var args2 = new FunctionWrapper(gen,
+                            "new KeyValuePair<RecordType, RecordType>"))
+                        {
+                            args2.Add($"new RecordType(\"{conv.Key.Type}\")");
+                            args2.Add($"new RecordType(\"{conv.Value.Type}\")");
+                        }
+                    });
+                }
+            }
         }
     }
 }

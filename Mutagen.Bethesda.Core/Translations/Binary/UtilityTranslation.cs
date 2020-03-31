@@ -1,6 +1,4 @@
 using Ionic.Zlib;
-using Loqui;
-using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
@@ -10,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
@@ -433,7 +430,7 @@ namespace Mutagen.Bethesda
                     {
                         ret[i] = loc;
                         bool breakOut = false;
-                        
+
                         // Check to see if there's still more to find
                         for (int j = 0; j < ret.Length; j++)
                         {
