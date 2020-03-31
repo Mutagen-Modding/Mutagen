@@ -1971,7 +1971,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((LogEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
         }

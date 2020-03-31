@@ -2973,7 +2973,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((PartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(

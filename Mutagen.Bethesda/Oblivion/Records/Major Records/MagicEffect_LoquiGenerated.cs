@@ -3618,7 +3618,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         var SubDataItem = item.SubData;
                         ((MagicEffectSubDataBinaryWriteTranslation)((IBinaryItem)SubDataItem).BinaryWriteTranslator).Write(
                             item: SubDataItem,
-                            writer: writer);
+                            writer: writer,
+                            recordTypeConverter: recordTypeConverter);
                     }
                 }
             }

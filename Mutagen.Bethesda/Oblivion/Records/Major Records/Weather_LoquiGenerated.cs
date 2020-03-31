@@ -5953,7 +5953,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     var Item = subItem;
                     ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
-                        writer: subWriter);
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
             {
@@ -6054,7 +6055,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((WeatherSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
         }

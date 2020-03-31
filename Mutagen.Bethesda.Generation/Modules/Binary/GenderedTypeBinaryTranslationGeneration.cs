@@ -108,7 +108,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor, 
             Accessor itemAccessor, 
             Accessor errorMaskAccessor,
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor converterAccessor)
         {
             GenderedType gendered = typeGen as GenderedType;
             var gen = this.Module.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
@@ -170,7 +171,8 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "subWriter",
                                 translationAccessor: "subTranslMask",
                                 itemAccessor: new Accessor($"subItem"),
-                                errorMaskAccessor: null);
+                                errorMaskAccessor: null,
+                                converterAccessor: needsMasters ? "conv" : null);
                         }
                     });
                 }

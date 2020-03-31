@@ -73,7 +73,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMask)
+            Accessor translationMask,
+            Accessor converterAccessor)
         {
             var dict = typeGen as DictType;
             if (dict.Mode != DictMode.KeyedValue)
@@ -123,7 +124,8 @@ namespace Mutagen.Bethesda.Generation
                                 itemAccessor: new Accessor("dictSubItem"),
                                 writerAccessor: "r",
                                 translationAccessor: "dictTranslMask",
-                                errorMaskAccessor: null);
+                                errorMaskAccessor: null,
+                                converterAccessor: null);
                         }
                     });
                 }

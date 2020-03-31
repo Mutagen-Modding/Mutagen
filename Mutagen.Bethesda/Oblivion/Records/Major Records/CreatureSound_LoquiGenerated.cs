@@ -1989,7 +1989,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((SoundItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
         }

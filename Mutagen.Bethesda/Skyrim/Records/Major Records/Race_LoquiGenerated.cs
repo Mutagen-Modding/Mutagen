@@ -8157,7 +8157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ((SimpleModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            recordTypeConverter: Race_Registration.SkeletalModelConverter);
+                            recordTypeConverter: conv);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
@@ -8218,7 +8218,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             GenderedItemBinaryTranslation.Write(
@@ -8234,7 +8235,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Write(
@@ -8274,7 +8276,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -8309,7 +8312,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((RaceMovementTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipTypeFlag>.Instance.WriteNullable(
@@ -8379,7 +8383,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((HeadDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
         }

@@ -3074,7 +3074,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         var TrainingItem = item.Training;
                         ((ClassTrainingBinaryWriteTranslation)((IBinaryItem)TrainingItem).BinaryWriteTranslator).Write(
                             item: TrainingItem,
-                            writer: writer);
+                            writer: writer,
+                            recordTypeConverter: recordTypeConverter);
                     }
                 }
             }

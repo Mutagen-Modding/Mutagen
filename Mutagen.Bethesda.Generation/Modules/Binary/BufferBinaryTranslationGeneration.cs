@@ -53,7 +53,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor converterAccessor)
         {
             BufferType zero = typeGen as BufferType;
             using (var args = new ArgsWrapper(fg,

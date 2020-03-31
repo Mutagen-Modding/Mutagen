@@ -2328,7 +2328,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<IAItemGetter>(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             LeveledItemSetterCommon.SpecialWrite_Vestigial_Internal(

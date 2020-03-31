@@ -53,7 +53,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor, 
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor converterAccessor)
         {
             ZeroType zero = typeGen as ZeroType;
             fg.AppendLine($"{writerAccessor}.WriteZeros({zero.Length});");

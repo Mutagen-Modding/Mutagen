@@ -2975,7 +2975,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((EffectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))

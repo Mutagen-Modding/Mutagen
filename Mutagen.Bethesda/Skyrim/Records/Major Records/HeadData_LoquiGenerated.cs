@@ -3547,7 +3547,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((HeadPartReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             if (item.AvailableMorphs.TryGet(out var AvailableMorphsItem))
@@ -3599,7 +3600,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((TintAssetsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             if (item.Model.TryGet(out var ModelItem))

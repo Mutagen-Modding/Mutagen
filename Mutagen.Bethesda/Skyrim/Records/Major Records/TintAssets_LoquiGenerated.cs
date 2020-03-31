@@ -2330,7 +2330,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ((TintPresetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
         }

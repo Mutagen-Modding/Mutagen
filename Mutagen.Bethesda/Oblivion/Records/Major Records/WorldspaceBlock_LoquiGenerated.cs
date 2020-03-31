@@ -2336,7 +2336,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((WorldspaceSubBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
         }

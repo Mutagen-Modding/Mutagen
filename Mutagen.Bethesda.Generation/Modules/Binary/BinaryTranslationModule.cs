@@ -1286,7 +1286,8 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "writer",
                                 itemAccessor: Accessor.FromType(field, "item"),
                                 translationAccessor: null,
-                                errorMaskAccessor: null);
+                                errorMaskAccessor: null,
+                                converterAccessor: null);
                         }
                     }
                 }
@@ -1406,7 +1407,8 @@ namespace Mutagen.Bethesda.Generation
                                             writerAccessor: "writer",
                                                 translationAccessor: null,
                                             itemAccessor: Accessor.FromType(subField.Field, "item"),
-                                            errorMaskAccessor: null);
+                                            errorMaskAccessor: null,
+                                            converterAccessor: "recordTypeConverter");
                                     }
                                     for (int i = 0; i < dataType.BreakIndices.Count; i++)
                                     {
@@ -1459,7 +1461,8 @@ namespace Mutagen.Bethesda.Generation
                                     writerAccessor: "writer",
                                     itemAccessor: accessor,
                                     translationAccessor: null,
-                                    errorMaskAccessor: null);
+                                    errorMaskAccessor: null,
+                                    converterAccessor: null);
                             }
                         }
                     }

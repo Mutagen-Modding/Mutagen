@@ -46,7 +46,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor, 
             Accessor itemAccessor, 
             Accessor errorMaskAccessor, 
-            Accessor translationAccessor)
+            Accessor translationAccessor,
+            Accessor converterAccessor)
         {
         }
 

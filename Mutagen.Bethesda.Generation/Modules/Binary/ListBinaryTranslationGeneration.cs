@@ -117,7 +117,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor converterAccessor)
         {
             var list = typeGen as ListType;
             if (!this.Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
@@ -217,7 +218,8 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "subWriter",
                                 translationAccessor: "listTranslMask",
                                 itemAccessor: new Accessor($"subItem"),
-                                errorMaskAccessor: null);
+                                errorMaskAccessor: null,
+                                converterAccessor: needsMasters ? "conv" : null);
                         }
                     });
                 }

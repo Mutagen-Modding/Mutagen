@@ -137,7 +137,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationMaskAccessor,
+            Accessor converterAccessor)
         {
             FormLinkType linkType = typeGen as FormLinkType;
             var data = typeGen.GetFieldData();

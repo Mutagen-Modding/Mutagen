@@ -9661,7 +9661,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((RankPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -9695,7 +9696,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((ItemEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             if (item.AIDTDataTypeState.HasFlag(Npc.AIDTDataType.Has))

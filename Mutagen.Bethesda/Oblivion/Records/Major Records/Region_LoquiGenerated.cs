@@ -3083,7 +3083,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         ((RegionAreaBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
-                            writer: subWriter);
+                            writer: subWriter,
+                            recordTypeConverter: conv);
                     }
                 });
             RegionBinaryWriteTranslation.WriteBinaryRegionAreaLogic(
