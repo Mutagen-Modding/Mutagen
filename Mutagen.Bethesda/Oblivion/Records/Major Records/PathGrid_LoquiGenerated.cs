@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = PathGrid_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = PathGrid_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => PathGridCommon.Instance.GetLinks(this);
         public PathGrid(FormKey formKey)
@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGAG_HEADER = new RecordType("PGAG");
         public static readonly RecordType PGRI_HEADER = new RecordType("PGRI");
         public static readonly RecordType PGRL_HEADER = new RecordType("PGRL");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = PGRD_HEADER;
+        public static readonly RecordType TriggeringRecordType = PGRD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(PathGridBinaryWriteTranslation);

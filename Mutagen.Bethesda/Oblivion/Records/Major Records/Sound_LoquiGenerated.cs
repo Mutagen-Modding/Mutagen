@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Sound_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Sound_Registration.TriggeringRecordType;
         public Sound(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType SNDD_HEADER = new RecordType("SNDD");
         public static readonly RecordType SNDX_HEADER = new RecordType("SNDX");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SOUN_HEADER;
+        public static readonly RecordType TriggeringRecordType = SOUN_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(SoundBinaryWriteTranslation);

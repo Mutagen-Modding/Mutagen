@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = AvailableMorphs_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = AvailableMorphs_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(AvailableMorphsXmlWriteTranslation);
         public static readonly RecordType MPAI_HEADER = new RecordType("MPAI");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MPAI_HEADER;
+        public static readonly RecordType TriggeringRecordType = MPAI_HEADER;
         public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AvailableMorphsBinaryWriteTranslation);

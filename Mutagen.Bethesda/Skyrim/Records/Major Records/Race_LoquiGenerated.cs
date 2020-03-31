@@ -2716,7 +2716,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Race_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => RaceCommon.Instance.GetLinks(this);
         public Race(FormKey formKey)
@@ -3864,7 +3864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SNMV_HEADER = new RecordType("SNMV");
         public static readonly RecordType SPMV_HEADER = new RecordType("SPMV");
         public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = RACE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RACE_HEADER;
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("MODL"),

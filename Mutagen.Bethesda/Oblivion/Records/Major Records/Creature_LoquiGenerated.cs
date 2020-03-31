@@ -3046,7 +3046,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Creature_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Creature_Registration.TriggeringRecordType;
         [Flags]
         public enum ACBSDataType
         {
@@ -4344,7 +4344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CSDT_HEADER = new RecordType("CSDT");
         public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
         public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CREA_HEADER;
+        public static readonly RecordType TriggeringRecordType = CREA_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 20;
         public static readonly Type BinaryWriteTranslation = typeof(CreatureBinaryWriteTranslation);

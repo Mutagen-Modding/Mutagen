@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = AIPackageSchedule_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = AIPackageSchedule_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(AIPackageScheduleXmlWriteTranslation);
         public static readonly RecordType PSDT_HEADER = new RecordType("PSDT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = PSDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = PSDT_HEADER;
         public const int NumStructFields = 5;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageScheduleBinaryWriteTranslation);

@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!GameSetting_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!GameSetting_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordFrame();
             var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, new RecordType("EDID"), navigateToContent: true);

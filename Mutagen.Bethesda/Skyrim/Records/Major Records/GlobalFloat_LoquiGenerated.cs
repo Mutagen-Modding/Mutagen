@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = GlobalFloat_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = GlobalFloat_Registration.TriggeringRecordType;
         public GlobalFloat(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(GlobalFloatXmlWriteTranslation);
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
+        public static readonly RecordType TriggeringRecordType = GLOB_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(GlobalFloatBinaryWriteTranslation);

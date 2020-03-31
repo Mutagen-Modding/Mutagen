@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ScriptEffect_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = ScriptEffect_Registration.TriggeringRecordType;
         [Flags]
         public enum SCITDataType
         {
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(ScriptEffectXmlWriteTranslation);
         public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SCIT_HEADER;
+        public static readonly RecordType TriggeringRecordType = SCIT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptEffectBinaryWriteTranslation);

@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = VendorLocation_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = VendorLocation_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => VendorLocationCommon.Instance.GetLinks(this);
         #endregion
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(VendorLocationXmlWriteTranslation);
         public static readonly RecordType PLVD_HEADER = new RecordType("PLVD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = PLVD_HEADER;
+        public static readonly RecordType TriggeringRecordType = PLVD_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(VendorLocationBinaryWriteTranslation);

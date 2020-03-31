@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Furnature_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Furnature_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => FurnatureCommon.Instance.GetLinks(this);
         public Furnature(FormKey formKey)
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = FURN_HEADER;
+        public static readonly RecordType TriggeringRecordType = FURN_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(FurnatureBinaryWriteTranslation);

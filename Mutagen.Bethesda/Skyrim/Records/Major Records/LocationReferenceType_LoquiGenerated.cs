@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = LocationReferenceType_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = LocationReferenceType_Registration.TriggeringRecordType;
         public LocationReferenceType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(LocationReferenceTypeXmlWriteTranslation);
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = LCRT_HEADER;
+        public static readonly RecordType TriggeringRecordType = LCRT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(LocationReferenceTypeBinaryWriteTranslation);

@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Tests
             else
             {
                 // Modify Length
-                stream.Position = loc.Min + Constants.HEADER_LENGTH;
+                stream.Position = loc.Min + Constants.HeaderLength;
                 var existingLen = stream.ReadUInt16();
                 byte[] lenData = new byte[2];
                 using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameMode))
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Tests
                     writer.Write((ushort)(existingLen - 7));
                 }
                 this._Instructions.SetSubstitution(
-                    loc: loc.Min + Constants.HEADER_LENGTH,
+                    loc: loc.Min + Constants.HeaderLength,
                     sub: lenData);
             }
 
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     throw new ArgumentException();
                 }
-                stream.Position = edidIndex + loc.Min + Constants.HEADER_LENGTH;
+                stream.Position = edidIndex + loc.Min + Constants.HeaderLength;
                 var edidLen = stream.ReadUInt16();
                 stream.Position += edidLen;
                 var locToPlace = stream.Position;
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!PlacedCreature_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!PlacedCreature_Registration.TriggeringRecordType.Equals(recType)) return;
 
             int amount = 0;
             stream.Position = loc.Min;
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!PlacedNpc_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!PlacedNpc_Registration.TriggeringRecordType.Equals(recType)) return;
 
             int amount = 0;
             stream.Position = loc.Min;
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!CombatStyle_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!CombatStyle_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = str.IndexOf("CSTD");
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Water_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!Water_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = str.IndexOf("DATA");
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x02)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                        loc: loc.Min + dataIndex + Constants.HeaderLength,
                         sub: new byte[] { 0, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x56)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                        loc: loc.Min + dataIndex + Constants.HeaderLength,
                         sub: new byte[] { 0x54, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x2A)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                        loc: loc.Min + dataIndex + Constants.HeaderLength,
                         sub: new byte[] { 0x28, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x3E)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                        loc: loc.Min + dataIndex + Constants.HeaderLength,
                         sub: new byte[] { 0x3C, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!GameSetting_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!GameSetting_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Book_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!Book_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Light_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!Light_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
 
@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!SpellUnleveled_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            if (!SpellUnleveled_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             foreach (var scitIndex in IterateTypes(str, new RecordType("SCIT")))

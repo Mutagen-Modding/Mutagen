@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 locs: ParseRecordLocations(
                                     stream: new BinaryMemoryReadStream(stream.RemainingMemory),
                                     finalPos: stream.Length,
-                                    trigger: WorldspaceBlock_Registration.TRIGGERING_RECORD_TYPE,
+                                    trigger: WorldspaceBlock_Registration.TriggeringRecordType,
                                     constants: GameConstants.Oblivion.GroupConstants,
                                     skipHeader: false));
                             break;

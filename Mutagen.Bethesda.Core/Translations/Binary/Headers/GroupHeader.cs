@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Binary
         public int GroupType => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(12, 4));
         public ReadOnlySpan<byte> LastModifiedSpan => this.Span.Slice(16, 4);
         public long TotalLength => this.RecordLength;
-        public bool IsGroup => this.RecordType == Constants.GRUP;
+        public bool IsGroup => this.RecordType == Constants.Group;
         public uint ContentLength => checked((uint)(this.TotalLength - this.HeaderLength));
         public int TypeAndLengthLength => Meta.GroupConstants.TypeAndLengthLength;
         public bool IsTopLevel => this.GroupType == 0;

@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = SoulGem_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = SoulGem_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -1469,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType SOUL_HEADER = new RecordType("SOUL");
         public static readonly RecordType SLCP_HEADER = new RecordType("SLCP");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SLGM_HEADER;
+        public static readonly RecordType TriggeringRecordType = SLGM_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);

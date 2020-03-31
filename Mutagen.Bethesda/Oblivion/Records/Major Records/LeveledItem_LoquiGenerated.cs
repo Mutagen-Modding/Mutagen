@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = LeveledItem_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LeveledItemCommon.Instance.GetLinks(this);
         public LeveledItem(FormKey formKey)
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
         public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = LVLI_HEADER;
+        public static readonly RecordType TriggeringRecordType = LVLI_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);

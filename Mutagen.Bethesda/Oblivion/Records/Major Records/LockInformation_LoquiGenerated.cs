@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = LockInformation_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = LockInformation_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => LockInformationCommon.Instance.GetLinks(this);
         #endregion
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(LockInformationXmlWriteTranslation);
         public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = XLOC_HEADER;
+        public static readonly RecordType TriggeringRecordType = XLOC_HEADER;
         public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(LockInformationBinaryWriteTranslation);

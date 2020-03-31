@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Binary
             var diff = endPos - this.Writer.Position;
             if (this.RecordConstants.HeaderIncludedInLength)
             {
-                diff += Constants.HEADER_LENGTH;
+                diff += Constants.HeaderLength;
             }
             else
             {

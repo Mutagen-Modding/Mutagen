@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = CombatStyleAdvanced_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = CombatStyleAdvanced_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(CombatStyleAdvancedXmlWriteTranslation);
         public static readonly RecordType CSAD_HEADER = new RecordType("CSAD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CSAD_HEADER;
+        public static readonly RecordType TriggeringRecordType = CSAD_HEADER;
         public const int NumStructFields = 21;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleAdvancedBinaryWriteTranslation);

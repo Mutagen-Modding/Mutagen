@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static Group()
         {
-            T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER).GetValue(null);
+            T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Constants.TriggeringRecordTypeMember).GetValue(null);
         }
 
         #region GroupType
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(GroupXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
+        public static readonly RecordType TriggeringRecordType = GRUP_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);

@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
                     locs: ParseRecordLocations(
                         stream: new BinaryMemoryReadStream(contentSpan),
                         finalPos: contentSpan.Length,
-                        trigger: DialogItem_Registration.TRIGGERING_RECORD_TYPE,
+                        trigger: DialogItem_Registration.TriggeringRecordType,
                         constants: GameConstants.Oblivion.MajorConstants,
                         skipHeader: false));
             }

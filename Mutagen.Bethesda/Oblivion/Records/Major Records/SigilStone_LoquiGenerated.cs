@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = SigilStone_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = SigilStone_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SGST_HEADER;
+        public static readonly RecordType TriggeringRecordType = SGST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(SigilStoneBinaryWriteTranslation);

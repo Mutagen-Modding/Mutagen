@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = LocalVariable_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = LocalVariable_Registration.TriggeringRecordType;
         [Flags]
         public enum SLSDDataType
         {
@@ -1282,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(LocalVariableXmlWriteTranslation);
         public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
         public static readonly RecordType SCVR_HEADER = new RecordType("SCVR");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SLSD_HEADER;
+        public static readonly RecordType TriggeringRecordType = SLSD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(LocalVariableBinaryWriteTranslation);

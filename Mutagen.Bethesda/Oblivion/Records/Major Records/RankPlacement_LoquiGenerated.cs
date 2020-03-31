@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = RankPlacement_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = RankPlacement_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => RankPlacementCommon.Instance.GetLinks(this);
         #endregion
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(RankPlacementXmlWriteTranslation);
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = SNAM_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RankPlacementBinaryWriteTranslation);

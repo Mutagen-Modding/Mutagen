@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = MovementType_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = MovementType_Registration.TriggeringRecordType;
         public MovementType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(MovementTypeXmlWriteTranslation);
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MOVT_HEADER;
+        public static readonly RecordType TriggeringRecordType = MOVT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(MovementTypeBinaryWriteTranslation);

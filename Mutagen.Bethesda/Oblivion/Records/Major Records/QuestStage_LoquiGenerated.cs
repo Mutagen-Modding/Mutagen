@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = QuestStage_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = QuestStage_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => QuestStageCommon.Instance.GetLinks(this);
         #endregion
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = INDX_HEADER;
+        public static readonly RecordType TriggeringRecordType = INDX_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(QuestStageBinaryWriteTranslation);

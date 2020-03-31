@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = AnimatedObject_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = AnimatedObject_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => AnimatedObjectCommon.Instance.GetLinks(this);
         public AnimatedObject(FormKey formKey)
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = ANIO_HEADER;
+        public static readonly RecordType TriggeringRecordType = ANIO_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(AnimatedObjectBinaryWriteTranslation);

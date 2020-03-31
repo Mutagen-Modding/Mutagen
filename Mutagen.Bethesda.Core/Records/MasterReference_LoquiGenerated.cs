@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = MasterReference_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = MasterReference_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly Type XmlWriteTranslation = typeof(MasterReferenceXmlWriteTranslation);
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
+        public static readonly RecordType TriggeringRecordType = MAST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(MasterReferenceBinaryWriteTranslation);

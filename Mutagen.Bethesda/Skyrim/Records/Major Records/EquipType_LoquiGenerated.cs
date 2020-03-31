@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = EquipType_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = EquipType_Registration.TriggeringRecordType;
         public EquipType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(EquipTypeXmlWriteTranslation);
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = EQUP_HEADER;
+        public static readonly RecordType TriggeringRecordType = EQUP_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(EquipTypeBinaryWriteTranslation);

@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = IdleAnimation_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => IdleAnimationCommon.Instance.GetLinks(this);
         public IdleAnimation(FormKey formKey)
@@ -1360,7 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = IDLE_HEADER;
+        public static readonly RecordType TriggeringRecordType = IDLE_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);

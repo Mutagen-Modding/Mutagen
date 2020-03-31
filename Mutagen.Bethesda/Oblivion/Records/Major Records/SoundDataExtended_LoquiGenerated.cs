@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = SoundDataExtended_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = SoundDataExtended_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(SoundDataExtendedXmlWriteTranslation);
         public static readonly RecordType SNDX_HEADER = new RecordType("SNDX");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SNDX_HEADER;
+        public static readonly RecordType TriggeringRecordType = SNDX_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SoundDataExtendedBinaryWriteTranslation);

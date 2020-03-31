@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Eye_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Eye_Registration.TriggeringRecordType;
         public Eye(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = EYES_HEADER;
+        public static readonly RecordType TriggeringRecordType = EYES_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(EyeBinaryWriteTranslation);

@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Landscape_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Landscape_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LandscapeCommon.Instance.GetLinks(this);
         public Landscape(FormKey formKey)
@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType BTXT_HEADER = new RecordType("BTXT");
         public static readonly RecordType ATXT_HEADER = new RecordType("ATXT");
         public static readonly RecordType VTEX_HEADER = new RecordType("VTEX");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = LAND_HEADER;
+        public static readonly RecordType TriggeringRecordType = LAND_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeBinaryWriteTranslation);

@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = RaceData_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = RaceData_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -2537,7 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(RaceDataXmlWriteTranslation);
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
+        public static readonly RecordType TriggeringRecordType = DATA_HEADER;
         public const int NumStructFields = 33;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RaceDataBinaryWriteTranslation);

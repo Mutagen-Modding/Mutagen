@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Weapon_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Weapon_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = WEAP_HEADER;
+        public static readonly RecordType TriggeringRecordType = WEAP_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);

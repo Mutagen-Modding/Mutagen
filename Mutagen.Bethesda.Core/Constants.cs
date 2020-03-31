@@ -8,12 +8,12 @@ namespace Mutagen.Bethesda
 {
     public class Constants
     {
-        public static readonly sbyte HEADER_LENGTH = 4;
-        public const string TRIGGERING_RECORDTYPE_MEMBER = "TRIGGERING_RECORD_TYPE";
-        public const string GRUP_RECORDTYPE_MEMBER = "GRUP_RECORD_TYPE";
+        public static readonly sbyte HeaderLength = 4;
+        public const string TriggeringRecordTypeMember = "TriggeringRecordType";
+        public const string GrupRecordTypeMember = "GrupRecordType";
         public const string EdidLinked = "edidLinked";
         public static readonly RecordType EditorID = new RecordType("EDID");
-        public static readonly RecordType GRUP = new RecordType("GRUP");
+        public static readonly RecordType Group = new RecordType("GRUP");
         public const int CompressedFlag = 0x00040000;
     }
 }

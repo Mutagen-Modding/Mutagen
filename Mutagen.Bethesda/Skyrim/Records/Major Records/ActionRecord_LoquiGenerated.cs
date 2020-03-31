@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ActionRecord_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = ActionRecord_Registration.TriggeringRecordType;
         public ActionRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ActionRecordXmlWriteTranslation);
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = AACT_HEADER;
+        public static readonly RecordType TriggeringRecordType = AACT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ActionRecordBinaryWriteTranslation);

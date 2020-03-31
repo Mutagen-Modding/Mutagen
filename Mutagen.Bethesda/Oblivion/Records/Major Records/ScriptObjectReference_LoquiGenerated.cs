@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ScriptObjectReference_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = ScriptObjectReference_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => ScriptObjectReferenceCommon.Instance.GetLinks(this);
         #endregion
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptObjectReferenceXmlWriteTranslation);
         public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SCRO_HEADER;
+        public static readonly RecordType TriggeringRecordType = SCRO_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptObjectReferenceBinaryWriteTranslation);

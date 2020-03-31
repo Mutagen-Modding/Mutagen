@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = AttackData_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = AttackData_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => AttackDataCommon.Instance.GetLinks(this);
         #endregion
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(AttackDataXmlWriteTranslation);
         public static readonly RecordType ATKD_HEADER = new RecordType("ATKD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = ATKD_HEADER;
+        public static readonly RecordType TriggeringRecordType = ATKD_HEADER;
         public const int NumStructFields = 11;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AttackDataBinaryWriteTranslation);

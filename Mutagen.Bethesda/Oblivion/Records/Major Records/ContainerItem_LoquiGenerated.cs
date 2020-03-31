@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ContainerItem_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = ContainerItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => ContainerItemCommon.Instance.GetLinks(this);
         #endregion
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ContainerItemXmlWriteTranslation);
         public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CNTO_HEADER;
+        public static readonly RecordType TriggeringRecordType = CNTO_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerItemBinaryWriteTranslation);

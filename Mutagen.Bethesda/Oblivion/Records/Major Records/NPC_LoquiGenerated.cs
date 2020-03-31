@@ -3615,7 +3615,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Npc_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
         [Flags]
         public enum ACBSDataType
         {
@@ -5135,7 +5135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FGGA_HEADER = new RecordType("FGGA");
         public static readonly RecordType FGTS_HEADER = new RecordType("FGTS");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = NPC__HEADER;
+        public static readonly RecordType TriggeringRecordType = NPC__HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 20;
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);

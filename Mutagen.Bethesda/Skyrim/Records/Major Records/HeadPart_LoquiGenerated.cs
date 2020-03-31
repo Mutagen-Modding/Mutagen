@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = HeadPart_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = HeadPart_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => HeadPartCommon.Instance.GetLinks(this);
         public HeadPart(FormKey formKey)
@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = HDPT_HEADER;
+        public static readonly RecordType TriggeringRecordType = HDPT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(HeadPartBinaryWriteTranslation);

@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = WeatherSound_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = WeatherSound_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => WeatherSoundCommon.Instance.GetLinks(this);
         #endregion
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(WeatherSoundXmlWriteTranslation);
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = SNAM_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherSoundBinaryWriteTranslation);

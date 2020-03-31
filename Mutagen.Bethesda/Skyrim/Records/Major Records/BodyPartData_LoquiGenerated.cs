@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = BodyPartData_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = BodyPartData_Registration.TriggeringRecordType;
         public BodyPartData(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(BodyPartDataXmlWriteTranslation);
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = BPTD_HEADER;
+        public static readonly RecordType TriggeringRecordType = BPTD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartDataBinaryWriteTranslation);

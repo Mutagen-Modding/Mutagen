@@ -2888,7 +2888,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = EffectShader_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -4248,7 +4248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = EFSH_HEADER;
+        public static readonly RecordType TriggeringRecordType = EFSH_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);

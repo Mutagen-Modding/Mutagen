@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = VendorValues_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = VendorValues_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(VendorValuesXmlWriteTranslation);
         public static readonly RecordType VENV_HEADER = new RecordType("VENV");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = VENV_HEADER;
+        public static readonly RecordType TriggeringRecordType = VENV_HEADER;
         public const int NumStructFields = 6;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(VendorValuesBinaryWriteTranslation);

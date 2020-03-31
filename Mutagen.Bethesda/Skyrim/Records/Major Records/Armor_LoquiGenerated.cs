@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Armor_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
         public Armor(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ArmorXmlWriteTranslation);
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = ARMO_HEADER;
+        public static readonly RecordType TriggeringRecordType = ARMO_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);

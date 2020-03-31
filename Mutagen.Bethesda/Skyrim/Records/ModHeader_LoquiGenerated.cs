@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ModHeader_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = ModHeader_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => ModHeaderCommon.Instance.GetLinks(this);
         #endregion
@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
         public static readonly RecordType INTV_HEADER = new RecordType("INTV");
         public static readonly RecordType INCC_HEADER = new RecordType("INCC");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
+        public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 5;
         public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);

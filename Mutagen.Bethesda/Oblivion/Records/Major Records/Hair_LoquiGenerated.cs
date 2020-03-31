@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Hair_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Hair_Registration.TriggeringRecordType;
         public Hair(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = HAIR_HEADER;
+        public static readonly RecordType TriggeringRecordType = HAIR_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(HairBinaryWriteTranslation);

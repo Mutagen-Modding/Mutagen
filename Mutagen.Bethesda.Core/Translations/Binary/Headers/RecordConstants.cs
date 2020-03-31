@@ -26,9 +26,9 @@ namespace Mutagen.Bethesda.Binary
             this.ObjectType = type;
             this.HeaderLength = headerLength;
             this.LengthLength = lengthLength;
-            this.LengthAfterLength = (sbyte)(this.HeaderLength - Constants.HEADER_LENGTH - this.LengthLength);
-            this.LengthAfterType = (sbyte)(this.HeaderLength - Constants.HEADER_LENGTH);
-            this.TypeAndLengthLength = (sbyte)(Constants.HEADER_LENGTH + this.LengthLength);
+            this.LengthAfterLength = (sbyte)(this.HeaderLength - Constants.HeaderLength - this.LengthLength);
+            this.LengthAfterType = (sbyte)(this.HeaderLength - Constants.HeaderLength);
+            this.TypeAndLengthLength = (sbyte)(Constants.HeaderLength + this.LengthLength);
             this.HeaderIncludedInLength = type == ObjectType.Group;
         }
 

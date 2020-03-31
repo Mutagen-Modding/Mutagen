@@ -2038,7 +2038,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = CombatStyle_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = CombatStyle_Registration.TriggeringRecordType;
         [Flags]
         public enum CSTDDataType
         {
@@ -3108,7 +3108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
         public static readonly RecordType CSTD_HEADER = new RecordType("CSTD");
         public static readonly RecordType CSAD_HEADER = new RecordType("CSAD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CSTY_HEADER;
+        public static readonly RecordType TriggeringRecordType = CSTY_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleBinaryWriteTranslation);

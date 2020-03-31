@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Region_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => RegionCommon.Instance.GetLinks(this);
         public Region(FormKey formKey)
@@ -1579,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RPLI_HEADER = new RecordType("RPLI");
         public static readonly RecordType RPLD_HEADER = new RecordType("RPLD");
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = REGN_HEADER;
+        public static readonly RecordType TriggeringRecordType = REGN_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);

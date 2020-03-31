@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = MagicEffect_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -1929,7 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType ESCE_HEADER = new RecordType("ESCE");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MGEF_HEADER;
+        public static readonly RecordType TriggeringRecordType = MGEF_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);

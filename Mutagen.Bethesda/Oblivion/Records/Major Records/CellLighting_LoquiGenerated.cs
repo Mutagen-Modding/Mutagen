@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = CellLighting_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = CellLighting_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(CellLightingXmlWriteTranslation);
         public static readonly RecordType XCLL_HEADER = new RecordType("XCLL");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = XCLL_HEADER;
+        public static readonly RecordType TriggeringRecordType = XCLL_HEADER;
         public const int NumStructFields = 9;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CellLightingBinaryWriteTranslation);

@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Model_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Model_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType MODT_HEADER = new RecordType("MODT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
+        public static readonly RecordType TriggeringRecordType = MODL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);

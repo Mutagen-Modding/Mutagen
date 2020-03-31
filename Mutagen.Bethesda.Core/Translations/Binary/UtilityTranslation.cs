@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda
                 // Copy major meta bytes over
                 slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
                 // Set length bytes
-                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HEADER_LENGTH), uncompressedLength);
+                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
                 // Remove compression flag
                 BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
                 // Copy uncompressed data over
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda
                 // Copy major meta bytes over
                 stream.RemainingSpan.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
                 // Set length bytes
-                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HEADER_LENGTH), uncompressedLength);
+                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
                 // Remove compression flag
                 BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
                 // Copy uncompressed data over
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda
             {
                 var edid = item.Value.EditorID;
                 if (edid == null) continue;
-                if (edid.Length != Constants.HEADER_LENGTH)
+                if (edid.Length != Constants.HeaderLength)
                 {
                     throw new ArgumentException($"EDID link record type {recordType} had an EDID of improper length: {edid}");
                 }
@@ -777,11 +777,11 @@ namespace Mutagen.Bethesda
         {
             if (!HeaderTranslation.TryParse(
                 frame,
-                Mutagen.Bethesda.Constants.GRUP,
+                Mutagen.Bethesda.Constants.Group,
                 out var grupLen,
                 frame.MetaData.GroupConstants.LengthLength))
             {
-                throw new ArgumentException($"Expected header was not read in: {Mutagen.Bethesda.Constants.GRUP}");
+                throw new ArgumentException($"Expected header was not read in: {Mutagen.Bethesda.Constants.Group}");
             }
             var groupLen = checked((int)(grupLen - frame.MetaData.GroupConstants.TypeAndLengthLength));
             frame = frame.ReadAndReframe(groupLen);

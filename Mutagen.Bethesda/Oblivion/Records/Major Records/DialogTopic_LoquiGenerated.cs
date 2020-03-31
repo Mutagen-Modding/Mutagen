@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = DialogTopic_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => DialogTopicCommon.Instance.GetLinks(this);
         public DialogTopic(FormKey formKey)
@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType INFO_HEADER = new RecordType("INFO");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = DIAL_HEADER;
+        public static readonly RecordType TriggeringRecordType = DIAL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);

@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Door_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Door_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => DoorCommon.Instance.GetLinks(this);
         public Door(FormKey formKey)
@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = DOOR_HEADER;
+        public static readonly RecordType TriggeringRecordType = DOOR_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);

@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Model_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Model_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => ModelCommon.Instance.GetLinks(this);
         #endregion
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ModelXmlWriteTranslation);
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType MODS_HEADER = new RecordType("MODS");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
+        public static readonly RecordType TriggeringRecordType = MODL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);

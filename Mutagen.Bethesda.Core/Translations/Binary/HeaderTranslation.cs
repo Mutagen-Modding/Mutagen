@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Binary
                 out contentLength,
                 lengthLength))
             {
-                reader.Position += Constants.HEADER_LENGTH + lengthLength;
+                reader.Position += Constants.HeaderLength + lengthLength;
                 return true;
             }
             return false;
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Binary
             out long contentLength,
             long lengthLength)
         {
-            if (reader.Remaining < Constants.HEADER_LENGTH + lengthLength)
+            if (reader.Remaining < Constants.HeaderLength + lengthLength)
             {
                 contentLength = -1;
                 return false;
@@ -52,13 +52,13 @@ namespace Mutagen.Bethesda.Binary
             switch (lengthLength)
             {
                 case 1:
-                    contentLength = reader.GetUInt8(offset: Constants.HEADER_LENGTH);
+                    contentLength = reader.GetUInt8(offset: Constants.HeaderLength);
                     break;
                 case 2:
-                    contentLength = reader.GetUInt16(offset: Constants.HEADER_LENGTH);
+                    contentLength = reader.GetUInt16(offset: Constants.HeaderLength);
                     break;
                 case 4:
-                    contentLength = reader.GetUInt32(offset: Constants.HEADER_LENGTH);
+                    contentLength = reader.GetUInt32(offset: Constants.HeaderLength);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Binary
             IBinaryReadStream reader,
             RecordType expectedHeader)
         {
-            if (reader.Remaining < Constants.HEADER_LENGTH)
+            if (reader.Remaining < Constants.HeaderLength)
             {
                 return false;
             }
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Binary
             contentLength = GetContentLength(
                 reader: reader,
                 lengthLength: reader.MetaData.SubConstants.LengthLength,
-                offset: Constants.HEADER_LENGTH + offset);
+                offset: Constants.HeaderLength + offset);
             return ret;
         }
 

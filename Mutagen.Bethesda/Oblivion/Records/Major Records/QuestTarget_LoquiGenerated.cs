@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = QuestTarget_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = QuestTarget_Registration.TriggeringRecordType;
         [Flags]
         public enum QSTADataType
         {
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType QSTA_HEADER = new RecordType("QSTA");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = QSTA_HEADER;
+        public static readonly RecordType TriggeringRecordType = QSTA_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(QuestTargetBinaryWriteTranslation);

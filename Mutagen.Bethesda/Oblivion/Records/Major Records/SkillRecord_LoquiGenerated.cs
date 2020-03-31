@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = SkillRecord_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = SkillRecord_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType JNAM_HEADER = new RecordType("JNAM");
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SKIL_HEADER;
+        public static readonly RecordType TriggeringRecordType = SKIL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(SkillRecordBinaryWriteTranslation);

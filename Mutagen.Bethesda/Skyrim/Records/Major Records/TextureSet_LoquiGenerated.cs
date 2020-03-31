@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = TextureSet_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = TextureSet_Registration.TriggeringRecordType;
         public TextureSet(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TX07_HEADER = new RecordType("TX07");
         public static readonly RecordType DODT_HEADER = new RecordType("DODT");
         public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = TXST_HEADER;
+        public static readonly RecordType TriggeringRecordType = TXST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(TextureSetBinaryWriteTranslation);

@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: loc + Constants.HEADER_LENGTH,
+                loc: loc + Constants.HeaderLength,
                 sub: lenData);
         }
         

@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = RegionData_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = RegionData_Registration.TriggeringRecordType;
         [Flags]
         public enum RDATDataType
         {
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(RegionDataXmlWriteTranslation);
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = RDAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RegionDataBinaryWriteTranslation);

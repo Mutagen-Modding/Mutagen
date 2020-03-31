@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = AIPackageTarget_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = AIPackageTarget_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(AIPackageTargetXmlWriteTranslation);
         public static readonly RecordType PTDT_HEADER = new RecordType("PTDT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = PTDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = PTDT_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageTargetBinaryWriteTranslation);

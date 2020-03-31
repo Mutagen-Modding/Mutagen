@@ -1991,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Race_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -2948,7 +2948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FGGA_HEADER = new RecordType("FGGA");
         public static readonly RecordType FGTS_HEADER = new RecordType("FGTS");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = RACE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RACE_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 16;
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);

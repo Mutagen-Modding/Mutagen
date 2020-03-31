@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = PlacedCreature_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = PlacedCreature_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType XRGD_HEADER = new RecordType("XRGD");
         public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = ACRE_HEADER;
+        public static readonly RecordType TriggeringRecordType = ACRE_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedCreatureBinaryWriteTranslation);

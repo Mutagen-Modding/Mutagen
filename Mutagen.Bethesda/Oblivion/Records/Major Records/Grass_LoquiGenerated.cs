@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Grass_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRAS_HEADER;
+        public static readonly RecordType TriggeringRecordType = GRAS_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(GrassBinaryWriteTranslation);

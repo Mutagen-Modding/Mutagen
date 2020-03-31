@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = BodyTemplate_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = BodyTemplate_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(BodyTemplateXmlWriteTranslation);
         public static readonly RecordType BODT_HEADER = new RecordType("BODT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = BODT_HEADER;
+        public static readonly RecordType TriggeringRecordType = BODT_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(BodyTemplateBinaryWriteTranslation);

@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ConditionGlobal_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = ConditionGlobal_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => ConditionGlobalCommon.Instance.GetLinks(this);
         #endregion
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ConditionGlobalXmlWriteTranslation);
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CTDA_HEADER;
+        public static readonly RecordType TriggeringRecordType = CTDA_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ConditionGlobalBinaryWriteTranslation);

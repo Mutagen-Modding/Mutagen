@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = MaterialType_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
         public MaterialType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(MaterialTypeXmlWriteTranslation);
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MATT_HEADER;
+        public static readonly RecordType TriggeringRecordType = MATT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(MaterialTypeBinaryWriteTranslation);

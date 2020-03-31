@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Subspace_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Subspace_Registration.TriggeringRecordType;
         [Flags]
         public enum DNAMDataType
         {
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(SubspaceXmlWriteTranslation);
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SBSP_HEADER;
+        public static readonly RecordType TriggeringRecordType = SBSP_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SubspaceBinaryWriteTranslation);

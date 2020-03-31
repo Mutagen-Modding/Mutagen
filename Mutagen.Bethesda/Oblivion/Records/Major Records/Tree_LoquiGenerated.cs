@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Tree_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Tree_Registration.TriggeringRecordType;
         [Flags]
         public enum CNAMDataType
         {
@@ -1875,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = TREE_HEADER;
+        public static readonly RecordType TriggeringRecordType = TREE_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);

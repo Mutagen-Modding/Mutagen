@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = EnableParent_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = EnableParent_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => EnableParentCommon.Instance.GetLinks(this);
         #endregion
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(EnableParentXmlWriteTranslation);
         public static readonly RecordType XESP_HEADER = new RecordType("XESP");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = XESP_HEADER;
+        public static readonly RecordType TriggeringRecordType = XESP_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(EnableParentBinaryWriteTranslation);

@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = LoadScreen_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LoadScreenCommon.Instance.GetLinks(this);
         public LoadScreen(FormKey formKey)
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType LNAM_HEADER = new RecordType("LNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = LSCR_HEADER;
+        public static readonly RecordType TriggeringRecordType = LSCR_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenBinaryWriteTranslation);

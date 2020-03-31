@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataSounds_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = RegionDataSounds_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => RegionDataSoundsCommon.Instance.GetLinks(this);
         #endregion
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
         public static readonly RecordType RDMD_HEADER = new RecordType("RDMD");
         public static readonly RecordType RDSD_HEADER = new RecordType("RDSD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = RDAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(RegionDataSoundsBinaryWriteTranslation);

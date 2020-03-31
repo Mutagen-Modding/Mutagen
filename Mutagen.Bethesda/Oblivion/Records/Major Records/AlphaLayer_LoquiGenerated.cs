@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = AlphaLayer_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = AlphaLayer_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(AlphaLayerXmlWriteTranslation);
         public static readonly RecordType ATXT_HEADER = new RecordType("ATXT");
         public static readonly RecordType VTXT_HEADER = new RecordType("VTXT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = ATXT_HEADER;
+        public static readonly RecordType TriggeringRecordType = ATXT_HEADER;
         public static RecordTypeConverter BaseConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("BTXT"),

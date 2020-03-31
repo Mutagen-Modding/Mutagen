@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ColorRecord_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = ColorRecord_Registration.TriggeringRecordType;
         public ColorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ColorRecordXmlWriteTranslation);
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CLFM_HEADER;
+        public static readonly RecordType TriggeringRecordType = CLFM_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ColorRecordBinaryWriteTranslation);

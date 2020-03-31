@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = DistantLODData_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = DistantLODData_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(DistantLODDataXmlWriteTranslation);
         public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = XLOD_HEADER;
+        public static readonly RecordType TriggeringRecordType = XLOD_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(DistantLODDataBinaryWriteTranslation);

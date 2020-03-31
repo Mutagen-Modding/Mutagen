@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Keyword_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Keyword_Registration.TriggeringRecordType;
         public Keyword(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(KeywordXmlWriteTranslation);
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = KYWD_HEADER;
+        public static readonly RecordType TriggeringRecordType = KYWD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(KeywordBinaryWriteTranslation);

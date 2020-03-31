@@ -1707,7 +1707,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Faction_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
         [Flags]
         public enum CRVADataType
         {
@@ -2629,7 +2629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType PLVD_HEADER = new RecordType("PLVD");
         public static readonly RecordType CITC_HEADER = new RecordType("CITC");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = FACT_HEADER;
+        public static readonly RecordType TriggeringRecordType = FACT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 15;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);

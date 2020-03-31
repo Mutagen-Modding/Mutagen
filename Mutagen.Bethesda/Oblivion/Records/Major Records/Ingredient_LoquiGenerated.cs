@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Ingredient_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Ingredient_Registration.TriggeringRecordType;
         [Flags]
         public enum ENITDataType
         {
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = INGR_HEADER;
+        public static readonly RecordType TriggeringRecordType = INGR_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(IngredientBinaryWriteTranslation);

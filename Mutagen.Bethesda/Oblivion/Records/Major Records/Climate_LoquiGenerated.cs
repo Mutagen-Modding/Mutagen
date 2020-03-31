@@ -1012,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Climate_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Climate_Registration.TriggeringRecordType;
         [Flags]
         public enum TNAMDataType
         {
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CLMT_HEADER;
+        public static readonly RecordType TriggeringRecordType = CLMT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(ClimateBinaryWriteTranslation);

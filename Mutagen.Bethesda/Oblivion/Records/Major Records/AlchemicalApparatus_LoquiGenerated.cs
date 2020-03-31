@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = AlchemicalApparatus_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = AlchemicalApparatus_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = APPA_HEADER;
+        public static readonly RecordType TriggeringRecordType = APPA_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(AlchemicalApparatusBinaryWriteTranslation);

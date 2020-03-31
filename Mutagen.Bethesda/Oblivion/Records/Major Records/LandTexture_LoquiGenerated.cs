@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = LandTexture_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = LandTexture_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LandTextureCommon.Instance.GetLinks(this);
         public LandTexture(FormKey formKey)
@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = LTEX_HEADER;
+        public static readonly RecordType TriggeringRecordType = LTEX_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(LandTextureBinaryWriteTranslation);

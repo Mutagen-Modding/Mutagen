@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ScriptVariableReference_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = ScriptVariableReference_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptVariableReferenceXmlWriteTranslation);
         public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SCRV_HEADER;
+        public static readonly RecordType TriggeringRecordType = SCRV_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptVariableReferenceBinaryWriteTranslation);

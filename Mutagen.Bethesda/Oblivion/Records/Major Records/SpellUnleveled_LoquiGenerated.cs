@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = SpellUnleveled_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = SpellUnleveled_Registration.TriggeringRecordType;
         [Flags]
         public enum SPITDataType
         {
@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType SPIT_HEADER = new RecordType("SPIT");
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SPEL_HEADER;
+        public static readonly RecordType TriggeringRecordType = SPEL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(SpellUnleveledBinaryWriteTranslation);

@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = GlobalShort_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = GlobalShort_Registration.TriggeringRecordType;
         public GlobalShort(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(GlobalShortXmlWriteTranslation);
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
+        public static readonly RecordType TriggeringRecordType = GLOB_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(GlobalShortBinaryWriteTranslation);

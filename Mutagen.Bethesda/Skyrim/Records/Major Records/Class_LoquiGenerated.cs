@@ -1710,7 +1710,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Class_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Class_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -2680,7 +2680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CLAS_HEADER;
+        public static readonly RecordType TriggeringRecordType = CLAS_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(ClassBinaryWriteTranslation);

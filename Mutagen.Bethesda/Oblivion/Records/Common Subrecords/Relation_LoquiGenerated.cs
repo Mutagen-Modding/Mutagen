@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Relation_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Relation_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => RelationCommon.Instance.GetLinks(this);
         #endregion
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(RelationXmlWriteTranslation);
         public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = XNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = XNAM_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RelationBinaryWriteTranslation);

@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = DialogResponse_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = DialogResponse_Registration.TriggeringRecordType;
         [Flags]
         public enum TRDTDataType
         {
@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TRDT_HEADER = new RecordType("TRDT");
         public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = TRDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = TRDT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseBinaryWriteTranslation);

@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Road_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Road_Registration.TriggeringRecordType;
         public Road(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(RoadXmlWriteTranslation);
         public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
         public static readonly RecordType PGRP_HEADER = new RecordType("PGRP");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = ROAD_HEADER;
+        public static readonly RecordType TriggeringRecordType = ROAD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(RoadBinaryWriteTranslation);

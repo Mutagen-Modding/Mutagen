@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)WorldspaceSubBlock.GRUP_RECORD_TYPE;
+        public static readonly RecordType GrupRecordType = (RecordType)WorldspaceSubBlock.GrupRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => WorldspaceBlockCommon.Instance.GetLinks(this);
         [DebuggerStepThrough]
@@ -1328,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceBlockXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
+        public static readonly RecordType TriggeringRecordType = GRUP_HEADER;
         public const int NumStructFields = 4;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBlockBinaryWriteTranslation);

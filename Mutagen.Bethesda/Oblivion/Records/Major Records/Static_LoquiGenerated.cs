@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Static_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GrupRecordType = Static_Registration.TriggeringRecordType;
         public Static(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(StaticXmlWriteTranslation);
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = STAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = STAT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
