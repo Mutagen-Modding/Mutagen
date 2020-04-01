@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (modKeyExclusionHint != null)
             {
-                loadOrderListing.Remove(modKeyExclusionHint);
+                loadOrderListing.Remove(modKeyExclusionHint.Value);
             }
             var loadOrder = new LoadOrder<OblivionMod>();
             await loadOrder.Import(
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 modKey = new ModKey("Flattened", master: false);
             }
-            OblivionMod ret = new OblivionMod(modKey);
+            OblivionMod ret = new OblivionMod(modKey.Value);
             foreach (var mod in loadOrder)
             {
                 if (mod.Mod == null) continue;

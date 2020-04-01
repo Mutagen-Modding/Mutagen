@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda
     /// 
     /// General practice is to use ModKey.TryFactory on a mod's file name when at all possible
     /// </summary>
-    public class ModKey : IEquatable<ModKey>
+    public struct ModKey : IEquatable<ModKey>
     {
         /// <summary>
         /// A static readonly singleton representing a null ModKey
@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda
         /// </summary>
         public string FileName => this.ToString();
         
-        private static Dictionary<string, ModKey[]> cache_ = new Dictionary<string, ModKey[]>(StringComparer.OrdinalIgnoreCase);
         private readonly int _hash;
         
         /// <summary>
@@ -54,7 +53,7 @@ namespace Mutagen.Bethesda
             string name,
             bool master)
         {
-            this.Name = name;
+            this.Name = string.Intern(name);
             this.Master = master;
             // Cache the hash on construction, as ModKeys are typically created rarely, but hashed often.
             this._hash = (Name?.ToUpper().GetHashCode() ?? 0)
@@ -100,7 +99,7 @@ namespace Mutagen.Bethesda
         /// <returns>String representation of ModKey</returns>
         public override string ToString()
         {
-            return string.IsNullOrWhiteSpace(Name) ? "Null" : $"{Name}.{(this.Master ? "esm" : "esp")}";
+            return string.IsNullOrWhiteSpace(Name) ? "Null" : $"{Name}.{(this.Master ? Constants.Esm : Constants.Esp)}";
         }
 
         /// <summary>
@@ -126,11 +125,11 @@ namespace Mutagen.Bethesda
             }
             var endSpan = str.Slice(index + 1);
             bool master;
-            if (endSpan.Equals("esm".AsSpan(), StringComparison.OrdinalIgnoreCase))
+            if (endSpan.Equals(Constants.Esm.AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
                 master = true;
             }
-            else if (endSpan.Equals("esp".AsSpan(), StringComparison.OrdinalIgnoreCase))
+            else if (endSpan.Equals(Constants.Esp.AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
                 master = false;
             }
@@ -140,29 +139,9 @@ namespace Mutagen.Bethesda
                 return false;
             }
             var modString = str.Slice(0, index).ToString();
-            var keyIndex = master ? 0 : 1;
-            ModKey[] keyItem;
-            lock (cache_)
-            {
-                if (cache_.TryGetValue(modString, out keyItem))
-                {
-                    modKey = keyItem[keyIndex];
-                    if (modKey != Null)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    keyItem = new ModKey[2];
-                    keyItem[master ? 1 : 0] = Null;
-                    cache_[modString] = keyItem;
-                }
-            }
             modKey = new ModKey(
                 name: modString,
                 master: master);
-            keyItem[keyIndex] = modKey;
             return true;
         }
 
