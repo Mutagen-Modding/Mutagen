@@ -2520,7 +2520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Textures = TexturesBinaryOverlay.TexturesFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Textures);
                 }
                 case 0x54444F44: // DODT

@@ -2966,7 +2966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Layers = this.ParseRepeatedTypelessSubrecord<BaseLayerBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: BaseLayer_Registration.TriggeringRecordTypes,
                         factory: (s, r, p, recConv) =>
                         {

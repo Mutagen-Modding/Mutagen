@@ -196,14 +196,16 @@ namespace Mutagen.Bethesda.Binary
             long finalPos,
             RecordType trigger,
             RecordHeaderConstants constants,
-            bool skipHeader)
+            bool skipHeader,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
             while (!stream.Complete && stream.Position < finalPos)
             {
                 var varMeta = constants.GetVariableMeta(stream);
-                if (varMeta.RecordType != trigger) break;
+                var recType = recordTypeConverter.ConvertToStandard(varMeta.RecordType);
+                if (recType != trigger) break;
                 if (skipHeader)
                 {
                     stream.Position += varMeta.HeaderLength;
@@ -224,14 +226,16 @@ namespace Mutagen.Bethesda.Binary
             long finalPos,
             ICollection<RecordType> triggers,
             RecordHeaderConstants constants,
-            bool skipHeader)
+            bool skipHeader,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
             while (!stream.Complete && stream.Position < finalPos)
             {
                 var varMeta = constants.GetVariableMeta(stream);
-                if (!triggers.Contains(varMeta.RecordType)) break;
+                var recType = recordTypeConverter.ConvertToStandard(varMeta.RecordType);
+                if (!triggers.Contains(recType)) break;
                 if (skipHeader)
                 {
                     stream.Position += varMeta.HeaderLength;

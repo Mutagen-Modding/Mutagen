@@ -3599,7 +3599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: ModHeader_Registration.MAST_HEADER,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);

@@ -2430,7 +2430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Locations = BinaryOverlaySetList<LoadScreenLocationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => LoadScreenLocationBinaryOverlay.LoadScreenLocationFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

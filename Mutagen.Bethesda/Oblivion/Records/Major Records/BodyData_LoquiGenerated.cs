@@ -2189,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
                 }
                 case 0x58444E49: // INDX
@@ -2198,7 +2198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
                     this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: BodyPart_Registration.TriggeringRecordTypes,
                         factory:  BodyPartBinaryOverlay.BodyPartFactory);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);

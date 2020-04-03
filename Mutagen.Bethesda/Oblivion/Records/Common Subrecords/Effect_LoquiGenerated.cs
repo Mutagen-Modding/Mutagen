@@ -2705,7 +2705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.ScriptEffect = ScriptEffectBinaryOverlay.ScriptEffectFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
                 }
                 default:

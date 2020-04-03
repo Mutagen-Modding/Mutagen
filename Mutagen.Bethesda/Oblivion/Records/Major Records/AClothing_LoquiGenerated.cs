@@ -3662,7 +3662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.MaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleBipedModel);
                 }
                 case 0x32444F4D: // MOD2

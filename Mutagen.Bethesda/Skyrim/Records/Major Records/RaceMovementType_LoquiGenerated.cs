@@ -2035,7 +2035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Overrides = SpeedOverridesBinaryOverlay.SpeedOverridesFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.Overrides);
                 }
                 default:

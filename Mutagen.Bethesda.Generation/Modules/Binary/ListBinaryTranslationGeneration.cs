@@ -632,6 +632,7 @@ namespace Mutagen.Bethesda.Generation
                                     subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: true");
+                                    subArgs.Add($"recordTypeConverter: {converterAccessor}");
                                 }
                             });
                         }

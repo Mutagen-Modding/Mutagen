@@ -10324,7 +10324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Model);
                 }
                 case 0x53424341: // ACBS
@@ -10338,7 +10338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Factions = BinaryOverlaySetList<RankPlacementBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -10369,7 +10369,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Spells);
                 }
                 case 0x49524353: // SCRI
@@ -10382,7 +10383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Items = BinaryOverlaySetList<ItemEntryBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ItemEntryBinaryOverlay.ItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -10409,7 +10410,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIPackages);
                 }
                 case 0x5A46464B: // KFFZ

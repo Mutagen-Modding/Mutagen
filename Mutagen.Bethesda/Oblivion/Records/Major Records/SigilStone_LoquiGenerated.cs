@@ -3219,7 +3219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Model);
                 }
                 case 0x4E4F4349: // ICON
@@ -3236,7 +3236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: SigilStone_Registration.EFID_HEADER,
                         factory:  EffectBinaryOverlay.EffectFactory);
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Effects);

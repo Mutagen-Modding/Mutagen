@@ -3994,14 +3994,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
                 case 0x54445254: // TRDT
                 {
                     this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: DialogItem_Registration.TRDT_HEADER,
                         factory:  DialogResponseBinaryOverlay.DialogResponseFactory);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
@@ -4012,7 +4013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -4033,7 +4034,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 }
                 case 0x464C4354: // TCLF
@@ -4047,7 +4049,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 }
                 case 0x52484353: // SCHR
@@ -4056,7 +4059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this._Script = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
                 }
                 default:

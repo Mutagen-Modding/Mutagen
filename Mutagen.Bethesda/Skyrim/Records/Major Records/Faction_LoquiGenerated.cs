@@ -5436,7 +5436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Relations = BinaryOverlaySetList<RelationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -5502,7 +5502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: Rank_Registration.TriggeringRecordTypes,
                         factory:  RankBinaryOverlay.RankFactory);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);

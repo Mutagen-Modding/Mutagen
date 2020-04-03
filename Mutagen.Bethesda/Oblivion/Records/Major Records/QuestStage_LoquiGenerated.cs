@@ -2154,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.LogEntries = this.ParseRepeatedTypelessSubrecord<LogEntryBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: LogEntry_Registration.TriggeringRecordTypes,
                         factory:  LogEntryBinaryOverlay.LogEntryFactory);
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);

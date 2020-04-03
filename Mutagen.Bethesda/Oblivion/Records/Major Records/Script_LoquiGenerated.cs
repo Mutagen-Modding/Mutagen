@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this._Fields = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Script_FieldIndex.Fields);
                 }
                 default:

@@ -2853,7 +2853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: Enchantment_Registration.EFID_HEADER,
                         factory:  EffectBinaryOverlay.EffectFactory);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);

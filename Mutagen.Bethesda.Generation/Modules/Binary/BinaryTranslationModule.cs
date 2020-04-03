@@ -2039,7 +2039,7 @@ namespace Mutagen.Bethesda.Generation
                                             fieldData: fieldData,
                                             toDo: async () =>
                                             {
-                                                string recConverter = "null";
+                                                string recConverter = "recordTypeConverter";
                                                 if (fieldData?.RecordTypeConverter != null
                                                     && fieldData.RecordTypeConverter.FromConversions.Count > 0)
                                                 {

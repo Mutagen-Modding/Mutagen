@@ -3141,7 +3141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Model);
                 }
                 case 0x49524353: // SCRI
@@ -3154,7 +3154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Items = BinaryOverlaySetList<ContainerItemBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerItemBinaryOverlay.ContainerItemFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

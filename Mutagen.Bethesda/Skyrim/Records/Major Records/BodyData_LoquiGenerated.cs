@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Part = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Part);
                 }
                 default:

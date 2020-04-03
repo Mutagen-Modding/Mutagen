@@ -2524,7 +2524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Items = BinaryOverlaySetList<WorldspaceSubBlockBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => WorldspaceSubBlockBinaryOverlay.WorldspaceSubBlockFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

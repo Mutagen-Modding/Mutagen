@@ -2783,7 +2783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: ScriptFields_Registration.SLSD_HEADER,
                         factory:  LocalVariableBinaryOverlay.LocalVariableFactory);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
@@ -2793,7 +2793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.References = this.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: ScriptReference_Registration.TriggeringRecordTypes,
                         factory: (s, r, p, recConv) =>
                         {

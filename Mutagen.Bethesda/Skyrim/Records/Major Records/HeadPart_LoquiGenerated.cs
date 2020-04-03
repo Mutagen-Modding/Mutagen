@@ -3198,7 +3198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Model);
                 }
                 case 0x41544144: // DATA
@@ -3222,7 +3222,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
                 }
                 case 0x304D414E: // NAM0
@@ -3230,7 +3231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.Parts = this.ParseRepeatedTypelessSubrecord<PartBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: Part_Registration.TriggeringRecordTypes,
                         factory:  PartBinaryOverlay.PartFactory);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);

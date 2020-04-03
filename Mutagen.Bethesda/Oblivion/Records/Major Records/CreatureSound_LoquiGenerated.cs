@@ -2170,7 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<SoundItemBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: SoundItem_Registration.TriggeringRecordTypes,
                         factory:  SoundItemBinaryOverlay.SoundItemFactory);
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);

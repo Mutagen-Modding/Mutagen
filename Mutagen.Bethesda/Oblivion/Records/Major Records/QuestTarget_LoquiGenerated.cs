@@ -2364,7 +2364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

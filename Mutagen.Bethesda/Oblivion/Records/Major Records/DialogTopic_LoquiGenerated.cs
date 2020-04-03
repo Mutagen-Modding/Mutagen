@@ -2913,7 +2913,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
                 }
                 case 0x4C4C5546: // FULL

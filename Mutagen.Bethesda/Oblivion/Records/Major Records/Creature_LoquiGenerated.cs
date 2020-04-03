@@ -8846,7 +8846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Model);
                 }
                 case 0x4F544E43: // CNTO
@@ -8854,7 +8854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Items = BinaryOverlaySetList<ItemEntryBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ItemEntryBinaryOverlay.ItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -8875,7 +8875,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
                 }
                 case 0x5A46494E: // NIFZ
@@ -8905,7 +8906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Factions = BinaryOverlaySetList<RankPlacementBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -8942,7 +8943,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
                 }
                 case 0x5A46464B: // KFFZ
@@ -9008,7 +9010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<CreatureSoundBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: CreatureSound_Registration.TriggeringRecordTypes,
                         factory:  CreatureSoundBinaryOverlay.CreatureSoundFactory);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);

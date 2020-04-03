@@ -3455,7 +3455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -3469,7 +3469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: Quest_Registration.INDX_HEADER,
                         factory:  QuestStageBinaryOverlay.QuestStageFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
@@ -3478,7 +3478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Targets = this.ParseRepeatedTypelessSubrecord<QuestTargetBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: Quest_Registration.QSTA_HEADER,
                         factory:  QuestTargetBinaryOverlay.QuestTargetFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);

@@ -8671,7 +8671,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypeNames);
                 }
                 case 0x4B435456: // VTCK
@@ -8714,7 +8715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: Attack_Registration.TriggeringRecordTypes,
                         factory:  AttackBinaryOverlay.AttackFactory);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Attacks);
@@ -8806,7 +8807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.MovementTypes = this.ParseRepeatedTypelessSubrecord<RaceMovementTypeBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: RaceMovementType_Registration.TriggeringRecordTypes,
                         factory:  RaceMovementTypeBinaryOverlay.RaceMovementTypeFactory);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypes);
@@ -8827,7 +8828,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentSlots);
                 }
                 case 0x53454E55: // UNES

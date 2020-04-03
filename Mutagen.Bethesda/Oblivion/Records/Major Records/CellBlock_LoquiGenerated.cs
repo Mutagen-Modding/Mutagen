@@ -2436,7 +2436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.SubBlocks = BinaryOverlaySetList<CellSubBlockBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => CellSubBlockBinaryOverlay.CellSubBlockFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

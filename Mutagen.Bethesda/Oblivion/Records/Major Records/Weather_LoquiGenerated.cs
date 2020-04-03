@@ -6422,7 +6422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
                 }
                 case 0x304D414E: // NAM0
@@ -6460,7 +6460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Sounds = BinaryOverlaySetList<WeatherSoundBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => WeatherSoundBinaryOverlay.WeatherSoundFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

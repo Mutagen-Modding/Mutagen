@@ -3321,7 +3321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Areas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: RegionArea_Registration.TriggeringRecordTypes,
                         factory:  RegionAreaBinaryOverlay.RegionAreaFactory);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);

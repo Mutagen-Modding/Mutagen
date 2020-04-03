@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<IASpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => LeveledEntryBinaryOverlay<IASpellGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,

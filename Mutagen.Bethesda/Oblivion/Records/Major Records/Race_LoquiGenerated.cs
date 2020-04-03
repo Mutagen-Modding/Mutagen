@@ -6409,7 +6409,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
                 }
                 case 0x4D414E58: // XNAM
@@ -6417,7 +6418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Relations = BinaryOverlaySetList<RaceRelationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => RaceRelationBinaryOverlay.RaceRelationFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -6468,7 +6469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
                     this.FaceData = this.ParseRepeatedTypelessSubrecord<FacePartBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: FacePart_Registration.TriggeringRecordTypes,
                         factory:  FacePartBinaryOverlay.FacePartFactory);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
@@ -6514,7 +6515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.FaceGenData = FaceGenDataBinaryOverlay.FaceGenDataFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
                 }
                 case 0x4D414E53: // SNAM

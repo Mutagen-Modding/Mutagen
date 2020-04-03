@@ -2543,7 +2543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return TryGet<int?>.Failure;
                     this.Presets = this.ParseRepeatedTypelessSubrecord<TintPresetBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: TintPreset_Registration.TriggeringRecordTypes,
                         factory:  TintPresetBinaryOverlay.TintPresetFactory);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Presets);

@@ -5227,7 +5227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.MapMarker = MapMarkerBinaryOverlay.MapMarkerFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
                 }
                 case 0x4D414E4F: // ONAM

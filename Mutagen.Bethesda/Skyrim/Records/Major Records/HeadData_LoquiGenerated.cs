@@ -3811,7 +3811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.HeadParts) return TryGet<int?>.Failure;
                     this.HeadParts = this.ParseRepeatedTypelessSubrecord<HeadPartReferenceBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: HeadPartReference_Registration.TriggeringRecordTypes,
                         factory:  HeadPartReferenceBinaryOverlay.HeadPartReferenceFactory);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.HeadParts);
@@ -3822,7 +3822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.AvailableMorphs = AvailableMorphsBinaryOverlay.AvailableMorphsFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableMorphs);
                 }
                 case 0x4D525052: // RPRM
@@ -3837,7 +3837,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
                 }
                 case 0x4D434841: // AHCM
@@ -3852,7 +3853,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableHairColors);
                 }
                 case 0x4D535446: // FTSM
@@ -3867,7 +3869,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true));
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.FaceDetails);
                 }
                 case 0x4D544644: // DFTM
@@ -3887,7 +3890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.TintMasks) return TryGet<int?>.Failure;
                     this.TintMasks = this.ParseRepeatedTypelessSubrecord<TintAssetsBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: null,
+                        recordTypeConverter: recordTypeConverter,
                         trigger: TintAssets_Registration.TriggeringRecordTypes,
                         factory:  TintAssetsBinaryOverlay.TintAssetsFactory);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.TintMasks);
@@ -3898,7 +3901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: null);
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.Model);
                 }
                 case 0x384D414E: // NAM8
