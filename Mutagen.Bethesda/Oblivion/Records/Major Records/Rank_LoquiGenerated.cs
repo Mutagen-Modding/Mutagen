@@ -2087,8 +2087,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankNumberLocation.Value, _package.Meta)) : default(Int32?);
         #endregion
         #region Name
-        private GenderedItemBinaryOverlay<String>? _NameOverlay;
-        public IGenderedItemGetter<String>? Name => _NameOverlay;
+        private IGenderedItemGetter<String?>? _NameOverlay;
+        public IGenderedItemGetter<String?>? Name => _NameOverlay;
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
@@ -2151,7 +2151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return TryGet<int?>.Failure;
-                    _NameOverlay = GenderedItemBinaryOverlay<String>.Factory(
+                    _NameOverlay = GenderedItemBinaryOverlay.Factory<String>(
                         package: _package,
                         male: Rank_Registration.MNAM_HEADER,
                         female: Rank_Registration.FNAM_HEADER,

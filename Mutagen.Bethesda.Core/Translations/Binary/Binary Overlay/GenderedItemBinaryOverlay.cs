@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Binary
         public T Male => _male.HasValue ? _creator(_data.Slice(_male.Value), _package) : default!;
         public T Female => _female.HasValue ? _creator(_data.Slice(_female.Value), _package) : default!;
 
-        private GenderedItemBinaryOverlay(
+        public GenderedItemBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package,
             int? male,
@@ -30,34 +30,97 @@ namespace Mutagen.Bethesda.Binary
             this._creator = creator;
         }
 
-        public static GenderedItemBinaryOverlay<T> FactorySkipMarkers(
-            ReadOnlyMemorySlice<byte> bytes,
+        public IEnumerator<T> GetEnumerator()
+        {
+            yield return Male;
+            yield return Female;
+        }
+
+        public void ToString(FileGeneration fg, string? name) => GenderedItem.ToString(this, fg, name);
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    }
+
+    public static class GenderedItemBinaryOverlay
+    {
+        public static GenderedItemBinaryOverlay<T> FactorySkipMarkers<T>(
+            BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
+            int offset,
             Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator)
         {
-            var find = UtilityTranslation.FindFirstSubrecords(bytes, package.Meta, male, female);
+            var initialPos = stream.Position;
             int? maleLoc = null, femaleLoc = null;
-            if (find[0] != null)
+            for (int i = 0; i < 2; i++)
             {
-                var subMeta = package.Meta.Subrecord(bytes);
-                maleLoc = find[0] + subMeta.TotalLength;
+                var recType = HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out var markerLen);
+                stream.Position += markerLen;
+                if (recType == male)
+                {
+                    maleLoc = (ushort)(stream.Position - offset);
+                }
+                else if (recType == female)
+                {
+                    femaleLoc = (ushort)(stream.Position - offset);
+                }
+                else
+                {
+                    break;
+                }
+                HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out var recLen);
+                stream.Position += recLen;
             }
-            if (find[1] != null)
+            var readLen = stream.Position - initialPos;
+            if (readLen == 0)
             {
-                var subMeta = package.Meta.Subrecord(bytes);
-                femaleLoc = find[1] + subMeta.TotalLength;
+                throw new ArgumentException("Expected things to be read.");
             }
             return new GenderedItemBinaryOverlay<T>(
-                bytes,
+                stream.ReadBytes(readLen),
                 package,
                 maleLoc,
                 femaleLoc,
                 creator);
         }
 
-        public static GenderedItemBinaryOverlay<T> Factory(
+        public static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordType male,
+            RecordType female,
+            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, T> creator)
+            where T : class
+        {
+            var initialPos = stream.Position;
+            T? maleObj = null, femaleObj = null;
+            for (int i = 0; i < 2; i++)
+            {
+                var recType = HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out var markerLen);
+                stream.Position += markerLen;
+                if (recType == male)
+                {
+                    maleObj = creator(stream, package);
+                }
+                else if (recType == female)
+                {
+                    femaleObj = creator(stream, package);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            var readLen = stream.Position - initialPos;
+            if (readLen == 0)
+            {
+                throw new ArgumentException("Expected things to be read.");
+            }
+            return new GenderedItem<T?>(maleObj, femaleObj);
+        }
+
+        public static GenderedItemBinaryOverlay<T> Factory<T>(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
@@ -83,15 +146,5 @@ namespace Mutagen.Bethesda.Binary
             stream.Position += lenParsed;
             return ret;
         }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            yield return Male;
-            yield return Female;
-        }
-
-        public void ToString(FileGeneration fg, string? name) => GenderedItem.ToString(this, fg, name);
-
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }

@@ -6325,8 +6325,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlyList<IFacePartGetter>? FaceData { get; private set; }
         #region BodyData
-        private GenderedItemBinaryOverlay<IBodyDataGetter>? _BodyDataOverlay;
-        public IGenderedItemGetter<IBodyDataGetter>? BodyData => _BodyDataOverlay;
+        private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
+        public IGenderedItemGetter<IBodyDataGetter?>? BodyData => _BodyDataOverlay;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; private set; }
@@ -6476,12 +6476,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x314D414E: // NAM1
                 {
-                    _BodyDataOverlay = GenderedItemBinaryOverlay<IBodyDataGetter>.FactorySkipMarkers(
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
+                    _BodyDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IBodyDataGetter>(
                         package: _package,
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
-                        bytes: _data.Slice(stream.Position - offset),
-                        creator: (m, p) => BodyDataBinaryOverlay.BodyDataFactory(new BinaryMemoryReadStream(m), p));
+                        stream: stream,
+                        creator: (s, p) => BodyDataBinaryOverlay.BodyDataFactory(s, p));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
                 case 0x4D414E48: // HNAM

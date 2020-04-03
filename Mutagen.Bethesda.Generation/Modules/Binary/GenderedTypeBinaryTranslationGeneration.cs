@@ -319,9 +319,9 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (typeGen.HasBeenSet)
                 {
-                    fg.AppendLine($"private GenderedItemBinaryOverlay<{gendered.SubTypeGeneration.TypeName(getter: true)}>? _{typeGen.Name}Overlay;");
+                    fg.AppendLine($"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)}>? _{typeGen.Name}Overlay;");
                 }
-                fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}>? {typeGen.Name} => _{typeGen.Name}Overlay;");
+                fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)}>? {typeGen.Name} => _{typeGen.Name}Overlay;");
             }
         }
 
@@ -335,21 +335,25 @@ namespace Mutagen.Bethesda.Generation
         {
             var gendered = typeGen as GenderedType;
             bool isLoqui = gendered.SubTypeGeneration is LoquiType;
+            if (typeGen.GetFieldData().MarkerType.HasValue)
+            {
+                fg.AppendLine($"stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker");
+            }
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     if (gendered.ItemHasBeenSet)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay<{gendered.SubTypeGeneration.TypeName(getter: true)}>.{(isLoqui ? "FactorySkipMarkers" : "Factory")}"))
+                            $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{(isLoqui ? "FactorySkipMarkersPreRead" : "Factory")}<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
                         {
                             args.Add("package: _package");
                             args.Add($"male: {objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)}");
                             args.Add($"female: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
                             if (gendered.SubTypeGeneration is LoquiType loqui)
                             {
-                                args.Add("bytes: _data.Slice(stream.Position - offset)");
-                                args.Add($"creator: (m, p) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(m), p)");
+                                args.AddPassArg("stream");
+                                args.Add($"creator: (s, p) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(s, p)");
                             }
                             else
                             {

@@ -8385,8 +8385,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region SkeletalModel
-        private GenderedItemBinaryOverlay<ISimpleModelGetter>? _SkeletalModelOverlay;
-        public IGenderedItemGetter<ISimpleModelGetter>? SkeletalModel => _SkeletalModelOverlay;
+        private IGenderedItemGetter<ISimpleModelGetter?>? _SkeletalModelOverlay;
+        public IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel => _SkeletalModelOverlay;
         #endregion
         public IReadOnlyList<String>? MovementTypeNames { get; private set; }
         #region Voices
@@ -8450,8 +8450,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IReadOnlyList<IAttackGetter>? Attacks { get; private set; }
         #region BodyData
-        private GenderedItemBinaryOverlay<IBodyDataGetter>? _BodyDataOverlay;
-        public IGenderedItemGetter<IBodyDataGetter>? BodyData => _BodyDataOverlay;
+        private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
+        public IGenderedItemGetter<IBodyDataGetter?>? BodyData => _BodyDataOverlay;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; private set; }
@@ -8466,8 +8466,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         #region BehaviorGraph
-        private GenderedItemBinaryOverlay<IModelGetter>? _BehaviorGraphOverlay;
-        public IGenderedItemGetter<IModelGetter>? BehaviorGraph => _BehaviorGraphOverlay;
+        private IGenderedItemGetter<IModelGetter?>? _BehaviorGraphOverlay;
+        public IGenderedItemGetter<IModelGetter?>? BehaviorGraph => _BehaviorGraphOverlay;
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
@@ -8547,8 +8547,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint => _BaseMovementDefaultSprintLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseMovementDefaultSprintLocation.Value, _package.Meta)))) : FormLinkNullable<IMovementTypeGetter>.Empty;
         #endregion
         #region HeadData
-        private GenderedItemBinaryOverlay<IHeadDataGetter>? _HeadDataOverlay;
-        public IGenderedItemGetter<IHeadDataGetter>? HeadData => _HeadDataOverlay;
+        private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
+        public IGenderedItemGetter<IHeadDataGetter?>? HeadData => _HeadDataOverlay;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -8652,12 +8652,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E4D: // MNAM
                 case 0x4D414E46: // FNAM
                 {
-                    _SkeletalModelOverlay = GenderedItemBinaryOverlay<ISimpleModelGetter>.FactorySkipMarkers(
+                    _SkeletalModelOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<ISimpleModelGetter>(
                         package: _package,
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
-                        bytes: _data.Slice(stream.Position - offset),
-                        creator: (m, p) => SimpleModelBinaryOverlay.SimpleModelFactory(new BinaryMemoryReadStream(m), p));
+                        stream: stream,
+                        creator: (s, p) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.SkeletalModel);
                 }
                 case 0x4D4E544D: // MTNM
@@ -8722,12 +8722,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x314D414E: // NAM1
                 {
-                    _BodyDataOverlay = GenderedItemBinaryOverlay<IBodyDataGetter>.FactorySkipMarkers(
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
+                    _BodyDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IBodyDataGetter>(
                         package: _package,
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
-                        bytes: _data.Slice(stream.Position - offset),
-                        creator: (m, p) => BodyDataBinaryOverlay.BodyDataFactory(new BinaryMemoryReadStream(m), p));
+                        stream: stream,
+                        creator: (s, p) => BodyDataBinaryOverlay.BodyDataFactory(s, p));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
                 case 0x4D414E48: // HNAM
@@ -8761,12 +8762,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x334D414E: // NAM3
                 {
-                    _BehaviorGraphOverlay = GenderedItemBinaryOverlay<IModelGetter>.FactorySkipMarkers(
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
+                    _BehaviorGraphOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IModelGetter>(
                         package: _package,
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
-                        bytes: _data.Slice(stream.Position - offset),
-                        creator: (m, p) => ModelBinaryOverlay.ModelFactory(new BinaryMemoryReadStream(m), p));
+                        stream: stream,
+                        creator: (s, p) => ModelBinaryOverlay.ModelFactory(s, p));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BehaviorGraph);
                 }
                 case 0x344D414E: // NAM4
@@ -8883,12 +8885,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    _HeadDataOverlay = GenderedItemBinaryOverlay<IHeadDataGetter>.FactorySkipMarkers(
+                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
+                    _HeadDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadDataGetter>(
                         package: _package,
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
-                        bytes: _data.Slice(stream.Position - offset),
-                        creator: (m, p) => HeadDataBinaryOverlay.HeadDataFactory(new BinaryMemoryReadStream(m), p));
+                        stream: stream,
+                        creator: (s, p) => HeadDataBinaryOverlay.HeadDataFactory(s, p));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.HeadData);
                 }
                 default:
