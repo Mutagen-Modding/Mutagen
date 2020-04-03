@@ -1973,8 +1973,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MovementTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IMovementTypeGetter>.Empty;
         #endregion
         #region Overrides
-        public ISpeedOverridesGetter? Overrides { get; private set; }
-        public bool Overrides_IsSet => Overrides != null;
+        private RangeInt32? _OverridesLocation;
+        private bool _Overrides_IsSet => _OverridesLocation.HasValue;
+        public ISpeedOverridesGetter? Overrides => _Overrides_IsSet ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(new BinaryMemoryReadStream(_data.Slice(_OverridesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Overrides_IsSet => _OverridesLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2032,10 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x44455053: // SPED
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.Overrides) return TryGet<int?>.Failure;
-                    this.Overrides = SpeedOverridesBinaryOverlay.SpeedOverridesFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                    _OverridesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.Overrides);
                 }
                 default:

@@ -43,13 +43,14 @@ namespace Mutagen.Bethesda
         {
             this.TypeInt = type;
         }
-        
+
         /// <summary>
         /// Constructor taking in a string
         /// The integer constructor is preferable in most cases, as it is faster and can never throw an exception.
         /// </summary>
         /// <param name="type">String of four characters</param>
         /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
+        [DebuggerStepThrough]
         public RecordType(ReadOnlySpan<char> typeStr)
         {
             if (typeStr.Length != Length)
@@ -143,6 +144,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="typeInt">Integer to convert</param>
         /// <returns>Four character string</returns>
+        [DebuggerStepThrough]
         public static string GetStringType(int typeInt)
         {
             return string.Create(4, typeInt, (chars, state) =>
@@ -160,6 +162,7 @@ namespace Mutagen.Bethesda
         /// <param name="typeStr">Four character string to convert</param>
         /// <returns>Integer representing the record type</returns>
         /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
+        [DebuggerStepThrough]
         public static int GetTypeInt(ReadOnlySpan<char> typeStr)
         {
             if (typeStr.Length != Length)

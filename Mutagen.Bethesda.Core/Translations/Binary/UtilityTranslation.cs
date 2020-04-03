@@ -407,6 +407,29 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Parses span data and locates all uninterrupted repeating instances of target record type
+        /// 
+        /// It is assumed the span contains only subrecords
+        /// </summary>
+        /// <param name="span">Bytes containing subrecords</param>
+        /// <param name="meta">Metadata to use in subrecord parsing</param>
+        /// <param name="recordType">Repeating type to locate</param>
+        /// <returns>Array of locations of located target types</returns>
+        public static int[] FindRepeatingSubrecord(ReadOnlySpan<byte> span, GameConstants meta, RecordType recordType, out int lenParsed)
+        {
+            lenParsed = 0;
+            List<int> list = new List<int>();
+            while (span.Length > lenParsed)
+            {
+                var subMeta = meta.Subrecord(span.Slice(lenParsed));
+                if (subMeta.RecordType != recordType) break;
+                list.Add(lenParsed);
+                lenParsed += subMeta.TotalLength;
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>
         /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
         /// -1 represents a recordtype that was not found.
         /// 

@@ -176,7 +176,40 @@ namespace Mutagen.Bethesda.Tests
                 loc: loc + Constants.HeaderLength,
                 sub: lenData);
         }
-        
+
+        public void ModifyLengths(
+            IMutagenReadStream stream,
+            int amount,
+            FormID formID,
+            long recordLoc,
+            long? subRecordLoc)
+        {
+            if (amount == 0) return;
+            foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
+            {
+                this._LengthTracker[k] = (uint)(this._LengthTracker[k] + amount);
+            }
+
+            stream.Position = recordLoc;
+            var majorMeta = stream.ReadMajorRecord();
+            byte[] lenData = new byte[2];
+            BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(majorMeta.ContentLength + amount));
+            this._Instructions.SetSubstitution(
+                loc: recordLoc + Constants.HeaderLength,
+                sub: lenData);
+
+            if (subRecordLoc != null)
+            {
+                stream.Position = subRecordLoc.Value;
+                var subMeta = stream.ReadSubrecord();
+                lenData = new byte[2];
+                BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
+                this._Instructions.SetSubstitution(
+                    loc: subRecordLoc.Value + Constants.HeaderLength,
+                    sub: lenData);
+            }
+        }
+
         public void ProcessZeroFloat(IMutagenReadStream stream)
         {
             var f = stream.ReadFloat();

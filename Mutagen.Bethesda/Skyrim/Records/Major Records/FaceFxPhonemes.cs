@@ -212,6 +212,87 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new NotImplementedException();
             }
         }
+
+        public static Target GetTarget(string str, out bool lipMode)
+        {
+            switch (str)
+            {
+                case "Aah":
+                    lipMode = false;
+                    return Target.Aah;
+                case "LipBigAah":
+                    lipMode = true;
+                    return Target.Aah;
+                case "BigAah":
+                    lipMode = false;
+                    return Target.BigAah;
+                case "LipDST":
+                    lipMode = true;
+                    return Target.BigAah;
+                case "BMP":
+                    lipMode = false;
+                    return Target.BMP;
+                case "LipEee":
+                    lipMode = true;
+                    return Target.BMP;
+                case "ChJSh":
+                    lipMode = false;
+                    return Target.ChJSh;
+                case "LipFV":
+                    lipMode = true;
+                    return Target.ChJSh;
+                case "DST":
+                    lipMode = false;
+                    return Target.DST;
+                case "LipK":
+                    lipMode = true;
+                    return Target.DST;
+                case "Eee":
+                    lipMode = false;
+                    return Target.Eee;
+                case "LipL":
+                    lipMode = true;
+                    return Target.Eee;
+                case "Eh":
+                    lipMode = false;
+                    return Target.Eh;
+                case "LipR":
+                    lipMode = true;
+                    return Target.Eh;
+                case "FV":
+                    lipMode = false;
+                    return Target.FV;
+                case "LipTh":
+                    lipMode = true;
+                    return Target.FV;
+                case "I":
+                    lipMode = false;
+                    return Target.I;
+                case "K":
+                    lipMode = false;
+                    return Target.K;
+                case "N":
+                    lipMode = false;
+                    return Target.N;
+                case "Oh":
+                    lipMode = false;
+                    return Target.Oh;
+                case "OohQ":
+                    lipMode = false;
+                    return Target.OohQ;
+                case "R":
+                    lipMode = false;
+                    return Target.R;
+                case "Th":
+                    lipMode = false;
+                    return Target.Th;
+                case "W":
+                    lipMode = false;
+                    return Target.W;
+                default:
+                    throw new ArgumentException($"Unknown Face String: {str}");
+            }
+        }
     }
 
     namespace Internals
@@ -260,99 +341,8 @@ namespace Mutagen.Bethesda.Skyrim
                     while (subFrame.Header.RecordType == Race_Registration.PHTN_HEADER)
                     {
                         var str = BinaryStringUtility.ProcessWholeToZString(subFrame.Content);
-                        switch (str)
-                        {
-                            case "Aah":
-                                Add(targetAccumulation, Target.Aah);
-                                SetLipMode(false);
-                                break;
-                            case "LipBigAah":
-                                Add(targetAccumulation, Target.Aah);
-                                SetLipMode(true);
-                                break;
-                            case "BigAah":
-                                Add(targetAccumulation, Target.BigAah);
-                                SetLipMode(false);
-                                break;
-                            case "LipDST":
-                                Add(targetAccumulation, Target.BigAah);
-                                SetLipMode(true);
-                                break;
-                            case "BMP":
-                                Add(targetAccumulation, Target.BMP);
-                                SetLipMode(false);
-                                break;
-                            case "LipEee":
-                                Add(targetAccumulation, Target.BMP);
-                                SetLipMode(true);
-                                break;
-                            case "ChJSh":
-                                Add(targetAccumulation, Target.ChJSh);
-                                SetLipMode(false);
-                                break;
-                            case "LipFV":
-                                Add(targetAccumulation, Target.ChJSh);
-                                SetLipMode(true);
-                                break;
-                            case "DST":
-                                Add(targetAccumulation, Target.DST);
-                                SetLipMode(false);
-                                break;
-                            case "LipK":
-                                Add(targetAccumulation, Target.DST);
-                                SetLipMode(true);
-                                break;
-                            case "Eee":
-                                Add(targetAccumulation, Target.Eee);
-                                SetLipMode(false);
-                                break;
-                            case "LipL":
-                                Add(targetAccumulation, Target.Eee);
-                                SetLipMode(true);
-                                break;
-                            case "Eh":
-                                Add(targetAccumulation, Target.Eh);
-                                SetLipMode(false);
-                                break;
-                            case "LipR":
-                                Add(targetAccumulation, Target.Eh);
-                                SetLipMode(true);
-                                break;
-                            case "FV":
-                                Add(targetAccumulation, Target.FV);
-                                SetLipMode(false);
-                                break;
-                            case "LipTh":
-                                Add(targetAccumulation, Target.FV);
-                                SetLipMode(true);
-                                break;
-                            case "I":
-                                Add(targetAccumulation, Target.I);
-                                break;
-                            case "K":
-                                Add(targetAccumulation, Target.K);
-                                break;
-                            case "N":
-                                Add(targetAccumulation, Target.N);
-                                break;
-                            case "Oh":
-                                Add(targetAccumulation, Target.Oh);
-                                break;
-                            case "OohQ":
-                                Add(targetAccumulation, Target.OohQ);
-                                break;
-                            case "R":
-                                Add(targetAccumulation, Target.R);
-                                break;
-                            case "Th":
-                                Add(targetAccumulation, Target.Th);
-                                break;
-                            case "W":
-                                Add(targetAccumulation, Target.W);
-                                break;
-                            default:
-                                throw new ArgumentException($"Unknown Face String: {str}");
-                        }
+                        Add(targetAccumulation, FaceFxPhonemesMixIn.GetTarget(str, out var isLip));
+                        SetLipMode(isLip);
                         frame.Position += subFrame.Header.TotalLength;
                         if (!frame.Reader.TryGetSubrecordFrame(out subFrame)) break;
                     }
@@ -410,11 +400,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!phonemes.Any(p => p != null)) return;
                 var lipMode = item.LipMode;
                 var hasAll = phonemes.All(p => p != null);
-                if (!hasAll)
+                if (!hasAll || lipMode)
                 {
-                    foreach (var target in FaceFxPhonemesBinaryCreateTranslation.Targets)
+                    for (int i = 0; i < phonemes.Length; i++)
                     {
-                        IPhonemeGetter? phoneme = phonemes[(int)target];
+                        if (phonemes[i] == null) continue;
+                        var target = (Target)i;
                         using (HeaderExport.ExportSubrecordHeader(writer, Race_Registration.PHTN_HEADER))
                         {
                             writer.WriteZString(target.GetString(lipMode));

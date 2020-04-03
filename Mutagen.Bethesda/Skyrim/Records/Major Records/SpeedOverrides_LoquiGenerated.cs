@@ -787,6 +787,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public new static readonly RecordType GrupRecordType = SpeedOverrides_Registration.TriggeringRecordType;
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SpeedOverridesBinaryWriteTranslation.Instance;
@@ -1452,6 +1456,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SpeedOverridesXmlWriteTranslation);
+        public static readonly RecordType SPED_HEADER = new RecordType("SPED");
+        public static readonly RecordType TriggeringRecordType = SPED_HEADER;
         public const int NumStructFields = 11;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SpeedOverridesBinaryWriteTranslation);
@@ -1560,10 +1566,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.TypelessRecordParse(
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(SpeedOverrides_Registration.SPED_HEADER)));
+            UtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
-                setFinal: false,
+                setFinal: true,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }
@@ -2540,9 +2549,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISpeedOverridesGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: SpeedOverrides_Registration.SPED_HEADER,
+                type: ObjectType.Subrecord))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -2674,9 +2689,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new SpeedOverridesBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 44),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            int offset = stream.Position;
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x2C + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

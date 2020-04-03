@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += subHeader.TotalLength;
                     if (!transl(frame, out male, recordTypeConverter))
                     {
-                        throw new ArgumentException();
+                        male = null;
                     }
                 }
                 else if (type == femaleMarker)
@@ -114,12 +114,12 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += subHeader.TotalLength;
                     if (!transl(frame, out female, recordTypeConverter))
                     {
-                        throw new ArgumentException();
+                        female = null;
                     }
                 }
                 else
                 {
-                    break;
+                    throw new ArgumentException();
                 }
             }
             return new GenderedItem<TItem?>(male, female);
@@ -280,34 +280,28 @@ namespace Mutagen.Bethesda.Binary
         {
             if (item == null) return;
             var male = item.Male;
-            if (male != null)
+            using (HeaderExport.ExportSubrecordHeader(writer, maleMarker))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, maleMarker))
-                {
-                    if (markerWrap)
-                    {
-                        transl(writer, male, recordTypeConverter);
-                    }
-                }
-                if (!markerWrap)
+                if (markerWrap)
                 {
                     transl(writer, male, recordTypeConverter);
                 }
             }
-            var female = item.Female;
-            if (female != null)
+            if (!markerWrap)
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, femaleMarker))
-                {
-                    if (markerWrap)
-                    {
-                        transl(writer, female, recordTypeConverter);
-                    }
-                }
-                if (!markerWrap)
+                transl(writer, male, recordTypeConverter);
+            }
+            var female = item.Female;
+            using (HeaderExport.ExportSubrecordHeader(writer, femaleMarker))
+            {
+                if (markerWrap)
                 {
                     transl(writer, female, recordTypeConverter);
                 }
+            }
+            if (!markerWrap)
+            {
+                transl(writer, female, recordTypeConverter);
             }
         }
 

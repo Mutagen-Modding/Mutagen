@@ -76,6 +76,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class RaceBinaryCreateTranslation
         {
+            public const int NumBipedObjectNames = 32;
+
             static partial void FillBinaryExtraNAM2Custom(MutagenFrame frame, IRaceInternal item)
             {
                 if (frame.Complete) return;
@@ -88,11 +90,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void FillBinaryBipedObjectNamesCustom(MutagenFrame frame, IRaceInternal item)
             {
-                int counter = 0;
-                while (!frame.Reader.Complete)
+                for (int i = 0; i < NumBipedObjectNames; i++)
                 {
-                    if (!frame.Reader.TryReadSubrecordFrame(Race_Registration.NAME_HEADER, out var subHeader)) break;
-                    BipedObject type = (BipedObject)counter++;
+                    var subHeader = frame.Reader.ReadSubrecordFrame(Race_Registration.NAME_HEADER);
+                    BipedObject type = (BipedObject)i;
                     var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                     if (!string.IsNullOrEmpty(val))
                     {
@@ -104,44 +105,6 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
             static partial void FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
-        }
-
-        public partial class RaceBinaryWriteTranslation
-        {
-            static partial void WriteBinaryExtraNAM2Custom(MutagenWriter writer, IRaceGetter item)
-            {
-                if (item.ExportingExtraNam2)
-                {
-                    using var header = HeaderExport.ExportSubrecordHeader(writer, Race.NAM2);
-                }
-            }
-
-            static partial void WriteBinaryBipedObjectNamesCustom(MutagenWriter writer, IRaceGetter item)
-            {
-                var bipedObjs = item.BipedObjectNames;
-                for (int i = 0; i < 32; i++)
-                {
-                    var bipedObj = (BipedObject)i;
-                    using (HeaderExport.ExportSubrecordHeader(writer, Race_Registration.NAME_HEADER))
-                    {
-                        if (bipedObjs.TryGetValue(bipedObj, out var val))
-                        {
-                            writer.WriteZString(val);
-                        }
-                        else
-                        {
-                            writer.WriteZString(string.Empty);
-                        }
-                    }
-                }
-            }
-
-            static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(MutagenWriter writer, IRaceGetter item) => FaceFxPhonemesBinaryWriteTranslation.WriteFaceFxPhonemes(writer, item.FaceFxPhonemes);
-
-            static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(MutagenWriter writer, IRaceGetter item)
-            {
-                // Handled by Listing section
-            }
         }
 
         public partial class RaceBinaryOverlay
@@ -163,37 +126,41 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class RaceDataBinaryCreateTranslation
+        public partial class RaceBinaryWriteTranslation
         {
-            static partial void FillBinaryFlags2Custom(MutagenFrame frame, IRaceData item)
+            static partial void WriteBinaryExtraNAM2Custom(MutagenWriter writer, IRaceGetter item)
             {
-                ulong flags2 = frame.ReadUInt32();
-                flags2 <<= 32;
-                item.Flags |= ((Race.Flag)flags2);
-            }
-
-            static partial void FillBinaryMountDataCustom(MutagenFrame frame, IRaceData item)
-            {
-                if (!frame.Complete)
+                if (item.ExportingExtraNam2)
                 {
-                    throw new NotImplementedException();
+                    using var header = HeaderExport.ExportSubrecordHeader(writer, Race.NAM2);
                 }
             }
-        }
 
-        public partial class RaceDataBinaryWriteTranslation
-        {
-            static partial void WriteBinaryFlags2Custom(MutagenWriter writer, IRaceDataGetter item)
+            static partial void WriteBinaryBipedObjectNamesCustom(MutagenWriter writer, IRaceGetter item)
             {
-                ulong flags = (ulong)item.Flags;
-                flags >>= 32;
-                writer.Write((uint)flags);
+                var bipedObjs = item.BipedObjectNames;
+                for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
+                {
+                    var bipedObj = (BipedObject)i;
+                    using (HeaderExport.ExportSubrecordHeader(writer, Race_Registration.NAME_HEADER))
+                    {
+                        if (bipedObjs.TryGetValue(bipedObj, out var val))
+                        {
+                            writer.WriteZString(val);
+                        }
+                        else
+                        {
+                            writer.WriteZString(string.Empty);
+                        }
+                    }
+                }
             }
 
-            static partial void WriteBinaryMountDataCustom(MutagenWriter writer, IRaceDataGetter item)
+            static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(MutagenWriter writer, IRaceGetter item) => FaceFxPhonemesBinaryWriteTranslation.WriteFaceFxPhonemes(writer, item.FaceFxPhonemes);
+
+            static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(MutagenWriter writer, IRaceGetter item)
             {
-                //ToDo
-                //Implement Mount Data export
+                // Handled by Listing section
             }
         }
     }

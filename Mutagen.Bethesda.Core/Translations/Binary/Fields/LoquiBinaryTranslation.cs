@@ -62,10 +62,11 @@ namespace Mutagen.Bethesda.Binary
             out T item,
             RecordTypeConverter? recordTypeConverter)
         {
+            var startPos = frame.Position;
             item = CREATE(
                 reader: frame,
                 recordTypeConverter: recordTypeConverter);
-            return true;
+            return startPos != frame.Position;
         }
         #endregion
     }

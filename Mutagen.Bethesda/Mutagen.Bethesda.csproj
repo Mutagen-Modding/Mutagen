@@ -940,6 +940,9 @@
     <Compile Include="Skyrim\Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RaceData.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\RaceData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>

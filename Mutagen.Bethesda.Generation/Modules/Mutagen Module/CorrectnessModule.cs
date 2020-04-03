@@ -62,6 +62,7 @@ namespace Mutagen.Bethesda.Generation
                     throw new ArgumentException($"{obj.Name} cannot have an embedded field without a record type after ones with record types have been defined: {field.Name}");
                 }
             }
+
             await base.LoadWrapup(obj);
         }
     }

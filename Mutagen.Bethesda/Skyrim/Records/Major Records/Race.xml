@@ -175,10 +175,10 @@
   <Object name="RaceMovementType" objType="Subrecord" GUID="fb099dce-2d5d-4b0e-86dd-ae8fa82d4951" ID="67">
     <Fields>
       <FormLink name="MovementType" refName="MovementType" recordType="MTYP" />
-      <RefDirect name="Overrides" refName="SpeedOverrides" recordType="SPED" />
+      <RefDirect name="Overrides" refName="SpeedOverrides" />
     </Fields>
   </Object>
-  <Object name="SpeedOverrides" objType="Subrecord" GUID="9e8f3f43-b822-4733-90a8-18f6e067be2e" ID="68">
+  <Object name="SpeedOverrides" objType="Subrecord" recordType="SPED" GUID="9e8f3f43-b822-4733-90a8-18f6e067be2e" ID="68">
     <Fields>
       <Float name="LeftWalk" />
       <Float name="LeftRun" />
