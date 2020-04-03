@@ -1,5 +1,7 @@
 ﻿using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
 
@@ -40,6 +42,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             //ToDo
             //Implement Mount Data export
+        }
+    }
+
+    public partial class RaceDataBinaryOverlay
+    {
+        public Race.Flag GetFlagsCustom(int location)
+        {
+            var flag = (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(location, 4));
+
+            // Clear out upper flags
+            flag &= ((Race.Flag)0x00000000FFFFFFFF);
+
+            // Set upper flags
+            ulong flags2 = BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(124, 4));
+            flags2 <<= 32;
+            flag |= ((Race.Flag)flags2);
+            return flag;
         }
     }
 }

@@ -5029,7 +5029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         #endregion
-        public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(32, 4));
+        public Race.Flag Flags => GetFlagsCustom(location: 32);
         public Single StartingHealth => SpanExt.GetFloat(_data.Span.Slice(36, 4));
         public Single StartingMagicka => SpanExt.GetFloat(_data.Span.Slice(40, 4));
         public Single StartingStamina => SpanExt.GetFloat(_data.Span.Slice(44, 4));

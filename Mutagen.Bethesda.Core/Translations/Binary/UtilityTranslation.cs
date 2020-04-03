@@ -607,6 +607,13 @@ namespace Mutagen.Bethesda
         {
             UtilityTranslation.SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
         }
+
+        public static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)
+        {
+            while (meta.TryReadSubrecordFrame(stream, recordType, out var _))
+            {
+            }
+        }
     }
 
     public static class UtilityAsyncTranslation

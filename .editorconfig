@@ -1,4 +1,4 @@
-﻿[*.cs]
+[*.cs]
 
 # CS8602: Dereference of a possibly null reference.
 dotnet_diagnostic.CS8602.severity = error
@@ -65,3 +65,6 @@ dotnet_diagnostic.CS8611.severity = error
 
 # CS8597: Thrown value may be null.
 dotnet_diagnostic.CS8597.severity = error
+
+# CS8609: Nullability of reference types in return type doesn't match overridden member.
+dotnet_diagnostic.CS8609.severity = error

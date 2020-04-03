@@ -136,7 +136,25 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public SubrecordHeader Subrecord(ReadOnlySpan<byte> span) => new SubrecordHeader(this, span);
+        public SubrecordHeader Subrecord(ReadOnlySpan<byte> span, RecordType targetType)
+        {
+            var meta = new SubrecordHeader(this, span);
+            if (meta.RecordType != targetType)
+            {
+                throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
+            }
+            return meta;
+        }
         public SubrecordFrame SubrecordFrame(ReadOnlySpan<byte> span) => new SubrecordFrame(this, span);
+        public SubrecordFrame SubrecordFrame(ReadOnlySpan<byte> span, RecordType targetType)
+        {
+            var meta = new SubrecordHeader(this, span);
+            if (meta.RecordType != targetType)
+            {
+                throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
+            }
+            return new SubrecordFrame(meta, span);
+        }
         public SubrecordMemoryFrame SubrecordMemoryFrame(ReadOnlyMemorySlice<byte> span) => new SubrecordMemoryFrame(this, span);
         public SubrecordHeader GetSubrecord(IBinaryReadStream stream, int offset = 0) => new SubrecordHeader(this, stream.GetSpan(this.SubConstants.HeaderLength, offset));
         public bool TryGetSubrecord(IBinaryReadStream stream, out SubrecordHeader meta)

@@ -90,7 +90,8 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
-            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, T> creator)
+            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class
         {
             var initialPos = stream.Position;
@@ -101,11 +102,65 @@ namespace Mutagen.Bethesda.Binary
                 stream.Position += markerLen;
                 if (recType == male)
                 {
-                    maleObj = creator(stream, package);
+                    var startPos = stream.Position;
+                    maleObj = creator(stream, package, recordTypeConverter);
+                    if (startPos == stream.Position)
+                    {
+                        maleObj = null;
+                    }
                 }
                 else if (recType == female)
                 {
-                    femaleObj = creator(stream, package);
+                    var startPos = stream.Position;
+                    femaleObj = creator(stream, package, recordTypeConverter);
+                    if (startPos == stream.Position)
+                    {
+                        femaleObj = null;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            var readLen = stream.Position - initialPos;
+            if (readLen == 0)
+            {
+                throw new ArgumentException("Expected things to be read.");
+            }
+            return new GenderedItem<T?>(maleObj, femaleObj);
+        }
+
+        public static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordType male,
+            RecordType female,
+            RecordType marker,
+            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            RecordTypeConverter? recordTypeConverter = null,
+            RecordTypeConverter? femaleRecordConverter = null)
+            where T : class
+        {
+            var initialPos = stream.Position;
+            T? maleObj = null, femaleObj = null;
+            for (int i = 0; i < 2; i++)
+            {
+                // Skip marker
+                var recType = HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out var markerLen);
+                if (recType != marker) break;
+                stream.Position += markerLen;
+
+                // Read and skip gender marker
+                recType = HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out markerLen);
+                stream.Position += markerLen;
+                if (recType == male)
+                {
+                    maleObj = creator(stream, package, recordTypeConverter);
+                }
+                else if (recType == female)
+                {
+                    femaleObj = creator(stream, package, femaleRecordConverter ?? recordTypeConverter);
                 }
                 else
                 {

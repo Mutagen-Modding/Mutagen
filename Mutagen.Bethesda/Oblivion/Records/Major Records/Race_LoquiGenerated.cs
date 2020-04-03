@@ -6482,7 +6482,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
                         stream: stream,
-                        creator: (s, p) => BodyDataBinaryOverlay.BodyDataFactory(s, p));
+                        creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
                 case 0x4D414E48: // HNAM

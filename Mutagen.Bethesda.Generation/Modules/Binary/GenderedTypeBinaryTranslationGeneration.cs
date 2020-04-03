@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var gendered = typeGen as GenderedType;
             bool isLoqui = gendered.SubTypeGeneration is LoquiType;
-            if (typeGen.GetFieldData().MarkerType.HasValue)
+            if (typeGen.GetFieldData().MarkerType.HasValue && !gendered.MarkerPerGender)
             {
                 fg.AppendLine($"stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker");
             }
@@ -350,16 +350,34 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("package: _package");
                             args.Add($"male: {objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)}");
                             args.Add($"female: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
+                            if (gendered.MarkerPerGender)
+                            {
+                                args.Add($"marker: {objGen.RecordTypeHeaderName(typeGen.GetFieldData().MarkerType.Value)}");
+                            }
                             if (gendered.SubTypeGeneration is LoquiType loqui)
                             {
                                 args.AddPassArg("stream");
-                                args.Add($"creator: (s, p) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(s, p)");
+                                args.Add($"creator: (s, p, r) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(s, p, r)");
+                                var subData = loqui.GetFieldData();
+                                if (subData?.RecordTypeConverter != null
+                                    && subData.RecordTypeConverter.FromConversions.Count > 0)
+                                {
+                                    args.Add($"recordTypeConverter: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                                }
+                                else if (converterAccessor != null)
+                                {
+                                    args.Add($"recordTypeConverter: {converterAccessor}");
+                                }
                             }
                             else
                             {
                                 args.AddPassArg("stream");
                                 this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subGen);
                                 args.Add($"creator: (m, p) => {subGen.GenerateForTypicalWrapper(objGen, typeGen, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.Meta)", "p")}");
+                            }
+                            if (gendered.FemaleConversions != null)
+                            {
+                                args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
                             }
                         }
                     }

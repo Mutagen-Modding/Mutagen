@@ -109,20 +109,67 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class RaceBinaryOverlay
         {
-            public bool ExportingExtraNam2 => throw new NotImplementedException();
+            public bool ExportingExtraNam2 { get; private set; }
             public bool ExportingExtraNam3 => throw new NotImplementedException();
-            public IFaceFxPhonemesGetter FaceFxPhonemes => throw new NotImplementedException();
+
+            private int? _faceFxPhonemesLoc;
+            public IFaceFxPhonemesGetter FaceFxPhonemes => GetFaceFx();
 
             partial void ExtraNAM2CustomParse(BinaryMemoryReadStream stream, int offset)
             {
-                throw new NotImplementedException();
             }
 
-            public IReadOnlyDictionary<BipedObject, string> BipedObjectNames => throw new NotImplementedException();
+            private int? _bipedObjectNamesLoc;
+            public IReadOnlyDictionary<BipedObject, string> BipedObjectNames
+            {
+                get
+                {
+                    if (_bipedObjectNamesLoc == null) return DictionaryExt.Empty<BipedObject, string>();
+                    var ret = new Dictionary<BipedObject, string>();
+                    var loc = _bipedObjectNamesLoc.Value;
+                    for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
+                    {
+                        var subHeader = _package.Meta.SubrecordFrame(_data.Slice(loc).Span, Race_Registration.NAME_HEADER);
+                        BipedObject type = (BipedObject)i;
+                        var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
+                        if (!string.IsNullOrEmpty(val))
+                        {
+                            ret[type] = val;
+                        }
+                        loc += subHeader.HeaderAndContentData.Length;
+                    }
+                    return ret;
+                }
+            }
 
             void BipedObjectNamesCustomParse(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
-                throw new NotImplementedException();
+                _bipedObjectNamesLoc = (ushort)(stream.Position - offset);
+                UtilityTranslation.SkipPastAll(stream, _package.Meta, Race_Registration.NAME_HEADER);
+            }
+
+            partial void FaceFxPhonemesListingParsingCustomParse(BinaryMemoryReadStream stream, int offset)
+            {
+                FaceFxPhonemesRawParsingCustomParse(stream, offset);
+            }
+
+            partial void FaceFxPhonemesRawParsingCustomParse(BinaryMemoryReadStream stream, int offset)
+            {
+                if (_faceFxPhonemesLoc == null)
+                {
+                    _faceFxPhonemesLoc = (ushort)(stream.Position - offset);
+                }
+                UtilityTranslation.SkipPastAll(stream, _package.Meta, Race_Registration.PHTN_HEADER);
+                UtilityTranslation.SkipPastAll(stream, _package.Meta, Race_Registration.PHWT_HEADER);
+            }
+
+            private FaceFxPhonemes GetFaceFx()
+            {
+                var ret = new FaceFxPhonemes();
+                if (_faceFxPhonemesLoc == null) return ret;
+                var frame = new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_faceFxPhonemesLoc.Value), _package.Meta));
+                FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, ret);
+                return ret;
             }
         }
 

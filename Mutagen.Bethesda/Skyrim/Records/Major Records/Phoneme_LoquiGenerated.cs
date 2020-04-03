@@ -2892,7 +2892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PhonemeXmlWriteTranslation);
-        public const int NumStructFields = 43;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PhonemeBinaryWriteTranslation);
         #region Interface
@@ -3014,49 +3014,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPhoneme item,
             MutagenFrame frame)
         {
-            item.IY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.IH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.EH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.EY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AE = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AA = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AW = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AO = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.OY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.OW = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.UH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.UW = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ER = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AX = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.S = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Z = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ZH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.F = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.TH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.V = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.M = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.N = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.NG = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.L = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.R = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.W = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Y = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.HH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.B = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.D = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.JH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.G = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.P = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.T = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.K = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.CH = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SIL = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SHOTSIL = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FLAP = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -5252,135 +5209,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPhonemeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.IY);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.IH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.EH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.EY);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AE);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AA);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AW);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AY);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AO);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.OY);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.OW);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.UH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.UW);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ER);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AX);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.S);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Z);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ZH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.F);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.TH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.V);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.DH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.M);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.N);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.NG);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.L);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.R);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.W);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Y);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.HH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.B);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.D);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.JH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.G);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.P);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.T);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.K);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.CH);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SIL);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SHOTSIL);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FLAP);
         }
 
         public void Write(
@@ -5491,49 +5319,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        public Single IY => SpanExt.GetFloat(_data.Span.Slice(0, 4));
-        public Single IH => SpanExt.GetFloat(_data.Span.Slice(4, 4));
-        public Single EH => SpanExt.GetFloat(_data.Span.Slice(8, 4));
-        public Single EY => SpanExt.GetFloat(_data.Span.Slice(12, 4));
-        public Single AE => SpanExt.GetFloat(_data.Span.Slice(16, 4));
-        public Single AA => SpanExt.GetFloat(_data.Span.Slice(20, 4));
-        public Single AW => SpanExt.GetFloat(_data.Span.Slice(24, 4));
-        public Single AY => SpanExt.GetFloat(_data.Span.Slice(28, 4));
-        public Single AH => SpanExt.GetFloat(_data.Span.Slice(32, 4));
-        public Single AO => SpanExt.GetFloat(_data.Span.Slice(36, 4));
-        public Single OY => SpanExt.GetFloat(_data.Span.Slice(40, 4));
-        public Single OW => SpanExt.GetFloat(_data.Span.Slice(44, 4));
-        public Single UH => SpanExt.GetFloat(_data.Span.Slice(48, 4));
-        public Single UW => SpanExt.GetFloat(_data.Span.Slice(52, 4));
-        public Single ER => SpanExt.GetFloat(_data.Span.Slice(56, 4));
-        public Single AX => SpanExt.GetFloat(_data.Span.Slice(60, 4));
-        public Single S => SpanExt.GetFloat(_data.Span.Slice(64, 4));
-        public Single SH => SpanExt.GetFloat(_data.Span.Slice(68, 4));
-        public Single Z => SpanExt.GetFloat(_data.Span.Slice(72, 4));
-        public Single ZH => SpanExt.GetFloat(_data.Span.Slice(76, 4));
-        public Single F => SpanExt.GetFloat(_data.Span.Slice(80, 4));
-        public Single TH => SpanExt.GetFloat(_data.Span.Slice(84, 4));
-        public Single V => SpanExt.GetFloat(_data.Span.Slice(88, 4));
-        public Single DH => SpanExt.GetFloat(_data.Span.Slice(92, 4));
-        public Single M => SpanExt.GetFloat(_data.Span.Slice(96, 4));
-        public Single N => SpanExt.GetFloat(_data.Span.Slice(100, 4));
-        public Single NG => SpanExt.GetFloat(_data.Span.Slice(104, 4));
-        public Single L => SpanExt.GetFloat(_data.Span.Slice(108, 4));
-        public Single R => SpanExt.GetFloat(_data.Span.Slice(112, 4));
-        public Single W => SpanExt.GetFloat(_data.Span.Slice(116, 4));
-        public Single Y => SpanExt.GetFloat(_data.Span.Slice(120, 4));
-        public Single HH => SpanExt.GetFloat(_data.Span.Slice(124, 4));
-        public Single B => SpanExt.GetFloat(_data.Span.Slice(128, 4));
-        public Single D => SpanExt.GetFloat(_data.Span.Slice(132, 4));
-        public Single JH => SpanExt.GetFloat(_data.Span.Slice(136, 4));
-        public Single G => SpanExt.GetFloat(_data.Span.Slice(140, 4));
-        public Single P => SpanExt.GetFloat(_data.Span.Slice(144, 4));
-        public Single T => SpanExt.GetFloat(_data.Span.Slice(148, 4));
-        public Single K => SpanExt.GetFloat(_data.Span.Slice(152, 4));
-        public Single CH => SpanExt.GetFloat(_data.Span.Slice(156, 4));
-        public Single SIL => SpanExt.GetFloat(_data.Span.Slice(160, 4));
-        public Single SHOTSIL => SpanExt.GetFloat(_data.Span.Slice(164, 4));
-        public Single FLAP => SpanExt.GetFloat(_data.Span.Slice(168, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -5554,7 +5339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PhonemeBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 172),
+                bytes: stream.RemainingMemory.Slice(0, 0),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

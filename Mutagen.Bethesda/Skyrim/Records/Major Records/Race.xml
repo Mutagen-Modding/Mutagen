@@ -133,7 +133,7 @@
           <Float />
         </Fields>
       </Gendered>
-      <Enum name="Flags" enumName="Race.Flag" byteLength="4" />
+      <Enum name="Flags" enumName="Race.Flag" byteLength="4" binaryOverlay="Custom" />
       <Float name="StartingHealth" />
       <Float name="StartingMagicka" />
       <Float name="StartingStamina" />
@@ -195,70 +195,70 @@
   </Object>
   <Object name="FaceFxPhonemes" objType="Subrecord" GUID="b965bdb9-1d8c-4efe-8cfa-2f35cd13370a" ID="70">
     <Fields>
-      <Bool name="LipMode" />
-      <RefDirect name="Aah_LipBigAah" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="BigAah_LipDST" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="BMP_LipEee" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="ChJSh_LipFV" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="DST_LipK" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="Eee_LipL" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="Eh_LipR" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="FV_LipTh" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="I" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="K" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="N" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="Oh" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="OohQ" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="R" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="Th" hasBeenSet="True" refName="Phoneme" />
-      <RefDirect name="W" hasBeenSet="True" refName="Phoneme" />
+      <Bool name="LipMode" binary="NoGeneration" />
+      <RefDirect name="Aah_LipBigAah" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="BigAah_LipDST" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="BMP_LipEee" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="ChJSh_LipFV" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="DST_LipK" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Eee_LipL" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Eh_LipR" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="FV_LipTh" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="I" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="K" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="N" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Oh" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="OohQ" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="R" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Th" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="W" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="Phoneme" objType="Subrecord" GUID="de2d7619-85dc-497e-b8a2-b955f9340a93" ID="71">
     <Fields>
-      <Float name="IY" />
-      <Float name="IH" />
-      <Float name="EH" />
-      <Float name="EY" />
-      <Float name="AE" />
-      <Float name="AA" />
-      <Float name="AW" />
-      <Float name="AY" />
-      <Float name="AH" />
-      <Float name="AO" />
-      <Float name="OY" />
-      <Float name="OW" />
-      <Float name="UH" />
-      <Float name="UW" />
-      <Float name="ER" />
-      <Float name="AX" />
-      <Float name="S" />
-      <Float name="SH" />
-      <Float name="Z" />
-      <Float name="ZH" />
-      <Float name="F" />
-      <Float name="TH" />
-      <Float name="V" />
-      <Float name="DH" />
-      <Float name="M" />
-      <Float name="N" />
-      <Float name="NG" />
-      <Float name="L" />
-      <Float name="R" />
-      <Float name="W" />
-      <Float name="Y" />
-      <Float name="HH" />
-      <Float name="B" />
-      <Float name="D" />
-      <Float name="JH" />
-      <Float name="G" />
-      <Float name="P" />
-      <Float name="T" />
-      <Float name="K" />
-      <Float name="CH" />
-      <Float name="SIL" />
-      <Float name="SHOTSIL" />
-      <Float name="FLAP" />
+      <Float name="IY" binary="NoGeneration" />
+      <Float name="IH" binary="NoGeneration" />
+      <Float name="EH" binary="NoGeneration" />
+      <Float name="EY" binary="NoGeneration" />
+      <Float name="AE" binary="NoGeneration" />
+      <Float name="AA" binary="NoGeneration" />
+      <Float name="AW" binary="NoGeneration" />
+      <Float name="AY" binary="NoGeneration" />
+      <Float name="AH" binary="NoGeneration" />
+      <Float name="AO" binary="NoGeneration" />
+      <Float name="OY" binary="NoGeneration" />
+      <Float name="OW" binary="NoGeneration" />
+      <Float name="UH" binary="NoGeneration" />
+      <Float name="UW" binary="NoGeneration" />
+      <Float name="ER" binary="NoGeneration" />
+      <Float name="AX" binary="NoGeneration" />
+      <Float name="S" binary="NoGeneration" />
+      <Float name="SH" binary="NoGeneration" />
+      <Float name="Z" binary="NoGeneration" />
+      <Float name="ZH" binary="NoGeneration" />
+      <Float name="F" binary="NoGeneration" />
+      <Float name="TH" binary="NoGeneration" />
+      <Float name="V" binary="NoGeneration" />
+      <Float name="DH" binary="NoGeneration" />
+      <Float name="M" binary="NoGeneration" />
+      <Float name="N" binary="NoGeneration" />
+      <Float name="NG" binary="NoGeneration" />
+      <Float name="L" binary="NoGeneration" />
+      <Float name="R" binary="NoGeneration" />
+      <Float name="W" binary="NoGeneration" />
+      <Float name="Y" binary="NoGeneration" />
+      <Float name="HH" binary="NoGeneration" />
+      <Float name="B" binary="NoGeneration" />
+      <Float name="D" binary="NoGeneration" />
+      <Float name="JH" binary="NoGeneration" />
+      <Float name="G" binary="NoGeneration" />
+      <Float name="P" binary="NoGeneration" />
+      <Float name="T" binary="NoGeneration" />
+      <Float name="K" binary="NoGeneration" />
+      <Float name="CH" binary="NoGeneration" />
+      <Float name="SIL" binary="NoGeneration" />
+      <Float name="SHOTSIL" binary="NoGeneration" />
+      <Float name="FLAP" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="HeadData" objType="Subrecord" GUID="c0a94c29-c6cd-4b72-b019-b2af3b6b2b34" ID="72">

@@ -23,7 +23,7 @@
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />
     <PackageReference Include="Loqui" Version="1.1.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.4" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.5" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
@@ -52,6 +52,7 @@
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
     <Compile Include="Persistance\SimpleFormKeyAllocator.cs" />
+    <Compile Include="Streams\MutagenInterfaceReadStream.cs" />
     <Compile Include="Translations\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />

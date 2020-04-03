@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "TRIGGERING_RECORD_TYPE";
+            string testString = "his.AvailableHairColors = BinaryOverlaySetList<IFormLinkGetter<IColorRecordGetter>>.FactoryByArr";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Generation
             GenerateRecords();
             GenerateTester();
         }
-
+         
         static void GenerateRecords()
         { 
             LoquiGenerator gen = new LoquiGenerator(typical: false)

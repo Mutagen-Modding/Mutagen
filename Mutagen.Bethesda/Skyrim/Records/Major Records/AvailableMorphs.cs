@@ -94,17 +94,22 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class AvailableMorphsBinaryOverlay
         {
-            public IMorphGetter? Nose => throw new NotImplementedException();
+            private AvailableMorphs morphs = null!;
 
-            public IMorphGetter? Brow => throw new NotImplementedException();
+            public IMorphGetter? Nose => morphs.Nose;
 
-            public IMorphGetter? Eye => throw new NotImplementedException();
+            public IMorphGetter? Brow => morphs.Brow;
 
-            public IMorphGetter? Lip => throw new NotImplementedException();
+            public IMorphGetter? Eye => morphs.Eye;
+
+            public IMorphGetter? Lip => morphs.Lip;
 
             partial void ParseCustomParse(BinaryMemoryReadStream stream, int offset)
             {
-                throw new NotImplementedException();
+                morphs = new AvailableMorphs();
+                AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustomPublic(
+                    new MutagenFrame(new MutagenInterfaceReadStream(stream: stream, metaData: _package.Meta)),
+                    morphs);
             }
         }
     }

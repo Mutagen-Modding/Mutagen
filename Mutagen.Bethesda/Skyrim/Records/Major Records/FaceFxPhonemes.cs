@@ -429,6 +429,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FaceFxPhonemesBinaryOverlay
         {
+            public bool LipMode => throw new NotImplementedException();
+
+            public IPhonemeGetter? Aah_LipBigAah => throw new NotImplementedException();
+
+            public IPhonemeGetter? BigAah_LipDST => throw new NotImplementedException();
+
+            public IPhonemeGetter? BMP_LipEee => throw new NotImplementedException();
+
+            public IPhonemeGetter? ChJSh_LipFV => throw new NotImplementedException();
+
+            public IPhonemeGetter? DST_LipK => throw new NotImplementedException();
+
+            public IPhonemeGetter? Eee_LipL => throw new NotImplementedException();
+
+            public IPhonemeGetter? Eh_LipR => throw new NotImplementedException();
+
+            public IPhonemeGetter? FV_LipTh => throw new NotImplementedException();
+
+            public IPhonemeGetter? I => throw new NotImplementedException();
+
+            public IPhonemeGetter? K => throw new NotImplementedException();
+
+            public IPhonemeGetter? N => throw new NotImplementedException();
+
+            public IPhonemeGetter? Oh => throw new NotImplementedException();
+
+            public IPhonemeGetter? OohQ => throw new NotImplementedException();
+
+            public IPhonemeGetter? R => throw new NotImplementedException();
+
+            public IPhonemeGetter? Th => throw new NotImplementedException();
+
+            public IPhonemeGetter? W => throw new NotImplementedException();
+
+            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

@@ -293,4 +293,96 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
     }
+
+    namespace Internals
+    {
+        public partial class PhonemeBinaryOverlay
+        {
+            public float IY => throw new NotImplementedException();
+
+            public float IH => throw new NotImplementedException();
+
+            public float EH => throw new NotImplementedException();
+
+            public float EY => throw new NotImplementedException();
+
+            public float AE => throw new NotImplementedException();
+
+            public float AA => throw new NotImplementedException();
+
+            public float AW => throw new NotImplementedException();
+
+            public float AY => throw new NotImplementedException();
+
+            public float AH => throw new NotImplementedException();
+
+            public float AO => throw new NotImplementedException();
+
+            public float OY => throw new NotImplementedException();
+
+            public float OW => throw new NotImplementedException();
+
+            public float UH => throw new NotImplementedException();
+
+            public float UW => throw new NotImplementedException();
+
+            public float ER => throw new NotImplementedException();
+
+            public float AX => throw new NotImplementedException();
+
+            public float S => throw new NotImplementedException();
+
+            public float SH => throw new NotImplementedException();
+
+            public float Z => throw new NotImplementedException();
+
+            public float ZH => throw new NotImplementedException();
+
+            public float F => throw new NotImplementedException();
+
+            public float TH => throw new NotImplementedException();
+
+            public float V => throw new NotImplementedException();
+
+            public float DH => throw new NotImplementedException();
+
+            public float M => throw new NotImplementedException();
+
+            public float N => throw new NotImplementedException();
+
+            public float NG => throw new NotImplementedException();
+
+            public float L => throw new NotImplementedException();
+
+            public float R => throw new NotImplementedException();
+
+            public float W => throw new NotImplementedException();
+
+            public float Y => throw new NotImplementedException();
+
+            public float HH => throw new NotImplementedException();
+
+            public float B => throw new NotImplementedException();
+
+            public float D => throw new NotImplementedException();
+
+            public float JH => throw new NotImplementedException();
+
+            public float G => throw new NotImplementedException();
+
+            public float P => throw new NotImplementedException();
+
+            public float T => throw new NotImplementedException();
+
+            public float K => throw new NotImplementedException();
+
+            public float CH => throw new NotImplementedException();
+
+            public float SIL => throw new NotImplementedException();
+
+            public float SHOTSIL => throw new NotImplementedException();
+
+            public float FLAP => throw new NotImplementedException();
+        }
+    }
 }

@@ -8612,12 +8612,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54435053: // SPCT
                 {
-                    var subMeta = _package.Meta.ReadSubrecord(stream);
-                    var subLen = subMeta.ContentLength;
-                    this.ActorEffect = BinaryOverlaySetList<IFormLinkGetter<IASpellGetter>>.FactoryByStartIndex(
+                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.Meta.ReadSubrecordFrame(stream).Content);
+                    var subLen = checked((int)((4 + _package.Meta.SubConstants.HeaderLength) * count));
+                    this.ActorEffect = BinaryOverlaySetList<IFormLinkGetter<IASpellGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
+                        subrecordType: Race_Registration.SPLO_HEADER,
+                        count: count,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.ActorEffect);
@@ -8634,12 +8636,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x5A49534B: // KSIZ
                 {
+                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.Meta.ReadSubrecordFrame(stream).Content);
                     var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByStartIndex(
+                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
+                        count: count,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Keywords);
@@ -8657,7 +8661,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
                         stream: stream,
-                        creator: (s, p) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p));
+                        creator: (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
+                        recordTypeConverter: Race_Registration.SkeletalModelConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.SkeletalModel);
                 }
                 case 0x4D4E544D: // MTNM
@@ -8665,13 +8670,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.MovementTypeNames = BinaryOverlaySetList<String>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(s),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.Meta.SubrecordFrame(s).Content),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
                             constants: _package.Meta.SubConstants,
                             trigger: type,
-                            skipHeader: true,
+                            skipHeader: false,
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypeNames);
                 }
@@ -8728,7 +8733,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
                         stream: stream,
-                        creator: (s, p) => BodyDataBinaryOverlay.BodyDataFactory(s, p));
+                        creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
                 case 0x4D414E48: // HNAM
@@ -8768,7 +8774,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
                         stream: stream,
-                        creator: (s, p) => ModelBinaryOverlay.ModelFactory(s, p));
+                        creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BehaviorGraph);
                 }
                 case 0x344D414E: // NAM4
@@ -8885,13 +8892,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
                     _HeadDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadDataGetter>(
                         package: _package,
                         male: Race_Registration.MNAM_HEADER,
                         female: Race_Registration.FNAM_HEADER,
+                        marker: Race_Registration.NAM0_HEADER,
                         stream: stream,
-                        creator: (s, p) => HeadDataBinaryOverlay.HeadDataFactory(s, p));
+                        creator: (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
+                        recordTypeConverter: recordTypeConverter,
+                        femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.HeadData);
                 }
                 default:

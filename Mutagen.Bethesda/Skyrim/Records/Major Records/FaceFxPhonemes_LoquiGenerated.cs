@@ -1980,7 +1980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FaceFxPhonemesXmlWriteTranslation);
-        public const int NumStructFields = 17;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(FaceFxPhonemesBinaryWriteTranslation);
         #region Interface
@@ -2076,39 +2076,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFaceFxPhonemes item,
             MutagenFrame frame)
         {
-            item.LipMode = frame.ReadBoolean();
-            if (frame.Complete) return;
-            item.Aah_LipBigAah = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.BigAah_LipDST = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.BMP_LipEee = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.ChJSh_LipFV = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.DST_LipK = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.Eee_LipL = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.Eh_LipR = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.FV_LipTh = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.I = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.K = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.N = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.Oh = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.OohQ = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.R = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.Th = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.W = Mutagen.Bethesda.Skyrim.Phoneme.CreateFromBinary(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -3914,103 +3881,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFaceFxPhonemesGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.LipMode);
-            if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)Aah_LipBigAahItem).BinaryWriteTranslator).Write(
-                    item: Aah_LipBigAahItem,
-                    writer: writer);
-            }
-            if (item.BigAah_LipDST.TryGet(out var BigAah_LipDSTItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)BigAah_LipDSTItem).BinaryWriteTranslator).Write(
-                    item: BigAah_LipDSTItem,
-                    writer: writer);
-            }
-            if (item.BMP_LipEee.TryGet(out var BMP_LipEeeItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)BMP_LipEeeItem).BinaryWriteTranslator).Write(
-                    item: BMP_LipEeeItem,
-                    writer: writer);
-            }
-            if (item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)ChJSh_LipFVItem).BinaryWriteTranslator).Write(
-                    item: ChJSh_LipFVItem,
-                    writer: writer);
-            }
-            if (item.DST_LipK.TryGet(out var DST_LipKItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)DST_LipKItem).BinaryWriteTranslator).Write(
-                    item: DST_LipKItem,
-                    writer: writer);
-            }
-            if (item.Eee_LipL.TryGet(out var Eee_LipLItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)Eee_LipLItem).BinaryWriteTranslator).Write(
-                    item: Eee_LipLItem,
-                    writer: writer);
-            }
-            if (item.Eh_LipR.TryGet(out var Eh_LipRItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)Eh_LipRItem).BinaryWriteTranslator).Write(
-                    item: Eh_LipRItem,
-                    writer: writer);
-            }
-            if (item.FV_LipTh.TryGet(out var FV_LipThItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)FV_LipThItem).BinaryWriteTranslator).Write(
-                    item: FV_LipThItem,
-                    writer: writer);
-            }
-            if (item.I.TryGet(out var IItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)IItem).BinaryWriteTranslator).Write(
-                    item: IItem,
-                    writer: writer);
-            }
-            if (item.K.TryGet(out var KItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)KItem).BinaryWriteTranslator).Write(
-                    item: KItem,
-                    writer: writer);
-            }
-            if (item.N.TryGet(out var NItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)NItem).BinaryWriteTranslator).Write(
-                    item: NItem,
-                    writer: writer);
-            }
-            if (item.Oh.TryGet(out var OhItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)OhItem).BinaryWriteTranslator).Write(
-                    item: OhItem,
-                    writer: writer);
-            }
-            if (item.OohQ.TryGet(out var OohQItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)OohQItem).BinaryWriteTranslator).Write(
-                    item: OohQItem,
-                    writer: writer);
-            }
-            if (item.R.TryGet(out var RItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)RItem).BinaryWriteTranslator).Write(
-                    item: RItem,
-                    writer: writer);
-            }
-            if (item.Th.TryGet(out var ThItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)ThItem).BinaryWriteTranslator).Write(
-                    item: ThItem,
-                    writer: writer);
-            }
-            if (item.W.TryGet(out var WItem))
-            {
-                ((PhonemeBinaryWriteTranslation)((IBinaryItem)WItem).BinaryWriteTranslator).Write(
-                    item: WItem,
-                    writer: writer);
-            }
         }
 
         public void Write(
@@ -4121,23 +3991,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        public Boolean LipMode => _data.Span.Slice(0, 1)[0] == 1;
-        public IPhonemeGetter Aah_LipBigAah => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter BigAah_LipDST => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(173)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter BMP_LipEee => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(345)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter ChJSh_LipFV => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(517)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter DST_LipK => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(689)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter Eee_LipL => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(861)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter Eh_LipR => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1033)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter FV_LipTh => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1205)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter I => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1377)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter K => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1549)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter N => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1721)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter Oh => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(1893)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter OohQ => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(2065)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter R => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(2237)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter Th => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(2409)), _package, default(RecordTypeConverter));
-        public IPhonemeGetter W => PhonemeBinaryOverlay.PhonemeFactory(new BinaryMemoryReadStream(_data.Slice(2581)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -4158,7 +4011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new FaceFxPhonemesBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 2753),
+                bytes: stream.RemainingMemory.Slice(0, 0),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(
