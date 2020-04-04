@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static void CustomStringImports(MutagenFrame frame, IConditionData item)
             {
                 if (!frame.MetaData.TryGetSubrecordFrame(frame.Reader, out var subMeta)) return;
-                if (!(item is IFunctionConditionDataInternal funcData)) return;
+                if (!(item is IFunctionConditionData funcData)) return;
                 switch (subMeta.Header.RecordType.TypeInt)
                 {
                     case 0x31534943: // CIS1
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FunctionConditionDataBinaryCreateTranslation
         {
-            static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IFunctionConditionDataInternal item)
+            static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IFunctionConditionData item)
             {
                 item.ParameterOneNumber = frame.ReadInt32();
                 item.ParameterTwoNumber = frame.ReadInt32();

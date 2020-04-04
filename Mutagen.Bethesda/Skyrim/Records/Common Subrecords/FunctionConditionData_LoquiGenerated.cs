@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class FunctionConditionData :
         ConditionData,
-        IFunctionConditionDataInternal,
+        IFunctionConditionData,
         ILoquiObjectSetter<FunctionConditionData>,
         IEquatable<FunctionConditionData>,
         IEqualsMask
@@ -62,12 +62,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParameterOneNumber
         public Int32 ParameterOneNumber { get; set; } = default;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32 IFunctionConditionDataInternal.ParameterOneNumber
-        {
-            get => this.ParameterOneNumber;
-            set => this.ParameterOneNumber = value;
-        }
         #endregion
         #region ParameterOneString
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -79,12 +73,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFunctionConditionDataInternal.ParameterOneString
-        {
-            get => this.ParameterOneString;
-            set => this.ParameterOneString = value;
-        }
         #endregion
         #region ParameterTwoRecord
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -95,12 +83,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParameterTwoNumber
         public Int32 ParameterTwoNumber { get; set; } = default;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32 IFunctionConditionDataInternal.ParameterTwoNumber
-        {
-            get => this.ParameterTwoNumber;
-            set => this.ParameterTwoNumber = value;
-        }
         #endregion
         #region ParameterTwoString
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -112,12 +94,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFunctionConditionDataGetter.ParameterTwoString => this.ParameterTwoString;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFunctionConditionDataInternal.ParameterTwoString
-        {
-            get => this.ParameterTwoString;
-            set => this.ParameterTwoString = value;
-        }
         #endregion
         #region Unknown3
         public Int32 Unknown3 { get; set; } = default;
@@ -891,25 +867,19 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFunctionConditionData :
         IFunctionConditionDataGetter,
         IConditionData,
-        ILoquiObjectSetter<IFunctionConditionDataInternal>
+        ILoquiObjectSetter<IFunctionConditionData>
     {
         new UInt16 Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new Int32 Unknown3 { get; set; }
-        new Int32 Unknown4 { get; set; }
-        new Int32 Unknown5 { get; set; }
-    }
-
-    public partial interface IFunctionConditionDataInternal :
-        IFunctionConditionData,
-        IFunctionConditionDataGetter
-    {
         new IFormLink<SkyrimMajorRecord> ParameterOneRecord { get; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
         new IFormLink<SkyrimMajorRecord> ParameterTwoRecord { get; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
+        new Int32 Unknown3 { get; set; }
+        new Int32 Unknown4 { get; set; }
+        new Int32 Unknown5 { get; set; }
     }
 
     public partial interface IFunctionConditionDataGetter :
@@ -938,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Common MixIn
     public static partial class FunctionConditionDataMixIn
     {
-        public static void Clear(this IFunctionConditionDataInternal item)
+        public static void Clear(this IFunctionConditionData item)
         {
             ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -1006,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IFunctionConditionDataInternal lhs,
+            this IFunctionConditionData lhs,
             IFunctionConditionDataGetter rhs,
             out FunctionConditionData.ErrorMask errorMask,
             FunctionConditionData.TranslationMask? copyMask = null)
@@ -1021,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IFunctionConditionDataInternal lhs,
+            this IFunctionConditionData lhs,
             IFunctionConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -1067,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             XElement node,
             FunctionConditionData.TranslationMask? translationMask = null)
         {
@@ -1080,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             XElement node,
             out FunctionConditionData.ErrorMask errorMask,
             FunctionConditionData.TranslationMask? translationMask = null)
@@ -1095,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1108,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             string path,
             FunctionConditionData.TranslationMask? translationMask = null)
         {
@@ -1120,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             string path,
             out FunctionConditionData.ErrorMask errorMask,
             FunctionConditionData.TranslationMask? translationMask = null)
@@ -1134,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             string path,
             ErrorMaskBuilder? errorMask,
             FunctionConditionData.TranslationMask? translationMask = null)
@@ -1148,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             Stream stream,
             FunctionConditionData.TranslationMask? translationMask = null)
         {
@@ -1160,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             Stream stream,
             out FunctionConditionData.ErrorMask errorMask,
             FunctionConditionData.TranslationMask? translationMask = null)
@@ -1174,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             FunctionConditionData.TranslationMask? translationMask = null)
@@ -1192,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1202,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IFunctionConditionDataInternal item,
+            this IFunctionConditionData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1268,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type SetterType = typeof(IFunctionConditionData);
 
-        public static readonly Type? InternalSetterType = typeof(IFunctionConditionDataInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.FunctionConditionData";
 
@@ -1527,13 +1497,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public void Clear(IFunctionConditionDataInternal item)
+        public void Clear(IFunctionConditionData item)
         {
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
             item.ParameterOneRecord.FormKey = FormKey.Null;
+            item.ParameterOneNumber = default;
+            item.ParameterOneString = default;
             item.ParameterTwoRecord.FormKey = FormKey.Null;
+            item.ParameterTwoNumber = default;
+            item.ParameterTwoString = default;
             item.Unknown3 = default;
             item.Unknown4 = default;
             item.Unknown5 = FunctionConditionData._Unknown5_Default;
@@ -1542,12 +1516,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(IConditionData item)
         {
-            Clear(item: (IFunctionConditionDataInternal)item);
+            Clear(item: (IFunctionConditionData)item);
         }
         
         #region Xml Translation
         public void CopyInFromXml(
-            IFunctionConditionDataInternal item,
+            IFunctionConditionData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1575,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IFunctionConditionDataInternal item,
+            IFunctionConditionData item,
             MutagenFrame frame)
         {
             item.Function = frame.ReadUInt16();
@@ -1586,7 +1560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void CopyInFromBinary(
-            IFunctionConditionDataInternal item,
+            IFunctionConditionData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1865,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IFunctionConditionDataInternal item,
+            IFunctionConditionData item,
             IFunctionConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -1875,6 +1849,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Function) ?? true))
+            {
+                item.Function = rhs.Function;
+            }
+            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
             {
                 item.ParameterOneRecord.FormKey = rhs.ParameterOneRecord.FormKey;
@@ -1898,32 +1880,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
             {
                 item.ParameterTwoString = rhs.ParameterTwoString;
-            }
-            DeepCopyIn(
-                (IFunctionConditionData)item,
-                (IFunctionConditionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public void DeepCopyIn(
-            IFunctionConditionData item,
-            IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask);
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Function) ?? true))
-            {
-                item.Function = rhs.Function;
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown2) ?? true))
-            {
-                item.Unknown2 = rhs.Unknown2;
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown3) ?? true))
             {
@@ -2201,7 +2157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new readonly static FunctionConditionDataXmlCreateTranslation Instance = new FunctionConditionDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IFunctionConditionDataInternal item,
+            IFunctionConditionData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -2226,7 +2182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IFunctionConditionDataInternal item,
+            IFunctionConditionData item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -2582,11 +2538,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void FillBinaryParameterParsingCustom(
             MutagenFrame frame,
-            IFunctionConditionDataInternal item);
+            IFunctionConditionData item);
 
         public static void FillBinaryParameterParsingCustomPublic(
             MutagenFrame frame,
-            IFunctionConditionDataInternal item)
+            IFunctionConditionData item)
         {
             FillBinaryParameterParsingCustom(
                 frame: frame,
