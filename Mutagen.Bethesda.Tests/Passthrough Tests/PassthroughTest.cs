@@ -73,14 +73,12 @@ namespace Mutagen.Bethesda.Tests
             {
                 try
                 {
-                    using (var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write))
-                    {
-                        ModDecompressor.Decompress(
-                            streamCreator: () => File.OpenRead(this.FilePath.Path),
-                            gameMode: this.GameMode,
-                            outputStream: outStream,
-                            interest: interest);
-                    }
+                    using var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write);
+                    ModDecompressor.Decompress(
+                        streamCreator: () => File.OpenRead(this.FilePath.Path),
+                        gameMode: this.GameMode,
+                        outputStream: outStream,
+                        interest: interest);
                 }
                 catch (Exception)
                 {
@@ -96,13 +94,11 @@ namespace Mutagen.Bethesda.Tests
             {
                 try
                 {
-                    using (var outStream = new FileStream(orderedPath, FileMode.Create))
-                    {
-                        ModRecordSorter.Sort(
-                            streamCreator: () => File.OpenRead(uncompressedPath),
-                            outputStream: outStream,
-                            gameMode: this.Target.GameMode);
-                    }
+                    using var outStream = new FileStream(orderedPath, FileMode.Create);
+                    ModRecordSorter.Sort(
+                        streamCreator: () => File.OpenRead(uncompressedPath),
+                        outputStream: outStream,
+                        gameMode: this.Target.GameMode);
                 }
                 catch (Exception)
                 {
@@ -145,133 +141,108 @@ namespace Mutagen.Bethesda.Tests
 
         protected abstract Task<IMod> ImportBinary(FilePath path);
         protected abstract Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path);
-        //protected abstract Task<IMod> ImportXmlFolder(DirectoryPath dir);
-        //protected abstract Task WriteXmlFolder(IModGetter mod, DirectoryPath dir);
         protected abstract Task<IMod> ImportCopyIn(FilePath file);
 
-        public async Task BinaryPassthroughTest()
+        public async IAsyncEnumerable<(string TestName, Exception ex)> BinaryPassthroughTest()
         {
-            using (var tmp = await SetupProcessedFiles())
+            using var tmp = await SetupProcessedFiles();
+
+            var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
+            var processedPath = ProcessedPath(tmp);
+            var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
+            var binaryOverlayPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryOverlay");
+            var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
+
+            List<Exception> delayedExceptions = new List<Exception>();
+
+            var writeParams = new BinaryWriteParameters()
             {
-                var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
-                var processedPath = ProcessedPath(tmp);
-                var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
-                var binaryOverlayPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryOverlay");
-                var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
+                MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+            };
 
-                List<Exception> delayedExceptions = new List<Exception>();
-
-                var writeParams = new BinaryWriteParameters()
-                {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
-                    MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
-                };
-
-                // Do normal
-                if (Settings.TestNormal)
-                {
-                    var mod = await ImportBinary(this.FilePath.Path);
-
-                    foreach (var record in mod.EnumerateMajorRecords())
+            // Do normal
+            if (Settings.TestNormal)
+            {
+                yield return await TestBattery.RunTest(
+                    "Binary Normal Passthrough",
+                    this.Target,
+                    async () =>
                     {
-                        record.IsCompressed = false;
-                    }
+                        var mod = await ImportBinary(this.FilePath.Path);
 
-                    mod.WriteToBinaryParallel(outputPath, writeParams);
-                    GC.Collect();
+                        foreach (var record in mod.EnumerateMajorRecords())
+                        {
+                            record.IsCompressed = false;
+                        }
 
-                    using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
-                    {
+                        mod.WriteToBinaryParallel(outputPath, writeParams);
+                        GC.Collect();
+
+                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
+
                         var ret = AssertFilesEqual(
                             stream,
                             outputPath,
                             amountToReport: 15);
                         if (ret.Exception != null)
                         {
-                            if (ret.HadMore)
-                            {
-                                delayedExceptions.Add(ret.Exception);
-                            }
-                            else
-                            {
-                                throw ret.Exception;
-                            }
+                            throw ret.Exception;
                         }
-                    }
-                }
+                    });
+            }
 
-                if (Settings.TestBinaryOverlay)
-                {
-                    using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
+            if (Settings.TestBinaryOverlay)
+            {
+                yield return await TestBattery.RunTest(
+                    "Binary Overlay Passthrough",
+                    this.Target,
+                    async () =>
                     {
-                        wrapper.WriteToBinary(binaryOverlayPath, writeParams);
-                    }
+                        using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
+                        {
+                            wrapper.WriteToBinary(binaryOverlayPath, writeParams);
+                        }
 
-                    using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
-                    {
+                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
+
                         var ret = PassthroughTest.AssertFilesEqual(
                             stream,
                             binaryOverlayPath,
                             amountToReport: 15);
                         if (ret.Exception != null)
                         {
-                            if (ret.HadMore)
-                            {
-                                delayedExceptions.Add(ret.Exception);
-                            }
-                            else
-                            {
-                                throw ret.Exception;
-                            }
+                            throw ret.Exception;
                         }
-                    }
-                }
+                    });
+            }
 
-                //if (Settings.TestFolder)
-                //{
-                //    var ret = await XmlFolderPassthroughTest();
-                //    if (ret.Exception != null)
-                //    {
-                //        if (ret.HadMore)
-                //        {
-                //            delayedExceptions.Add(ret.Exception);
-                //        }
-                //        else
-                //        {
-                //            throw ret.Exception;
-                //        }
-                //    }
-                //}
-
-                if (Settings.TestCopyIn)
-                {
-                    var copyIn = await ImportCopyIn(this.FilePath.Path);
-                    copyIn.WriteToBinary(copyInPath, writeParams);
-
-                    using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
+            if (Settings.TestCopyIn)
+            {
+                yield return await TestBattery.RunTest(
+                    "Copy In Passthrough",
+                    this.Target,
+                    async () =>
                     {
+                        var copyIn = await ImportCopyIn(this.FilePath.Path);
+                        copyIn.WriteToBinary(copyInPath, writeParams);
+
+                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
+
                         var ret = PassthroughTest.AssertFilesEqual(
                             stream,
                             copyInPath,
                             amountToReport: 15);
                         if (ret.Exception != null)
                         {
-                            if (ret.HadMore)
-                            {
-                                delayedExceptions.Add(ret.Exception);
-                            }
-                            else
-                            {
-                                throw ret.Exception;
-                            }
+                            throw ret.Exception;
                         }
-                    }
-                }
+                    });
+            }
 
-                if (delayedExceptions.Count > 0)
-                {
-                    throw new AggregateException(delayedExceptions);
-                }
+            if (delayedExceptions.Count > 0)
+            {
+                throw new AggregateException(delayedExceptions);
             }
         }
 
@@ -316,59 +287,54 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughTest Factory(TestingSettings settings, Target target)
         {
-            switch (target.GameMode)
+            return target.GameMode switch
             {
-                case GameMode.Oblivion:
-                    return new OblivionPassthroughTest(settings, target);
-                case GameMode.Skyrim:
-                    return new SkyrimPassthroughTest(settings, target);
-                default:
-                    throw new NotImplementedException();
-            }
+                GameMode.Oblivion => new OblivionPassthroughTest(settings, target),
+                GameMode.Skyrim => new SkyrimPassthroughTest(settings, target),
+                _ => throw new NotImplementedException(),
+            };
         }
 
-        public static (Exception Exception, IEnumerable<RangeInt64> Sections, bool HadMore) AssertFilesEqual(
+        public static (Exception Exception, IEnumerable<RangeInt64> Sections) AssertFilesEqual(
             Stream stream,
             string path2,
             RangeCollection ignoreList = null,
             ushort amountToReport = 5)
         {
             List<RangeInt32> errorRanges = new List<RangeInt32>();
-            using (var reader2 = new BinaryReadStream(path2))
+            using var reader2 = new BinaryReadStream(path2);
+            Stream compareStream = new ComparisonStream(
+                stream,
+                reader2);
+
+            if (ignoreList != null)
             {
-                Stream compareStream = new ComparisonStream(
-                    stream,
-                    reader2);
-
-                if (ignoreList != null)
-                {
-                    compareStream = new BasicSubstitutionRangeStream(
-                        compareStream,
-                        ignoreList,
-                        toSubstitute: 0);
-                }
-
-                var errs = GetDifferences(compareStream)
-                    .First(amountToReport)
-                    .ToArray();
-                if (errs.Length > 0)
-                {
-                    var posStr = string.Join(" ", errs.Select((r) =>
-                    {
-                        return r.ToString("X");
-                    }));
-                    return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs, false);
-                }
-                if (stream.Position != stream.Length)
-                {
-                    return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position.ToString("X")} than {path2}"), errs, true);
-                }
-                if (reader2.Position != reader2.Length)
-                {
-                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position.ToString("X")} than source stream."), errs, true);
-                }
-                return (null, errs, false);
+                compareStream = new BasicSubstitutionRangeStream(
+                    compareStream,
+                    ignoreList,
+                    toSubstitute: 0);
             }
+
+            var errs = GetDifferences(compareStream)
+                .First(amountToReport)
+                .ToArray();
+            if (errs.Length > 0)
+            {
+                var posStr = string.Join(" ", errs.Select((r) =>
+                {
+                    return r.ToString("X");
+                }));
+                return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs);
+            }
+            if (stream.Position != stream.Length)
+            {
+                return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position.ToString("X")} than {path2}"), errs);
+            }
+            if (reader2.Position != reader2.Length)
+            {
+                return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position.ToString("X")} than source stream."), errs);
+            }
+            return (null, errs);
         }
 
         public static IEnumerable<RangeInt64> GetDifferences(

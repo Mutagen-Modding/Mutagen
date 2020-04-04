@@ -44,14 +44,13 @@ namespace Mutagen.Bethesda.Tests
                 sw.Start();
                 await TestBattery.RunTests(settings);
                 sw.Stop();
-                System.Console.WriteLine($"Tests took: {sw.ElapsedMilliseconds * 1.0 / 1000}s");
             }
             catch (Exception ex)
             {
                 System.Console.WriteLine("Exception occurred:");
                 System.Console.WriteLine(ex);
             }
-            System.Console.ReadKey();
+            System.Console.ReadLine();
         }
     }
 }

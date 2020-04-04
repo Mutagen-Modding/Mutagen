@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,14 +11,57 @@ namespace Mutagen.Bethesda.Tests
     {
         public static async Task RunTests(TestingSettings settings)
         {
-            foreach (var t in GetTests(settings: settings))
+            int passed = 0;
+            int failed = 0;
+            await foreach (var (TestName, ex) in GetTests(settings: settings))
             {
-                t.Wait();
+                System.Console.WriteLine("========================================\\");
+                System.Console.WriteLine(TestName);
+                if (ex != null)
+                {
+                    failed++;
+                    System.Console.WriteLine(ex);
+                }
+                else
+                {
+                    failed++;
+                    System.Console.WriteLine("Passed");
+                }
+                System.Console.WriteLine("========================================/");
+                System.Console.WriteLine();
                 GC.Collect();
+            }
+            if (failed == 0)
+            {
+                System.Console.WriteLine("All passed");
+            }
+            else
+            {
+                System.Console.WriteLine($"{failed} / {(passed + failed)} failed");
             }
         }
 
-        public static IEnumerable<Task> GetTests(TestingSettings settings)
+        public static async Task<(string TestName, Exception ex)> RunTest(string name, Func<Task> toDo)
+        {
+            try
+            {
+                await toDo().ConfigureAwait(false);
+                return (name, null);
+            }
+            catch (Exception ex)
+            {
+                return (name, ex);
+            }
+        }
+
+        public static async Task<(string TestName, Exception ex)> RunTest(string name, Target target, Func<Task> toDo)
+        {
+            return await RunTest($"{target.GameMode} => {target.Path}\n" +
+                $"{name}",
+                toDo);
+        }
+
+        public static async IAsyncEnumerable<(string TestName, Exception ex)> GetTests(TestingSettings settings)
         {
             var oblivPassthrough = new Target()
             {
@@ -38,27 +82,30 @@ namespace Mutagen.Bethesda.Tests
                     PassthroughTest passthroughTest = PassthroughTest.Factory(settings, target);
                     if (passthroughTests)
                     {
-                        yield return passthroughTest.BinaryPassthroughTest();
+                        await foreach (var result in passthroughTest.BinaryPassthroughTest())
+                        {
+                            yield return result;
+                        }
                     }
                     if (settings.PassthroughSettings?.TestImport ?? false)
                     {
-                        yield return passthroughTest.TestImport();
+                        yield return await RunTest("Test Import", target, passthroughTest.TestImport);
                     }
                     if (settings.TestLocators)
                     {
-                        yield return OtherTests.BaseGroupIterator(target, settings.DataFolderLocations);
+                        yield return await RunTest("Data Folder Locator", target, () => OtherTests.BaseGroupIterator(target, settings.DataFolderLocations));
                     }
                 }
             }
 
             if (settings.TestGroupMasks)
             {
-                yield return OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough);
-                yield return OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough);
+                yield return await RunTest("GroupMask Import", () => OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough));
+                yield return await RunTest("GroupMask Export", () => OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough));
             }
             if (settings.TestFlattenedMod)
             {
-                yield return FlattenedMod_Tests.Oblivion_FlattenMod(settings);
+                yield return await RunTest("Flatten Mod", () => FlattenedMod_Tests.Oblivion_FlattenMod(settings));
             }
             if (settings.TestBenchmarks)
             {
@@ -66,7 +113,7 @@ namespace Mutagen.Bethesda.Tests
             }
             if (settings.TestRecordEnumerables)
             {
-                yield return OtherTests.RecordEnumerations(settings, oblivPassthrough);
+                yield return await RunTest("Record Enumerations", () => OtherTests.RecordEnumerations(settings, oblivPassthrough));
             }
         }
     }
