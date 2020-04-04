@@ -334,13 +334,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.PointToPointConnections?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-                ret = ret.CombineHashCode(this.InterCellConnections?.GetHashCode());
-                ret = ret.CombineHashCode(this.PointToReferenceMappings?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.PointToPointConnections);
+                hash.Add(this.Unknown);
+                hash.Add(this.InterCellConnections);
+                hash.Add(this.PointToReferenceMappings);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1901,16 +1901,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IPathGridGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.PointToPointConnections).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.PointToPointConnections);
             if (item.Unknown.TryGet(out var UnknownItem))
             {
-                ret = HashHelper.GetHashCode(UnknownItem).CombineHashCode(ret);
+                hash.Add(UnknownItem);
             }
-            ret = HashHelper.GetHashCode(item.InterCellConnections).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PointToReferenceMappings).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.InterCellConnections);
+            hash.Add(item.PointToReferenceMappings);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

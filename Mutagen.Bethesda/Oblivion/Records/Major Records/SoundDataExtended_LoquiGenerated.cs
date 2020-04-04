@@ -285,12 +285,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.StaticAttenuation?.GetHashCode());
-                ret = ret.CombineHashCode(this.StopTime?.GetHashCode());
-                ret = ret.CombineHashCode(this.StartTime?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.StaticAttenuation);
+                hash.Add(this.StopTime);
+                hash.Add(this.StartTime);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1377,12 +1377,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ISoundDataExtendedInternalGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.StaticAttenuation).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.StopTime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.StartTime).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.StaticAttenuation);
+            hash.Add(item.StopTime);
+            hash.Add(item.StartTime);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISoundDataInternalGetter item)

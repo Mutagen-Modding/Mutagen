@@ -294,11 +294,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.SymmetricGeometry?.GetHashCode());
-                ret = ret.CombineHashCode(this.AsymmetricGeometry?.GetHashCode());
-                ret = ret.CombineHashCode(this.SymmetricTexture?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.SymmetricGeometry);
+                hash.Add(this.AsymmetricGeometry);
+                hash.Add(this.SymmetricTexture);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1395,20 +1395,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IFaceGenDataGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.SymmetricGeometry.TryGet(out var SymmetricGeometryItem))
             {
-                ret = HashHelper.GetHashCode(SymmetricGeometryItem).CombineHashCode(ret);
+                hash.Add(SymmetricGeometryItem);
             }
             if (item.AsymmetricGeometry.TryGet(out var AsymmetricGeometryItem))
             {
-                ret = HashHelper.GetHashCode(AsymmetricGeometryItem).CombineHashCode(ret);
+                hash.Add(AsymmetricGeometryItem);
             }
             if (item.SymmetricTexture.TryGet(out var SymmetricTextureItem))
             {
-                ret = HashHelper.GetHashCode(SymmetricTextureItem).CombineHashCode(ret);
+                hash.Add(SymmetricTextureItem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

@@ -392,17 +392,17 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Type?.GetHashCode());
-                ret = ret.CombineHashCode(this.ExtraParts?.GetHashCode());
-                ret = ret.CombineHashCode(this.Parts?.GetHashCode());
-                ret = ret.CombineHashCode(this.TextureSet?.GetHashCode());
-                ret = ret.CombineHashCode(this.ValidRaces?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Flags);
+                hash.Add(this.Type);
+                hash.Add(this.ExtraParts);
+                hash.Add(this.Parts);
+                hash.Add(this.TextureSet);
+                hash.Add(this.ValidRaces);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2095,35 +2095,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IHeadPartGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
             if (item.Type.TryGet(out var Typeitem))
             {
-                ret = HashHelper.GetHashCode(Typeitem).CombineHashCode(ret);
+                hash.Add(Typeitem);
             }
-            ret = HashHelper.GetHashCode(item.ExtraParts).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Parts).CombineHashCode(ret);
+            hash.Add(item.ExtraParts);
+            hash.Add(item.Parts);
             if (item.TextureSet.TryGet(out var TextureSetitem))
             {
-                ret = HashHelper.GetHashCode(TextureSetitem).CombineHashCode(ret);
+                hash.Add(TextureSetitem);
             }
             if (item.ValidRaces.TryGet(out var ValidRacesitem))
             {
-                ret = HashHelper.GetHashCode(ValidRacesitem).CombineHashCode(ret);
+                hash.Add(ValidRacesitem);
             }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)

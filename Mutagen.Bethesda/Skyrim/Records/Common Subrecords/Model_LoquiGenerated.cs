@@ -273,10 +273,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.AlternateTextures?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.AlternateTextures);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1376,10 +1376,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IModelGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.AlternateTextures).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.AlternateTextures);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISimpleModelGetter item)

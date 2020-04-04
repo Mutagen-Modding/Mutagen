@@ -363,15 +363,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-                ret = ret.CombineHashCode(this.VertexNormals?.GetHashCode());
-                ret = ret.CombineHashCode(this.VertexHeightMap?.GetHashCode());
-                ret = ret.CombineHashCode(this.VertexColors?.GetHashCode());
-                ret = ret.CombineHashCode(this.Layers?.GetHashCode());
-                ret = ret.CombineHashCode(this.Textures?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Unknown);
+                hash.Add(this.VertexNormals);
+                hash.Add(this.VertexHeightMap);
+                hash.Add(this.VertexColors);
+                hash.Add(this.Layers);
+                hash.Add(this.Textures);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1946,27 +1946,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILandscapeGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Unknown.TryGet(out var UnknownItem))
             {
-                ret = HashHelper.GetHashCode(UnknownItem).CombineHashCode(ret);
+                hash.Add(UnknownItem);
             }
             if (item.VertexNormals.TryGet(out var VertexNormalsItem))
             {
-                ret = HashHelper.GetHashCode(VertexNormalsItem).CombineHashCode(ret);
+                hash.Add(VertexNormalsItem);
             }
             if (item.VertexHeightMap.TryGet(out var VertexHeightMapItem))
             {
-                ret = HashHelper.GetHashCode(VertexHeightMapItem).CombineHashCode(ret);
+                hash.Add(VertexHeightMapItem);
             }
             if (item.VertexColors.TryGet(out var VertexColorsItem))
             {
-                ret = HashHelper.GetHashCode(VertexColorsItem).CombineHashCode(ret);
+                hash.Add(VertexColorsItem);
             }
-            ret = HashHelper.GetHashCode(item.Layers).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Textures).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Layers);
+            hash.Add(item.Textures);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

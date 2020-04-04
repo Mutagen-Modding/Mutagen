@@ -367,14 +367,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.ArmorValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.Value?.GetHashCode());
-                ret = ret.CombineHashCode(this.Health?.GetHashCode());
-                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.ArmorValue);
+                hash.Add(this.Value);
+                hash.Add(this.Health);
+                hash.Add(this.Weight);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1759,14 +1759,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IArmorGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.ArmorValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.ArmorValue);
+            hash.Add(item.Value);
+            hash.Add(item.Health);
+            hash.Add(item.Weight);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IAClothingGetter item)

@@ -287,11 +287,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.RankNumber?.GetHashCode());
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Insignia?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.RankNumber);
+                hash.Add(this.Name);
+                hash.Add(this.Insignia);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1411,20 +1411,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRankGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.RankNumber.TryGet(out var RankNumberitem))
             {
-                ret = HashHelper.GetHashCode(RankNumberitem).CombineHashCode(ret);
+                hash.Add(RankNumberitem);
             }
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem.Male, Nameitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(Nameitem.Male, Nameitem.Female));
             }
             if (item.Insignia.TryGet(out var Insigniaitem))
             {
-                ret = HashHelper.GetHashCode(Insigniaitem).CombineHashCode(ret);
+                hash.Add(Insigniaitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

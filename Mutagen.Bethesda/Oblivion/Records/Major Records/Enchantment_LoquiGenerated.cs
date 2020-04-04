@@ -377,16 +377,16 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Type?.GetHashCode());
-                ret = ret.CombineHashCode(this.ChargeAmount?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnchantCost?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Effects?.GetHashCode());
-                ret = ret.CombineHashCode(this.ENITDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Type);
+                hash.Add(this.ChargeAmount);
+                hash.Add(this.EnchantCost);
+                hash.Add(this.Flags);
+                hash.Add(this.Effects);
+                hash.Add(this.ENITDataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1884,19 +1884,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IEnchantmentGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
-            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ChargeAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EnchantCost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ENITDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Type);
+            hash.Add(item.ChargeAmount);
+            hash.Add(item.EnchantCost);
+            hash.Add(item.Flags);
+            hash.Add(item.Effects);
+            hash.Add(item.ENITDataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

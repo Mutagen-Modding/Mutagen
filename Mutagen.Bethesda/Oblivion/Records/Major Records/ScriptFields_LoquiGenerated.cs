@@ -318,13 +318,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.MetadataSummary?.GetHashCode());
-                ret = ret.CombineHashCode(this.CompiledScript?.GetHashCode());
-                ret = ret.CombineHashCode(this.SourceCode?.GetHashCode());
-                ret = ret.CombineHashCode(this.LocalVariables?.GetHashCode());
-                ret = ret.CombineHashCode(this.References?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.MetadataSummary);
+                hash.Add(this.CompiledScript);
+                hash.Add(this.SourceCode);
+                hash.Add(this.LocalVariables);
+                hash.Add(this.References);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1817,19 +1817,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IScriptFieldsGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.MetadataSummary).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.MetadataSummary);
             if (item.CompiledScript.TryGet(out var CompiledScriptItem))
             {
-                ret = HashHelper.GetHashCode(CompiledScriptItem).CombineHashCode(ret);
+                hash.Add(CompiledScriptItem);
             }
             if (item.SourceCode.TryGet(out var SourceCodeitem))
             {
-                ret = HashHelper.GetHashCode(SourceCodeitem).CombineHashCode(ret);
+                hash.Add(SourceCodeitem);
             }
-            ret = HashHelper.GetHashCode(item.LocalVariables).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.References).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.LocalVariables);
+            hash.Add(item.References);
+            return hash.ToHashCode();
         }
         
         #endregion

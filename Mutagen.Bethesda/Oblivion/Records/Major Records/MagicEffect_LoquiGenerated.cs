@@ -517,25 +517,25 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Description?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseCost?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unused?.GetHashCode());
-                ret = ret.CombineHashCode(this.MagicSchool?.GetHashCode());
-                ret = ret.CombineHashCode(this.Resistance?.GetHashCode());
-                ret = ret.CombineHashCode(this.CounterEffectCount?.GetHashCode());
-                ret = ret.CombineHashCode(this.Light?.GetHashCode());
-                ret = ret.CombineHashCode(this.ProjectileSpeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.EffectShader?.GetHashCode());
-                ret = ret.CombineHashCode(this.SubData?.GetHashCode());
-                ret = ret.CombineHashCode(this.CounterEffects?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Icon);
+                hash.Add(this.Model);
+                hash.Add(this.Flags);
+                hash.Add(this.BaseCost);
+                hash.Add(this.Unused);
+                hash.Add(this.MagicSchool);
+                hash.Add(this.Resistance);
+                hash.Add(this.CounterEffectCount);
+                hash.Add(this.Light);
+                hash.Add(this.ProjectileSpeed);
+                hash.Add(this.EffectShader);
+                hash.Add(this.SubData);
+                hash.Add(this.CounterEffects);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2486,37 +2486,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IMagicEffectGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Description.TryGet(out var Descriptionitem))
             {
-                ret = HashHelper.GetHashCode(Descriptionitem).CombineHashCode(ret);
+                hash.Add(Descriptionitem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BaseCost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unused).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MagicSchool).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Resistance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CounterEffectCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Light).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ProjectileSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EffectShader).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SubData).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CounterEffects).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Flags);
+            hash.Add(item.BaseCost);
+            hash.Add(item.Unused);
+            hash.Add(item.MagicSchool);
+            hash.Add(item.Resistance);
+            hash.Add(item.CounterEffectCount);
+            hash.Add(item.Light);
+            hash.Add(item.ProjectileSpeed);
+            hash.Add(item.EffectShader);
+            hash.Add(item.SubData);
+            hash.Add(item.CounterEffects);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

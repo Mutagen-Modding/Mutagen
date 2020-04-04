@@ -274,10 +274,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.AlphaLayerData?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.AlphaLayerData);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1310,13 +1310,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IAlphaLayerGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.AlphaLayerData.TryGet(out var AlphaLayerDataItem))
             {
-                ret = HashHelper.GetHashCode(AlphaLayerDataItem).CombineHashCode(ret);
+                hash.Add(AlphaLayerDataItem);
             }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IBaseLayerGetter item)

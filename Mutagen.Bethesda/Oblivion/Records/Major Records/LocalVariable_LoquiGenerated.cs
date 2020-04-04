@@ -338,14 +338,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Index?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.SLSDDataTypeState?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Index);
+                hash.Add(this.Fluff);
+                hash.Add(this.Flags);
+                hash.Add(this.Fluff2);
+                hash.Add(this.Name);
+                hash.Add(this.SLSDDataTypeState);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1568,17 +1568,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILocalVariableGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Index);
+            hash.Add(item.Fluff);
+            hash.Add(item.Flags);
+            hash.Add(item.Fluff2);
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
-            ret = HashHelper.GetHashCode(item.SLSDDataTypeState).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.SLSDDataTypeState);
+            return hash.ToHashCode();
         }
         
         #endregion

@@ -180,16 +180,16 @@ namespace Mutagen.Bethesda.Tests
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.ReuseCaches?.GetHashCode());
-                ret = ret.CombineHashCode(this.ReorderRecords?.GetHashCode());
-                ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestNormal?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestBinaryOverlay?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestImport?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestCopyIn?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.ReuseCaches);
+                hash.Add(this.ReorderRecords);
+                hash.Add(this.DeleteCachesAfter);
+                hash.Add(this.TestNormal);
+                hash.Add(this.TestBinaryOverlay);
+                hash.Add(this.TestImport);
+                hash.Add(this.TestFolder);
+                hash.Add(this.TestCopyIn);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1487,16 +1487,16 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public virtual int GetHashCode(IPassthroughSettingsGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.ReuseCaches).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ReorderRecords).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DeleteCachesAfter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestNormal).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestBinaryOverlay).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestImport).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestFolder).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestCopyIn).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.ReuseCaches);
+            hash.Add(item.ReorderRecords);
+            hash.Add(item.DeleteCachesAfter);
+            hash.Add(item.TestNormal);
+            hash.Add(item.TestBinaryOverlay);
+            hash.Add(item.TestImport);
+            hash.Add(item.TestFolder);
+            hash.Add(item.TestCopyIn);
+            return hash.ToHashCode();
         }
         
         #endregion

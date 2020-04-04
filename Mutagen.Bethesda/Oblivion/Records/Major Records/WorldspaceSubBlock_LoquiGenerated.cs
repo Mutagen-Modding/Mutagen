@@ -307,13 +307,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.BlockNumberY?.GetHashCode());
-                ret = ret.CombineHashCode(this.BlockNumberX?.GetHashCode());
-                ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
-                ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
-                ret = ret.CombineHashCode(this.Items?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.BlockNumberY);
+                hash.Add(this.BlockNumberX);
+                hash.Add(this.GroupType);
+                hash.Add(this.LastModified);
+                hash.Add(this.Items);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1643,13 +1643,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IWorldspaceSubBlockGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.BlockNumberY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BlockNumberX).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.BlockNumberY);
+            hash.Add(item.BlockNumberX);
+            hash.Add(item.GroupType);
+            hash.Add(item.LastModified);
+            hash.Add(item.Items);
+            return hash.ToHashCode();
         }
         
         #endregion

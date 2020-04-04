@@ -334,14 +334,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Script?.GetHashCode());
-                ret = ret.CombineHashCode(this.MagicSchool?.GetHashCode());
-                ret = ret.CombineHashCode(this.VisualEffect?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.SCITDataTypeState?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Script);
+                hash.Add(this.MagicSchool);
+                hash.Add(this.VisualEffect);
+                hash.Add(this.Flags);
+                hash.Add(this.Name);
+                hash.Add(this.SCITDataTypeState);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1585,17 +1585,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IScriptEffectGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MagicSchool).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.VisualEffect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Script);
+            hash.Add(item.MagicSchool);
+            hash.Add(item.VisualEffect);
+            hash.Add(item.Flags);
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
-            ret = HashHelper.GetHashCode(item.SCITDataTypeState).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.SCITDataTypeState);
+            return hash.ToHashCode();
         }
         
         #endregion

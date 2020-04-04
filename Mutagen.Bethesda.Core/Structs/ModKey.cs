@@ -55,9 +55,12 @@ namespace Mutagen.Bethesda
         {
             this.Name = string.Intern(name);
             this.Master = master;
+
             // Cache the hash on construction, as ModKeys are typically created rarely, but hashed often.
-            this._hash = (Name?.ToUpper().GetHashCode() ?? 0)
-                .CombineHashCode(Master.GetHashCode());
+            HashCode hash = new HashCode();
+            hash.Add(Name.GetHashCode(StringComparison.OrdinalIgnoreCase));
+            hash.Add(Master);
+            this._hash = hash.ToHashCode();
         }
 
         /// <summary>

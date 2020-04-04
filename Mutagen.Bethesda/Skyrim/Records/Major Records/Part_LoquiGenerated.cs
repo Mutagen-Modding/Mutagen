@@ -278,10 +278,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.PartType?.GetHashCode());
-                ret = ret.CombineHashCode(this.FileName?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.PartType);
+                hash.Add(this.FileName);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1325,16 +1325,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IPartGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.PartType.TryGet(out var PartTypeitem))
             {
-                ret = HashHelper.GetHashCode(PartTypeitem).CombineHashCode(ret);
+                hash.Add(PartTypeitem);
             }
             if (item.FileName.TryGet(out var FileNameitem))
             {
-                ret = HashHelper.GetHashCode(FileNameitem).CombineHashCode(ret);
+                hash.Add(FileNameitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

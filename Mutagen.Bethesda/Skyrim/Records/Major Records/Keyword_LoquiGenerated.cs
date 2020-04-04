@@ -282,10 +282,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Color?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Color);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1381,13 +1381,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IKeywordGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Color.TryGet(out var Coloritem))
             {
-                ret = HashHelper.GetHashCode(Coloritem).CombineHashCode(ret);
+                hash.Add(Coloritem);
             }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)

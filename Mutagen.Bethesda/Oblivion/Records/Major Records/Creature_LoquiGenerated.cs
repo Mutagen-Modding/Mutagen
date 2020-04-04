@@ -1133,61 +1133,61 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Items?.GetHashCode());
-                ret = ret.CombineHashCode(this.Spells?.GetHashCode());
-                ret = ret.CombineHashCode(this.Models?.GetHashCode());
-                ret = ret.CombineHashCode(this.NIFT?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseSpellPoints?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fatigue?.GetHashCode());
-                ret = ret.CombineHashCode(this.BarterGold?.GetHashCode());
-                ret = ret.CombineHashCode(this.LevelOffset?.GetHashCode());
-                ret = ret.CombineHashCode(this.CalcMin?.GetHashCode());
-                ret = ret.CombineHashCode(this.CalcMax?.GetHashCode());
-                ret = ret.CombineHashCode(this.Factions?.GetHashCode());
-                ret = ret.CombineHashCode(this.DeathItem?.GetHashCode());
-                ret = ret.CombineHashCode(this.Script?.GetHashCode());
-                ret = ret.CombineHashCode(this.Aggression?.GetHashCode());
-                ret = ret.CombineHashCode(this.Confidence?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnergyLevel?.GetHashCode());
-                ret = ret.CombineHashCode(this.Responsibility?.GetHashCode());
-                ret = ret.CombineHashCode(this.BuySellServices?.GetHashCode());
-                ret = ret.CombineHashCode(this.Teaches?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
-                ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
-                ret = ret.CombineHashCode(this.Animations?.GetHashCode());
-                ret = ret.CombineHashCode(this.CreatureType?.GetHashCode());
-                ret = ret.CombineHashCode(this.CombatSkill?.GetHashCode());
-                ret = ret.CombineHashCode(this.MagicSkill?.GetHashCode());
-                ret = ret.CombineHashCode(this.StealthSkill?.GetHashCode());
-                ret = ret.CombineHashCode(this.SoulLevel?.GetHashCode());
-                ret = ret.CombineHashCode(this.Health?.GetHashCode());
-                ret = ret.CombineHashCode(this.AttackDamage?.GetHashCode());
-                ret = ret.CombineHashCode(this.Strength?.GetHashCode());
-                ret = ret.CombineHashCode(this.Intelligence?.GetHashCode());
-                ret = ret.CombineHashCode(this.Willpower?.GetHashCode());
-                ret = ret.CombineHashCode(this.Agility?.GetHashCode());
-                ret = ret.CombineHashCode(this.Speed?.GetHashCode());
-                ret = ret.CombineHashCode(this.Endurance?.GetHashCode());
-                ret = ret.CombineHashCode(this.Personality?.GetHashCode());
-                ret = ret.CombineHashCode(this.Luck?.GetHashCode());
-                ret = ret.CombineHashCode(this.AttackReach?.GetHashCode());
-                ret = ret.CombineHashCode(this.CombatStyle?.GetHashCode());
-                ret = ret.CombineHashCode(this.TurningSpeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseScale?.GetHashCode());
-                ret = ret.CombineHashCode(this.FootWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.BloodSpray?.GetHashCode());
-                ret = ret.CombineHashCode(this.BloodDecal?.GetHashCode());
-                ret = ret.CombineHashCode(this.InheritsSoundFrom?.GetHashCode());
-                ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
-                ret = ret.CombineHashCode(this.ACBSDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(this.AIDTDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Items);
+                hash.Add(this.Spells);
+                hash.Add(this.Models);
+                hash.Add(this.NIFT);
+                hash.Add(this.Flags);
+                hash.Add(this.BaseSpellPoints);
+                hash.Add(this.Fatigue);
+                hash.Add(this.BarterGold);
+                hash.Add(this.LevelOffset);
+                hash.Add(this.CalcMin);
+                hash.Add(this.CalcMax);
+                hash.Add(this.Factions);
+                hash.Add(this.DeathItem);
+                hash.Add(this.Script);
+                hash.Add(this.Aggression);
+                hash.Add(this.Confidence);
+                hash.Add(this.EnergyLevel);
+                hash.Add(this.Responsibility);
+                hash.Add(this.BuySellServices);
+                hash.Add(this.Teaches);
+                hash.Add(this.MaximumTrainingLevel);
+                hash.Add(this.AIPackages);
+                hash.Add(this.Animations);
+                hash.Add(this.CreatureType);
+                hash.Add(this.CombatSkill);
+                hash.Add(this.MagicSkill);
+                hash.Add(this.StealthSkill);
+                hash.Add(this.SoulLevel);
+                hash.Add(this.Health);
+                hash.Add(this.AttackDamage);
+                hash.Add(this.Strength);
+                hash.Add(this.Intelligence);
+                hash.Add(this.Willpower);
+                hash.Add(this.Agility);
+                hash.Add(this.Speed);
+                hash.Add(this.Endurance);
+                hash.Add(this.Personality);
+                hash.Add(this.Luck);
+                hash.Add(this.AttackReach);
+                hash.Add(this.CombatStyle);
+                hash.Add(this.TurningSpeed);
+                hash.Add(this.BaseScale);
+                hash.Add(this.FootWeight);
+                hash.Add(this.BloodSpray);
+                hash.Add(this.BloodDecal);
+                hash.Add(this.InheritsSoundFrom);
+                hash.Add(this.Sounds);
+                hash.Add(this.ACBSDataTypeState);
+                hash.Add(this.AIDTDataTypeState);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -5590,100 +5590,100 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ICreatureGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
-            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Models).CombineHashCode(ret);
+            hash.Add(item.Items);
+            hash.Add(item.Spells);
+            hash.Add(item.Models);
             if (item.NIFT.TryGet(out var NIFTItem))
             {
-                ret = HashHelper.GetHashCode(NIFTItem).CombineHashCode(ret);
+                hash.Add(NIFTItem);
             }
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BaseSpellPoints).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fatigue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BarterGold).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LevelOffset).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CalcMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CalcMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
+            hash.Add(item.Flags);
+            hash.Add(item.BaseSpellPoints);
+            hash.Add(item.Fatigue);
+            hash.Add(item.BarterGold);
+            hash.Add(item.LevelOffset);
+            hash.Add(item.CalcMin);
+            hash.Add(item.CalcMax);
+            hash.Add(item.Factions);
             if (item.DeathItem.TryGet(out var DeathItemitem))
             {
-                ret = HashHelper.GetHashCode(DeathItemitem).CombineHashCode(ret);
+                hash.Add(DeathItemitem);
             }
             if (item.Script.TryGet(out var Scriptitem))
             {
-                ret = HashHelper.GetHashCode(Scriptitem).CombineHashCode(ret);
+                hash.Add(Scriptitem);
             }
-            ret = HashHelper.GetHashCode(item.Aggression).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Confidence).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EnergyLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Responsibility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BuySellServices).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AIPackages).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Animations).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CreatureType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CombatSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MagicSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.StealthSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SoulLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AttackDamage).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Strength).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Intelligence).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Willpower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Agility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Speed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Endurance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Personality).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Luck).CombineHashCode(ret);
+            hash.Add(item.Aggression);
+            hash.Add(item.Confidence);
+            hash.Add(item.EnergyLevel);
+            hash.Add(item.Responsibility);
+            hash.Add(item.BuySellServices);
+            hash.Add(item.Teaches);
+            hash.Add(item.MaximumTrainingLevel);
+            hash.Add(item.AIPackages);
+            hash.Add(item.Animations);
+            hash.Add(item.CreatureType);
+            hash.Add(item.CombatSkill);
+            hash.Add(item.MagicSkill);
+            hash.Add(item.StealthSkill);
+            hash.Add(item.SoulLevel);
+            hash.Add(item.Health);
+            hash.Add(item.AttackDamage);
+            hash.Add(item.Strength);
+            hash.Add(item.Intelligence);
+            hash.Add(item.Willpower);
+            hash.Add(item.Agility);
+            hash.Add(item.Speed);
+            hash.Add(item.Endurance);
+            hash.Add(item.Personality);
+            hash.Add(item.Luck);
             if (item.AttackReach.TryGet(out var AttackReachitem))
             {
-                ret = HashHelper.GetHashCode(AttackReachitem).CombineHashCode(ret);
+                hash.Add(AttackReachitem);
             }
             if (item.CombatStyle.TryGet(out var CombatStyleitem))
             {
-                ret = HashHelper.GetHashCode(CombatStyleitem).CombineHashCode(ret);
+                hash.Add(CombatStyleitem);
             }
             if (item.TurningSpeed.TryGet(out var TurningSpeeditem))
             {
-                ret = HashHelper.GetHashCode(TurningSpeeditem).CombineHashCode(ret);
+                hash.Add(TurningSpeeditem);
             }
             if (item.BaseScale.TryGet(out var BaseScaleitem))
             {
-                ret = HashHelper.GetHashCode(BaseScaleitem).CombineHashCode(ret);
+                hash.Add(BaseScaleitem);
             }
             if (item.FootWeight.TryGet(out var FootWeightitem))
             {
-                ret = HashHelper.GetHashCode(FootWeightitem).CombineHashCode(ret);
+                hash.Add(FootWeightitem);
             }
             if (item.BloodSpray.TryGet(out var BloodSprayitem))
             {
-                ret = HashHelper.GetHashCode(BloodSprayitem).CombineHashCode(ret);
+                hash.Add(BloodSprayitem);
             }
             if (item.BloodDecal.TryGet(out var BloodDecalitem))
             {
-                ret = HashHelper.GetHashCode(BloodDecalitem).CombineHashCode(ret);
+                hash.Add(BloodDecalitem);
             }
             if (item.InheritsSoundFrom.TryGet(out var InheritsSoundFromitem))
             {
-                ret = HashHelper.GetHashCode(InheritsSoundFromitem).CombineHashCode(ret);
+                hash.Add(InheritsSoundFromitem);
             }
-            ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ACBSDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AIDTDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Sounds);
+            hash.Add(item.ACBSDataTypeState);
+            hash.Add(item.AIDTDataTypeState);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IANpcGetter item)

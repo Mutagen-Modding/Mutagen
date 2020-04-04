@@ -279,12 +279,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Sunrise?.GetHashCode());
-                ret = ret.CombineHashCode(this.Day?.GetHashCode());
-                ret = ret.CombineHashCode(this.Sunset?.GetHashCode());
-                ret = ret.CombineHashCode(this.Night?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Sunrise);
+                hash.Add(this.Day);
+                hash.Add(this.Sunset);
+                hash.Add(this.Night);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1377,12 +1377,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IWeatherTypeGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Sunrise).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Day).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Sunset).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Night).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Sunrise);
+            hash.Add(item.Day);
+            hash.Add(item.Sunset);
+            hash.Add(item.Night);
+            return hash.ToHashCode();
         }
         
         #endregion

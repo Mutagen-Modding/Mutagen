@@ -374,16 +374,16 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Diffuse?.GetHashCode());
-                ret = ret.CombineHashCode(this.NormalOrGloss?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnvironmentMaskOrSubsurfaceTint?.GetHashCode());
-                ret = ret.CombineHashCode(this.GlowOrDetailMap?.GetHashCode());
-                ret = ret.CombineHashCode(this.Height?.GetHashCode());
-                ret = ret.CombineHashCode(this.Environment?.GetHashCode());
-                ret = ret.CombineHashCode(this.Multilayer?.GetHashCode());
-                ret = ret.CombineHashCode(this.BacklightMaskOrSpecular?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Diffuse);
+                hash.Add(this.NormalOrGloss);
+                hash.Add(this.EnvironmentMaskOrSubsurfaceTint);
+                hash.Add(this.GlowOrDetailMap);
+                hash.Add(this.Height);
+                hash.Add(this.Environment);
+                hash.Add(this.Multilayer);
+                hash.Add(this.BacklightMaskOrSpecular);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1771,40 +1771,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(ITexturesGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Diffuse.TryGet(out var Diffuseitem))
             {
-                ret = HashHelper.GetHashCode(Diffuseitem).CombineHashCode(ret);
+                hash.Add(Diffuseitem);
             }
             if (item.NormalOrGloss.TryGet(out var NormalOrGlossitem))
             {
-                ret = HashHelper.GetHashCode(NormalOrGlossitem).CombineHashCode(ret);
+                hash.Add(NormalOrGlossitem);
             }
             if (item.EnvironmentMaskOrSubsurfaceTint.TryGet(out var EnvironmentMaskOrSubsurfaceTintitem))
             {
-                ret = HashHelper.GetHashCode(EnvironmentMaskOrSubsurfaceTintitem).CombineHashCode(ret);
+                hash.Add(EnvironmentMaskOrSubsurfaceTintitem);
             }
             if (item.GlowOrDetailMap.TryGet(out var GlowOrDetailMapitem))
             {
-                ret = HashHelper.GetHashCode(GlowOrDetailMapitem).CombineHashCode(ret);
+                hash.Add(GlowOrDetailMapitem);
             }
             if (item.Height.TryGet(out var Heightitem))
             {
-                ret = HashHelper.GetHashCode(Heightitem).CombineHashCode(ret);
+                hash.Add(Heightitem);
             }
             if (item.Environment.TryGet(out var Environmentitem))
             {
-                ret = HashHelper.GetHashCode(Environmentitem).CombineHashCode(ret);
+                hash.Add(Environmentitem);
             }
             if (item.Multilayer.TryGet(out var Multilayeritem))
             {
-                ret = HashHelper.GetHashCode(Multilayeritem).CombineHashCode(ret);
+                hash.Add(Multilayeritem);
             }
             if (item.BacklightMaskOrSpecular.TryGet(out var BacklightMaskOrSpecularitem))
             {
-                ret = HashHelper.GetHashCode(BacklightMaskOrSpecularitem).CombineHashCode(ret);
+                hash.Add(BacklightMaskOrSpecularitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

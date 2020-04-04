@@ -294,11 +294,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.RankID?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleRankTitle?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleRankTitle?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.RankID);
+                hash.Add(this.MaleRankTitle);
+                hash.Add(this.FemaleRankTitle);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1399,20 +1399,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IRankGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.RankID.TryGet(out var RankIDitem))
             {
-                ret = HashHelper.GetHashCode(RankIDitem).CombineHashCode(ret);
+                hash.Add(RankIDitem);
             }
             if (item.MaleRankTitle.TryGet(out var MaleRankTitleitem))
             {
-                ret = HashHelper.GetHashCode(MaleRankTitleitem).CombineHashCode(ret);
+                hash.Add(MaleRankTitleitem);
             }
             if (item.FemaleRankTitle.TryGet(out var FemaleRankTitleitem))
             {
-                ret = HashHelper.GetHashCode(FemaleRankTitleitem).CombineHashCode(ret);
+                hash.Add(FemaleRankTitleitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

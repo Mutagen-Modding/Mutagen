@@ -311,12 +311,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Nose?.GetHashCode());
-                ret = ret.CombineHashCode(this.Brow?.GetHashCode());
-                ret = ret.CombineHashCode(this.Eye?.GetHashCode());
-                ret = ret.CombineHashCode(this.Lip?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Nose);
+                hash.Add(this.Brow);
+                hash.Add(this.Eye);
+                hash.Add(this.Lip);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1492,24 +1492,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IAvailableMorphsGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Nose.TryGet(out var Noseitem))
             {
-                ret = HashHelper.GetHashCode(Noseitem).CombineHashCode(ret);
+                hash.Add(Noseitem);
             }
             if (item.Brow.TryGet(out var Browitem))
             {
-                ret = HashHelper.GetHashCode(Browitem).CombineHashCode(ret);
+                hash.Add(Browitem);
             }
             if (item.Eye.TryGet(out var Eyeitem))
             {
-                ret = HashHelper.GetHashCode(Eyeitem).CombineHashCode(ret);
+                hash.Add(Eyeitem);
             }
             if (item.Lip.TryGet(out var Lipitem))
             {
-                ret = HashHelper.GetHashCode(Lipitem).CombineHashCode(ret);
+                hash.Add(Lipitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

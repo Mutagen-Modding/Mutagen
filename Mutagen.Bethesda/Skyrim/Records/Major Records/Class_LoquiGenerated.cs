@@ -808,40 +808,40 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Description?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-                ret = ret.CombineHashCode(this.Teaches?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaxTrainingLevel?.GetHashCode());
-                ret = ret.CombineHashCode(this.OneHandedWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.TwoHandedWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.MarksmanWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.BlockWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.SmithingWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.HeavyArmorWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.LightArmorWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.PickpocketWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.LockpickingWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.SneakWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.AlchemyWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.SpeechcraftWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.AlterationWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.ConjurationWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.DestructionWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.IllusionWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.RestorationWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnchantingWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.BleedoutDefault?.GetHashCode());
-                ret = ret.CombineHashCode(this.VoicePoints?.GetHashCode());
-                ret = ret.CombineHashCode(this.HealthWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.MagickaWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.StaminaWeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Icon);
+                hash.Add(this.Unknown);
+                hash.Add(this.Teaches);
+                hash.Add(this.MaxTrainingLevel);
+                hash.Add(this.OneHandedWeight);
+                hash.Add(this.TwoHandedWeight);
+                hash.Add(this.MarksmanWeight);
+                hash.Add(this.BlockWeight);
+                hash.Add(this.SmithingWeight);
+                hash.Add(this.HeavyArmorWeight);
+                hash.Add(this.LightArmorWeight);
+                hash.Add(this.PickpocketWeight);
+                hash.Add(this.LockpickingWeight);
+                hash.Add(this.SneakWeight);
+                hash.Add(this.AlchemyWeight);
+                hash.Add(this.SpeechcraftWeight);
+                hash.Add(this.AlterationWeight);
+                hash.Add(this.ConjurationWeight);
+                hash.Add(this.DestructionWeight);
+                hash.Add(this.IllusionWeight);
+                hash.Add(this.RestorationWeight);
+                hash.Add(this.EnchantingWeight);
+                hash.Add(this.BleedoutDefault);
+                hash.Add(this.VoicePoints);
+                hash.Add(this.HealthWeight);
+                hash.Add(this.MagickaWeight);
+                hash.Add(this.StaminaWeight);
+                hash.Add(this.Unknown2);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -3325,49 +3325,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IClassGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Description.TryGet(out var Descriptionitem))
             {
-                ret = HashHelper.GetHashCode(Descriptionitem).CombineHashCode(ret);
+                hash.Add(Descriptionitem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
-            ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxTrainingLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.OneHandedWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TwoHandedWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MarksmanWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BlockWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SmithingWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HeavyArmorWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LightArmorWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PickpocketWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LockpickingWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SneakWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AlchemyWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SpeechcraftWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AlterationWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ConjurationWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DestructionWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.IllusionWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RestorationWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EnchantingWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BleedoutDefault).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.VoicePoints).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HealthWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MagickaWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.StaminaWeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Unknown);
+            hash.Add(item.Teaches);
+            hash.Add(item.MaxTrainingLevel);
+            hash.Add(item.OneHandedWeight);
+            hash.Add(item.TwoHandedWeight);
+            hash.Add(item.MarksmanWeight);
+            hash.Add(item.BlockWeight);
+            hash.Add(item.SmithingWeight);
+            hash.Add(item.HeavyArmorWeight);
+            hash.Add(item.LightArmorWeight);
+            hash.Add(item.PickpocketWeight);
+            hash.Add(item.LockpickingWeight);
+            hash.Add(item.SneakWeight);
+            hash.Add(item.AlchemyWeight);
+            hash.Add(item.SpeechcraftWeight);
+            hash.Add(item.AlterationWeight);
+            hash.Add(item.ConjurationWeight);
+            hash.Add(item.DestructionWeight);
+            hash.Add(item.IllusionWeight);
+            hash.Add(item.RestorationWeight);
+            hash.Add(item.EnchantingWeight);
+            hash.Add(item.BleedoutDefault);
+            hash.Add(item.VoicePoints);
+            hash.Add(item.HealthWeight);
+            hash.Add(item.MagickaWeight);
+            hash.Add(item.StaminaWeight);
+            hash.Add(item.Unknown2);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)

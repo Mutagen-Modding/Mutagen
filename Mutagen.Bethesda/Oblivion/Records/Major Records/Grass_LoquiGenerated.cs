@@ -501,23 +501,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Density?.GetHashCode());
-                ret = ret.CombineHashCode(this.MinSlope?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaxSlope?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff1?.GetHashCode());
-                ret = ret.CombineHashCode(this.UnitFromWaterAmount?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
-                ret = ret.CombineHashCode(this.UnitFromWaterMode?.GetHashCode());
-                ret = ret.CombineHashCode(this.PositionRange?.GetHashCode());
-                ret = ret.CombineHashCode(this.HeightRange?.GetHashCode());
-                ret = ret.CombineHashCode(this.ColorRange?.GetHashCode());
-                ret = ret.CombineHashCode(this.WavePeriod?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.Density);
+                hash.Add(this.MinSlope);
+                hash.Add(this.MaxSlope);
+                hash.Add(this.Fluff1);
+                hash.Add(this.UnitFromWaterAmount);
+                hash.Add(this.Fluff2);
+                hash.Add(this.UnitFromWaterMode);
+                hash.Add(this.PositionRange);
+                hash.Add(this.HeightRange);
+                hash.Add(this.ColorRange);
+                hash.Add(this.WavePeriod);
+                hash.Add(this.Flags);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2222,26 +2222,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IGrassGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
-            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UnitFromWaterAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UnitFromWaterMode).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PositionRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HeightRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ColorRange).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.WavePeriod).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Density);
+            hash.Add(item.MinSlope);
+            hash.Add(item.MaxSlope);
+            hash.Add(item.Fluff1);
+            hash.Add(item.UnitFromWaterAmount);
+            hash.Add(item.Fluff2);
+            hash.Add(item.UnitFromWaterMode);
+            hash.Add(item.PositionRange);
+            hash.Add(item.HeightRange);
+            hash.Add(item.ColorRange);
+            hash.Add(item.WavePeriod);
+            hash.Add(item.Flags);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

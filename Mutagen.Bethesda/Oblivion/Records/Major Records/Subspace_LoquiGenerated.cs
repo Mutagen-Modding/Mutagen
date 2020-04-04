@@ -323,13 +323,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.X?.GetHashCode());
-                ret = ret.CombineHashCode(this.Y?.GetHashCode());
-                ret = ret.CombineHashCode(this.Z?.GetHashCode());
-                ret = ret.CombineHashCode(this.DNAMDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.X);
+                hash.Add(this.Y);
+                hash.Add(this.Z);
+                hash.Add(this.DNAMDataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1562,13 +1562,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ISubspaceGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.X).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Y).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Z).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DNAMDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.X);
+            hash.Add(item.Y);
+            hash.Add(item.Z);
+            hash.Add(item.DNAMDataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

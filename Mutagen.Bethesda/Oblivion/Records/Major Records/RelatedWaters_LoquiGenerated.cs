@@ -282,11 +282,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.RelatedWaterDaytime?.GetHashCode());
-                ret = ret.CombineHashCode(this.RelatedWaterNighttime?.GetHashCode());
-                ret = ret.CombineHashCode(this.RelatedWaterUnderwater?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.RelatedWaterDaytime);
+                hash.Add(this.RelatedWaterNighttime);
+                hash.Add(this.RelatedWaterUnderwater);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1344,11 +1344,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRelatedWatersGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.RelatedWaterDaytime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RelatedWaterNighttime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RelatedWaterUnderwater).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.RelatedWaterDaytime);
+            hash.Add(item.RelatedWaterNighttime);
+            hash.Add(item.RelatedWaterUnderwater);
+            return hash.ToHashCode();
         }
         
         #endregion

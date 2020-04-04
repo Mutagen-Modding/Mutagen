@@ -336,14 +336,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.ChanceNone?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Entries?.GetHashCode());
-                ret = ret.CombineHashCode(this.Script?.GetHashCode());
-                ret = ret.CombineHashCode(this.Template?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.ChanceNone);
+                hash.Add(this.Flags);
+                hash.Add(this.Entries);
+                hash.Add(this.Script);
+                hash.Add(this.Template);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1792,26 +1792,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILeveledCreatureGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.ChanceNone.TryGet(out var ChanceNoneitem))
             {
-                ret = HashHelper.GetHashCode(ChanceNoneitem).CombineHashCode(ret);
+                hash.Add(ChanceNoneitem);
             }
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
-            ret = HashHelper.GetHashCode(item.Entries).CombineHashCode(ret);
+            hash.Add(item.Entries);
             if (item.Script.TryGet(out var Scriptitem))
             {
-                ret = HashHelper.GetHashCode(Scriptitem).CombineHashCode(ret);
+                hash.Add(Scriptitem);
             }
             if (item.Template.TryGet(out var Templateitem))
             {
-                ret = HashHelper.GetHashCode(Templateitem).CombineHashCode(ret);
+                hash.Add(Templateitem);
             }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(INpcSpawnGetter item)

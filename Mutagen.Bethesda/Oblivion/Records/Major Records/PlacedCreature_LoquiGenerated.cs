@@ -405,19 +405,19 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Base?.GetHashCode());
-                ret = ret.CombineHashCode(this.Owner?.GetHashCode());
-                ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
-                ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
-                ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Scale?.GetHashCode());
-                ret = ret.CombineHashCode(this.Position?.GetHashCode());
-                ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Base);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
+                hash.Add(this.GlobalVariable);
+                hash.Add(this.EnableParent);
+                hash.Add(this.RagdollData);
+                hash.Add(this.Scale);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2001,40 +2001,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IPlacedCreatureGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Base.TryGet(out var Baseitem))
             {
-                ret = HashHelper.GetHashCode(Baseitem).CombineHashCode(ret);
+                hash.Add(Baseitem);
             }
             if (item.Owner.TryGet(out var Owneritem))
             {
-                ret = HashHelper.GetHashCode(Owneritem).CombineHashCode(ret);
+                hash.Add(Owneritem);
             }
             if (item.FactionRank.TryGet(out var FactionRankitem))
             {
-                ret = HashHelper.GetHashCode(FactionRankitem).CombineHashCode(ret);
+                hash.Add(FactionRankitem);
             }
             if (item.GlobalVariable.TryGet(out var GlobalVariableitem))
             {
-                ret = HashHelper.GetHashCode(GlobalVariableitem).CombineHashCode(ret);
+                hash.Add(GlobalVariableitem);
             }
             if (item.EnableParent.TryGet(out var EnableParentitem))
             {
-                ret = HashHelper.GetHashCode(EnableParentitem).CombineHashCode(ret);
+                hash.Add(EnableParentitem);
             }
             if (item.RagdollData.TryGet(out var RagdollDataItem))
             {
-                ret = HashHelper.GetHashCode(RagdollDataItem).CombineHashCode(ret);
+                hash.Add(RagdollDataItem);
             }
             if (item.Scale.TryGet(out var Scaleitem))
             {
-                ret = HashHelper.GetHashCode(Scaleitem).CombineHashCode(ret);
+                hash.Add(Scaleitem);
             }
-            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

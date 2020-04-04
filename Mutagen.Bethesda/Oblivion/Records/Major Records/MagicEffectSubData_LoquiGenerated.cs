@@ -322,15 +322,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.EnchantEffect?.GetHashCode());
-                ret = ret.CombineHashCode(this.CastingSound?.GetHashCode());
-                ret = ret.CombineHashCode(this.BoltSound?.GetHashCode());
-                ret = ret.CombineHashCode(this.HitSound?.GetHashCode());
-                ret = ret.CombineHashCode(this.AreaSound?.GetHashCode());
-                ret = ret.CombineHashCode(this.ConstantEffectEnchantmentFactor?.GetHashCode());
-                ret = ret.CombineHashCode(this.ConstantEffectBarterFactor?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.EnchantEffect);
+                hash.Add(this.CastingSound);
+                hash.Add(this.BoltSound);
+                hash.Add(this.HitSound);
+                hash.Add(this.AreaSound);
+                hash.Add(this.ConstantEffectEnchantmentFactor);
+                hash.Add(this.ConstantEffectBarterFactor);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1566,15 +1566,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IMagicEffectSubDataGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.EnchantEffect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CastingSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BoltSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HitSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AreaSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ConstantEffectEnchantmentFactor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ConstantEffectBarterFactor).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.EnchantEffect);
+            hash.Add(item.CastingSound);
+            hash.Add(item.BoltSound);
+            hash.Add(item.HitSound);
+            hash.Add(item.AreaSound);
+            hash.Add(item.ConstantEffectEnchantmentFactor);
+            hash.Add(item.ConstantEffectBarterFactor);
+            return hash.ToHashCode();
         }
         
         #endregion

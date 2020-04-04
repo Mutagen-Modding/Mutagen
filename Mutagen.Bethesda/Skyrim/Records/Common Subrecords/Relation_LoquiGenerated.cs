@@ -274,11 +274,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Faction?.GetHashCode());
-                ret = ret.CombineHashCode(this.Modifier?.GetHashCode());
-                ret = ret.CombineHashCode(this.GroupCombatReaction?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Faction);
+                hash.Add(this.Modifier);
+                hash.Add(this.GroupCombatReaction);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1332,11 +1332,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IRelationGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Faction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Modifier).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GroupCombatReaction).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Faction);
+            hash.Add(item.Modifier);
+            hash.Add(item.GroupCombatReaction);
+            return hash.ToHashCode();
         }
         
         #endregion

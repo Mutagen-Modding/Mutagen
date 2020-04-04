@@ -888,42 +888,42 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Texture?.GetHashCode());
-                ret = ret.CombineHashCode(this.Opacity?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaterialID?.GetHashCode());
-                ret = ret.CombineHashCode(this.Sound?.GetHashCode());
-                ret = ret.CombineHashCode(this.WindVelocity?.GetHashCode());
-                ret = ret.CombineHashCode(this.WindDirection?.GetHashCode());
-                ret = ret.CombineHashCode(this.WaveAmplitude?.GetHashCode());
-                ret = ret.CombineHashCode(this.WaveFrequency?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunPower?.GetHashCode());
-                ret = ret.CombineHashCode(this.ReflectivityAmount?.GetHashCode());
-                ret = ret.CombineHashCode(this.FresnelAmount?.GetHashCode());
-                ret = ret.CombineHashCode(this.ScrollXSpeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.ScrollYSpeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogDistanceNearPlane?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogDistanceFarPlane?.GetHashCode());
-                ret = ret.CombineHashCode(this.ShallowColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.DeepColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.ReflectionColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.TextureBlend?.GetHashCode());
-                ret = ret.CombineHashCode(this.RainSimulatorForce?.GetHashCode());
-                ret = ret.CombineHashCode(this.RainSimulatorVelocity?.GetHashCode());
-                ret = ret.CombineHashCode(this.RainSimulatorFalloff?.GetHashCode());
-                ret = ret.CombineHashCode(this.RainSimulatorDampner?.GetHashCode());
-                ret = ret.CombineHashCode(this.RainSimulatorStartingSize?.GetHashCode());
-                ret = ret.CombineHashCode(this.DisplacementSimulatorForce?.GetHashCode());
-                ret = ret.CombineHashCode(this.DisplacementSimulatorVelocity?.GetHashCode());
-                ret = ret.CombineHashCode(this.DisplacementSimulatorFalloff?.GetHashCode());
-                ret = ret.CombineHashCode(this.DisplacementSimulatorDampner?.GetHashCode());
-                ret = ret.CombineHashCode(this.DisplacementSimulatorStartingSize?.GetHashCode());
-                ret = ret.CombineHashCode(this.Damage?.GetHashCode());
-                ret = ret.CombineHashCode(this.RelatedWaters?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Texture);
+                hash.Add(this.Opacity);
+                hash.Add(this.Flags);
+                hash.Add(this.MaterialID);
+                hash.Add(this.Sound);
+                hash.Add(this.WindVelocity);
+                hash.Add(this.WindDirection);
+                hash.Add(this.WaveAmplitude);
+                hash.Add(this.WaveFrequency);
+                hash.Add(this.SunPower);
+                hash.Add(this.ReflectivityAmount);
+                hash.Add(this.FresnelAmount);
+                hash.Add(this.ScrollXSpeed);
+                hash.Add(this.ScrollYSpeed);
+                hash.Add(this.FogDistanceNearPlane);
+                hash.Add(this.FogDistanceFarPlane);
+                hash.Add(this.ShallowColor);
+                hash.Add(this.DeepColor);
+                hash.Add(this.ReflectionColor);
+                hash.Add(this.TextureBlend);
+                hash.Add(this.RainSimulatorForce);
+                hash.Add(this.RainSimulatorVelocity);
+                hash.Add(this.RainSimulatorFalloff);
+                hash.Add(this.RainSimulatorDampner);
+                hash.Add(this.RainSimulatorStartingSize);
+                hash.Add(this.DisplacementSimulatorForce);
+                hash.Add(this.DisplacementSimulatorVelocity);
+                hash.Add(this.DisplacementSimulatorFalloff);
+                hash.Add(this.DisplacementSimulatorDampner);
+                hash.Add(this.DisplacementSimulatorStartingSize);
+                hash.Add(this.Damage);
+                hash.Add(this.RelatedWaters);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -3579,60 +3579,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IWaterGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Texture.TryGet(out var Textureitem))
             {
-                ret = HashHelper.GetHashCode(Textureitem).CombineHashCode(ret);
+                hash.Add(Textureitem);
             }
             if (item.Opacity.TryGet(out var Opacityitem))
             {
-                ret = HashHelper.GetHashCode(Opacityitem).CombineHashCode(ret);
+                hash.Add(Opacityitem);
             }
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
             if (item.MaterialID.TryGet(out var MaterialIDitem))
             {
-                ret = HashHelper.GetHashCode(MaterialIDitem).CombineHashCode(ret);
+                hash.Add(MaterialIDitem);
             }
             if (item.Sound.TryGet(out var Sounditem))
             {
-                ret = HashHelper.GetHashCode(Sounditem).CombineHashCode(ret);
+                hash.Add(Sounditem);
             }
-            ret = HashHelper.GetHashCode(item.WindVelocity).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.WindDirection).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.WaveAmplitude).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.WaveFrequency).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SunPower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ReflectivityAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FresnelAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ScrollXSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ScrollYSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogDistanceNearPlane).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogDistanceFarPlane).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ShallowColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DeepColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ReflectionColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TextureBlend).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RainSimulatorForce).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RainSimulatorVelocity).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RainSimulatorFalloff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RainSimulatorDampner).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RainSimulatorStartingSize).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DisplacementSimulatorForce).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DisplacementSimulatorVelocity).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DisplacementSimulatorFalloff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DisplacementSimulatorDampner).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DisplacementSimulatorStartingSize).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Damage).CombineHashCode(ret);
+            hash.Add(item.WindVelocity);
+            hash.Add(item.WindDirection);
+            hash.Add(item.WaveAmplitude);
+            hash.Add(item.WaveFrequency);
+            hash.Add(item.SunPower);
+            hash.Add(item.ReflectivityAmount);
+            hash.Add(item.FresnelAmount);
+            hash.Add(item.ScrollXSpeed);
+            hash.Add(item.ScrollYSpeed);
+            hash.Add(item.FogDistanceNearPlane);
+            hash.Add(item.FogDistanceFarPlane);
+            hash.Add(item.ShallowColor);
+            hash.Add(item.DeepColor);
+            hash.Add(item.ReflectionColor);
+            hash.Add(item.TextureBlend);
+            hash.Add(item.RainSimulatorForce);
+            hash.Add(item.RainSimulatorVelocity);
+            hash.Add(item.RainSimulatorFalloff);
+            hash.Add(item.RainSimulatorDampner);
+            hash.Add(item.RainSimulatorStartingSize);
+            hash.Add(item.DisplacementSimulatorForce);
+            hash.Add(item.DisplacementSimulatorVelocity);
+            hash.Add(item.DisplacementSimulatorFalloff);
+            hash.Add(item.DisplacementSimulatorDampner);
+            hash.Add(item.DisplacementSimulatorStartingSize);
+            hash.Add(item.Damage);
             if (item.RelatedWaters.TryGet(out var RelatedWatersitem))
             {
-                ret = HashHelper.GetHashCode(RelatedWatersitem).CombineHashCode(ret);
+                hash.Add(RelatedWatersitem);
             }
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

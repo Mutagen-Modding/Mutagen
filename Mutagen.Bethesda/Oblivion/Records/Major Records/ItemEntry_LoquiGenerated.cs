@@ -274,10 +274,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Item?.GetHashCode());
-                ret = ret.CombineHashCode(this.Count?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Item);
+                hash.Add(this.Count);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1289,13 +1289,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IItemEntryGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Item).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Item);
             if (item.Count.TryGet(out var Countitem))
             {
-                ret = HashHelper.GetHashCode(Countitem).CombineHashCode(ret);
+                hash.Add(Countitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

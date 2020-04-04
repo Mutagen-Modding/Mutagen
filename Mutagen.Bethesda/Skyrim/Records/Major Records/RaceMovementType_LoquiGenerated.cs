@@ -275,10 +275,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.MovementType?.GetHashCode());
-                ret = ret.CombineHashCode(this.Overrides?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.MovementType);
+                hash.Add(this.Overrides);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1342,16 +1342,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IRaceMovementTypeGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.MovementType.TryGet(out var MovementTypeitem))
             {
-                ret = HashHelper.GetHashCode(MovementTypeitem).CombineHashCode(ret);
+                hash.Add(MovementTypeitem);
             }
             if (item.Overrides.TryGet(out var Overridesitem))
             {
-                ret = HashHelper.GetHashCode(Overridesitem).CombineHashCode(ret);
+                hash.Add(Overridesitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

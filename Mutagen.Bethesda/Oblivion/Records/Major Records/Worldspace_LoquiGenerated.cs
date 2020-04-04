@@ -503,25 +503,25 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Parent?.GetHashCode());
-                ret = ret.CombineHashCode(this.Climate?.GetHashCode());
-                ret = ret.CombineHashCode(this.Water?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.MapData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.ObjectBoundsMin?.GetHashCode());
-                ret = ret.CombineHashCode(this.ObjectBoundsMax?.GetHashCode());
-                ret = ret.CombineHashCode(this.Music?.GetHashCode());
-                ret = ret.CombineHashCode(this.OffsetData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Road?.GetHashCode());
-                ret = ret.CombineHashCode(this.TopCell?.GetHashCode());
-                ret = ret.CombineHashCode(this.SubCellsTimestamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.SubCells?.GetHashCode());
-                ret = ret.CombineHashCode(this.UsingOffsetLength?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Parent);
+                hash.Add(this.Climate);
+                hash.Add(this.Water);
+                hash.Add(this.Icon);
+                hash.Add(this.MapData);
+                hash.Add(this.Flags);
+                hash.Add(this.ObjectBoundsMin);
+                hash.Add(this.ObjectBoundsMax);
+                hash.Add(this.Music);
+                hash.Add(this.OffsetData);
+                hash.Add(this.Road);
+                hash.Add(this.TopCell);
+                hash.Add(this.SubCellsTimestamp);
+                hash.Add(this.SubCells);
+                hash.Add(this.UsingOffsetLength);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2624,64 +2624,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IWorldspaceGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Parent.TryGet(out var Parentitem))
             {
-                ret = HashHelper.GetHashCode(Parentitem).CombineHashCode(ret);
+                hash.Add(Parentitem);
             }
             if (item.Climate.TryGet(out var Climateitem))
             {
-                ret = HashHelper.GetHashCode(Climateitem).CombineHashCode(ret);
+                hash.Add(Climateitem);
             }
             if (item.Water.TryGet(out var Wateritem))
             {
-                ret = HashHelper.GetHashCode(Wateritem).CombineHashCode(ret);
+                hash.Add(Wateritem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
             if (item.MapData.TryGet(out var MapDataitem))
             {
-                ret = HashHelper.GetHashCode(MapDataitem).CombineHashCode(ret);
+                hash.Add(MapDataitem);
             }
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
             if (item.ObjectBoundsMin.TryGet(out var ObjectBoundsMinitem))
             {
-                ret = HashHelper.GetHashCode(ObjectBoundsMinitem).CombineHashCode(ret);
+                hash.Add(ObjectBoundsMinitem);
             }
             if (item.ObjectBoundsMax.TryGet(out var ObjectBoundsMaxitem))
             {
-                ret = HashHelper.GetHashCode(ObjectBoundsMaxitem).CombineHashCode(ret);
+                hash.Add(ObjectBoundsMaxitem);
             }
             if (item.Music.TryGet(out var Musicitem))
             {
-                ret = HashHelper.GetHashCode(Musicitem).CombineHashCode(ret);
+                hash.Add(Musicitem);
             }
             if (item.OffsetData.TryGet(out var OffsetDataItem))
             {
-                ret = HashHelper.GetHashCode(OffsetDataItem).CombineHashCode(ret);
+                hash.Add(OffsetDataItem);
             }
             if (item.Road.TryGet(out var Roaditem))
             {
-                ret = HashHelper.GetHashCode(Roaditem).CombineHashCode(ret);
+                hash.Add(Roaditem);
             }
             if (item.TopCell.TryGet(out var TopCellitem))
             {
-                ret = HashHelper.GetHashCode(TopCellitem).CombineHashCode(ret);
+                hash.Add(TopCellitem);
             }
-            ret = HashHelper.GetHashCode(item.SubCellsTimestamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SubCells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UsingOffsetLength).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.SubCellsTimestamp);
+            hash.Add(item.SubCells);
+            hash.Add(item.UsingOffsetLength);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IPlaceGetter item)

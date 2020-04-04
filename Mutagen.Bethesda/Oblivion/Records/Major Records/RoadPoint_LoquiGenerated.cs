@@ -289,11 +289,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Point?.GetHashCode());
-                ret = ret.CombineHashCode(this.NumConnectionsFluffBytes?.GetHashCode());
-                ret = ret.CombineHashCode(this.Connections?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Point);
+                hash.Add(this.NumConnectionsFluffBytes);
+                hash.Add(this.Connections);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1427,11 +1427,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRoadPointGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Point).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NumConnectionsFluffBytes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Connections).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Point);
+            hash.Add(item.NumConnectionsFluffBytes);
+            hash.Add(item.Connections);
+            return hash.ToHashCode();
         }
         
         #endregion

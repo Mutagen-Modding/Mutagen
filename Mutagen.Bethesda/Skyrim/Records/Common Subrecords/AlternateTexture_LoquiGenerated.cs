@@ -274,11 +274,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.NexTexture?.GetHashCode());
-                ret = ret.CombineHashCode(this.Index?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.NexTexture);
+                hash.Add(this.Index);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1328,11 +1328,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IAlternateTextureGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NexTexture).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Index).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Name);
+            hash.Add(item.NexTexture);
+            hash.Add(item.Index);
+            return hash.ToHashCode();
         }
         
         #endregion

@@ -298,11 +298,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Types?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Flags);
+                hash.Add(this.Name);
+                hash.Add(this.Types);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1501,17 +1501,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IMapMarkerGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
-            ret = HashHelper.GetHashCode(item.Types).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.Types);
+            return hash.ToHashCode();
         }
         
         #endregion

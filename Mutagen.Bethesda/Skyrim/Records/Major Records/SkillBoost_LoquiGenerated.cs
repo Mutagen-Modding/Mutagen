@@ -262,10 +262,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Skill?.GetHashCode());
-                ret = ret.CombineHashCode(this.Boost?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Skill);
+                hash.Add(this.Boost);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1260,10 +1260,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(ISkillBoostGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Skill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Boost).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Skill);
+            hash.Add(item.Boost);
+            return hash.ToHashCode();
         }
         
         #endregion

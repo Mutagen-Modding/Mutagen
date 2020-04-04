@@ -319,17 +319,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.AmbientColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.DirectionalColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogNear?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogFar?.GetHashCode());
-                ret = ret.CombineHashCode(this.DirectionalRotationXY?.GetHashCode());
-                ret = ret.CombineHashCode(this.DirectionalRotationZ?.GetHashCode());
-                ret = ret.CombineHashCode(this.DirectionalFade?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogClipDistance?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.AmbientColor);
+                hash.Add(this.DirectionalColor);
+                hash.Add(this.FogColor);
+                hash.Add(this.FogNear);
+                hash.Add(this.FogFar);
+                hash.Add(this.DirectionalRotationXY);
+                hash.Add(this.DirectionalRotationZ);
+                hash.Add(this.DirectionalFade);
+                hash.Add(this.FogClipDistance);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1654,17 +1654,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ICellLightingGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.AmbientColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DirectionalColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DirectionalRotationXY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DirectionalRotationZ).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DirectionalFade).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogClipDistance).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.AmbientColor);
+            hash.Add(item.DirectionalColor);
+            hash.Add(item.FogColor);
+            hash.Add(item.FogNear);
+            hash.Add(item.FogFar);
+            hash.Add(item.DirectionalRotationXY);
+            hash.Add(item.DirectionalRotationZ);
+            hash.Add(item.DirectionalFade);
+            hash.Add(item.FogClipDistance);
+            return hash.ToHashCode();
         }
         
         #endregion

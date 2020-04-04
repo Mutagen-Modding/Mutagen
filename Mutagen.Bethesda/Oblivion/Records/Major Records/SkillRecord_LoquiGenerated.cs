@@ -471,22 +471,22 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Skill?.GetHashCode());
-                ret = ret.CombineHashCode(this.Description?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.Action?.GetHashCode());
-                ret = ret.CombineHashCode(this.Attribute?.GetHashCode());
-                ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
-                ret = ret.CombineHashCode(this.UseValueFirst?.GetHashCode());
-                ret = ret.CombineHashCode(this.UseValueSecond?.GetHashCode());
-                ret = ret.CombineHashCode(this.ApprenticeText?.GetHashCode());
-                ret = ret.CombineHashCode(this.JourneymanText?.GetHashCode());
-                ret = ret.CombineHashCode(this.ExpertText?.GetHashCode());
-                ret = ret.CombineHashCode(this.MasterText?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Skill);
+                hash.Add(this.Description);
+                hash.Add(this.Icon);
+                hash.Add(this.Action);
+                hash.Add(this.Attribute);
+                hash.Add(this.Specialization);
+                hash.Add(this.UseValueFirst);
+                hash.Add(this.UseValueSecond);
+                hash.Add(this.ApprenticeText);
+                hash.Add(this.JourneymanText);
+                hash.Add(this.ExpertText);
+                hash.Add(this.MasterText);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2192,43 +2192,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ISkillRecordGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Skill.TryGet(out var Skillitem))
             {
-                ret = HashHelper.GetHashCode(Skillitem).CombineHashCode(ret);
+                hash.Add(Skillitem);
             }
             if (item.Description.TryGet(out var Descriptionitem))
             {
-                ret = HashHelper.GetHashCode(Descriptionitem).CombineHashCode(ret);
+                hash.Add(Descriptionitem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
-            ret = HashHelper.GetHashCode(item.Action).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Attribute).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Specialization).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UseValueFirst).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UseValueSecond).CombineHashCode(ret);
+            hash.Add(item.Action);
+            hash.Add(item.Attribute);
+            hash.Add(item.Specialization);
+            hash.Add(item.UseValueFirst);
+            hash.Add(item.UseValueSecond);
             if (item.ApprenticeText.TryGet(out var ApprenticeTextitem))
             {
-                ret = HashHelper.GetHashCode(ApprenticeTextitem).CombineHashCode(ret);
+                hash.Add(ApprenticeTextitem);
             }
             if (item.JourneymanText.TryGet(out var JourneymanTextitem))
             {
-                ret = HashHelper.GetHashCode(JourneymanTextitem).CombineHashCode(ret);
+                hash.Add(JourneymanTextitem);
             }
             if (item.ExpertText.TryGet(out var ExpertTextitem))
             {
-                ret = HashHelper.GetHashCode(ExpertTextitem).CombineHashCode(ret);
+                hash.Add(ExpertTextitem);
             }
             if (item.MasterText.TryGet(out var MasterTextitem))
             {
-                ret = HashHelper.GetHashCode(MasterTextitem).CombineHashCode(ret);
+                hash.Add(MasterTextitem);
             }
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

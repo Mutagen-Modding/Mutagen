@@ -299,12 +299,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.BlockNumber?.GetHashCode());
-                ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
-                ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
-                ret = ret.CombineHashCode(this.Cells?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.BlockNumber);
+                hash.Add(this.GroupType);
+                hash.Add(this.LastModified);
+                hash.Add(this.Cells);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1589,12 +1589,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ICellSubBlockGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.BlockNumber).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Cells).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.BlockNumber);
+            hash.Add(item.GroupType);
+            hash.Add(item.LastModified);
+            hash.Add(item.Cells);
+            return hash.ToHashCode();
         }
         
         #endregion

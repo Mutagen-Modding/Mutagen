@@ -334,19 +334,19 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.LeftWalk?.GetHashCode());
-                ret = ret.CombineHashCode(this.LeftRun?.GetHashCode());
-                ret = ret.CombineHashCode(this.RightWalk?.GetHashCode());
-                ret = ret.CombineHashCode(this.RightRun?.GetHashCode());
-                ret = ret.CombineHashCode(this.ForwardWalk?.GetHashCode());
-                ret = ret.CombineHashCode(this.ForwardRun?.GetHashCode());
-                ret = ret.CombineHashCode(this.BackWalk?.GetHashCode());
-                ret = ret.CombineHashCode(this.BackRun?.GetHashCode());
-                ret = ret.CombineHashCode(this.RotateWalk?.GetHashCode());
-                ret = ret.CombineHashCode(this.RotateRun?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.LeftWalk);
+                hash.Add(this.LeftRun);
+                hash.Add(this.RightWalk);
+                hash.Add(this.RightRun);
+                hash.Add(this.ForwardWalk);
+                hash.Add(this.ForwardRun);
+                hash.Add(this.BackWalk);
+                hash.Add(this.BackRun);
+                hash.Add(this.RotateWalk);
+                hash.Add(this.RotateRun);
+                hash.Add(this.Unknown);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1755,19 +1755,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(ISpeedOverridesGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.LeftWalk).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LeftRun).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RightWalk).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RightRun).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ForwardWalk).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ForwardRun).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BackWalk).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BackRun).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RotateWalk).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RotateRun).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.LeftWalk);
+            hash.Add(item.LeftRun);
+            hash.Add(item.RightWalk);
+            hash.Add(item.RightRun);
+            hash.Add(item.ForwardWalk);
+            hash.Add(item.ForwardRun);
+            hash.Add(item.BackWalk);
+            hash.Add(item.BackRun);
+            hash.Add(item.RotateWalk);
+            hash.Add(item.RotateRun);
+            hash.Add(item.Unknown);
+            return hash.ToHashCode();
         }
         
         #endregion

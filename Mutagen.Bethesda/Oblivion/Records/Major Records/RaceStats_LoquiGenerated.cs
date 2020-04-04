@@ -310,16 +310,16 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Strength?.GetHashCode());
-                ret = ret.CombineHashCode(this.Intelligence?.GetHashCode());
-                ret = ret.CombineHashCode(this.Willpower?.GetHashCode());
-                ret = ret.CombineHashCode(this.Agility?.GetHashCode());
-                ret = ret.CombineHashCode(this.Speed?.GetHashCode());
-                ret = ret.CombineHashCode(this.Endurance?.GetHashCode());
-                ret = ret.CombineHashCode(this.Personality?.GetHashCode());
-                ret = ret.CombineHashCode(this.Luck?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Strength);
+                hash.Add(this.Intelligence);
+                hash.Add(this.Willpower);
+                hash.Add(this.Agility);
+                hash.Add(this.Speed);
+                hash.Add(this.Endurance);
+                hash.Add(this.Personality);
+                hash.Add(this.Luck);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1584,16 +1584,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRaceStatsGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Strength).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Intelligence).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Willpower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Agility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Speed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Endurance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Personality).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Luck).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Strength);
+            hash.Add(item.Intelligence);
+            hash.Add(item.Willpower);
+            hash.Add(item.Agility);
+            hash.Add(item.Speed);
+            hash.Add(item.Endurance);
+            hash.Add(item.Personality);
+            hash.Add(item.Luck);
+            return hash.ToHashCode();
         }
         
         #endregion

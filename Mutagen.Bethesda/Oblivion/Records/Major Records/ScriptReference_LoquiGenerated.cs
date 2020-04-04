@@ -243,8 +243,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                return ret;
+                var hash = new HashCode();
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1129,8 +1129,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IScriptReferenceGetter item)
         {
-            int ret = 0;
-            return ret;
+            var hash = new HashCode();
+            return hash.ToHashCode();
         }
         
         #endregion

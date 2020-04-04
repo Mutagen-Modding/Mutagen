@@ -200,8 +200,10 @@ namespace Mutagen.Bethesda
         /// <returns>Hashcode retrieved from ModKey and ID values.</returns>
         public override int GetHashCode()
         {
-            return this.ModKey.GetHashCode()
-                .CombineHashCode(this.ID.GetHashCode());
+            var hash = new HashCode();
+            hash.Add(this.ModKey);
+            hash.Add(this.ID);
+            return hash.ToHashCode();
         }
 
         public static bool operator ==(FormKey? a, FormKey? b)

@@ -676,35 +676,35 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Relations?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.PrisonMarker?.GetHashCode());
-                ret = ret.CombineHashCode(this.FollowerWaitMarker?.GetHashCode());
-                ret = ret.CombineHashCode(this.EvidenceChest?.GetHashCode());
-                ret = ret.CombineHashCode(this.PlayerBelongingsChest?.GetHashCode());
-                ret = ret.CombineHashCode(this.CrimeGroup?.GetHashCode());
-                ret = ret.CombineHashCode(this.JailOutfit?.GetHashCode());
-                ret = ret.CombineHashCode(this.ArrestCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.AttackOnSightCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.MurderCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.AssaultCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.TrespassCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.PickpocketCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.UnknownCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.StealMultCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.EscapeCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.WerewolfCrimeValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.Ranks?.GetHashCode());
-                ret = ret.CombineHashCode(this.VendorList?.GetHashCode());
-                ret = ret.CombineHashCode(this.VendorChest?.GetHashCode());
-                ret = ret.CombineHashCode(this.VendorValues?.GetHashCode());
-                ret = ret.CombineHashCode(this.VendorLocation?.GetHashCode());
-                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-                ret = ret.CombineHashCode(this.CRVADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Relations);
+                hash.Add(this.Flags);
+                hash.Add(this.PrisonMarker);
+                hash.Add(this.FollowerWaitMarker);
+                hash.Add(this.EvidenceChest);
+                hash.Add(this.PlayerBelongingsChest);
+                hash.Add(this.CrimeGroup);
+                hash.Add(this.JailOutfit);
+                hash.Add(this.ArrestCrimeValue);
+                hash.Add(this.AttackOnSightCrimeValue);
+                hash.Add(this.MurderCrimeValue);
+                hash.Add(this.AssaultCrimeValue);
+                hash.Add(this.TrespassCrimeValue);
+                hash.Add(this.PickpocketCrimeValue);
+                hash.Add(this.UnknownCrimeValue);
+                hash.Add(this.StealMultCrimeValue);
+                hash.Add(this.EscapeCrimeValue);
+                hash.Add(this.WerewolfCrimeValue);
+                hash.Add(this.Ranks);
+                hash.Add(this.VendorList);
+                hash.Add(this.VendorChest);
+                hash.Add(this.VendorValues);
+                hash.Add(this.VendorLocation);
+                hash.Add(this.Conditions);
+                hash.Add(this.CRVADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -3432,71 +3432,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IFactionGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
-            ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+            hash.Add(item.Relations);
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
             if (item.PrisonMarker.TryGet(out var PrisonMarkeritem))
             {
-                ret = HashHelper.GetHashCode(PrisonMarkeritem).CombineHashCode(ret);
+                hash.Add(PrisonMarkeritem);
             }
             if (item.FollowerWaitMarker.TryGet(out var FollowerWaitMarkeritem))
             {
-                ret = HashHelper.GetHashCode(FollowerWaitMarkeritem).CombineHashCode(ret);
+                hash.Add(FollowerWaitMarkeritem);
             }
             if (item.EvidenceChest.TryGet(out var EvidenceChestitem))
             {
-                ret = HashHelper.GetHashCode(EvidenceChestitem).CombineHashCode(ret);
+                hash.Add(EvidenceChestitem);
             }
             if (item.PlayerBelongingsChest.TryGet(out var PlayerBelongingsChestitem))
             {
-                ret = HashHelper.GetHashCode(PlayerBelongingsChestitem).CombineHashCode(ret);
+                hash.Add(PlayerBelongingsChestitem);
             }
             if (item.CrimeGroup.TryGet(out var CrimeGroupitem))
             {
-                ret = HashHelper.GetHashCode(CrimeGroupitem).CombineHashCode(ret);
+                hash.Add(CrimeGroupitem);
             }
             if (item.JailOutfit.TryGet(out var JailOutfititem))
             {
-                ret = HashHelper.GetHashCode(JailOutfititem).CombineHashCode(ret);
+                hash.Add(JailOutfititem);
             }
-            ret = HashHelper.GetHashCode(item.ArrestCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AttackOnSightCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MurderCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AssaultCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TrespassCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PickpocketCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UnknownCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.StealMultCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EscapeCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.WerewolfCrimeValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Ranks).CombineHashCode(ret);
+            hash.Add(item.ArrestCrimeValue);
+            hash.Add(item.AttackOnSightCrimeValue);
+            hash.Add(item.MurderCrimeValue);
+            hash.Add(item.AssaultCrimeValue);
+            hash.Add(item.TrespassCrimeValue);
+            hash.Add(item.PickpocketCrimeValue);
+            hash.Add(item.UnknownCrimeValue);
+            hash.Add(item.StealMultCrimeValue);
+            hash.Add(item.EscapeCrimeValue);
+            hash.Add(item.WerewolfCrimeValue);
+            hash.Add(item.Ranks);
             if (item.VendorList.TryGet(out var VendorListitem))
             {
-                ret = HashHelper.GetHashCode(VendorListitem).CombineHashCode(ret);
+                hash.Add(VendorListitem);
             }
             if (item.VendorChest.TryGet(out var VendorChestitem))
             {
-                ret = HashHelper.GetHashCode(VendorChestitem).CombineHashCode(ret);
+                hash.Add(VendorChestitem);
             }
             if (item.VendorValues.TryGet(out var VendorValuesitem))
             {
-                ret = HashHelper.GetHashCode(VendorValuesitem).CombineHashCode(ret);
+                hash.Add(VendorValuesitem);
             }
             if (item.VendorLocation.TryGet(out var VendorLocationitem))
             {
-                ret = HashHelper.GetHashCode(VendorLocationitem).CombineHashCode(ret);
+                hash.Add(VendorLocationitem);
             }
-            ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CRVADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Conditions);
+            hash.Add(item.CRVADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)

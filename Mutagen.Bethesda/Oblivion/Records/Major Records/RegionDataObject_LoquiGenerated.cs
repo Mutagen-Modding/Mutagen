@@ -402,25 +402,25 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Object?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParentIndex?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown1?.GetHashCode());
-                ret = ret.CombineHashCode(this.Density?.GetHashCode());
-                ret = ret.CombineHashCode(this.Clustering?.GetHashCode());
-                ret = ret.CombineHashCode(this.MinSlope?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaxSlope?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.RadiusWrtPercent?.GetHashCode());
-                ret = ret.CombineHashCode(this.Radius?.GetHashCode());
-                ret = ret.CombineHashCode(this.MinHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaxHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.Sink?.GetHashCode());
-                ret = ret.CombineHashCode(this.SinkVariance?.GetHashCode());
-                ret = ret.CombineHashCode(this.SizeVariance?.GetHashCode());
-                ret = ret.CombineHashCode(this.AngleVariance?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Object);
+                hash.Add(this.ParentIndex);
+                hash.Add(this.Unknown1);
+                hash.Add(this.Density);
+                hash.Add(this.Clustering);
+                hash.Add(this.MinSlope);
+                hash.Add(this.MaxSlope);
+                hash.Add(this.Flags);
+                hash.Add(this.RadiusWrtPercent);
+                hash.Add(this.Radius);
+                hash.Add(this.MinHeight);
+                hash.Add(this.MaxHeight);
+                hash.Add(this.Sink);
+                hash.Add(this.SinkVariance);
+                hash.Add(this.SizeVariance);
+                hash.Add(this.AngleVariance);
+                hash.Add(this.Unknown2);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2098,25 +2098,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRegionDataObjectGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Object).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ParentIndex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Clustering).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxSlope).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RadiusWrtPercent).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Sink).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SinkVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SizeVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AngleVariance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Object);
+            hash.Add(item.ParentIndex);
+            hash.Add(item.Unknown1);
+            hash.Add(item.Density);
+            hash.Add(item.Clustering);
+            hash.Add(item.MinSlope);
+            hash.Add(item.MaxSlope);
+            hash.Add(item.Flags);
+            hash.Add(item.RadiusWrtPercent);
+            hash.Add(item.Radius);
+            hash.Add(item.MinHeight);
+            hash.Add(item.MaxHeight);
+            hash.Add(item.Sink);
+            hash.Add(item.SinkVariance);
+            hash.Add(item.SizeVariance);
+            hash.Add(item.AngleVariance);
+            hash.Add(item.Unknown2);
+            return hash.ToHashCode();
         }
         
         #endregion

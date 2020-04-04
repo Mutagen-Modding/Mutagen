@@ -295,11 +295,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Index?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Index);
+                hash.Add(this.Model);
+                hash.Add(this.Icon);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1412,20 +1412,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IFacePartGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Index.TryGet(out var Indexitem))
             {
-                ret = HashHelper.GetHashCode(Indexitem).CombineHashCode(ret);
+                hash.Add(Indexitem);
             }
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

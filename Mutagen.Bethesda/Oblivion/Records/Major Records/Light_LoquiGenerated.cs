@@ -508,24 +508,24 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Script?.GetHashCode());
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.Time?.GetHashCode());
-                ret = ret.CombineHashCode(this.Radius?.GetHashCode());
-                ret = ret.CombineHashCode(this.Color?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.FalloffExponent?.GetHashCode());
-                ret = ret.CombineHashCode(this.FOV?.GetHashCode());
-                ret = ret.CombineHashCode(this.Value?.GetHashCode());
-                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fade?.GetHashCode());
-                ret = ret.CombineHashCode(this.Sound?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.Script);
+                hash.Add(this.Name);
+                hash.Add(this.Icon);
+                hash.Add(this.Time);
+                hash.Add(this.Radius);
+                hash.Add(this.Color);
+                hash.Add(this.Flags);
+                hash.Add(this.FalloffExponent);
+                hash.Add(this.FOV);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
+                hash.Add(this.Fade);
+                hash.Add(this.Sound);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2368,42 +2368,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILightGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
             if (item.Script.TryGet(out var Scriptitem))
             {
-                ret = HashHelper.GetHashCode(Scriptitem).CombineHashCode(ret);
+                hash.Add(Scriptitem);
             }
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
-            ret = HashHelper.GetHashCode(item.Time).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Color).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FalloffExponent).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FOV).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
+            hash.Add(item.Time);
+            hash.Add(item.Radius);
+            hash.Add(item.Color);
+            hash.Add(item.Flags);
+            hash.Add(item.FalloffExponent);
+            hash.Add(item.FOV);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
             if (item.Fade.TryGet(out var Fadeitem))
             {
-                ret = HashHelper.GetHashCode(Fadeitem).CombineHashCode(ret);
+                hash.Add(Fadeitem);
             }
             if (item.Sound.TryGet(out var Sounditem))
             {
-                ret = HashHelper.GetHashCode(Sounditem).CombineHashCode(ret);
+                hash.Add(Sounditem);
             }
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IAItemGetter item)

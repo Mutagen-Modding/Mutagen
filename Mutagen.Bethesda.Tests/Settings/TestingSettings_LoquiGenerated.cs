@@ -195,16 +195,16 @@ namespace Mutagen.Bethesda.Tests
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.TestGroupMasks?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestFlattenedMod?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestBenchmarks?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestLocators?.GetHashCode());
-                ret = ret.CombineHashCode(this.TestRecordEnumerables?.GetHashCode());
-                ret = ret.CombineHashCode(this.DataFolderLocations?.GetHashCode());
-                ret = ret.CombineHashCode(this.PassthroughSettings?.GetHashCode());
-                ret = ret.CombineHashCode(this.TargetGroups?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.TestGroupMasks);
+                hash.Add(this.TestFlattenedMod);
+                hash.Add(this.TestBenchmarks);
+                hash.Add(this.TestLocators);
+                hash.Add(this.TestRecordEnumerables);
+                hash.Add(this.DataFolderLocations);
+                hash.Add(this.PassthroughSettings);
+                hash.Add(this.TargetGroups);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1614,16 +1614,16 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public virtual int GetHashCode(ITestingSettingsGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.TestGroupMasks).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestFlattenedMod).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestBenchmarks).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestLocators).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestRecordEnumerables).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DataFolderLocations).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PassthroughSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TargetGroups).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.TestGroupMasks);
+            hash.Add(item.TestFlattenedMod);
+            hash.Add(item.TestBenchmarks);
+            hash.Add(item.TestLocators);
+            hash.Add(item.TestRecordEnumerables);
+            hash.Add(item.DataFolderLocations);
+            hash.Add(item.PassthroughSettings);
+            hash.Add(item.TargetGroups);
+            return hash.ToHashCode();
         }
         
         #endregion

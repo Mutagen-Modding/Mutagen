@@ -278,11 +278,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Direct?.GetHashCode());
-                ret = ret.CombineHashCode(this.Indirect?.GetHashCode());
-                ret = ret.CombineHashCode(this.GridPoint?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Direct);
+                hash.Add(this.Indirect);
+                hash.Add(this.GridPoint);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1338,11 +1338,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILoadScreenLocationGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Direct).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Indirect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GridPoint).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Direct);
+            hash.Add(item.Indirect);
+            hash.Add(item.GridPoint);
+            return hash.ToHashCode();
         }
         
         #endregion

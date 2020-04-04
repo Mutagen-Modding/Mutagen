@@ -269,10 +269,10 @@ namespace Mutagen.Bethesda
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Master?.GetHashCode());
-                ret = ret.CombineHashCode(this.FileSize?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Master);
+                hash.Add(this.FileSize);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1304,13 +1304,13 @@ namespace Mutagen.Bethesda.Internals
         
         public virtual int GetHashCode(IMasterReferenceGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Master).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Master);
             if (item.FileSize.TryGet(out var FileSizeitem))
             {
-                ret = HashHelper.GetHashCode(FileSizeitem).CombineHashCode(ret);
+                hash.Add(FileSizeitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

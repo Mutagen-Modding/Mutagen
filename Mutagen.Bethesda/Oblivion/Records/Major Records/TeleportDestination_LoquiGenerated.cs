@@ -274,11 +274,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Destination?.GetHashCode());
-                ret = ret.CombineHashCode(this.Position?.GetHashCode());
-                ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Destination);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1332,11 +1332,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ITeleportDestinationGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Destination).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Destination);
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
+            return hash.ToHashCode();
         }
         
         #endregion

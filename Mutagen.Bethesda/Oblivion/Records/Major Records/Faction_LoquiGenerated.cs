@@ -349,14 +349,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Relations?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.CrimeGoldMultiplier?.GetHashCode());
-                ret = ret.CombineHashCode(this.Ranks?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Relations);
+                hash.Add(this.Flags);
+                hash.Add(this.CrimeGoldMultiplier);
+                hash.Add(this.Ranks);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1883,23 +1883,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IFactionGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
-            ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+            hash.Add(item.Relations);
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
             if (item.CrimeGoldMultiplier.TryGet(out var CrimeGoldMultiplieritem))
             {
-                ret = HashHelper.GetHashCode(CrimeGoldMultiplieritem).CombineHashCode(ret);
+                hash.Add(CrimeGoldMultiplieritem);
             }
-            ret = HashHelper.GetHashCode(item.Ranks).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Ranks);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

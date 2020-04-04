@@ -372,16 +372,16 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.GeneralType?.GetHashCode());
-                ret = ret.CombineHashCode(this.Location?.GetHashCode());
-                ret = ret.CombineHashCode(this.Schedule?.GetHashCode());
-                ret = ret.CombineHashCode(this.Target?.GetHashCode());
-                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-                ret = ret.CombineHashCode(this.PKDTDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Flags);
+                hash.Add(this.GeneralType);
+                hash.Add(this.Location);
+                hash.Add(this.Schedule);
+                hash.Add(this.Target);
+                hash.Add(this.Conditions);
+                hash.Add(this.PKDTDataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1938,25 +1938,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IAIPackageGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GeneralType).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Flags);
+            hash.Add(item.GeneralType);
             if (item.Location.TryGet(out var Locationitem))
             {
-                ret = HashHelper.GetHashCode(Locationitem).CombineHashCode(ret);
+                hash.Add(Locationitem);
             }
             if (item.Schedule.TryGet(out var Scheduleitem))
             {
-                ret = HashHelper.GetHashCode(Scheduleitem).CombineHashCode(ret);
+                hash.Add(Scheduleitem);
             }
             if (item.Target.TryGet(out var Targetitem))
             {
-                ret = HashHelper.GetHashCode(Targetitem).CombineHashCode(ret);
+                hash.Add(Targetitem);
             }
-            ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PKDTDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Conditions);
+            hash.Add(item.PKDTDataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

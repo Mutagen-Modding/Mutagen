@@ -294,13 +294,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.RefCount?.GetHashCode());
-                ret = ret.CombineHashCode(this.CompiledSize?.GetHashCode());
-                ret = ret.CombineHashCode(this.VariableCount?.GetHashCode());
-                ret = ret.CombineHashCode(this.Type?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Fluff);
+                hash.Add(this.RefCount);
+                hash.Add(this.CompiledSize);
+                hash.Add(this.VariableCount);
+                hash.Add(this.Type);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1461,13 +1461,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IScriptMetaSummaryGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RefCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CompiledSize).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.VariableCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Fluff);
+            hash.Add(item.RefCount);
+            hash.Add(item.CompiledSize);
+            hash.Add(item.VariableCount);
+            hash.Add(item.Type);
+            return hash.ToHashCode();
         }
         
         #endregion

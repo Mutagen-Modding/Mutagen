@@ -437,20 +437,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.DialogType?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Quest?.GetHashCode());
-                ret = ret.CombineHashCode(this.PreviousTopic?.GetHashCode());
-                ret = ret.CombineHashCode(this.Topics?.GetHashCode());
-                ret = ret.CombineHashCode(this.Responses?.GetHashCode());
-                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-                ret = ret.CombineHashCode(this.Choices?.GetHashCode());
-                ret = ret.CombineHashCode(this.LinkFrom?.GetHashCode());
-                ret = ret.CombineHashCode(this.Script?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.DialogType);
+                hash.Add(this.Flags);
+                hash.Add(this.Quest);
+                hash.Add(this.PreviousTopic);
+                hash.Add(this.Topics);
+                hash.Add(this.Responses);
+                hash.Add(this.Conditions);
+                hash.Add(this.Choices);
+                hash.Add(this.LinkFrom);
+                hash.Add(this.Script);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2609,26 +2609,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IDialogItemGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.DialogType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.DialogType);
+            hash.Add(item.Flags);
             if (item.Quest.TryGet(out var Questitem))
             {
-                ret = HashHelper.GetHashCode(Questitem).CombineHashCode(ret);
+                hash.Add(Questitem);
             }
             if (item.PreviousTopic.TryGet(out var PreviousTopicitem))
             {
-                ret = HashHelper.GetHashCode(PreviousTopicitem).CombineHashCode(ret);
+                hash.Add(PreviousTopicitem);
             }
-            ret = HashHelper.GetHashCode(item.Topics).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Responses).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Choices).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LinkFrom).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Topics);
+            hash.Add(item.Responses);
+            hash.Add(item.Conditions);
+            hash.Add(item.Choices);
+            hash.Add(item.LinkFrom);
+            hash.Add(item.Script);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

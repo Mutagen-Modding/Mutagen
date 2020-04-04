@@ -294,14 +294,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.StartHour?.GetHashCode());
-                ret = ret.CombineHashCode(this.EndHour?.GetHashCode());
-                ret = ret.CombineHashCode(this.Radius?.GetHashCode());
-                ret = ret.CombineHashCode(this.OnlyBuysStolenItems?.GetHashCode());
-                ret = ret.CombineHashCode(this.NotSellBuy?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.StartHour);
+                hash.Add(this.EndHour);
+                hash.Add(this.Radius);
+                hash.Add(this.OnlyBuysStolenItems);
+                hash.Add(this.NotSellBuy);
+                hash.Add(this.Unknown);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1485,14 +1485,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IVendorValuesGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.StartHour).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EndHour).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Radius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.OnlyBuysStolenItems).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NotSellBuy).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.StartHour);
+            hash.Add(item.EndHour);
+            hash.Add(item.Radius);
+            hash.Add(item.OnlyBuysStolenItems);
+            hash.Add(item.NotSellBuy);
+            hash.Add(item.Unknown);
+            return hash.ToHashCode();
         }
         
         #endregion

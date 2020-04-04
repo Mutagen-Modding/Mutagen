@@ -508,24 +508,24 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.SpeedTreeSeeds?.GetHashCode());
-                ret = ret.CombineHashCode(this.LeafCurvature?.GetHashCode());
-                ret = ret.CombineHashCode(this.MinimumLeafAngle?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaximumLeafAngle?.GetHashCode());
-                ret = ret.CombineHashCode(this.BranchDimmingValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.LeafDimmingValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.ShadowRadius?.GetHashCode());
-                ret = ret.CombineHashCode(this.RockingSpeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.RustleSpeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.BillboardWidth?.GetHashCode());
-                ret = ret.CombineHashCode(this.BillboardHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.CNAMDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(this.BNAMDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.Icon);
+                hash.Add(this.SpeedTreeSeeds);
+                hash.Add(this.LeafCurvature);
+                hash.Add(this.MinimumLeafAngle);
+                hash.Add(this.MaximumLeafAngle);
+                hash.Add(this.BranchDimmingValue);
+                hash.Add(this.LeafDimmingValue);
+                hash.Add(this.ShadowRadius);
+                hash.Add(this.RockingSpeed);
+                hash.Add(this.RustleSpeed);
+                hash.Add(this.BillboardWidth);
+                hash.Add(this.BillboardHeight);
+                hash.Add(this.CNAMDataTypeState);
+                hash.Add(this.BNAMDataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2406,30 +2406,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ITreeGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
-            ret = HashHelper.GetHashCode(item.SpeedTreeSeeds).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LeafCurvature).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinimumLeafAngle).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaximumLeafAngle).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BranchDimmingValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LeafDimmingValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ShadowRadius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RockingSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RustleSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BillboardWidth).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BillboardHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BNAMDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.SpeedTreeSeeds);
+            hash.Add(item.LeafCurvature);
+            hash.Add(item.MinimumLeafAngle);
+            hash.Add(item.MaximumLeafAngle);
+            hash.Add(item.BranchDimmingValue);
+            hash.Add(item.LeafDimmingValue);
+            hash.Add(item.ShadowRadius);
+            hash.Add(item.RockingSpeed);
+            hash.Add(item.RustleSpeed);
+            hash.Add(item.BillboardWidth);
+            hash.Add(item.BillboardHeight);
+            hash.Add(item.CNAMDataTypeState);
+            hash.Add(item.BNAMDataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

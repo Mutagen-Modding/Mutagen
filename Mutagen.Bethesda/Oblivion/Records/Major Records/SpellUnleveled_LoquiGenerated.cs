@@ -362,15 +362,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Type?.GetHashCode());
-                ret = ret.CombineHashCode(this.Cost?.GetHashCode());
-                ret = ret.CombineHashCode(this.Level?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flag?.GetHashCode());
-                ret = ret.CombineHashCode(this.Effects?.GetHashCode());
-                ret = ret.CombineHashCode(this.SPITDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Type);
+                hash.Add(this.Cost);
+                hash.Add(this.Level);
+                hash.Add(this.Flag);
+                hash.Add(this.Effects);
+                hash.Add(this.SPITDataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1882,15 +1882,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ISpellUnleveledGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Cost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Level).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flag).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Effects).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SPITDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Type);
+            hash.Add(item.Cost);
+            hash.Add(item.Level);
+            hash.Add(item.Flag);
+            hash.Add(item.Effects);
+            hash.Add(item.SPITDataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISpellGetter item)

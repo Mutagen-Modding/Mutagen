@@ -426,19 +426,19 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Description?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.PrimaryAttributes?.GetHashCode());
-                ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
-                ret = ret.CombineHashCode(this.SecondaryAttributes?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.ClassServices?.GetHashCode());
-                ret = ret.CombineHashCode(this.Training?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Icon);
+                hash.Add(this.PrimaryAttributes);
+                hash.Add(this.Specialization);
+                hash.Add(this.SecondaryAttributes);
+                hash.Add(this.Flags);
+                hash.Add(this.ClassServices);
+                hash.Add(this.Training);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2186,28 +2186,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IClassGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Description.TryGet(out var Descriptionitem))
             {
-                ret = HashHelper.GetHashCode(Descriptionitem).CombineHashCode(ret);
+                hash.Add(Descriptionitem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
-            ret = HashHelper.GetHashCode(item.PrimaryAttributes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Specialization).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SecondaryAttributes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ClassServices).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Training).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.PrimaryAttributes);
+            hash.Add(item.Specialization);
+            hash.Add(item.SecondaryAttributes);
+            hash.Add(item.Flags);
+            hash.Add(item.ClassServices);
+            hash.Add(item.Training);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

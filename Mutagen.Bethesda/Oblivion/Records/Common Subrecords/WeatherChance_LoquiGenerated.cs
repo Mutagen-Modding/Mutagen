@@ -266,10 +266,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Weather?.GetHashCode());
-                ret = ret.CombineHashCode(this.Chance?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Weather);
+                hash.Add(this.Chance);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1272,10 +1272,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IWeatherChanceGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Weather).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Chance).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Weather);
+            hash.Add(item.Chance);
+            return hash.ToHashCode();
         }
         
         #endregion

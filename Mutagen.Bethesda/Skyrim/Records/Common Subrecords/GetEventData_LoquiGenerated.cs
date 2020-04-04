@@ -315,16 +315,16 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
-                ret = ret.CombineHashCode(this.EventFunction?.GetHashCode());
-                ret = ret.CombineHashCode(this.EventMember?.GetHashCode());
-                ret = ret.CombineHashCode(this.Parameter3?.GetHashCode());
-                ret = ret.CombineHashCode(this.RunOnType?.GetHashCode());
-                ret = ret.CombineHashCode(this.Reference?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown3?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Unknown2);
+                hash.Add(this.EventFunction);
+                hash.Add(this.EventMember);
+                hash.Add(this.Parameter3);
+                hash.Add(this.RunOnType);
+                hash.Add(this.Reference);
+                hash.Add(this.Unknown3);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1557,16 +1557,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IGetEventDataGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EventFunction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EventMember).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Parameter3).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RunOnType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown3).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Unknown2);
+            hash.Add(item.EventFunction);
+            hash.Add(item.EventMember);
+            hash.Add(item.Parameter3);
+            hash.Add(item.RunOnType);
+            hash.Add(item.Reference);
+            hash.Add(item.Unknown3);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IConditionDataGetter item)

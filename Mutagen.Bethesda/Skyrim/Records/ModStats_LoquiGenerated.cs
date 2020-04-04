@@ -270,11 +270,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Version?.GetHashCode());
-                ret = ret.CombineHashCode(this.NumRecords?.GetHashCode());
-                ret = ret.CombineHashCode(this.NextObjectID?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Version);
+                hash.Add(this.NumRecords);
+                hash.Add(this.NextObjectID);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1323,11 +1323,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IModStatsGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NumRecords).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NextObjectID).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Version);
+            hash.Add(item.NumRecords);
+            hash.Add(item.NextObjectID);
+            return hash.ToHashCode();
         }
         
         #endregion

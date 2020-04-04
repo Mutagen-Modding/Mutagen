@@ -331,13 +331,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-                ret = ret.CombineHashCode(this.AnimationGroupSection?.GetHashCode());
-                ret = ret.CombineHashCode(this.RelatedIdleAnimations?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.Conditions);
+                hash.Add(this.AnimationGroupSection);
+                hash.Add(this.RelatedIdleAnimations);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1806,19 +1806,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IIdleAnimationGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
-            ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
+            hash.Add(item.Conditions);
             if (item.AnimationGroupSection.TryGet(out var AnimationGroupSectionitem))
             {
-                ret = HashHelper.GetHashCode(AnimationGroupSectionitem).CombineHashCode(ret);
+                hash.Add(AnimationGroupSectionitem);
             }
-            ret = HashHelper.GetHashCode(item.RelatedIdleAnimations).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.RelatedIdleAnimations);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

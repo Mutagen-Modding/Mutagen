@@ -502,24 +502,24 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.Script?.GetHashCode());
-                ret = ret.CombineHashCode(this.Enchantment?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnchantmentPoints?.GetHashCode());
-                ret = ret.CombineHashCode(this.Type?.GetHashCode());
-                ret = ret.CombineHashCode(this.Speed?.GetHashCode());
-                ret = ret.CombineHashCode(this.Reach?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Value?.GetHashCode());
-                ret = ret.CombineHashCode(this.Health?.GetHashCode());
-                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-                ret = ret.CombineHashCode(this.Damage?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Icon);
+                hash.Add(this.Script);
+                hash.Add(this.Enchantment);
+                hash.Add(this.EnchantmentPoints);
+                hash.Add(this.Type);
+                hash.Add(this.Speed);
+                hash.Add(this.Reach);
+                hash.Add(this.Flags);
+                hash.Add(this.Value);
+                hash.Add(this.Health);
+                hash.Add(this.Weight);
+                hash.Add(this.Damage);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2353,42 +2353,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IWeaponGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
             if (item.Script.TryGet(out var Scriptitem))
             {
-                ret = HashHelper.GetHashCode(Scriptitem).CombineHashCode(ret);
+                hash.Add(Scriptitem);
             }
             if (item.Enchantment.TryGet(out var Enchantmentitem))
             {
-                ret = HashHelper.GetHashCode(Enchantmentitem).CombineHashCode(ret);
+                hash.Add(Enchantmentitem);
             }
             if (item.EnchantmentPoints.TryGet(out var EnchantmentPointsitem))
             {
-                ret = HashHelper.GetHashCode(EnchantmentPointsitem).CombineHashCode(ret);
+                hash.Add(EnchantmentPointsitem);
             }
-            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Speed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Reach).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Health).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Weight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Damage).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Type);
+            hash.Add(item.Speed);
+            hash.Add(item.Reach);
+            hash.Add(item.Flags);
+            hash.Add(item.Value);
+            hash.Add(item.Health);
+            hash.Add(item.Weight);
+            hash.Add(item.Damage);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IAItemGetter item)

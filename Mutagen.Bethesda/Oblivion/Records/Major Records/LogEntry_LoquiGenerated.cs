@@ -314,12 +314,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-                ret = ret.CombineHashCode(this.Entry?.GetHashCode());
-                ret = ret.CombineHashCode(this.ResultScript?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Flags);
+                hash.Add(this.Conditions);
+                hash.Add(this.Entry);
+                hash.Add(this.ResultScript);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1607,21 +1607,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILogEntryGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
-            ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
+            hash.Add(item.Conditions);
             if (item.Entry.TryGet(out var Entryitem))
             {
-                ret = HashHelper.GetHashCode(Entryitem).CombineHashCode(ret);
+                hash.Add(Entryitem);
             }
             if (item.ResultScript.TryGet(out var ResultScriptitem))
             {
-                ret = HashHelper.GetHashCode(ResultScriptitem).CombineHashCode(ret);
+                hash.Add(ResultScriptitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

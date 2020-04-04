@@ -153,10 +153,10 @@ namespace Mutagen.Bethesda.Tests
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.InterestingTypes?.GetHashCode());
-                ret = ret.CombineHashCode(this.UninterestingTypes?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.InterestingTypes);
+                hash.Add(this.UninterestingTypes);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1370,10 +1370,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public virtual int GetHashCode(IRecordInterestGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.InterestingTypes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.UninterestingTypes).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.InterestingTypes);
+            hash.Add(item.UninterestingTypes);
+            return hash.ToHashCode();
         }
         
         #endregion

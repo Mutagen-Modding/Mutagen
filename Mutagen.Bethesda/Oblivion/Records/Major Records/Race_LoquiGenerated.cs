@@ -677,37 +677,37 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Description?.GetHashCode());
-                ret = ret.CombineHashCode(this.Spells?.GetHashCode());
-                ret = ret.CombineHashCode(this.Relations?.GetHashCode());
-                ret = ret.CombineHashCode(this.SkillBoost0?.GetHashCode());
-                ret = ret.CombineHashCode(this.SkillBoost1?.GetHashCode());
-                ret = ret.CombineHashCode(this.SkillBoost2?.GetHashCode());
-                ret = ret.CombineHashCode(this.SkillBoost3?.GetHashCode());
-                ret = ret.CombineHashCode(this.SkillBoost4?.GetHashCode());
-                ret = ret.CombineHashCode(this.SkillBoost5?.GetHashCode());
-                ret = ret.CombineHashCode(this.SkillBoost6?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.Height?.GetHashCode());
-                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Voices?.GetHashCode());
-                ret = ret.CombineHashCode(this.DefaultHair?.GetHashCode());
-                ret = ret.CombineHashCode(this.DefaultHairColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.FaceGenMainClamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.FaceGenFaceClamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.RaceStats?.GetHashCode());
-                ret = ret.CombineHashCode(this.FaceData?.GetHashCode());
-                ret = ret.CombineHashCode(this.BodyData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
-                ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
-                ret = ret.CombineHashCode(this.FaceGenData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Spells);
+                hash.Add(this.Relations);
+                hash.Add(this.SkillBoost0);
+                hash.Add(this.SkillBoost1);
+                hash.Add(this.SkillBoost2);
+                hash.Add(this.SkillBoost3);
+                hash.Add(this.SkillBoost4);
+                hash.Add(this.SkillBoost5);
+                hash.Add(this.SkillBoost6);
+                hash.Add(this.Fluff);
+                hash.Add(this.Height);
+                hash.Add(this.Weight);
+                hash.Add(this.Flags);
+                hash.Add(this.Voices);
+                hash.Add(this.DefaultHair);
+                hash.Add(this.DefaultHairColor);
+                hash.Add(this.FaceGenMainClamp);
+                hash.Add(this.FaceGenFaceClamp);
+                hash.Add(this.RaceStats);
+                hash.Add(this.FaceData);
+                hash.Add(this.BodyData);
+                hash.Add(this.Hairs);
+                hash.Add(this.Eyes);
+                hash.Add(this.FaceGenData);
+                hash.Add(this.Unknown);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -3827,70 +3827,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRaceGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Description.TryGet(out var Descriptionitem))
             {
-                ret = HashHelper.GetHashCode(Descriptionitem).CombineHashCode(ret);
+                hash.Add(Descriptionitem);
             }
-            ret = HashHelper.GetHashCode(item.Spells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SkillBoost0).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SkillBoost1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SkillBoost2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SkillBoost3).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SkillBoost4).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SkillBoost5).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SkillBoost6).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Height.Male, item.Height.Female).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Weight.Male, item.Weight.Female).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            hash.Add(item.Spells);
+            hash.Add(item.Relations);
+            hash.Add(item.SkillBoost0);
+            hash.Add(item.SkillBoost1);
+            hash.Add(item.SkillBoost2);
+            hash.Add(item.SkillBoost3);
+            hash.Add(item.SkillBoost4);
+            hash.Add(item.SkillBoost5);
+            hash.Add(item.SkillBoost6);
+            hash.Add(item.Fluff);
+            hash.Add(HashCode.Combine(item.Height.Male, item.Height.Female));
+            hash.Add(HashCode.Combine(item.Weight.Male, item.Weight.Female));
+            hash.Add(item.Flags);
             if (item.Voices.TryGet(out var Voicesitem))
             {
-                ret = HashHelper.GetHashCode(Voicesitem.Male, Voicesitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(Voicesitem.Male, Voicesitem.Female));
             }
             if (item.DefaultHair.TryGet(out var DefaultHairitem))
             {
-                ret = HashHelper.GetHashCode(DefaultHairitem.Male, DefaultHairitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(DefaultHairitem.Male, DefaultHairitem.Female));
             }
             if (item.DefaultHairColor.TryGet(out var DefaultHairColoritem))
             {
-                ret = HashHelper.GetHashCode(DefaultHairColoritem).CombineHashCode(ret);
+                hash.Add(DefaultHairColoritem);
             }
             if (item.FaceGenMainClamp.TryGet(out var FaceGenMainClampitem))
             {
-                ret = HashHelper.GetHashCode(FaceGenMainClampitem).CombineHashCode(ret);
+                hash.Add(FaceGenMainClampitem);
             }
             if (item.FaceGenFaceClamp.TryGet(out var FaceGenFaceClampitem))
             {
-                ret = HashHelper.GetHashCode(FaceGenFaceClampitem).CombineHashCode(ret);
+                hash.Add(FaceGenFaceClampitem);
             }
             if (item.RaceStats.TryGet(out var RaceStatsitem))
             {
-                ret = HashHelper.GetHashCode(RaceStatsitem.Male, RaceStatsitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(RaceStatsitem.Male, RaceStatsitem.Female));
             }
-            ret = HashHelper.GetHashCode(item.FaceData).CombineHashCode(ret);
+            hash.Add(item.FaceData);
             if (item.BodyData.TryGet(out var BodyDataitem))
             {
-                ret = HashHelper.GetHashCode(BodyDataitem.Male, BodyDataitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(BodyDataitem.Male, BodyDataitem.Female));
             }
-            ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
+            hash.Add(item.Hairs);
+            hash.Add(item.Eyes);
             if (item.FaceGenData.TryGet(out var FaceGenDataitem))
             {
-                ret = HashHelper.GetHashCode(FaceGenDataitem).CombineHashCode(ret);
+                hash.Add(FaceGenDataitem);
             }
             if (item.Unknown.TryGet(out var UnknownItem))
             {
-                ret = HashHelper.GetHashCode(UnknownItem).CombineHashCode(ret);
+                hash.Add(UnknownItem);
             }
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

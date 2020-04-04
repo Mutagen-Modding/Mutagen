@@ -430,22 +430,22 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.ModHeader?.GetHashCode());
-                ret = ret.CombineHashCode(this.GameSettings?.GetHashCode());
-                ret = ret.CombineHashCode(this.Keywords?.GetHashCode());
-                ret = ret.CombineHashCode(this.LocationReferenceTypes?.GetHashCode());
-                ret = ret.CombineHashCode(this.Actions?.GetHashCode());
-                ret = ret.CombineHashCode(this.TextureSets?.GetHashCode());
-                ret = ret.CombineHashCode(this.Globals?.GetHashCode());
-                ret = ret.CombineHashCode(this.Classes?.GetHashCode());
-                ret = ret.CombineHashCode(this.Factions?.GetHashCode());
-                ret = ret.CombineHashCode(this.HeadParts?.GetHashCode());
-                ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
-                ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
-                ret = ret.CombineHashCode(this.Races?.GetHashCode());
-                ret = ret.CombineHashCode(this.SoundMarkers?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.ModHeader);
+                hash.Add(this.GameSettings);
+                hash.Add(this.Keywords);
+                hash.Add(this.LocationReferenceTypes);
+                hash.Add(this.Actions);
+                hash.Add(this.TextureSets);
+                hash.Add(this.Globals);
+                hash.Add(this.Classes);
+                hash.Add(this.Factions);
+                hash.Add(this.HeadParts);
+                hash.Add(this.Hairs);
+                hash.Add(this.Eyes);
+                hash.Add(this.Races);
+                hash.Add(this.SoundMarkers);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2830,22 +2830,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(ISkyrimModGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.ModHeader).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GameSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Keywords).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LocationReferenceTypes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Actions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TextureSets).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Globals).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Classes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HeadParts).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Races).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SoundMarkers).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.ModHeader);
+            hash.Add(item.GameSettings);
+            hash.Add(item.Keywords);
+            hash.Add(item.LocationReferenceTypes);
+            hash.Add(item.Actions);
+            hash.Add(item.TextureSets);
+            hash.Add(item.Globals);
+            hash.Add(item.Classes);
+            hash.Add(item.Factions);
+            hash.Add(item.HeadParts);
+            hash.Add(item.Hairs);
+            hash.Add(item.Eyes);
+            hash.Add(item.Races);
+            hash.Add(item.SoundMarkers);
+            return hash.ToHashCode();
         }
         
         #endregion

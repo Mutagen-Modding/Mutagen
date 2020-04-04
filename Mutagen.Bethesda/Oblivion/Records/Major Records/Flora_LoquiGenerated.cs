@@ -398,18 +398,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.Script?.GetHashCode());
-                ret = ret.CombineHashCode(this.Ingredient?.GetHashCode());
-                ret = ret.CombineHashCode(this.Spring?.GetHashCode());
-                ret = ret.CombineHashCode(this.Summer?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fall?.GetHashCode());
-                ret = ret.CombineHashCode(this.Winter?.GetHashCode());
-                ret = ret.CombineHashCode(this.PFPCDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Script);
+                hash.Add(this.Ingredient);
+                hash.Add(this.Spring);
+                hash.Add(this.Summer);
+                hash.Add(this.Fall);
+                hash.Add(this.Winter);
+                hash.Add(this.PFPCDataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1922,30 +1922,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IFloraGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
             if (item.Script.TryGet(out var Scriptitem))
             {
-                ret = HashHelper.GetHashCode(Scriptitem).CombineHashCode(ret);
+                hash.Add(Scriptitem);
             }
             if (item.Ingredient.TryGet(out var Ingredientitem))
             {
-                ret = HashHelper.GetHashCode(Ingredientitem).CombineHashCode(ret);
+                hash.Add(Ingredientitem);
             }
-            ret = HashHelper.GetHashCode(item.Spring).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Summer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fall).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Winter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PFPCDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Spring);
+            hash.Add(item.Summer);
+            hash.Add(item.Fall);
+            hash.Add(item.Winter);
+            hash.Add(item.PFPCDataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

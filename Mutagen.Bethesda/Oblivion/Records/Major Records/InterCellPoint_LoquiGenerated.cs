@@ -262,10 +262,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.PointID?.GetHashCode());
-                ret = ret.CombineHashCode(this.Point?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.PointID);
+                hash.Add(this.Point);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1260,10 +1260,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IInterCellPointGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.PointID).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Point).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.PointID);
+            hash.Add(item.Point);
+            return hash.ToHashCode();
         }
         
         #endregion

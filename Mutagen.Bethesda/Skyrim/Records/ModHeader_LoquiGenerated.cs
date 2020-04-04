@@ -438,22 +438,22 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.FormID?.GetHashCode());
-                ret = ret.CombineHashCode(this.Version?.GetHashCode());
-                ret = ret.CombineHashCode(this.FormVersion?.GetHashCode());
-                ret = ret.CombineHashCode(this.Version2?.GetHashCode());
-                ret = ret.CombineHashCode(this.Stats?.GetHashCode());
-                ret = ret.CombineHashCode(this.TypeOffsets?.GetHashCode());
-                ret = ret.CombineHashCode(this.Deleted?.GetHashCode());
-                ret = ret.CombineHashCode(this.Author?.GetHashCode());
-                ret = ret.CombineHashCode(this.Description?.GetHashCode());
-                ret = ret.CombineHashCode(this.MasterReferences?.GetHashCode());
-                ret = ret.CombineHashCode(this.OverriddenForms?.GetHashCode());
-                ret = ret.CombineHashCode(this.INTV?.GetHashCode());
-                ret = ret.CombineHashCode(this.INCC?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Flags);
+                hash.Add(this.FormID);
+                hash.Add(this.Version);
+                hash.Add(this.FormVersion);
+                hash.Add(this.Version2);
+                hash.Add(this.Stats);
+                hash.Add(this.TypeOffsets);
+                hash.Add(this.Deleted);
+                hash.Add(this.Author);
+                hash.Add(this.Description);
+                hash.Add(this.MasterReferences);
+                hash.Add(this.OverriddenForms);
+                hash.Add(this.INTV);
+                hash.Add(this.INCC);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2297,40 +2297,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IModHeaderGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FormID).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FormVersion).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Version2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Stats).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Flags);
+            hash.Add(item.FormID);
+            hash.Add(item.Version);
+            hash.Add(item.FormVersion);
+            hash.Add(item.Version2);
+            hash.Add(item.Stats);
             if (item.TypeOffsets.TryGet(out var TypeOffsetsItem))
             {
-                ret = HashHelper.GetHashCode(TypeOffsetsItem).CombineHashCode(ret);
+                hash.Add(TypeOffsetsItem);
             }
             if (item.Deleted.TryGet(out var DeletedItem))
             {
-                ret = HashHelper.GetHashCode(DeletedItem).CombineHashCode(ret);
+                hash.Add(DeletedItem);
             }
             if (item.Author.TryGet(out var Authoritem))
             {
-                ret = HashHelper.GetHashCode(Authoritem).CombineHashCode(ret);
+                hash.Add(Authoritem);
             }
             if (item.Description.TryGet(out var Descriptionitem))
             {
-                ret = HashHelper.GetHashCode(Descriptionitem).CombineHashCode(ret);
+                hash.Add(Descriptionitem);
             }
-            ret = HashHelper.GetHashCode(item.MasterReferences).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.OverriddenForms).CombineHashCode(ret);
+            hash.Add(item.MasterReferences);
+            hash.Add(item.OverriddenForms);
             if (item.INTV.TryGet(out var INTVitem))
             {
-                ret = HashHelper.GetHashCode(INTVitem).CombineHashCode(ret);
+                hash.Add(INTVitem);
             }
             if (item.INCC.TryGet(out var INCCitem))
             {
-                ret = HashHelper.GetHashCode(INCCitem).CombineHashCode(ret);
+                hash.Add(INCCitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

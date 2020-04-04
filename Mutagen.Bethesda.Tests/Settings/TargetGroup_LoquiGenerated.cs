@@ -143,10 +143,10 @@ namespace Mutagen.Bethesda.Tests
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Do?.GetHashCode());
-                ret = ret.CombineHashCode(this.Targets?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Do);
+                hash.Add(this.Targets);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1276,10 +1276,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public virtual int GetHashCode(ITargetGroupGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Do).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Targets).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Do);
+            hash.Add(item.Targets);
+            return hash.ToHashCode();
         }
         
         #endregion

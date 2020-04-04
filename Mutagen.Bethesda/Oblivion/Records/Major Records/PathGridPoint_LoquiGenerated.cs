@@ -297,12 +297,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Point?.GetHashCode());
-                ret = ret.CombineHashCode(this.NumConnections?.GetHashCode());
-                ret = ret.CombineHashCode(this.FluffBytes?.GetHashCode());
-                ret = ret.CombineHashCode(this.Connections?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Point);
+                hash.Add(this.NumConnections);
+                hash.Add(this.FluffBytes);
+                hash.Add(this.Connections);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1477,12 +1477,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IPathGridPointGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Point).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NumConnections).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FluffBytes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Connections).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Point);
+            hash.Add(item.NumConnections);
+            hash.Add(item.FluffBytes);
+            hash.Add(item.Connections);
+            return hash.ToHashCode();
         }
         
         #endregion

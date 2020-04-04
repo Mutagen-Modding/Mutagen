@@ -279,11 +279,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.TrainedSkill?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.TrainedSkill);
+                hash.Add(this.MaximumTrainingLevel);
+                hash.Add(this.Fluff);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1323,11 +1323,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IClassTrainingGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.TrainedSkill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaximumTrainingLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.TrainedSkill);
+            hash.Add(item.MaximumTrainingLevel);
+            hash.Add(item.Fluff);
+            return hash.ToHashCode();
         }
         
         #endregion

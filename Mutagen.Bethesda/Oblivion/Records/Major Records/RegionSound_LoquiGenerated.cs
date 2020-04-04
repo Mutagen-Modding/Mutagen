@@ -275,11 +275,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Sound?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Chance?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Sound);
+                hash.Add(this.Flags);
+                hash.Add(this.Chance);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1327,11 +1327,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRegionSoundGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Chance).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Sound);
+            hash.Add(item.Flags);
+            hash.Add(item.Chance);
+            return hash.ToHashCode();
         }
         
         #endregion

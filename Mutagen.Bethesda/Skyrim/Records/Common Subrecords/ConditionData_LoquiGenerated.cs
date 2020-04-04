@@ -243,8 +243,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                return ret;
+                var hash = new HashCode();
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1115,8 +1115,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IConditionDataGetter item)
         {
-            int ret = 0;
-            return ret;
+            var hash = new HashCode();
+            return hash.ToHashCode();
         }
         
         #endregion

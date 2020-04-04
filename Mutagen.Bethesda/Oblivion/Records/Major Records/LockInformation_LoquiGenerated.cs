@@ -290,12 +290,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.LockLevel?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.Key?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.LockLevel);
+                hash.Add(this.Fluff);
+                hash.Add(this.Key);
+                hash.Add(this.Flags);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1394,12 +1394,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILockInformationGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.LockLevel).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Key).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.LockLevel);
+            hash.Add(item.Fluff);
+            hash.Add(item.Key);
+            hash.Add(item.Flags);
+            return hash.ToHashCode();
         }
         
         #endregion

@@ -270,11 +270,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.UsableDimensions?.GetHashCode());
-                ret = ret.CombineHashCode(this.CellCoordinatesNWCell?.GetHashCode());
-                ret = ret.CombineHashCode(this.CellCoordinatesSECell?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.UsableDimensions);
+                hash.Add(this.CellCoordinatesNWCell);
+                hash.Add(this.CellCoordinatesSECell);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1323,11 +1323,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IMapDataGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.UsableDimensions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CellCoordinatesNWCell).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CellCoordinatesSECell).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.UsableDimensions);
+            hash.Add(item.CellCoordinatesNWCell);
+            hash.Add(item.CellCoordinatesSECell);
+            return hash.ToHashCode();
         }
         
         #endregion

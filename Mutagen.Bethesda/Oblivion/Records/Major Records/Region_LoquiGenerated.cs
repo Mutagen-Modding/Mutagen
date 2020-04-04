@@ -405,18 +405,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.MapColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.Worldspace?.GetHashCode());
-                ret = ret.CombineHashCode(this.Areas?.GetHashCode());
-                ret = ret.CombineHashCode(this.Objects?.GetHashCode());
-                ret = ret.CombineHashCode(this.Weather?.GetHashCode());
-                ret = ret.CombineHashCode(this.MapName?.GetHashCode());
-                ret = ret.CombineHashCode(this.Grasses?.GetHashCode());
-                ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Icon);
+                hash.Add(this.MapColor);
+                hash.Add(this.Worldspace);
+                hash.Add(this.Areas);
+                hash.Add(this.Objects);
+                hash.Add(this.Weather);
+                hash.Add(this.MapName);
+                hash.Add(this.Grasses);
+                hash.Add(this.Sounds);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2091,42 +2091,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRegionGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
             if (item.MapColor.TryGet(out var MapColoritem))
             {
-                ret = HashHelper.GetHashCode(MapColoritem).CombineHashCode(ret);
+                hash.Add(MapColoritem);
             }
             if (item.Worldspace.TryGet(out var Worldspaceitem))
             {
-                ret = HashHelper.GetHashCode(Worldspaceitem).CombineHashCode(ret);
+                hash.Add(Worldspaceitem);
             }
-            ret = HashHelper.GetHashCode(item.Areas).CombineHashCode(ret);
+            hash.Add(item.Areas);
             if (item.Objects.TryGet(out var Objectsitem))
             {
-                ret = HashHelper.GetHashCode(Objectsitem).CombineHashCode(ret);
+                hash.Add(Objectsitem);
             }
             if (item.Weather.TryGet(out var Weatheritem))
             {
-                ret = HashHelper.GetHashCode(Weatheritem).CombineHashCode(ret);
+                hash.Add(Weatheritem);
             }
             if (item.MapName.TryGet(out var MapNameitem))
             {
-                ret = HashHelper.GetHashCode(MapNameitem).CombineHashCode(ret);
+                hash.Add(MapNameitem);
             }
             if (item.Grasses.TryGet(out var Grassesitem))
             {
-                ret = HashHelper.GetHashCode(Grassesitem).CombineHashCode(ret);
+                hash.Add(Grassesitem);
             }
             if (item.Sounds.TryGet(out var Soundsitem))
             {
-                ret = HashHelper.GetHashCode(Soundsitem).CombineHashCode(ret);
+                hash.Add(Soundsitem);
             }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

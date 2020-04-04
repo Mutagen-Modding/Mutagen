@@ -281,10 +281,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.EdgeFallOff?.GetHashCode());
-                ret = ret.CombineHashCode(this.RegionPoints?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.EdgeFallOff);
+                hash.Add(this.RegionPoints);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1421,13 +1421,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRegionAreaGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.EdgeFallOff.TryGet(out var EdgeFallOffitem))
             {
-                ret = HashHelper.GetHashCode(EdgeFallOffitem).CombineHashCode(ret);
+                hash.Add(EdgeFallOffitem);
             }
-            ret = HashHelper.GetHashCode(item.RegionPoints).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.RegionPoints);
+            return hash.ToHashCode();
         }
         
         #endregion

@@ -328,13 +328,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-                ret = ret.CombineHashCode(this.Havok?.GetHashCode());
-                ret = ret.CombineHashCode(this.TextureSpecularExponent?.GetHashCode());
-                ret = ret.CombineHashCode(this.PotentialGrass?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Icon);
+                hash.Add(this.Havok);
+                hash.Add(this.TextureSpecularExponent);
+                hash.Add(this.PotentialGrass);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1696,22 +1696,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILandTextureGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
+                hash.Add(Iconitem);
             }
             if (item.Havok.TryGet(out var Havokitem))
             {
-                ret = HashHelper.GetHashCode(Havokitem).CombineHashCode(ret);
+                hash.Add(Havokitem);
             }
             if (item.TextureSpecularExponent.TryGet(out var TextureSpecularExponentitem))
             {
-                ret = HashHelper.GetHashCode(TextureSpecularExponentitem).CombineHashCode(ret);
+                hash.Add(TextureSpecularExponentitem);
             }
-            ret = HashHelper.GetHashCode(item.PotentialGrass).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.PotentialGrass);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

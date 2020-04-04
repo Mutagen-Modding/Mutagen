@@ -511,25 +511,25 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.LipMode?.GetHashCode());
-                ret = ret.CombineHashCode(this.Aah_LipBigAah?.GetHashCode());
-                ret = ret.CombineHashCode(this.BigAah_LipDST?.GetHashCode());
-                ret = ret.CombineHashCode(this.BMP_LipEee?.GetHashCode());
-                ret = ret.CombineHashCode(this.ChJSh_LipFV?.GetHashCode());
-                ret = ret.CombineHashCode(this.DST_LipK?.GetHashCode());
-                ret = ret.CombineHashCode(this.Eee_LipL?.GetHashCode());
-                ret = ret.CombineHashCode(this.Eh_LipR?.GetHashCode());
-                ret = ret.CombineHashCode(this.FV_LipTh?.GetHashCode());
-                ret = ret.CombineHashCode(this.I?.GetHashCode());
-                ret = ret.CombineHashCode(this.K?.GetHashCode());
-                ret = ret.CombineHashCode(this.N?.GetHashCode());
-                ret = ret.CombineHashCode(this.Oh?.GetHashCode());
-                ret = ret.CombineHashCode(this.OohQ?.GetHashCode());
-                ret = ret.CombineHashCode(this.R?.GetHashCode());
-                ret = ret.CombineHashCode(this.Th?.GetHashCode());
-                ret = ret.CombineHashCode(this.W?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.LipMode);
+                hash.Add(this.Aah_LipBigAah);
+                hash.Add(this.BigAah_LipDST);
+                hash.Add(this.BMP_LipEee);
+                hash.Add(this.ChJSh_LipFV);
+                hash.Add(this.DST_LipK);
+                hash.Add(this.Eee_LipL);
+                hash.Add(this.Eh_LipR);
+                hash.Add(this.FV_LipTh);
+                hash.Add(this.I);
+                hash.Add(this.K);
+                hash.Add(this.N);
+                hash.Add(this.Oh);
+                hash.Add(this.OohQ);
+                hash.Add(this.R);
+                hash.Add(this.Th);
+                hash.Add(this.W);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2439,73 +2439,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IFaceFxPhonemesGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.LipMode).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.LipMode);
             if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahitem))
             {
-                ret = HashHelper.GetHashCode(Aah_LipBigAahitem).CombineHashCode(ret);
+                hash.Add(Aah_LipBigAahitem);
             }
             if (item.BigAah_LipDST.TryGet(out var BigAah_LipDSTitem))
             {
-                ret = HashHelper.GetHashCode(BigAah_LipDSTitem).CombineHashCode(ret);
+                hash.Add(BigAah_LipDSTitem);
             }
             if (item.BMP_LipEee.TryGet(out var BMP_LipEeeitem))
             {
-                ret = HashHelper.GetHashCode(BMP_LipEeeitem).CombineHashCode(ret);
+                hash.Add(BMP_LipEeeitem);
             }
             if (item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVitem))
             {
-                ret = HashHelper.GetHashCode(ChJSh_LipFVitem).CombineHashCode(ret);
+                hash.Add(ChJSh_LipFVitem);
             }
             if (item.DST_LipK.TryGet(out var DST_LipKitem))
             {
-                ret = HashHelper.GetHashCode(DST_LipKitem).CombineHashCode(ret);
+                hash.Add(DST_LipKitem);
             }
             if (item.Eee_LipL.TryGet(out var Eee_LipLitem))
             {
-                ret = HashHelper.GetHashCode(Eee_LipLitem).CombineHashCode(ret);
+                hash.Add(Eee_LipLitem);
             }
             if (item.Eh_LipR.TryGet(out var Eh_LipRitem))
             {
-                ret = HashHelper.GetHashCode(Eh_LipRitem).CombineHashCode(ret);
+                hash.Add(Eh_LipRitem);
             }
             if (item.FV_LipTh.TryGet(out var FV_LipThitem))
             {
-                ret = HashHelper.GetHashCode(FV_LipThitem).CombineHashCode(ret);
+                hash.Add(FV_LipThitem);
             }
             if (item.I.TryGet(out var Iitem))
             {
-                ret = HashHelper.GetHashCode(Iitem).CombineHashCode(ret);
+                hash.Add(Iitem);
             }
             if (item.K.TryGet(out var Kitem))
             {
-                ret = HashHelper.GetHashCode(Kitem).CombineHashCode(ret);
+                hash.Add(Kitem);
             }
             if (item.N.TryGet(out var Nitem))
             {
-                ret = HashHelper.GetHashCode(Nitem).CombineHashCode(ret);
+                hash.Add(Nitem);
             }
             if (item.Oh.TryGet(out var Ohitem))
             {
-                ret = HashHelper.GetHashCode(Ohitem).CombineHashCode(ret);
+                hash.Add(Ohitem);
             }
             if (item.OohQ.TryGet(out var OohQitem))
             {
-                ret = HashHelper.GetHashCode(OohQitem).CombineHashCode(ret);
+                hash.Add(OohQitem);
             }
             if (item.R.TryGet(out var Ritem))
             {
-                ret = HashHelper.GetHashCode(Ritem).CombineHashCode(ret);
+                hash.Add(Ritem);
             }
             if (item.Th.TryGet(out var Thitem))
             {
-                ret = HashHelper.GetHashCode(Thitem).CombineHashCode(ret);
+                hash.Add(Thitem);
             }
             if (item.W.TryGet(out var Witem))
             {
-                ret = HashHelper.GetHashCode(Witem).CombineHashCode(ret);
+                hash.Add(Witem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

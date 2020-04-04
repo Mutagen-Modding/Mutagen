@@ -790,9 +790,6 @@
     <Compile Include="Skyrim\Records\Major Records\BodyData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\BodyDataPair_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\BodyData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -1057,8 +1054,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />
-    <PackageReference Include="Loqui" Version="1.1.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.5" />
+    <PackageReference Include="Loqui" Version="1.1.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

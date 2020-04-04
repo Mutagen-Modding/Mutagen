@@ -1167,19 +1167,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ILeveledEntryGetter<T> item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Level).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Reference).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Level);
+            hash.Add(item.Fluff);
+            hash.Add(item.Reference);
             if (item.Count.TryGet(out var Countitem))
             {
-                ret = HashHelper.GetHashCode(Countitem).CombineHashCode(ret);
+                hash.Add(Countitem);
             }
             if (item.Fluff2.TryGet(out var Fluff2Item))
             {
-                ret = HashHelper.GetHashCode(Fluff2Item).CombineHashCode(ret);
+                hash.Add(Fluff2Item);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion
@@ -2020,13 +2020,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Level?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.Reference?.GetHashCode());
-                ret = ret.CombineHashCode(this.Count?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Level);
+                hash.Add(this.Fluff);
+                hash.Add(this.Reference);
+                hash.Add(this.Count);
+                hash.Add(this.Fluff2);
+                return hash.ToHashCode();
             }
         
             #endregion

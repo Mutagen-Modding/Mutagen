@@ -304,12 +304,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Target?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-                ret = ret.CombineHashCode(this.QSTADataTypeState?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Target);
+                hash.Add(this.Flags);
+                hash.Add(this.Conditions);
+                hash.Add(this.QSTADataTypeState);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1556,12 +1556,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IQuestTargetGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Target).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.QSTADataTypeState).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Target);
+            hash.Add(item.Flags);
+            hash.Add(item.Conditions);
+            hash.Add(item.QSTADataTypeState);
+            return hash.ToHashCode();
         }
         
         #endregion

@@ -286,13 +286,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Month?.GetHashCode());
-                ret = ret.CombineHashCode(this.DayOfWeek?.GetHashCode());
-                ret = ret.CombineHashCode(this.Day?.GetHashCode());
-                ret = ret.CombineHashCode(this.Time?.GetHashCode());
-                ret = ret.CombineHashCode(this.Duration?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Month);
+                hash.Add(this.DayOfWeek);
+                hash.Add(this.Day);
+                hash.Add(this.Time);
+                hash.Add(this.Duration);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1431,13 +1431,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IAIPackageScheduleGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Month).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DayOfWeek).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Day).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Time).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Duration).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Month);
+            hash.Add(item.DayOfWeek);
+            hash.Add(item.Day);
+            hash.Add(item.Time);
+            hash.Add(item.Duration);
+            return hash.ToHashCode();
         }
         
         #endregion

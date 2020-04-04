@@ -131,10 +131,10 @@ namespace Mutagen.Bethesda.Tests
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Oblivion?.GetHashCode());
-                ret = ret.CombineHashCode(this.Skyrim?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Oblivion);
+                hash.Add(this.Skyrim);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1168,10 +1168,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public virtual int GetHashCode(IDataFolderLocationsGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Oblivion).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Skyrim).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Oblivion);
+            hash.Add(item.Skyrim);
+            return hash.ToHashCode();
         }
         
         #endregion

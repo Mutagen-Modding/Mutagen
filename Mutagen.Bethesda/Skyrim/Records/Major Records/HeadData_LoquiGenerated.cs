@@ -410,18 +410,18 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.HeadParts?.GetHashCode());
-                ret = ret.CombineHashCode(this.AvailableMorphs?.GetHashCode());
-                ret = ret.CombineHashCode(this.RacePresets?.GetHashCode());
-                ret = ret.CombineHashCode(this.AvailableHairColors?.GetHashCode());
-                ret = ret.CombineHashCode(this.FaceDetails?.GetHashCode());
-                ret = ret.CombineHashCode(this.DefaultFaceTexture?.GetHashCode());
-                ret = ret.CombineHashCode(this.TintMasks?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.MorphRace?.GetHashCode());
-                ret = ret.CombineHashCode(this.ArmorRace?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.HeadParts);
+                hash.Add(this.AvailableMorphs);
+                hash.Add(this.RacePresets);
+                hash.Add(this.AvailableHairColors);
+                hash.Add(this.FaceDetails);
+                hash.Add(this.DefaultFaceTexture);
+                hash.Add(this.TintMasks);
+                hash.Add(this.Model);
+                hash.Add(this.MorphRace);
+                hash.Add(this.ArmorRace);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2463,33 +2463,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IHeadDataGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.HeadParts).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.HeadParts);
             if (item.AvailableMorphs.TryGet(out var AvailableMorphsitem))
             {
-                ret = HashHelper.GetHashCode(AvailableMorphsitem).CombineHashCode(ret);
+                hash.Add(AvailableMorphsitem);
             }
-            ret = HashHelper.GetHashCode(item.RacePresets).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AvailableHairColors).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FaceDetails).CombineHashCode(ret);
+            hash.Add(item.RacePresets);
+            hash.Add(item.AvailableHairColors);
+            hash.Add(item.FaceDetails);
             if (item.DefaultFaceTexture.TryGet(out var DefaultFaceTextureitem))
             {
-                ret = HashHelper.GetHashCode(DefaultFaceTextureitem).CombineHashCode(ret);
+                hash.Add(DefaultFaceTextureitem);
             }
-            ret = HashHelper.GetHashCode(item.TintMasks).CombineHashCode(ret);
+            hash.Add(item.TintMasks);
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
             if (item.MorphRace.TryGet(out var MorphRaceitem))
             {
-                ret = HashHelper.GetHashCode(MorphRaceitem).CombineHashCode(ret);
+                hash.Add(MorphRaceitem);
             }
             if (item.ArmorRace.TryGet(out var ArmorRaceitem))
             {
-                ret = HashHelper.GetHashCode(ArmorRaceitem).CombineHashCode(ret);
+                hash.Add(ArmorRaceitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

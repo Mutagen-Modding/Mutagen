@@ -325,13 +325,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.ObjectBounds?.GetHashCode());
-                ret = ret.CombineHashCode(this.FNAM?.GetHashCode());
-                ret = ret.CombineHashCode(this.SNDD?.GetHashCode());
-                ret = ret.CombineHashCode(this.SoundDescriptor?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.FNAM);
+                hash.Add(this.SNDD);
+                hash.Add(this.SoundDescriptor);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1603,25 +1603,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(ISoundMarkerGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.ObjectBounds.TryGet(out var ObjectBoundsitem))
             {
-                ret = HashHelper.GetHashCode(ObjectBoundsitem).CombineHashCode(ret);
+                hash.Add(ObjectBoundsitem);
             }
             if (item.FNAM.TryGet(out var FNAMItem))
             {
-                ret = HashHelper.GetHashCode(FNAMItem).CombineHashCode(ret);
+                hash.Add(FNAMItem);
             }
             if (item.SNDD.TryGet(out var SNDDItem))
             {
-                ret = HashHelper.GetHashCode(SNDDItem).CombineHashCode(ret);
+                hash.Add(SNDDItem);
             }
             if (item.SoundDescriptor.TryGet(out var SoundDescriptoritem))
             {
-                ret = HashHelper.GetHashCode(SoundDescriptoritem).CombineHashCode(ret);
+                hash.Add(SoundDescriptoritem);
             }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)

@@ -387,20 +387,20 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Function?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParameterOneRecord?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParameterOneNumber?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParameterOneString?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParameterTwoRecord?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParameterTwoNumber?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParameterTwoString?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown3?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown4?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown5?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Function);
+                hash.Add(this.Unknown2);
+                hash.Add(this.ParameterOneRecord);
+                hash.Add(this.ParameterOneNumber);
+                hash.Add(this.ParameterOneString);
+                hash.Add(this.ParameterTwoRecord);
+                hash.Add(this.ParameterTwoNumber);
+                hash.Add(this.ParameterTwoString);
+                hash.Add(this.Unknown3);
+                hash.Add(this.Unknown4);
+                hash.Add(this.Unknown5);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1809,26 +1809,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IFunctionConditionDataGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Function).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ParameterOneRecord).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ParameterOneNumber).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Function);
+            hash.Add(item.Unknown2);
+            hash.Add(item.ParameterOneRecord);
+            hash.Add(item.ParameterOneNumber);
             if (item.ParameterOneString.TryGet(out var ParameterOneStringitem))
             {
-                ret = HashHelper.GetHashCode(ParameterOneStringitem).CombineHashCode(ret);
+                hash.Add(ParameterOneStringitem);
             }
-            ret = HashHelper.GetHashCode(item.ParameterTwoRecord).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ParameterTwoNumber).CombineHashCode(ret);
+            hash.Add(item.ParameterTwoRecord);
+            hash.Add(item.ParameterTwoNumber);
             if (item.ParameterTwoString.TryGet(out var ParameterTwoStringitem))
             {
-                ret = HashHelper.GetHashCode(ParameterTwoStringitem).CombineHashCode(ret);
+                hash.Add(ParameterTwoStringitem);
             }
-            ret = HashHelper.GetHashCode(item.Unknown3).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown4).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown5).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Unknown3);
+            hash.Add(item.Unknown4);
+            hash.Add(item.Unknown5);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IConditionDataGetter item)

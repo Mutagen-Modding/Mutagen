@@ -174,14 +174,14 @@ namespace Mutagen.Bethesda.Tests
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Do?.GetHashCode());
-                ret = ret.CombineHashCode(this.Path?.GetHashCode());
-                ret = ret.CombineHashCode(this.NumMasters?.GetHashCode());
-                ret = ret.CombineHashCode(this.GameMode?.GetHashCode());
-                ret = ret.CombineHashCode(this.ExpectedBaseGroupCount?.GetHashCode());
-                ret = ret.CombineHashCode(this.Interest?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Do);
+                hash.Add(this.Path);
+                hash.Add(this.NumMasters);
+                hash.Add(this.GameMode);
+                hash.Add(this.ExpectedBaseGroupCount);
+                hash.Add(this.Interest);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1402,17 +1402,17 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public virtual int GetHashCode(ITargetGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Do).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Path).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.NumMasters).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.GameMode).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Do);
+            hash.Add(item.Path);
+            hash.Add(item.NumMasters);
+            hash.Add(item.GameMode);
             if (item.ExpectedBaseGroupCount.TryGet(out var ExpectedBaseGroupCountitem))
             {
-                ret = HashHelper.GetHashCode(ExpectedBaseGroupCountitem).CombineHashCode(ret);
+                hash.Add(ExpectedBaseGroupCountitem);
             }
-            ret = HashHelper.GetHashCode(item.Interest).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.Interest);
+            return hash.ToHashCode();
         }
         
         #endregion

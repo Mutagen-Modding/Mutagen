@@ -372,16 +372,16 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Emotion?.GetHashCode());
-                ret = ret.CombineHashCode(this.EmotionValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff1?.GetHashCode());
-                ret = ret.CombineHashCode(this.ResponseNumber?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
-                ret = ret.CombineHashCode(this.ResponseText?.GetHashCode());
-                ret = ret.CombineHashCode(this.ActorNotes?.GetHashCode());
-                ret = ret.CombineHashCode(this.TRDTDataTypeState?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Emotion);
+                hash.Add(this.EmotionValue);
+                hash.Add(this.Fluff1);
+                hash.Add(this.ResponseNumber);
+                hash.Add(this.Fluff2);
+                hash.Add(this.ResponseText);
+                hash.Add(this.ActorNotes);
+                hash.Add(this.TRDTDataTypeState);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1704,22 +1704,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IDialogResponseGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Emotion).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.EmotionValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff1).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ResponseNumber).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Emotion);
+            hash.Add(item.EmotionValue);
+            hash.Add(item.Fluff1);
+            hash.Add(item.ResponseNumber);
+            hash.Add(item.Fluff2);
             if (item.ResponseText.TryGet(out var ResponseTextitem))
             {
-                ret = HashHelper.GetHashCode(ResponseTextitem).CombineHashCode(ret);
+                hash.Add(ResponseTextitem);
             }
             if (item.ActorNotes.TryGet(out var ActorNotesitem))
             {
-                ret = HashHelper.GetHashCode(ActorNotesitem).CombineHashCode(ret);
+                hash.Add(ActorNotesitem);
             }
-            ret = HashHelper.GetHashCode(item.TRDTDataTypeState).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.TRDTDataTypeState);
+            return hash.ToHashCode();
         }
         
         #endregion

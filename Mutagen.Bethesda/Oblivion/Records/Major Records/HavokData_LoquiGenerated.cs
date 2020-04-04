@@ -270,11 +270,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Material?.GetHashCode());
-                ret = ret.CombineHashCode(this.Friction?.GetHashCode());
-                ret = ret.CombineHashCode(this.Restitution?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Material);
+                hash.Add(this.Friction);
+                hash.Add(this.Restitution);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1323,11 +1323,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IHavokDataGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Material).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Friction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Restitution).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Material);
+            hash.Add(item.Friction);
+            hash.Add(item.Restitution);
+            return hash.ToHashCode();
         }
         
         #endregion

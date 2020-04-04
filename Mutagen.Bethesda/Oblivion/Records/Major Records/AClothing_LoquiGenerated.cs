@@ -461,22 +461,22 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Script?.GetHashCode());
-                ret = ret.CombineHashCode(this.Enchantment?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnchantmentPoints?.GetHashCode());
-                ret = ret.CombineHashCode(this.BipedFlags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleBipedModel?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleWorldModel?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaleIcon?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleBipedModel?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleWorldModel?.GetHashCode());
-                ret = ret.CombineHashCode(this.FemaleIcon?.GetHashCode());
-                ret = ret.CombineHashCode(this.BMDTDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Script);
+                hash.Add(this.Enchantment);
+                hash.Add(this.EnchantmentPoints);
+                hash.Add(this.BipedFlags);
+                hash.Add(this.Flags);
+                hash.Add(this.MaleBipedModel);
+                hash.Add(this.MaleWorldModel);
+                hash.Add(this.MaleIcon);
+                hash.Add(this.FemaleBipedModel);
+                hash.Add(this.FemaleWorldModel);
+                hash.Add(this.FemaleIcon);
+                hash.Add(this.BMDTDataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2315,52 +2315,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IAClothingGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Script.TryGet(out var Scriptitem))
             {
-                ret = HashHelper.GetHashCode(Scriptitem).CombineHashCode(ret);
+                hash.Add(Scriptitem);
             }
             if (item.Enchantment.TryGet(out var Enchantmentitem))
             {
-                ret = HashHelper.GetHashCode(Enchantmentitem).CombineHashCode(ret);
+                hash.Add(Enchantmentitem);
             }
             if (item.EnchantmentPoints.TryGet(out var EnchantmentPointsitem))
             {
-                ret = HashHelper.GetHashCode(EnchantmentPointsitem).CombineHashCode(ret);
+                hash.Add(EnchantmentPointsitem);
             }
-            ret = HashHelper.GetHashCode(item.BipedFlags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+            hash.Add(item.BipedFlags);
+            hash.Add(item.Flags);
             if (item.MaleBipedModel.TryGet(out var MaleBipedModelitem))
             {
-                ret = HashHelper.GetHashCode(MaleBipedModelitem).CombineHashCode(ret);
+                hash.Add(MaleBipedModelitem);
             }
             if (item.MaleWorldModel.TryGet(out var MaleWorldModelitem))
             {
-                ret = HashHelper.GetHashCode(MaleWorldModelitem).CombineHashCode(ret);
+                hash.Add(MaleWorldModelitem);
             }
             if (item.MaleIcon.TryGet(out var MaleIconitem))
             {
-                ret = HashHelper.GetHashCode(MaleIconitem).CombineHashCode(ret);
+                hash.Add(MaleIconitem);
             }
             if (item.FemaleBipedModel.TryGet(out var FemaleBipedModelitem))
             {
-                ret = HashHelper.GetHashCode(FemaleBipedModelitem).CombineHashCode(ret);
+                hash.Add(FemaleBipedModelitem);
             }
             if (item.FemaleWorldModel.TryGet(out var FemaleWorldModelitem))
             {
-                ret = HashHelper.GetHashCode(FemaleWorldModelitem).CombineHashCode(ret);
+                hash.Add(FemaleWorldModelitem);
             }
             if (item.FemaleIcon.TryGet(out var FemaleIconitem))
             {
-                ret = HashHelper.GetHashCode(FemaleIconitem).CombineHashCode(ret);
+                hash.Add(FemaleIconitem);
             }
-            ret = HashHelper.GetHashCode(item.BMDTDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.BMDTDataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IAItemGetter item)

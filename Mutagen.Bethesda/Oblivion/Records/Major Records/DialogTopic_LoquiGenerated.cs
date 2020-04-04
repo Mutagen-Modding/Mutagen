@@ -348,14 +348,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Quests?.GetHashCode());
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.DialogType?.GetHashCode());
-                ret = ret.CombineHashCode(this.Timestamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.Items?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Quests);
+                hash.Add(this.Name);
+                hash.Add(this.DialogType);
+                hash.Add(this.Timestamp);
+                hash.Add(this.Items);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1900,20 +1900,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IDialogTopicGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Quests).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Quests);
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.DialogType.TryGet(out var DialogTypeitem))
             {
-                ret = HashHelper.GetHashCode(DialogTypeitem).CombineHashCode(ret);
+                hash.Add(DialogTypeitem);
             }
-            ret = HashHelper.GetHashCode(item.Timestamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Timestamp);
+            hash.Add(item.Items);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

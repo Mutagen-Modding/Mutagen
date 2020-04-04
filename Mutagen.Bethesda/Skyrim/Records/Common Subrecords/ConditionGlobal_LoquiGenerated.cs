@@ -273,11 +273,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.ComparisonValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.Data?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.ComparisonValue);
+                hash.Add(this.Data);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1315,11 +1315,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IConditionGlobalGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.ComparisonValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.ComparisonValue);
+            hash.Add(item.Data);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IConditionGetter item)

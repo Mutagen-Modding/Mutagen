@@ -326,13 +326,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Index?.GetHashCode());
-                ret = ret.CombineHashCode(this.FileName?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaskType?.GetHashCode());
-                ret = ret.CombineHashCode(this.PresetDefault?.GetHashCode());
-                ret = ret.CombineHashCode(this.Presets?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Index);
+                hash.Add(this.FileName);
+                hash.Add(this.MaskType);
+                hash.Add(this.PresetDefault);
+                hash.Add(this.Presets);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1664,25 +1664,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(ITintAssetsGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Index.TryGet(out var Indexitem))
             {
-                ret = HashHelper.GetHashCode(Indexitem).CombineHashCode(ret);
+                hash.Add(Indexitem);
             }
             if (item.FileName.TryGet(out var FileNameitem))
             {
-                ret = HashHelper.GetHashCode(FileNameitem).CombineHashCode(ret);
+                hash.Add(FileNameitem);
             }
             if (item.MaskType.TryGet(out var MaskTypeitem))
             {
-                ret = HashHelper.GetHashCode(MaskTypeitem).CombineHashCode(ret);
+                hash.Add(MaskTypeitem);
             }
             if (item.PresetDefault.TryGet(out var PresetDefaultitem))
             {
-                ret = HashHelper.GetHashCode(PresetDefaultitem).CombineHashCode(ret);
+                hash.Add(PresetDefaultitem);
             }
-            ret = HashHelper.GetHashCode(item.Presets).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.Presets);
+            return hash.ToHashCode();
         }
         
         #endregion

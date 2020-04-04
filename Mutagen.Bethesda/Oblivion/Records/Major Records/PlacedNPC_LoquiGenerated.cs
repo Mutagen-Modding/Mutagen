@@ -437,21 +437,21 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Base?.GetHashCode());
-                ret = ret.CombineHashCode(this.XPCIFluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.FULLFluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.DistantLODData?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
-                ret = ret.CombineHashCode(this.MerchantContainer?.GetHashCode());
-                ret = ret.CombineHashCode(this.Horse?.GetHashCode());
-                ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Scale?.GetHashCode());
-                ret = ret.CombineHashCode(this.Position?.GetHashCode());
-                ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Base);
+                hash.Add(this.XPCIFluff);
+                hash.Add(this.FULLFluff);
+                hash.Add(this.DistantLODData);
+                hash.Add(this.EnableParent);
+                hash.Add(this.MerchantContainer);
+                hash.Add(this.Horse);
+                hash.Add(this.RagdollData);
+                hash.Add(this.Scale);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2154,48 +2154,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IPlacedNpcGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Base.TryGet(out var Baseitem))
             {
-                ret = HashHelper.GetHashCode(Baseitem).CombineHashCode(ret);
+                hash.Add(Baseitem);
             }
             if (item.XPCIFluff.TryGet(out var XPCIFluffItem))
             {
-                ret = HashHelper.GetHashCode(XPCIFluffItem).CombineHashCode(ret);
+                hash.Add(XPCIFluffItem);
             }
             if (item.FULLFluff.TryGet(out var FULLFluffItem))
             {
-                ret = HashHelper.GetHashCode(FULLFluffItem).CombineHashCode(ret);
+                hash.Add(FULLFluffItem);
             }
             if (item.DistantLODData.TryGet(out var DistantLODDataitem))
             {
-                ret = HashHelper.GetHashCode(DistantLODDataitem).CombineHashCode(ret);
+                hash.Add(DistantLODDataitem);
             }
             if (item.EnableParent.TryGet(out var EnableParentitem))
             {
-                ret = HashHelper.GetHashCode(EnableParentitem).CombineHashCode(ret);
+                hash.Add(EnableParentitem);
             }
             if (item.MerchantContainer.TryGet(out var MerchantContaineritem))
             {
-                ret = HashHelper.GetHashCode(MerchantContaineritem).CombineHashCode(ret);
+                hash.Add(MerchantContaineritem);
             }
             if (item.Horse.TryGet(out var Horseitem))
             {
-                ret = HashHelper.GetHashCode(Horseitem).CombineHashCode(ret);
+                hash.Add(Horseitem);
             }
             if (item.RagdollData.TryGet(out var RagdollDataItem))
             {
-                ret = HashHelper.GetHashCode(RagdollDataItem).CombineHashCode(ret);
+                hash.Add(RagdollDataItem);
             }
             if (item.Scale.TryGet(out var Scaleitem))
             {
-                ret = HashHelper.GetHashCode(Scaleitem).CombineHashCode(ret);
+                hash.Add(Scaleitem);
             }
-            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

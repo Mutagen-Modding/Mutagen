@@ -373,16 +373,16 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.MagicEffect?.GetHashCode());
-                ret = ret.CombineHashCode(this.Magnitude?.GetHashCode());
-                ret = ret.CombineHashCode(this.Area?.GetHashCode());
-                ret = ret.CombineHashCode(this.Duration?.GetHashCode());
-                ret = ret.CombineHashCode(this.Type?.GetHashCode());
-                ret = ret.CombineHashCode(this.ActorValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.ScriptEffect?.GetHashCode());
-                ret = ret.CombineHashCode(this.EFITDataTypeState?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.MagicEffect);
+                hash.Add(this.Magnitude);
+                hash.Add(this.Area);
+                hash.Add(this.Duration);
+                hash.Add(this.Type);
+                hash.Add(this.ActorValue);
+                hash.Add(this.ScriptEffect);
+                hash.Add(this.EFITDataTypeState);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1720,19 +1720,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IEffectGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.MagicEffect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Magnitude).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Area).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Duration).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ActorValue).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.MagicEffect);
+            hash.Add(item.Magnitude);
+            hash.Add(item.Area);
+            hash.Add(item.Duration);
+            hash.Add(item.Type);
+            hash.Add(item.ActorValue);
             if (item.ScriptEffect.TryGet(out var ScriptEffectitem))
             {
-                ret = HashHelper.GetHashCode(ScriptEffectitem).CombineHashCode(ret);
+                hash.Add(ScriptEffectitem);
             }
-            ret = HashHelper.GetHashCode(item.EFITDataTypeState).CombineHashCode(ret);
-            return ret;
+            hash.Add(item.EFITDataTypeState);
+            return hash.ToHashCode();
         }
         
         #endregion

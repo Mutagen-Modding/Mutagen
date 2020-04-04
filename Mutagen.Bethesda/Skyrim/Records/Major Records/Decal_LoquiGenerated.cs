@@ -335,19 +335,19 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.MinWidth?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaxWidth?.GetHashCode());
-                ret = ret.CombineHashCode(this.MinHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaxHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.Depth?.GetHashCode());
-                ret = ret.CombineHashCode(this.Shininess?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParallaxScale?.GetHashCode());
-                ret = ret.CombineHashCode(this.ParallaxPasses?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-                ret = ret.CombineHashCode(this.Color?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.MinWidth);
+                hash.Add(this.MaxWidth);
+                hash.Add(this.MinHeight);
+                hash.Add(this.MaxHeight);
+                hash.Add(this.Depth);
+                hash.Add(this.Shininess);
+                hash.Add(this.ParallaxScale);
+                hash.Add(this.ParallaxPasses);
+                hash.Add(this.Flags);
+                hash.Add(this.Unknown);
+                hash.Add(this.Color);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1758,19 +1758,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IDecalGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.MinWidth).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxWidth).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MinHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MaxHeight).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Depth).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Shininess).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ParallaxScale).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ParallaxPasses).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Color).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.MinWidth);
+            hash.Add(item.MaxWidth);
+            hash.Add(item.MinHeight);
+            hash.Add(item.MaxHeight);
+            hash.Add(item.Depth);
+            hash.Add(item.Shininess);
+            hash.Add(item.ParallaxScale);
+            hash.Add(item.ParallaxPasses);
+            hash.Add(item.Flags);
+            hash.Add(item.Unknown);
+            hash.Add(item.Color);
+            return hash.ToHashCode();
         }
         
         #endregion

@@ -813,49 +813,49 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Description?.GetHashCode());
-                ret = ret.CombineHashCode(this.ActorEffect?.GetHashCode());
-                ret = ret.CombineHashCode(this.Skin?.GetHashCode());
-                ret = ret.CombineHashCode(this.BodyTemplate?.GetHashCode());
-                ret = ret.CombineHashCode(this.Keywords?.GetHashCode());
-                ret = ret.CombineHashCode(this.Data?.GetHashCode());
-                ret = ret.CombineHashCode(this.SkeletalModel?.GetHashCode());
-                ret = ret.CombineHashCode(this.MovementTypeNames?.GetHashCode());
-                ret = ret.CombineHashCode(this.Voices?.GetHashCode());
-                ret = ret.CombineHashCode(this.DecapitateArmors?.GetHashCode());
-                ret = ret.CombineHashCode(this.DefaultHairColors?.GetHashCode());
-                ret = ret.CombineHashCode(this.NumberOfTintsInList?.GetHashCode());
-                ret = ret.CombineHashCode(this.FacegenMainClamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.FacegenFaceClamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.AttackRace?.GetHashCode());
-                ret = ret.CombineHashCode(this.Attacks?.GetHashCode());
-                ret = ret.CombineHashCode(this.BodyData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
-                ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
-                ret = ret.CombineHashCode(this.BodyPartData?.GetHashCode());
-                ret = ret.CombineHashCode(this.BehaviorGraph?.GetHashCode());
-                ret = ret.CombineHashCode(this.MaterialType?.GetHashCode());
-                ret = ret.CombineHashCode(this.ImpactDataSet?.GetHashCode());
-                ret = ret.CombineHashCode(this.DecapitationFX?.GetHashCode());
-                ret = ret.CombineHashCode(this.OpenLootSound?.GetHashCode());
-                ret = ret.CombineHashCode(this.CloseLootSound?.GetHashCode());
-                ret = ret.CombineHashCode(this.BipedObjectNames?.GetHashCode());
-                ret = ret.CombineHashCode(this.MovementTypes?.GetHashCode());
-                ret = ret.CombineHashCode(this.EquipmentFlags?.GetHashCode());
-                ret = ret.CombineHashCode(this.EquipmentSlots?.GetHashCode());
-                ret = ret.CombineHashCode(this.UnarmedEquipSlot?.GetHashCode());
-                ret = ret.CombineHashCode(this.FaceFxPhonemes?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseMovementDefaultWalk?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseMovementDefaultRun?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseMovementDefaultSwim?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseMovementDefaultFly?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseMovementDefaultSneak?.GetHashCode());
-                ret = ret.CombineHashCode(this.BaseMovementDefaultSprint?.GetHashCode());
-                ret = ret.CombineHashCode(this.HeadData?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.ActorEffect);
+                hash.Add(this.Skin);
+                hash.Add(this.BodyTemplate);
+                hash.Add(this.Keywords);
+                hash.Add(this.Data);
+                hash.Add(this.SkeletalModel);
+                hash.Add(this.MovementTypeNames);
+                hash.Add(this.Voices);
+                hash.Add(this.DecapitateArmors);
+                hash.Add(this.DefaultHairColors);
+                hash.Add(this.NumberOfTintsInList);
+                hash.Add(this.FacegenMainClamp);
+                hash.Add(this.FacegenFaceClamp);
+                hash.Add(this.AttackRace);
+                hash.Add(this.Attacks);
+                hash.Add(this.BodyData);
+                hash.Add(this.Hairs);
+                hash.Add(this.Eyes);
+                hash.Add(this.BodyPartData);
+                hash.Add(this.BehaviorGraph);
+                hash.Add(this.MaterialType);
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.DecapitationFX);
+                hash.Add(this.OpenLootSound);
+                hash.Add(this.CloseLootSound);
+                hash.Add(this.BipedObjectNames);
+                hash.Add(this.MovementTypes);
+                hash.Add(this.EquipmentFlags);
+                hash.Add(this.EquipmentSlots);
+                hash.Add(this.UnarmedEquipSlot);
+                hash.Add(this.FaceFxPhonemes);
+                hash.Add(this.BaseMovementDefaultWalk);
+                hash.Add(this.BaseMovementDefaultRun);
+                hash.Add(this.BaseMovementDefaultSwim);
+                hash.Add(this.BaseMovementDefaultFly);
+                hash.Add(this.BaseMovementDefaultSneak);
+                hash.Add(this.BaseMovementDefaultSprint);
+                hash.Add(this.HeadData);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -5185,139 +5185,139 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IRaceGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Description.TryGet(out var Descriptionitem))
             {
-                ret = HashHelper.GetHashCode(Descriptionitem).CombineHashCode(ret);
+                hash.Add(Descriptionitem);
             }
-            ret = HashHelper.GetHashCode(item.ActorEffect).CombineHashCode(ret);
+            hash.Add(item.ActorEffect);
             if (item.Skin.TryGet(out var Skinitem))
             {
-                ret = HashHelper.GetHashCode(Skinitem).CombineHashCode(ret);
+                hash.Add(Skinitem);
             }
             if (item.BodyTemplate.TryGet(out var BodyTemplateitem))
             {
-                ret = HashHelper.GetHashCode(BodyTemplateitem).CombineHashCode(ret);
+                hash.Add(BodyTemplateitem);
             }
-            ret = HashHelper.GetHashCode(item.Keywords).CombineHashCode(ret);
+            hash.Add(item.Keywords);
             if (item.Data.TryGet(out var Dataitem))
             {
-                ret = HashHelper.GetHashCode(Dataitem).CombineHashCode(ret);
+                hash.Add(Dataitem);
             }
             if (item.SkeletalModel.TryGet(out var SkeletalModelitem))
             {
-                ret = HashHelper.GetHashCode(SkeletalModelitem.Male, SkeletalModelitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(SkeletalModelitem.Male, SkeletalModelitem.Female));
             }
-            ret = HashHelper.GetHashCode(item.MovementTypeNames).CombineHashCode(ret);
+            hash.Add(item.MovementTypeNames);
             if (item.Voices.TryGet(out var Voicesitem))
             {
-                ret = HashHelper.GetHashCode(Voicesitem.Male, Voicesitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(Voicesitem.Male, Voicesitem.Female));
             }
             if (item.DecapitateArmors.TryGet(out var DecapitateArmorsitem))
             {
-                ret = HashHelper.GetHashCode(DecapitateArmorsitem.Male, DecapitateArmorsitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(DecapitateArmorsitem.Male, DecapitateArmorsitem.Female));
             }
             if (item.DefaultHairColors.TryGet(out var DefaultHairColorsitem))
             {
-                ret = HashHelper.GetHashCode(DefaultHairColorsitem.Male, DefaultHairColorsitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(DefaultHairColorsitem.Male, DefaultHairColorsitem.Female));
             }
             if (item.NumberOfTintsInList.TryGet(out var NumberOfTintsInListitem))
             {
-                ret = HashHelper.GetHashCode(NumberOfTintsInListitem).CombineHashCode(ret);
+                hash.Add(NumberOfTintsInListitem);
             }
             if (item.FacegenMainClamp.TryGet(out var FacegenMainClampitem))
             {
-                ret = HashHelper.GetHashCode(FacegenMainClampitem).CombineHashCode(ret);
+                hash.Add(FacegenMainClampitem);
             }
             if (item.FacegenFaceClamp.TryGet(out var FacegenFaceClampitem))
             {
-                ret = HashHelper.GetHashCode(FacegenFaceClampitem).CombineHashCode(ret);
+                hash.Add(FacegenFaceClampitem);
             }
             if (item.AttackRace.TryGet(out var AttackRaceitem))
             {
-                ret = HashHelper.GetHashCode(AttackRaceitem).CombineHashCode(ret);
+                hash.Add(AttackRaceitem);
             }
-            ret = HashHelper.GetHashCode(item.Attacks).CombineHashCode(ret);
+            hash.Add(item.Attacks);
             if (item.BodyData.TryGet(out var BodyDataitem))
             {
-                ret = HashHelper.GetHashCode(BodyDataitem.Male, BodyDataitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(BodyDataitem.Male, BodyDataitem.Female));
             }
-            ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
+            hash.Add(item.Hairs);
+            hash.Add(item.Eyes);
             if (item.BodyPartData.TryGet(out var BodyPartDataitem))
             {
-                ret = HashHelper.GetHashCode(BodyPartDataitem).CombineHashCode(ret);
+                hash.Add(BodyPartDataitem);
             }
             if (item.BehaviorGraph.TryGet(out var BehaviorGraphitem))
             {
-                ret = HashHelper.GetHashCode(BehaviorGraphitem.Male, BehaviorGraphitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(BehaviorGraphitem.Male, BehaviorGraphitem.Female));
             }
             if (item.MaterialType.TryGet(out var MaterialTypeitem))
             {
-                ret = HashHelper.GetHashCode(MaterialTypeitem).CombineHashCode(ret);
+                hash.Add(MaterialTypeitem);
             }
             if (item.ImpactDataSet.TryGet(out var ImpactDataSetitem))
             {
-                ret = HashHelper.GetHashCode(ImpactDataSetitem).CombineHashCode(ret);
+                hash.Add(ImpactDataSetitem);
             }
             if (item.DecapitationFX.TryGet(out var DecapitationFXitem))
             {
-                ret = HashHelper.GetHashCode(DecapitationFXitem).CombineHashCode(ret);
+                hash.Add(DecapitationFXitem);
             }
             if (item.OpenLootSound.TryGet(out var OpenLootSounditem))
             {
-                ret = HashHelper.GetHashCode(OpenLootSounditem).CombineHashCode(ret);
+                hash.Add(OpenLootSounditem);
             }
             if (item.CloseLootSound.TryGet(out var CloseLootSounditem))
             {
-                ret = HashHelper.GetHashCode(CloseLootSounditem).CombineHashCode(ret);
+                hash.Add(CloseLootSounditem);
             }
-            ret = HashHelper.GetHashCode(item.BipedObjectNames).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.MovementTypes).CombineHashCode(ret);
+            hash.Add(item.BipedObjectNames);
+            hash.Add(item.MovementTypes);
             if (item.EquipmentFlags.TryGet(out var EquipmentFlagsitem))
             {
-                ret = HashHelper.GetHashCode(EquipmentFlagsitem).CombineHashCode(ret);
+                hash.Add(EquipmentFlagsitem);
             }
-            ret = HashHelper.GetHashCode(item.EquipmentSlots).CombineHashCode(ret);
+            hash.Add(item.EquipmentSlots);
             if (item.UnarmedEquipSlot.TryGet(out var UnarmedEquipSlotitem))
             {
-                ret = HashHelper.GetHashCode(UnarmedEquipSlotitem).CombineHashCode(ret);
+                hash.Add(UnarmedEquipSlotitem);
             }
-            ret = HashHelper.GetHashCode(item.FaceFxPhonemes).CombineHashCode(ret);
+            hash.Add(item.FaceFxPhonemes);
             if (item.BaseMovementDefaultWalk.TryGet(out var BaseMovementDefaultWalkitem))
             {
-                ret = HashHelper.GetHashCode(BaseMovementDefaultWalkitem).CombineHashCode(ret);
+                hash.Add(BaseMovementDefaultWalkitem);
             }
             if (item.BaseMovementDefaultRun.TryGet(out var BaseMovementDefaultRunitem))
             {
-                ret = HashHelper.GetHashCode(BaseMovementDefaultRunitem).CombineHashCode(ret);
+                hash.Add(BaseMovementDefaultRunitem);
             }
             if (item.BaseMovementDefaultSwim.TryGet(out var BaseMovementDefaultSwimitem))
             {
-                ret = HashHelper.GetHashCode(BaseMovementDefaultSwimitem).CombineHashCode(ret);
+                hash.Add(BaseMovementDefaultSwimitem);
             }
             if (item.BaseMovementDefaultFly.TryGet(out var BaseMovementDefaultFlyitem))
             {
-                ret = HashHelper.GetHashCode(BaseMovementDefaultFlyitem).CombineHashCode(ret);
+                hash.Add(BaseMovementDefaultFlyitem);
             }
             if (item.BaseMovementDefaultSneak.TryGet(out var BaseMovementDefaultSneakitem))
             {
-                ret = HashHelper.GetHashCode(BaseMovementDefaultSneakitem).CombineHashCode(ret);
+                hash.Add(BaseMovementDefaultSneakitem);
             }
             if (item.BaseMovementDefaultSprint.TryGet(out var BaseMovementDefaultSprintitem))
             {
-                ret = HashHelper.GetHashCode(BaseMovementDefaultSprintitem).CombineHashCode(ret);
+                hash.Add(BaseMovementDefaultSprintitem);
             }
             if (item.HeadData.TryGet(out var HeadDataitem))
             {
-                ret = HashHelper.GetHashCode(HeadDataitem.Male, HeadDataitem.Female).CombineHashCode(ret);
+                hash.Add(HashCode.Combine(HeadDataitem.Male, HeadDataitem.Female));
             }
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)

@@ -641,35 +641,35 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Base?.GetHashCode());
-                ret = ret.CombineHashCode(this.XPCIFluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.FULLFluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.TeleportDestination?.GetHashCode());
-                ret = ret.CombineHashCode(this.Lock?.GetHashCode());
-                ret = ret.CombineHashCode(this.Owner?.GetHashCode());
-                ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
-                ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
-                ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
-                ret = ret.CombineHashCode(this.Target?.GetHashCode());
-                ret = ret.CombineHashCode(this.SpeedTreeSeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.DistantLODData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Charge?.GetHashCode());
-                ret = ret.CombineHashCode(this.Health?.GetHashCode());
-                ret = ret.CombineHashCode(this.LevelModifier?.GetHashCode());
-                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-                ret = ret.CombineHashCode(this.ActionFlags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Count?.GetHashCode());
-                ret = ret.CombineHashCode(this.MapMarker?.GetHashCode());
-                ret = ret.CombineHashCode(this.OpenByDefault?.GetHashCode());
-                ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
-                ret = ret.CombineHashCode(this.Scale?.GetHashCode());
-                ret = ret.CombineHashCode(this.ContainedSoul?.GetHashCode());
-                ret = ret.CombineHashCode(this.Position?.GetHashCode());
-                ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Base);
+                hash.Add(this.XPCIFluff);
+                hash.Add(this.FULLFluff);
+                hash.Add(this.TeleportDestination);
+                hash.Add(this.Lock);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
+                hash.Add(this.GlobalVariable);
+                hash.Add(this.EnableParent);
+                hash.Add(this.Target);
+                hash.Add(this.SpeedTreeSeed);
+                hash.Add(this.DistantLODData);
+                hash.Add(this.Charge);
+                hash.Add(this.Health);
+                hash.Add(this.LevelModifier);
+                hash.Add(this.Unknown);
+                hash.Add(this.ActionFlags);
+                hash.Add(this.Count);
+                hash.Add(this.MapMarker);
+                hash.Add(this.OpenByDefault);
+                hash.Add(this.RagdollData);
+                hash.Add(this.Scale);
+                hash.Add(this.ContainedSoul);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -3159,101 +3159,101 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IPlacedObjectGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Base.TryGet(out var Baseitem))
             {
-                ret = HashHelper.GetHashCode(Baseitem).CombineHashCode(ret);
+                hash.Add(Baseitem);
             }
             if (item.XPCIFluff.TryGet(out var XPCIFluffItem))
             {
-                ret = HashHelper.GetHashCode(XPCIFluffItem).CombineHashCode(ret);
+                hash.Add(XPCIFluffItem);
             }
             if (item.FULLFluff.TryGet(out var FULLFluffItem))
             {
-                ret = HashHelper.GetHashCode(FULLFluffItem).CombineHashCode(ret);
+                hash.Add(FULLFluffItem);
             }
             if (item.TeleportDestination.TryGet(out var TeleportDestinationitem))
             {
-                ret = HashHelper.GetHashCode(TeleportDestinationitem).CombineHashCode(ret);
+                hash.Add(TeleportDestinationitem);
             }
             if (item.Lock.TryGet(out var Lockitem))
             {
-                ret = HashHelper.GetHashCode(Lockitem).CombineHashCode(ret);
+                hash.Add(Lockitem);
             }
             if (item.Owner.TryGet(out var Owneritem))
             {
-                ret = HashHelper.GetHashCode(Owneritem).CombineHashCode(ret);
+                hash.Add(Owneritem);
             }
             if (item.FactionRank.TryGet(out var FactionRankitem))
             {
-                ret = HashHelper.GetHashCode(FactionRankitem).CombineHashCode(ret);
+                hash.Add(FactionRankitem);
             }
             if (item.GlobalVariable.TryGet(out var GlobalVariableitem))
             {
-                ret = HashHelper.GetHashCode(GlobalVariableitem).CombineHashCode(ret);
+                hash.Add(GlobalVariableitem);
             }
             if (item.EnableParent.TryGet(out var EnableParentitem))
             {
-                ret = HashHelper.GetHashCode(EnableParentitem).CombineHashCode(ret);
+                hash.Add(EnableParentitem);
             }
             if (item.Target.TryGet(out var Targetitem))
             {
-                ret = HashHelper.GetHashCode(Targetitem).CombineHashCode(ret);
+                hash.Add(Targetitem);
             }
             if (item.SpeedTreeSeed.TryGet(out var SpeedTreeSeeditem))
             {
-                ret = HashHelper.GetHashCode(SpeedTreeSeeditem).CombineHashCode(ret);
+                hash.Add(SpeedTreeSeeditem);
             }
             if (item.DistantLODData.TryGet(out var DistantLODDataitem))
             {
-                ret = HashHelper.GetHashCode(DistantLODDataitem).CombineHashCode(ret);
+                hash.Add(DistantLODDataitem);
             }
             if (item.Charge.TryGet(out var Chargeitem))
             {
-                ret = HashHelper.GetHashCode(Chargeitem).CombineHashCode(ret);
+                hash.Add(Chargeitem);
             }
             if (item.Health.TryGet(out var Healthitem))
             {
-                ret = HashHelper.GetHashCode(Healthitem).CombineHashCode(ret);
+                hash.Add(Healthitem);
             }
             if (item.LevelModifier.TryGet(out var LevelModifieritem))
             {
-                ret = HashHelper.GetHashCode(LevelModifieritem).CombineHashCode(ret);
+                hash.Add(LevelModifieritem);
             }
             if (item.Unknown.TryGet(out var Unknownitem))
             {
-                ret = HashHelper.GetHashCode(Unknownitem).CombineHashCode(ret);
+                hash.Add(Unknownitem);
             }
             if (item.ActionFlags.TryGet(out var ActionFlagsitem))
             {
-                ret = HashHelper.GetHashCode(ActionFlagsitem).CombineHashCode(ret);
+                hash.Add(ActionFlagsitem);
             }
             if (item.Count.TryGet(out var Countitem))
             {
-                ret = HashHelper.GetHashCode(Countitem).CombineHashCode(ret);
+                hash.Add(Countitem);
             }
             if (item.MapMarker.TryGet(out var MapMarkeritem))
             {
-                ret = HashHelper.GetHashCode(MapMarkeritem).CombineHashCode(ret);
+                hash.Add(MapMarkeritem);
             }
-            ret = HashHelper.GetHashCode(item.OpenByDefault).CombineHashCode(ret);
+            hash.Add(item.OpenByDefault);
             if (item.RagdollData.TryGet(out var RagdollDataItem))
             {
-                ret = HashHelper.GetHashCode(RagdollDataItem).CombineHashCode(ret);
+                hash.Add(RagdollDataItem);
             }
             if (item.Scale.TryGet(out var Scaleitem))
             {
-                ret = HashHelper.GetHashCode(Scaleitem).CombineHashCode(ret);
+                hash.Add(Scaleitem);
             }
             if (item.ContainedSoul.TryGet(out var ContainedSoulitem))
             {
-                ret = HashHelper.GetHashCode(ContainedSoulitem).CombineHashCode(ret);
+                hash.Add(ContainedSoulitem);
             }
-            ret = HashHelper.GetHashCode(item.Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Rotation).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

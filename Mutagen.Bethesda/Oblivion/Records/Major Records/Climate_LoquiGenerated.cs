@@ -463,21 +463,21 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Weathers?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunTexture?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunGlareTexture?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunriseBegin?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunriseEnd?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunsetBegin?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunsetEnd?.GetHashCode());
-                ret = ret.CombineHashCode(this.Volatility?.GetHashCode());
-                ret = ret.CombineHashCode(this.Phase?.GetHashCode());
-                ret = ret.CombineHashCode(this.PhaseLength?.GetHashCode());
-                ret = ret.CombineHashCode(this.TNAMDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Weathers);
+                hash.Add(this.SunTexture);
+                hash.Add(this.SunGlareTexture);
+                hash.Add(this.Model);
+                hash.Add(this.SunriseBegin);
+                hash.Add(this.SunriseEnd);
+                hash.Add(this.SunsetBegin);
+                hash.Add(this.SunsetEnd);
+                hash.Add(this.Volatility);
+                hash.Add(this.Phase);
+                hash.Add(this.PhaseLength);
+                hash.Add(this.TNAMDataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -2243,30 +2243,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IClimateGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Weathers).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.Weathers);
             if (item.SunTexture.TryGet(out var SunTextureitem))
             {
-                ret = HashHelper.GetHashCode(SunTextureitem).CombineHashCode(ret);
+                hash.Add(SunTextureitem);
             }
             if (item.SunGlareTexture.TryGet(out var SunGlareTextureitem))
             {
-                ret = HashHelper.GetHashCode(SunGlareTextureitem).CombineHashCode(ret);
+                hash.Add(SunGlareTextureitem);
             }
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
-            ret = HashHelper.GetHashCode(item.SunriseBegin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SunriseEnd).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SunsetBegin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SunsetEnd).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Volatility).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Phase).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PhaseLength).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TNAMDataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.SunriseBegin);
+            hash.Add(item.SunriseEnd);
+            hash.Add(item.SunsetBegin);
+            hash.Add(item.SunsetEnd);
+            hash.Add(item.Volatility);
+            hash.Add(item.Phase);
+            hash.Add(item.PhaseLength);
+            hash.Add(item.TNAMDataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

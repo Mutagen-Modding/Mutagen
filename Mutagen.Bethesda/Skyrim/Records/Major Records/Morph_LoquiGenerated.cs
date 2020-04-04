@@ -256,9 +256,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Data?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Data);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1208,9 +1208,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IMorphGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Data).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Data);
+            return hash.ToHashCode();
         }
         
         #endregion

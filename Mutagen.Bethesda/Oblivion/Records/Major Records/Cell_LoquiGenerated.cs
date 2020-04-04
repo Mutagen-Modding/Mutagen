@@ -596,30 +596,30 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Name?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Grid?.GetHashCode());
-                ret = ret.CombineHashCode(this.Lighting?.GetHashCode());
-                ret = ret.CombineHashCode(this.Regions?.GetHashCode());
-                ret = ret.CombineHashCode(this.MusicType?.GetHashCode());
-                ret = ret.CombineHashCode(this.WaterHeight?.GetHashCode());
-                ret = ret.CombineHashCode(this.Climate?.GetHashCode());
-                ret = ret.CombineHashCode(this.Water?.GetHashCode());
-                ret = ret.CombineHashCode(this.Owner?.GetHashCode());
-                ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
-                ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
-                ret = ret.CombineHashCode(this.PathGrid?.GetHashCode());
-                ret = ret.CombineHashCode(this.Landscape?.GetHashCode());
-                ret = ret.CombineHashCode(this.Timestamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.PersistentTimestamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.Persistent?.GetHashCode());
-                ret = ret.CombineHashCode(this.TemporaryTimestamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.Temporary?.GetHashCode());
-                ret = ret.CombineHashCode(this.VisibleWhenDistantTimestamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.VisibleWhenDistant?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Flags);
+                hash.Add(this.Grid);
+                hash.Add(this.Lighting);
+                hash.Add(this.Regions);
+                hash.Add(this.MusicType);
+                hash.Add(this.WaterHeight);
+                hash.Add(this.Climate);
+                hash.Add(this.Water);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
+                hash.Add(this.GlobalVariable);
+                hash.Add(this.PathGrid);
+                hash.Add(this.Landscape);
+                hash.Add(this.Timestamp);
+                hash.Add(this.PersistentTimestamp);
+                hash.Add(this.Persistent);
+                hash.Add(this.TemporaryTimestamp);
+                hash.Add(this.Temporary);
+                hash.Add(this.VisibleWhenDistantTimestamp);
+                hash.Add(this.VisibleWhenDistant);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -3238,69 +3238,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(ICellGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
+                hash.Add(Nameitem);
             }
             if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
+                hash.Add(Flagsitem);
             }
             if (item.Grid.TryGet(out var Griditem))
             {
-                ret = HashHelper.GetHashCode(Griditem).CombineHashCode(ret);
+                hash.Add(Griditem);
             }
             if (item.Lighting.TryGet(out var Lightingitem))
             {
-                ret = HashHelper.GetHashCode(Lightingitem).CombineHashCode(ret);
+                hash.Add(Lightingitem);
             }
-            ret = HashHelper.GetHashCode(item.Regions).CombineHashCode(ret);
+            hash.Add(item.Regions);
             if (item.MusicType.TryGet(out var MusicTypeitem))
             {
-                ret = HashHelper.GetHashCode(MusicTypeitem).CombineHashCode(ret);
+                hash.Add(MusicTypeitem);
             }
             if (item.WaterHeight.TryGet(out var WaterHeightitem))
             {
-                ret = HashHelper.GetHashCode(WaterHeightitem).CombineHashCode(ret);
+                hash.Add(WaterHeightitem);
             }
             if (item.Climate.TryGet(out var Climateitem))
             {
-                ret = HashHelper.GetHashCode(Climateitem).CombineHashCode(ret);
+                hash.Add(Climateitem);
             }
             if (item.Water.TryGet(out var Wateritem))
             {
-                ret = HashHelper.GetHashCode(Wateritem).CombineHashCode(ret);
+                hash.Add(Wateritem);
             }
             if (item.Owner.TryGet(out var Owneritem))
             {
-                ret = HashHelper.GetHashCode(Owneritem).CombineHashCode(ret);
+                hash.Add(Owneritem);
             }
             if (item.FactionRank.TryGet(out var FactionRankitem))
             {
-                ret = HashHelper.GetHashCode(FactionRankitem).CombineHashCode(ret);
+                hash.Add(FactionRankitem);
             }
             if (item.GlobalVariable.TryGet(out var GlobalVariableitem))
             {
-                ret = HashHelper.GetHashCode(GlobalVariableitem).CombineHashCode(ret);
+                hash.Add(GlobalVariableitem);
             }
             if (item.PathGrid.TryGet(out var PathGriditem))
             {
-                ret = HashHelper.GetHashCode(PathGriditem).CombineHashCode(ret);
+                hash.Add(PathGriditem);
             }
             if (item.Landscape.TryGet(out var Landscapeitem))
             {
-                ret = HashHelper.GetHashCode(Landscapeitem).CombineHashCode(ret);
+                hash.Add(Landscapeitem);
             }
-            ret = HashHelper.GetHashCode(item.Timestamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PersistentTimestamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Persistent).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TemporaryTimestamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Temporary).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.VisibleWhenDistantTimestamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.VisibleWhenDistant).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.Timestamp);
+            hash.Add(item.PersistentTimestamp);
+            hash.Add(item.Persistent);
+            hash.Add(item.TemporaryTimestamp);
+            hash.Add(item.Temporary);
+            hash.Add(item.VisibleWhenDistantTimestamp);
+            hash.Add(item.VisibleWhenDistant);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IPlaceGetter item)

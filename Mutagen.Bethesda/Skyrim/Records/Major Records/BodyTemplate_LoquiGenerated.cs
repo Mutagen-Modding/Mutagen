@@ -270,11 +270,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.FirstPersonFlags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.ArmorType?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.FirstPersonFlags);
+                hash.Add(this.Flags);
+                hash.Add(this.ArmorType);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1323,11 +1323,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IBodyTemplateGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.FirstPersonFlags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ArmorType).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.FirstPersonFlags);
+            hash.Add(item.Flags);
+            hash.Add(item.ArmorType);
+            return hash.ToHashCode();
         }
         
         #endregion

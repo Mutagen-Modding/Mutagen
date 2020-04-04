@@ -342,19 +342,19 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.DamageMult?.GetHashCode());
-                ret = ret.CombineHashCode(this.Chance?.GetHashCode());
-                ret = ret.CombineHashCode(this.Spell?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.AttackAngle?.GetHashCode());
-                ret = ret.CombineHashCode(this.StrikeAngle?.GetHashCode());
-                ret = ret.CombineHashCode(this.Stagger?.GetHashCode());
-                ret = ret.CombineHashCode(this.AttackType?.GetHashCode());
-                ret = ret.CombineHashCode(this.Knockdown?.GetHashCode());
-                ret = ret.CombineHashCode(this.RecoveryTime?.GetHashCode());
-                ret = ret.CombineHashCode(this.StaminaMult?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.DamageMult);
+                hash.Add(this.Chance);
+                hash.Add(this.Spell);
+                hash.Add(this.Flags);
+                hash.Add(this.AttackAngle);
+                hash.Add(this.StrikeAngle);
+                hash.Add(this.Stagger);
+                hash.Add(this.AttackType);
+                hash.Add(this.Knockdown);
+                hash.Add(this.RecoveryTime);
+                hash.Add(this.StaminaMult);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1770,19 +1770,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(IAttackDataGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.DamageMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Chance).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Spell).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AttackAngle).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.StrikeAngle).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Stagger).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.AttackType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Knockdown).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.RecoveryTime).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.StaminaMult).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.DamageMult);
+            hash.Add(item.Chance);
+            hash.Add(item.Spell);
+            hash.Add(item.Flags);
+            hash.Add(item.AttackAngle);
+            hash.Add(item.StrikeAngle);
+            hash.Add(item.Stagger);
+            hash.Add(item.AttackType);
+            hash.Add(item.Knockdown);
+            hash.Add(item.RecoveryTime);
+            hash.Add(item.StaminaMult);
+            return hash.ToHashCode();
         }
         
         #endregion

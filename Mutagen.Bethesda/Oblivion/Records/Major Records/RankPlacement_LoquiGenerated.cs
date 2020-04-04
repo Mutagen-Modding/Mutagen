@@ -282,11 +282,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Faction?.GetHashCode());
-                ret = ret.CombineHashCode(this.Rank?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Faction);
+                hash.Add(this.Rank);
+                hash.Add(this.Fluff);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1340,11 +1340,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IRankPlacementGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Faction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Rank).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Faction);
+            hash.Add(item.Rank);
+            hash.Add(item.Fluff);
+            return hash.ToHashCode();
         }
         
         #endregion

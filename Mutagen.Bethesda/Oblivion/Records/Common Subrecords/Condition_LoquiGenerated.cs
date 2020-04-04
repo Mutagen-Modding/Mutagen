@@ -318,16 +318,16 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.CompareOperator?.GetHashCode());
-                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-                ret = ret.CombineHashCode(this.ComparisonValue?.GetHashCode());
-                ret = ret.CombineHashCode(this.Function?.GetHashCode());
-                ret = ret.CombineHashCode(this.FirstParameter?.GetHashCode());
-                ret = ret.CombineHashCode(this.SecondParameter?.GetHashCode());
-                ret = ret.CombineHashCode(this.ThirdParameter?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.CompareOperator);
+                hash.Add(this.Flags);
+                hash.Add(this.Fluff);
+                hash.Add(this.ComparisonValue);
+                hash.Add(this.Function);
+                hash.Add(this.FirstParameter);
+                hash.Add(this.SecondParameter);
+                hash.Add(this.ThirdParameter);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1624,16 +1624,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IConditionGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.CompareOperator).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ComparisonValue).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Function).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FirstParameter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SecondParameter).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ThirdParameter).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.CompareOperator);
+            hash.Add(item.Flags);
+            hash.Add(item.Fluff);
+            hash.Add(item.ComparisonValue);
+            hash.Add(item.Function);
+            hash.Add(item.FirstParameter);
+            hash.Add(item.SecondParameter);
+            hash.Add(item.ThirdParameter);
+            return hash.ToHashCode();
         }
         
         #endregion

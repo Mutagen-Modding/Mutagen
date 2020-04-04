@@ -283,12 +283,12 @@ namespace Mutagen.Bethesda
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.MajorRecordFlagsRaw?.GetHashCode());
-                ret = ret.CombineHashCode(this.FormKey?.GetHashCode());
-                ret = ret.CombineHashCode(this.Version?.GetHashCode());
-                ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.MajorRecordFlagsRaw);
+                hash.Add(this.FormKey);
+                hash.Add(this.Version);
+                hash.Add(this.EditorID);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1685,15 +1685,15 @@ namespace Mutagen.Bethesda.Internals
         
         public virtual int GetHashCode(IMajorRecordGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.MajorRecordFlagsRaw).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FormKey).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Version).CombineHashCode(ret);
+            var hash = new HashCode();
+            hash.Add(item.MajorRecordFlagsRaw);
+            hash.Add(item.FormKey);
+            hash.Add(item.Version);
             if (item.EditorID.TryGet(out var EditorIDitem))
             {
-                ret = HashHelper.GetHashCode(EditorIDitem).CombineHashCode(ret);
+                hash.Add(EditorIDitem);
             }
-            return ret;
+            return hash.ToHashCode();
         }
         
         #endregion

@@ -215,12 +215,12 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"if ({accessor}.TryGet(out var {this.Name}item))");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"{hashResultAccessor} = HashHelper.GetHashCode({this.Name}item.Male, {this.Name}item.Female).CombineHashCode({hashResultAccessor});");
+                    fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({this.Name}item.Male, {this.Name}item.Female));");
                 }
             }
             else
             {
-                fg.AppendLine($"{hashResultAccessor} = HashHelper.GetHashCode({accessor}.Male, {accessor}.Female).CombineHashCode({hashResultAccessor});");
+                fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({accessor}.Male, {accessor}.Female));");
             }
         }
 

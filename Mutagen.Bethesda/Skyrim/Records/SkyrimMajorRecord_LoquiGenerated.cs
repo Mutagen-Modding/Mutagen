@@ -282,12 +282,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.SkyrimMajorRecordFlags?.GetHashCode());
-                ret = ret.CombineHashCode(this.FormVersion?.GetHashCode());
-                ret = ret.CombineHashCode(this.Version2?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.SkyrimMajorRecordFlags);
+                hash.Add(this.FormVersion);
+                hash.Add(this.Version2);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1438,12 +1438,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public virtual int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.SkyrimMajorRecordFlags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FormVersion).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Version2).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.SkyrimMajorRecordFlags);
+            hash.Add(item.FormVersion);
+            hash.Add(item.Version2);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IMajorRecordGetter item)

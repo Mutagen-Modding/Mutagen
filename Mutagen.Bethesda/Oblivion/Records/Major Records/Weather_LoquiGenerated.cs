@@ -930,48 +930,48 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.TextureLowerLayer?.GetHashCode());
-                ret = ret.CombineHashCode(this.TextureUpperLayer?.GetHashCode());
-                ret = ret.CombineHashCode(this.Model?.GetHashCode());
-                ret = ret.CombineHashCode(this.WeatherTypes?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogDayNear?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogDayFar?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogNightNear?.GetHashCode());
-                ret = ret.CombineHashCode(this.FogNightFar?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrEyeAdaptSpeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrBlurRadius?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrBlurPasses?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrEmissiveMult?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrTargetLum?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrUpperLumClamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrBrightScale?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrBrightClamp?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrLumRampNoTex?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrLumRampMin?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrLumRampMax?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrSunlightDimmer?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrGrassDimmer?.GetHashCode());
-                ret = ret.CombineHashCode(this.HdrTreeDimmer?.GetHashCode());
-                ret = ret.CombineHashCode(this.WindSpeed?.GetHashCode());
-                ret = ret.CombineHashCode(this.CloudSpeedLower?.GetHashCode());
-                ret = ret.CombineHashCode(this.CloudSpeedUpper?.GetHashCode());
-                ret = ret.CombineHashCode(this.TransDelta?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunGlare?.GetHashCode());
-                ret = ret.CombineHashCode(this.SunDamage?.GetHashCode());
-                ret = ret.CombineHashCode(this.PrecipitationBeginFadeIn?.GetHashCode());
-                ret = ret.CombineHashCode(this.PrecipitationEndFadeOut?.GetHashCode());
-                ret = ret.CombineHashCode(this.ThunderLightningBeginFadeIn?.GetHashCode());
-                ret = ret.CombineHashCode(this.ThunderLightningEndFadeOut?.GetHashCode());
-                ret = ret.CombineHashCode(this.ThunderLightningFrequency?.GetHashCode());
-                ret = ret.CombineHashCode(this.Classification?.GetHashCode());
-                ret = ret.CombineHashCode(this.LightningColor?.GetHashCode());
-                ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
-                ret = ret.CombineHashCode(this.FNAMDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(this.HNAMDataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-                ret = ret.CombineHashCode(base.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.TextureLowerLayer);
+                hash.Add(this.TextureUpperLayer);
+                hash.Add(this.Model);
+                hash.Add(this.WeatherTypes);
+                hash.Add(this.FogDayNear);
+                hash.Add(this.FogDayFar);
+                hash.Add(this.FogNightNear);
+                hash.Add(this.FogNightFar);
+                hash.Add(this.HdrEyeAdaptSpeed);
+                hash.Add(this.HdrBlurRadius);
+                hash.Add(this.HdrBlurPasses);
+                hash.Add(this.HdrEmissiveMult);
+                hash.Add(this.HdrTargetLum);
+                hash.Add(this.HdrUpperLumClamp);
+                hash.Add(this.HdrBrightScale);
+                hash.Add(this.HdrBrightClamp);
+                hash.Add(this.HdrLumRampNoTex);
+                hash.Add(this.HdrLumRampMin);
+                hash.Add(this.HdrLumRampMax);
+                hash.Add(this.HdrSunlightDimmer);
+                hash.Add(this.HdrGrassDimmer);
+                hash.Add(this.HdrTreeDimmer);
+                hash.Add(this.WindSpeed);
+                hash.Add(this.CloudSpeedLower);
+                hash.Add(this.CloudSpeedUpper);
+                hash.Add(this.TransDelta);
+                hash.Add(this.SunGlare);
+                hash.Add(this.SunDamage);
+                hash.Add(this.PrecipitationBeginFadeIn);
+                hash.Add(this.PrecipitationEndFadeOut);
+                hash.Add(this.ThunderLightningBeginFadeIn);
+                hash.Add(this.ThunderLightningEndFadeOut);
+                hash.Add(this.ThunderLightningFrequency);
+                hash.Add(this.Classification);
+                hash.Add(this.LightningColor);
+                hash.Add(this.Sounds);
+                hash.Add(this.FNAMDataTypeState);
+                hash.Add(this.HNAMDataTypeState);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(base.GetHashCode());
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -4091,57 +4091,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IWeatherGetter item)
         {
-            int ret = 0;
+            var hash = new HashCode();
             if (item.TextureLowerLayer.TryGet(out var TextureLowerLayeritem))
             {
-                ret = HashHelper.GetHashCode(TextureLowerLayeritem).CombineHashCode(ret);
+                hash.Add(TextureLowerLayeritem);
             }
             if (item.TextureUpperLayer.TryGet(out var TextureUpperLayeritem))
             {
-                ret = HashHelper.GetHashCode(TextureUpperLayeritem).CombineHashCode(ret);
+                hash.Add(TextureUpperLayeritem);
             }
             if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
+                hash.Add(Modelitem);
             }
-            ret = HashHelper.GetHashCode(item.WeatherTypes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogDayNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogDayFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogNightNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FogNightFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrEyeAdaptSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrBlurRadius).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrBlurPasses).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrEmissiveMult).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrTargetLum).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrUpperLumClamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrBrightScale).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrBrightClamp).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrLumRampNoTex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrLumRampMin).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrLumRampMax).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrSunlightDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrGrassDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HdrTreeDimmer).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.WindSpeed).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CloudSpeedLower).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.CloudSpeedUpper).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TransDelta).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SunGlare).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.SunDamage).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PrecipitationBeginFadeIn).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.PrecipitationEndFadeOut).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ThunderLightningBeginFadeIn).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ThunderLightningEndFadeOut).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.ThunderLightningFrequency).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Classification).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LightningColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Sounds).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.FNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.HNAMDataTypeState).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
+            hash.Add(item.WeatherTypes);
+            hash.Add(item.FogDayNear);
+            hash.Add(item.FogDayFar);
+            hash.Add(item.FogNightNear);
+            hash.Add(item.FogNightFar);
+            hash.Add(item.HdrEyeAdaptSpeed);
+            hash.Add(item.HdrBlurRadius);
+            hash.Add(item.HdrBlurPasses);
+            hash.Add(item.HdrEmissiveMult);
+            hash.Add(item.HdrTargetLum);
+            hash.Add(item.HdrUpperLumClamp);
+            hash.Add(item.HdrBrightScale);
+            hash.Add(item.HdrBrightClamp);
+            hash.Add(item.HdrLumRampNoTex);
+            hash.Add(item.HdrLumRampMin);
+            hash.Add(item.HdrLumRampMax);
+            hash.Add(item.HdrSunlightDimmer);
+            hash.Add(item.HdrGrassDimmer);
+            hash.Add(item.HdrTreeDimmer);
+            hash.Add(item.WindSpeed);
+            hash.Add(item.CloudSpeedLower);
+            hash.Add(item.CloudSpeedUpper);
+            hash.Add(item.TransDelta);
+            hash.Add(item.SunGlare);
+            hash.Add(item.SunDamage);
+            hash.Add(item.PrecipitationBeginFadeIn);
+            hash.Add(item.PrecipitationEndFadeOut);
+            hash.Add(item.ThunderLightningBeginFadeIn);
+            hash.Add(item.ThunderLightningEndFadeOut);
+            hash.Add(item.ThunderLightningFrequency);
+            hash.Add(item.Classification);
+            hash.Add(item.LightningColor);
+            hash.Add(item.Sounds);
+            hash.Add(item.FNAMDataTypeState);
+            hash.Add(item.HNAMDataTypeState);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)

@@ -308,12 +308,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public override int GetHashCode()
             {
-                int ret = 0;
-                ret = ret.CombineHashCode(this.Texture?.GetHashCode());
-                ret = ret.CombineHashCode(this.Quadrant?.GetHashCode());
-                ret = ret.CombineHashCode(this.LayerNumber?.GetHashCode());
-                ret = ret.CombineHashCode(this.BTXTDataTypeState?.GetHashCode());
-                return ret;
+                var hash = new HashCode();
+                hash.Add(this.Texture);
+                hash.Add(this.Quadrant);
+                hash.Add(this.LayerNumber);
+                hash.Add(this.BTXTDataTypeState);
+                return hash.ToHashCode();
             }
 
             #endregion
@@ -1499,12 +1499,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual int GetHashCode(IBaseLayerGetter item)
         {
-            int ret = 0;
-            ret = HashHelper.GetHashCode(item.Texture).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Quadrant).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.LayerNumber).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.BTXTDataTypeState).CombineHashCode(ret);
-            return ret;
+            var hash = new HashCode();
+            hash.Add(item.Texture);
+            hash.Add(item.Quadrant);
+            hash.Add(item.LayerNumber);
+            hash.Add(item.BTXTDataTypeState);
+            return hash.ToHashCode();
         }
         
         #endregion
