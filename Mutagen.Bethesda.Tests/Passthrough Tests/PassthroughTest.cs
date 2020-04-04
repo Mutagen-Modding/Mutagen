@@ -181,14 +181,10 @@ namespace Mutagen.Bethesda.Tests
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
 
-                        var ret = AssertFilesEqual(
+                        AssertFilesEqual(
                             stream,
                             outputPath,
                             amountToReport: 15);
-                        if (ret.Exception != null)
-                        {
-                            throw ret.Exception;
-                        }
                     });
             }
 
@@ -206,14 +202,10 @@ namespace Mutagen.Bethesda.Tests
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
 
-                        var ret = PassthroughTest.AssertFilesEqual(
+                        PassthroughTest.AssertFilesEqual(
                             stream,
                             binaryOverlayPath,
                             amountToReport: 15);
-                        if (ret.Exception != null)
-                        {
-                            throw ret.Exception;
-                        }
                     });
             }
 
@@ -229,14 +221,10 @@ namespace Mutagen.Bethesda.Tests
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
 
-                        var ret = PassthroughTest.AssertFilesEqual(
+                        PassthroughTest.AssertFilesEqual(
                             stream,
                             copyInPath,
                             amountToReport: 15);
-                        if (ret.Exception != null)
-                        {
-                            throw ret.Exception;
-                        }
                     });
             }
 
@@ -295,13 +283,12 @@ namespace Mutagen.Bethesda.Tests
             };
         }
 
-        public static (Exception Exception, IEnumerable<RangeInt64> Sections) AssertFilesEqual(
+        public static void AssertFilesEqual(
             Stream stream,
             string path2,
             RangeCollection ignoreList = null,
             ushort amountToReport = 5)
         {
-            List<RangeInt32> errorRanges = new List<RangeInt32>();
             using var reader2 = new BinaryReadStream(path2);
             Stream compareStream = new ComparisonStream(
                 stream,
@@ -320,25 +307,19 @@ namespace Mutagen.Bethesda.Tests
                 .ToArray();
             if (errs.Length > 0)
             {
-                var posStr = string.Join(" ", errs.Select((r) =>
-                {
-                    return r.ToString("X");
-                }));
-                return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs);
+                throw new DidNotMatchException(path2, errs, stream);
             }
             if (stream.Position != stream.Length)
             {
-                return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position.ToString("X")} than {path2}"), errs);
+                throw new MoreDataException(path2, stream.Position);
             }
             if (reader2.Position != reader2.Length)
             {
-                return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position.ToString("X")} than source stream."), errs);
+                throw new UnexpectedlyMoreData(path2, reader2.Position);
             }
-            return (null, errs);
         }
 
-        public static IEnumerable<RangeInt64> GetDifferences(
-            Stream reader)
+        public static IEnumerable<RangeInt64> GetDifferences(Stream reader)
         {
             byte[] buf = new byte[4096];
             bool inRange = false;

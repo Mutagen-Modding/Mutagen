@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Loqui;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -20,11 +21,22 @@ namespace Mutagen.Bethesda.Tests
                 if (ex != null)
                 {
                     failed++;
-                    System.Console.WriteLine(ex);
+                    if (ex is IPrintable printable)
+                    {
+                        FileGeneration fg = new FileGeneration();
+                        printable.ToString(fg);
+                        var str = fg.ToString();
+                        System.Console.Write(fg);
+                        System.Console.WriteLine();
+                    }
+                    else
+                    {
+                        System.Console.WriteLine(ex);
+                    }
                 }
                 else
                 {
-                    failed++;
+                    passed++;
                     System.Console.WriteLine("Passed");
                 }
                 System.Console.WriteLine("========================================/");
