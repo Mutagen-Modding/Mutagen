@@ -1109,6 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
+        public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1143,6 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         REFR_HEADER,
                         RACE_HEADER,
                         SNDR_HEADER,
+                        SOUN_HEADER,
                         TXST_HEADER,
                         VTYP_HEADER
                     })

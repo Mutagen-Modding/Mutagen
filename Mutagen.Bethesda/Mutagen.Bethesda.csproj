@@ -1051,6 +1051,9 @@
     <Compile Include="Skyrim\Records\Major Records\Morph_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SoundMarker_LoquiGenerated.cs">
+      <DependentUpon>SoundMarker.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />

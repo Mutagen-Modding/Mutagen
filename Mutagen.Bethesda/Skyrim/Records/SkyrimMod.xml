@@ -15,6 +15,7 @@
       <Group name="Hairs" refName="Hair" />
       <Group name="Eyes" refName="Eye" />
       <Group name="Races" refName="Race" />
+      <Group name="SoundMarkers" refName="SoundMarker" />
     </Fields>
   </Object>
 </Loqui>

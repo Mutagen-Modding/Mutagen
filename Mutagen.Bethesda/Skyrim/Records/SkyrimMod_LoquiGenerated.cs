@@ -55,6 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Hairs_Object = new Group<Hair>(this);
             _Eyes_Object = new Group<Eye>(this);
             _Races_Object = new Group<Race>(this);
+            _SoundMarkers_Object = new Group<SoundMarker>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -150,6 +151,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<Race> Races => _Races_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IRaceGetter> ISkyrimModGetter.Races => _Races_Object;
+        #endregion
+        #region SoundMarkers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<SoundMarker> _SoundMarkers_Object;
+        public Group<SoundMarker> SoundMarkers => _SoundMarkers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ISoundMarkerGetter> ISkyrimModGetter.SoundMarkers => _SoundMarkers_Object;
         #endregion
 
         #region To String
@@ -334,6 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.SoundMarkers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -349,7 +358,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem HeadParts,
                 TItem Hairs,
                 TItem Eyes,
-                TItem Races)
+                TItem Races,
+                TItem SoundMarkers)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -364,6 +374,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(Hairs, new Group.Mask<TItem>(Hairs));
                 this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(Eyes, new Group.Mask<TItem>(Eyes));
                 this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(Races, new Group.Mask<TItem>(Races));
+                this.SoundMarkers = new MaskItem<TItem, Group.Mask<TItem>?>(SoundMarkers, new Group.Mask<TItem>(SoundMarkers));
             }
 
             #pragma warning disable CS8618
@@ -388,6 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Hairs { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Eyes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Races { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? SoundMarkers { get; set; }
             #endregion
 
             #region Equals
@@ -413,6 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
                 if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
                 if (!object.Equals(this.Races, rhs.Races)) return false;
+                if (!object.Equals(this.SoundMarkers, rhs.SoundMarkers)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -431,6 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
                 ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
                 ret = ret.CombineHashCode(this.Races?.GetHashCode());
+                ret = ret.CombineHashCode(this.SoundMarkers?.GetHashCode());
                 return ret;
             }
 
@@ -504,6 +518,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Races.Overall)) return false;
                     if (this.Races.Specific != null && !this.Races.Specific.All(eval)) return false;
                 }
+                if (SoundMarkers != null)
+                {
+                    if (!eval(this.SoundMarkers.Overall)) return false;
+                    if (this.SoundMarkers.Specific != null && !this.SoundMarkers.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -576,6 +595,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Races.Overall)) return true;
                     if (this.Races.Specific != null && this.Races.Specific.Any(eval)) return true;
                 }
+                if (SoundMarkers != null)
+                {
+                    if (eval(this.SoundMarkers.Overall)) return true;
+                    if (this.SoundMarkers.Specific != null && this.SoundMarkers.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -603,6 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Hairs = this.Hairs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
                 obj.Eyes = this.Eyes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
                 obj.Races = this.Races == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
+                obj.SoundMarkers = this.SoundMarkers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundMarkers.Overall), this.SoundMarkers.Specific?.Translate(eval));
             }
             #endregion
 
@@ -677,6 +702,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Races?.ToString(fg);
                     }
+                    if (printMask?.SoundMarkers?.Overall ?? true)
+                    {
+                        SoundMarkers?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -715,6 +744,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>? Hairs;
             public MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>? Eyes;
             public MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>? Races;
+            public MaskItem<Exception?, Group.ErrorMask<SoundMarker.ErrorMask>?>? SoundMarkers;
             #endregion
 
             #region IErrorMask
@@ -749,6 +779,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Eyes;
                     case SkyrimMod_FieldIndex.Races:
                         return Races;
+                    case SkyrimMod_FieldIndex.SoundMarkers:
+                        return SoundMarkers;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -797,6 +829,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Races:
                         this.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.SoundMarkers:
+                        this.SoundMarkers = new MaskItem<Exception?, Group.ErrorMask<SoundMarker.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -847,6 +882,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Races:
                         this.Races = (MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.SoundMarkers:
+                        this.SoundMarkers = (MaskItem<Exception?, Group.ErrorMask<SoundMarker.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -868,6 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Hairs != null) return true;
                 if (Eyes != null) return true;
                 if (Races != null) return true;
+                if (SoundMarkers != null) return true;
                 return false;
             }
             #endregion
@@ -915,6 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Hairs?.ToString(fg);
                 Eyes?.ToString(fg);
                 Races?.ToString(fg);
+                SoundMarkers?.ToString(fg);
             }
             #endregion
 
@@ -936,6 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Hairs = this.Hairs.Combine(rhs.Hairs, (l, r) => l.Combine(r));
                 ret.Eyes = this.Eyes.Combine(rhs.Eyes, (l, r) => l.Combine(r));
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
+                ret.SoundMarkers = this.SoundMarkers.Combine(rhs.SoundMarkers, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -970,6 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Hair.TranslationMask>?> Hairs;
             public MaskItem<bool, Group.TranslationMask<Eye.TranslationMask>?> Eyes;
             public MaskItem<bool, Group.TranslationMask<Race.TranslationMask>?> Races;
+            public MaskItem<bool, Group.TranslationMask<SoundMarker.TranslationMask>?> SoundMarkers;
             #endregion
 
             #region Ctors
@@ -988,6 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hairs = new MaskItem<bool, Group.TranslationMask<Hair.TranslationMask>?>(defaultOn, null);
                 this.Eyes = new MaskItem<bool, Group.TranslationMask<Eye.TranslationMask>?>(defaultOn, null);
                 this.Races = new MaskItem<bool, Group.TranslationMask<Race.TranslationMask>?>(defaultOn, null);
+                this.SoundMarkers = new MaskItem<bool, Group.TranslationMask<SoundMarker.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1016,6 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Hairs?.Overall ?? true, Hairs?.Specific?.GetCrystal()));
                 ret.Add((Eyes?.Overall ?? true, Eyes?.Specific?.GetCrystal()));
                 ret.Add((Races?.Overall ?? true, Races?.Specific?.GetCrystal()));
+                ret.Add((SoundMarkers?.Overall ?? true, SoundMarkers?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1041,6 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Hairs_Object = new Group<Hair>(this);
             _Eyes_Object = new Group<Eye>(this);
             _Races_Object = new Group<Race>(this);
+            _SoundMarkers_Object = new Group<SoundMarker>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1093,6 +1138,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Races ?? true)
             {
                 this.Races.RecordCache.Set(rhsMod.Races.RecordCache.Items);
+            }
+            if (mask?.SoundMarkers ?? true)
+            {
+                this.SoundMarkers.RecordCache.Set(rhsMod.SoundMarkers.RecordCache.Items);
             }
         }
 
@@ -1185,6 +1234,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Race>());
             }
+            if (mask?.SoundMarkers ?? true)
+            {
+                this.SoundMarkers.RecordCache.Set(
+                    rhs.SoundMarkers.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<SoundMarker>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -1222,6 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Hairs.RecordCache.Count > 0 ? 1 : 0;
             count += Eyes.RecordCache.Count > 0 ? 1 : 0;
             count += Races.RecordCache.Count > 0 ? 1 : 0;
+            count += SoundMarkers.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1408,6 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Hair> Hairs { get; }
         new Group<Eye> Eyes { get; }
         new Group<Race> Races { get; }
+        new Group<SoundMarker> SoundMarkers { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -1437,6 +1495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IHairGetter> Hairs { get; }
         IGroupGetter<IEyeGetter> Eyes { get; }
         IGroupGetter<IRaceGetter> Races { get; }
+        IGroupGetter<ISoundMarkerGetter> SoundMarkers { get; }
 
     }
 
@@ -1871,6 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Hairs = 10,
         Eyes = 11,
         Races = 12,
+        SoundMarkers = 13,
     }
     #endregion
 
@@ -1888,9 +1948,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -1946,6 +2006,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Eyes;
                 case "RACES":
                     return (ushort)SkyrimMod_FieldIndex.Races;
+                case "SOUNDMARKERS":
+                    return (ushort)SkyrimMod_FieldIndex.SoundMarkers;
                 default:
                     return null;
             }
@@ -1969,6 +2031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
                 case SkyrimMod_FieldIndex.Races:
+                case SkyrimMod_FieldIndex.SoundMarkers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1993,6 +2056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
                 case SkyrimMod_FieldIndex.Races:
+                case SkyrimMod_FieldIndex.SoundMarkers:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2017,6 +2081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
                 case SkyrimMod_FieldIndex.Races:
+                case SkyrimMod_FieldIndex.SoundMarkers:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2054,6 +2119,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Eyes";
                 case SkyrimMod_FieldIndex.Races:
                     return "Races";
+                case SkyrimMod_FieldIndex.SoundMarkers:
+                    return "SoundMarkers";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2077,6 +2144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
                 case SkyrimMod_FieldIndex.Races:
+                case SkyrimMod_FieldIndex.SoundMarkers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2102,6 +2170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hairs:
                 case SkyrimMod_FieldIndex.Eyes:
                 case SkyrimMod_FieldIndex.Races:
+                case SkyrimMod_FieldIndex.SoundMarkers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2139,6 +2208,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Eye>);
                 case SkyrimMod_FieldIndex.Races:
                     return typeof(Group<Race>);
+                case SkyrimMod_FieldIndex.SoundMarkers:
+                    return typeof(Group<SoundMarker>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2158,6 +2229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -2177,12 +2249,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         HDPT_HEADER,
                         HAIR_HEADER,
                         EYES_HEADER,
-                        RACE_HEADER
+                        RACE_HEADER,
+                        SOUN_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 13;
+        public const int NumTypedFields = 14;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2237,6 +2310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Hairs.Clear();
             item.Eyes.Clear();
             item.Races.Clear();
+            item.SoundMarkers.Clear();
         }
         
         #region Xml Translation
@@ -2520,6 +2594,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
                 }
+                case 0x4E554F53: // SOUN
+                {
+                    if (importMask?.SoundMarkers ?? true)
+                    {
+                        await item.SoundMarkers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoundMarkers);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -2584,6 +2672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Hairs = MaskItemExt.Factory(item.Hairs.GetEqualsMask(rhs.Hairs, include), include);
             ret.Eyes = MaskItemExt.Factory(item.Eyes.GetEqualsMask(rhs.Eyes, include), include);
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
+            ret.SoundMarkers = MaskItemExt.Factory(item.SoundMarkers.GetEqualsMask(rhs.SoundMarkers, include), include);
         }
         
         public string ToString(
@@ -2682,6 +2771,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Races?.ToString(fg, "Races");
             }
+            if (printMask?.SoundMarkers?.Overall ?? true)
+            {
+                item.SoundMarkers?.ToString(fg, "SoundMarkers");
+            }
         }
         
         public bool HasBeenSet(
@@ -2708,6 +2801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Hairs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hairs?.GetHasBeenSetMask());
             mask.Eyes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Eyes?.GetHasBeenSetMask());
             mask.Races = new MaskItem<bool, Group.Mask<bool>?>(true, item.Races?.GetHasBeenSetMask());
+            mask.SoundMarkers = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundMarkers?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -2730,6 +2824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Hairs, rhs.Hairs)) return false;
             if (!object.Equals(lhs.Eyes, rhs.Eyes)) return false;
             if (!object.Equals(lhs.Races, rhs.Races)) return false;
+            if (!object.Equals(lhs.SoundMarkers, rhs.SoundMarkers)) return false;
             return true;
         }
         
@@ -2749,6 +2844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Eyes).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Races).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.SoundMarkers).CombineHashCode(ret);
             return ret;
         }
         
@@ -2826,6 +2922,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRace":
                 case "IRaceInternal":
                     return obj.Races.RecordCache;
+                case "SoundMarker":
+                case "ISoundMarkerGetter":
+                case "ISoundMarker":
+                case "ISoundMarkerInternal":
+                    return obj.SoundMarkers.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -2842,7 +2943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[12];
+            Stream[] outputStreams = new Stream[13];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -2856,6 +2957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 10, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 11, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, masterRefs, 12, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2987,6 +3089,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.SoundMarkers is ILinkContainer SoundMarkerslinkCont)
+            {
+                foreach (var item in SoundMarkerslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -3037,6 +3146,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Races.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundMarkers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3162,6 +3275,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRace":
                 case "IRaceInternal":
                     foreach (var item in obj.Races.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundMarker":
+                case "ISoundMarkerGetter":
+                case "ISoundMarker":
+                case "ISoundMarkerInternal":
+                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -3445,6 +3567,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundMarkers) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoundMarkers);
+                try
+                {
+                    item.SoundMarkers.DeepCopyIn(
+                        rhs: rhs.SoundMarkers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoundMarkers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -3676,6 +3818,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Races,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Races));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundMarkers) ?? true))
+            {
+                var SoundMarkersItem = item.SoundMarkers;
+                ((GroupXmlWriteTranslation)((IXmlItem)SoundMarkersItem).XmlWriteTranslator).Write<ISoundMarkerGetter>(
+                    item: SoundMarkersItem,
+                    node: node,
+                    name: nameof(item.SoundMarkers),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.SoundMarkers,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoundMarkers));
             }
         }
 
@@ -4011,6 +4164,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "SoundMarkers":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoundMarkers);
+                    try
+                    {
+                        item.SoundMarkers.CopyInFromXml<SoundMarker>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -4192,6 +4364,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Hairs;
         public bool Eyes;
         public bool Races;
+        public bool SoundMarkers;
         public GroupMask()
         {
         }
@@ -4209,6 +4382,7 @@ namespace Mutagen.Bethesda.Skyrim
             Hairs = defaultValue;
             Eyes = defaultValue;
             Races = defaultValue;
+            SoundMarkers = defaultValue;
         }
     }
 
@@ -4355,6 +4529,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
                         item: RacesItem,
+                        writer: writer);
+                }
+            }
+            if (importMask?.SoundMarkers ?? true)
+            {
+                var SoundMarkersItem = item.SoundMarkers;
+                if (SoundMarkersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundMarkersItem).BinaryWriteTranslator).Write<ISoundMarkerGetter>(
+                        item: SoundMarkersItem,
                         writer: writer);
                 }
             }
@@ -4620,6 +4804,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IRaceGetter>? _Races => _Races_IsSet ? GroupBinaryOverlay<IRaceGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IRaceGetter> Races => _Races ?? new Group<Race>(this);
         #endregion
+        #region SoundMarkers
+        private RangeInt64? _SoundMarkersLocation;
+        private bool _SoundMarkers_IsSet => _SoundMarkersLocation.HasValue;
+        private IGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkers_IsSet ? GroupBinaryOverlay<ISoundMarkerGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _SoundMarkersLocation!.Value.Min, _SoundMarkersLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new Group<SoundMarker>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -4748,6 +4938,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
+                }
+                case 0x4E554F53: // SOUN
+                {
+                    _SoundMarkersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoundMarkers);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);
