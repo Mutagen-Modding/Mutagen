@@ -1051,6 +1051,15 @@
     <Compile Include="Skyrim\Records\Major Records\SoundMarker_LoquiGenerated.cs">
       <DependentUpon>SoundMarker.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ReverbParameters_LoquiGenerated.cs">
+      <DependentUpon>ReverbParameters.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AcousticSpace_LoquiGenerated.cs">
+      <DependentUpon>AcousticSpace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Region_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />

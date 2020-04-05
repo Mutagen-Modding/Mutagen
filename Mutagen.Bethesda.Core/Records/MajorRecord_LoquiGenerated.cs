@@ -1266,6 +1266,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
+        public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
@@ -1279,6 +1280,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
+        public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
@@ -1358,6 +1360,7 @@ namespace Mutagen.Bethesda.Internals
                         NPC__HEADER,
                         CELL_HEADER,
                         WRLD_HEADER,
+                        ASPC_HEADER,
                         AACT_HEADER,
                         ARTO_HEADER,
                         BPTD_HEADER,
@@ -1371,6 +1374,7 @@ namespace Mutagen.Bethesda.Internals
                         MATT_HEADER,
                         MOVT_HEADER,
                         OTFT_HEADER,
+                        REVB_HEADER,
                         SNDR_HEADER,
                         TXST_HEADER,
                         VTYP_HEADER

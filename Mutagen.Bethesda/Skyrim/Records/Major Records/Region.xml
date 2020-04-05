@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Region" recordType="REGN" objType="Record" baseClass="SkyrimMajorRecord" GUID="f10c5e7d-6f32-4e0f-a856-df812878ce5b" ID="88">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

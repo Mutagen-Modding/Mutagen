@@ -1084,6 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
+        public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
@@ -1108,6 +1109,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType REGN_HEADER = new RecordType("REGN");
+        public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
@@ -1119,6 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
+                        ASPC_HEADER,
                         AACT_HEADER,
                         ARMO_HEADER,
                         ARTO_HEADER,
@@ -1143,6 +1147,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         OTFT_HEADER,
                         REFR_HEADER,
                         RACE_HEADER,
+                        REGN_HEADER,
+                        REVB_HEADER,
                         SNDR_HEADER,
                         SOUN_HEADER,
                         TXST_HEADER,

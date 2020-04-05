@@ -16,6 +16,7 @@
       <Group name="Eyes" refName="Eye" />
       <Group name="Races" refName="Race" />
       <Group name="SoundMarkers" refName="SoundMarker" />
+      <Group name="AcousticSpaces" refName="AcousticSpace" />
     </Fields>
   </Object>
 </Loqui>
