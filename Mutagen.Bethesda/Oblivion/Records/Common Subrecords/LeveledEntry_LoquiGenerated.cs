@@ -1908,10 +1908,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
+        public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0, 2));
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
         public IFormLinkGetter<T> Reference => new FormLink<T>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public Int16? Count => _data.Length >= 10 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(8, 2)) : default(Int16?);
+        public Int16? Count => _data.Length >= 10 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(8, 2)) : default(Int16?);
         public ReadOnlyMemorySlice<Byte>? Fluff2 => _data.Length >= 12 ? _data.Span.Slice(10, 2).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         partial void CustomCtor(
             IBinaryReadStream stream,

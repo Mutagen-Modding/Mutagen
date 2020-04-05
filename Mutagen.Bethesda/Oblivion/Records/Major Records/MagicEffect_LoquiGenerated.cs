@@ -3782,7 +3782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region BaseCost
         private int _BaseCostLocation => _DATALocation!.Value + 0x4;
         private bool _BaseCost_IsSet => _DATALocation.HasValue;
-        public Single BaseCost => _BaseCost_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BaseCostLocation, 4)) : default;
+        public Single BaseCost => _BaseCost_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseCostLocation, 4)) : default;
         #endregion
         #region Unused
         private int _UnusedLocation => _DATALocation!.Value + 0x8;
@@ -3802,7 +3802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region CounterEffectCount
         private int _CounterEffectCountLocation => _DATALocation!.Value + 0x14;
         private bool _CounterEffectCount_IsSet => _DATALocation.HasValue;
-        public UInt32 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CounterEffectCountLocation, 4)) : default;
+        public UInt32 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_CounterEffectCountLocation, 4)) : default;
         #endregion
         #region Light
         private int _LightLocation => _DATALocation!.Value + 0x18;
@@ -3812,7 +3812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region ProjectileSpeed
         private int _ProjectileSpeedLocation => _DATALocation!.Value + 0x1C;
         private bool _ProjectileSpeed_IsSet => _DATALocation.HasValue;
-        public Single ProjectileSpeed => _ProjectileSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ProjectileSpeedLocation, 4)) : default;
+        public Single ProjectileSpeed => _ProjectileSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_ProjectileSpeedLocation, 4)) : default;
         #endregion
         #region EffectShader
         private int _EffectShaderLocation => _DATALocation!.Value + 0x20;

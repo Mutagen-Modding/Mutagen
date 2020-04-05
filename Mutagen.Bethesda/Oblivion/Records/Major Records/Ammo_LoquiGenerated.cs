@@ -3174,7 +3174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Speed
         private int _SpeedLocation => _DATALocation!.Value + 0x0;
         private bool _Speed_IsSet => _DATALocation.HasValue;
-        public Single Speed => _Speed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_SpeedLocation, 4)) : default;
+        public Single Speed => _Speed_IsSet ? SpanExt.GetFloat(_data.Slice(_SpeedLocation, 4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x4;
@@ -3184,17 +3184,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Value
         private int _ValueLocation => _DATALocation!.Value + 0x8;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0xC;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region Damage
         private int _DamageLocation => _DATALocation!.Value + 0x10;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public UInt16 Damage => _Damage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DamageLocation, 2)) : default;
+        public UInt16 Damage => _Damage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DamageLocation, 2)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

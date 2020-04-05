@@ -3164,7 +3164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Value
         private int _ValueLocation => _ENITLocation!.Value + 0x0;
         private bool _Value_IsSet => _ENITLocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _ENITLocation!.Value + 0x4;

@@ -1946,9 +1946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Span.Slice(0, 8));
-        public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Span.Slice(8, 4));
-        public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation.Read(_data.Span.Slice(12, 4));
+        public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Slice(0, 8));
+        public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Slice(8, 4));
+        public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation.Read(_data.Slice(12, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

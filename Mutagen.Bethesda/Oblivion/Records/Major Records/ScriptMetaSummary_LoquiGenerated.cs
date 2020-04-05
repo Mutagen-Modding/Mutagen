@@ -2148,9 +2148,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0, 4).ToArray();
-        public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
+        public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4, 4));
         public Int32 CompiledSize => GetCompiledSizeCustom(location: 8);
-        public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(12, 4));
+        public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(12, 4));
         public ScriptFields.ScriptType Type => (ScriptFields.ScriptType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

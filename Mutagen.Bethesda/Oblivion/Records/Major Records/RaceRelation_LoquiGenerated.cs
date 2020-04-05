@@ -1867,7 +1867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public IFormLinkGetter<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

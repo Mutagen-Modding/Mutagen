@@ -4954,7 +4954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value + 0x0;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region Teaches
         private int _TeachesLocation => _DATALocation!.Value + 0x4;
@@ -5059,12 +5059,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BleedoutDefault
         private int _BleedoutDefaultLocation => _DATALocation!.Value + 0x18;
         private bool _BleedoutDefault_IsSet => _DATALocation.HasValue;
-        public Single BleedoutDefault => _BleedoutDefault_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BleedoutDefaultLocation, 4)) : default;
+        public Single BleedoutDefault => _BleedoutDefault_IsSet ? SpanExt.GetFloat(_data.Slice(_BleedoutDefaultLocation, 4)) : default;
         #endregion
         #region VoicePoints
         private int _VoicePointsLocation => _DATALocation!.Value + 0x1C;
         private bool _VoicePoints_IsSet => _DATALocation.HasValue;
-        public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_VoicePointsLocation, 4)) : default;
+        public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_VoicePointsLocation, 4)) : default;
         #endregion
         #region HealthWeight
         private int _HealthWeightLocation => _DATALocation!.Value + 0x20;

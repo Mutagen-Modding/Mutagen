@@ -2486,15 +2486,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public Color AmbientColor => _data.Span.Slice(0, 4).ReadColor();
-        public Color DirectionalColor => _data.Span.Slice(4, 4).ReadColor();
-        public Color FogColor => _data.Span.Slice(8, 4).ReadColor();
-        public Single FogNear => SpanExt.GetFloat(_data.Span.Slice(12, 4));
-        public Single FogFar => SpanExt.GetFloat(_data.Span.Slice(16, 4));
-        public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(20, 4));
-        public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(24, 4));
-        public Single DirectionalFade => SpanExt.GetFloat(_data.Span.Slice(28, 4));
-        public Single FogClipDistance => SpanExt.GetFloat(_data.Span.Slice(32, 4));
+        public Color AmbientColor => _data.Slice(0, 4).ReadColor();
+        public Color DirectionalColor => _data.Slice(4, 4).ReadColor();
+        public Color FogColor => _data.Slice(8, 4).ReadColor();
+        public Single FogNear => SpanExt.GetFloat(_data.Slice(12, 4));
+        public Single FogFar => SpanExt.GetFloat(_data.Slice(16, 4));
+        public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(20, 4));
+        public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(24, 4));
+        public Single DirectionalFade => SpanExt.GetFloat(_data.Slice(28, 4));
+        public Single FogClipDistance => SpanExt.GetFloat(_data.Slice(32, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

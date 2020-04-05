@@ -1840,8 +1840,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public Int32 PointID => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(4, 12));
+        public Int32 PointID => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));
+        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(4, 12));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

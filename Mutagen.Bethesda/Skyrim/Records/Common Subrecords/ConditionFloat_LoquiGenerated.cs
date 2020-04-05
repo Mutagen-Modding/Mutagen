@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        public Single ComparisonValue => SpanExt.GetFloat(_data.Span.Slice(4, 4));
+        public Single ComparisonValue => SpanExt.GetFloat(_data.Slice(4, 4));
         public IConditionDataGetter Data => GetDataCustom(location: 8);
         partial void CustomCtor(
             IBinaryReadStream stream,

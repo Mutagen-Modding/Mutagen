@@ -9983,32 +9983,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region BaseSpellPoints
         private int _BaseSpellPointsLocation => _ACBSLocation!.Value + 0x4;
         private bool _BaseSpellPoints_IsSet => _ACBSLocation.HasValue;
-        public UInt16 BaseSpellPoints => _BaseSpellPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BaseSpellPointsLocation, 2)) : default;
+        public UInt16 BaseSpellPoints => _BaseSpellPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BaseSpellPointsLocation, 2)) : default;
         #endregion
         #region Fatigue
         private int _FatigueLocation => _ACBSLocation!.Value + 0x6;
         private bool _Fatigue_IsSet => _ACBSLocation.HasValue;
-        public UInt16 Fatigue => _Fatigue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FatigueLocation, 2)) : default;
+        public UInt16 Fatigue => _Fatigue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_FatigueLocation, 2)) : default;
         #endregion
         #region BarterGold
         private int _BarterGoldLocation => _ACBSLocation!.Value + 0x8;
         private bool _BarterGold_IsSet => _ACBSLocation.HasValue;
-        public UInt16 BarterGold => _BarterGold_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BarterGoldLocation, 2)) : default;
+        public UInt16 BarterGold => _BarterGold_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BarterGoldLocation, 2)) : default;
         #endregion
         #region LevelOffset
         private int _LevelOffsetLocation => _ACBSLocation!.Value + 0xA;
         private bool _LevelOffset_IsSet => _ACBSLocation.HasValue;
-        public Int16 LevelOffset => _LevelOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(_LevelOffsetLocation, 2)) : default;
+        public Int16 LevelOffset => _LevelOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_LevelOffsetLocation, 2)) : default;
         #endregion
         #region CalcMin
         private int _CalcMinLocation => _ACBSLocation!.Value + 0xC;
         private bool _CalcMin_IsSet => _ACBSLocation.HasValue;
-        public UInt16 CalcMin => _CalcMin_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMinLocation, 2)) : default;
+        public UInt16 CalcMin => _CalcMin_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CalcMinLocation, 2)) : default;
         #endregion
         #region CalcMax
         private int _CalcMaxLocation => _ACBSLocation!.Value + 0xE;
         private bool _CalcMax_IsSet => _ACBSLocation.HasValue;
-        public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMaxLocation, 2)) : default;
+        public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CalcMaxLocation, 2)) : default;
         #endregion
         public IReadOnlyList<IRankPlacementGetter>? Factions { get; private set; }
         #region DeathItem
@@ -10187,7 +10187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Health
         private int _HealthLocation => _DATALocation!.Value + 0x15;
         private bool _Health_IsSet => _DATALocation.HasValue;
-        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HealthLocation, 4)) : default;
+        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_HealthLocation, 4)) : default;
         #endregion
         #region Strength
         private int _StrengthLocation => _DATALocation!.Value + 0x19;

@@ -3199,21 +3199,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(4, 2));
+        public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(4, 2));
         public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(6, 2).ToArray();
-        public Single Density => SpanExt.GetFloat(_data.Span.Slice(8, 4));
+        public Single Density => SpanExt.GetFloat(_data.Slice(8, 4));
         public Byte Clustering => _data.Span[12];
         public Byte MinSlope => _data.Span[13];
         public Byte MaxSlope => _data.Span[14];
         public RegionDataObject.Flag Flags => (RegionDataObject.Flag)_data.Span.Slice(15, 1)[0];
-        public UInt16 RadiusWrtPercent => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(16, 2));
-        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(18, 2));
-        public Single MinHeight => SpanExt.GetFloat(_data.Span.Slice(20, 4));
-        public Single MaxHeight => SpanExt.GetFloat(_data.Span.Slice(24, 4));
-        public Single Sink => SpanExt.GetFloat(_data.Span.Slice(28, 4));
-        public Single SinkVariance => SpanExt.GetFloat(_data.Span.Slice(32, 4));
-        public Single SizeVariance => SpanExt.GetFloat(_data.Span.Slice(36, 4));
-        public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Span.Slice(40, 6));
+        public UInt16 RadiusWrtPercent => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(16, 2));
+        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(18, 2));
+        public Single MinHeight => SpanExt.GetFloat(_data.Slice(20, 4));
+        public Single MaxHeight => SpanExt.GetFloat(_data.Slice(24, 4));
+        public Single Sink => SpanExt.GetFloat(_data.Slice(28, 4));
+        public Single SinkVariance => SpanExt.GetFloat(_data.Slice(32, 4));
+        public Single SizeVariance => SpanExt.GetFloat(_data.Slice(36, 4));
+        public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Slice(40, 6));
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(46, 6).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,

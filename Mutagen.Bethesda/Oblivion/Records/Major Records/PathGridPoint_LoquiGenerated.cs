@@ -2157,7 +2157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(0, 12));
+        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0, 12));
         public Byte NumConnections => _data.Span[12];
         public ReadOnlyMemorySlice<Byte> FluffBytes => _data.Span.Slice(13, 3).ToArray();
         partial void CustomCtor(

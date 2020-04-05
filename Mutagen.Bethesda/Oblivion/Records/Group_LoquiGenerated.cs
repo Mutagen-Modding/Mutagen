@@ -1999,7 +1999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
+        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

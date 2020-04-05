@@ -2465,8 +2465,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
-        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(2, 2));
+        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0, 2));
+        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(2, 2));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public ReadOnlyMemorySlice<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
         public IReadOnlyList<IWorldspaceSubBlockGetter>? Items { get; private set; }

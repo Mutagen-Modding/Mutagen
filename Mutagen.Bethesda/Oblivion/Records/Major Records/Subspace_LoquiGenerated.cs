@@ -2265,17 +2265,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region X
         private int _XLocation => _DNAMLocation!.Value + 0x0;
         private bool _X_IsSet => _DNAMLocation.HasValue;
-        public Single X => _X_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_XLocation, 4)) : default;
+        public Single X => _X_IsSet ? SpanExt.GetFloat(_data.Slice(_XLocation, 4)) : default;
         #endregion
         #region Y
         private int _YLocation => _DNAMLocation!.Value + 0x4;
         private bool _Y_IsSet => _DNAMLocation.HasValue;
-        public Single Y => _Y_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_YLocation, 4)) : default;
+        public Single Y => _Y_IsSet ? SpanExt.GetFloat(_data.Slice(_YLocation, 4)) : default;
         #endregion
         #region Z
         private int _ZLocation => _DNAMLocation!.Value + 0x8;
         private bool _Z_IsSet => _DNAMLocation.HasValue;
-        public Single Z => _Z_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ZLocation, 4)) : default;
+        public Single Z => _Z_IsSet ? SpanExt.GetFloat(_data.Slice(_ZLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

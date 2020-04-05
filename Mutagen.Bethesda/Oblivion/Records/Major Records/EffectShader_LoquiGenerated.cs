@@ -7841,97 +7841,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region FillTextureEffectColor
         private int _FillTextureEffectColorLocation => _DATALocation!.Value + 0x10;
         private bool _FillTextureEffectColor_IsSet => _DATALocation.HasValue;
-        public Color FillTextureEffectColor => _FillTextureEffectColor_IsSet ? _data.Span.Slice(_FillTextureEffectColorLocation, 4).ReadColor() : default;
+        public Color FillTextureEffectColor => _FillTextureEffectColor_IsSet ? _data.Slice(_FillTextureEffectColorLocation, 4).ReadColor() : default;
         #endregion
         #region FillTextureEffectAlphaFadeInTime
         private int _FillTextureEffectAlphaFadeInTimeLocation => _DATALocation!.Value + 0x14;
         private bool _FillTextureEffectAlphaFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectAlphaFadeInTime => _FillTextureEffectAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectAlphaFadeInTimeLocation, 4)) : default;
+        public Single FillTextureEffectAlphaFadeInTime => _FillTextureEffectAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectAlphaFadeInTimeLocation, 4)) : default;
         #endregion
         #region FillTextureEffectFullAlphaTime
         private int _FillTextureEffectFullAlphaTimeLocation => _DATALocation!.Value + 0x18;
         private bool _FillTextureEffectFullAlphaTime_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectFullAlphaTime => _FillTextureEffectFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectFullAlphaTimeLocation, 4)) : default;
+        public Single FillTextureEffectFullAlphaTime => _FillTextureEffectFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectFullAlphaTimeLocation, 4)) : default;
         #endregion
         #region FillTextureEffectAlphaFadeOutTime
         private int _FillTextureEffectAlphaFadeOutTimeLocation => _DATALocation!.Value + 0x1C;
         private bool _FillTextureEffectAlphaFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectAlphaFadeOutTime => _FillTextureEffectAlphaFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectAlphaFadeOutTimeLocation, 4)) : default;
+        public Single FillTextureEffectAlphaFadeOutTime => _FillTextureEffectAlphaFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectAlphaFadeOutTimeLocation, 4)) : default;
         #endregion
         #region FillTextureEffectPersistentAlphaRatio
         private int _FillTextureEffectPersistentAlphaRatioLocation => _DATALocation!.Value + 0x20;
         private bool _FillTextureEffectPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectPersistentAlphaRatio => _FillTextureEffectPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectPersistentAlphaRatioLocation, 4)) : default;
+        public Single FillTextureEffectPersistentAlphaRatio => _FillTextureEffectPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectPersistentAlphaRatioLocation, 4)) : default;
         #endregion
         #region FillTextureEffectAlphaPulseAmplitude
         private int _FillTextureEffectAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x24;
         private bool _FillTextureEffectAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectAlphaPulseAmplitude => _FillTextureEffectAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectAlphaPulseAmplitudeLocation, 4)) : default;
+        public Single FillTextureEffectAlphaPulseAmplitude => _FillTextureEffectAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectAlphaPulseAmplitudeLocation, 4)) : default;
         #endregion
         #region FillTextureEffectAlphaPulseFrequency
         private int _FillTextureEffectAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x28;
         private bool _FillTextureEffectAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectAlphaPulseFrequency => _FillTextureEffectAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectAlphaPulseFrequencyLocation, 4)) : default;
+        public Single FillTextureEffectAlphaPulseFrequency => _FillTextureEffectAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectAlphaPulseFrequencyLocation, 4)) : default;
         #endregion
         #region FillTextureEffectTextureAnimationSpeedU
         private int _FillTextureEffectTextureAnimationSpeedULocation => _DATALocation!.Value + 0x2C;
         private bool _FillTextureEffectTextureAnimationSpeedU_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectTextureAnimationSpeedU => _FillTextureEffectTextureAnimationSpeedU_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectTextureAnimationSpeedULocation, 4)) : default;
+        public Single FillTextureEffectTextureAnimationSpeedU => _FillTextureEffectTextureAnimationSpeedU_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectTextureAnimationSpeedULocation, 4)) : default;
         #endregion
         #region FillTextureEffectTextureAnimationSpeedV
         private int _FillTextureEffectTextureAnimationSpeedVLocation => _DATALocation!.Value + 0x30;
         private bool _FillTextureEffectTextureAnimationSpeedV_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectTextureAnimationSpeedV => _FillTextureEffectTextureAnimationSpeedV_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectTextureAnimationSpeedVLocation, 4)) : default;
+        public Single FillTextureEffectTextureAnimationSpeedV => _FillTextureEffectTextureAnimationSpeedV_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectTextureAnimationSpeedVLocation, 4)) : default;
         #endregion
         #region EdgeEffectFallOff
         private int _EdgeEffectFallOffLocation => _DATALocation!.Value + 0x34;
         private bool _EdgeEffectFallOff_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectFallOffLocation, 4)) : default;
+        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFallOffLocation, 4)) : default;
         #endregion
         #region EdgeEffectColor
         private int _EdgeEffectColorLocation => _DATALocation!.Value + 0x38;
         private bool _EdgeEffectColor_IsSet => _DATALocation.HasValue;
-        public Color EdgeEffectColor => _EdgeEffectColor_IsSet ? _data.Span.Slice(_EdgeEffectColorLocation, 4).ReadColor() : default;
+        public Color EdgeEffectColor => _EdgeEffectColor_IsSet ? _data.Slice(_EdgeEffectColorLocation, 4).ReadColor() : default;
         #endregion
         #region EdgeEffectAlphaFadeInTime
         private int _EdgeEffectAlphaFadeInTimeLocation => _DATALocation!.Value + 0x3C;
         private bool _EdgeEffectAlphaFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4)) : default;
+        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4)) : default;
         #endregion
         #region EdgeEffectFullAlphaTime
         private int _EdgeEffectFullAlphaTimeLocation => _DATALocation!.Value + 0x40;
         private bool _EdgeEffectFullAlphaTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectFullAlphaTimeLocation, 4)) : default;
+        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFullAlphaTimeLocation, 4)) : default;
         #endregion
         #region EdgeEffectAlphaFadeOutTime
         private int _EdgeEffectAlphaFadeOutTimeLocation => _DATALocation!.Value + 0x44;
         private bool _EdgeEffectAlphaFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4)) : default;
+        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4)) : default;
         #endregion
         #region EdgeEffectPersistentAlphaRatio
         private int _EdgeEffectPersistentAlphaRatioLocation => _DATALocation!.Value + 0x48;
         private bool _EdgeEffectPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4)) : default;
+        public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4)) : default;
         #endregion
         #region EdgeEffectAlphaPulseAmplitude
         private int _EdgeEffectAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x4C;
         private bool _EdgeEffectAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4)) : default;
+        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4)) : default;
         #endregion
         #region EdgeEffectAlphaPulseFrequency
         private int _EdgeEffectAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x50;
         private bool _EdgeEffectAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4)) : default;
+        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4)) : default;
         #endregion
         #region FillTextureEffectFullAlphaRatio
         private int _FillTextureEffectFullAlphaRatioLocation => _DATALocation!.Value + 0x54;
         private bool _FillTextureEffectFullAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single FillTextureEffectFullAlphaRatio => _FillTextureEffectFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectFullAlphaRatioLocation, 4)) : default;
+        public Single FillTextureEffectFullAlphaRatio => _FillTextureEffectFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureEffectFullAlphaRatioLocation, 4)) : default;
         #endregion
         #region EdgeEffectFullAlphaRatio
         private int _EdgeEffectFullAlphaRatioLocation => _DATALocation!.Value + 0x58;
         private bool _EdgeEffectFullAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectFullAlphaRatioLocation, 4)) : default;
+        public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFullAlphaRatioLocation, 4)) : default;
         #endregion
         #region MembraneShaderDestBlendMode
         private int _MembraneShaderDestBlendModeLocation => _DATALocation!.Value + 0x5C;
@@ -7961,142 +7961,142 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region ParticleShaderParticleBirthRampUpTime
         private int _ParticleShaderParticleBirthRampUpTimeLocation => _DATALocation!.Value + 0x70;
         private bool _ParticleShaderParticleBirthRampUpTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderParticleBirthRampUpTime => _ParticleShaderParticleBirthRampUpTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderParticleBirthRampUpTimeLocation, 4)) : default;
+        public Single ParticleShaderParticleBirthRampUpTime => _ParticleShaderParticleBirthRampUpTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderParticleBirthRampUpTimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderFullParticleBirthTime
         private int _ParticleShaderFullParticleBirthTimeLocation => _DATALocation!.Value + 0x74;
         private bool _ParticleShaderFullParticleBirthTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderFullParticleBirthTime => _ParticleShaderFullParticleBirthTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderFullParticleBirthTimeLocation, 4)) : default;
+        public Single ParticleShaderFullParticleBirthTime => _ParticleShaderFullParticleBirthTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderFullParticleBirthTimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderParticleBirthRampDownTime
         private int _ParticleShaderParticleBirthRampDownTimeLocation => _DATALocation!.Value + 0x78;
         private bool _ParticleShaderParticleBirthRampDownTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderParticleBirthRampDownTime => _ParticleShaderParticleBirthRampDownTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderParticleBirthRampDownTimeLocation, 4)) : default;
+        public Single ParticleShaderParticleBirthRampDownTime => _ParticleShaderParticleBirthRampDownTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderParticleBirthRampDownTimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderFullParticleBirthRatio
         private int _ParticleShaderFullParticleBirthRatioLocation => _DATALocation!.Value + 0x7C;
         private bool _ParticleShaderFullParticleBirthRatio_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderFullParticleBirthRatio => _ParticleShaderFullParticleBirthRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderFullParticleBirthRatioLocation, 4)) : default;
+        public Single ParticleShaderFullParticleBirthRatio => _ParticleShaderFullParticleBirthRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderFullParticleBirthRatioLocation, 4)) : default;
         #endregion
         #region ParticleShaderPersistentParticleBirthRatio
         private int _ParticleShaderPersistentParticleBirthRatioLocation => _DATALocation!.Value + 0x80;
         private bool _ParticleShaderPersistentParticleBirthRatio_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderPersistentParticleBirthRatio => _ParticleShaderPersistentParticleBirthRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderPersistentParticleBirthRatioLocation, 4)) : default;
+        public Single ParticleShaderPersistentParticleBirthRatio => _ParticleShaderPersistentParticleBirthRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderPersistentParticleBirthRatioLocation, 4)) : default;
         #endregion
         #region ParticleShaderParticleLifetime
         private int _ParticleShaderParticleLifetimeLocation => _DATALocation!.Value + 0x84;
         private bool _ParticleShaderParticleLifetime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderParticleLifetime => _ParticleShaderParticleLifetime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderParticleLifetimeLocation, 4)) : default;
+        public Single ParticleShaderParticleLifetime => _ParticleShaderParticleLifetime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderParticleLifetimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderParticleLifetimePlusMinus
         private int _ParticleShaderParticleLifetimePlusMinusLocation => _DATALocation!.Value + 0x88;
         private bool _ParticleShaderParticleLifetimePlusMinus_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderParticleLifetimePlusMinus => _ParticleShaderParticleLifetimePlusMinus_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderParticleLifetimePlusMinusLocation, 4)) : default;
+        public Single ParticleShaderParticleLifetimePlusMinus => _ParticleShaderParticleLifetimePlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderParticleLifetimePlusMinusLocation, 4)) : default;
         #endregion
         #region ParticleShaderInitialSpeedAlongNormal
         private int _ParticleShaderInitialSpeedAlongNormalLocation => _DATALocation!.Value + 0x8C;
         private bool _ParticleShaderInitialSpeedAlongNormal_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderInitialSpeedAlongNormal => _ParticleShaderInitialSpeedAlongNormal_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderInitialSpeedAlongNormalLocation, 4)) : default;
+        public Single ParticleShaderInitialSpeedAlongNormal => _ParticleShaderInitialSpeedAlongNormal_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderInitialSpeedAlongNormalLocation, 4)) : default;
         #endregion
         #region ParticleShaderAccelerationAlongNormal
         private int _ParticleShaderAccelerationAlongNormalLocation => _DATALocation!.Value + 0x90;
         private bool _ParticleShaderAccelerationAlongNormal_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderAccelerationAlongNormal => _ParticleShaderAccelerationAlongNormal_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderAccelerationAlongNormalLocation, 4)) : default;
+        public Single ParticleShaderAccelerationAlongNormal => _ParticleShaderAccelerationAlongNormal_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderAccelerationAlongNormalLocation, 4)) : default;
         #endregion
         #region ParticleShaderInitialVelocity1
         private int _ParticleShaderInitialVelocity1Location => _DATALocation!.Value + 0x94;
         private bool _ParticleShaderInitialVelocity1_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderInitialVelocity1 => _ParticleShaderInitialVelocity1_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderInitialVelocity1Location, 4)) : default;
+        public Single ParticleShaderInitialVelocity1 => _ParticleShaderInitialVelocity1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderInitialVelocity1Location, 4)) : default;
         #endregion
         #region ParticleShaderInitialVelocity2
         private int _ParticleShaderInitialVelocity2Location => _DATALocation!.Value + 0x98;
         private bool _ParticleShaderInitialVelocity2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderInitialVelocity2 => _ParticleShaderInitialVelocity2_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderInitialVelocity2Location, 4)) : default;
+        public Single ParticleShaderInitialVelocity2 => _ParticleShaderInitialVelocity2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderInitialVelocity2Location, 4)) : default;
         #endregion
         #region ParticleShaderInitialVelocity3
         private int _ParticleShaderInitialVelocity3Location => _DATALocation!.Value + 0x9C;
         private bool _ParticleShaderInitialVelocity3_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderInitialVelocity3 => _ParticleShaderInitialVelocity3_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderInitialVelocity3Location, 4)) : default;
+        public Single ParticleShaderInitialVelocity3 => _ParticleShaderInitialVelocity3_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderInitialVelocity3Location, 4)) : default;
         #endregion
         #region ParticleShaderAcceleration1
         private int _ParticleShaderAcceleration1Location => _DATALocation!.Value + 0xA0;
         private bool _ParticleShaderAcceleration1_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderAcceleration1 => _ParticleShaderAcceleration1_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderAcceleration1Location, 4)) : default;
+        public Single ParticleShaderAcceleration1 => _ParticleShaderAcceleration1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderAcceleration1Location, 4)) : default;
         #endregion
         #region ParticleShaderAcceleration2
         private int _ParticleShaderAcceleration2Location => _DATALocation!.Value + 0xA4;
         private bool _ParticleShaderAcceleration2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderAcceleration2 => _ParticleShaderAcceleration2_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderAcceleration2Location, 4)) : default;
+        public Single ParticleShaderAcceleration2 => _ParticleShaderAcceleration2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderAcceleration2Location, 4)) : default;
         #endregion
         #region ParticleShaderAcceleration3
         private int _ParticleShaderAcceleration3Location => _DATALocation!.Value + 0xA8;
         private bool _ParticleShaderAcceleration3_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderAcceleration3 => _ParticleShaderAcceleration3_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderAcceleration3Location, 4)) : default;
+        public Single ParticleShaderAcceleration3 => _ParticleShaderAcceleration3_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderAcceleration3Location, 4)) : default;
         #endregion
         #region ParticleShaderScaleKey1
         private int _ParticleShaderScaleKey1Location => _DATALocation!.Value + 0xAC;
         private bool _ParticleShaderScaleKey1_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderScaleKey1 => _ParticleShaderScaleKey1_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderScaleKey1Location, 4)) : default;
+        public Single ParticleShaderScaleKey1 => _ParticleShaderScaleKey1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderScaleKey1Location, 4)) : default;
         #endregion
         #region ParticleShaderScaleKey2
         private int _ParticleShaderScaleKey2Location => _DATALocation!.Value + 0xB0;
         private bool _ParticleShaderScaleKey2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderScaleKey2 => _ParticleShaderScaleKey2_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderScaleKey2Location, 4)) : default;
+        public Single ParticleShaderScaleKey2 => _ParticleShaderScaleKey2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderScaleKey2Location, 4)) : default;
         #endregion
         #region ParticleShaderScaleKey1Time
         private int _ParticleShaderScaleKey1TimeLocation => _DATALocation!.Value + 0xB4;
         private bool _ParticleShaderScaleKey1Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderScaleKey1Time => _ParticleShaderScaleKey1Time_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderScaleKey1TimeLocation, 4)) : default;
+        public Single ParticleShaderScaleKey1Time => _ParticleShaderScaleKey1Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderScaleKey1TimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderScaleKey2Time
         private int _ParticleShaderScaleKey2TimeLocation => _DATALocation!.Value + 0xB8;
         private bool _ParticleShaderScaleKey2Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ParticleShaderScaleKey2Time => _ParticleShaderScaleKey2Time_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderScaleKey2TimeLocation, 4)) : default;
+        public Single ParticleShaderScaleKey2Time => _ParticleShaderScaleKey2Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleShaderScaleKey2TimeLocation, 4)) : default;
         #endregion
         #region ColorKey1Color
         private int _ColorKey1ColorLocation => _DATALocation!.Value + 0xBC;
         private bool _ColorKey1Color_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Color ColorKey1Color => _ColorKey1Color_IsSet ? _data.Span.Slice(_ColorKey1ColorLocation, 4).ReadColor() : default;
+        public Color ColorKey1Color => _ColorKey1Color_IsSet ? _data.Slice(_ColorKey1ColorLocation, 4).ReadColor() : default;
         #endregion
         #region ColorKey2Color
         private int _ColorKey2ColorLocation => _DATALocation!.Value + 0xC0;
         private bool _ColorKey2Color_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Color ColorKey2Color => _ColorKey2Color_IsSet ? _data.Span.Slice(_ColorKey2ColorLocation, 4).ReadColor() : default;
+        public Color ColorKey2Color => _ColorKey2Color_IsSet ? _data.Slice(_ColorKey2ColorLocation, 4).ReadColor() : default;
         #endregion
         #region ColorKey3Color
         private int _ColorKey3ColorLocation => _DATALocation!.Value + 0xC4;
         private bool _ColorKey3Color_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Color ColorKey3Color => _ColorKey3Color_IsSet ? _data.Span.Slice(_ColorKey3ColorLocation, 4).ReadColor() : default;
+        public Color ColorKey3Color => _ColorKey3Color_IsSet ? _data.Slice(_ColorKey3ColorLocation, 4).ReadColor() : default;
         #endregion
         #region ColorKey1ColorAlpha
         private int _ColorKey1ColorAlphaLocation => _DATALocation!.Value + 0xC8;
         private bool _ColorKey1ColorAlpha_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ColorKey1ColorAlpha => _ColorKey1ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey1ColorAlphaLocation, 4)) : default;
+        public Single ColorKey1ColorAlpha => _ColorKey1ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey1ColorAlphaLocation, 4)) : default;
         #endregion
         #region ColorKey2ColorAlpha
         private int _ColorKey2ColorAlphaLocation => _DATALocation!.Value + 0xCC;
         private bool _ColorKey2ColorAlpha_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ColorKey2ColorAlpha => _ColorKey2ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey2ColorAlphaLocation, 4)) : default;
+        public Single ColorKey2ColorAlpha => _ColorKey2ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey2ColorAlphaLocation, 4)) : default;
         #endregion
         #region ColorKey3ColorAlpha
         private int _ColorKey3ColorAlphaLocation => _DATALocation!.Value + 0xD0;
         private bool _ColorKey3ColorAlpha_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ColorKey3ColorAlpha => _ColorKey3ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey3ColorAlphaLocation, 4)) : default;
+        public Single ColorKey3ColorAlpha => _ColorKey3ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey3ColorAlphaLocation, 4)) : default;
         #endregion
         #region ColorKey1ColorKeyTime
         private int _ColorKey1ColorKeyTimeLocation => _DATALocation!.Value + 0xD4;
         private bool _ColorKey1ColorKeyTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ColorKey1ColorKeyTime => _ColorKey1ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey1ColorKeyTimeLocation, 4)) : default;
+        public Single ColorKey1ColorKeyTime => _ColorKey1ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey1ColorKeyTimeLocation, 4)) : default;
         #endregion
         #region ColorKey2ColorKeyTime
         private int _ColorKey2ColorKeyTimeLocation => _DATALocation!.Value + 0xD8;
         private bool _ColorKey2ColorKeyTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ColorKey2ColorKeyTime => _ColorKey2ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey2ColorKeyTimeLocation, 4)) : default;
+        public Single ColorKey2ColorKeyTime => _ColorKey2ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey2ColorKeyTimeLocation, 4)) : default;
         #endregion
         #region ColorKey3ColorKeyTime
         private int _ColorKey3ColorKeyTimeLocation => _DATALocation!.Value + 0xDC;
         private bool _ColorKey3ColorKeyTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public Single ColorKey3ColorKeyTime => _ColorKey3ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey3ColorKeyTimeLocation, 4)) : default;
+        public Single ColorKey3ColorKeyTime => _ColorKey3ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey3ColorKeyTimeLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

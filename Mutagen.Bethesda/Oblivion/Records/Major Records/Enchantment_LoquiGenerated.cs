@@ -2775,12 +2775,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region ChargeAmount
         private int _ChargeAmountLocation => _ENITLocation!.Value + 0x4;
         private bool _ChargeAmount_IsSet => _ENITLocation.HasValue;
-        public UInt32 ChargeAmount => _ChargeAmount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChargeAmountLocation, 4)) : default;
+        public UInt32 ChargeAmount => _ChargeAmount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ChargeAmountLocation, 4)) : default;
         #endregion
         #region EnchantCost
         private int _EnchantCostLocation => _ENITLocation!.Value + 0x8;
         private bool _EnchantCost_IsSet => _ENITLocation.HasValue;
-        public UInt32 EnchantCost => _EnchantCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantCostLocation, 4)) : default;
+        public UInt32 EnchantCost => _EnchantCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_EnchantCostLocation, 4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _ENITLocation!.Value + 0xC;

@@ -2201,12 +2201,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        public UInt16 StartHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0, 2));
-        public UInt16 EndHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(2, 2));
-        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
-        public Boolean OnlyBuysStolenItems => _data.Span.Slice(8, 1)[0] == 1;
-        public Boolean NotSellBuy => _data.Span.Slice(9, 1)[0] == 1;
-        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(10, 2));
+        public UInt16 StartHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0, 2));
+        public UInt16 EndHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(2, 2));
+        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4, 4));
+        public Boolean OnlyBuysStolenItems => _data.Slice(8, 1)[0] == 1;
+        public Boolean NotSellBuy => _data.Slice(9, 1)[0] == 1;
+        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(10, 2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

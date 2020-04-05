@@ -5298,52 +5298,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ArrestCrimeValue
         private int _ArrestCrimeValueLocation => _CRVALocation!.Value + 0x0;
         private bool _ArrestCrimeValue_IsSet => _CRVALocation.HasValue;
-        public Boolean ArrestCrimeValue => _ArrestCrimeValue_IsSet ? _data.Span.Slice(_ArrestCrimeValueLocation, 1)[0] == 1 : default;
+        public Boolean ArrestCrimeValue => _ArrestCrimeValue_IsSet ? _data.Slice(_ArrestCrimeValueLocation, 1)[0] == 1 : default;
         #endregion
         #region AttackOnSightCrimeValue
         private int _AttackOnSightCrimeValueLocation => _CRVALocation!.Value + 0x1;
         private bool _AttackOnSightCrimeValue_IsSet => _CRVALocation.HasValue;
-        public Boolean AttackOnSightCrimeValue => _AttackOnSightCrimeValue_IsSet ? _data.Span.Slice(_AttackOnSightCrimeValueLocation, 1)[0] == 1 : default;
+        public Boolean AttackOnSightCrimeValue => _AttackOnSightCrimeValue_IsSet ? _data.Slice(_AttackOnSightCrimeValueLocation, 1)[0] == 1 : default;
         #endregion
         #region MurderCrimeValue
         private int _MurderCrimeValueLocation => _CRVALocation!.Value + 0x2;
         private bool _MurderCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 MurderCrimeValue => _MurderCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_MurderCrimeValueLocation, 2)) : default;
+        public UInt16 MurderCrimeValue => _MurderCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_MurderCrimeValueLocation, 2)) : default;
         #endregion
         #region AssaultCrimeValue
         private int _AssaultCrimeValueLocation => _CRVALocation!.Value + 0x4;
         private bool _AssaultCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 AssaultCrimeValue => _AssaultCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_AssaultCrimeValueLocation, 2)) : default;
+        public UInt16 AssaultCrimeValue => _AssaultCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_AssaultCrimeValueLocation, 2)) : default;
         #endregion
         #region TrespassCrimeValue
         private int _TrespassCrimeValueLocation => _CRVALocation!.Value + 0x6;
         private bool _TrespassCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 TrespassCrimeValue => _TrespassCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_TrespassCrimeValueLocation, 2)) : default;
+        public UInt16 TrespassCrimeValue => _TrespassCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_TrespassCrimeValueLocation, 2)) : default;
         #endregion
         #region PickpocketCrimeValue
         private int _PickpocketCrimeValueLocation => _CRVALocation!.Value + 0x8;
         private bool _PickpocketCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 PickpocketCrimeValue => _PickpocketCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_PickpocketCrimeValueLocation, 2)) : default;
+        public UInt16 PickpocketCrimeValue => _PickpocketCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_PickpocketCrimeValueLocation, 2)) : default;
         #endregion
         #region UnknownCrimeValue
         private int _UnknownCrimeValueLocation => _CRVALocation!.Value + 0xA;
         private bool _UnknownCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 UnknownCrimeValue => _UnknownCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_UnknownCrimeValueLocation, 2)) : default;
+        public UInt16 UnknownCrimeValue => _UnknownCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownCrimeValueLocation, 2)) : default;
         #endregion
         #region StealMultCrimeValue
         private int _StealMultCrimeValueLocation => _CRVALocation!.Value + 0xC;
         private bool _StealMultCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break0);
-        public Single StealMultCrimeValue => _StealMultCrimeValue_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_StealMultCrimeValueLocation, 4)) : default;
+        public Single StealMultCrimeValue => _StealMultCrimeValue_IsSet ? SpanExt.GetFloat(_data.Slice(_StealMultCrimeValueLocation, 4)) : default;
         #endregion
         #region EscapeCrimeValue
         private int _EscapeCrimeValueLocation => _CRVALocation!.Value + 0x10;
         private bool _EscapeCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break1);
-        public UInt16 EscapeCrimeValue => _EscapeCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_EscapeCrimeValueLocation, 2)) : default;
+        public UInt16 EscapeCrimeValue => _EscapeCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_EscapeCrimeValueLocation, 2)) : default;
         #endregion
         #region WerewolfCrimeValue
         private int _WerewolfCrimeValueLocation => _CRVALocation!.Value + 0x12;
         private bool _WerewolfCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break1);
-        public UInt16 WerewolfCrimeValue => _WerewolfCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_WerewolfCrimeValueLocation, 2)) : default;
+        public UInt16 WerewolfCrimeValue => _WerewolfCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_WerewolfCrimeValueLocation, 2)) : default;
         #endregion
         public IReadOnlyList<IRankGetter>? Ranks { get; private set; }
         #region VendorList

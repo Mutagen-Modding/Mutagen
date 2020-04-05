@@ -1946,9 +1946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public Single Unknown0 => SpanExt.GetFloat(_data.Span.Slice(0, 4));
-        public Single Unknown1 => SpanExt.GetFloat(_data.Span.Slice(4, 4));
-        public Single Unknown2 => SpanExt.GetFloat(_data.Span.Slice(8, 4));
+        public Single Unknown0 => SpanExt.GetFloat(_data.Slice(0, 4));
+        public Single Unknown1 => SpanExt.GetFloat(_data.Slice(4, 4));
+        public Single Unknown2 => SpanExt.GetFloat(_data.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -3592,54 +3592,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region LeafCurvature
         private int _LeafCurvatureLocation => _CNAMLocation!.Value + 0x0;
         private bool _LeafCurvature_IsSet => _CNAMLocation.HasValue;
-        public Single LeafCurvature => _LeafCurvature_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_LeafCurvatureLocation, 4)) : default;
+        public Single LeafCurvature => _LeafCurvature_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafCurvatureLocation, 4)) : default;
         #endregion
         #region MinimumLeafAngle
         private int _MinimumLeafAngleLocation => _CNAMLocation!.Value + 0x4;
         private bool _MinimumLeafAngle_IsSet => _CNAMLocation.HasValue;
-        public Single MinimumLeafAngle => _MinimumLeafAngle_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MinimumLeafAngleLocation, 4)) : default;
+        public Single MinimumLeafAngle => _MinimumLeafAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_MinimumLeafAngleLocation, 4)) : default;
         #endregion
         #region MaximumLeafAngle
         private int _MaximumLeafAngleLocation => _CNAMLocation!.Value + 0x8;
         private bool _MaximumLeafAngle_IsSet => _CNAMLocation.HasValue;
-        public Single MaximumLeafAngle => _MaximumLeafAngle_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_MaximumLeafAngleLocation, 4)) : default;
+        public Single MaximumLeafAngle => _MaximumLeafAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_MaximumLeafAngleLocation, 4)) : default;
         #endregion
         #region BranchDimmingValue
         private int _BranchDimmingValueLocation => _CNAMLocation!.Value + 0xC;
         private bool _BranchDimmingValue_IsSet => _CNAMLocation.HasValue;
-        public Single BranchDimmingValue => _BranchDimmingValue_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BranchDimmingValueLocation, 4)) : default;
+        public Single BranchDimmingValue => _BranchDimmingValue_IsSet ? SpanExt.GetFloat(_data.Slice(_BranchDimmingValueLocation, 4)) : default;
         #endregion
         #region LeafDimmingValue
         private int _LeafDimmingValueLocation => _CNAMLocation!.Value + 0x10;
         private bool _LeafDimmingValue_IsSet => _CNAMLocation.HasValue;
-        public Single LeafDimmingValue => _LeafDimmingValue_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_LeafDimmingValueLocation, 4)) : default;
+        public Single LeafDimmingValue => _LeafDimmingValue_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafDimmingValueLocation, 4)) : default;
         #endregion
         #region ShadowRadius
         private int _ShadowRadiusLocation => _CNAMLocation!.Value + 0x14;
         private bool _ShadowRadius_IsSet => _CNAMLocation.HasValue;
-        public Int32 ShadowRadius => _ShadowRadius_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShadowRadiusLocation, 4)) : default;
+        public Int32 ShadowRadius => _ShadowRadius_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_ShadowRadiusLocation, 4)) : default;
         #endregion
         #region RockingSpeed
         private int _RockingSpeedLocation => _CNAMLocation!.Value + 0x18;
         private bool _RockingSpeed_IsSet => _CNAMLocation.HasValue;
-        public Single RockingSpeed => _RockingSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RockingSpeedLocation, 4)) : default;
+        public Single RockingSpeed => _RockingSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_RockingSpeedLocation, 4)) : default;
         #endregion
         #region RustleSpeed
         private int _RustleSpeedLocation => _CNAMLocation!.Value + 0x1C;
         private bool _RustleSpeed_IsSet => _CNAMLocation.HasValue;
-        public Single RustleSpeed => _RustleSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RustleSpeedLocation, 4)) : default;
+        public Single RustleSpeed => _RustleSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_RustleSpeedLocation, 4)) : default;
         #endregion
         private int? _BNAMLocation;
         public Tree.BNAMDataType BNAMDataTypeState { get; private set; }
         #region BillboardWidth
         private int _BillboardWidthLocation => _BNAMLocation!.Value + 0x0;
         private bool _BillboardWidth_IsSet => _BNAMLocation.HasValue;
-        public Single BillboardWidth => _BillboardWidth_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BillboardWidthLocation, 4)) : default;
+        public Single BillboardWidth => _BillboardWidth_IsSet ? SpanExt.GetFloat(_data.Slice(_BillboardWidthLocation, 4)) : default;
         #endregion
         #region BillboardHeight
         private int _BillboardHeightLocation => _BNAMLocation!.Value + 0x4;
         private bool _BillboardHeight_IsSet => _BNAMLocation.HasValue;
-        public Single BillboardHeight => _BillboardHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BillboardHeightLocation, 4)) : default;
+        public Single BillboardHeight => _BillboardHeight_IsSet ? SpanExt.GetFloat(_data.Slice(_BillboardHeightLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

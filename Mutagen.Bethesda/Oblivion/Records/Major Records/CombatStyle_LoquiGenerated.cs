@@ -5820,42 +5820,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DodgeLeftRightTimerMin
         private int _DodgeLeftRightTimerMinLocation => _CSTDLocation!.Value + 0x4;
         private bool _DodgeLeftRightTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeLeftRightTimerMin => _DodgeLeftRightTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeLeftRightTimerMinLocation, 4)) : default;
+        public Single DodgeLeftRightTimerMin => _DodgeLeftRightTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeLeftRightTimerMinLocation, 4)) : default;
         #endregion
         #region DodgeLeftRightTimerMax
         private int _DodgeLeftRightTimerMaxLocation => _CSTDLocation!.Value + 0x8;
         private bool _DodgeLeftRightTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeLeftRightTimerMax => _DodgeLeftRightTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeLeftRightTimerMaxLocation, 4)) : default;
+        public Single DodgeLeftRightTimerMax => _DodgeLeftRightTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeLeftRightTimerMaxLocation, 4)) : default;
         #endregion
         #region DodgeForwardTimerMin
         private int _DodgeForwardTimerMinLocation => _CSTDLocation!.Value + 0xC;
         private bool _DodgeForwardTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeForwardTimerMin => _DodgeForwardTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeForwardTimerMinLocation, 4)) : default;
+        public Single DodgeForwardTimerMin => _DodgeForwardTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeForwardTimerMinLocation, 4)) : default;
         #endregion
         #region DodgeForwardTimerMax
         private int _DodgeForwardTimerMaxLocation => _CSTDLocation!.Value + 0x10;
         private bool _DodgeForwardTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeForwardTimerMax => _DodgeForwardTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeForwardTimerMaxLocation, 4)) : default;
+        public Single DodgeForwardTimerMax => _DodgeForwardTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeForwardTimerMaxLocation, 4)) : default;
         #endregion
         #region DodgeBackTimerMin
         private int _DodgeBackTimerMinLocation => _CSTDLocation!.Value + 0x14;
         private bool _DodgeBackTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeBackTimerMin => _DodgeBackTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeBackTimerMinLocation, 4)) : default;
+        public Single DodgeBackTimerMin => _DodgeBackTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeBackTimerMinLocation, 4)) : default;
         #endregion
         #region DodgeBackTimerMax
         private int _DodgeBackTimerMaxLocation => _CSTDLocation!.Value + 0x18;
         private bool _DodgeBackTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeBackTimerMax => _DodgeBackTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DodgeBackTimerMaxLocation, 4)) : default;
+        public Single DodgeBackTimerMax => _DodgeBackTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeBackTimerMaxLocation, 4)) : default;
         #endregion
         #region IdleTimerMin
         private int _IdleTimerMinLocation => _CSTDLocation!.Value + 0x1C;
         private bool _IdleTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single IdleTimerMin => _IdleTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_IdleTimerMinLocation, 4)) : default;
+        public Single IdleTimerMin => _IdleTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_IdleTimerMinLocation, 4)) : default;
         #endregion
         #region IdleTimerMax
         private int _IdleTimerMaxLocation => _CSTDLocation!.Value + 0x20;
         private bool _IdleTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single IdleTimerMax => _IdleTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_IdleTimerMaxLocation, 4)) : default;
+        public Single IdleTimerMax => _IdleTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_IdleTimerMaxLocation, 4)) : default;
         #endregion
         #region BlockPercentChance
         private int _BlockPercentChanceLocation => _CSTDLocation!.Value + 0x24;
@@ -5870,17 +5870,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region RecoilStaggerBonusToAttack
         private int _RecoilStaggerBonusToAttackLocation => _CSTDLocation!.Value + 0x28;
         private bool _RecoilStaggerBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single RecoilStaggerBonusToAttack => _RecoilStaggerBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RecoilStaggerBonusToAttackLocation, 4)) : default;
+        public Single RecoilStaggerBonusToAttack => _RecoilStaggerBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_RecoilStaggerBonusToAttackLocation, 4)) : default;
         #endregion
         #region UnconsciousBonusToAttack
         private int _UnconsciousBonusToAttackLocation => _CSTDLocation!.Value + 0x2C;
         private bool _UnconsciousBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single UnconsciousBonusToAttack => _UnconsciousBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UnconsciousBonusToAttackLocation, 4)) : default;
+        public Single UnconsciousBonusToAttack => _UnconsciousBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_UnconsciousBonusToAttackLocation, 4)) : default;
         #endregion
         #region HandToHandBonusToAttack
         private int _HandToHandBonusToAttackLocation => _CSTDLocation!.Value + 0x30;
         private bool _HandToHandBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single HandToHandBonusToAttack => _HandToHandBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HandToHandBonusToAttackLocation, 4)) : default;
+        public Single HandToHandBonusToAttack => _HandToHandBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_HandToHandBonusToAttackLocation, 4)) : default;
         #endregion
         #region PowerAttackPercentChance
         private int _PowerAttackPercentChanceLocation => _CSTDLocation!.Value + 0x34;
@@ -5890,12 +5890,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region RecoilStaggerBonusToPowerAttack
         private int _RecoilStaggerBonusToPowerAttackLocation => _CSTDLocation!.Value + 0x38;
         private bool _RecoilStaggerBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
-        public Single RecoilStaggerBonusToPowerAttack => _RecoilStaggerBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RecoilStaggerBonusToPowerAttackLocation, 4)) : default;
+        public Single RecoilStaggerBonusToPowerAttack => _RecoilStaggerBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_RecoilStaggerBonusToPowerAttackLocation, 4)) : default;
         #endregion
         #region UnconsciousBonusToPowerAttack
         private int _UnconsciousBonusToPowerAttackLocation => _CSTDLocation!.Value + 0x3C;
         private bool _UnconsciousBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
-        public Single UnconsciousBonusToPowerAttack => _UnconsciousBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UnconsciousBonusToPowerAttackLocation, 4)) : default;
+        public Single UnconsciousBonusToPowerAttack => _UnconsciousBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_UnconsciousBonusToPowerAttackLocation, 4)) : default;
         #endregion
         #region PowerAttackNormal
         private int _PowerAttackNormalLocation => _CSTDLocation!.Value + 0x40;
@@ -5925,12 +5925,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region HoldTimerMin
         private int _HoldTimerMinLocation => _CSTDLocation!.Value + 0x48;
         private bool _HoldTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single HoldTimerMin => _HoldTimerMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HoldTimerMinLocation, 4)) : default;
+        public Single HoldTimerMin => _HoldTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_HoldTimerMinLocation, 4)) : default;
         #endregion
         #region HoldTimerMax
         private int _HoldTimerMaxLocation => _CSTDLocation!.Value + 0x4C;
         private bool _HoldTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single HoldTimerMax => _HoldTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HoldTimerMaxLocation, 4)) : default;
+        public Single HoldTimerMax => _HoldTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_HoldTimerMaxLocation, 4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _CSTDLocation!.Value + 0x50;
@@ -5945,37 +5945,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region RangeMultOptimal
         private int _RangeMultOptimalLocation => _CSTDLocation!.Value + 0x54;
         private bool _RangeMultOptimal_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0);
-        public Single RangeMultOptimal => _RangeMultOptimal_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RangeMultOptimalLocation, 4)) : default;
+        public Single RangeMultOptimal => _RangeMultOptimal_IsSet ? SpanExt.GetFloat(_data.Slice(_RangeMultOptimalLocation, 4)) : default;
         #endregion
         #region RangeMultMax
         private int _RangeMultMaxLocation => _CSTDLocation!.Value + 0x58;
         private bool _RangeMultMax_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0);
-        public Single RangeMultMax => _RangeMultMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RangeMultMaxLocation, 4)) : default;
+        public Single RangeMultMax => _RangeMultMax_IsSet ? SpanExt.GetFloat(_data.Slice(_RangeMultMaxLocation, 4)) : default;
         #endregion
         #region SwitchDistanceMelee
         private int _SwitchDistanceMeleeLocation => _CSTDLocation!.Value + 0x5C;
         private bool _SwitchDistanceMelee_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
-        public Single SwitchDistanceMelee => _SwitchDistanceMelee_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_SwitchDistanceMeleeLocation, 4)) : default;
+        public Single SwitchDistanceMelee => _SwitchDistanceMelee_IsSet ? SpanExt.GetFloat(_data.Slice(_SwitchDistanceMeleeLocation, 4)) : default;
         #endregion
         #region SwitchDistanceRanged
         private int _SwitchDistanceRangedLocation => _CSTDLocation!.Value + 0x60;
         private bool _SwitchDistanceRanged_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
-        public Single SwitchDistanceRanged => _SwitchDistanceRanged_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_SwitchDistanceRangedLocation, 4)) : default;
+        public Single SwitchDistanceRanged => _SwitchDistanceRanged_IsSet ? SpanExt.GetFloat(_data.Slice(_SwitchDistanceRangedLocation, 4)) : default;
         #endregion
         #region BuffStandoffDistance
         private int _BuffStandoffDistanceLocation => _CSTDLocation!.Value + 0x64;
         private bool _BuffStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
-        public Single BuffStandoffDistance => _BuffStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BuffStandoffDistanceLocation, 4)) : default;
+        public Single BuffStandoffDistance => _BuffStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_BuffStandoffDistanceLocation, 4)) : default;
         #endregion
         #region RangedStandoffDistance
         private int _RangedStandoffDistanceLocation => _CSTDLocation!.Value + 0x68;
         private bool _RangedStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2);
-        public Single RangedStandoffDistance => _RangedStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RangedStandoffDistanceLocation, 4)) : default;
+        public Single RangedStandoffDistance => _RangedStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_RangedStandoffDistanceLocation, 4)) : default;
         #endregion
         #region GroupStandoffDistance
         private int _GroupStandoffDistanceLocation => _CSTDLocation!.Value + 0x6C;
         private bool _GroupStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2);
-        public Single GroupStandoffDistance => _GroupStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_GroupStandoffDistanceLocation, 4)) : default;
+        public Single GroupStandoffDistance => _GroupStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_GroupStandoffDistanceLocation, 4)) : default;
         #endregion
         #region RushingAttackPercentChance
         private int _RushingAttackPercentChanceLocation => _CSTDLocation!.Value + 0x70;
@@ -5985,7 +5985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region RushingAttackDistanceMult
         private int _RushingAttackDistanceMultLocation => _CSTDLocation!.Value + 0x74;
         private bool _RushingAttackDistanceMult_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3);
-        public Single RushingAttackDistanceMult => _RushingAttackDistanceMult_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RushingAttackDistanceMultLocation, 4)) : default;
+        public Single RushingAttackDistanceMult => _RushingAttackDistanceMult_IsSet ? SpanExt.GetFloat(_data.Slice(_RushingAttackDistanceMultLocation, 4)) : default;
         #endregion
         #region SecondaryFlags
         partial void SecondaryFlagsCustomParse(

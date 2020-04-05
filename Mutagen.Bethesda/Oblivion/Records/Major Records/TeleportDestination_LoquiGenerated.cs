@@ -1958,8 +1958,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public IFormLinkGetter<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Span.Slice(4, 12));
-        public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Span.Slice(16, 12));
+        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(4, 12));
+        public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(16, 12));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

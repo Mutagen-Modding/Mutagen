@@ -1960,7 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public IFormLinkGetter<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public Single Radius => SpanExt.GetFloat(_data.Span.Slice(8, 4));
+        public Single Radius => SpanExt.GetFloat(_data.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

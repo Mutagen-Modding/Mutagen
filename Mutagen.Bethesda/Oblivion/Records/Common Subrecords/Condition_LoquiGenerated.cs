@@ -2447,11 +2447,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
-        public Single ComparisonValue => SpanExt.GetFloat(_data.Span.Slice(4, 4));
+        public Single ComparisonValue => SpanExt.GetFloat(_data.Slice(4, 4));
         public Function Function => (Function)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
-        public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
-        public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
-        public Int32 ThirdParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(20, 4));
+        public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(12, 4));
+        public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(16, 4));
+        public Int32 ThirdParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(20, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

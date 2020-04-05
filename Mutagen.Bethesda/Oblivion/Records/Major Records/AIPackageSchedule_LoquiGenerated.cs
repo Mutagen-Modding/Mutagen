@@ -2124,7 +2124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Weekday DayOfWeek => (Weekday)_data.Span.Slice(1, 1)[0];
         public Byte Day => _data.Span[2];
         public Byte Time => _data.Span[3];
-        public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -2535,7 +2535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region EmotionValue
         private int _EmotionValueLocation => _TRDTLocation!.Value + 0x4;
         private bool _EmotionValue_IsSet => _TRDTLocation.HasValue;
-        public Int32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionValueLocation, 4)) : default;
+        public Int32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_EmotionValueLocation, 4)) : default;
         #endregion
         #region Fluff1
         private int _Fluff1Location => _TRDTLocation!.Value + 0x8;

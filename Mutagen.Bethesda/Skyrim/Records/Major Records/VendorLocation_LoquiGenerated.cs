@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public VendorLocation.LocationType Type => (VendorLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4));
+        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

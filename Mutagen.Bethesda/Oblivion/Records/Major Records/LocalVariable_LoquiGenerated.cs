@@ -2320,7 +2320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Index
         private int _IndexLocation => _SLSDLocation!.Value + 0x0;
         private bool _Index_IsSet => _SLSDLocation.HasValue;
-        public Int32 Index => _Index_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_IndexLocation, 4)) : default;
+        public Int32 Index => _Index_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_IndexLocation, 4)) : default;
         #endregion
         #region Fluff
         private int _FluffLocation => _SLSDLocation!.Value + 0x4;

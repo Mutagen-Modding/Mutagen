@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region LayerNumber
         private int _LayerNumberLocation => _BTXTLocation!.Value + 0x6;
         private bool _LayerNumber_IsSet => _BTXTLocation.HasValue;
-        public UInt16 LayerNumber => _LayerNumber_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_LayerNumberLocation, 2)) : default;
+        public UInt16 LayerNumber => _LayerNumber_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_LayerNumberLocation, 2)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

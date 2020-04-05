@@ -6200,94 +6200,94 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region FogDayNear
         private int _FogDayNearLocation => _FNAMLocation!.Value + 0x0;
         private bool _FogDayNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDayNear => _FogDayNear_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDayNearLocation, 4)) : default;
+        public Single FogDayNear => _FogDayNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDayNearLocation, 4)) : default;
         #endregion
         #region FogDayFar
         private int _FogDayFarLocation => _FNAMLocation!.Value + 0x4;
         private bool _FogDayFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDayFar => _FogDayFar_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDayFarLocation, 4)) : default;
+        public Single FogDayFar => _FogDayFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDayFarLocation, 4)) : default;
         #endregion
         #region FogNightNear
         private int _FogNightNearLocation => _FNAMLocation!.Value + 0x8;
         private bool _FogNightNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogNightNear => _FogNightNear_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogNightNearLocation, 4)) : default;
+        public Single FogNightNear => _FogNightNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogNightNearLocation, 4)) : default;
         #endregion
         #region FogNightFar
         private int _FogNightFarLocation => _FNAMLocation!.Value + 0xC;
         private bool _FogNightFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogNightFar => _FogNightFar_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogNightFarLocation, 4)) : default;
+        public Single FogNightFar => _FogNightFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogNightFarLocation, 4)) : default;
         #endregion
         private int? _HNAMLocation;
         public Weather.HNAMDataType HNAMDataTypeState { get; private set; }
         #region HdrEyeAdaptSpeed
         private int _HdrEyeAdaptSpeedLocation => _HNAMLocation!.Value + 0x0;
         private bool _HdrEyeAdaptSpeed_IsSet => _HNAMLocation.HasValue;
-        public Single HdrEyeAdaptSpeed => _HdrEyeAdaptSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrEyeAdaptSpeedLocation, 4)) : default;
+        public Single HdrEyeAdaptSpeed => _HdrEyeAdaptSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrEyeAdaptSpeedLocation, 4)) : default;
         #endregion
         #region HdrBlurRadius
         private int _HdrBlurRadiusLocation => _HNAMLocation!.Value + 0x4;
         private bool _HdrBlurRadius_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBlurRadius => _HdrBlurRadius_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrBlurRadiusLocation, 4)) : default;
+        public Single HdrBlurRadius => _HdrBlurRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrBlurRadiusLocation, 4)) : default;
         #endregion
         #region HdrBlurPasses
         private int _HdrBlurPassesLocation => _HNAMLocation!.Value + 0x8;
         private bool _HdrBlurPasses_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBlurPasses => _HdrBlurPasses_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrBlurPassesLocation, 4)) : default;
+        public Single HdrBlurPasses => _HdrBlurPasses_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrBlurPassesLocation, 4)) : default;
         #endregion
         #region HdrEmissiveMult
         private int _HdrEmissiveMultLocation => _HNAMLocation!.Value + 0xC;
         private bool _HdrEmissiveMult_IsSet => _HNAMLocation.HasValue;
-        public Single HdrEmissiveMult => _HdrEmissiveMult_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrEmissiveMultLocation, 4)) : default;
+        public Single HdrEmissiveMult => _HdrEmissiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrEmissiveMultLocation, 4)) : default;
         #endregion
         #region HdrTargetLum
         private int _HdrTargetLumLocation => _HNAMLocation!.Value + 0x10;
         private bool _HdrTargetLum_IsSet => _HNAMLocation.HasValue;
-        public Single HdrTargetLum => _HdrTargetLum_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrTargetLumLocation, 4)) : default;
+        public Single HdrTargetLum => _HdrTargetLum_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrTargetLumLocation, 4)) : default;
         #endregion
         #region HdrUpperLumClamp
         private int _HdrUpperLumClampLocation => _HNAMLocation!.Value + 0x14;
         private bool _HdrUpperLumClamp_IsSet => _HNAMLocation.HasValue;
-        public Single HdrUpperLumClamp => _HdrUpperLumClamp_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrUpperLumClampLocation, 4)) : default;
+        public Single HdrUpperLumClamp => _HdrUpperLumClamp_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrUpperLumClampLocation, 4)) : default;
         #endregion
         #region HdrBrightScale
         private int _HdrBrightScaleLocation => _HNAMLocation!.Value + 0x18;
         private bool _HdrBrightScale_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBrightScale => _HdrBrightScale_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrBrightScaleLocation, 4)) : default;
+        public Single HdrBrightScale => _HdrBrightScale_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrBrightScaleLocation, 4)) : default;
         #endregion
         #region HdrBrightClamp
         private int _HdrBrightClampLocation => _HNAMLocation!.Value + 0x1C;
         private bool _HdrBrightClamp_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBrightClamp => _HdrBrightClamp_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrBrightClampLocation, 4)) : default;
+        public Single HdrBrightClamp => _HdrBrightClamp_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrBrightClampLocation, 4)) : default;
         #endregion
         #region HdrLumRampNoTex
         private int _HdrLumRampNoTexLocation => _HNAMLocation!.Value + 0x20;
         private bool _HdrLumRampNoTex_IsSet => _HNAMLocation.HasValue;
-        public Single HdrLumRampNoTex => _HdrLumRampNoTex_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrLumRampNoTexLocation, 4)) : default;
+        public Single HdrLumRampNoTex => _HdrLumRampNoTex_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrLumRampNoTexLocation, 4)) : default;
         #endregion
         #region HdrLumRampMin
         private int _HdrLumRampMinLocation => _HNAMLocation!.Value + 0x24;
         private bool _HdrLumRampMin_IsSet => _HNAMLocation.HasValue;
-        public Single HdrLumRampMin => _HdrLumRampMin_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrLumRampMinLocation, 4)) : default;
+        public Single HdrLumRampMin => _HdrLumRampMin_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrLumRampMinLocation, 4)) : default;
         #endregion
         #region HdrLumRampMax
         private int _HdrLumRampMaxLocation => _HNAMLocation!.Value + 0x28;
         private bool _HdrLumRampMax_IsSet => _HNAMLocation.HasValue;
-        public Single HdrLumRampMax => _HdrLumRampMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrLumRampMaxLocation, 4)) : default;
+        public Single HdrLumRampMax => _HdrLumRampMax_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrLumRampMaxLocation, 4)) : default;
         #endregion
         #region HdrSunlightDimmer
         private int _HdrSunlightDimmerLocation => _HNAMLocation!.Value + 0x2C;
         private bool _HdrSunlightDimmer_IsSet => _HNAMLocation.HasValue;
-        public Single HdrSunlightDimmer => _HdrSunlightDimmer_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrSunlightDimmerLocation, 4)) : default;
+        public Single HdrSunlightDimmer => _HdrSunlightDimmer_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrSunlightDimmerLocation, 4)) : default;
         #endregion
         #region HdrGrassDimmer
         private int _HdrGrassDimmerLocation => _HNAMLocation!.Value + 0x30;
         private bool _HdrGrassDimmer_IsSet => _HNAMLocation.HasValue;
-        public Single HdrGrassDimmer => _HdrGrassDimmer_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrGrassDimmerLocation, 4)) : default;
+        public Single HdrGrassDimmer => _HdrGrassDimmer_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrGrassDimmerLocation, 4)) : default;
         #endregion
         #region HdrTreeDimmer
         private int _HdrTreeDimmerLocation => _HNAMLocation!.Value + 0x34;
         private bool _HdrTreeDimmer_IsSet => _HNAMLocation.HasValue;
-        public Single HdrTreeDimmer => _HdrTreeDimmer_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HdrTreeDimmerLocation, 4)) : default;
+        public Single HdrTreeDimmer => _HdrTreeDimmer_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrTreeDimmerLocation, 4)) : default;
         #endregion
         private int? _DATALocation;
         public Weather.DATADataType DATADataTypeState { get; private set; }
@@ -6354,7 +6354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region LightningColor
         private int _LightningColorLocation => _DATALocation!.Value + 0xC;
         private bool _LightningColor_IsSet => _DATALocation.HasValue;
-        public Color LightningColor => _LightningColor_IsSet ? _data.Span.Slice(_LightningColorLocation, 3).ReadColor() : default;
+        public Color LightningColor => _LightningColor_IsSet ? _data.Slice(_LightningColorLocation, 3).ReadColor() : default;
         #endregion
         public IReadOnlyList<IWeatherSoundGetter>? Sounds { get; private set; }
         partial void CustomCtor(

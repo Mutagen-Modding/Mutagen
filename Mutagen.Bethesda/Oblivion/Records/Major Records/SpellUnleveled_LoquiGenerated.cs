@@ -2845,7 +2845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Cost
         private int _CostLocation => _SPITLocation!.Value + 0x4;
         private bool _Cost_IsSet => _SPITLocation.HasValue;
-        public UInt32 Cost => _Cost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CostLocation, 4)) : default;
+        public UInt32 Cost => _Cost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_CostLocation, 4)) : default;
         #endregion
         #region Level
         private int _LevelLocation => _SPITLocation!.Value + 0x8;

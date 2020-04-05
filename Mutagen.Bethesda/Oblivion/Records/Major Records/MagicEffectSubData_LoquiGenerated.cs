@@ -2334,8 +2334,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormLinkGetter<ISoundGetter> BoltSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
         public IFormLinkGetter<ISoundGetter> HitSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(12, 4))));
         public IFormLinkGetter<ISoundGetter> AreaSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(16, 4))));
-        public Single ConstantEffectEnchantmentFactor => SpanExt.GetFloat(_data.Span.Slice(20, 4));
-        public Single ConstantEffectBarterFactor => SpanExt.GetFloat(_data.Span.Slice(24, 4));
+        public Single ConstantEffectEnchantmentFactor => SpanExt.GetFloat(_data.Slice(20, 4));
+        public Single ConstantEffectBarterFactor => SpanExt.GetFloat(_data.Slice(24, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

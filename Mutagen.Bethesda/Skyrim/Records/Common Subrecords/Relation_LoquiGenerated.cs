@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4));
         public Combat GroupCombatReaction => (Combat)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

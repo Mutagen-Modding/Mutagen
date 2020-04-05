@@ -2613,17 +2613,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Magnitude
         private int _MagnitudeLocation => _EFITLocation!.Value + 0x4;
         private bool _Magnitude_IsSet => _EFITLocation.HasValue;
-        public UInt32 Magnitude => _Magnitude_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MagnitudeLocation, 4)) : default;
+        public UInt32 Magnitude => _Magnitude_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_MagnitudeLocation, 4)) : default;
         #endregion
         #region Area
         private int _AreaLocation => _EFITLocation!.Value + 0x8;
         private bool _Area_IsSet => _EFITLocation.HasValue;
-        public UInt32 Area => _Area_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AreaLocation, 4)) : default;
+        public UInt32 Area => _Area_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AreaLocation, 4)) : default;
         #endregion
         #region Duration
         private int _DurationLocation => _EFITLocation!.Value + 0xC;
         private bool _Duration_IsSet => _EFITLocation.HasValue;
-        public UInt32 Duration => _Duration_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DurationLocation, 4)) : default;
+        public UInt32 Duration => _Duration_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_DurationLocation, 4)) : default;
         #endregion
         #region Type
         private int _TypeLocation => _EFITLocation!.Value + 0x10;

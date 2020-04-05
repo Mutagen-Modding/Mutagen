@@ -2384,9 +2384,9 @@ namespace Mutagen.Bethesda.Internals
                 recordTypeConverter: null);
         }
 
-        public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
+        public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));
         public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(4, 4), this._package.MasterReferences!);
-        public UInt32 Version => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4));
+        public UInt32 Version => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(8, 4));
         #region EditorID
         private int? _EditorIDLocation;
         public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditorIDLocation.Value, _package.Meta)) : default(string?);

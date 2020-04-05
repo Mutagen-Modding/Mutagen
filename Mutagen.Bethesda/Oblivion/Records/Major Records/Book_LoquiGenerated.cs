@@ -3321,12 +3321,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Value
         private int _ValueLocation => _DATALocation!.Value + 0x2;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public Single Value => _Value_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ValueLocation, 4)) : default;
+        public Single Value => _Value_IsSet ? SpanExt.GetFloat(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0x6;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

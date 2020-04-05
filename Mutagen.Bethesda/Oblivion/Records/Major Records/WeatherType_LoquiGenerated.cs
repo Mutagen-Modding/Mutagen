@@ -2033,10 +2033,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public Color Sunrise => _data.Span.Slice(0, 4).ReadColor();
-        public Color Day => _data.Span.Slice(4, 4).ReadColor();
-        public Color Sunset => _data.Span.Slice(8, 4).ReadColor();
-        public Color Night => _data.Span.Slice(12, 4).ReadColor();
+        public Color Sunrise => _data.Slice(0, 4).ReadColor();
+        public Color Day => _data.Slice(4, 4).ReadColor();
+        public Color Sunset => _data.Slice(8, 4).ReadColor();
+        public Color Night => _data.Slice(12, 4).ReadColor();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -3283,12 +3283,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region UseValueFirst
         private int _UseValueFirstLocation => _DATALocation!.Value + 0xC;
         private bool _UseValueFirst_IsSet => _DATALocation.HasValue;
-        public Single UseValueFirst => _UseValueFirst_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UseValueFirstLocation, 4)) : default;
+        public Single UseValueFirst => _UseValueFirst_IsSet ? SpanExt.GetFloat(_data.Slice(_UseValueFirstLocation, 4)) : default;
         #endregion
         #region UseValueSecond
         private int _UseValueSecondLocation => _DATALocation!.Value + 0x10;
         private bool _UseValueSecond_IsSet => _DATALocation.HasValue;
-        public Single UseValueSecond => _UseValueSecond_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UseValueSecondLocation, 4)) : default;
+        public Single UseValueSecond => _UseValueSecond_IsSet ? SpanExt.GetFloat(_data.Slice(_UseValueSecondLocation, 4)) : default;
         #endregion
         #region ApprenticeText
         private int? _ApprenticeTextLocation;

@@ -3601,17 +3601,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Time
         private int _TimeLocation => _DATALocation!.Value + 0x0;
         private bool _Time_IsSet => _DATALocation.HasValue;
-        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TimeLocation, 4)) : default;
+        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_TimeLocation, 4)) : default;
         #endregion
         #region Radius
         private int _RadiusLocation => _DATALocation!.Value + 0x4;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_RadiusLocation, 4)) : default;
+        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_RadiusLocation, 4)) : default;
         #endregion
         #region Color
         private int _ColorLocation => _DATALocation!.Value + 0x8;
         private bool _Color_IsSet => _DATALocation.HasValue;
-        public Color Color => _Color_IsSet ? _data.Span.Slice(_ColorLocation, 4).ReadColor() : default;
+        public Color Color => _Color_IsSet ? _data.Slice(_ColorLocation, 4).ReadColor() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0xC;
@@ -3621,22 +3621,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region FalloffExponent
         private int _FalloffExponentLocation => _DATALocation!.Value + 0x10;
         private bool _FalloffExponent_IsSet => _DATALocation.HasValue;
-        public Single FalloffExponent => _FalloffExponent_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FalloffExponentLocation, 4)) : default;
+        public Single FalloffExponent => _FalloffExponent_IsSet ? SpanExt.GetFloat(_data.Slice(_FalloffExponentLocation, 4)) : default;
         #endregion
         #region FOV
         private int _FOVLocation => _DATALocation!.Value + 0x14;
         private bool _FOV_IsSet => _DATALocation.HasValue;
-        public Single FOV => _FOV_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FOVLocation, 4)) : default;
+        public Single FOV => _FOV_IsSet ? SpanExt.GetFloat(_data.Slice(_FOVLocation, 4)) : default;
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value + 0x18;
         private bool _Value_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0x1C;
         private bool _Weight_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region Fade
         private int? _FadeLocation;

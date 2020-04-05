@@ -2969,17 +2969,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Value
         private int _ValueLocation => _DATALocation!.Value + 0x1;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0x5;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region Quality
         private int _QualityLocation => _DATALocation!.Value + 0x9;
         private bool _Quality_IsSet => _DATALocation.HasValue;
-        public Single Quality => _Quality_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_QualityLocation, 4)) : default;
+        public Single Quality => _Quality_IsSet ? SpanExt.GetFloat(_data.Slice(_QualityLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

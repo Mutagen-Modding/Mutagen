@@ -3548,27 +3548,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public Single DodgeFatigueModMult => SpanExt.GetFloat(_data.Span.Slice(0, 4));
-        public Single DodgeFatigueModBase => SpanExt.GetFloat(_data.Span.Slice(4, 4));
-        public Single EncumbSpeedModBase => SpanExt.GetFloat(_data.Span.Slice(8, 4));
-        public Single EncumbSpeedModMult => SpanExt.GetFloat(_data.Span.Slice(12, 4));
-        public Single DodgeWhileUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(16, 4));
-        public Single DodgeNotUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(20, 4));
-        public Single DodgeBackWhileUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(24, 4));
-        public Single DodgeBackNotUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(28, 4));
-        public Single DodgeForwardWhileUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(32, 4));
-        public Single DodgeForwardNotUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(36, 4));
-        public Single BlockSkillModifierMult => SpanExt.GetFloat(_data.Span.Slice(40, 4));
-        public Single BlockSkillModifierBase => SpanExt.GetFloat(_data.Span.Slice(44, 4));
-        public Single BlockWhileUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(48, 4));
-        public Single BlockNotUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(52, 4));
-        public Single AttackSkillModifierMult => SpanExt.GetFloat(_data.Span.Slice(56, 4));
-        public Single AttackSkillModifierBase => SpanExt.GetFloat(_data.Span.Slice(60, 4));
-        public Single AttackWhileUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(64, 4));
-        public Single AttackNotUnderAttackMult => SpanExt.GetFloat(_data.Span.Slice(68, 4));
-        public Single AttackDuringBlockMult => SpanExt.GetFloat(_data.Span.Slice(72, 4));
-        public Single PowerAttackFatigueModBase => SpanExt.GetFloat(_data.Span.Slice(76, 4));
-        public Single PowerAttackFatigueModMult => SpanExt.GetFloat(_data.Span.Slice(80, 4));
+        public Single DodgeFatigueModMult => SpanExt.GetFloat(_data.Slice(0, 4));
+        public Single DodgeFatigueModBase => SpanExt.GetFloat(_data.Slice(4, 4));
+        public Single EncumbSpeedModBase => SpanExt.GetFloat(_data.Slice(8, 4));
+        public Single EncumbSpeedModMult => SpanExt.GetFloat(_data.Slice(12, 4));
+        public Single DodgeWhileUnderAttackMult => SpanExt.GetFloat(_data.Slice(16, 4));
+        public Single DodgeNotUnderAttackMult => SpanExt.GetFloat(_data.Slice(20, 4));
+        public Single DodgeBackWhileUnderAttackMult => SpanExt.GetFloat(_data.Slice(24, 4));
+        public Single DodgeBackNotUnderAttackMult => SpanExt.GetFloat(_data.Slice(28, 4));
+        public Single DodgeForwardWhileUnderAttackMult => SpanExt.GetFloat(_data.Slice(32, 4));
+        public Single DodgeForwardNotUnderAttackMult => SpanExt.GetFloat(_data.Slice(36, 4));
+        public Single BlockSkillModifierMult => SpanExt.GetFloat(_data.Slice(40, 4));
+        public Single BlockSkillModifierBase => SpanExt.GetFloat(_data.Slice(44, 4));
+        public Single BlockWhileUnderAttackMult => SpanExt.GetFloat(_data.Slice(48, 4));
+        public Single BlockNotUnderAttackMult => SpanExt.GetFloat(_data.Slice(52, 4));
+        public Single AttackSkillModifierMult => SpanExt.GetFloat(_data.Slice(56, 4));
+        public Single AttackSkillModifierBase => SpanExt.GetFloat(_data.Slice(60, 4));
+        public Single AttackWhileUnderAttackMult => SpanExt.GetFloat(_data.Slice(64, 4));
+        public Single AttackNotUnderAttackMult => SpanExt.GetFloat(_data.Slice(68, 4));
+        public Single AttackDuringBlockMult => SpanExt.GetFloat(_data.Slice(72, 4));
+        public Single PowerAttackFatigueModBase => SpanExt.GetFloat(_data.Slice(76, 4));
+        public Single PowerAttackFatigueModMult => SpanExt.GetFloat(_data.Slice(80, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

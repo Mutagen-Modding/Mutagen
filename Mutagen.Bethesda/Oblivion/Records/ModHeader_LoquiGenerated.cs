@@ -2937,8 +2937,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public ModHeader.HeaderFlag Flags => (ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
-        public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
+        public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4, 4));
+        public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(8, 4));
         #region Stats
         private RangeInt32? _StatsLocation;
         private bool _Stats_IsSet => _StatsLocation.HasValue;
