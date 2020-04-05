@@ -145,7 +145,10 @@ namespace Mutagen.Bethesda.Generation
             Accessor dataAccessor,
             Accessor packageAccessor)
         {
-            if (typeGen.GetFieldData().HasTrigger)
+            var data = typeGen.GetFieldData();
+            var gendered = data.Parent as GenderedType;
+            if (data.HasTrigger
+                || (gendered?.MaleMarker.HasValue ?? false))
             {
                 return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
             }

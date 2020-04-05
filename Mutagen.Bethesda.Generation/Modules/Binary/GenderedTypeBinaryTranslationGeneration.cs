@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.AddPassArg("stream");
                                 this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subGen);
-                                args.Add($"creator: (m, p) => {subGen.GenerateForTypicalWrapper(objGen, typeGen, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.Meta)", "p")}");
+                                args.Add($"creator: (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.Meta)", "p")}");
                             }
                             if (gendered.FemaleConversions != null)
                             {

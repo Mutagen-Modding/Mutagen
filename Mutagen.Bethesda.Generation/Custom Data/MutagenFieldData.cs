@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda.Generation
     public class MutagenFieldData
     {
         public readonly TypeGeneration SourceTypeGeneration;
+        public TypeGeneration Parent;
         public RecordType? MarkerType { get; set; }
         public RecordType? RecordType { get; set; }
         public HashSet<RecordType> TriggeringRecordTypes { get; } = new HashSet<Mutagen.Bethesda.RecordType>();
