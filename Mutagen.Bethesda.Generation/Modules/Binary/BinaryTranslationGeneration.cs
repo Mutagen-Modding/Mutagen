@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 return this.ExpectedLength(objGen, typeGen) ?? 0;
             }
-            return 0;
+            return null;
         }
 
         public virtual async Task GenerateWrapperRecordTypeParse(

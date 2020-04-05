@@ -1565,7 +1565,11 @@ namespace Mutagen.Bethesda.Generation
                             default:
                                 continue;
                         }
-                        passedLength += typeGen.GetPassedAmount(obj, field);
+                        if (!data.HasTrigger)
+                        {
+                            var amount = typeGen.GetPassedAmount(obj, field);
+                            passedLength += amount.Value;
+                        }
                     }
                 }
 
@@ -1598,7 +1602,11 @@ namespace Mutagen.Bethesda.Generation
                             field,
                             dataAccessor,
                             passedLength);
-                        passedLength += typeGen.GetPassedAmount(obj, field);
+                        if (!data.HasTrigger)
+                        {
+                            var amount = typeGen.GetPassedAmount(obj, field);
+                            passedLength += amount.Value;
+                        }
                     }
                 }
 
@@ -1619,7 +1627,11 @@ namespace Mutagen.Bethesda.Generation
                         default:
                             continue;
                     }
-                    passedLength += typeGen.GetPassedAmount(obj, field);
+                    if (!data.HasTrigger)
+                    {
+                        var amount = typeGen.GetPassedAmount(obj, field);
+                        passedLength += amount.Value;
+                    }
                 }
 
                 using (var args = new ArgsWrapper(fg,
@@ -1841,13 +1853,13 @@ namespace Mutagen.Bethesda.Generation
                                 switch (obj.GetObjectType())
                                 {
                                     case ObjectType.Subrecord:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.SubConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.SubConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Record:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.MajorConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.MajorConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Group:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.GroupConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.GroupConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Mod:
                                         break;
