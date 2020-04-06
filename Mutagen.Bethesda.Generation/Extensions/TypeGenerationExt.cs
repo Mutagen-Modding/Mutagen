@@ -31,5 +31,12 @@ namespace Mutagen.Bethesda.Generation
             fieldData = null;
             return false;
         }
+
+        public static bool NeedMasters(this TypeGeneration typeGen)
+        {
+            return typeGen is FormLinkType
+                || (typeGen is LoquiType loqui
+                    && loqui.GetFieldData().HasTrigger);
+        }
     }
 }

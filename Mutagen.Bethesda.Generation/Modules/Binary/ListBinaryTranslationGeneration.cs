@@ -264,8 +264,7 @@ namespace Mutagen.Bethesda.Generation
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
                 && (bool)t;
 
-            bool needsMasters = list.SubTypeGeneration is FormLinkType
-                || list.SubTypeGeneration is LoquiType;
+            bool needsMasters = list.SubTypeGeneration.NeedMasters();
 
             bool recordPerItem = false;
             if (((bool)list.CustomData[CounterSubrecordPerItemType])

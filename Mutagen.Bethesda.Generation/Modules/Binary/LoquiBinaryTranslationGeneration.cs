@@ -210,7 +210,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"item: out {outItemAccessor.DirectAccess}!");
                 }
-                if (converterAccessor != null)
+                if (converterAccessor != null
+                    && loquiGen.NeedMasters())
                 {
                     args.Add($"recordTypeConverter: {converterAccessor}");
                 }

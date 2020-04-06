@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "ash = HashHelper.GetHashCode(item.Height.Male, item.Height.Female).CombineHashCode(ha";
+            string testString = "eturn LoquiBinaryTranslation<WeatherChance>.Instance.Par";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
