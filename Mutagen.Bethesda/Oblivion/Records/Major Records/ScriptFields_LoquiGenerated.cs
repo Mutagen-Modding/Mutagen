@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.Plain);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
                 }
                 case 0x44534C53: // SLSD

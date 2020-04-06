@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.FileName);
                 }
                 case 0x504E4954: // TINP

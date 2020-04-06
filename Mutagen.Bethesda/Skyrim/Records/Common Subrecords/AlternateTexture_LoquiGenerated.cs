@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                 frame: frame,
-                parseWhole: true);
+                stringBinaryType: StringBinaryType.PrependLength);
             item.NexTexture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);

@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Name);
                 }
                 case 0x49524353: // SCRI
@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.MaleIcon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleIcon);
                 }
                 case 0x33444F4D: // MOD3
@@ -1966,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.FemaleIcon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleIcon);
                 }
                 default:

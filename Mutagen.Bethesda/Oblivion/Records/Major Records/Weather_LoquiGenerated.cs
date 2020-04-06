@@ -3461,7 +3461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.TextureLowerLayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
                 }
                 case 0x4D414E44: // DNAM
@@ -3469,7 +3469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.TextureUpperLayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
                 }
                 case 0x4C444F4D: // MODL

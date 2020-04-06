@@ -1976,7 +1976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
                 }
                 case 0x4D414E53: // SNAM
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
                 }
                 case 0x5453414D: // MAST

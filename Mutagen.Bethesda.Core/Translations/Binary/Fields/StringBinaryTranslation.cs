@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Binary
 
         public virtual string Parse(
             MutagenFrame frame,
-            bool parseWhole,
+            bool parseWhole = true,
             StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
         {
             switch (stringBinaryType)
