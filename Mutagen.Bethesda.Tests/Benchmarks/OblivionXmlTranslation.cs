@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             XmlFolder.Create();
 
             // Setup
-            Mod = await OblivionMod.CreateFromBinary(
+            Mod = OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
             //await Mod.WriteToXmlFolder(XmlFolder, doMasks: false);
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             OneTimeXmlFolder.Create();
 
             // Setup
-            Mod = await OblivionMod.CreateFromBinary(
+            Mod = OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
         }

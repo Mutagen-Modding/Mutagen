@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Tests
 
         protected override async Task<IMod> ImportBinary(FilePath path)
         {
-            return await OblivionMod.CreateFromBinary(
+            return OblivionMod.CreateFromBinary(
                 path.Path,
                 this.ModKey);
         }

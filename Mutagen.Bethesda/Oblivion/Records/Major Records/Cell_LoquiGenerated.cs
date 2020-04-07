@@ -25,7 +25,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -1640,19 +1639,19 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new async Task<Cell> CreateFromBinary(MutagenFrame frame)
+        public static new Cell CreateFromBinary(MutagenFrame frame)
         {
-            return await CreateFromBinary(
+            return CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public new static async Task<Cell> CreateFromBinary(
+        public new static Cell CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Cell();
-            await ((CellSetterCommon)((ICellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            ((CellSetterCommon)((ICellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -2036,22 +2035,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         [DebuggerStepThrough]
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ICellInternal item,
             MutagenFrame frame)
         {
-            await CopyInFromBinary(
+            CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ICellInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            await ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -2751,7 +2750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public async Task CopyInFromBinary(
+        public void CopyInFromBinary(
             ICellInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2763,7 +2762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
-            await CellBinaryCreateTranslation.CustomBinaryEndImport(
+            CellBinaryCreateTranslation.CustomBinaryEndImportPublic(
                 frame: frame,
                 obj: item);
         }
@@ -5030,6 +5029,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
 
+        static partial void CustomBinaryEndImport(
+            MutagenFrame frame,
+            ICellInternal obj);
+        public static void CustomBinaryEndImportPublic(
+            MutagenFrame frame,
+            ICellInternal obj)
+        {
+            CustomBinaryEndImport(
+                frame: frame,
+                obj: obj);
+        }
     }
 
 }

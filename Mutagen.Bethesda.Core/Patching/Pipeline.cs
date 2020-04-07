@@ -10,15 +10,15 @@ namespace Mutagen.Bethesda
 {
     public static class Pipeline
     {
-        public static Task TypicalPatch<TMod>(
+        public static void TypicalPatch<TMod>(
             string[] mainArgs,
             ModKey outputMod,
             List<ModKey> loadOrderListing,
-            Func<FilePath, ModKey, Task<TryGet<TMod>>> importer,
-            Func<ModKey, LoadOrder<TMod>, Task<TMod>> processor)
+            LoadOrder<TMod>.Importer importer,
+            Func<ModKey, LoadOrder<TMod>, TMod> processor)
             where TMod : class, IMod
         {
-            return TypicalPatch(
+            TypicalPatch(
                 dataFolder: new Noggog.DirectoryPath(mainArgs[0]),
                 outModKey: outputMod,
                 loadOrderListing: loadOrderListing,
@@ -26,21 +26,21 @@ namespace Mutagen.Bethesda
                 importer: importer);
         }
 
-        public static async Task TypicalPatch<TMod>(
+        public static void TypicalPatch<TMod>(
             DirectoryPath dataFolder,
             ModKey outModKey,
             List<ModKey> loadOrderListing,
-            Func<FilePath, ModKey, Task<TryGet<TMod>>> importer,
-            Func<ModKey, LoadOrder<TMod>, Task<TMod>> processor)
+            LoadOrder<TMod>.Importer importer,
+            Func<ModKey, LoadOrder<TMod>, TMod> processor)
             where TMod : class, IMod
         {
             loadOrderListing.Remove(outModKey);
             var loadOrder = new LoadOrder<TMod>();
-            await loadOrder.Import(
+            loadOrder.Import(
                 dataFolder,
                 loadOrderListing,
-                importer).ConfigureAwait(false);
-            var outMod = await processor(outModKey, loadOrder).ConfigureAwait(false);
+                importer);
+            var outMod = processor(outModKey, loadOrder);
             foreach (var npc in outMod.EnumerateMajorRecords())
             {
                 npc.IsCompressed = false;

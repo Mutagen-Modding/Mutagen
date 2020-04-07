@@ -9,7 +9,7 @@
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
       <Int32 name="Unknown" />
-      <Dict name="RecordCache" asyncItems="true" hasBeenSet="False">
+      <Dict name="RecordCache" hasBeenSet="False">
         <KeyedValue keyAccessor="FormKey" keyType="FormKey">
           <Ref>
             <Generic>T</Generic>
@@ -18,4 +18,4 @@
       </Dict>
     </Fields>
   </Object>
-&gt;</Loqui>
+</Loqui>

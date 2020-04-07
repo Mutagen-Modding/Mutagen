@@ -23,7 +23,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -728,19 +727,19 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<WorldspaceBlock> CreateFromBinary(MutagenFrame frame)
+        public static WorldspaceBlock CreateFromBinary(MutagenFrame frame)
         {
-            return await CreateFromBinary(
+            return CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task<WorldspaceBlock> CreateFromBinary(
+        public static WorldspaceBlock CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new WorldspaceBlock();
-            await ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1102,22 +1101,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         [DebuggerStepThrough]
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IWorldspaceBlock item,
             MutagenFrame frame)
         {
-            await CopyInFromBinary(
+            CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IWorldspaceBlock item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            await ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1439,7 +1438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LastModified = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
-        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             IWorldspaceBlock item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1452,17 +1451,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x50555247: // GRUP
                 {
                     item.Items = 
-                        (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceSubBlock>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceSubBlock>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
                             thread: true,
                             recordTypeConverter: recordTypeConverter,
-                            transl: async (MutagenFrame r, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out WorldspaceSubBlock listSubItem, RecordTypeConverter? conv) =>
                             {
-                                return await LoquiBinaryAsyncTranslation<WorldspaceSubBlock>.Instance.Parse(
+                                return LoquiBinaryTranslation<WorldspaceSubBlock>.Instance.Parse(
                                     frame: r,
-                                    recordTypeConverter: conv).ConfigureAwait(false);
-                            }).ConfigureAwait(false))
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            })
                         .ToExtendedList<WorldspaceSubBlock>();
                     return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
                 }
@@ -1472,17 +1472,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public async Task CopyInFromBinary(
+        public void CopyInFromBinary(
             IWorldspaceBlock item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            await UtilityAsyncTranslation.GroupParse(
+            UtilityTranslation.GroupParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+                fillTyped: FillBinaryRecordTypes);
         }
         
         #endregion

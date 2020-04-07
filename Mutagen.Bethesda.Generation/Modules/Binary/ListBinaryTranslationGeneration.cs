@@ -47,7 +47,6 @@ namespace Mutagen.Bethesda.Generation
         public override bool IsAsync(TypeGeneration gen, bool read)
         {
             var listType = gen as ListType;
-            if (listType.CustomData.TryGetValue(ThreadKey, out var val) && ((bool)val)) return true;
             if (this.Module.TryGetTypeGeneration(listType.SubTypeGeneration.GetType(), out var keyGen)
                 && keyGen.IsAsync(listType.SubTypeGeneration, read)) return true;
             return false;

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryCreateTranslation
         {
-            public static async Task CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
+            static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
             {
                 CustomBinaryEnd(frame, obj);
             }

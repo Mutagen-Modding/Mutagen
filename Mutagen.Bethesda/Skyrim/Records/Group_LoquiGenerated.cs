@@ -22,7 +22,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -277,19 +276,19 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<Group<T>> CreateFromBinary(MutagenFrame frame)
+        public static Group<T> CreateFromBinary(MutagenFrame frame)
         {
-            return await CreateFromBinary(
+            return CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task<Group<T>> CreateFromBinary(
+        public static Group<T> CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Group<T>();
-            await ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -703,24 +702,24 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerStepThrough]
-        public static async Task CopyInFromBinary<T>(
+        public static void CopyInFromBinary<T>(
             this IGroup<T> item,
             MutagenFrame frame)
             where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
         {
-            await CopyInFromBinary(
+            CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task CopyInFromBinary<T>(
+        public static void CopyInFromBinary<T>(
             this IGroup<T> item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
         {
-            await ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1039,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = frame.ReadInt32();
         }
         
-        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             IGroup<T> item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1052,14 +1051,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 default:
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
-                        await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
-                            transl: (MutagenFrame r) =>
+                            transl: (MutagenFrame r, out T dictSubItem) =>
                             {
-                                return LoquiBinaryAsyncTranslation<T>.Instance.Parse(frame: r);
-                            }).ConfigureAwait(false);
+                                return LoquiBinaryTranslation<T>.Instance.Parse(
+                                    frame: r,
+                                    item: out dictSubItem!);
+                            });
                         return TryGet<int?>.Failure;
                     }
                     frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
@@ -1067,17 +1068,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public async Task CopyInFromBinary(
+        public void CopyInFromBinary(
             IGroup<T> item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            await UtilityAsyncTranslation.GroupParse(
+            UtilityTranslation.GroupParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+                fillTyped: FillBinaryRecordTypes);
         }
         
         #endregion

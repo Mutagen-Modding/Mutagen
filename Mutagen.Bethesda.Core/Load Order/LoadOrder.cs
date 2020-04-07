@@ -158,37 +158,43 @@ namespace Mutagen.Bethesda
             this._modsByLoadOrder.Clear();
         }
 
-        public async Task Import(
+        public delegate bool Importer(FilePath path, ModKey modKey, [MaybeNullWhen(false)] out TMod mod);
+
+        public void Import(
             DirectoryPath dataFolder,
             List<ModKey> loadOrder,
-            Func<FilePath, ModKey, Task<TryGet<TMod>>> importer)
+            Importer importer)
         {
             this.Clear();
-            int index = 0;
-            var results = await Task.WhenAll(
-                loadOrder.Select(modKey =>
-                {
-                    var modIndex = index++;
-                    return Task.Run(async () =>
-                    {
-                        FilePath modPath = dataFolder.GetFile(modKey.FileName);
-                        if (!modPath.Exists) return (modKey, modIndex, TryGet<TMod>.Failure);
-                        return (modKey, modIndex, await importer(modPath, modKey).ConfigureAwait(false));
-                    });
-                })).ConfigureAwait(false);
-            foreach (var item in results
-                .OrderBy(i => i.modIndex))
+            var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loadOrder.Count];
+            Parallel.ForEach(loadOrder, (modKey, state, modIndex) =>
             {
-                if (item.Item3.Succeeded)
+                FilePath modPath = dataFolder.GetFile(modKey.FileName);
+                if (!modPath.Exists)
+                {
+                    results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
+                    return;
+                }
+                if (!importer(modPath, modKey, out var mod))
+                {
+                    results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
+                    return;
+                }
+                results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Succeed(mod));
+            });
+            foreach (var item in results
+                .OrderBy(i => i.ModIndex))
+            {
+                if (item.Mod.Succeeded)
                 {
                     this._modsByLoadOrder.Add(
                         new ModListing<TMod>(
-                            item.Item3.Value));
+                            item.Mod.Value));
                 }
                 else
                 {
                     this._modsByLoadOrder.Add(
-                        ModListing<TMod>.UnloadedModListing(item.modKey));
+                        ModListing<TMod>.UnloadedModListing(item.ModKey));
                 }
             }
         }

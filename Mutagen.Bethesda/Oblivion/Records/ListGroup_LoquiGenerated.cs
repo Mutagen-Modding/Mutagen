@@ -23,7 +23,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -277,19 +276,19 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<ListGroup<T>> CreateFromBinary(MutagenFrame frame)
+        public static ListGroup<T> CreateFromBinary(MutagenFrame frame)
         {
-            return await CreateFromBinary(
+            return CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task<ListGroup<T>> CreateFromBinary(
+        public static ListGroup<T> CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ListGroup<T>();
-            await ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
+            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -701,24 +700,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         [DebuggerStepThrough]
-        public static async Task CopyInFromBinary<T>(
+        public static void CopyInFromBinary<T>(
             this IListGroup<T> item,
             MutagenFrame frame)
             where T : CellBlock, IXmlItem, IBinaryItem
         {
-            await CopyInFromBinary(
+            CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task CopyInFromBinary<T>(
+        public static void CopyInFromBinary<T>(
             this IListGroup<T> item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem
         {
-            await ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1025,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LastModified = frame.ReadInt32();
         }
         
-        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             IListGroup<T> item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1039,17 +1038,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (nextRecordType.Equals(ListGroup<T>.T_RecordType))
                     {
                         item.Records.SetTo(
-                            (await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.Parse(
+                            Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
                                 frame: frame,
                                 triggeringRecord: ListGroup<T>.T_RecordType,
                                 thread: true,
                                 recordTypeConverter: recordTypeConverter,
-                                transl: async (MutagenFrame r, RecordTypeConverter? conv) =>
+                                transl: (MutagenFrame r, out T listSubItem, RecordTypeConverter? conv) =>
                                 {
-                                    return await LoquiBinaryAsyncTranslation<T>.Instance.Parse(
+                                    return LoquiBinaryTranslation<T>.Instance.Parse(
                                         frame: r,
-                                        recordTypeConverter: conv).ConfigureAwait(false);
-                                }).ConfigureAwait(false)));
+                                        item: out listSubItem!,
+                                        recordTypeConverter: conv);
+                                }));
                         return TryGet<int?>.Failure;
                     }
                     frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
@@ -1057,17 +1057,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public async Task CopyInFromBinary(
+        public void CopyInFromBinary(
             IListGroup<T> item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            await UtilityAsyncTranslation.GroupParse(
+            UtilityTranslation.GroupParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+                fillTyped: FillBinaryRecordTypes);
         }
         
         #endregion

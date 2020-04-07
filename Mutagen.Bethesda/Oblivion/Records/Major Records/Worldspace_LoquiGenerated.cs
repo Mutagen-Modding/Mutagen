@@ -25,7 +25,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -1204,19 +1203,19 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new async Task<Worldspace> CreateFromBinary(MutagenFrame frame)
+        public static new Worldspace CreateFromBinary(MutagenFrame frame)
         {
-            return await CreateFromBinary(
+            return CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public new static async Task<Worldspace> CreateFromBinary(
+        public new static Worldspace CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Worldspace();
-            await ((WorldspaceSetterCommon)((IWorldspaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1590,22 +1589,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         [DebuggerStepThrough]
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IWorldspaceInternal item,
             MutagenFrame frame)
         {
-            await CopyInFromBinary(
+            CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IWorldspaceInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            await ((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -2132,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
         
-        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             IWorldspaceInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2235,19 +2234,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public async Task CopyInFromBinary(
+        public void CopyInFromBinary(
             IWorldspaceInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            await UtilityAsyncTranslation.MajorRecordParse<IWorldspaceInternal>(
+            UtilityTranslation.MajorRecordParse<IWorldspaceInternal>(
                 record: item,
                 frame: frame,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
-            await WorldspaceBinaryCreateTranslation.CustomBinaryEndImport(
+            WorldspaceBinaryCreateTranslation.CustomBinaryEndImportPublic(
                 frame: frame,
                 obj: item);
         }
@@ -4114,6 +4113,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
+        static partial void CustomBinaryEndImport(
+            MutagenFrame frame,
+            IWorldspaceInternal obj);
+        public static void CustomBinaryEndImportPublic(
+            MutagenFrame frame,
+            IWorldspaceInternal obj)
+        {
+            CustomBinaryEndImport(
+                frame: frame,
+                obj: obj);
+        }
     }
 
 }

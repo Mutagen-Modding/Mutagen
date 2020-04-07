@@ -3752,26 +3752,26 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<OblivionMod> CreateFromBinary(
+        public static OblivionMod CreateFromBinary(
             MutagenFrame frame,
             ModKey modKey,
             GroupMask? importMask = null)
         {
-            return await CreateFromBinary(
+            return CreateFromBinary(
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task<OblivionMod> CreateFromBinary(
+        public static OblivionMod CreateFromBinary(
             MutagenFrame frame,
             ModKey modKey,
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             var ret = new OblivionMod(modKey);
-            await ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 importMask: importMask,
                 modKey: modKey,
@@ -3780,7 +3780,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static async Task<OblivionMod> CreateFromBinary(
+        public static OblivionMod CreateFromBinary(
             string path,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null)
@@ -3789,14 +3789,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                return await CreateFromBinary(
+                return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<OblivionMod> CreateFromBinary(
+        public static OblivionMod CreateFromBinary(
             string path,
             ErrorMaskBuilder? errorMask,
             ModKey? modKeyOverride = null,
@@ -3806,7 +3806,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                return await CreateFromBinary(
+                return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -3814,7 +3814,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static async Task<OblivionMod> CreateFromBinary(
+        public static OblivionMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
             GroupMask? importMask = null)
@@ -3822,14 +3822,14 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
-                return await CreateFromBinary(
+                return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static async Task<OblivionMod> CreateFromBinary(
+        public static OblivionMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
             ErrorMaskBuilder? errorMask,
@@ -3838,7 +3838,7 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
-                return await CreateFromBinary(
+                return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -4379,28 +4379,28 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         [DebuggerStepThrough]
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IOblivionMod item,
             MutagenFrame frame,
             ModKey modKey,
             GroupMask? importMask = null)
         {
-            await CopyInFromBinary(
+            CopyInFromBinary(
                 item: item,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
-                recordTypeConverter: null).ConfigureAwait(false);
+                recordTypeConverter: null);
         }
 
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IOblivionMod item,
             MutagenFrame frame,
             ModKey modKey,
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            await ((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 importMask: importMask,
                 modKey: modKey,
@@ -4408,7 +4408,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IOblivionMod item,
             string path,
             ModKey? modKeyOverride = null,
@@ -4418,7 +4418,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                await CopyInFromBinary(
+                CopyInFromBinary(
                     item: item,
                     importMask: importMask,
                     modKey: modKey,
@@ -4426,7 +4426,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static async Task CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IOblivionMod item,
             Stream stream,
             ModKey modKey,
@@ -4435,7 +4435,7 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
-                await CopyInFromBinary(
+                CopyInFromBinary(
                     item: item,
                     importMask: importMask,
                     modKey: modKey,
@@ -5608,7 +5608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
         
-        protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
+        protected static TryGet<int?> FillBinaryRecordTypes(
             IOblivionMod item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -5631,7 +5631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.GameSettings ?? true)
                     {
-                        await item.GameSettings.CopyInFromBinary(
+                        item.GameSettings.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5645,7 +5645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Globals ?? true)
                     {
-                        await item.Globals.CopyInFromBinary(
+                        item.Globals.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5659,7 +5659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Classes ?? true)
                     {
-                        await item.Classes.CopyInFromBinary(
+                        item.Classes.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5673,7 +5673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Factions ?? true)
                     {
-                        await item.Factions.CopyInFromBinary(
+                        item.Factions.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5687,7 +5687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Hairs ?? true)
                     {
-                        await item.Hairs.CopyInFromBinary(
+                        item.Hairs.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5701,7 +5701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Eyes ?? true)
                     {
-                        await item.Eyes.CopyInFromBinary(
+                        item.Eyes.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5715,7 +5715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Races ?? true)
                     {
-                        await item.Races.CopyInFromBinary(
+                        item.Races.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5729,7 +5729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Sounds ?? true)
                     {
-                        await item.Sounds.CopyInFromBinary(
+                        item.Sounds.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5743,7 +5743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Skills ?? true)
                     {
-                        await item.Skills.CopyInFromBinary(
+                        item.Skills.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5757,7 +5757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.MagicEffects ?? true)
                     {
-                        await item.MagicEffects.CopyInFromBinary(
+                        item.MagicEffects.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5771,7 +5771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Scripts ?? true)
                     {
-                        await item.Scripts.CopyInFromBinary(
+                        item.Scripts.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5785,7 +5785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.LandTextures ?? true)
                     {
-                        await item.LandTextures.CopyInFromBinary(
+                        item.LandTextures.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5799,7 +5799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Enchantments ?? true)
                     {
-                        await item.Enchantments.CopyInFromBinary(
+                        item.Enchantments.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5813,7 +5813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Spells ?? true)
                     {
-                        await item.Spells.CopyInFromBinary(
+                        item.Spells.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5827,7 +5827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Birthsigns ?? true)
                     {
-                        await item.Birthsigns.CopyInFromBinary(
+                        item.Birthsigns.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5841,7 +5841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Activators ?? true)
                     {
-                        await item.Activators.CopyInFromBinary(
+                        item.Activators.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5855,7 +5855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.AlchemicalApparatus ?? true)
                     {
-                        await item.AlchemicalApparatus.CopyInFromBinary(
+                        item.AlchemicalApparatus.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5869,7 +5869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Armors ?? true)
                     {
-                        await item.Armors.CopyInFromBinary(
+                        item.Armors.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5883,7 +5883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Books ?? true)
                     {
-                        await item.Books.CopyInFromBinary(
+                        item.Books.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5897,7 +5897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Clothes ?? true)
                     {
-                        await item.Clothes.CopyInFromBinary(
+                        item.Clothes.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5911,7 +5911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Containers ?? true)
                     {
-                        await item.Containers.CopyInFromBinary(
+                        item.Containers.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5925,7 +5925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Doors ?? true)
                     {
-                        await item.Doors.CopyInFromBinary(
+                        item.Doors.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5939,7 +5939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Ingredients ?? true)
                     {
-                        await item.Ingredients.CopyInFromBinary(
+                        item.Ingredients.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5953,7 +5953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Lights ?? true)
                     {
-                        await item.Lights.CopyInFromBinary(
+                        item.Lights.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5967,7 +5967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Miscellaneous ?? true)
                     {
-                        await item.Miscellaneous.CopyInFromBinary(
+                        item.Miscellaneous.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5981,7 +5981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Statics ?? true)
                     {
-                        await item.Statics.CopyInFromBinary(
+                        item.Statics.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -5995,7 +5995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Grasses ?? true)
                     {
-                        await item.Grasses.CopyInFromBinary(
+                        item.Grasses.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6009,7 +6009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Trees ?? true)
                     {
-                        await item.Trees.CopyInFromBinary(
+                        item.Trees.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6023,7 +6023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Flora ?? true)
                     {
-                        await item.Flora.CopyInFromBinary(
+                        item.Flora.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6037,7 +6037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Furnature ?? true)
                     {
-                        await item.Furnature.CopyInFromBinary(
+                        item.Furnature.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6051,7 +6051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Weapons ?? true)
                     {
-                        await item.Weapons.CopyInFromBinary(
+                        item.Weapons.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6065,7 +6065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Ammo ?? true)
                     {
-                        await item.Ammo.CopyInFromBinary(
+                        item.Ammo.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6079,7 +6079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Npcs ?? true)
                     {
-                        await item.Npcs.CopyInFromBinary(
+                        item.Npcs.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6093,7 +6093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Creatures ?? true)
                     {
-                        await item.Creatures.CopyInFromBinary(
+                        item.Creatures.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6107,7 +6107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.LeveledCreatures ?? true)
                     {
-                        await item.LeveledCreatures.CopyInFromBinary(
+                        item.LeveledCreatures.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6121,7 +6121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.SoulGems ?? true)
                     {
-                        await item.SoulGems.CopyInFromBinary(
+                        item.SoulGems.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6135,7 +6135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Keys ?? true)
                     {
-                        await item.Keys.CopyInFromBinary(
+                        item.Keys.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6149,7 +6149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Potions ?? true)
                     {
-                        await item.Potions.CopyInFromBinary(
+                        item.Potions.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6163,7 +6163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Subspaces ?? true)
                     {
-                        await item.Subspaces.CopyInFromBinary(
+                        item.Subspaces.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6177,7 +6177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.SigilStones ?? true)
                     {
-                        await item.SigilStones.CopyInFromBinary(
+                        item.SigilStones.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6191,7 +6191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.LeveledItems ?? true)
                     {
-                        await item.LeveledItems.CopyInFromBinary(
+                        item.LeveledItems.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6205,7 +6205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Weathers ?? true)
                     {
-                        await item.Weathers.CopyInFromBinary(
+                        item.Weathers.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6219,7 +6219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Climates ?? true)
                     {
-                        await item.Climates.CopyInFromBinary(
+                        item.Climates.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6233,7 +6233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Regions ?? true)
                     {
-                        await item.Regions.CopyInFromBinary(
+                        item.Regions.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6247,7 +6247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Cells ?? true)
                     {
-                        await item.Cells.CopyInFromBinary(
+                        item.Cells.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6261,7 +6261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Worldspaces ?? true)
                     {
-                        await item.Worldspaces.CopyInFromBinary(
+                        item.Worldspaces.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6275,7 +6275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.DialogTopics ?? true)
                     {
-                        await item.DialogTopics.CopyInFromBinary(
+                        item.DialogTopics.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6289,7 +6289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Quests ?? true)
                     {
-                        await item.Quests.CopyInFromBinary(
+                        item.Quests.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6303,7 +6303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.IdleAnimations ?? true)
                     {
-                        await item.IdleAnimations.CopyInFromBinary(
+                        item.IdleAnimations.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6317,7 +6317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.AIPackages ?? true)
                     {
-                        await item.AIPackages.CopyInFromBinary(
+                        item.AIPackages.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6331,7 +6331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.CombatStyles ?? true)
                     {
-                        await item.CombatStyles.CopyInFromBinary(
+                        item.CombatStyles.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6345,7 +6345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.LoadScreens ?? true)
                     {
-                        await item.LoadScreens.CopyInFromBinary(
+                        item.LoadScreens.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6359,7 +6359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.LeveledSpells ?? true)
                     {
-                        await item.LeveledSpells.CopyInFromBinary(
+                        item.LeveledSpells.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6373,7 +6373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.AnimatedObjects ?? true)
                     {
-                        await item.AnimatedObjects.CopyInFromBinary(
+                        item.AnimatedObjects.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6387,7 +6387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.Waters ?? true)
                     {
-                        await item.Waters.CopyInFromBinary(
+                        item.Waters.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6401,7 +6401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (importMask?.EffectShaders ?? true)
                     {
-                        await item.EffectShaders.CopyInFromBinary(
+                        item.EffectShaders.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6417,7 +6417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public async Task CopyInFromBinary(
+        public void CopyInFromBinary(
             IOblivionMod item,
             MutagenFrame frame,
             ModKey modKey,
@@ -6425,13 +6425,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GroupMask? importMask = null)
         {
             frame.Reader.MasterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
-            await UtilityAsyncTranslation.ModParse(
+            UtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
                 importMask: importMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
+                fillTyped: FillBinaryRecordTypes);
         }
         
         #endregion

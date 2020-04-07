@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
 
             // Setup
-            Mod = await OblivionMod.CreateFromBinary(
+            Mod = OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
 
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public async Task CreateBinary()
         {
-            await OblivionMod.CreateFromBinary(
+            OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
         }

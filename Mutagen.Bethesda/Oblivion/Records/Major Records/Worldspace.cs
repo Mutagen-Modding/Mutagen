@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.OffsetData = frame.Reader.ReadBytes(len);
             }
 
-            public static async Task CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
+            static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
             {
                 if (frame.Reader.Complete) return;
                 var next = HeaderTranslation.GetNextType(
@@ -198,11 +198,9 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             break;
                         case 0x4C4C4543: // "CELL":
-                            var topCell = await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
-                                frame: subFrame).ConfigureAwait(false);
-                            if (topCell.Succeeded)
+                            if (LoquiBinaryTranslation<Cell>.Instance.Parse(subFrame, out var topCell))
                             {
-                                obj.TopCell = topCell.Value;
+                                obj.TopCell = topCell;
                             }
                             else
                             {
@@ -211,13 +209,10 @@ namespace Mutagen.Bethesda.Oblivion
                             break;
                         case 0x50555247: // "GRUP":
                             obj.SubCells = new ExtendedList<WorldspaceBlock>(
-                                await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.Parse(
+                                Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
                                     frame: frame,
                                     triggeringRecord: Worldspace_Registration.GRUP_HEADER,
-                                    transl: (MutagenFrame r) =>
-                                    {
-                                        return LoquiBinaryAsyncTranslation<WorldspaceBlock>.Instance.Parse(r);
-                                    }).ConfigureAwait(false));
+                                    transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
                             break;
                         default:
                             return;

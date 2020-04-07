@@ -145,6 +145,68 @@ namespace Mutagen.Bethesda.Binary
             }
             return ret;
         }
+
+        public IEnumerable<T> ParseParallel(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var frames = new List<MutagenFrame>();
+            triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
+            while (!frame.Complete && !frame.Reader.Complete)
+            {
+                var header = frame
+                    .MetaData.GetNextRecordVariableMeta(frame.Reader);
+                if (header.RecordType != triggeringRecord) break;
+                if (!IsLoqui)
+                {
+                    throw new NotImplementedException();
+                }
+                var totalLen = header.TotalLength;
+                var subFrame = new MutagenFrame(frame.ReadAndReframe(checked((int)totalLen)));
+                frames.Add(subFrame);
+            }
+            var ret = new TryGet<T>[frame.Length];
+            Parallel.ForEach(frames, (subFrame, state, count) =>
+            {
+                if (transl(subFrame, out var subItem, recordTypeConverter))
+                {
+                    ret[count] = TryGet<T>.Succeed(subItem);
+                }
+                else
+                {
+                    ret[count] = TryGet<T>.Failure;
+                }
+            });
+            return ret.Where(i => i.Succeeded)
+                .Select(i => i.Value);
+        }
+
+        public IEnumerable<T> Parse(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            bool thread,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (thread)
+            {
+                return ParseParallel(
+                    frame,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+        }
         #endregion
 
         #region Lengthed Triggering Records
@@ -451,6 +513,21 @@ namespace Mutagen.Bethesda.Binary
                 transl(writer, item, recordTypeConverter);
             }
         }
+
+        #region Cache Helpers
+        public void Parse<K>(
+            MutagenFrame frame,
+            ICache<T, K> item,
+            RecordType triggeringRecord,
+            BinarySubParseDelegate<T> transl)
+        {
+            item.SetTo(
+                Parse(
+                    frame,
+                    triggeringRecord,
+                    transl: transl));
+        }
+        #endregion
     }
 
     public class ListAsyncBinaryTranslation<T>
