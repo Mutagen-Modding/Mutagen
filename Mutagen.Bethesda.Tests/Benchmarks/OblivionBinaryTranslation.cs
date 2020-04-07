@@ -22,6 +22,11 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public static string DataPath;
         public static string BinaryPath;
         public static MemoryStream DataOutput;
+        public static BinaryWriteParameters WriteParametersNoCheck = new BinaryWriteParameters()
+        {
+            MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+            MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+        };
 
         [GlobalSetup]
         public async Task Setup()
@@ -68,7 +73,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             var mod = OblivionModBinaryOverlay.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
                 ModKey);
-            mod.WriteToBinary(BinaryPath);
+            mod.WriteToBinary(BinaryPath, WriteParametersNoCheck);
         }
 
         [Benchmark]
@@ -79,7 +84,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 new MemorySlice<byte>(bytes),
                 ModKey);
             DataOutput.Position = 0;
-            mod.WriteToBinary(DataOutput);
+            mod.WriteToBinary(DataOutput, WriteParametersNoCheck);
         }
 
         [Benchmark]
@@ -89,7 +94,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             var mod = OblivionModBinaryOverlay.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
                 ModKey);
-            mod.WriteToBinaryParallel(BinaryPath);
+            mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
         }
 
         [Benchmark]
@@ -100,33 +105,33 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 new MemorySlice<byte>(bytes),
                 ModKey);
             DataOutput.Position = 0;
-            mod.WriteToBinaryParallel(DataOutput);
+            mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
         }
 
         [Benchmark]
         public void WriteBinaryToDisk()
         {
-            Mod.WriteToBinary(BinaryPath);
+            Mod.WriteToBinary(BinaryPath, WriteParametersNoCheck);
         }
 
         [Benchmark]
         public void WriteBinaryToMemory()
         {
             DataOutput.Position = 0;
-            Mod.WriteToBinary(DataOutput);
+            Mod.WriteToBinary(DataOutput, WriteParametersNoCheck);
         }
 
         [Benchmark]
         public void WriteBinaryParallelToDisk()
         {
-            Mod.WriteToBinaryParallel(BinaryPath);
+            Mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
         }
 
         [Benchmark]
         public void WriteBinaryParallelToMemory()
         {
             DataOutput.Position = 0;
-            Mod.WriteToBinaryParallel(DataOutput);
+            Mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
         }
     }
 }
