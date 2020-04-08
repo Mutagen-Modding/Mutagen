@@ -1305,7 +1305,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IPassthroughSettings item,
             XElement node,
             ErrorMaskBuilder? errorMask,

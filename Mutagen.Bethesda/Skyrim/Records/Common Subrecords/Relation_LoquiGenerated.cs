@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IRelation item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.GroupCombatReaction = EnumBinaryTranslation<Combat>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IRelation item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

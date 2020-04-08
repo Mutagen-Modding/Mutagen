@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IAIPackageSchedule item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration = frame.ReadInt32();
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IAIPackageSchedule item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

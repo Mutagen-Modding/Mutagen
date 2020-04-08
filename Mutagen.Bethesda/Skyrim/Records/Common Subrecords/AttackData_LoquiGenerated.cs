@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IAttackData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.StaminaMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IAttackData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

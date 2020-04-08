@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IGlobalInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1052,6 +1052,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 errorMask.ReportException(ex);
             }
+        }
+        
+        public override void CopyInFromXml(
+            ISkyrimMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (Global)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
+            IMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (Global)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         
         #endregion
@@ -1085,11 +1111,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IGlobalInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+        }
+        
+        public override void CopyInFromBinary(
+            ISkyrimMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (Global)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
+        public override void CopyInFromBinary(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (Global)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         #endregion

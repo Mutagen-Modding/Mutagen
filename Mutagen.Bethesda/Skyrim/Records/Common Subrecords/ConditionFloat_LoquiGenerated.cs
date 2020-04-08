@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IConditionFloat item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1124,6 +1124,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public override void CopyInFromXml(
+            ICondition item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (ConditionFloat)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1140,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IConditionFloat item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1157,6 +1170,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionFloatBinaryCreateTranslation.CustomBinaryEndImportPublic(
                 frame: frame,
                 obj: item);
+        }
+        
+        public override void CopyInFromBinary(
+            ICondition item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (ConditionFloat)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         #endregion

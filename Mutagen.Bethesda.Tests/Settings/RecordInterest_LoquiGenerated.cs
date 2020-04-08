@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IRecordInterest item,
             XElement node,
             ErrorMaskBuilder? errorMask,

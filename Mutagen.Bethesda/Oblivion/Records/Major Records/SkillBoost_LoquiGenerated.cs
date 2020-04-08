@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ISkillBoost item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Boost = frame.ReadInt8();
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ISkillBoost item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1263,6 +1263,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public override void CopyInFromXml(
+            IMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (SkyrimMajorRecord)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1278,11 +1291,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Version2 = frame.ReadUInt16();
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+        }
+        
+        public override void CopyInFromBinary(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (SkyrimMajorRecord)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         #endregion

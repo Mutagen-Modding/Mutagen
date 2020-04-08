@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ICellBlock item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1407,6 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: CellBlock_Registration.GRUP_HEADER,
+                            thread: true,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out CellSubBlock listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -1424,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ICellBlock item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

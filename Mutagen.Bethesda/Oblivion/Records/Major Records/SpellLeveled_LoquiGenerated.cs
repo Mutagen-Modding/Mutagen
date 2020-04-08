@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ISpellLeveledInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1080,6 +1080,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public override void CopyInFromXml(
+            ISpellInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (SpellLeveled)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
+            IASpellInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (SpellLeveled)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
+            IOblivionMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (SpellLeveled)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
+            IMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (SpellLeveled)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1093,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ISpellLeveledInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1105,6 +1157,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
+            ISpellInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (SpellLeveled)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
+        public override void CopyInFromBinary(
+            IASpellInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (SpellLeveled)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
+        public override void CopyInFromBinary(
+            IOblivionMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (SpellLeveled)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
+        public override void CopyInFromBinary(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (SpellLeveled)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         #endregion

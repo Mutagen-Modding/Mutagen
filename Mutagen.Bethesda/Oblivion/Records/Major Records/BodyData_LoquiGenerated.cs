@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IBodyData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IBodyData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

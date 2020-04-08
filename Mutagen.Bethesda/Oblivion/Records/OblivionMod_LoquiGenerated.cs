@@ -5548,7 +5548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IOblivionMod item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -6417,7 +6417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IOblivionMod item,
             MutagenFrame frame,
             ModKey modKey,

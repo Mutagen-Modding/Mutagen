@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IBaseLayerInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IBaseLayerInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

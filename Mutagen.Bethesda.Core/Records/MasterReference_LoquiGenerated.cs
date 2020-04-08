@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IMasterReference item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IMasterReference item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

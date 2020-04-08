@@ -1976,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ICombatStyleAdvanced item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -2031,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.PowerAttackFatigueModMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ICombatStyleAdvanced item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

@@ -2421,7 +2421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ISkyrimMod item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -2702,7 +2702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ISkyrimMod item,
             MutagenFrame frame,
             ModKey modKey,

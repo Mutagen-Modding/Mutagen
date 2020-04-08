@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

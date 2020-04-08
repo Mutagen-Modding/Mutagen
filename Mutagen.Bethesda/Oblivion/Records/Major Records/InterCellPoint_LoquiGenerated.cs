@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IInterCellPoint item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IInterCellPoint item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

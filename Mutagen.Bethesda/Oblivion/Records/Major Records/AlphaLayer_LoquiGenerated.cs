@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IAlphaLayerInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1116,6 +1116,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 errorMask.ReportException(ex);
             }
+        }
+        
+        public override void CopyInFromXml(
+            IBaseLayerInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (AlphaLayer)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         
         #endregion
@@ -1149,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IAlphaLayerInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1161,6 +1174,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
+            IBaseLayerInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (AlphaLayer)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         #endregion

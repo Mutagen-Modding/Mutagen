@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IScriptMetaSummary item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IScriptMetaSummary item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ISoundDataInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ISoundDataInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

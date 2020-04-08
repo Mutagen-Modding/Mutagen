@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IPathGridPoint item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FluffBytes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IPathGridPoint item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

@@ -2620,7 +2620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             IRaceData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -2697,7 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             IRaceData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

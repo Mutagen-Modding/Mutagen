@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ILoadScreenLocation item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GridPoint = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ILoadScreenLocation item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

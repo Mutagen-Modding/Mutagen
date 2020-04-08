@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ILockInformation item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1249,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ILockInformation item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)

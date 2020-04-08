@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public void CopyInFromXml(
+        public virtual void CopyInFromXml(
             ISoundDataExtendedInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1181,6 +1181,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public override void CopyInFromXml(
+            ISoundDataInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (SoundDataExtended)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1202,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
         
-        public void CopyInFromBinary(
+        public virtual void CopyInFromBinary(
             ISoundDataExtendedInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1216,6 +1229,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 setFinal: true,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
+        }
+        
+        public override void CopyInFromBinary(
+            ISoundDataInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (SoundDataExtended)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         #endregion
