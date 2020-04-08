@@ -52,21 +52,20 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     obj.TopCell = (Cell)topCell.Duplicate(getNextFormKey, duplicatedRecords);
                 }
-                obj.SubCells = rhs.SubCells.Select((block) =>
+                obj.SubCells.SetTo(rhs.SubCells.Select((block) =>
                 {
                     var blockRet = new WorldspaceBlock();
                     blockRet.DeepCopyIn(block, duplicateBlockCopyMask);
-                    blockRet.Items = block.Items.Select((subBlock) =>
+                    blockRet.Items.SetTo(block.Items.Select((subBlock) =>
                     {
                         var subBlockRet = new WorldspaceSubBlock();
                         subBlockRet.DeepCopyIn(subBlock, duplicateSubBlockCopyMask);
-                        subBlockRet.Items = subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords))
-                            .ToExtendedList();
+                        subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords)));
                         return subBlockRet;
-                    }).ToExtendedList();
+                    }));
 
                     return blockRet;
-                }).ToExtendedList();
+                }));
             }
         }
 
@@ -208,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             break;
                         case 0x50555247: // "GRUP":
-                            obj.SubCells = new ExtendedList<WorldspaceBlock>(
+                            obj.SubCells.SetTo(
                                 Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
                                     frame: frame,
                                     triggeringRecord: Worldspace_Registration.GRUP_HEADER,
@@ -233,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public ReadOnlyMemorySlice<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
 
-            public IReadOnlyList<IWorldspaceBlockGetter>? SubCells { get; private set; }
+            public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
 
             private int? _OffsetLengthLocation;
             public bool UsingOffsetLength => this._OffsetLengthLocation.HasValue;

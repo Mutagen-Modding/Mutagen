@@ -87,15 +87,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RaceRelation>? _Relations;
-        public ExtendedList<RaceRelation>? Relations
+        private ExtendedList<RaceRelation> _Relations = new ExtendedList<RaceRelation>();
+        public ExtendedList<RaceRelation> Relations
         {
             get => this._Relations;
-            set => this._Relations = value;
+            protected set => this._Relations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IRaceRelationGetter>? IRaceGetter.Relations => _Relations;
+        IReadOnlyList<IRaceRelationGetter> IRaceGetter.Relations => _Relations;
         #endregion
 
         #endregion
@@ -255,15 +255,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FacePart>? _FaceData;
-        public ExtendedList<FacePart>? FaceData
+        private ExtendedList<FacePart> _FaceData = new ExtendedList<FacePart>();
+        public ExtendedList<FacePart> FaceData
         {
             get => this._FaceData;
-            set => this._FaceData = value;
+            protected set => this._FaceData = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFacePartGetter>? IRaceGetter.FaceData => _FaceData;
+        IReadOnlyList<IFacePartGetter> IRaceGetter.FaceData => _FaceData;
         #endregion
 
         #endregion
@@ -2081,7 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Description { get; set; }
         new ExtendedList<IFormLink<Spell>>? Spells { get; set; }
-        new ExtendedList<RaceRelation>? Relations { get; set; }
+        new ExtendedList<RaceRelation> Relations { get; }
         new SkillBoost SkillBoost0 { get; set; }
         new SkillBoost SkillBoost1 { get; set; }
         new SkillBoost SkillBoost2 { get; set; }
@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32? FaceGenMainClamp { get; set; }
         new Int32? FaceGenFaceClamp { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
-        new ExtendedList<FacePart>? FaceData { get; set; }
+        new ExtendedList<FacePart> FaceData { get; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
         new ExtendedList<IFormLink<Hair>>? Hairs { get; set; }
         new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         String? Description { get; }
         IReadOnlyList<IFormLinkGetter<ISpellGetter>>? Spells { get; }
-        IReadOnlyList<IRaceRelationGetter>? Relations { get; }
+        IReadOnlyList<IRaceRelationGetter> Relations { get; }
         ISkillBoostGetter SkillBoost0 { get; }
         ISkillBoostGetter SkillBoost1 { get; }
         ISkillBoostGetter SkillBoost2 { get; }
@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? FaceGenMainClamp { get; }
         Int32? FaceGenFaceClamp { get; }
         IGenderedItemGetter<IRaceStatsGetter>? RaceStats { get; }
-        IReadOnlyList<IFacePartGetter>? FaceData { get; }
+        IReadOnlyList<IFacePartGetter> FaceData { get; }
         IGenderedItemGetter<IBodyDataGetter?>? BodyData { get; }
         IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; }
         IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; }
@@ -2996,7 +2996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Description = default;
             item.Spells = null;
-            item.Relations = null;
+            item.Relations.Clear();
             item.SkillBoost0 = new SkillBoost();
             item.SkillBoost1 = new SkillBoost();
             item.SkillBoost2 = new SkillBoost();
@@ -3016,7 +3016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FaceGenMainClamp = default;
             item.FaceGenFaceClamp = default;
             item.RaceStats = null;
-            item.FaceData = null;
+            item.FaceData.Clear();
             item.BodyData = null;
             item.Hairs = null;
             item.Eyes = null;
@@ -3169,7 +3169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    item.Relations = 
+                    item.Relations.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.XNAM_HEADER,
@@ -3180,8 +3180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<RaceRelation>();
+                            }));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
                 }
                 case 0x41544144: // DATA
@@ -3254,7 +3253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x304D414E: // NAM0
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
-                    item.FaceData = 
+                    item.FaceData.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
@@ -3265,8 +3264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<FacePart>();
+                            }));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
                 }
                 case 0x314D414E: // NAM1
@@ -3535,14 +3533,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Relations?.Overall ?? true)
-                && item.Relations.TryGet(out var RelationsItem))
+            if (printMask?.Relations?.Overall ?? true)
             {
                 fg.AppendLine("Relations =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in RelationsItem)
+                    foreach (var subItem in item.Relations)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3628,14 +3625,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 RaceStatsItem?.ToString(fg, "RaceStats");
             }
-            if ((printMask?.FaceData?.Overall ?? true)
-                && item.FaceData.TryGet(out var FaceDataItem))
+            if (printMask?.FaceData?.Overall ?? true)
             {
                 fg.AppendLine("FaceData =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in FaceDataItem)
+                    foreach (var subItem in item.FaceData)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3713,14 +3709,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != (item.Spells != null)) return false;
-            if (checkMask.Relations?.Overall.HasValue ?? false && checkMask.Relations!.Overall.Value != (item.Relations != null)) return false;
             if (checkMask.Voices?.Overall ?? false) return false;
             if (checkMask.DefaultHair?.Overall ?? false) return false;
             if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != (item.DefaultHairColor != null)) return false;
             if (checkMask.FaceGenMainClamp.HasValue && checkMask.FaceGenMainClamp.Value != (item.FaceGenMainClamp != null)) return false;
             if (checkMask.FaceGenFaceClamp.HasValue && checkMask.FaceGenFaceClamp.Value != (item.FaceGenFaceClamp != null)) return false;
             if (checkMask.RaceStats?.Overall ?? false) return false;
-            if (checkMask.FaceData?.Overall.HasValue ?? false && checkMask.FaceData!.Overall.Value != (item.FaceData != null)) return false;
             if (checkMask.BodyData?.Overall ?? false) return false;
             if (checkMask.Hairs?.Overall.HasValue ?? false && checkMask.Hairs!.Overall.Value != (item.Hairs != null)) return false;
             if (checkMask.Eyes?.Overall.HasValue ?? false && checkMask.Eyes!.Overall.Value != (item.Eyes != null)) return false;
@@ -3739,10 +3733,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = (item.Name != null);
             mask.Description = (item.Description != null);
             mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Spells != null), default);
-            if (item.Relations.TryGet(out var RelationsItem))
-            {
-                mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceRelation.Mask<bool>?>>?>(true, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceRelation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var RelationsItem = item.Relations;
+            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceRelation.Mask<bool>?>>?>(true, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceRelation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.SkillBoost0 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost0?.GetHasBeenSetMask());
             mask.SkillBoost1 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost1?.GetHasBeenSetMask());
             mask.SkillBoost2 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost2?.GetHasBeenSetMask());
@@ -3762,10 +3754,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.RaceStats = GenderedItem.HasBeenSetHelper(
                 item.RaceStats,
                 (i) => i.GetHasBeenSetMask());
-            if (item.FaceData.TryGet(out var FaceDataItem))
-            {
-                mask.FaceData = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, FacePart.Mask<bool>?>>?>(true, FaceDataItem.WithIndex().Select((i) => new MaskItemIndexed<bool, FacePart.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var FaceDataItem = item.FaceData;
+            mask.FaceData = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, FacePart.Mask<bool>?>>?>(true, FaceDataItem.WithIndex().Select((i) => new MaskItemIndexed<bool, FacePart.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.BodyData = GenderedItem.HasBeenSetMaskHelper(
                 item.BodyData,
                 (i) => i?.GetHasBeenSetMask());
@@ -3973,12 +3963,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Relations != null)
+            foreach (var item in obj.Relations.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Relations.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.Hairs != null)
             {
@@ -4080,22 +4067,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Relations);
                 try
                 {
-                    if ((rhs.Relations != null))
-                    {
-                        item.Relations = 
-                            rhs.Relations
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<RaceRelation>();
-                    }
-                    else
-                    {
-                        item.Relations = null;
-                    }
+                    item.Relations.SetTo(
+                        rhs.Relations
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4406,22 +4385,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceData);
                 try
                 {
-                    if ((rhs.FaceData != null))
-                    {
-                        item.FaceData = 
-                            rhs.FaceData
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<FacePart>();
-                    }
-                    else
-                    {
-                        item.FaceData = null;
-                    }
+                    item.FaceData.SetTo(
+                        rhs.FaceData
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4739,8 +4710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((item.Relations != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
             {
                 ListXmlTranslation<IRaceRelationGetter>.Instance.Write(
                     node: node,
@@ -4982,8 +4952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask);
                 }
             }
-            if ((item.FaceData != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
             {
                 ListXmlTranslation<IFacePartGetter>.Instance.Write(
                     node: node,
@@ -5284,11 +5253,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Relations = RelationsItem.ToExtendedList();
+                            item.Relations.SetTo(RelationsItem);
                         }
                         else
                         {
-                            item.Relations = null;
+                            item.Relations.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -5649,11 +5618,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.FaceData = FaceDataItem.ToExtendedList();
+                            item.FaceData.SetTo(FaceDataItem);
                         }
                         else
                         {
-                            item.FaceData = null;
+                            item.FaceData.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -6232,7 +6201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellGetter>>? Spells { get; private set; }
-        public IReadOnlyList<IRaceRelationGetter>? Relations { get; private set; }
+        public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = ListExt.Empty<RaceRelationBinaryOverlay>();
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
         #region SkillBoost0
@@ -6371,7 +6340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-        public IReadOnlyList<IFacePartGetter>? FaceData { get; private set; }
+        public IReadOnlyList<IFacePartGetter> FaceData { get; private set; } = ListExt.Empty<FacePartBinaryOverlay>();
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?>? BodyData => _BodyDataOverlay;

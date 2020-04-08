@@ -109,15 +109,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            set => this._Conditions = value;
+            protected set => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter>? IAIPackageGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter> IAIPackageGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
         new AIPackageLocation? Location { get; set; }
         new AIPackageSchedule? Schedule { get; set; }
         new AIPackageTarget? Target { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
         new AIPackage.PKDTDataType PKDTDataTypeState { get; set; }
     }
 
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAIPackageLocationGetter? Location { get; }
         IAIPackageScheduleGetter? Schedule { get; }
         IAIPackageTargetGetter? Target { get; }
-        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
         AIPackage.PKDTDataType PKDTDataTypeState { get; }
 
     }
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Location = null;
             item.Schedule = null;
             item.Target = null;
-            item.Conditions = null;
+            item.Conditions.Clear();
             item.PKDTDataTypeState = default;
             base.Clear(item);
         }
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    item.Conditions = 
+                    item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
@@ -1675,8 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<Condition>();
+                            }));
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Conditions);
                 }
                 default:
@@ -1849,14 +1848,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 TargetItem?.ToString(fg, "Target");
             }
-            if ((printMask?.Conditions?.Overall ?? true)
-                && item.Conditions.TryGet(out var ConditionsItem))
+            if (printMask?.Conditions?.Overall ?? true)
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ConditionsItem)
+                    foreach (var subItem in item.Conditions)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1884,7 +1882,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Schedule?.Specific != null && (item.Schedule == null || !item.Schedule.HasBeenSet(checkMask.Schedule.Specific))) return false;
             if (checkMask.Target?.Overall.HasValue ?? false && checkMask.Target.Overall.Value != (item.Target != null)) return false;
             if (checkMask.Target?.Specific != null && (item.Target == null || !item.Target.HasBeenSet(checkMask.Target.Specific))) return false;
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1902,10 +1899,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Schedule = new MaskItem<bool, AIPackageSchedule.Mask<bool>?>(itemSchedule != null, itemSchedule?.GetHasBeenSetMask());
             var itemTarget = item.Target;
             mask.Target = new MaskItem<bool, AIPackageTarget.Mask<bool>?>(itemTarget != null, itemTarget?.GetHasBeenSetMask());
-            if (item.Conditions.TryGet(out var ConditionsItem))
-            {
-                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.PKDTDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2176,22 +2171,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Conditions);
                 try
                 {
-                    if ((rhs.Conditions != null))
-                    {
-                        item.Conditions = 
-                            rhs.Conditions
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<Condition>();
-                    }
-                    else
-                    {
-                        item.Conditions = null;
-                    }
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2412,8 +2399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Target));
                 }
             }
-            if ((item.Conditions != null)
-                && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Conditions) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<IConditionGetter>.Instance.Write(
                     node: node,
@@ -2656,11 +2642,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Conditions = ConditionsItem.ToExtendedList();
+                            item.Conditions.SetTo(ConditionsItem);
                         }
                         else
                         {
-                            item.Conditions = null;
+                            item.Conditions.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -3043,7 +3029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IAIPackageTargetGetter? Target => _Target_IsSet ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new BinaryMemoryReadStream(_data.Slice(_TargetLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Target_IsSet => _TargetLocation.HasValue;
         #endregion
-        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

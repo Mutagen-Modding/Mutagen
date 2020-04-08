@@ -80,15 +80,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RegionArea>? _Areas;
-        public ExtendedList<RegionArea>? Areas
+        private ExtendedList<RegionArea> _Areas = new ExtendedList<RegionArea>();
+        public ExtendedList<RegionArea> Areas
         {
             get => this._Areas;
-            set => this._Areas = value;
+            protected set => this._Areas = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IRegionAreaGetter>? IRegionGetter.Areas => _Areas;
+        IReadOnlyList<IRegionAreaGetter> IRegionGetter.Areas => _Areas;
         #endregion
 
         #endregion
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
         new IFormLinkNullable<Worldspace> Worldspace { get; }
-        new ExtendedList<RegionArea>? Areas { get; set; }
+        new ExtendedList<RegionArea> Areas { get; }
         new RegionDataObjects? Objects { get; set; }
         new RegionDataWeather? Weather { get; set; }
         new RegionDataMapName? MapName { get; set; }
@@ -1027,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Icon { get; }
         Color? MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
-        IReadOnlyList<IRegionAreaGetter>? Areas { get; }
+        IReadOnlyList<IRegionAreaGetter> Areas { get; }
         IRegionDataObjectsGetter? Objects { get; }
         IRegionDataWeatherGetter? Weather { get; }
         IRegionDataMapNameGetter? MapName { get; }
@@ -1627,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon = default;
             item.MapColor = default;
             item.Worldspace.FormKey = null;
-            item.Areas = null;
+            item.Areas.Clear();
             item.Objects = null;
             item.Weather = null;
             item.MapName = null;
@@ -1774,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x494C5052: // RPLI
                 case 0x444C5052: // RPLD
                 {
-                    item.Areas = 
+                    item.Areas.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
@@ -1785,8 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<RegionArea>();
+                            }));
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
                 }
                 case 0x54414452: // RDAT
@@ -1968,14 +1967,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(WorldspaceItem, "Worldspace");
             }
-            if ((printMask?.Areas?.Overall ?? true)
-                && item.Areas.TryGet(out var AreasItem))
+            if (printMask?.Areas?.Overall ?? true)
             {
                 fg.AppendLine("Areas =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in AreasItem)
+                    foreach (var subItem in item.Areas)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2021,7 +2019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != (item.MapColor != null)) return false;
             if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != (item.Worldspace.FormKey != null)) return false;
-            if (checkMask.Areas?.Overall.HasValue ?? false && checkMask.Areas!.Overall.Value != (item.Areas != null)) return false;
             if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects.Overall.Value != (item.Objects != null)) return false;
             if (checkMask.Objects?.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
             if (checkMask.Weather?.Overall.HasValue ?? false && checkMask.Weather.Overall.Value != (item.Weather != null)) return false;
@@ -2044,10 +2041,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Icon = (item.Icon != null);
             mask.MapColor = (item.MapColor != null);
             mask.Worldspace = (item.Worldspace.FormKey != null);
-            if (item.Areas.TryGet(out var AreasItem))
-            {
-                mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>?>(true, AreasItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var AreasItem = item.Areas;
+            mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>?>(true, AreasItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemObjects = item.Objects;
             mask.Objects = new MaskItem<bool, RegionDataObjects.Mask<bool>?>(itemObjects != null, itemObjects?.GetHasBeenSetMask());
             var itemWeather = item.Weather;
@@ -2294,22 +2289,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Areas);
                 try
                 {
-                    if ((rhs.Areas != null))
-                    {
-                        item.Areas = 
-                            rhs.Areas
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<RegionArea>();
-                    }
-                    else
-                    {
-                        item.Areas = null;
-                    }
+                    item.Areas.SetTo(
+                        rhs.Areas
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2623,8 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Region_FieldIndex.Worldspace,
                     errorMask: errorMask);
             }
-            if ((item.Areas != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
                 ListXmlTranslation<IRegionAreaGetter>.Instance.Write(
                     node: node,
@@ -2888,11 +2874,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Areas = AreasItem.ToExtendedList();
+                            item.Areas.SetTo(AreasItem);
                         }
                         else
                         {
-                            item.Areas = null;
+                            item.Areas.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -3290,7 +3276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
         public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormLinkNullable<IWorldspaceGetter>.Empty;
         #endregion
-        public IReadOnlyList<IRegionAreaGetter>? Areas { get; private set; }
+        public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic
         partial void RegionAreaLogicCustomParse(
             BinaryMemoryReadStream stream,

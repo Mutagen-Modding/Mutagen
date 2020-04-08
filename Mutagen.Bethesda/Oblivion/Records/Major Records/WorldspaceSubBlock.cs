@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class WorldspaceSubBlockBinaryOverlay
     {
-        public IReadOnlyList<ICellGetter>? Items { get; private set; }
+        public IReadOnlyList<ICellGetter> Items { get; private set; } = ListExt.Empty<ICellGetter>();
 
         partial void ItemsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {

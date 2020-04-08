@@ -398,7 +398,18 @@ namespace Mutagen.Bethesda.Generation
 
             if (!field.HasBeenSetProperty.Value.HasBeenSet)
             {
-                field.HasBeenSetProperty.OnNext((data.HasTrigger, true));
+                bool hasBeenSettable;
+                switch (field)
+                {
+                    case ListType list:
+                        hasBeenSettable = data.RecordType != null 
+                            || (list.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counter) && counter != null);
+                        break;
+                    default:
+                        hasBeenSettable = data.HasTrigger;
+                        break;
+                }
+                field.HasBeenSetProperty.OnNext((hasBeenSettable, true));
             }
         }
         

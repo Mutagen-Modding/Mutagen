@@ -501,15 +501,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherSound>? _Sounds;
-        public ExtendedList<WeatherSound>? Sounds
+        private ExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
+        public ExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
-            set => this._Sounds = value;
+            protected set => this._Sounds = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IWeatherSoundGetter>? IWeatherGetter.Sounds => _Sounds;
+        IReadOnlyList<IWeatherSoundGetter> IWeatherGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -2308,7 +2308,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte ThunderLightningFrequency { get; set; }
         new Weather.WeatherClassification Classification { get; set; }
         new Color LightningColor { get; set; }
-        new ExtendedList<WeatherSound>? Sounds { get; set; }
+        new ExtendedList<WeatherSound> Sounds { get; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.HNAMDataType HNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }
@@ -2363,7 +2363,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte ThunderLightningFrequency { get; }
         Weather.WeatherClassification Classification { get; }
         Color LightningColor { get; }
-        IReadOnlyList<IWeatherSoundGetter>? Sounds { get; }
+        IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
         Weather.FNAMDataType FNAMDataTypeState { get; }
         Weather.HNAMDataType HNAMDataTypeState { get; }
         Weather.DATADataType DATADataTypeState { get; }
@@ -3355,7 +3355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThunderLightningFrequency = default;
             item.Classification = default;
             item.LightningColor = default;
-            item.Sounds = null;
+            item.Sounds.Clear();
             item.FNAMDataTypeState = default;
             item.HNAMDataTypeState = default;
             item.DATADataTypeState = default;
@@ -3581,7 +3581,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    item.Sounds = 
+                    item.Sounds.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Weather_Registration.SNAM_HEADER,
@@ -3592,8 +3592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<WeatherSound>();
+                            }));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
                 }
                 default:
@@ -3928,14 +3927,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.LightningColor, "LightningColor");
             }
-            if ((printMask?.Sounds?.Overall ?? true)
-                && item.Sounds.TryGet(out var SoundsItem))
+            if (printMask?.Sounds?.Overall ?? true)
             {
                 fg.AppendLine("Sounds =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in SoundsItem)
+                    foreach (var subItem in item.Sounds)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3970,7 +3968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.WeatherTypes?.Overall.HasValue ?? false && checkMask.WeatherTypes!.Overall.Value != (item.WeatherTypes != null)) return false;
-            if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != (item.Sounds != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -4019,10 +4016,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ThunderLightningFrequency = true;
             mask.Classification = true;
             mask.LightningColor = true;
-            if (item.Sounds.TryGet(out var SoundsItem))
-            {
-                mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var SoundsItem = item.Sounds;
+            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.FNAMDataTypeState = true;
             mask.HNAMDataTypeState = true;
             mask.DATADataTypeState = true;
@@ -4215,12 +4210,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Sounds != null)
+            foreach (var item in obj.Sounds.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Sounds.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -4463,22 +4455,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
                 try
                 {
-                    if ((rhs.Sounds != null))
-                    {
-                        item.Sounds = 
-                            rhs.Sounds
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<WeatherSound>();
-                    }
-                    else
-                    {
-                        item.Sounds = null;
-                    }
+                    item.Sounds.SetTo(
+                        rhs.Sounds
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4987,8 +4971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if ((item.Sounds != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
                 ListXmlTranslation<IWeatherSoundGetter>.Instance.Write(
                     node: node,
@@ -5799,11 +5782,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Sounds = SoundsItem.ToExtendedList();
+                            item.Sounds.SetTo(SoundsItem);
                         }
                         else
                         {
-                            item.Sounds = null;
+                            item.Sounds.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -6402,7 +6385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _LightningColor_IsSet => _DATALocation.HasValue;
         public Color LightningColor => _LightningColor_IsSet ? _data.Slice(_LightningColorLocation, 3).ReadColor() : default;
         #endregion
-        public IReadOnlyList<IWeatherSoundGetter>? Sounds { get; private set; }
+        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

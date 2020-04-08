@@ -72,15 +72,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Locations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LoadScreenLocation>? _Locations;
-        public ExtendedList<LoadScreenLocation>? Locations
+        private ExtendedList<LoadScreenLocation> _Locations = new ExtendedList<LoadScreenLocation>();
+        public ExtendedList<LoadScreenLocation> Locations
         {
             get => this._Locations;
-            set => this._Locations = value;
+            protected set => this._Locations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILoadScreenLocationGetter>? ILoadScreenGetter.Locations => _Locations;
+        IReadOnlyList<ILoadScreenLocationGetter> ILoadScreenGetter.Locations => _Locations;
         #endregion
 
         #endregion
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<LoadScreenLocation>? Locations { get; set; }
+        new ExtendedList<LoadScreenLocation> Locations { get; }
     }
 
     public partial interface ILoadScreenInternal :
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         String? Icon { get; }
         String? Description { get; }
-        IReadOnlyList<ILoadScreenLocationGetter>? Locations { get; }
+        IReadOnlyList<ILoadScreenLocationGetter> Locations { get; }
 
     }
 
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Icon = default;
             item.Description = default;
-            item.Locations = null;
+            item.Locations.Clear();
             base.Clear(item);
         }
         
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    item.Locations = 
+                    item.Locations.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LoadScreenLocation>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LoadScreen_Registration.LNAM_HEADER,
@@ -1412,8 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<LoadScreenLocation>();
+                            }));
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Locations);
                 }
                 default:
@@ -1557,14 +1556,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
-            if ((printMask?.Locations?.Overall ?? true)
-                && item.Locations.TryGet(out var LocationsItem))
+            if (printMask?.Locations?.Overall ?? true)
             {
                 fg.AppendLine("Locations =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in LocationsItem)
+                    foreach (var subItem in item.Locations)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1584,7 +1582,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Locations?.Overall.HasValue ?? false && checkMask.Locations!.Overall.Value != (item.Locations != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1596,10 +1593,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Icon = (item.Icon != null);
             mask.Description = (item.Description != null);
-            if (item.Locations.TryGet(out var LocationsItem))
-            {
-                mask.Locations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LoadScreenLocation.Mask<bool>?>>?>(true, LocationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LoadScreenLocation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var LocationsItem = item.Locations;
+            mask.Locations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LoadScreenLocation.Mask<bool>?>>?>(true, LocationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LoadScreenLocation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1714,12 +1709,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Locations != null)
+            foreach (var item in obj.Locations.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Locations.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -1780,22 +1772,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Locations);
                 try
                 {
-                    if ((rhs.Locations != null))
-                    {
-                        item.Locations = 
-                            rhs.Locations
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<LoadScreenLocation>();
-                    }
-                    else
-                    {
-                        item.Locations = null;
-                    }
+                    item.Locations.SetTo(
+                        rhs.Locations
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1969,8 +1953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LoadScreen_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if ((item.Locations != null)
-                && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Locations) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Locations) ?? true))
             {
                 ListXmlTranslation<ILoadScreenLocationGetter>.Instance.Write(
                     node: node,
@@ -2146,11 +2129,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Locations = LocationsItem.ToExtendedList();
+                            item.Locations.SetTo(LocationsItem);
                         }
                         else
                         {
-                            item.Locations = null;
+                            item.Locations.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2412,7 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlyList<ILoadScreenLocationGetter>? Locations { get; private set; }
+        public IReadOnlyList<ILoadScreenLocationGetter> Locations { get; private set; } = ListExt.Empty<LoadScreenLocationBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -66,29 +66,29 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocalVariables
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocalVariable>? _LocalVariables;
-        public ExtendedList<LocalVariable>? LocalVariables
+        private ExtendedList<LocalVariable> _LocalVariables = new ExtendedList<LocalVariable>();
+        public ExtendedList<LocalVariable> LocalVariables
         {
             get => this._LocalVariables;
-            set => this._LocalVariables = value;
+            protected set => this._LocalVariables = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocalVariableGetter>? IScriptFieldsGetter.LocalVariables => _LocalVariables;
+        IReadOnlyList<ILocalVariableGetter> IScriptFieldsGetter.LocalVariables => _LocalVariables;
         #endregion
 
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ScriptReference>? _References;
-        public ExtendedList<ScriptReference>? References
+        private ExtendedList<ScriptReference> _References = new ExtendedList<ScriptReference>();
+        public ExtendedList<ScriptReference> References
         {
             get => this._References;
-            set => this._References = value;
+            protected set => this._References = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IScriptReferenceGetter>? IScriptFieldsGetter.References => _References;
+        IReadOnlyList<IScriptReferenceGetter> IScriptFieldsGetter.References => _References;
         #endregion
 
         #endregion
@@ -862,8 +862,8 @@ namespace Mutagen.Bethesda.Oblivion
         new ScriptMetaSummary MetadataSummary { get; }
         new Byte[]? CompiledScript { get; set; }
         new String? SourceCode { get; set; }
-        new ExtendedList<LocalVariable>? LocalVariables { get; set; }
-        new ExtendedList<ScriptReference>? References { get; set; }
+        new ExtendedList<LocalVariable> LocalVariables { get; }
+        new ExtendedList<ScriptReference> References { get; }
     }
 
     public partial interface IScriptFieldsGetter :
@@ -882,8 +882,8 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptMetaSummaryGetter MetadataSummary { get; }
         ReadOnlyMemorySlice<Byte>? CompiledScript { get; }
         String? SourceCode { get; }
-        IReadOnlyList<ILocalVariableGetter>? LocalVariables { get; }
-        IReadOnlyList<IScriptReferenceGetter>? References { get; }
+        IReadOnlyList<ILocalVariableGetter> LocalVariables { get; }
+        IReadOnlyList<IScriptReferenceGetter> References { get; }
 
     }
 
@@ -1449,8 +1449,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.CompiledScript = default;
             item.SourceCode = default;
-            item.LocalVariables = null;
-            item.References = null;
+            item.LocalVariables.Clear();
+            item.References.Clear();
         }
         
         #region Xml Translation
@@ -1570,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44534C53: // SLSD
                 {
-                    item.LocalVariables = 
+                    item.LocalVariables.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ScriptFields_Registration.SLSD_HEADER,
@@ -1581,14 +1581,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<LocalVariable>();
+                            }));
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
                 }
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
                 {
-                    item.References = 
+                    item.References.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
@@ -1610,8 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     default:
                                         throw new NotImplementedException();
                                 }
-                            })
-                        .ToExtendedList<ScriptReference>();
+                            }));
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.References);
                 }
                 default:
@@ -1732,14 +1730,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(SourceCodeItem, "SourceCode");
             }
-            if ((printMask?.LocalVariables?.Overall ?? true)
-                && item.LocalVariables.TryGet(out var LocalVariablesItem))
+            if (printMask?.LocalVariables?.Overall ?? true)
             {
                 fg.AppendLine("LocalVariables =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in LocalVariablesItem)
+                    foreach (var subItem in item.LocalVariables)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1751,14 +1748,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.References?.Overall ?? true)
-                && item.References.TryGet(out var ReferencesItem))
+            if (printMask?.References?.Overall ?? true)
             {
                 fg.AppendLine("References =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ReferencesItem)
+                    foreach (var subItem in item.References)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1778,8 +1774,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.CompiledScript.HasValue && checkMask.CompiledScript.Value != (item.CompiledScript != null)) return false;
             if (checkMask.SourceCode.HasValue && checkMask.SourceCode.Value != (item.SourceCode != null)) return false;
-            if (checkMask.LocalVariables?.Overall.HasValue ?? false && checkMask.LocalVariables!.Overall.Value != (item.LocalVariables != null)) return false;
-            if (checkMask.References?.Overall.HasValue ?? false && checkMask.References!.Overall.Value != (item.References != null)) return false;
             return true;
         }
         
@@ -1790,14 +1784,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.MetadataSummary = new MaskItem<bool, ScriptMetaSummary.Mask<bool>?>(true, item.MetadataSummary?.GetHasBeenSetMask());
             mask.CompiledScript = (item.CompiledScript != null);
             mask.SourceCode = (item.SourceCode != null);
-            if (item.LocalVariables.TryGet(out var LocalVariablesItem))
-            {
-                mask.LocalVariables = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocalVariable.Mask<bool>?>>?>(true, LocalVariablesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocalVariable.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.References.TryGet(out var ReferencesItem))
-            {
-                mask.References = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptReference.Mask<bool>?>>?>(true, ReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var LocalVariablesItem = item.LocalVariables;
+            mask.LocalVariables = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocalVariable.Mask<bool>?>>?>(true, LocalVariablesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocalVariable.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var ReferencesItem = item.References;
+            mask.References = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptReference.Mask<bool>?>>?>(true, ReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1843,13 +1833,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IScriptFieldsGetter obj)
         {
-            if (obj.References != null)
+            foreach (var item in obj.References.WhereCastable<IScriptReferenceGetter, ILinkContainer>()
+                .SelectMany((f) => f.Links))
             {
-                foreach (var item in obj.References.WhereCastable<IScriptReferenceGetter, ILinkContainer>()
-                    .SelectMany((f) => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -1908,22 +1895,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.LocalVariables);
                 try
                 {
-                    if ((rhs.LocalVariables != null))
-                    {
-                        item.LocalVariables = 
-                            rhs.LocalVariables
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<LocalVariable>();
-                    }
-                    else
-                    {
-                        item.LocalVariables = null;
-                    }
+                    item.LocalVariables.SetTo(
+                        rhs.LocalVariables
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1940,22 +1919,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.References);
                 try
                 {
-                    if ((rhs.References != null))
-                    {
-                        item.References = 
-                            rhs.References
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<ScriptReference>();
-                    }
-                    else
-                    {
-                        item.References = null;
-                    }
+                    item.References.SetTo(
+                        rhs.References
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2087,8 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)ScriptFields_FieldIndex.SourceCode,
                     errorMask: errorMask);
             }
-            if ((item.LocalVariables != null)
-                && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.LocalVariables) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.LocalVariables) ?? true))
             {
                 ListXmlTranslation<ILocalVariableGetter>.Instance.Write(
                     node: node,
@@ -2110,8 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     });
             }
-            if ((item.References != null)
-                && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
             {
                 ListXmlTranslation<IScriptReferenceGetter>.Instance.Write(
                     node: node,
@@ -2286,11 +2255,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.LocalVariables = LocalVariablesItem.ToExtendedList();
+                            item.LocalVariables.SetTo(LocalVariablesItem);
                         }
                         else
                         {
-                            item.LocalVariables = null;
+                            item.LocalVariables.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2314,11 +2283,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.References = ReferencesItem.ToExtendedList();
+                            item.References.SetTo(ReferencesItem);
                         }
                         else
                         {
-                            item.References = null;
+                            item.References.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2706,8 +2675,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _SourceCodeLocation;
         public String? SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SourceCodeLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlyList<ILocalVariableGetter>? LocalVariables { get; private set; }
-        public IReadOnlyList<IScriptReferenceGetter>? References { get; private set; }
+        public IReadOnlyList<ILocalVariableGetter> LocalVariables { get; private set; } = ListExt.Empty<LocalVariableBinaryOverlay>();
+        public IReadOnlyList<IScriptReferenceGetter> References { get; private set; } = ListExt.Empty<ScriptReferenceBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

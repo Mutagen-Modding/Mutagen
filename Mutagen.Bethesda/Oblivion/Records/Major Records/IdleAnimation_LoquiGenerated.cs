@@ -61,15 +61,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            set => this._Conditions = value;
+            protected set => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter>? IIdleAnimationGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter> IIdleAnimationGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IIdleAnimationInternal>
     {
         new Model? Model { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; set; }
         new ExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations { get; set; }
     }
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         IModelGetter? Model { get; }
-        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
         IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; }
         IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; }
 
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Model = null;
-            item.Conditions = null;
+            item.Conditions.Clear();
             item.AnimationGroupSection = default;
             item.RelatedIdleAnimations = null;
             base.Clear(item);
@@ -1531,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    item.Conditions = 
+                    item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
@@ -1542,8 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<Condition>();
+                            }));
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
                 }
                 case 0x4D414E41: // ANAM
@@ -1707,14 +1706,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.Conditions?.Overall ?? true)
-                && item.Conditions.TryGet(out var ConditionsItem))
+            if (printMask?.Conditions?.Overall ?? true)
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ConditionsItem)
+                    foreach (var subItem in item.Conditions)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1758,7 +1756,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
             if (checkMask.AnimationGroupSection.HasValue && checkMask.AnimationGroupSection.Value != (item.AnimationGroupSection != null)) return false;
             if (checkMask.RelatedIdleAnimations?.Overall.HasValue ?? false && checkMask.RelatedIdleAnimations!.Overall.Value != (item.RelatedIdleAnimations != null)) return false;
             return base.HasBeenSet(
@@ -1772,10 +1769,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            if (item.Conditions.TryGet(out var ConditionsItem))
-            {
-                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.AnimationGroupSection = (item.AnimationGroupSection != null);
             mask.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.RelatedIdleAnimations != null), default);
             base.FillHasBeenSetMask(
@@ -1978,22 +1973,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
                 try
                 {
-                    if ((rhs.Conditions != null))
-                    {
-                        item.Conditions = 
-                            rhs.Conditions
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<Condition>();
-                    }
-                    else
-                    {
-                        item.Conditions = null;
-                    }
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2192,8 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model));
                 }
             }
-            if ((item.Conditions != null)
-                && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<IConditionGetter>.Instance.Write(
                     node: node,
@@ -2381,11 +2367,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Conditions = ConditionsItem.ToExtendedList();
+                            item.Conditions.SetTo(ConditionsItem);
                         }
                         else
                         {
-                            item.Conditions = null;
+                            item.Conditions.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2700,7 +2686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         #region AnimationGroupSection
         private int? _AnimationGroupSectionLocation;
         private bool AnimationGroupSection_IsSet => _AnimationGroupSectionLocation.HasValue;

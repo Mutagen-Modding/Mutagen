@@ -166,15 +166,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RankPlacement>? _Factions;
-        public ExtendedList<RankPlacement>? Factions
+        private ExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
+        public ExtendedList<RankPlacement> Factions
         {
             get => this._Factions;
-            set => this._Factions = value;
+            protected set => this._Factions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IRankPlacementGetter>? INpcGetter.Factions => _Factions;
+        IReadOnlyList<IRankPlacementGetter> INpcGetter.Factions => _Factions;
         #endregion
 
         #endregion
@@ -215,15 +215,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ItemEntry>? _Items;
-        public ExtendedList<ItemEntry>? Items
+        private ExtendedList<ItemEntry> _Items = new ExtendedList<ItemEntry>();
+        public ExtendedList<ItemEntry> Items
         {
             get => this._Items;
-            set => this._Items = value;
+            protected set => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IItemEntryGetter>? INpcGetter.Items => _Items;
+        IReadOnlyList<IItemEntryGetter> INpcGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -3721,12 +3721,12 @@ namespace Mutagen.Bethesda.Oblivion
         new Int16 LevelOffset { get; set; }
         new UInt16 CalcMin { get; set; }
         new UInt16 CalcMax { get; set; }
-        new ExtendedList<RankPlacement>? Factions { get; set; }
+        new ExtendedList<RankPlacement> Factions { get; }
         new IFormLinkNullable<AItem> DeathItem { get; }
         new IFormLinkNullable<Race> Race { get; }
         new ExtendedList<IFormLink<ASpell>>? Spells { get; set; }
         new IFormLinkNullable<Script> Script { get; }
-        new ExtendedList<ItemEntry>? Items { get; set; }
+        new ExtendedList<ItemEntry> Items { get; }
         new Byte Aggression { get; set; }
         new Byte Confidence { get; set; }
         new Byte EnergyLevel { get; set; }
@@ -3805,12 +3805,12 @@ namespace Mutagen.Bethesda.Oblivion
         Int16 LevelOffset { get; }
         UInt16 CalcMin { get; }
         UInt16 CalcMax { get; }
-        IReadOnlyList<IRankPlacementGetter>? Factions { get; }
+        IReadOnlyList<IRankPlacementGetter> Factions { get; }
         IFormLinkNullableGetter<IAItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<IASpellGetter>>? Spells { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        IReadOnlyList<IItemEntryGetter>? Items { get; }
+        IReadOnlyList<IItemEntryGetter> Items { get; }
         Byte Aggression { get; }
         Byte Confidence { get; }
         Byte EnergyLevel { get; }
@@ -5189,12 +5189,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LevelOffset = default;
             item.CalcMin = default;
             item.CalcMax = default;
-            item.Factions = null;
+            item.Factions.Clear();
             item.DeathItem.FormKey = null;
             item.Race.FormKey = null;
             item.Spells = null;
             item.Script.FormKey = null;
-            item.Items = null;
+            item.Items.Clear();
             item.Aggression = default;
             item.Confidence = default;
             item.EnergyLevel = default;
@@ -5439,7 +5439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    item.Factions = 
+                    item.Factions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Npc_Registration.SNAM_HEADER,
@@ -5450,8 +5450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<RankPlacement>();
+                            }));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
                 }
                 case 0x4D414E49: // INAM
@@ -5491,7 +5490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F544E43: // CNTO
                 {
-                    item.Items = 
+                    item.Items.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Npc_Registration.CNTO_HEADER,
@@ -5502,8 +5501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<ItemEntry>();
+                            }));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
                 }
                 case 0x54444941: // AIDT
@@ -5939,14 +5937,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.CalcMax, "CalcMax");
             }
-            if ((printMask?.Factions?.Overall ?? true)
-                && item.Factions.TryGet(out var FactionsItem))
+            if (printMask?.Factions?.Overall ?? true)
             {
                 fg.AppendLine("Factions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in FactionsItem)
+                    foreach (var subItem in item.Factions)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -5992,14 +5989,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(ScriptItem, "Script");
             }
-            if ((printMask?.Items?.Overall ?? true)
-                && item.Items.TryGet(out var ItemsItem))
+            if (printMask?.Items?.Overall ?? true)
             {
                 fg.AppendLine("Items =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ItemsItem)
+                    foreach (var subItem in item.Items)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -6286,12 +6282,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Factions?.Overall.HasValue ?? false && checkMask.Factions!.Overall.Value != (item.Factions != null)) return false;
             if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != (item.DeathItem.FormKey != null)) return false;
             if (checkMask.Race.HasValue && checkMask.Race.Value != (item.Race.FormKey != null)) return false;
             if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != (item.Spells != null)) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
-            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
             if (checkMask.AIPackages?.Overall.HasValue ?? false && checkMask.AIPackages!.Overall.Value != (item.AIPackages != null)) return false;
             if (checkMask.Animations?.Overall.HasValue ?? false && checkMask.Animations!.Overall.Value != (item.Animations != null)) return false;
             if (checkMask.Class.HasValue && checkMask.Class.Value != (item.Class.FormKey != null)) return false;
@@ -6323,18 +6317,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.LevelOffset = true;
             mask.CalcMin = true;
             mask.CalcMax = true;
-            if (item.Factions.TryGet(out var FactionsItem))
-            {
-                mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>?>(true, FactionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var FactionsItem = item.Factions;
+            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>?>(true, FactionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.DeathItem = (item.DeathItem.FormKey != null);
             mask.Race = (item.Race.FormKey != null);
             mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Spells != null), default);
             mask.Script = (item.Script.FormKey != null);
-            if (item.Items.TryGet(out var ItemsItem))
-            {
-                mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var ItemsItem = item.Items;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Aggression = true;
             mask.Confidence = true;
             mask.EnergyLevel = true;
@@ -6734,12 +6724,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Factions != null)
+            foreach (var item in obj.Factions.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Factions.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield return obj.DeathItem;
             yield return obj.Race;
@@ -6751,12 +6738,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             yield return obj.Script;
-            if (obj.Items != null)
+            foreach (var item in obj.Items.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Items.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.AIPackages != null)
             {
@@ -6884,22 +6868,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.Factions);
                 try
                 {
-                    if ((rhs.Factions != null))
-                    {
-                        item.Factions = 
-                            rhs.Factions
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<RankPlacement>();
-                    }
-                    else
-                    {
-                        item.Factions = null;
-                    }
+                    item.Factions.SetTo(
+                        rhs.Factions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6955,22 +6931,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.Items);
                 try
                 {
-                    if ((rhs.Items != null))
-                    {
-                        item.Items = 
-                            rhs.Items
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<ItemEntry>();
-                    }
-                    else
-                    {
-                        item.Items = null;
-                    }
+                    item.Items.SetTo(
+                        rhs.Items
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7574,8 +7542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if ((item.Factions != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
                 ListXmlTranslation<IRankPlacementGetter>.Instance.Write(
                     node: node,
@@ -7646,8 +7613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Npc_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if ((item.Items != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<IItemEntryGetter>.Instance.Write(
                     node: node,
@@ -8503,11 +8469,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Factions = FactionsItem.ToExtendedList();
+                            item.Factions.SetTo(FactionsItem);
                         }
                         else
                         {
-                            item.Factions = null;
+                            item.Factions.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -8613,11 +8579,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Items = ItemsItem.ToExtendedList();
+                            item.Items.SetTo(ItemsItem);
                         }
                         else
                         {
-                            item.Items = null;
+                            item.Items.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -10106,7 +10072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _CalcMax_IsSet => _ACBSLocation.HasValue;
         public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CalcMaxLocation, 2)) : default;
         #endregion
-        public IReadOnlyList<IRankPlacementGetter>? Factions { get; private set; }
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
@@ -10123,7 +10089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Script_IsSet => _ScriptLocation.HasValue;
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
         #endregion
-        public IReadOnlyList<IItemEntryGetter>? Items { get; private set; }
+        public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
         private int? _AIDTLocation;
         public Npc.AIDTDataType AIDTDataTypeState { get; private set; }
         #region Aggression

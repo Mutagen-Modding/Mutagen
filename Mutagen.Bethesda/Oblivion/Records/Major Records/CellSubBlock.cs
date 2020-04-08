@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         partial class CellSubBlockBinaryOverlay
         {
-            public IReadOnlyList<ICellGetter>? Cells { get; private set; }
+            public IReadOnlyList<ICellGetter> Cells { get; private set; } = ListExt.Empty<ICellGetter>();
 
             partial void CellsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {

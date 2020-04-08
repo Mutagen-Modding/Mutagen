@@ -72,15 +72,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledEntry<NpcSpawn>>? _Entries;
-        public ExtendedList<LeveledEntry<NpcSpawn>>? Entries
+        private ExtendedList<LeveledEntry<NpcSpawn>> _Entries = new ExtendedList<LeveledEntry<NpcSpawn>>();
+        public ExtendedList<LeveledEntry<NpcSpawn>> Entries
         {
             get => this._Entries;
-            set => this._Entries = value;
+            protected set => this._Entries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>>? ILeveledCreatureGetter.Entries => _Entries;
+        IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>> ILeveledCreatureGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new ExtendedList<LeveledEntry<NpcSpawn>>? Entries { get; set; }
+        new ExtendedList<LeveledEntry<NpcSpawn>> Entries { get; }
         new IFormLinkNullable<Script> Script { get; }
         new IFormLinkNullable<ANpc> Template { get; }
     }
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
-        IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>>? Entries { get; }
+        IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>> Entries { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IFormLinkNullableGetter<IANpcGetter> Template { get; }
 
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.ChanceNone = default;
             item.Flags = default;
-            item.Entries = null;
+            item.Entries.Clear();
             item.Script.FormKey = null;
             item.Template.FormKey = null;
             base.Clear(item);
@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C564C: // LVLO
                 {
-                    item.Entries = 
+                    item.Entries.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NpcSpawn>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
@@ -1528,8 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<LeveledEntry<NpcSpawn>>();
+                            }));
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);
                 }
                 case 0x49524353: // SCRI
@@ -1702,14 +1701,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.Entries?.Overall ?? true)
-                && item.Entries.TryGet(out var EntriesItem))
+            if (printMask?.Entries?.Overall ?? true)
             {
                 fg.AppendLine("Entries =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in EntriesItem)
+                    foreach (var subItem in item.Entries)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1739,7 +1737,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != (item.ChanceNone != null)) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.Entries?.Overall.HasValue ?? false && checkMask.Entries!.Overall.Value != (item.Entries != null)) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.Template.HasValue && checkMask.Template.Value != (item.Template.FormKey != null)) return false;
             return base.HasBeenSet(
@@ -1753,10 +1750,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.ChanceNone = (item.ChanceNone != null);
             mask.Flags = (item.Flags != null);
-            if (item.Entries.TryGet(out var EntriesItem))
-            {
-                mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>?>(true, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var EntriesItem = item.Entries;
+            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>?>(true, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Script = (item.Script.FormKey != null);
             mask.Template = (item.Template.FormKey != null);
             base.FillHasBeenSetMask(
@@ -1916,12 +1911,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Entries != null)
+            foreach (var item in obj.Entries.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Entries.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield return obj.Script;
             yield return obj.Template;
@@ -1984,22 +1976,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Entries);
                 try
                 {
-                    if ((rhs.Entries != null))
-                    {
-                        item.Entries = 
-                            rhs.Entries
-                            .Select(r =>
-                            {
-                                return r.DeepCopy<NpcSpawn, INpcSpawnGetter, NpcSpawn.TranslationMask>(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<LeveledEntry<NpcSpawn>>();
-                    }
-                    else
-                    {
-                        item.Entries = null;
-                    }
+                    item.Entries.SetTo(
+                        rhs.Entries
+                        .Select(r =>
+                        {
+                            return r.DeepCopy<NpcSpawn, INpcSpawnGetter, NpcSpawn.TranslationMask>(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2207,8 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((item.Entries != null)
-                && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
             {
                 ListXmlTranslation<ILeveledEntryGetter<INpcSpawnGetter>>.Instance.Write(
                     node: node,
@@ -2419,11 +2402,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Entries = EntriesItem.ToExtendedList();
+                            item.Entries.SetTo(EntriesItem);
                         }
                         else
                         {
-                            item.Entries = null;
+                            item.Entries.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2740,7 +2723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool Flags_IsSet => _FlagsLocation.HasValue;
         public LeveledFlag? Flags => Flags_IsSet ? (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(LeveledFlag?);
         #endregion
-        public IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>>? Entries { get; private set; }
+        public IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>> Entries { get; private set; } = ListExt.Empty<LeveledEntryBinaryOverlay<INpcSpawnGetter>>();
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;

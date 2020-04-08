@@ -98,15 +98,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogItem>? _Items;
-        public ExtendedList<DialogItem>? Items
+        private ExtendedList<DialogItem> _Items = new ExtendedList<DialogItem>();
+        public ExtendedList<DialogItem> Items
         {
             get => this._Items;
-            set => this._Items = value;
+            protected set => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IDialogItemGetter>? IDialogTopicGetter.Items => _Items;
+        IReadOnlyList<IDialogItemGetter> IDialogTopicGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
         new Byte[] Timestamp { get; set; }
-        new ExtendedList<DialogItem>? Items { get; set; }
+        new ExtendedList<DialogItem> Items { get; }
     }
 
     public partial interface IDialogTopicInternal :
@@ -918,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         DialogType? DialogType { get; }
         ReadOnlyMemorySlice<Byte> Timestamp { get; }
-        IReadOnlyList<IDialogItemGetter>? Items { get; }
+        IReadOnlyList<IDialogItemGetter> Items { get; }
 
     }
 
@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.DialogType = default;
             item.Timestamp = new byte[4];
-            item.Items = null;
+            item.Items.Clear();
             base.Clear(item);
         }
         
@@ -1825,14 +1825,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
             }
-            if ((printMask?.Items?.Overall ?? true)
-                && item.Items.TryGet(out var ItemsItem))
+            if (printMask?.Items?.Overall ?? true)
             {
                 fg.AppendLine("Items =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ItemsItem)
+                    foreach (var subItem in item.Items)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1853,7 +1852,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Quests?.Overall.HasValue ?? false && checkMask.Quests!.Overall.Value != (item.Quests != null)) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.DialogType.HasValue && checkMask.DialogType.Value != (item.DialogType != null)) return false;
-            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1867,10 +1865,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = (item.Name != null);
             mask.DialogType = (item.DialogType != null);
             mask.Timestamp = true;
-            if (item.Items.TryGet(out var ItemsItem))
-            {
-                mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogItem.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogItem.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var ItemsItem = item.Items;
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogItem.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogItem.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1996,12 +1992,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Items != null)
+            foreach (var item in obj.Items.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Items.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -2022,15 +2015,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((obj.Quests != null))
             {
             }
-            if ((obj.Items != null))
+            foreach (var subItem in obj.Items)
             {
-                foreach (var subItem in obj.Items.TryIterate())
+                yield return subItem;
+                foreach (var item in subItem.EnumerateMajorRecords())
                 {
-                    yield return subItem;
-                    foreach (var item in subItem.EnumerateMajorRecords())
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
         }
@@ -2055,7 +2045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IDialogItemGetter":
                 case "IDialogItem":
                 case "IDialogItemInternal":
-                    foreach (var subItem in obj.Items.TryIterate())
+                    foreach (var subItem in obj.Items)
                     {
                         yield return (subItem as TMajor)!;
                         foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
@@ -2145,25 +2135,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
                 try
                 {
-                    if ((rhs.Items != null))
-                    {
-                        item.Items = 
-                            rhs.Items
-                            .Select(r =>
-                            {
-                                var copyRet = new DialogItem(r.FormKey);
-                                copyRet.DeepCopyIn(
-                                    rhs: r,
-                                    copyMask: default(TranslationCrystal),
-                                    errorMask: errorMask);
-                                return copyRet;
-                            })
-                            .ToExtendedList<DialogItem>();
-                    }
-                    else
-                    {
-                        item.Items = null;
-                    }
+                    item.Items.SetTo(
+                        rhs.Items
+                        .Select(r =>
+                        {
+                            var copyRet = new DialogItem(r.FormKey);
+                            copyRet.DeepCopyIn(
+                                rhs: r,
+                                copyMask: default(TranslationCrystal),
+                                errorMask: errorMask);
+                            return copyRet;
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2365,8 +2347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)DialogTopic_FieldIndex.Timestamp,
                     errorMask: errorMask);
             }
-            if ((item.Items != null)
-                && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Items) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<IDialogItemGetter>.Instance.Write(
                     node: node,
@@ -2589,11 +2570,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Items = ItemsItem.ToExtendedList();
+                            item.Items.SetTo(ItemsItem);
                         }
                         else
                         {
-                            item.Items = null;
+                            item.Items.Clear();
                         }
                     }
                     catch (Exception ex)

@@ -41,9 +41,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     obj.Landscape = (Landscape)landscape.Duplicate(getNextFormKey, duplicatedRecords);
                 }
-                obj.Persistent = new ExtendedList<IPlaced>(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
-                obj.Temporary = new ExtendedList<IPlaced>(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
-                obj.VisibleWhenDistant = new ExtendedList<IPlaced>(rhs.VisibleWhenDistant.Select((i) => (IPlaced)i.Duplicate(getNextFormKey)));
+                obj.Persistent.SetTo(new ExtendedList<IPlaced>(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords))));
+                obj.Temporary.SetTo(new ExtendedList<IPlaced>(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords))));
+                obj.VisibleWhenDistant.SetTo(new ExtendedList<IPlaced>(rhs.VisibleWhenDistant.Select((i) => (IPlaced)i.Duplicate(getNextFormKey))));
             }
         }
 
@@ -86,7 +86,6 @@ namespace Mutagen.Bethesda.Oblivion
                     switch (type)
                     {
                         case GroupTypeEnum.CellPersistentChildren:
-                            obj.Persistent = new ExtendedList<IPlaced>();
                             ParseTypical(
                                 frame: itemFrame,
                                 obj: obj,
@@ -99,7 +98,6 @@ namespace Mutagen.Bethesda.Oblivion
                                 obj);
                             break;
                         case GroupTypeEnum.CellVisibleDistantChildren:
-                            obj.VisibleWhenDistant = new ExtendedList<IPlaced>();
                             ParseTypical(
                                 frame: itemFrame,
                                 obj: obj,
@@ -248,7 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
                         placed = null!;
                         return false;
                     });
-                obj.Temporary = new ExtendedList<IPlaced>(items);
+                obj.Temporary.SetTo(new ExtendedList<IPlaced>(items));
             }
         }
 
@@ -356,15 +354,15 @@ namespace Mutagen.Bethesda.Oblivion
 
             private int? _persistentLocation;
             public ReadOnlyMemorySlice<byte> PersistentTimestamp => _persistentLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
-            public IReadOnlyList<IPlacedGetter>? Persistent { get; private set; }
+            public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             private int? _temporaryLocation;
             public ReadOnlyMemorySlice<byte> TemporaryTimestamp => _temporaryLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
-            public IReadOnlyList<IPlacedGetter>? Temporary { get; private set; }
+            public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             private int? _visibleWhenDistantLocation;
             public ReadOnlyMemorySlice<byte> VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
-            public IReadOnlyList<IPlacedGetter>? VisibleWhenDistant { get; private set; }
+            public IReadOnlyList<IPlacedGetter> VisibleWhenDistant { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {

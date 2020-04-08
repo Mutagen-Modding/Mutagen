@@ -59,15 +59,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BodyPart>? _BodyParts;
-        public ExtendedList<BodyPart>? BodyParts
+        private ExtendedList<BodyPart> _BodyParts = new ExtendedList<BodyPart>();
+        public ExtendedList<BodyPart> BodyParts
         {
             get => this._BodyParts;
-            set => this._BodyParts = value;
+            protected set => this._BodyParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IBodyPartGetter>? IBodyDataGetter.BodyParts => _BodyParts;
+        IReadOnlyList<IBodyPartGetter> IBodyDataGetter.BodyParts => _BodyParts;
         #endregion
 
         #endregion
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IBodyData>
     {
         new Model? Model { get; set; }
-        new ExtendedList<BodyPart>? BodyParts { get; set; }
+        new ExtendedList<BodyPart> BodyParts { get; }
     }
 
     public partial interface IBodyDataGetter :
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         IModelGetter? Model { get; }
-        IReadOnlyList<IBodyPartGetter>? BodyParts { get; }
+        IReadOnlyList<IBodyPartGetter> BodyParts { get; }
 
     }
 
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Model = null;
-            item.BodyParts = null;
+            item.BodyParts.Clear();
         }
         
         #region Xml Translation
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E4F4349: // ICON
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
-                    item.BodyParts = 
+                    item.BodyParts.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
@@ -1283,8 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<BodyPart>();
+                            }));
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
                 }
                 default:
@@ -1394,14 +1393,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.BodyParts?.Overall ?? true)
-                && item.BodyParts.TryGet(out var BodyPartsItem))
+            if (printMask?.BodyParts?.Overall ?? true)
             {
                 fg.AppendLine("BodyParts =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in BodyPartsItem)
+                    foreach (var subItem in item.BodyParts)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1421,7 +1419,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.BodyParts?.Overall.HasValue ?? false && checkMask.BodyParts!.Overall.Value != (item.BodyParts != null)) return false;
             return true;
         }
         
@@ -1431,10 +1428,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            if (item.BodyParts.TryGet(out var BodyPartsItem))
-            {
-                mask.BodyParts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BodyPart.Mask<bool>?>>?>(true, BodyPartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, BodyPart.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var BodyPartsItem = item.BodyParts;
+            mask.BodyParts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BodyPart.Mask<bool>?>>?>(true, BodyPartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, BodyPart.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1519,22 +1514,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BodyData_FieldIndex.BodyParts);
                 try
                 {
-                    if ((rhs.BodyParts != null))
-                    {
-                        item.BodyParts = 
-                            rhs.BodyParts
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<BodyPart>();
-                    }
-                    else
-                    {
-                        item.BodyParts = null;
-                    }
+                    item.BodyParts.SetTo(
+                        rhs.BodyParts
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1649,8 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
                 }
             }
-            if ((item.BodyParts != null)
-                && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.BodyParts) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.BodyParts) ?? true))
             {
                 ListXmlTranslation<IBodyPartGetter>.Instance.Write(
                     node: node,
@@ -1808,11 +1794,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.BodyParts = BodyPartsItem.ToExtendedList();
+                            item.BodyParts.SetTo(BodyPartsItem);
                         }
                         else
                         {
-                            item.BodyParts = null;
+                            item.BodyParts.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2135,7 +2121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlyList<IBodyPartGetter>? BodyParts { get; private set; }
+        public IReadOnlyList<IBodyPartGetter> BodyParts { get; private set; } = ListExt.Empty<BodyPartBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

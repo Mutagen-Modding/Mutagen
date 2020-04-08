@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Effect>? _Effects;
-        public ExtendedList<Effect>? Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
-            set => this._Effects = value;
+            protected set => this._Effects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IEffectGetter>? IPotionGetter.Effects => _Effects;
+        IReadOnlyList<IEffectGetter> IPotionGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Single? Weight { get; set; }
         new UInt32 Value { get; set; }
         new IngredientFlag Flags { get; set; }
-        new ExtendedList<Effect>? Effects { get; set; }
+        new ExtendedList<Effect> Effects { get; }
         new Potion.ENITDataType ENITDataTypeState { get; set; }
     }
 
@@ -1000,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
         Single? Weight { get; }
         UInt32 Value { get; }
         IngredientFlag Flags { get; }
-        IReadOnlyList<IEffectGetter>? Effects { get; }
+        IReadOnlyList<IEffectGetter> Effects { get; }
         Potion.ENITDataType ENITDataTypeState { get; }
 
     }
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weight = default;
             item.Value = default;
             item.Flags = default;
-            item.Effects = null;
+            item.Effects.Clear();
             item.ENITDataTypeState = default;
             base.Clear(item);
         }
@@ -1787,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494645: // EFID
                 {
-                    item.Effects = 
+                    item.Effects.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Potion_Registration.EFID_HEADER,
@@ -1798,8 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<Effect>();
+                            }));
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Effects);
                 }
                 default:
@@ -1987,14 +1986,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if ((printMask?.Effects?.Overall ?? true)
-                && item.Effects.TryGet(out var EffectsItem))
+            if (printMask?.Effects?.Overall ?? true)
             {
                 fg.AppendLine("Effects =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in EffectsItem)
+                    foreach (var subItem in item.Effects)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2022,7 +2020,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.Weight.HasValue && checkMask.Weight.Value != (item.Weight != null)) return false;
-            if (checkMask.Effects?.Overall.HasValue ?? false && checkMask.Effects!.Overall.Value != (item.Effects != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2040,10 +2037,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Weight = (item.Weight != null);
             mask.Value = true;
             mask.Flags = true;
-            if (item.Effects.TryGet(out var EffectsItem))
-            {
-                mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var EffectsItem = item.Effects;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.ENITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2214,12 +2209,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 yield return item;
             }
             yield return obj.Script;
-            if (obj.Effects != null)
+            foreach (var item in obj.Effects.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Effects.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -2322,22 +2314,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Potion_FieldIndex.Effects);
                 try
                 {
-                    if ((rhs.Effects != null))
-                    {
-                        item.Effects = 
-                            rhs.Effects
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<Effect>();
-                    }
-                    else
-                    {
-                        item.Effects = null;
-                    }
+                    item.Effects.SetTo(
+                        rhs.Effects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2596,8 +2580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if ((item.Effects != null)
-                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Effects) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Effects) ?? true))
             {
                 ListXmlTranslation<IEffectGetter>.Instance.Write(
                     node: node,
@@ -2889,11 +2872,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Effects = EffectsItem.ToExtendedList();
+                            item.Effects.SetTo(EffectsItem);
                         }
                         else
                         {
-                            item.Effects = null;
+                            item.Effects.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -3243,7 +3226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flags_IsSet => _ENITLocation.HasValue;
         public IngredientFlag Flags => _Flags_IsSet ? (IngredientFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
-        public IReadOnlyList<IEffectGetter>? Effects { get; private set; }
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

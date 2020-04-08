@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Presets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<TintPreset>? _Presets;
-        public ExtendedList<TintPreset>? Presets
+        private ExtendedList<TintPreset> _Presets = new ExtendedList<TintPreset>();
+        public ExtendedList<TintPreset> Presets
         {
             get => this._Presets;
-            set => this._Presets = value;
+            protected set => this._Presets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ITintPresetGetter>? ITintAssetsGetter.Presets => _Presets;
+        IReadOnlyList<ITintPresetGetter> ITintAssetsGetter.Presets => _Presets;
         #endregion
 
         #endregion
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
         new IFormLinkNullable<ColorRecord> PresetDefault { get; }
-        new ExtendedList<TintPreset>? Presets { get; set; }
+        new ExtendedList<TintPreset> Presets { get; }
     }
 
     public partial interface ITintAssetsGetter :
@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? FileName { get; }
         TintAssets.TintMaskType? MaskType { get; }
         IFormLinkNullableGetter<IColorRecordGetter> PresetDefault { get; }
-        IReadOnlyList<ITintPresetGetter>? Presets { get; }
+        IReadOnlyList<ITintPresetGetter> Presets { get; }
 
     }
 
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FileName = default;
             item.MaskType = default;
             item.PresetDefault.FormKey = null;
-            item.Presets = null;
+            item.Presets.Clear();
         }
         
         #region Xml Translation
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x53524954: // TIRS
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return TryGet<int?>.Failure;
-                    item.Presets = 
+                    item.Presets.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<TintPreset>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: TintPreset_Registration.TriggeringRecordTypes,
@@ -1475,8 +1475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<TintPreset>();
+                            }));
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Presets);
                 }
                 default:
@@ -1600,14 +1599,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(PresetDefaultItem, "PresetDefault");
             }
-            if ((printMask?.Presets?.Overall ?? true)
-                && item.Presets.TryGet(out var PresetsItem))
+            if (printMask?.Presets?.Overall ?? true)
             {
                 fg.AppendLine("Presets =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in PresetsItem)
+                    foreach (var subItem in item.Presets)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1629,7 +1627,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.FileName.HasValue && checkMask.FileName.Value != (item.FileName != null)) return false;
             if (checkMask.MaskType.HasValue && checkMask.MaskType.Value != (item.MaskType != null)) return false;
             if (checkMask.PresetDefault.HasValue && checkMask.PresetDefault.Value != (item.PresetDefault.FormKey != null)) return false;
-            if (checkMask.Presets?.Overall.HasValue ?? false && checkMask.Presets!.Overall.Value != (item.Presets != null)) return false;
             return true;
         }
         
@@ -1641,10 +1638,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.FileName = (item.FileName != null);
             mask.MaskType = (item.MaskType != null);
             mask.PresetDefault = (item.PresetDefault.FormKey != null);
-            if (item.Presets.TryGet(out var PresetsItem))
-            {
-                mask.Presets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TintPreset.Mask<bool>?>>?>(true, PresetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, TintPreset.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var PresetsItem = item.Presets;
+            mask.Presets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TintPreset.Mask<bool>?>>?>(true, PresetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, TintPreset.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1697,12 +1692,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<ILinkGetter> GetLinks(ITintAssetsGetter obj)
         {
             yield return obj.PresetDefault;
-            if (obj.Presets != null)
+            foreach (var item in obj.Presets.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.Presets.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -1742,22 +1734,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)TintAssets_FieldIndex.Presets);
                 try
                 {
-                    if ((rhs.Presets != null))
-                    {
-                        item.Presets = 
-                            rhs.Presets
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<TintPreset>();
-                    }
-                    else
-                    {
-                        item.Presets = null;
-                    }
+                    item.Presets.SetTo(
+                        rhs.Presets
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1898,8 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)TintAssets_FieldIndex.PresetDefault,
                     errorMask: errorMask);
             }
-            if ((item.Presets != null)
-                && (translationMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
             {
                 ListXmlTranslation<ITintPresetGetter>.Instance.Write(
                     node: node,
@@ -2110,11 +2093,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Presets = PresetsItem.ToExtendedList();
+                            item.Presets.SetTo(PresetsItem);
                         }
                         else
                         {
-                            item.Presets = null;
+                            item.Presets.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2464,7 +2447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool PresetDefault_IsSet => _PresetDefaultLocation.HasValue;
         public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PresetDefaultLocation.Value, _package.Meta)))) : FormLinkNullable<IColorRecordGetter>.Empty;
         #endregion
-        public IReadOnlyList<ITintPresetGetter>? Presets { get; private set; }
+        public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = ListExt.Empty<TintPresetBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

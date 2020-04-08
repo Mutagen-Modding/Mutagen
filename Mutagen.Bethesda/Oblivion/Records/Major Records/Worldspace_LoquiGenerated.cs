@@ -194,15 +194,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WorldspaceBlock>? _SubCells;
-        public ExtendedList<WorldspaceBlock>? SubCells
+        private ExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
+        public ExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
-            set => this._SubCells = value;
+            protected set => this._SubCells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IWorldspaceBlockGetter>? IWorldspaceGetter.SubCells => _SubCells;
+        IReadOnlyList<IWorldspaceBlockGetter> IWorldspaceGetter.SubCells => _SubCells;
         #endregion
 
         #endregion
@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Road? Road { get; set; }
         new Cell? TopCell { get; set; }
         new Byte[] SubCellsTimestamp { get; set; }
-        new ExtendedList<WorldspaceBlock>? SubCells { get; set; }
+        new ExtendedList<WorldspaceBlock> SubCells { get; }
         new Boolean UsingOffsetLength { get; set; }
     }
 
@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRoadGetter? Road { get; }
         ICellGetter? TopCell { get; }
         ReadOnlyMemorySlice<Byte> SubCellsTimestamp { get; }
-        IReadOnlyList<IWorldspaceBlockGetter>? SubCells { get; }
+        IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; }
         Boolean UsingOffsetLength { get; }
 
     }
@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Road = null;
             item.TopCell = null;
             item.SubCellsTimestamp = new byte[4];
-            item.SubCells = null;
+            item.SubCells.Clear();
             item.UsingOffsetLength = default;
             base.Clear(item);
         }
@@ -2502,14 +2502,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"SubCellsTimestamp => {SpanExt.ToHexString(item.SubCellsTimestamp)}");
             }
-            if ((printMask?.SubCells?.Overall ?? true)
-                && item.SubCells.TryGet(out var SubCellsItem))
+            if (printMask?.SubCells?.Overall ?? true)
             {
                 fg.AppendLine("SubCells =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in SubCellsItem)
+                    foreach (var subItem in item.SubCells)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2547,7 +2546,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Road?.Specific != null && (item.Road == null || !item.Road.HasBeenSet(checkMask.Road.Specific))) return false;
             if (checkMask.TopCell?.Overall.HasValue ?? false && checkMask.TopCell.Overall.Value != (item.TopCell != null)) return false;
             if (checkMask.TopCell?.Specific != null && (item.TopCell == null || !item.TopCell.HasBeenSet(checkMask.TopCell.Specific))) return false;
-            if (checkMask.SubCells?.Overall.HasValue ?? false && checkMask.SubCells!.Overall.Value != (item.SubCells != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2574,10 +2572,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemTopCell = item.TopCell;
             mask.TopCell = new MaskItem<bool, Cell.Mask<bool>?>(itemTopCell != null, itemTopCell?.GetHasBeenSetMask());
             mask.SubCellsTimestamp = true;
-            if (item.SubCells.TryGet(out var SubCellsItem))
-            {
-                mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>>?>(true, SubCellsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var SubCellsItem = item.SubCells;
+            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>>?>(true, SubCellsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.UsingOffsetLength = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2795,12 +2791,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.SubCells != null)
+            foreach (var item in obj.SubCells.SelectMany(f => f.Links))
             {
-                foreach (var item in obj.SubCells.SelectMany(f => f.Links))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -2843,14 +2836,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-            if ((obj.SubCells != null))
+            foreach (var subItem in obj.SubCells)
             {
-                foreach (var subItem in obj.SubCells.TryIterate())
+                foreach (var item in subItem.EnumerateMajorRecords())
                 {
-                    foreach (var item in subItem.EnumerateMajorRecords())
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
         }
@@ -2900,7 +2890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "WorldspaceBlock":
                 case "IWorldspaceBlockGetter":
                 case "IWorldspaceBlock":
-                    foreach (var subItem in obj.SubCells.TryIterate())
+                    foreach (var subItem in obj.SubCells)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
                         {
@@ -3085,22 +3075,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
                 try
                 {
-                    if ((rhs.SubCells != null))
-                    {
-                        item.SubCells = 
-                            rhs.SubCells
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<WorldspaceBlock>();
-                    }
-                    else
-                    {
-                        item.SubCells = null;
-                    }
+                    item.SubCells.SetTo(
+                        rhs.SubCells
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3435,8 +3417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Worldspace_FieldIndex.SubCellsTimestamp,
                     errorMask: errorMask);
             }
-            if ((item.SubCells != null)
-                && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
                 ListXmlTranslation<IWorldspaceBlockGetter>.Instance.Write(
                     node: node,
@@ -3856,11 +3837,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.SubCells = SubCellsItem.ToExtendedList();
+                            item.SubCells.SetTo(SubCellsItem);
                         }
                         else
                         {
-                            item.SubCells = null;
+                            item.SubCells.Clear();
                         }
                     }
                     catch (Exception ex)

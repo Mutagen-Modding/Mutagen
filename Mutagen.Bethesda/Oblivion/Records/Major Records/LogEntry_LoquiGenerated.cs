@@ -59,15 +59,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            set => this._Conditions = value;
+            protected set => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter>? ILogEntryGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter> ILogEntryGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILogEntry>
     {
         new LogEntry.Flag? Flags { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
         new String? Entry { get; set; }
         new ScriptFields? ResultScript { get; set; }
     }
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         LogEntry.Flag? Flags { get; }
-        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
         String? Entry { get; }
         IScriptFieldsGetter? ResultScript { get; }
 
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Flags = default;
-            item.Conditions = null;
+            item.Conditions.Clear();
             item.Entry = default;
             item.ResultScript = null;
         }
@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445443: // CTDT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
-                    item.Conditions = 
+                    item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
@@ -1405,8 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<Condition>();
+                            }));
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
                 }
                 case 0x4D414E43: // CNAM
@@ -1534,14 +1533,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.Conditions?.Overall ?? true)
-                && item.Conditions.TryGet(out var ConditionsItem))
+            if (printMask?.Conditions?.Overall ?? true)
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ConditionsItem)
+                    foreach (var subItem in item.Conditions)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1570,7 +1568,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LogEntry.Mask<bool?> checkMask)
         {
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
             if (checkMask.Entry.HasValue && checkMask.Entry.Value != (item.Entry != null)) return false;
             if (checkMask.ResultScript?.Overall.HasValue ?? false && checkMask.ResultScript.Overall.Value != (item.ResultScript != null)) return false;
             if (checkMask.ResultScript?.Specific != null && (item.ResultScript == null || !item.ResultScript.HasBeenSet(checkMask.ResultScript.Specific))) return false;
@@ -1582,10 +1579,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LogEntry.Mask<bool> mask)
         {
             mask.Flags = (item.Flags != null);
-            if (item.Conditions.TryGet(out var ConditionsItem))
-            {
-                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Entry = (item.Entry != null);
             var itemResultScript = item.ResultScript;
             mask.ResultScript = new MaskItem<bool, ScriptFields.Mask<bool>?>(itemResultScript != null, itemResultScript?.GetHasBeenSetMask());
@@ -1668,22 +1663,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Conditions);
                 try
                 {
-                    if ((rhs.Conditions != null))
-                    {
-                        item.Conditions = 
-                            rhs.Conditions
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<Condition>();
-                    }
-                    else
-                    {
-                        item.Conditions = null;
-                    }
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1824,8 +1811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LogEntry_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((item.Conditions != null)
-                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<IConditionGetter>.Instance.Write(
                     node: node,
@@ -2006,11 +1992,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Conditions = ConditionsItem.ToExtendedList();
+                            item.Conditions.SetTo(ConditionsItem);
                         }
                         else
                         {
-                            item.Conditions = null;
+                            item.Conditions.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2382,7 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool Flags_IsSet => _FlagsLocation.HasValue;
         public LogEntry.Flag? Flags => Flags_IsSet ? (LogEntry.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(LogEntry.Flag?);
         #endregion
-        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         #region Entry
         private int? _EntryLocation;
         public String? Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.Meta)) : default(string?);
