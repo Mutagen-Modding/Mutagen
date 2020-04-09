@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Head),
-                    item: item.Head.FormKey,
+                    item: item.Head.FormKey.Value,
                     fieldIndex: (int)HeadPartReference_FieldIndex.Head,
                     errorMask: errorMask);
             }

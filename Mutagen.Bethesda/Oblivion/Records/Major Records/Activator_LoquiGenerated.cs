@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script.FormKey,
+                    item: item.Script.FormKey.Value,
                     fieldIndex: (int)Activator_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -1956,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Sound),
-                    item: item.Sound.FormKey,
+                    item: item.Sound.FormKey.Value,
                     fieldIndex: (int)Activator_FieldIndex.Sound,
                     errorMask: errorMask);
             }

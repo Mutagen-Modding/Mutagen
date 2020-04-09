@@ -6256,7 +6256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Skin),
-                    item: item.Skin.FormKey,
+                    item: item.Skin.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.Skin,
                     errorMask: errorMask);
             }
@@ -6442,7 +6442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AttackRace),
-                    item: item.AttackRace.FormKey,
+                    item: item.AttackRace.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.AttackRace,
                     errorMask: errorMask);
             }
@@ -6538,7 +6538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BodyPartData),
-                    item: item.BodyPartData.FormKey,
+                    item: item.BodyPartData.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.BodyPartData,
                     errorMask: errorMask);
             }
@@ -6574,7 +6574,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MaterialType),
-                    item: item.MaterialType.FormKey,
+                    item: item.MaterialType.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.MaterialType,
                     errorMask: errorMask);
             }
@@ -6584,7 +6584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ImpactDataSet),
-                    item: item.ImpactDataSet.FormKey,
+                    item: item.ImpactDataSet.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.ImpactDataSet,
                     errorMask: errorMask);
             }
@@ -6594,7 +6594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DecapitationFX),
-                    item: item.DecapitationFX.FormKey,
+                    item: item.DecapitationFX.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.DecapitationFX,
                     errorMask: errorMask);
             }
@@ -6604,7 +6604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.OpenLootSound),
-                    item: item.OpenLootSound.FormKey,
+                    item: item.OpenLootSound.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.OpenLootSound,
                     errorMask: errorMask);
             }
@@ -6614,7 +6614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CloseLootSound),
-                    item: item.CloseLootSound.FormKey,
+                    item: item.CloseLootSound.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.CloseLootSound,
                     errorMask: errorMask);
             }
@@ -6702,7 +6702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.UnarmedEquipSlot),
-                    item: item.UnarmedEquipSlot.FormKey,
+                    item: item.UnarmedEquipSlot.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.UnarmedEquipSlot,
                     errorMask: errorMask);
             }
@@ -6723,7 +6723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BaseMovementDefaultWalk),
-                    item: item.BaseMovementDefaultWalk.FormKey,
+                    item: item.BaseMovementDefaultWalk.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultWalk,
                     errorMask: errorMask);
             }
@@ -6733,7 +6733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BaseMovementDefaultRun),
-                    item: item.BaseMovementDefaultRun.FormKey,
+                    item: item.BaseMovementDefaultRun.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultRun,
                     errorMask: errorMask);
             }
@@ -6743,7 +6743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BaseMovementDefaultSwim),
-                    item: item.BaseMovementDefaultSwim.FormKey,
+                    item: item.BaseMovementDefaultSwim.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultSwim,
                     errorMask: errorMask);
             }
@@ -6753,7 +6753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BaseMovementDefaultFly),
-                    item: item.BaseMovementDefaultFly.FormKey,
+                    item: item.BaseMovementDefaultFly.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultFly,
                     errorMask: errorMask);
             }
@@ -6763,7 +6763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BaseMovementDefaultSneak),
-                    item: item.BaseMovementDefaultSneak.FormKey,
+                    item: item.BaseMovementDefaultSneak.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultSneak,
                     errorMask: errorMask);
             }
@@ -6773,7 +6773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BaseMovementDefaultSprint),
-                    item: item.BaseMovementDefaultSprint.FormKey,
+                    item: item.BaseMovementDefaultSprint.FormKey.Value,
                     fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultSprint,
                     errorMask: errorMask);
             }

@@ -129,12 +129,12 @@ namespace Mutagen.Bethesda
             where TMod : IModGetter
         {
             if (this.FormKey == null
-                || this.FormKey.Equals(FormKey.Null))
+                || this.FormKey.Equals(Mutagen.Bethesda.FormKey.Null))
             {
                 major = default!;
                 return false;
             }
-            if (package.TryLookup<TMajor>(this.FormKey, out var majorRec))
+            if (package.TryLookup<TMajor>(this.FormKey.Value, out var majorRec))
             {
                 major = majorRec;
                 return true;
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda
                 formKey = default!;
                 return false;
             }
-            formKey = this.FormKey;
+            formKey = this.FormKey.Value;
             return true;
         }
 

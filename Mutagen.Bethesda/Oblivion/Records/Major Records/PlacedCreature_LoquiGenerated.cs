@@ -2383,7 +2383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Base),
-                    item: item.Base.FormKey,
+                    item: item.Base.FormKey.Value,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -2393,7 +2393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Owner),
-                    item: item.Owner.FormKey,
+                    item: item.Owner.FormKey.Value,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                     errorMask: errorMask);
             }
@@ -2413,7 +2413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable.FormKey,
+                    item: item.GlobalVariable.FormKey.Value,
                     fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }

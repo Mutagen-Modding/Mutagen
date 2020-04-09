@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (await obj.IsMajorRecord())
             {
-                obj.BasicCtorPermission = PermissionLevel.@protected;
+                obj.BasicCtorPermission = CtorPermissionLevel.@protected;
             }
             await base.LoadWrapup(obj);
         }

@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AmbientSound),
-                    item: item.AmbientSound.FormKey,
+                    item: item.AmbientSound.FormKey.Value,
                     fieldIndex: (int)AcousticSpace_FieldIndex.AmbientSound,
                     errorMask: errorMask);
             }
@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.UseSoundFromRegion),
-                    item: item.UseSoundFromRegion.FormKey,
+                    item: item.UseSoundFromRegion.FormKey.Value,
                     fieldIndex: (int)AcousticSpace_FieldIndex.UseSoundFromRegion,
                     errorMask: errorMask);
             }
@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EnvironmentType),
-                    item: item.EnvironmentType.FormKey,
+                    item: item.EnvironmentType.FormKey.Value,
                     fieldIndex: (int)AcousticSpace_FieldIndex.EnvironmentType,
                     errorMask: errorMask);
             }

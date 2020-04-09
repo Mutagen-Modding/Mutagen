@@ -2219,7 +2219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script.FormKey,
+                    item: item.Script.FormKey.Value,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Template),
-                    item: item.Template.FormKey,
+                    item: item.Template.FormKey.Value,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                     errorMask: errorMask);
             }

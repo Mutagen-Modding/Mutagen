@@ -2382,7 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script.FormKey,
+                    item: item.Script.FormKey.Value,
                     fieldIndex: (int)Door_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.OpenSound),
-                    item: item.OpenSound.FormKey,
+                    item: item.OpenSound.FormKey.Value,
                     fieldIndex: (int)Door_FieldIndex.OpenSound,
                     errorMask: errorMask);
             }
@@ -2402,7 +2402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CloseSound),
-                    item: item.CloseSound.FormKey,
+                    item: item.CloseSound.FormKey.Value,
                     fieldIndex: (int)Door_FieldIndex.CloseSound,
                     errorMask: errorMask);
             }
@@ -2412,7 +2412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LoopSound),
-                    item: item.LoopSound.FormKey,
+                    item: item.LoopSound.FormKey.Value,
                     fieldIndex: (int)Door_FieldIndex.LoopSound,
                     errorMask: errorMask);
             }

@@ -1508,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MovementType),
-                    item: item.MovementType.FormKey,
+                    item: item.MovementType.FormKey.Value,
                     fieldIndex: (int)RaceMovementType_FieldIndex.MovementType,
                     errorMask: errorMask);
             }

@@ -4074,7 +4074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Climate),
-                    item: item.Climate.FormKey,
+                    item: item.Climate.FormKey.Value,
                     fieldIndex: (int)Cell_FieldIndex.Climate,
                     errorMask: errorMask);
             }
@@ -4084,7 +4084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Water),
-                    item: item.Water.FormKey,
+                    item: item.Water.FormKey.Value,
                     fieldIndex: (int)Cell_FieldIndex.Water,
                     errorMask: errorMask);
             }
@@ -4094,7 +4094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Owner),
-                    item: item.Owner.FormKey,
+                    item: item.Owner.FormKey.Value,
                     fieldIndex: (int)Cell_FieldIndex.Owner,
                     errorMask: errorMask);
             }
@@ -4114,7 +4114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable.FormKey,
+                    item: item.GlobalVariable.FormKey.Value,
                     fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }

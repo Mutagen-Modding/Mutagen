@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda
     ///   - Cannot be misinterpreted to originate from the wrong Mod depending on context
     ///   - Remove the 255 limit while within code space.  On-disk formats still enforce 255 limit.
     /// </summary>
-    public class FormKey : IEquatable<FormKey>
+    public struct FormKey : IEquatable<FormKey>
     {
         /// <summary>
         /// A static readonly singleton string representing a null FormKey

@@ -2588,7 +2588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Base),
-                    item: item.Base.FormKey,
+                    item: item.Base.FormKey.Value,
                     fieldIndex: (int)PlacedNpc_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -2646,7 +2646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MerchantContainer),
-                    item: item.MerchantContainer.FormKey,
+                    item: item.MerchantContainer.FormKey.Value,
                     fieldIndex: (int)PlacedNpc_FieldIndex.MerchantContainer,
                     errorMask: errorMask);
             }
@@ -2656,7 +2656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Horse),
-                    item: item.Horse.FormKey,
+                    item: item.Horse.FormKey.Value,
                     fieldIndex: (int)PlacedNpc_FieldIndex.Horse,
                     errorMask: errorMask);
             }

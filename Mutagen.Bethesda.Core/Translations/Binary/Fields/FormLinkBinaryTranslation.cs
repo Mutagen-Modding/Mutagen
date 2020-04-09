@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Binary
             if (item.FormKey == null) return;
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
-                item.FormKey,
+                item.FormKey.Value,
                 header);
         }
     }

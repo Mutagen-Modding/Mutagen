@@ -2606,7 +2606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Worldspace),
-                    item: item.Worldspace.FormKey,
+                    item: item.Worldspace.FormKey.Value,
                     fieldIndex: (int)Region_FieldIndex.Worldspace,
                     errorMask: errorMask);
             }

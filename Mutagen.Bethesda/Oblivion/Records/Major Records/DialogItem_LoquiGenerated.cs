@@ -3115,7 +3115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Quest),
-                    item: item.Quest.FormKey,
+                    item: item.Quest.FormKey.Value,
                     fieldIndex: (int)DialogItem_FieldIndex.Quest,
                     errorMask: errorMask);
             }
@@ -3125,7 +3125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PreviousTopic),
-                    item: item.PreviousTopic.FormKey,
+                    item: item.PreviousTopic.FormKey.Value,
                     fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
                     errorMask: errorMask);
             }

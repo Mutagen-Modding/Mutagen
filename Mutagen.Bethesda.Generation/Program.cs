@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "eturn LoquiBinaryTranslation<WeatherChance>.Instance.Par";
+            string testString = "item: item.Script.FormKey,";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
