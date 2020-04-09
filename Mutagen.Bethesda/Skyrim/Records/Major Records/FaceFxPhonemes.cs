@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
                         var target = (Target)i;
                         using (HeaderExport.ExportSubrecordHeader(writer, Race_Registration.PHTN_HEADER))
                         {
-                            writer.WriteZString(target.GetString(lipMode));
+                            writer.Write(target.GetString(lipMode), StringBinaryType.NullTerminate);
                         }
                     }
                 }

@@ -157,14 +157,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     using (HeaderExport.ExportSubrecordHeader(writer, Condition_Registration.CIS1_HEADER))
                     {
-                        StringBinaryTranslation.WriteString(writer, param1, StringBinaryType.NullTerminate);
+                        StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
                 if (funcData.ParameterTwoString.TryGet(out var param2))
                 {
                     using (HeaderExport.ExportSubrecordHeader(writer, Condition_Registration.CIS2_HEADER))
                     {
-                        StringBinaryTranslation.WriteString(writer, param2, StringBinaryType.NullTerminate);
+                        StringBinaryTranslation.Instance.Write(writer, param2, StringBinaryType.NullTerminate);
                     }
                 }
             }

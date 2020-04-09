@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             string item)
         {
-            Write(writer, item, binaryType: StringBinaryType.NullTerminate);
+            writer.Write(item, binaryType: StringBinaryType.NullTerminate);
         }
 
         public void WriteNullable(
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Binary
             string? item)
         {
             if (item == null) return;
-            Write(writer, item, binaryType: StringBinaryType.NullTerminate);
+            writer.Write(item, binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
@@ -76,29 +76,7 @@ namespace Mutagen.Bethesda.Binary
             string item,
             StringBinaryType binaryType)
         {
-            WriteString(writer, item, binaryType);
-        }
-
-        public static void WriteString(
-            MutagenWriter writer,
-            string item,
-            StringBinaryType binaryType)
-        {
-            switch (binaryType)
-            {
-                case StringBinaryType.Plain:
-                    writer.Write(item);
-                    break;
-                case StringBinaryType.NullTerminate:
-                    writer.WriteZString(item);
-                    break;
-                case StringBinaryType.PrependLength:
-                    writer.Write(item.Length);
-                    writer.Write(item);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+            writer.Write(item, binaryType);
         }
 
         public void Write(
@@ -109,8 +87,7 @@ namespace Mutagen.Bethesda.Binary
         {
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
-                this.Write(
-                    writer,
+                writer.Write(
                     item,
                     binaryType: binaryType);
             }
@@ -125,8 +102,7 @@ namespace Mutagen.Bethesda.Binary
             if (item == null) return;
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
-                this.Write(
-                    writer,
+                writer.Write(
                     item,
                     binaryType: binaryType);
             }
@@ -138,8 +114,7 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             if (item == null) return;
-            this.Write(
-                writer,
+            writer.Write(
                 item,
                 binaryType: binaryType);
         }
@@ -150,7 +125,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException($"Expected length was {item.Length}, but was passed {length}.");
             }
-            Write(writer, item, binaryType: StringBinaryType.NullTerminate);
+            writer.Write(item, binaryType: StringBinaryType.NullTerminate);
         }
     }
 }

@@ -193,11 +193,11 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         if (bipedObjs.TryGetValue(bipedObj, out var val))
                         {
-                            writer.WriteZString(val);
+                            writer.Write(val, StringBinaryType.NullTerminate);
                         }
                         else
                         {
-                            writer.WriteZString(string.Empty);
+                            writer.Write(string.Empty, StringBinaryType.NullTerminate);
                         }
                     }
                 }

@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(ReadOnlySpan<char> str)
         {
-            byte[] bytes = new byte[str.Length];
+            Span<byte> bytes = stackalloc byte[str.Length];
             for (int i = 0; i < bytes.Length; i++)
             {
                 var c = str[i];
@@ -215,16 +215,24 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(bytes);
         }
 
-        public void Write(string? str)
+        public void Write(string str, StringBinaryType binaryType)
         {
-            if (str == null) return;
-            Write(str.AsSpan());
-        }
-
-        public void WriteZString(string str)
-        {
-            Write(str.AsSpan());
-            this.Write((byte)0);
+            switch (binaryType)
+            {
+                case StringBinaryType.Plain:
+                    Write(str.AsSpan());
+                    break;
+                case StringBinaryType.NullTerminate:
+                    Write(str.AsSpan());
+                    this.Write((byte)0);
+                    break;
+                case StringBinaryType.PrependLength:
+                    Write(str.Length);
+                    Write(str.AsSpan());
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public void Write(Color color, bool extraByte)
