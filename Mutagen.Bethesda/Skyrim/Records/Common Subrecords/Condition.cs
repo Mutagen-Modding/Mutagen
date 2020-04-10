@@ -1,4 +1,4 @@
-﻿using Loqui.Internal;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 int b = ((int)flag) & 0x1F;
                 int b2 = ((int)compare) << 5;
-                return (byte)(b & b2);
+                return (byte)(b | b2);
             }
 
             public static void WriteConditionsList(IReadOnlyList<IConditionGetter>? condList, MutagenWriter writer)

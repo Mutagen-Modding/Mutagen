@@ -707,6 +707,7 @@
     <Compile Include="Oblivion\Records\OblivionMod_LoquiGenerated.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Enums\CompareOperator.cs" />
     <Compile Include="Skyrim\ProtocolDefinition_Skyrim.cs" />
     <Compile Include="Skyrim\Records\Common Enums\ActorValueExtended.cs" />
     <Compile Include="Skyrim\Records\Common Enums\ArmorType.cs" />
