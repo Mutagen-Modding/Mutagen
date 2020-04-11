@@ -36,8 +36,14 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item)
             {
+                if (!frame.TryReadSubrecordFrame(Faction_Registration.CITC_HEADER, out var countMeta)
+                    || countMeta.Content.Length != 4)
+                {
+                    throw new ArgumentException();
+                }
+                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.Content);
                 item.Conditions = new ExtendedList<Condition>();
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
+                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame, count);
             }
         }
 
@@ -45,7 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IFactionGetter item)
             {
-                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
+                var conditions = item.Conditions;
+                if (conditions == null) return;
+                using (HeaderExport.ExportSubrecordHeader(writer, Faction_Registration.CITC_HEADER))
+                {
+                    writer.Write(conditions.Count);
+                }
+                ConditionBinaryWriteTranslation.WriteConditionsList(conditions, writer);
             }
         }
 
@@ -55,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
-                Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+                Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
             }
         }
     }

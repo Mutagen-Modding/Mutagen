@@ -48,12 +48,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public String Name { get; set; } = string.Empty;
         #endregion
-        #region NexTexture
+        #region NewTexture
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<TextureSet> _NexTexture = new FormLink<TextureSet>();
-        public IFormLink<TextureSet> NexTexture => this._NexTexture;
+        protected IFormLink<TextureSet> _NewTexture = new FormLink<TextureSet>();
+        public IFormLink<TextureSet> NewTexture => this._NewTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NexTexture => this.NexTexture;
+        IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;
         #endregion
         #region Index
         public Int32 Index { get; set; } = default;
@@ -229,17 +229,17 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Name = initialValue;
-                this.NexTexture = initialValue;
+                this.NewTexture = initialValue;
                 this.Index = initialValue;
             }
 
             public Mask(
                 TItem Name,
-                TItem NexTexture,
+                TItem NewTexture,
                 TItem Index)
             {
                 this.Name = Name;
-                this.NexTexture = NexTexture;
+                this.NewTexture = NewTexture;
                 this.Index = Index;
             }
 
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Name;
-            public TItem NexTexture;
+            public TItem NewTexture;
             public TItem Index;
             #endregion
 
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.NexTexture, rhs.NexTexture)) return false;
+                if (!object.Equals(this.NewTexture, rhs.NewTexture)) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
                 return true;
             }
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.Name);
-                hash.Add(this.NexTexture);
+                hash.Add(this.NewTexture);
                 hash.Add(this.Index);
                 return hash.ToHashCode();
             }
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Name)) return false;
-                if (!eval(this.NexTexture)) return false;
+                if (!eval(this.NewTexture)) return false;
                 if (!eval(this.Index)) return false;
                 return true;
             }
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Name)) return true;
-                if (eval(this.NexTexture)) return true;
+                if (eval(this.NewTexture)) return true;
                 if (eval(this.Index)) return true;
                 return false;
             }
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Name = eval(this.Name);
-                obj.NexTexture = eval(this.NexTexture);
+                obj.NewTexture = eval(this.NewTexture);
                 obj.Index = eval(this.Index);
             }
             #endregion
@@ -342,9 +342,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.NexTexture ?? true)
+                    if (printMask?.NewTexture ?? true)
                     {
-                        fg.AppendItem(NexTexture, "NexTexture");
+                        fg.AppendItem(NewTexture, "NewTexture");
                     }
                     if (printMask?.Index ?? true)
                     {
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Name;
-            public Exception? NexTexture;
+            public Exception? NewTexture;
             public Exception? Index;
             #endregion
 
@@ -388,8 +388,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case AlternateTexture_FieldIndex.Name:
                         return Name;
-                    case AlternateTexture_FieldIndex.NexTexture:
-                        return NexTexture;
+                    case AlternateTexture_FieldIndex.NewTexture:
+                        return NewTexture;
                     case AlternateTexture_FieldIndex.Index:
                         return Index;
                     default:
@@ -405,8 +405,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case AlternateTexture_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case AlternateTexture_FieldIndex.NexTexture:
-                        this.NexTexture = ex;
+                    case AlternateTexture_FieldIndex.NewTexture:
+                        this.NewTexture = ex;
                         break;
                     case AlternateTexture_FieldIndex.Index:
                         this.Index = ex;
@@ -424,8 +424,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case AlternateTexture_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case AlternateTexture_FieldIndex.NexTexture:
-                        this.NexTexture = (Exception?)obj;
+                    case AlternateTexture_FieldIndex.NewTexture:
+                        this.NewTexture = (Exception?)obj;
                         break;
                     case AlternateTexture_FieldIndex.Index:
                         this.Index = (Exception?)obj;
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Name != null) return true;
-                if (NexTexture != null) return true;
+                if (NewTexture != null) return true;
                 if (Index != null) return true;
                 return false;
             }
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Name, "Name");
-                fg.AppendItem(NexTexture, "NexTexture");
+                fg.AppendItem(NewTexture, "NewTexture");
                 fg.AppendItem(Index, "Index");
             }
             #endregion
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.NexTexture = this.NexTexture.Combine(rhs.NexTexture);
+                ret.NewTexture = this.NewTexture.Combine(rhs.NewTexture);
                 ret.Index = this.Index.Combine(rhs.Index);
                 return ret;
             }
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public bool Name;
-            public bool NexTexture;
+            public bool NewTexture;
             public bool Index;
             #endregion
 
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
             {
                 this.Name = defaultOn;
-                this.NexTexture = defaultOn;
+                this.NewTexture = defaultOn;
                 this.Index = defaultOn;
             }
 
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Name, null));
-                ret.Add((NexTexture, null));
+                ret.Add((NewTexture, null));
                 ret.Add((Index, null));
             }
         }
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAlternateTexture>
     {
         new String Name { get; set; }
-        new IFormLink<TextureSet> NexTexture { get; }
+        new IFormLink<TextureSet> NewTexture { get; }
         new Int32 Index { get; set; }
     }
 
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         String Name { get; }
-        IFormLinkGetter<ITextureSetGetter> NexTexture { get; }
+        IFormLinkGetter<ITextureSetGetter> NewTexture { get; }
         Int32 Index { get; }
 
     }
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public enum AlternateTexture_FieldIndex
     {
         Name = 0,
-        NexTexture = 1,
+        NewTexture = 1,
         Index = 2,
     }
     #endregion
@@ -990,8 +990,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case "NAME":
                     return (ushort)AlternateTexture_FieldIndex.Name;
-                case "NEXTEXTURE":
-                    return (ushort)AlternateTexture_FieldIndex.NexTexture;
+                case "NEWTEXTURE":
+                    return (ushort)AlternateTexture_FieldIndex.NewTexture;
                 case "INDEX":
                     return (ushort)AlternateTexture_FieldIndex.Index;
                 default:
@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NexTexture:
+                case AlternateTexture_FieldIndex.NewTexture:
                 case AlternateTexture_FieldIndex.Index:
                     return false;
                 default:
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NexTexture:
+                case AlternateTexture_FieldIndex.NewTexture:
                 case AlternateTexture_FieldIndex.Index:
                     return false;
                 default:
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NexTexture:
+                case AlternateTexture_FieldIndex.NewTexture:
                 case AlternateTexture_FieldIndex.Index:
                     return false;
                 default:
@@ -1048,8 +1048,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case AlternateTexture_FieldIndex.Name:
                     return "Name";
-                case AlternateTexture_FieldIndex.NexTexture:
-                    return "NexTexture";
+                case AlternateTexture_FieldIndex.NewTexture:
+                    return "NewTexture";
                 case AlternateTexture_FieldIndex.Index:
                     return "Index";
                 default:
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NexTexture:
+                case AlternateTexture_FieldIndex.NewTexture:
                 case AlternateTexture_FieldIndex.Index:
                     return false;
                 default:
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NexTexture:
+                case AlternateTexture_FieldIndex.NewTexture:
                 case AlternateTexture_FieldIndex.Index:
                     return false;
                 default:
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case AlternateTexture_FieldIndex.Name:
                     return typeof(String);
-                case AlternateTexture_FieldIndex.NexTexture:
+                case AlternateTexture_FieldIndex.NewTexture:
                     return typeof(IFormLink<TextureSet>);
                 case AlternateTexture_FieldIndex.Index:
                     return typeof(Int32);
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.NexTexture.FormKey = FormKey.Null;
+            item.NewTexture.FormKey = FormKey.Null;
             item.Index = default;
         }
         
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                 frame: frame,
                 stringBinaryType: StringBinaryType.PrependLength);
-            item.NexTexture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.NewTexture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Index = frame.ReadInt32();
@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.NexTexture = object.Equals(item.NexTexture, rhs.NexTexture);
+            ret.NewTexture = object.Equals(item.NewTexture, rhs.NewTexture);
             ret.Index = item.Index == rhs.Index;
         }
         
@@ -1287,9 +1287,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Name, "Name");
             }
-            if (printMask?.NexTexture ?? true)
+            if (printMask?.NewTexture ?? true)
             {
-                fg.AppendItem(item.NexTexture, "NexTexture");
+                fg.AppendItem(item.NewTexture, "NewTexture");
             }
             if (printMask?.Index ?? true)
             {
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlternateTexture.Mask<bool> mask)
         {
             mask.Name = true;
-            mask.NexTexture = true;
+            mask.NewTexture = true;
             mask.Index = true;
         }
         
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.NexTexture.Equals(rhs.NexTexture)) return false;
+            if (!lhs.NewTexture.Equals(rhs.NewTexture)) return false;
             if (lhs.Index != rhs.Index) return false;
             return true;
         }
@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Name);
-            hash.Add(item.NexTexture);
+            hash.Add(item.NewTexture);
             hash.Add(item.Index);
             return hash.ToHashCode();
         }
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IAlternateTextureGetter obj)
         {
-            yield return obj.NexTexture;
+            yield return obj.NewTexture;
             yield break;
         }
         
@@ -1368,9 +1368,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NexTexture) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
             {
-                item.NexTexture.FormKey = rhs.NexTexture.FormKey;
+                item.NewTexture.FormKey = rhs.NewTexture.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
             {
@@ -1474,13 +1474,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)AlternateTexture_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NexTexture) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.NexTexture),
-                    item: item.NexTexture.FormKey,
-                    fieldIndex: (int)AlternateTexture_FieldIndex.NexTexture,
+                    name: nameof(item.NewTexture),
+                    item: item.NewTexture.FormKey,
+                    fieldIndex: (int)AlternateTexture_FieldIndex.NewTexture,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
@@ -1616,11 +1616,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "NexTexture":
-                    errorMask?.PushIndex((int)AlternateTexture_FieldIndex.NexTexture);
+                case "NewTexture":
+                    errorMask?.PushIndex((int)AlternateTexture_FieldIndex.NewTexture);
                     try
                     {
-                        item.NexTexture.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.NewTexture.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1833,7 +1833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 binaryType: StringBinaryType.PrependLength);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NexTexture);
+                item: item.NewTexture);
             writer.Write(item.Index);
         }
 
@@ -1946,7 +1946,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormLinkGetter<ITextureSetGetter> NexTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public String Name => BinaryStringUtility.ParsePrependedString(_data.Slice(0), lengthLength: 4);
+        public IFormLinkGetter<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

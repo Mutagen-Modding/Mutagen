@@ -22,25 +22,25 @@
     <Compile Include="Oblivion\Interfaces\IPlaced.cs" />
     <Compile Include="Oblivion\OblivionPipeline.cs" />
     <Compile Include="Oblivion\ProtocolDefinition_Oblivion.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\ActorValue.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\ActorValueExtended.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\Attribute.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\BipedFlag.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\CompareOperator.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\DialogType.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\EmotionType.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\EquipmentFlag.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\FunctionIndex.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\IngredientFlag.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\LeveledFlag.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\MagicSchool.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\Month.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\MusicType.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\Resistance.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\Skill.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\SoulLevel.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\Specialization.cs" />
-    <Compile Include="Oblivion\Records\Common Enums\Weekday.cs" />
+    <Compile Include="Oblivion\Enums\ActorValue.cs" />
+    <Compile Include="Oblivion\Enums\ActorValueExtended.cs" />
+    <Compile Include="Oblivion\Enums\Attribute.cs" />
+    <Compile Include="Oblivion\Enums\BipedFlag.cs" />
+    <Compile Include="Oblivion\Enums\CompareOperator.cs" />
+    <Compile Include="Oblivion\Enums\DialogType.cs" />
+    <Compile Include="Oblivion\Enums\EmotionType.cs" />
+    <Compile Include="Oblivion\Enums\EquipmentFlag.cs" />
+    <Compile Include="Oblivion\Enums\FunctionIndex.cs" />
+    <Compile Include="Oblivion\Enums\IngredientFlag.cs" />
+    <Compile Include="Oblivion\Enums\LeveledFlag.cs" />
+    <Compile Include="Oblivion\Enums\MagicSchool.cs" />
+    <Compile Include="Oblivion\Enums\Month.cs" />
+    <Compile Include="Oblivion\Enums\MusicType.cs" />
+    <Compile Include="Oblivion\Enums\Resistance.cs" />
+    <Compile Include="Oblivion\Enums\Skill.cs" />
+    <Compile Include="Oblivion\Enums\SoulLevel.cs" />
+    <Compile Include="Oblivion\Enums\Specialization.cs" />
+    <Compile Include="Oblivion\Enums\Weekday.cs" />
     <Compile Include="Oblivion\Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -707,18 +707,19 @@
     <Compile Include="Oblivion\Records\OblivionMod_LoquiGenerated.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Enums\CastingType.cs" />
     <Compile Include="Skyrim\Enums\CompareOperator.cs" />
+    <Compile Include="Skyrim\Enums\SoundLevel.cs" />
+    <Compile Include="Skyrim\Enums\Targeting.cs" />
+    <Compile Include="Skyrim\Interfaces\IBoundableEquipment.cs" />
     <Compile Include="Skyrim\ProtocolDefinition_Skyrim.cs" />
-    <Compile Include="Skyrim\Records\Common Enums\ActorValueExtended.cs" />
-    <Compile Include="Skyrim\Records\Common Enums\ArmorType.cs" />
-    <Compile Include="Skyrim\Records\Common Enums\BipedObject.cs" />
-    <Compile Include="Skyrim\Records\Common Enums\Combat.cs" />
-    <Compile Include="Skyrim\Records\Common Enums\EquipType.cs" />
-    <Compile Include="Skyrim\Records\Common Enums\Skill.cs" />
-    <Compile Include="Skyrim\Records\Common Enums\VendorLocation.cs" />
-    <Compile Include="Skyrim\Records\Common Subrecords\AlternateTexture.cs">
-      <DependentUpon>Model.xml</DependentUpon>
-    </Compile>
+    <Compile Include="Skyrim\Enums\ActorValueExtended.cs" />
+    <Compile Include="Skyrim\Enums\ArmorType.cs" />
+    <Compile Include="Skyrim\Enums\BipedObject.cs" />
+    <Compile Include="Skyrim\Enums\Combat.cs" />
+    <Compile Include="Skyrim\Enums\EquipType.cs" />
+    <Compile Include="Skyrim\Enums\Skill.cs" />
+    <Compile Include="Skyrim\Enums\VendorLocation.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\AlternateTexture_LoquiGenerated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
@@ -766,6 +767,15 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Relation_LoquiGenerated.cs">
       <DependentUpon>Relation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptEntry.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptProperty.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\VirtualMachineAdapter.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
@@ -914,6 +924,45 @@
     <Compile Include="Skyrim\Records\Major Records\LocationReferenceType_LoquiGenerated.cs">
       <DependentUpon>LocationReferenceType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffect.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectBoundArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectData.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectGuideArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectKeywordArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectLightArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectNpcArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectSpawnHazardArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectSpellArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectEnchantmentArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectVampireArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectWerewolfArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\MaterialType_LoquiGenerated.cs">
       <DependentUpon>MaterialType.xml</DependentUpon>
     </Compile>
@@ -1060,6 +1109,117 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Region_LoquiGenerated.cs">
       <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffect_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\VirtualMachineAdapter_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptEntry_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptObjectProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptStringProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptIntProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptFloatProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptBoolProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptObjectListProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptIntListProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptFloatListProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptBoolListProperty_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectData_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Static_LoquiGenerated.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\EffectShader_LoquiGenerated.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Light_LoquiGenerated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectLightArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Explosion_LoquiGenerated.cs">
+      <DependentUpon>Explosion.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Projectile_LoquiGenerated.cs">
+      <DependentUpon>Projectile.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DualCastData_LoquiGenerated.cs">
+      <DependentUpon>DualCastData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ImageSpaceAdapter_LoquiGenerated.cs">
+      <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Perk_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Spell_LoquiGenerated.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectSound_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectNpcArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectSpellArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectEnchantmentArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectKeywordArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectBoundArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Hazard_LoquiGenerated.cs">
+      <DependentUpon>Hazard.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectGuideArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectSpawnHazardArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectWerewolfArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MagicEffectVampireArchetype_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ObjectEffect_LoquiGenerated.cs">
+      <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

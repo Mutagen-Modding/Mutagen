@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Static" recordType="STAT" objType="Record" baseClass="SkyrimMajorRecord" GUID="89036057-4570-493d-a5f7-4c5718f67a06" ID="105">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

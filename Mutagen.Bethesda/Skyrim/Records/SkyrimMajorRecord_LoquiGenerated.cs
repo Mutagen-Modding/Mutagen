@@ -1092,27 +1092,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
+        public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
+        public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
+        public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
+        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
+        public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
+        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
+        public static readonly RecordType PERK_HEADER = new RecordType("PERK");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
+        public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
+        public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1130,27 +1140,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         BPTD_HEADER,
                         CLAS_HEADER,
                         CLFM_HEADER,
+                        DUAL_HEADER,
+                        EFSH_HEADER,
                         EQUP_HEADER,
+                        EXPL_HEADER,
                         EYES_HEADER,
                         FACT_HEADER,
                         FLST_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
                         HAIR_HEADER,
+                        HAZD_HEADER,
                         HDPT_HEADER,
                         IPDS_HEADER,
                         KYWD_HEADER,
+                        LIGH_HEADER,
                         LCRT_HEADER,
+                        MGEF_HEADER,
                         MATT_HEADER,
                         MOVT_HEADER,
                         NPC__HEADER,
+                        ENCH_HEADER,
                         OTFT_HEADER,
+                        PERK_HEADER,
                         REFR_HEADER,
+                        PROJ_HEADER,
                         RACE_HEADER,
                         REGN_HEADER,
                         REVB_HEADER,
                         SNDR_HEADER,
                         SOUN_HEADER,
+                        STAT_HEADER,
                         TXST_HEADER,
                         VTYP_HEADER
                     })

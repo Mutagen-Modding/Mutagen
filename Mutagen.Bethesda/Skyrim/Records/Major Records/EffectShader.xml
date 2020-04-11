@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="SkyrimMajorRecord" GUID="faa7eca9-d976-44d0-aadd-b5a8dbb97974" ID="106">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

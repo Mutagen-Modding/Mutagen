@@ -49,8 +49,15 @@ namespace Mutagen.Bethesda.Binary
                         return BinaryStringUtility.ParseUnknownLengthString(frame.Reader);
                     }
                 case StringBinaryType.PrependLength:
-                    var len = frame.ReadInt32();
-                    return BinaryStringUtility.ToZString(frame.ReadMemory(len));
+                    {
+                        var len = frame.ReadInt32();
+                        return BinaryStringUtility.ToZString(frame.ReadMemory(len));
+                    }
+                case StringBinaryType.PrependLengthUShort:
+                    {
+                        var len = frame.ReadInt16();
+                        return BinaryStringUtility.ToZString(frame.ReadMemory(len));
+                    }
                 default:
                     throw new NotImplementedException();
             }

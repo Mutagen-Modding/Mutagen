@@ -146,33 +146,28 @@ namespace Mutagen.Bethesda.Generation
             Accessor dataAccessor,
             Accessor packageAccessor)
         {
-            var data = typeGen.GetFieldData();
-            var gendered = data.Parent as GenderedType;
-            if (data.HasTrigger
-                || (gendered?.MaleMarker.HasValue ?? false))
+            StringType str = typeGen as StringType;
+            switch (str.BinaryType)
             {
-                return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
-            }
-            else
-            {
-                return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor})";
-            }
-        }
-
-        public override void GenerateWrapperFields(
-            FileGeneration fg,
-            ObjectGeneration objGen,
-            TypeGeneration typeGen,
-            Accessor dataAccessor,
-            int? currentPosition,
-            DataType dataType = null)
-        {
-            var data = typeGen.GetFieldData();
-            if (data.BinaryOverlayFallback != BinaryGenerationType.Normal
-                || data.RecordType.HasValue
-                || this.ExpectedLength(objGen, typeGen) != null)
-            {
-                base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, dataType);
+                case StringBinaryType.Plain:
+                case StringBinaryType.NullTerminate:
+                    var data = typeGen.GetFieldData();
+                    var gendered = data.Parent as GenderedType;
+                    if (data.HasTrigger
+                        || (gendered?.MaleMarker.HasValue ?? false))
+                    {
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
+                    }
+                    else
+                    {
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor})";
+                    }
+                case StringBinaryType.PrependLength:
+                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4)";
+                case StringBinaryType.PrependLengthUShort:
+                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2)";
+                default:
+                    throw new NotImplementedException();
             }
         }
     }

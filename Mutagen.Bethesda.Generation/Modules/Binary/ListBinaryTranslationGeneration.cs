@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Generation
             listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
             listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
             listType.CustomData[CounterSubrecordPerItemType] = node.GetAttribute("counterSubrecordPerItem", false);
-            listType.CustomData[PrependCountType] = node.GetAttribute("prependCount", false);
+            listType.CustomData[PrependCountType] = node.GetAttribute("prependCount", default(byte));
             var asyncItem = node.GetAttribute<bool>("asyncItems", false);
             if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
             {
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Generation
                 return ListBinaryType.CounterRecord;
             }
             if (list.CustomData.TryGetValue(PrependCountType, out var prependCountRecType)
-                && prependCountRecType is bool prependCount
-                && prependCount)
+                && prependCountRecType is byte prependCount
+                && prependCount > 0)
             {
                 return ListBinaryType.PrependCount;
             }
@@ -307,7 +307,18 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 break;
                             case ListBinaryType.PrependCount:
-                                args.Add("amount: frame.ReadInt32()");
+                                byte countLen = (byte)list.CustomData[PrependCountType];
+                                switch (countLen)
+                                {
+                                    case 2:
+                                        args.Add("amount: frame.ReadUInt16()");
+                                        break;
+                                    case 4:
+                                        args.Add("amount: frame.ReadInt32()");
+                                        break;
+                                    default:
+                                        throw new NotImplementedException();
+                                }
                                 args.AddPassArg($"frame");
                                 break;
                             case ListBinaryType.Frame:

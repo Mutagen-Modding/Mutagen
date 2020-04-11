@@ -1271,8 +1271,11 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
+        public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
+        public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
@@ -1280,6 +1283,8 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
+        public static readonly RecordType PERK_HEADER = new RecordType("PERK");
+        public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
@@ -1365,8 +1370,11 @@ namespace Mutagen.Bethesda.Internals
                         ARTO_HEADER,
                         BPTD_HEADER,
                         CLFM_HEADER,
+                        DUAL_HEADER,
                         EQUP_HEADER,
+                        EXPL_HEADER,
                         FLST_HEADER,
+                        HAZD_HEADER,
                         HDPT_HEADER,
                         IPDS_HEADER,
                         KYWD_HEADER,
@@ -1374,6 +1382,8 @@ namespace Mutagen.Bethesda.Internals
                         MATT_HEADER,
                         MOVT_HEADER,
                         OTFT_HEADER,
+                        PERK_HEADER,
+                        PROJ_HEADER,
                         REVB_HEADER,
                         SNDR_HEADER,
                         TXST_HEADER,

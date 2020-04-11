@@ -1604,8 +1604,15 @@ namespace Mutagen.Bethesda.Generation
                             passedLength);
                         if (!data.HasTrigger)
                         {
-                            var amount = typeGen.GetPassedAmount(obj, field);
-                            passedLength += amount.Value;
+                            if (data.Length.HasValue)
+                            {
+                                passedLength += data.Length.Value;
+                            }
+                            else
+                            {
+                                var amount = typeGen.GetPassedAmount(obj, field);
+                                passedLength += amount.Value;
+                            }
                         }
                     }
                 }
@@ -2122,7 +2129,7 @@ namespace Mutagen.Bethesda.Generation
                                     else if (failOnUnknown)
                                     {
                                         fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
-                                    }
+                                }
                                     else
                                     {
                                         fg.AppendLine($"return TryGet<int?>.Succeed(null);");

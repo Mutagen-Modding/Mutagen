@@ -11,9 +11,9 @@ namespace Mutagen.Bethesda.Binary
 {
     public class MutagenWriter : IDisposable
     {
-        private bool dispose = true;
+        private readonly bool dispose = true;
         public System.IO.BinaryWriter Writer;
-        private static byte Zero = 0;
+        private const byte Zero = 0;
         public Stream BaseStream { get; }
         public GameConstants Meta { get; }
         public MasterReferenceReader? MasterReferences { get; set; }
@@ -228,6 +228,10 @@ namespace Mutagen.Bethesda.Binary
                     break;
                 case StringBinaryType.PrependLength:
                     Write(str.Length);
+                    Write(str.AsSpan());
+                    break;
+                case StringBinaryType.PrependLengthUShort:
+                    Write(checked((ushort)str.Length));
                     Write(str.AsSpan());
                     break;
                 default:

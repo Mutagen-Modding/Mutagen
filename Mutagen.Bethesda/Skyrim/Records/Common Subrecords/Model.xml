@@ -14,7 +14,7 @@
   <Object name="AlternateTexture" objType="Subrecord" GUID="8001a465-c267-45ee-81b5-a51613668e74" ID="43">
     <Fields>
       <String name="Name" binaryType="PrependLength" />
-      <FormLink name="NexTexture" refName="TextureSet" />
+      <FormLink name="NewTexture" refName="TextureSet" />
       <Int32 name="Index" />
     </Fields>
   </Object>

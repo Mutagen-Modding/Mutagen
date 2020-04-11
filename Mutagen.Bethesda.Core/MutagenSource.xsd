@@ -229,7 +229,7 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="prependCount" >
+          <xs:attribute name="prependCount" type="xs:byte" >
             <xs:annotation>
               <xs:documentation>
                 Whether to add list count as an integer before the record data.  The counter is not put in its own subrecord
@@ -305,6 +305,7 @@
       <xs:enumeration value="Plain" />
       <xs:enumeration value="NullTerminate" />
       <xs:enumeration value="PrependLength" />
+      <xs:enumeration value="PrependLengthUShort" />
     </xs:restriction>
   </xs:simpleType>
 

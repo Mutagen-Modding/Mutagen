@@ -1186,10 +1186,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x53444F4D: // MODS
                 {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.AlternateTextures = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
-                            amount: frame.ReadInt32(),
-                            frame: frame,
+                            frame: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
                             {
                                 return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
@@ -1828,6 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IAlternateTextureGetter>.Instance.Write(
                 writer: writer,
                 items: item.AlternateTextures,
+                recordType: Model_Registration.MODS_HEADER,
                 transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -1989,7 +1990,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x53444F4D: // MODS
                 {
-                    throw new NotImplementedException();
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.AlternateTextures = BinaryOverlaySetList<AlternateTextureBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => AlternateTextureBinaryOverlay.AlternateTextureFactory(new BinaryMemoryReadStream(s), p));
+                    stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
                 }
                 default:

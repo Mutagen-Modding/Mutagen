@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DualCastData" recordType="DUAL" objType="Record" baseClass="SkyrimMajorRecord" GUID="636155e6-228a-40cb-a05b-32afabd5966e" ID="112">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

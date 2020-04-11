@@ -1,6 +1,7 @@
 ﻿using Mutagen.Bethesda.Binary;
 using System;
 using System.Buffers;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -92,6 +93,25 @@ namespace Noggog
             var ret = BinaryStringUtility.ToZString(mem.Slice(0, index));
             stream.Position += index + 1;
             return ret;
+        }
+
+        public static string ParsePrependedString(ReadOnlyMemorySlice<byte> span, byte lengthLength)
+        {
+            switch (lengthLength)
+            {
+                case 2:
+                    {
+                        var length = BinaryPrimitives.ReadUInt16LittleEndian(span);
+                        return ToZString(span.Slice(2, length));
+                    }
+                case 4:
+                    {
+                        var length = BinaryPrimitives.ReadUInt32LittleEndian(span);
+                        return ToZString(span.Slice(4, checked((int)length)));
+                    }
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

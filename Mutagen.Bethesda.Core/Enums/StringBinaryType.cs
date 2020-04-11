@@ -20,8 +20,12 @@ namespace Mutagen.Bethesda
         /// </summary>
         NullTerminate,
         /// <summary>
-        /// Length prepended as a ushort
+        /// Length prepended as a uint
         /// </summary>
         PrependLength,
+        /// <summary>
+        /// Length prepended as a ushort
+        /// </summary>
+        PrependLengthUShort,
     }
 }

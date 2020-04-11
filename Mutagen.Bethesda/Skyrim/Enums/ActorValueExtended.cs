@@ -6,6 +6,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public enum ActorValueExtended
     {
+        None = -1,
         Aggression = 0,
         Confidence = 1,
         Energy = 2,

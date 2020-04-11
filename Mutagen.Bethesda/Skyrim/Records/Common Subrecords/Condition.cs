@@ -1,4 +1,4 @@
-using Loqui.Internal;
+﻿using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -81,20 +81,22 @@ namespace Mutagen.Bethesda.Skyrim
                 return (CompareOperator)((CompareMask & b) >> 5);
             }
 
-            public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame)
+            public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame, int count)
             {
-                if (!frame.TryReadSubrecordFrame(Faction_Registration.CITC_HEADER, out var countMeta)
-                    || countMeta.Content.Length != 4)
-                {
-                    throw new ArgumentException();
-                }
-                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.Content);
-                List<Condition> conds = new List<Condition>(count);
+                conditions.Clear();
                 for (int i = 0; i < count; i++)
                 {
-                    conds.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
+                    conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
                 }
-                conditions.SetTo(conds);
+            }
+
+            public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame)
+            {
+                conditions.Clear();
+                while (frame.Reader.TryGetSubrecord(Condition_Registration.CTDA_HEADER, out var subMeta))
+                {
+                    conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
+                }
             }
 
             static partial void FillBinaryFlagsCustom(MutagenFrame frame, ICondition item)
@@ -132,13 +134,8 @@ namespace Mutagen.Bethesda.Skyrim
                 return (byte)(b | b2);
             }
 
-            public static void WriteConditionsList(IReadOnlyList<IConditionGetter>? condList, MutagenWriter writer)
+            public static void WriteConditionsList(IReadOnlyList<IConditionGetter> condList, MutagenWriter writer)
             {
-                if (condList == null) return;
-                using (HeaderExport.ExportSubrecordHeader(writer, Faction_Registration.CITC_HEADER))
-                {
-                    writer.Write(condList.Count);
-                }
                 foreach (var cond in condList)
                 {
                     cond.WriteToBinary(writer);
@@ -199,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
+            public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
                 var counterMeta = package.Meta.ReadSubrecordFrame(stream);
                 if (counterMeta.Header.RecordType != Faction_Registration.CITC_HEADER
@@ -208,6 +205,16 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException();
                 }
                 var count = BinaryPrimitives.ReadUInt32LittleEndian(counterMeta.Content);
+                var ret = ConstructBinayOverlayList(stream, package);
+                if (count != ret.Count)
+                {
+                    throw new ArgumentException("Number of parsed conditions did not matched labeled count.");
+                }
+                return ret;
+            }
+
+            public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
+            {
                 var span = stream.RemainingMemory;
                 var pos = stream.Position;
                 var recordLocs = ParseRecordLocations(
@@ -218,10 +225,6 @@ namespace Mutagen.Bethesda.Skyrim
                     includeTriggers: IncludeTriggers,
                     skipHeader: false);
                 span = span.Slice(0, stream.Position - pos);
-                if (count != recordLocs.Length)
-                {
-                    throw new ArgumentException("Number of parsed conditions did not matched labeled count.");
-                }
                 return BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                     mem: span,
                     package: package,

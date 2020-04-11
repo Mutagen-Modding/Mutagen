@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="SkyrimMajorRecord" GUID="bfe597ce-f696-454d-bb7c-bd5de7c9d585" ID="124">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>
