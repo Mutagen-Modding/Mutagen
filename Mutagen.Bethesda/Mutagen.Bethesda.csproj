@@ -1221,6 +1221,15 @@
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect_LoquiGenerated.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Grass_LoquiGenerated.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LandTexture_LoquiGenerated.cs">
+      <DependentUpon>LandTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\HavokData_LoquiGenerated.cs">
+      <DependentUpon>LandTexture.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />

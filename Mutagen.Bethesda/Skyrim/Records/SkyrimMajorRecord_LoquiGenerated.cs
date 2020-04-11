@@ -1101,11 +1101,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
+        public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
@@ -1149,11 +1151,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         FLST_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
+                        GRAS_HEADER,
                         HAIR_HEADER,
                         HAZD_HEADER,
                         HDPT_HEADER,
                         IPDS_HEADER,
                         KYWD_HEADER,
+                        LTEX_HEADER,
                         LIGH_HEADER,
                         LCRT_HEADER,
                         MGEF_HEADER,

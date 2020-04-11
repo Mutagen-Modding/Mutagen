@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LandTexture" recordType="LTEX" objType="Record" baseClass="SkyrimMajorRecord" GUID="f6e8d6f6-773c-4c3b-b09b-d892c0114ed7" ID="130">
+    <Fields>
+      <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
+      <FormLink name="MaterialType" refName="MaterialType" recordType="MNAM" />
+      <RefDirect name="HavokData" refName="HavokData" />
+      <UInt8 name="TextureSpecularExponent" recordType="SNAM" />
+      <List name="Grasses">
+        <FormLink refName="Grass" recordType="GNAM" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="HavokData" objType="Subrecord" recordType="HNAM" GUID="bc8d2e74-e5f5-43ae-96e6-3691eed4d27a" ID="131">
+    <Fields>
+      <UInt8 name="Friction" />
+      <UInt8 name="Restitution" />
+    </Fields>
+  </Object>
+</Loqui>
