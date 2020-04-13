@@ -11,8 +11,17 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class LoadOrder
+    /// <summary>
+    /// A static class with LoadOrder related utility functions
+    /// </summary>
+    public static class LoadOrder
     {
+        /// <summary>
+        /// Attempts to locate the path to a game's load order file
+        /// </summary>
+        /// <param name="game">Game to locate for</param>
+        /// <param name="path">Path to load order file if it was located</param>
+        /// <returns>True if file located</returns>
         public static bool TryGetPluginsFile(GameMode game, out FilePath path)
         {
             string pluginPath;
@@ -31,16 +40,51 @@ namespace Mutagen.Bethesda
             return path.Exists;
         }
 
-        public static bool TryCreateLoadOrder(
-            FilePath pluginListPath,
+        /// <summary>
+        /// Constructs a load order from a list of mods and a data folder.
+        /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
+        /// </summary>
+        /// <param name="modsToInclude">Mods to include</param>
+        /// <param name="dataPath">Path to data folder</param>
+        /// <returns>List of modkeys in load order, excluding missing mods</returns>
+        /// <exception cref="FileNotFoundException">If throwOnMissingMods true and file is missing</exception>
+        public static IExtendedList<ModKey> AlignLoadOrder(
+            IEnumerable<ModKey> modsToInclude,
             DirectoryPath dataPath,
-            out List<ModKey> loadOrder)
+            bool throwOnMissingMods = false)
         {
             List<(ModKey ModKey, DateTime Write)> list = new List<(ModKey ModKey, DateTime Write)>();
-            loadOrder = new List<ModKey>();
-            foreach (var item in File.ReadAllLines(pluginListPath.Path))
+            var loadOrder = new ExtendedList<ModKey>();
+            foreach (var key in modsToInclude)
             {
-                var str = item;
+                FilePath file = new FilePath(
+                    Path.Combine(dataPath.Path, key.ToString()));
+                if (!file.Exists)
+                {
+                    if (throwOnMissingMods) throw new FileNotFoundException($"Expected mod was missing: {file}");
+                    continue;
+                }
+                list.Add((key, file.Info.LastWriteTime));
+            }
+            loadOrder.AddRange(list
+                .OrderBy(i => i.Write)
+                .Select(i => i.ModKey));
+            return loadOrder;
+        }
+
+        /// <summary>
+        /// Parses a stream to retrieve all ModKeys in expected plugin file format
+        /// </summary>
+        /// <param name="stream">Stream to read from</param>
+        /// <returns>List of modkeys representing a load order</returns>
+        /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
+        public static IExtendedList<ModKey> ProcessLoadOrder(Stream stream)
+        {
+            var ret = new ExtendedList<ModKey>();
+            using var streamReader = new StreamReader(stream);
+            while (!streamReader.EndOfStream)
+            {
+                var str = streamReader.ReadLine();
                 var commentIndex = str.IndexOf('#');
                 if (commentIndex != -1)
                 {
@@ -48,38 +92,72 @@ namespace Mutagen.Bethesda
                 }
                 if (string.IsNullOrWhiteSpace(str)) continue;
                 str = str.Trim();
-                if (!ModKey.TryFactory(str, out var key)) return false;
-                FilePath file = new FilePath(
-                    Path.Combine(dataPath.Path, str));
-                if (!file.Exists) return false;
-                list.Add((key, file.Info.LastWriteTime));
+                if (!ModKey.TryFactory(str, out var key))
+                {
+                    throw new ArgumentException("Load order file had malformed line: {str}");   
+                }
+                ret.Add(key);
             }
-            loadOrder.AddRange(list
-                .OrderBy(i => i.Write)
-                .Select(i => i.ModKey));
-            return true;
+            return ret;
+        }
+        
+        /// <summary>
+        /// Parses a file to retrieve all ModKeys in expected plugin file format
+        /// </summary>
+        /// <param name="path">Path of plugin list</param>
+        /// <returns>List of modkeys representing a load order</returns>
+        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
+        public static IExtendedList<ModKey> ProcessLoadOrder(FilePath path)
+        {
+            var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read);
+            return ProcessLoadOrder(stream);
         }
 
-        public static bool TryGetUsualLoadOrder(GameMode game, DirectoryPath dataPath, [MaybeNullWhen(false)]out List<ModKey> loadOrder)
+        /// <summary>
+        /// Returns a load order listing from the usual sources
+        /// </summary>
+        /// <param name="game">Game type</param>
+        /// <param name="dataPath">Path to game's data folder</param>
+        /// <param name="allowMissingMods">Whether to skip missing mods</param>
+        /// <returns>List of modkeys representing a load order</returns>
+        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
+        /// <exception cref="FileNotFoundException">If plugin file not located, or if allowMissingMods false and file is missing</exception>
+        public static IExtendedList<ModKey> GetUsualLoadOrder(GameMode game, DirectoryPath dataPath, bool allowMissingMods)
         {
             if (!TryGetPluginsFile(game, out var path))
             {
-                loadOrder = default!;
-                return false;
+                throw new FileNotFoundException("Could not locate plugins file");
             }
-            return TryCreateLoadOrder(path, dataPath, out loadOrder);
+            
+            IExtendedList<ModKey> mods = ProcessLoadOrder(path);
+            return AlignLoadOrder(mods, dataPath, throwOnMissingMods: !allowMissingMods);
         }
     }
 
+    /// <summary>
+    /// A container for Mod objects in an order
+    /// </summary>
     public class LoadOrder<TMod> : IEnumerable<ModListing<TMod>>
         where TMod : class, IModGetter
     {
         private readonly List<ModListing<TMod>> _modsByLoadOrder = new List<ModListing<TMod>>();
 
+        /// <summary>
+        /// Number of mods
+        /// </summary>
         public int Count => _modsByLoadOrder.Count;
 
+        /// <summary>
+        /// Access a mod at a given index
+        /// </summary>
         public ModListing<TMod> this[LoadOrderIndex index] => _modsByLoadOrder[index.ID];
 
+        /// <summary>
+        /// Attempts to retrive a mod listing given a ModKey
+        /// </summary>
+        /// <param name="key">ModKey to query for</param>
+        /// <param name="result">Result containing located index, and a reference to the listing</param>
+        /// <returns>True if matching mod located</returns>
         public bool TryGetListing(ModKey key, out (LoadOrderIndex Index, ModListing<TMod> Listing) result)
         {
             for (int i = 0; i < _modsByLoadOrder.Count; i++)
@@ -95,6 +173,12 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        /// <summary>
+        /// Attempts to retrive a mod object given a ModKey
+        /// </summary>
+        /// <param name="key">ModKey to query for</param>
+        /// <param name="result">Result containing located index, and a reference to the mod object</param>
+        /// <returns>True if matching mod located</returns>
         public bool TryGetMod(ModKey key, out (LoadOrderIndex Index, TMod Mod) result)
         {
             if (!this.TryGetListing(key, out var listing)
@@ -107,7 +191,13 @@ namespace Mutagen.Bethesda
             return true;
         }
 
-        public bool TryGetIndex(LoadOrderIndex index, [MaybeNullWhen(false)] out ModListing<TMod> result)
+        /// <summary>
+        /// Attempts to retrive a mod listing given an index
+        /// </summary>
+        /// <param name="index">Index to retrieve</param>
+        /// <param name="result">Reference to the mod listing</param>
+        /// <returns>True if index in range</returns>
+        public bool TryGetListing(LoadOrderIndex index, [MaybeNullWhen(false)] out ModListing<TMod> result)
         {
             if (!_modsByLoadOrder.InRange(index.ID))
             {
@@ -118,6 +208,11 @@ namespace Mutagen.Bethesda
             return result != null;
         }
 
+        /// <summary>
+        /// Adds a mod to the end of the load order
+        /// </summary>
+        /// <param name="mod">Mod to add</param>
+        /// <exception cref="ArgumentException">If mod with same key exists already</exception>
         public void Add(TMod mod)
         {
             if (this.Contains(mod.ModKey))
@@ -127,7 +222,13 @@ namespace Mutagen.Bethesda
             _modsByLoadOrder.Add(new ModListing<TMod>(mod));
         }
 
-        public void Add(TMod mod, byte index)
+        /// <summary>
+        /// Adds a mod at the given index
+        /// </summary>
+        /// <param name="mod">Mod to add</param>
+        /// <param name="index">Index to insert at</param>
+        /// <exception cref="ArgumentException">If mod with same key exists already</exception>
+        public void Add(TMod mod, int index)
         {
             if (this.Contains(mod.ModKey))
             {
@@ -136,16 +237,26 @@ namespace Mutagen.Bethesda
             _modsByLoadOrder.Insert(index, new ModListing<TMod>(mod));
         }
 
-        public bool Contains(ModKey mod)
+        /// <summary>
+        /// Checks if a mod exists with given key
+        /// </summary>
+        /// <param name="key">Key to query</param>
+        /// <returns>True if mod on list with key</returns>
+        public bool Contains(ModKey key)
         {
-            return IndexOf(mod) != -1;
+            return IndexOf(key) != -1;
         }
 
-        public int IndexOf(ModKey mod)
+        /// <summary>
+        /// Locates index of a mod with given key
+        /// </summary>
+        /// <param name="key">Key to query</param>
+        /// <returns>Index of mod on list with key. -1 if not located</returns>
+        public int IndexOf(ModKey key)
         {
             for (int i = 0; i < _modsByLoadOrder.Count; i++)
             {
-                if (_modsByLoadOrder[i].Key.Equals(mod))
+                if (_modsByLoadOrder[i].Key.Equals(key))
                 {
                     return i;
                 }
@@ -153,16 +264,32 @@ namespace Mutagen.Bethesda
             return -1;
         }
 
+        /// <summary>
+        /// Clears load order of all mods
+        /// </summary>
         public void Clear()
         {
             this._modsByLoadOrder.Clear();
         }
 
+        /// <summary>
+        /// Delegate used for importing mods
+        /// </summary>
+        /// <param name="path">Path to mod file</param>
+        /// <param name="modKey">ModKey associated with listing</param>
+        /// <param name="mod">Out parameter containing mod object if successful</param>
+        /// <returns>True if import successful</returns>
         public delegate bool Importer(FilePath path, ModKey modKey, [MaybeNullWhen(false)] out TMod mod);
 
+        /// <summary>
+        /// Clears load order and fills it with mods constructed by given importer
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="importer">Function used to construct a mod</param>
         public void Import(
             DirectoryPath dataFolder,
-            List<ModKey> loadOrder,
+            IReadOnlyList<ModKey> loadOrder,
             Importer importer)
         {
             this.Clear();
@@ -199,6 +326,9 @@ namespace Mutagen.Bethesda
             }
         }
 
+        /// <summary>
+        /// Iterates through all mod listings in load order
+        /// </summary>
         public IEnumerator<ModListing<TMod>> GetEnumerator()
         {
             return _modsByLoadOrder.GetEnumerator();

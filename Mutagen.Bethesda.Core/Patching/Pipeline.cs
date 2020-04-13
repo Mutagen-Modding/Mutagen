@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda
         public static void TypicalPatch<TMod>(
             string[] mainArgs,
             ModKey outputMod,
-            List<ModKey> loadOrderListing,
+            IReadOnlyList<ModKey> loadOrderList,
             LoadOrder<TMod>.Importer importer,
             Func<ModKey, LoadOrder<TMod>, TMod> processor)
             where TMod : class, IMod
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
             TypicalPatch(
                 dataFolder: new Noggog.DirectoryPath(mainArgs[0]),
                 outModKey: outputMod,
-                loadOrderListing: loadOrderListing,
+                loadOrderList: loadOrderList,
                 processor: processor,
                 importer: importer);
         }
@@ -29,16 +29,17 @@ namespace Mutagen.Bethesda
         public static void TypicalPatch<TMod>(
             DirectoryPath dataFolder,
             ModKey outModKey,
-            List<ModKey> loadOrderListing,
+            IReadOnlyList<ModKey> loadOrderList,
             LoadOrder<TMod>.Importer importer,
             Func<ModKey, LoadOrder<TMod>, TMod> processor)
             where TMod : class, IMod
         {
-            loadOrderListing.Remove(outModKey);
+            var loadOrderInternal = loadOrderList.ToList();
+            loadOrderInternal.Remove(outModKey);
             var loadOrder = new LoadOrder<TMod>();
             loadOrder.Import(
                 dataFolder,
-                loadOrderListing,
+                loadOrderInternal,
                 importer);
             var outMod = processor(outModKey, loadOrder);
             foreach (var npc in outMod.EnumerateMajorRecords())

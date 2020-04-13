@@ -28,16 +28,14 @@ namespace Mutagen.Bethesda.Oblivion
             DirectoryPath dataFolder,
             ModKey outModKey,
             Func<ModKey, LoadOrder<OblivionMod>, OblivionMod> processor,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool allowMissingMods = false)
         {
-            if (!LoadOrder.TryGetUsualLoadOrder(GameMode.Oblivion, dataFolder, out var loadOrderListing))
-            {
-                throw new ArgumentException("Could not retrieve load order.");
-            }
+            var loadOrderList = LoadOrder.GetUsualLoadOrder(GameMode.Oblivion, dataFolder, allowMissingMods: allowMissingMods);
             Pipeline.TypicalPatch(
                 dataFolder: dataFolder,
                 outModKey: outModKey,
-                loadOrderListing: loadOrderListing,
+                loadOrderList: loadOrderList,
                 processor: processor,
                 importer: (FilePath path, ModKey modKey, out OblivionMod mod) =>
                 {
@@ -49,22 +47,18 @@ namespace Mutagen.Bethesda.Oblivion
                 });
         }
 
-        public static bool TryImportUsualLoadOrder(
+        public static LoadOrder<OblivionMod> ImportUsualLoadOrder(
             DirectoryPath dataFolder,
-            [MaybeNullWhen(false)] out LoadOrder<OblivionMod> loadOrder,
             GroupMask? importMask = null,
-            ModKey? modKeyExclusionHint = null)
+            ModKey? modKeyExclusionHint = null,
+            bool allowMissingMods = false)
         {
-            if (!LoadOrder.TryGetUsualLoadOrder(GameMode.Oblivion, dataFolder, out var loadOrderListing))
-            {
-                loadOrder = default;
-                return false;
-            }
+            var loadOrderListing = LoadOrder.GetUsualLoadOrder(GameMode.Oblivion, dataFolder, allowMissingMods: allowMissingMods);
             if (modKeyExclusionHint != null)
             {
                 loadOrderListing.Remove(modKeyExclusionHint.Value);
             }
-            loadOrder = new LoadOrder<OblivionMod>();
+            var loadOrder = new LoadOrder<OblivionMod>();
             loadOrder.Import(
                 dataFolder,
                 loadOrderListing,
@@ -76,23 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
                         importMask: importMask);
                     return true;
                 });
-            return true;
-        }
-
-        public static LoadOrder<OblivionMod>? ImportUsualLoadOrder(
-            DirectoryPath dataFolder,
-            GroupMask? importMask = null,
-            ModKey? modKeyExclusionHint = null)
-        {
-            if (TryImportUsualLoadOrder(
-                dataFolder,
-                out var loadOrder,
-                importMask,
-                modKeyExclusionHint))
-            {
-                return loadOrder;
-            }
-            return default;
+            return loadOrder;
         }
 
         public static OblivionMod Flatten(this LoadOrder<OblivionMod> loadOrder, ModKey? modKey = null)
