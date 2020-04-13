@@ -15,14 +15,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: Bash@3
-  displayName: Lower Nullability Errors
-  inputs:
-    targetType: 'inline'
-    script: |
-      sed -i '/CS8625/d' ./.editorconfig
-      sed -i '/CS8601/d' ./.editorconfig
-      
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
