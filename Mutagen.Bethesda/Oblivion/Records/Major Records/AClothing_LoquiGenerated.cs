@@ -85,31 +85,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IAClothingGetter.EnchantmentPoints => this.EnchantmentPoints;
         #endregion
-        #region BipedFlags
+        #region ClothingFlags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private BipedFlag _BipedFlags;
-        public BipedFlag BipedFlags
+        private ClothingFlags? _ClothingFlags;
+        public ClothingFlags? ClothingFlags
         {
-            get => this._BipedFlags;
-            set
-            {
-                this.BMDTDataTypeState |= BMDTDataType.Has;
-                this._BipedFlags = value;
-            }
+            get => _ClothingFlags;
+            set => _ClothingFlags = value;
         }
-        #endregion
-        #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private EquipmentFlag _Flags;
-        public EquipmentFlag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.BMDTDataTypeState |= BMDTDataType.Has;
-                this._Flags = value;
-            }
-        }
+        IClothingFlagsGetter? IAClothingGetter.ClothingFlags => this.ClothingFlags;
         #endregion
         #region MaleBipedModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -176,9 +161,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAClothingGetter.FemaleIcon => this.FemaleIcon;
-        #endregion
-        #region BMDTDataTypeState
-        public AClothing.BMDTDataType BMDTDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -357,15 +339,13 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = initialValue;
                 this.Enchantment = initialValue;
                 this.EnchantmentPoints = initialValue;
-                this.BipedFlags = initialValue;
-                this.Flags = initialValue;
+                this.ClothingFlags = new MaskItem<TItem, ClothingFlags.Mask<TItem>?>(initialValue, new ClothingFlags.Mask<TItem>(initialValue));
                 this.MaleBipedModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.MaleWorldModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.MaleIcon = initialValue;
                 this.FemaleBipedModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.FemaleWorldModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.FemaleIcon = initialValue;
-                this.BMDTDataTypeState = initialValue;
             }
 
             public Mask(
@@ -378,15 +358,13 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Script,
                 TItem Enchantment,
                 TItem EnchantmentPoints,
-                TItem BipedFlags,
-                TItem Flags,
+                TItem ClothingFlags,
                 TItem MaleBipedModel,
                 TItem MaleWorldModel,
                 TItem MaleIcon,
                 TItem FemaleBipedModel,
                 TItem FemaleWorldModel,
-                TItem FemaleIcon,
-                TItem BMDTDataTypeState)
+                TItem FemaleIcon)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -398,15 +376,13 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = Script;
                 this.Enchantment = Enchantment;
                 this.EnchantmentPoints = EnchantmentPoints;
-                this.BipedFlags = BipedFlags;
-                this.Flags = Flags;
+                this.ClothingFlags = new MaskItem<TItem, ClothingFlags.Mask<TItem>?>(ClothingFlags, new ClothingFlags.Mask<TItem>(ClothingFlags));
                 this.MaleBipedModel = new MaskItem<TItem, Model.Mask<TItem>?>(MaleBipedModel, new Model.Mask<TItem>(MaleBipedModel));
                 this.MaleWorldModel = new MaskItem<TItem, Model.Mask<TItem>?>(MaleWorldModel, new Model.Mask<TItem>(MaleWorldModel));
                 this.MaleIcon = MaleIcon;
                 this.FemaleBipedModel = new MaskItem<TItem, Model.Mask<TItem>?>(FemaleBipedModel, new Model.Mask<TItem>(FemaleBipedModel));
                 this.FemaleWorldModel = new MaskItem<TItem, Model.Mask<TItem>?>(FemaleWorldModel, new Model.Mask<TItem>(FemaleWorldModel));
                 this.FemaleIcon = FemaleIcon;
-                this.BMDTDataTypeState = BMDTDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -422,15 +398,13 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Script;
             public TItem Enchantment;
             public TItem EnchantmentPoints;
-            public TItem BipedFlags;
-            public TItem Flags;
+            public MaskItem<TItem, ClothingFlags.Mask<TItem>?>? ClothingFlags { get; set; }
             public MaskItem<TItem, Model.Mask<TItem>?>? MaleBipedModel { get; set; }
             public MaskItem<TItem, Model.Mask<TItem>?>? MaleWorldModel { get; set; }
             public TItem MaleIcon;
             public MaskItem<TItem, Model.Mask<TItem>?>? FemaleBipedModel { get; set; }
             public MaskItem<TItem, Model.Mask<TItem>?>? FemaleWorldModel { get; set; }
             public TItem FemaleIcon;
-            public TItem BMDTDataTypeState;
             #endregion
 
             #region Equals
@@ -448,15 +422,13 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Script, rhs.Script)) return false;
                 if (!object.Equals(this.Enchantment, rhs.Enchantment)) return false;
                 if (!object.Equals(this.EnchantmentPoints, rhs.EnchantmentPoints)) return false;
-                if (!object.Equals(this.BipedFlags, rhs.BipedFlags)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ClothingFlags, rhs.ClothingFlags)) return false;
                 if (!object.Equals(this.MaleBipedModel, rhs.MaleBipedModel)) return false;
                 if (!object.Equals(this.MaleWorldModel, rhs.MaleWorldModel)) return false;
                 if (!object.Equals(this.MaleIcon, rhs.MaleIcon)) return false;
                 if (!object.Equals(this.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
                 if (!object.Equals(this.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
                 if (!object.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
-                if (!object.Equals(this.BMDTDataTypeState, rhs.BMDTDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -466,15 +438,13 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Script);
                 hash.Add(this.Enchantment);
                 hash.Add(this.EnchantmentPoints);
-                hash.Add(this.BipedFlags);
-                hash.Add(this.Flags);
+                hash.Add(this.ClothingFlags);
                 hash.Add(this.MaleBipedModel);
                 hash.Add(this.MaleWorldModel);
                 hash.Add(this.MaleIcon);
                 hash.Add(this.FemaleBipedModel);
                 hash.Add(this.FemaleWorldModel);
                 hash.Add(this.FemaleIcon);
-                hash.Add(this.BMDTDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -489,8 +459,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Script)) return false;
                 if (!eval(this.Enchantment)) return false;
                 if (!eval(this.EnchantmentPoints)) return false;
-                if (!eval(this.BipedFlags)) return false;
-                if (!eval(this.Flags)) return false;
+                if (ClothingFlags != null)
+                {
+                    if (!eval(this.ClothingFlags.Overall)) return false;
+                    if (this.ClothingFlags.Specific != null && !this.ClothingFlags.Specific.All(eval)) return false;
+                }
                 if (MaleBipedModel != null)
                 {
                     if (!eval(this.MaleBipedModel.Overall)) return false;
@@ -513,7 +486,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (this.FemaleWorldModel.Specific != null && !this.FemaleWorldModel.Specific.All(eval)) return false;
                 }
                 if (!eval(this.FemaleIcon)) return false;
-                if (!eval(this.BMDTDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -526,8 +498,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Script)) return true;
                 if (eval(this.Enchantment)) return true;
                 if (eval(this.EnchantmentPoints)) return true;
-                if (eval(this.BipedFlags)) return true;
-                if (eval(this.Flags)) return true;
+                if (ClothingFlags != null)
+                {
+                    if (eval(this.ClothingFlags.Overall)) return true;
+                    if (this.ClothingFlags.Specific != null && this.ClothingFlags.Specific.Any(eval)) return true;
+                }
                 if (MaleBipedModel != null)
                 {
                     if (eval(this.MaleBipedModel.Overall)) return true;
@@ -550,7 +525,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (this.FemaleWorldModel.Specific != null && this.FemaleWorldModel.Specific.Any(eval)) return true;
                 }
                 if (eval(this.FemaleIcon)) return true;
-                if (eval(this.BMDTDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -570,15 +544,13 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Script = eval(this.Script);
                 obj.Enchantment = eval(this.Enchantment);
                 obj.EnchantmentPoints = eval(this.EnchantmentPoints);
-                obj.BipedFlags = eval(this.BipedFlags);
-                obj.Flags = eval(this.Flags);
+                obj.ClothingFlags = this.ClothingFlags == null ? null : new MaskItem<R, ClothingFlags.Mask<R>?>(eval(this.ClothingFlags.Overall), this.ClothingFlags.Specific?.Translate(eval));
                 obj.MaleBipedModel = this.MaleBipedModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.MaleBipedModel.Overall), this.MaleBipedModel.Specific?.Translate(eval));
                 obj.MaleWorldModel = this.MaleWorldModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.MaleWorldModel.Overall), this.MaleWorldModel.Specific?.Translate(eval));
                 obj.MaleIcon = eval(this.MaleIcon);
                 obj.FemaleBipedModel = this.FemaleBipedModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.FemaleBipedModel.Overall), this.FemaleBipedModel.Specific?.Translate(eval));
                 obj.FemaleWorldModel = this.FemaleWorldModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.FemaleWorldModel.Overall), this.FemaleWorldModel.Specific?.Translate(eval));
                 obj.FemaleIcon = eval(this.FemaleIcon);
-                obj.BMDTDataTypeState = eval(this.BMDTDataTypeState);
             }
             #endregion
 
@@ -617,13 +589,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
                     }
-                    if (printMask?.BipedFlags ?? true)
+                    if (printMask?.ClothingFlags?.Overall ?? true)
                     {
-                        fg.AppendItem(BipedFlags, "BipedFlags");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
+                        ClothingFlags?.ToString(fg);
                     }
                     if (printMask?.MaleBipedModel?.Overall ?? true)
                     {
@@ -649,10 +617,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(FemaleIcon, "FemaleIcon");
                     }
-                    if (printMask?.BMDTDataTypeState ?? true)
-                    {
-                        fg.AppendItem(BMDTDataTypeState, "BMDTDataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -669,15 +633,13 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Script;
             public Exception? Enchantment;
             public Exception? EnchantmentPoints;
-            public Exception? BipedFlags;
-            public Exception? Flags;
+            public MaskItem<Exception?, ClothingFlags.ErrorMask?>? ClothingFlags;
             public MaskItem<Exception?, Model.ErrorMask?>? MaleBipedModel;
             public MaskItem<Exception?, Model.ErrorMask?>? MaleWorldModel;
             public Exception? MaleIcon;
             public MaskItem<Exception?, Model.ErrorMask?>? FemaleBipedModel;
             public MaskItem<Exception?, Model.ErrorMask?>? FemaleWorldModel;
             public Exception? FemaleIcon;
-            public Exception? BMDTDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -694,10 +656,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Enchantment;
                     case AClothing_FieldIndex.EnchantmentPoints:
                         return EnchantmentPoints;
-                    case AClothing_FieldIndex.BipedFlags:
-                        return BipedFlags;
-                    case AClothing_FieldIndex.Flags:
-                        return Flags;
+                    case AClothing_FieldIndex.ClothingFlags:
+                        return ClothingFlags;
                     case AClothing_FieldIndex.MaleBipedModel:
                         return MaleBipedModel;
                     case AClothing_FieldIndex.MaleWorldModel:
@@ -710,8 +670,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return FemaleWorldModel;
                     case AClothing_FieldIndex.FemaleIcon:
                         return FemaleIcon;
-                    case AClothing_FieldIndex.BMDTDataTypeState:
-                        return BMDTDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -734,11 +692,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case AClothing_FieldIndex.EnchantmentPoints:
                         this.EnchantmentPoints = ex;
                         break;
-                    case AClothing_FieldIndex.BipedFlags:
-                        this.BipedFlags = ex;
-                        break;
-                    case AClothing_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case AClothing_FieldIndex.ClothingFlags:
+                        this.ClothingFlags = new MaskItem<Exception?, ClothingFlags.ErrorMask?>(ex, null);
                         break;
                     case AClothing_FieldIndex.MaleBipedModel:
                         this.MaleBipedModel = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -757,9 +712,6 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     case AClothing_FieldIndex.FemaleIcon:
                         this.FemaleIcon = ex;
-                        break;
-                    case AClothing_FieldIndex.BMDTDataTypeState:
-                        this.BMDTDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -784,11 +736,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case AClothing_FieldIndex.EnchantmentPoints:
                         this.EnchantmentPoints = (Exception?)obj;
                         break;
-                    case AClothing_FieldIndex.BipedFlags:
-                        this.BipedFlags = (Exception?)obj;
-                        break;
-                    case AClothing_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case AClothing_FieldIndex.ClothingFlags:
+                        this.ClothingFlags = (MaskItem<Exception?, ClothingFlags.ErrorMask?>?)obj;
                         break;
                     case AClothing_FieldIndex.MaleBipedModel:
                         this.MaleBipedModel = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
@@ -808,9 +757,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case AClothing_FieldIndex.FemaleIcon:
                         this.FemaleIcon = (Exception?)obj;
                         break;
-                    case AClothing_FieldIndex.BMDTDataTypeState:
-                        this.BMDTDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -824,15 +770,13 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Script != null) return true;
                 if (Enchantment != null) return true;
                 if (EnchantmentPoints != null) return true;
-                if (BipedFlags != null) return true;
-                if (Flags != null) return true;
+                if (ClothingFlags != null) return true;
                 if (MaleBipedModel != null) return true;
                 if (MaleWorldModel != null) return true;
                 if (MaleIcon != null) return true;
                 if (FemaleBipedModel != null) return true;
                 if (FemaleWorldModel != null) return true;
                 if (FemaleIcon != null) return true;
-                if (BMDTDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -872,15 +816,13 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Script, "Script");
                 fg.AppendItem(Enchantment, "Enchantment");
                 fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
-                fg.AppendItem(BipedFlags, "BipedFlags");
-                fg.AppendItem(Flags, "Flags");
+                ClothingFlags?.ToString(fg);
                 MaleBipedModel?.ToString(fg);
                 MaleWorldModel?.ToString(fg);
                 fg.AppendItem(MaleIcon, "MaleIcon");
                 FemaleBipedModel?.ToString(fg);
                 FemaleWorldModel?.ToString(fg);
                 fg.AppendItem(FemaleIcon, "FemaleIcon");
-                fg.AppendItem(BMDTDataTypeState, "BMDTDataTypeState");
             }
             #endregion
 
@@ -893,15 +835,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
                 ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
-                ret.BipedFlags = this.BipedFlags.Combine(rhs.BipedFlags);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ClothingFlags = this.ClothingFlags.Combine(rhs.ClothingFlags, (l, r) => l.Combine(r));
                 ret.MaleBipedModel = this.MaleBipedModel.Combine(rhs.MaleBipedModel, (l, r) => l.Combine(r));
                 ret.MaleWorldModel = this.MaleWorldModel.Combine(rhs.MaleWorldModel, (l, r) => l.Combine(r));
                 ret.MaleIcon = this.MaleIcon.Combine(rhs.MaleIcon);
                 ret.FemaleBipedModel = this.FemaleBipedModel.Combine(rhs.FemaleBipedModel, (l, r) => l.Combine(r));
                 ret.FemaleWorldModel = this.FemaleWorldModel.Combine(rhs.FemaleWorldModel, (l, r) => l.Combine(r));
                 ret.FemaleIcon = this.FemaleIcon.Combine(rhs.FemaleIcon);
-                ret.BMDTDataTypeState = this.BMDTDataTypeState.Combine(rhs.BMDTDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -928,15 +868,13 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Script;
             public bool Enchantment;
             public bool EnchantmentPoints;
-            public bool BipedFlags;
-            public bool Flags;
+            public MaskItem<bool, ClothingFlags.TranslationMask?> ClothingFlags;
             public MaskItem<bool, Model.TranslationMask?> MaleBipedModel;
             public MaskItem<bool, Model.TranslationMask?> MaleWorldModel;
             public bool MaleIcon;
             public MaskItem<bool, Model.TranslationMask?> FemaleBipedModel;
             public MaskItem<bool, Model.TranslationMask?> FemaleWorldModel;
             public bool FemaleIcon;
-            public bool BMDTDataTypeState;
             #endregion
 
             #region Ctors
@@ -947,15 +885,13 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = defaultOn;
                 this.Enchantment = defaultOn;
                 this.EnchantmentPoints = defaultOn;
-                this.BipedFlags = defaultOn;
-                this.Flags = defaultOn;
+                this.ClothingFlags = new MaskItem<bool, ClothingFlags.TranslationMask?>(defaultOn, null);
                 this.MaleBipedModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.MaleWorldModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.MaleIcon = defaultOn;
                 this.FemaleBipedModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.FemaleWorldModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.FemaleIcon = defaultOn;
-                this.BMDTDataTypeState = defaultOn;
             }
 
             #endregion
@@ -967,25 +903,18 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Script, null));
                 ret.Add((Enchantment, null));
                 ret.Add((EnchantmentPoints, null));
-                ret.Add((BipedFlags, null));
-                ret.Add((Flags, null));
+                ret.Add((ClothingFlags?.Overall ?? true, ClothingFlags?.Specific?.GetCrystal()));
                 ret.Add((MaleBipedModel?.Overall ?? true, MaleBipedModel?.Specific?.GetCrystal()));
                 ret.Add((MaleWorldModel?.Overall ?? true, MaleWorldModel?.Specific?.GetCrystal()));
                 ret.Add((MaleIcon, null));
                 ret.Add((FemaleBipedModel?.Overall ?? true, FemaleBipedModel?.Specific?.GetCrystal()));
                 ret.Add((FemaleWorldModel?.Overall ?? true, FemaleWorldModel?.Specific?.GetCrystal()));
                 ret.Add((FemaleIcon, null));
-                ret.Add((BMDTDataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
-        [Flags]
-        public enum BMDTDataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => AClothingCommon.Instance.GetLinks(this);
         public AClothing(FormKey formKey)
@@ -1048,15 +977,13 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormLinkNullable<Script> Script { get; }
         new IFormLinkNullable<Enchantment> Enchantment { get; }
         new UInt16? EnchantmentPoints { get; set; }
-        new BipedFlag BipedFlags { get; set; }
-        new EquipmentFlag Flags { get; set; }
+        new ClothingFlags? ClothingFlags { get; set; }
         new Model? MaleBipedModel { get; set; }
         new Model? MaleWorldModel { get; set; }
         new String? MaleIcon { get; set; }
         new Model? FemaleBipedModel { get; set; }
         new Model? FemaleWorldModel { get; set; }
         new String? FemaleIcon { get; set; }
-        new AClothing.BMDTDataType BMDTDataTypeState { get; set; }
     }
 
     public partial interface IAClothingInternal :
@@ -1077,15 +1004,13 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IFormLinkNullableGetter<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
-        BipedFlag BipedFlags { get; }
-        EquipmentFlag Flags { get; }
+        IClothingFlagsGetter? ClothingFlags { get; }
         IModelGetter? MaleBipedModel { get; }
         IModelGetter? MaleWorldModel { get; }
         String? MaleIcon { get; }
         IModelGetter? FemaleBipedModel { get; }
         IModelGetter? FemaleWorldModel { get; }
         String? FemaleIcon { get; }
-        AClothing.BMDTDataType BMDTDataTypeState { get; }
 
     }
 
@@ -1389,15 +1314,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Script = 6,
         Enchantment = 7,
         EnchantmentPoints = 8,
-        BipedFlags = 9,
-        Flags = 10,
-        MaleBipedModel = 11,
-        MaleWorldModel = 12,
-        MaleIcon = 13,
-        FemaleBipedModel = 14,
-        FemaleWorldModel = 15,
-        FemaleIcon = 16,
-        BMDTDataTypeState = 17,
+        ClothingFlags = 9,
+        MaleBipedModel = 10,
+        MaleWorldModel = 11,
+        MaleIcon = 12,
+        FemaleBipedModel = 13,
+        FemaleWorldModel = 14,
+        FemaleIcon = 15,
     }
     #endregion
 
@@ -1415,9 +1338,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "45098216-a539-4788-84f5-ece76ab7abf2";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(AClothing.Mask<>);
 
@@ -1455,10 +1378,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)AClothing_FieldIndex.Enchantment;
                 case "ENCHANTMENTPOINTS":
                     return (ushort)AClothing_FieldIndex.EnchantmentPoints;
-                case "BIPEDFLAGS":
-                    return (ushort)AClothing_FieldIndex.BipedFlags;
-                case "FLAGS":
-                    return (ushort)AClothing_FieldIndex.Flags;
+                case "CLOTHINGFLAGS":
+                    return (ushort)AClothing_FieldIndex.ClothingFlags;
                 case "MALEBIPEDMODEL":
                     return (ushort)AClothing_FieldIndex.MaleBipedModel;
                 case "MALEWORLDMODEL":
@@ -1471,8 +1392,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)AClothing_FieldIndex.FemaleWorldModel;
                 case "FEMALEICON":
                     return (ushort)AClothing_FieldIndex.FemaleIcon;
-                case "BMDTDATATYPESTATE":
-                    return (ushort)AClothing_FieldIndex.BMDTDataTypeState;
                 default:
                     return null;
             }
@@ -1487,15 +1406,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AClothing_FieldIndex.Script:
                 case AClothing_FieldIndex.Enchantment:
                 case AClothing_FieldIndex.EnchantmentPoints:
-                case AClothing_FieldIndex.BipedFlags:
-                case AClothing_FieldIndex.Flags:
+                case AClothing_FieldIndex.ClothingFlags:
                 case AClothing_FieldIndex.MaleBipedModel:
                 case AClothing_FieldIndex.MaleWorldModel:
                 case AClothing_FieldIndex.MaleIcon:
                 case AClothing_FieldIndex.FemaleBipedModel:
                 case AClothing_FieldIndex.FemaleWorldModel:
                 case AClothing_FieldIndex.FemaleIcon:
-                case AClothing_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsEnumerable(index);
@@ -1507,6 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AClothing_FieldIndex enu = (AClothing_FieldIndex)index;
             switch (enu)
             {
+                case AClothing_FieldIndex.ClothingFlags:
                 case AClothing_FieldIndex.MaleBipedModel:
                 case AClothing_FieldIndex.MaleWorldModel:
                 case AClothing_FieldIndex.FemaleBipedModel:
@@ -1516,11 +1434,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AClothing_FieldIndex.Script:
                 case AClothing_FieldIndex.Enchantment:
                 case AClothing_FieldIndex.EnchantmentPoints:
-                case AClothing_FieldIndex.BipedFlags:
-                case AClothing_FieldIndex.Flags:
                 case AClothing_FieldIndex.MaleIcon:
                 case AClothing_FieldIndex.FemaleIcon:
-                case AClothing_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsLoqui(index);
@@ -1536,15 +1451,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AClothing_FieldIndex.Script:
                 case AClothing_FieldIndex.Enchantment:
                 case AClothing_FieldIndex.EnchantmentPoints:
-                case AClothing_FieldIndex.BipedFlags:
-                case AClothing_FieldIndex.Flags:
+                case AClothing_FieldIndex.ClothingFlags:
                 case AClothing_FieldIndex.MaleBipedModel:
                 case AClothing_FieldIndex.MaleWorldModel:
                 case AClothing_FieldIndex.MaleIcon:
                 case AClothing_FieldIndex.FemaleBipedModel:
                 case AClothing_FieldIndex.FemaleWorldModel:
                 case AClothing_FieldIndex.FemaleIcon:
-                case AClothing_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsSingleton(index);
@@ -1564,10 +1477,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Enchantment";
                 case AClothing_FieldIndex.EnchantmentPoints:
                     return "EnchantmentPoints";
-                case AClothing_FieldIndex.BipedFlags:
-                    return "BipedFlags";
-                case AClothing_FieldIndex.Flags:
-                    return "Flags";
+                case AClothing_FieldIndex.ClothingFlags:
+                    return "ClothingFlags";
                 case AClothing_FieldIndex.MaleBipedModel:
                     return "MaleBipedModel";
                 case AClothing_FieldIndex.MaleWorldModel:
@@ -1580,8 +1491,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "FemaleWorldModel";
                 case AClothing_FieldIndex.FemaleIcon:
                     return "FemaleIcon";
-                case AClothing_FieldIndex.BMDTDataTypeState:
-                    return "BMDTDataTypeState";
                 default:
                     return AItem_Registration.GetNthName(index);
             }
@@ -1596,15 +1505,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AClothing_FieldIndex.Script:
                 case AClothing_FieldIndex.Enchantment:
                 case AClothing_FieldIndex.EnchantmentPoints:
-                case AClothing_FieldIndex.BipedFlags:
-                case AClothing_FieldIndex.Flags:
+                case AClothing_FieldIndex.ClothingFlags:
                 case AClothing_FieldIndex.MaleBipedModel:
                 case AClothing_FieldIndex.MaleWorldModel:
                 case AClothing_FieldIndex.MaleIcon:
                 case AClothing_FieldIndex.FemaleBipedModel:
                 case AClothing_FieldIndex.FemaleWorldModel:
                 case AClothing_FieldIndex.FemaleIcon:
-                case AClothing_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return AItem_Registration.IsNthDerivative(index);
@@ -1620,15 +1527,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AClothing_FieldIndex.Script:
                 case AClothing_FieldIndex.Enchantment:
                 case AClothing_FieldIndex.EnchantmentPoints:
-                case AClothing_FieldIndex.BipedFlags:
-                case AClothing_FieldIndex.Flags:
+                case AClothing_FieldIndex.ClothingFlags:
                 case AClothing_FieldIndex.MaleBipedModel:
                 case AClothing_FieldIndex.MaleWorldModel:
                 case AClothing_FieldIndex.MaleIcon:
                 case AClothing_FieldIndex.FemaleBipedModel:
                 case AClothing_FieldIndex.FemaleWorldModel:
                 case AClothing_FieldIndex.FemaleIcon:
-                case AClothing_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return AItem_Registration.IsProtected(index);
@@ -1648,10 +1553,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IFormLinkNullable<Enchantment>);
                 case AClothing_FieldIndex.EnchantmentPoints:
                     return typeof(UInt16);
-                case AClothing_FieldIndex.BipedFlags:
-                    return typeof(BipedFlag);
-                case AClothing_FieldIndex.Flags:
-                    return typeof(EquipmentFlag);
+                case AClothing_FieldIndex.ClothingFlags:
+                    return typeof(ClothingFlags);
                 case AClothing_FieldIndex.MaleBipedModel:
                     return typeof(Model);
                 case AClothing_FieldIndex.MaleWorldModel:
@@ -1664,8 +1567,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Model);
                 case AClothing_FieldIndex.FemaleIcon:
                     return typeof(String);
-                case AClothing_FieldIndex.BMDTDataTypeState:
-                    return typeof(AClothing.BMDTDataType);
                 default:
                     return AItem_Registration.GetNthType(index);
             }
@@ -1677,14 +1578,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType MOD2_HEADER = new RecordType("MOD2");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType MOD3_HEADER = new RecordType("MOD3");
         public static readonly RecordType MOD4_HEADER = new RecordType("MOD4");
         public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
+        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1697,6 +1598,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ENAM_HEADER,
                         ANAM_HEADER,
                         BMDT_HEADER,
+                        MODL_HEADER,
+                        MOD2_HEADER,
+                        ICON_HEADER,
+                        MOD3_HEADER,
+                        MOD4_HEADER,
+                        ICO2_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER
                     })
@@ -1733,7 +1640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new RecordType("MODT"),
                 new RecordType("MO4T")));
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 10;
+        public const int NumTypedFields = 11;
         public static readonly Type BinaryWriteTranslation = typeof(AClothingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1780,15 +1687,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Script.FormKey = null;
             item.Enchantment.FormKey = null;
             item.EnchantmentPoints = default;
-            item.BipedFlags = default;
-            item.Flags = default;
+            item.ClothingFlags = null;
             item.MaleBipedModel = null;
             item.MaleWorldModel = null;
             item.MaleIcon = default;
             item.FemaleBipedModel = null;
             item.FemaleWorldModel = null;
             item.FemaleIcon = default;
-            item.BMDTDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1817,9 +1722,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasBMDTDataType":
-                    item.BMDTDataTypeState |= AClothing.BMDTDataType.Has;
-                    break;
                 default:
                     AItemSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1905,15 +1807,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         public override RecordType RecordType => throw new ArgumentException();
-        protected static void FillBinaryStructs(
-            IAClothingInternal item,
-            MutagenFrame frame)
-        {
-            AItemSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         protected static TryGet<int?> FillBinaryRecordTypes(
             IAClothingInternal item,
             MutagenFrame frame,
@@ -1956,15 +1849,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54444D42: // BMDT
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.BMDTDataTypeState = AClothing.BMDTDataType.Has;
-                    }
-                    item.BipedFlags = EnumBinaryTranslation<BipedFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
-                    item.Flags = EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Flags);
+                    item.ClothingFlags = Mutagen.Bethesda.Oblivion.ClothingFlags.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.ClothingFlags);
                 }
                 case 0x4C444F4D: // MODL
                 {
@@ -2090,8 +1976,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Script = object.Equals(item.Script, rhs.Script);
             ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
             ret.EnchantmentPoints = item.EnchantmentPoints == rhs.EnchantmentPoints;
-            ret.BipedFlags = item.BipedFlags == rhs.BipedFlags;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.ClothingFlags = EqualsMaskHelper.EqualsHelper(
+                item.ClothingFlags,
+                rhs.ClothingFlags,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.MaleBipedModel = EqualsMaskHelper.EqualsHelper(
                 item.MaleBipedModel,
                 rhs.MaleBipedModel,
@@ -2114,7 +2003,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.FemaleIcon = string.Equals(item.FemaleIcon, rhs.FemaleIcon);
-            ret.BMDTDataTypeState = item.BMDTDataTypeState == rhs.BMDTDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2186,13 +2074,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(EnchantmentPointsItem, "EnchantmentPoints");
             }
-            if (printMask?.BipedFlags ?? true)
+            if ((printMask?.ClothingFlags?.Overall ?? true)
+                && item.ClothingFlags.TryGet(out var ClothingFlagsItem))
             {
-                fg.AppendItem(item.BipedFlags, "BipedFlags");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
+                ClothingFlagsItem?.ToString(fg, "ClothingFlags");
             }
             if ((printMask?.MaleBipedModel?.Overall ?? true)
                 && item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
@@ -2224,10 +2109,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(FemaleIconItem, "FemaleIcon");
             }
-            if (printMask?.BMDTDataTypeState ?? true)
-            {
-                fg.AppendItem(item.BMDTDataTypeState, "BMDTDataTypeState");
-            }
         }
         
         public bool HasBeenSet(
@@ -2238,6 +2119,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != (item.Enchantment.FormKey != null)) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != (item.EnchantmentPoints != null)) return false;
+            if (checkMask.ClothingFlags?.Overall.HasValue ?? false && checkMask.ClothingFlags.Overall.Value != (item.ClothingFlags != null)) return false;
+            if (checkMask.ClothingFlags?.Specific != null && (item.ClothingFlags == null || !item.ClothingFlags.HasBeenSet(checkMask.ClothingFlags.Specific))) return false;
             if (checkMask.MaleBipedModel?.Overall.HasValue ?? false && checkMask.MaleBipedModel.Overall.Value != (item.MaleBipedModel != null)) return false;
             if (checkMask.MaleBipedModel?.Specific != null && (item.MaleBipedModel == null || !item.MaleBipedModel.HasBeenSet(checkMask.MaleBipedModel.Specific))) return false;
             if (checkMask.MaleWorldModel?.Overall.HasValue ?? false && checkMask.MaleWorldModel.Overall.Value != (item.MaleWorldModel != null)) return false;
@@ -2261,8 +2144,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Script = (item.Script.FormKey != null);
             mask.Enchantment = (item.Enchantment.FormKey != null);
             mask.EnchantmentPoints = (item.EnchantmentPoints != null);
-            mask.BipedFlags = true;
-            mask.Flags = true;
+            var itemClothingFlags = item.ClothingFlags;
+            mask.ClothingFlags = new MaskItem<bool, ClothingFlags.Mask<bool>?>(itemClothingFlags != null, itemClothingFlags?.GetHasBeenSetMask());
             var itemMaleBipedModel = item.MaleBipedModel;
             mask.MaleBipedModel = new MaskItem<bool, Model.Mask<bool>?>(itemMaleBipedModel != null, itemMaleBipedModel?.GetHasBeenSetMask());
             var itemMaleWorldModel = item.MaleWorldModel;
@@ -2273,7 +2156,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemFemaleWorldModel = item.FemaleWorldModel;
             mask.FemaleWorldModel = new MaskItem<bool, Model.Mask<bool>?>(itemFemaleWorldModel != null, itemFemaleWorldModel?.GetHasBeenSetMask());
             mask.FemaleIcon = (item.FemaleIcon != null);
-            mask.BMDTDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2346,15 +2228,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
             if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
-            if (lhs.BipedFlags != rhs.BipedFlags) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!object.Equals(lhs.ClothingFlags, rhs.ClothingFlags)) return false;
             if (!object.Equals(lhs.MaleBipedModel, rhs.MaleBipedModel)) return false;
             if (!object.Equals(lhs.MaleWorldModel, rhs.MaleWorldModel)) return false;
             if (!string.Equals(lhs.MaleIcon, rhs.MaleIcon)) return false;
             if (!object.Equals(lhs.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
             if (!object.Equals(lhs.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
             if (!string.Equals(lhs.FemaleIcon, rhs.FemaleIcon)) return false;
-            if (lhs.BMDTDataTypeState != rhs.BMDTDataTypeState) return false;
             return true;
         }
         
@@ -2404,8 +2284,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(EnchantmentPointsitem);
             }
-            hash.Add(item.BipedFlags);
-            hash.Add(item.Flags);
+            if (item.ClothingFlags.TryGet(out var ClothingFlagsitem))
+            {
+                hash.Add(ClothingFlagsitem);
+            }
             if (item.MaleBipedModel.TryGet(out var MaleBipedModelitem))
             {
                 hash.Add(MaleBipedModelitem);
@@ -2430,7 +2312,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(FemaleIconitem);
             }
-            hash.Add(item.BMDTDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2525,13 +2406,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.EnchantmentPoints = rhs.EnchantmentPoints;
             }
-            if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.BipedFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.ClothingFlags) ?? true))
             {
-                item.BipedFlags = rhs.BipedFlags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
+                errorMask?.PushIndex((int)AClothing_FieldIndex.ClothingFlags);
+                try
+                {
+                    if(rhs.ClothingFlags.TryGet(out var rhsClothingFlags))
+                    {
+                        item.ClothingFlags = rhsClothingFlags.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AClothing_FieldIndex.ClothingFlags));
+                    }
+                    else
+                    {
+                        item.ClothingFlags = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.MaleBipedModel) ?? true))
             {
@@ -2644,10 +2543,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.FemaleIcon) ?? true))
             {
                 item.FemaleIcon = rhs.FemaleIcon;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.BMDTDataTypeState) ?? true))
-            {
-                item.BMDTDataTypeState = rhs.BMDTDataTypeState;
             }
         }
         
@@ -2857,25 +2752,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)AClothing_FieldIndex.EnchantmentPoints,
                     errorMask: errorMask);
             }
-            if (item.BMDTDataTypeState.HasFlag(AClothing.BMDTDataType.Has))
+            if ((item.ClothingFlags != null)
+                && (translationMask?.GetShouldTranslate((int)AClothing_FieldIndex.ClothingFlags) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)AClothing_FieldIndex.BipedFlags) ?? true))
+                if (item.ClothingFlags.TryGet(out var ClothingFlagsItem))
                 {
-                    EnumXmlTranslation<BipedFlag>.Instance.Write(
+                    ((ClothingFlagsXmlWriteTranslation)((IXmlItem)ClothingFlagsItem).XmlWriteTranslator).Write(
+                        item: ClothingFlagsItem,
                         node: node,
-                        name: nameof(item.BipedFlags),
-                        item: item.BipedFlags,
-                        fieldIndex: (int)AClothing_FieldIndex.BipedFlags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)AClothing_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<EquipmentFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)AClothing_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        name: nameof(item.ClothingFlags),
+                        fieldIndex: (int)AClothing_FieldIndex.ClothingFlags,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AClothing_FieldIndex.ClothingFlags));
                 }
             }
             if ((item.MaleBipedModel != null)
@@ -2952,15 +2840,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.FemaleIcon),
                     item: item.FemaleIcon,
                     fieldIndex: (int)AClothing_FieldIndex.FemaleIcon,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AClothing_FieldIndex.BMDTDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<AClothing.BMDTDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BMDTDataTypeState),
-                    item: item.BMDTDataTypeState,
-                    fieldIndex: (int)AClothing_FieldIndex.BMDTDataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -3157,32 +3036,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "BipedFlags":
-                    errorMask?.PushIndex((int)AClothing_FieldIndex.BipedFlags);
+                case "ClothingFlags":
+                    errorMask?.PushIndex((int)AClothing_FieldIndex.ClothingFlags);
                     try
                     {
-                        item.BipedFlags = EnumXmlTranslation<BipedFlag>.Instance.Parse(
+                        item.ClothingFlags = LoquiXmlTranslation<ClothingFlags>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.BMDTDataTypeState |= AClothing.BMDTDataType.Has;
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)AClothing_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<EquipmentFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AClothing_FieldIndex.ClothingFlags));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3306,24 +3167,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "BMDTDataTypeState":
-                    errorMask?.PushIndex((int)AClothing_FieldIndex.BMDTDataTypeState);
-                    try
-                    {
-                        item.BMDTDataTypeState = EnumXmlTranslation<AClothing.BMDTDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     AItemXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -3410,15 +3253,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AClothingBinaryWriteTranslation Instance = new AClothingBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IAClothingGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IAClothingGetter item,
             MutagenWriter writer,
@@ -3445,19 +3279,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.EnchantmentPoints,
                 header: recordTypeConverter.ConvertToCustom(AClothing_Registration.ANAM_HEADER));
-            if (item.BMDTDataTypeState.HasFlag(AClothing.BMDTDataType.Has))
+            if (item.ClothingFlags.TryGet(out var ClothingFlagsItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(AClothing_Registration.BMDT_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Write(
-                        writer,
-                        item.BipedFlags,
-                        length: 2);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 2);
-                }
+                ((ClothingFlagsBinaryWriteTranslation)((IBinaryItem)ClothingFlagsItem).BinaryWriteTranslator).Write(
+                    item: ClothingFlagsItem,
+                    writer: writer);
             }
             if (item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
             {
@@ -3503,7 +3329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAClothingGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
+            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
             WriteRecordTypes(
@@ -3642,17 +3468,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _EnchantmentPointsLocation;
         public UInt16? EnchantmentPoints => _EnchantmentPointsLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentPointsLocation.Value, _package.Meta)) : default(UInt16?);
         #endregion
-        private int? _BMDTLocation;
-        public AClothing.BMDTDataType BMDTDataTypeState { get; private set; }
-        #region BipedFlags
-        private int _BipedFlagsLocation => _BMDTLocation!.Value + 0x0;
-        private bool _BipedFlags_IsSet => _BMDTLocation.HasValue;
-        public BipedFlag BipedFlags => _BipedFlags_IsSet ? (BipedFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_BipedFlagsLocation, 2)) : default;
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _BMDTLocation!.Value + 0x2;
-        private bool _Flags_IsSet => _BMDTLocation.HasValue;
-        public EquipmentFlag Flags => _Flags_IsSet ? (EquipmentFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
+        #region ClothingFlags
+        private RangeInt32? _ClothingFlagsLocation;
+        private bool _ClothingFlags_IsSet => _ClothingFlagsLocation.HasValue;
+        public IClothingFlagsGetter? ClothingFlags => _ClothingFlags_IsSet ? ClothingFlagsBinaryOverlay.ClothingFlagsFactory(new BinaryMemoryReadStream(_data.Slice(_ClothingFlagsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool ClothingFlags_IsSet => _ClothingFlagsLocation.HasValue;
         #endregion
         #region MaleBipedModel
         public IModelGetter? MaleBipedModel { get; private set; }
@@ -3725,9 +3545,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54444D42: // BMDT
                 {
-                    _BMDTLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.BMDTDataTypeState = AClothing.BMDTDataType.Has;
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Flags);
+                    _ClothingFlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.ClothingFlags);
                 }
                 case 0x4C444F4D: // MODL
                 {

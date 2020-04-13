@@ -1080,6 +1080,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType MOD2_HEADER = new RecordType("MOD2");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType MOD3_HEADER = new RecordType("MOD3");
+        public static readonly RecordType MOD4_HEADER = new RecordType("MOD4");
+        public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
@@ -1155,6 +1161,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ENAM_HEADER,
                         ANAM_HEADER,
                         BMDT_HEADER,
+                        MODL_HEADER,
+                        MOD2_HEADER,
+                        ICON_HEADER,
+                        MOD3_HEADER,
+                        MOD4_HEADER,
+                        ICO2_HEADER,
                         APPA_HEADER,
                         AMMO_HEADER,
                         BOOK_HEADER,

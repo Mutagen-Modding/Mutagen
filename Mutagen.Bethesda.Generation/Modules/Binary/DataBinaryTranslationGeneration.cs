@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Generation
                         generatedStart = true;
                         fg.AppendLine($"var subLen = _package.Meta.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                     }
-                    fg.AppendLine($"if (subLen <= 0x{passedLen.Value.ToString("X")})");
+                    fg.AppendLine($"if (subLen <= 0x{passedLen.Value:X})");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Break{item.BreakIndex};");

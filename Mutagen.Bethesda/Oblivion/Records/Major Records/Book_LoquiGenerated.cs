@@ -118,60 +118,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBookGetter.Description => this.Description;
         #endregion
-        #region Flags
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Book.BookFlag _Flags;
-        public Book.BookFlag Flags
+        private BookData? _Data;
+        public BookData? Data
         {
-            get => this._Flags;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Flags = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region Teaches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Skill _Teaches;
-        public Skill Teaches
-        {
-            get => this._Teaches;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Teaches = value;
-            }
-        }
-        #endregion
-        #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _Value;
-        public Single Value
-        {
-            get => this._Value;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Value = value;
-            }
-        }
-        #endregion
-        #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _Weight;
-        public Single Weight
-        {
-            get => this._Weight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Weight = value;
-            }
-        }
-        #endregion
-        #region DATADataTypeState
-        public Book.DATADataType DATADataTypeState { get; set; } = default;
+        IBookDataGetter? IBookGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -350,11 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Enchantment = initialValue;
                 this.EnchantmentPoints = initialValue;
                 this.Description = initialValue;
-                this.Flags = initialValue;
-                this.Teaches = initialValue;
-                this.Value = initialValue;
-                this.Weight = initialValue;
-                this.DATADataTypeState = initialValue;
+                this.Data = new MaskItem<TItem, BookData.Mask<TItem>?>(initialValue, new BookData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -370,11 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Enchantment,
                 TItem EnchantmentPoints,
                 TItem Description,
-                TItem Flags,
-                TItem Teaches,
-                TItem Value,
-                TItem Weight,
-                TItem DATADataTypeState)
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -389,11 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Enchantment = Enchantment;
                 this.EnchantmentPoints = EnchantmentPoints;
                 this.Description = Description;
-                this.Flags = Flags;
-                this.Teaches = Teaches;
-                this.Value = Value;
-                this.Weight = Weight;
-                this.DATADataTypeState = DATADataTypeState;
+                this.Data = new MaskItem<TItem, BookData.Mask<TItem>?>(Data, new BookData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -412,11 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Enchantment;
             public TItem EnchantmentPoints;
             public TItem Description;
-            public TItem Flags;
-            public TItem Teaches;
-            public TItem Value;
-            public TItem Weight;
-            public TItem DATADataTypeState;
+            public MaskItem<TItem, BookData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -437,11 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Enchantment, rhs.Enchantment)) return false;
                 if (!object.Equals(this.EnchantmentPoints, rhs.EnchantmentPoints)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
-                if (!object.Equals(this.Value, rhs.Value)) return false;
-                if (!object.Equals(this.Weight, rhs.Weight)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -454,11 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Enchantment);
                 hash.Add(this.EnchantmentPoints);
                 hash.Add(this.Description);
-                hash.Add(this.Flags);
-                hash.Add(this.Teaches);
-                hash.Add(this.Value);
-                hash.Add(this.Weight);
-                hash.Add(this.DATADataTypeState);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -480,11 +412,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Enchantment)) return false;
                 if (!eval(this.EnchantmentPoints)) return false;
                 if (!eval(this.Description)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.Teaches)) return false;
-                if (!eval(this.Value)) return false;
-                if (!eval(this.Weight)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -504,11 +436,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Enchantment)) return true;
                 if (eval(this.EnchantmentPoints)) return true;
                 if (eval(this.Description)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.Teaches)) return true;
-                if (eval(this.Value)) return true;
-                if (eval(this.Weight)) return true;
-                if (eval(this.DATADataTypeState)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -531,11 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Enchantment = eval(this.Enchantment);
                 obj.EnchantmentPoints = eval(this.EnchantmentPoints);
                 obj.Description = eval(this.Description);
-                obj.Flags = eval(this.Flags);
-                obj.Teaches = eval(this.Teaches);
-                obj.Value = eval(this.Value);
-                obj.Weight = eval(this.Weight);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
+                obj.Data = this.Data == null ? null : new MaskItem<R, BookData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -586,25 +514,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Description, "Description");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.Teaches ?? true)
-                    {
-                        fg.AppendItem(Teaches, "Teaches");
-                    }
-                    if (printMask?.Value ?? true)
-                    {
-                        fg.AppendItem(Value, "Value");
-                    }
-                    if (printMask?.Weight ?? true)
-                    {
-                        fg.AppendItem(Weight, "Weight");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        Data?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -625,11 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Enchantment;
             public Exception? EnchantmentPoints;
             public Exception? Description;
-            public Exception? Flags;
-            public Exception? Teaches;
-            public Exception? Value;
-            public Exception? Weight;
-            public Exception? DATADataTypeState;
+            public MaskItem<Exception?, BookData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
@@ -652,16 +560,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return EnchantmentPoints;
                     case Book_FieldIndex.Description:
                         return Description;
-                    case Book_FieldIndex.Flags:
-                        return Flags;
-                    case Book_FieldIndex.Teaches:
-                        return Teaches;
-                    case Book_FieldIndex.Value:
-                        return Value;
-                    case Book_FieldIndex.Weight:
-                        return Weight;
-                    case Book_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
+                    case Book_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -693,20 +593,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Book_FieldIndex.Description:
                         this.Description = ex;
                         break;
-                    case Book_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case Book_FieldIndex.Teaches:
-                        this.Teaches = ex;
-                        break;
-                    case Book_FieldIndex.Value:
-                        this.Value = ex;
-                        break;
-                    case Book_FieldIndex.Weight:
-                        this.Weight = ex;
-                        break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
+                    case Book_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, BookData.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -740,20 +628,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Book_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.Teaches:
-                        this.Teaches = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.Value:
-                        this.Value = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.Weight:
-                        this.Weight = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
+                    case Book_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, BookData.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -771,11 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Enchantment != null) return true;
                 if (EnchantmentPoints != null) return true;
                 if (Description != null) return true;
-                if (Flags != null) return true;
-                if (Teaches != null) return true;
-                if (Value != null) return true;
-                if (Weight != null) return true;
-                if (DATADataTypeState != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -818,11 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Enchantment, "Enchantment");
                 fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
                 fg.AppendItem(Description, "Description");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Teaches, "Teaches");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                Data?.ToString(fg);
             }
             #endregion
 
@@ -838,11 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
                 ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Teaches = this.Teaches.Combine(rhs.Teaches);
-                ret.Value = this.Value.Combine(rhs.Value);
-                ret.Weight = this.Weight.Combine(rhs.Weight);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -872,11 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Enchantment;
             public bool EnchantmentPoints;
             public bool Description;
-            public bool Flags;
-            public bool Teaches;
-            public bool Value;
-            public bool Weight;
-            public bool DATADataTypeState;
+            public MaskItem<bool, BookData.TranslationMask?> Data;
             #endregion
 
             #region Ctors
@@ -890,11 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Enchantment = defaultOn;
                 this.EnchantmentPoints = defaultOn;
                 this.Description = defaultOn;
-                this.Flags = defaultOn;
-                this.Teaches = defaultOn;
-                this.Value = defaultOn;
-                this.Weight = defaultOn;
-                this.DATADataTypeState = defaultOn;
+                this.Data = new MaskItem<bool, BookData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -909,22 +765,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Enchantment, null));
                 ret.Add((EnchantmentPoints, null));
                 ret.Add((Description, null));
-                ret.Add((Flags, null));
-                ret.Add((Teaches, null));
-                ret.Add((Value, null));
-                ret.Add((Weight, null));
-                ret.Add((DATADataTypeState, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Book_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => BookCommon.Instance.GetLinks(this);
         public Book(FormKey formKey)
@@ -1013,11 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormLinkNullable<Enchantment> Enchantment { get; }
         new UInt16? EnchantmentPoints { get; set; }
         new String? Description { get; set; }
-        new Book.BookFlag Flags { get; set; }
-        new Skill Teaches { get; set; }
-        new Single Value { get; set; }
-        new Single Weight { get; set; }
-        new Book.DATADataType DATADataTypeState { get; set; }
+        new BookData? Data { get; set; }
     }
 
     public partial interface IBookInternal :
@@ -1041,11 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
         String? Description { get; }
-        Book.BookFlag Flags { get; }
-        Skill Teaches { get; }
-        Single Value { get; }
-        Single Weight { get; }
-        Book.DATADataType DATADataTypeState { get; }
+        IBookDataGetter? Data { get; }
 
     }
 
@@ -1352,11 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Enchantment = 9,
         EnchantmentPoints = 10,
         Description = 11,
-        Flags = 12,
-        Teaches = 13,
-        Value = 14,
-        Weight = 15,
-        DATADataTypeState = 16,
+        Data = 12,
     }
     #endregion
 
@@ -1374,9 +1209,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "e16c811f-5052-494d-8102-b7450f5b6833";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Book.Mask<>);
 
@@ -1420,16 +1255,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Book_FieldIndex.EnchantmentPoints;
                 case "DESCRIPTION":
                     return (ushort)Book_FieldIndex.Description;
-                case "FLAGS":
-                    return (ushort)Book_FieldIndex.Flags;
-                case "TEACHES":
-                    return (ushort)Book_FieldIndex.Teaches;
-                case "VALUE":
-                    return (ushort)Book_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)Book_FieldIndex.Weight;
-                case "DATADATATYPESTATE":
-                    return (ushort)Book_FieldIndex.DATADataTypeState;
+                case "DATA":
+                    return (ushort)Book_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -1447,11 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Enchantment:
                 case Book_FieldIndex.EnchantmentPoints:
                 case Book_FieldIndex.Description:
-                case Book_FieldIndex.Flags:
-                case Book_FieldIndex.Teaches:
-                case Book_FieldIndex.Value:
-                case Book_FieldIndex.Weight:
-                case Book_FieldIndex.DATADataTypeState:
+                case Book_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsEnumerable(index);
@@ -1464,6 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Book_FieldIndex.Model:
+                case Book_FieldIndex.Data:
                     return true;
                 case Book_FieldIndex.Name:
                 case Book_FieldIndex.Icon:
@@ -1471,11 +1295,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Enchantment:
                 case Book_FieldIndex.EnchantmentPoints:
                 case Book_FieldIndex.Description:
-                case Book_FieldIndex.Flags:
-                case Book_FieldIndex.Teaches:
-                case Book_FieldIndex.Value:
-                case Book_FieldIndex.Weight:
-                case Book_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsLoqui(index);
@@ -1494,11 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Enchantment:
                 case Book_FieldIndex.EnchantmentPoints:
                 case Book_FieldIndex.Description:
-                case Book_FieldIndex.Flags:
-                case Book_FieldIndex.Teaches:
-                case Book_FieldIndex.Value:
-                case Book_FieldIndex.Weight:
-                case Book_FieldIndex.DATADataTypeState:
+                case Book_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsSingleton(index);
@@ -1524,16 +1339,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "EnchantmentPoints";
                 case Book_FieldIndex.Description:
                     return "Description";
-                case Book_FieldIndex.Flags:
-                    return "Flags";
-                case Book_FieldIndex.Teaches:
-                    return "Teaches";
-                case Book_FieldIndex.Value:
-                    return "Value";
-                case Book_FieldIndex.Weight:
-                    return "Weight";
-                case Book_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
+                case Book_FieldIndex.Data:
+                    return "Data";
                 default:
                     return AItem_Registration.GetNthName(index);
             }
@@ -1551,11 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Enchantment:
                 case Book_FieldIndex.EnchantmentPoints:
                 case Book_FieldIndex.Description:
-                case Book_FieldIndex.Flags:
-                case Book_FieldIndex.Teaches:
-                case Book_FieldIndex.Value:
-                case Book_FieldIndex.Weight:
-                case Book_FieldIndex.DATADataTypeState:
+                case Book_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.IsNthDerivative(index);
@@ -1574,11 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Enchantment:
                 case Book_FieldIndex.EnchantmentPoints:
                 case Book_FieldIndex.Description:
-                case Book_FieldIndex.Flags:
-                case Book_FieldIndex.Teaches:
-                case Book_FieldIndex.Value:
-                case Book_FieldIndex.Weight:
-                case Book_FieldIndex.DATADataTypeState:
+                case Book_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.IsProtected(index);
@@ -1604,16 +1403,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(UInt16);
                 case Book_FieldIndex.Description:
                     return typeof(String);
-                case Book_FieldIndex.Flags:
-                    return typeof(Book.BookFlag);
-                case Book_FieldIndex.Teaches:
-                    return typeof(Skill);
-                case Book_FieldIndex.Value:
-                    return typeof(Single);
-                case Book_FieldIndex.Weight:
-                    return typeof(Single);
-                case Book_FieldIndex.DATADataTypeState:
-                    return typeof(Book.DATADataType);
+                case Book_FieldIndex.Data:
+                    return typeof(BookData);
                 default:
                     return AItem_Registration.GetNthType(index);
             }
@@ -1631,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = BOOK_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
+        public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(BookBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1681,11 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Enchantment.FormKey = null;
             item.EnchantmentPoints = default;
             item.Description = default;
-            item.Flags = default;
-            item.Teaches = default;
-            item.Value = default;
-            item.Weight = default;
-            item.DATADataTypeState = default;
+            item.Data = null;
             base.Clear(item);
         }
         
@@ -1714,9 +1501,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Book.DATADataType.Has;
-                    break;
                 default:
                     AItemSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1874,17 +1658,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = Book.DATADataType.Has;
-                    }
-                    item.Flags = EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Value = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
+                    item.Data = Mutagen.Bethesda.Oblivion.BookData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Data);
                 }
                 default:
                     return AItemSetterCommon.FillBinaryRecordTypes(
@@ -1982,11 +1757,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
             ret.EnchantmentPoints = item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.Description = string.Equals(item.Description, rhs.Description);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Teaches = item.Teaches == rhs.Teaches;
-            ret.Value = item.Value.EqualsWithin(rhs.Value);
-            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2073,25 +1848,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.Teaches ?? true)
-            {
-                fg.AppendItem(item.Teaches, "Teaches");
-            }
-            if (printMask?.Value ?? true)
-            {
-                fg.AppendItem(item.Value, "Value");
-            }
-            if (printMask?.Weight ?? true)
-            {
-                fg.AppendItem(item.Weight, "Weight");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                DataItem?.ToString(fg, "Data");
             }
         }
         
@@ -2107,6 +1867,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != (item.Enchantment.FormKey != null)) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != (item.EnchantmentPoints != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2124,11 +1886,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Enchantment = (item.Enchantment.FormKey != null);
             mask.EnchantmentPoints = (item.EnchantmentPoints != null);
             mask.Description = (item.Description != null);
-            mask.Flags = true;
-            mask.Teaches = true;
-            mask.Value = true;
-            mask.Weight = true;
-            mask.DATADataTypeState = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, BookData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2204,11 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
             if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Teaches != rhs.Teaches) return false;
-            if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
         
@@ -2270,11 +2025,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Descriptionitem);
             }
-            hash.Add(item.Flags);
-            hash.Add(item.Teaches);
-            hash.Add(item.Value);
-            hash.Add(item.Weight);
-            hash.Add(item.DATADataTypeState);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2407,25 +2161,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Description = rhs.Description;
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Data) ?? true))
             {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
-            {
-                item.Teaches = rhs.Teaches;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
-            {
-                item.Value = rhs.Value;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
-            {
-                item.Weight = rhs.Weight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
+                errorMask?.PushIndex((int)Book_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Book_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2669,53 +2429,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Book_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if (item.DATADataTypeState.HasFlag(Book.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    EnumXmlTranslation<Book.BookFlag>.Instance.Write(
+                    ((BookDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Book_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Book_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Data));
                 }
-                if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
-                {
-                    EnumXmlTranslation<Skill>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Teaches),
-                        item: item.Teaches,
-                        fieldIndex: (int)Book_FieldIndex.Teaches,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)Book_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)Book_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Book.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Book_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -2966,86 +2692,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Flags);
+                case "Data":
+                    errorMask?.PushIndex((int)Book_FieldIndex.Data);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<Book.BookFlag>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<BookData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= Book.DATADataType.Has;
-                    break;
-                case "Teaches":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Teaches);
-                    try
-                    {
-                        item.Teaches = EnumXmlTranslation<Skill>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Value);
-                    try
-                    {
-                        item.Value = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Book_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Book.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3143,15 +2797,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static BookBinaryWriteTranslation Instance = new BookBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IBookGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IBookGetter item,
             MutagenWriter writer,
@@ -3194,25 +2839,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Book_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.DATADataTypeState.HasFlag(Book.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Book_Registration.DATA_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 1);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                        writer,
-                        item.Teaches,
-                        length: 1);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Weight);
-                }
+                ((BookDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer);
             }
         }
 
@@ -3226,7 +2857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Book_Registration.BOOK_HEADER,
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3378,27 +3009,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        private int? _DATALocation;
-        public Book.DATADataType DATADataTypeState { get; private set; }
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x0;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Book.BookFlag Flags => _Flags_IsSet ? (Book.BookFlag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
-        #endregion
-        #region Teaches
-        private int _TeachesLocation => _DATALocation!.Value + 0x1;
-        private bool _Teaches_IsSet => _DATALocation.HasValue;
-        public Skill Teaches => _Teaches_IsSet ? (Skill)_data.Span.Slice(_TeachesLocation, 1)[0] : default;
-        #endregion
-        #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0x2;
-        private bool _Value_IsSet => _DATALocation.HasValue;
-        public Single Value => _Value_IsSet ? SpanExt.GetFloat(_data.Slice(_ValueLocation, 4)) : default;
-        #endregion
-        #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x6;
-        private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IBookDataGetter? Data => _Data_IsSet ? BookDataBinaryOverlay.BookDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3490,9 +3105,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = Book.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Data);
                 }
                 default:
                     return base.FillRecordType(

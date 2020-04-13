@@ -60,9 +60,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class AIPackageBinaryCreateTranslation
+        public partial class AIPackageDataBinaryCreateTranslation
         {
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IAIPackageInternal item)
+            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IAIPackageData item)
             {
                 if (frame.Remaining == 8)
                 {
@@ -83,9 +83,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class AIPackageBinaryWriteTranslation
+        public partial class AIPackageDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageGetter item)
+            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageDataGetter item)
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
                     writer,
@@ -98,35 +98,31 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class AIPackageBinaryOverlay
+        public partial class AIPackageDataBinaryOverlay
         {
-            public bool GetFlagsIsSetCustom() => _PKDTLocation.HasValue;
-            public AIPackage.Flag GetFlagsCustom()
+            public bool GetFlagsIsSetCustom() => true;
+            public AIPackage.Flag GetFlagsCustom(int location)
             {
-                if (!_Flags_IsSet) return default;
-                var subFrame = _package.Meta.SubrecordFrame(_data.Slice(_PKDTLocation!.Value - _package.Meta.SubConstants.HeaderLength));
-                if (subFrame.Content.Length > 4)
+                if (_data.Length > 4)
                 {
-                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content));
+                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_data));
                 }
                 else
                 {
-                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content));
+                    return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(_data));
                 }
             }
 
-            public bool GetGeneralTypeIsSetCustom() => _PKDTLocation.HasValue;
-            public AIPackage.GeneralTypeEnum GetGeneralTypeCustom()
+            public bool GetGeneralTypeIsSetCustom() => true;
+            public AIPackage.GeneralTypeEnum GetGeneralTypeCustom(int location)
             {
-                if (!_GeneralType_IsSet) return default;
-                var subFrame = _package.Meta.SubrecordFrame(_data.Slice(_PKDTLocation!.Value - _package.Meta.SubConstants.HeaderLength));
-                if (subFrame.Content.Length > 4)
+                if (_data.Length > 4)
                 {
-                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content.Slice(4)));
+                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4)));
                 }
                 else
                 {
-                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(subFrame.Content[2]);
+                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(_data[2]);
                 }
             }
         }

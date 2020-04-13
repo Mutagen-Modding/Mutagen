@@ -100,73 +100,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IAmmoGetter.EnchantmentPoints => this.EnchantmentPoints;
         #endregion
-        #region Speed
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _Speed;
-        public Single Speed
+        private AmmoData? _Data;
+        public AmmoData? Data
         {
-            get => this._Speed;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Speed = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Ammo.AmmoFlag _Flags;
-        public Ammo.AmmoFlag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Flags = value;
-            }
-        }
-        #endregion
-        #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _Value;
-        public UInt32 Value
-        {
-            get => this._Value;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Value = value;
-            }
-        }
-        #endregion
-        #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _Weight;
-        public Single Weight
-        {
-            get => this._Weight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Weight = value;
-            }
-        }
-        #endregion
-        #region Damage
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _Damage;
-        public UInt16 Damage
-        {
-            get => this._Damage;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Damage = value;
-            }
-        }
-        #endregion
-        #region DATADataTypeState
-        public Ammo.DATADataType DATADataTypeState { get; set; } = default;
+        IAmmoDataGetter? IAmmoGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -343,12 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.Enchantment = initialValue;
                 this.EnchantmentPoints = initialValue;
-                this.Speed = initialValue;
-                this.Flags = initialValue;
-                this.Value = initialValue;
-                this.Weight = initialValue;
-                this.Damage = initialValue;
-                this.DATADataTypeState = initialValue;
+                this.Data = new MaskItem<TItem, AmmoData.Mask<TItem>?>(initialValue, new AmmoData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -362,12 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Icon,
                 TItem Enchantment,
                 TItem EnchantmentPoints,
-                TItem Speed,
-                TItem Flags,
-                TItem Value,
-                TItem Weight,
-                TItem Damage,
-                TItem DATADataTypeState)
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -380,12 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.Enchantment = Enchantment;
                 this.EnchantmentPoints = EnchantmentPoints;
-                this.Speed = Speed;
-                this.Flags = Flags;
-                this.Value = Value;
-                this.Weight = Weight;
-                this.Damage = Damage;
-                this.DATADataTypeState = DATADataTypeState;
+                this.Data = new MaskItem<TItem, AmmoData.Mask<TItem>?>(Data, new AmmoData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -402,12 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Icon;
             public TItem Enchantment;
             public TItem EnchantmentPoints;
-            public TItem Speed;
-            public TItem Flags;
-            public TItem Value;
-            public TItem Weight;
-            public TItem Damage;
-            public TItem DATADataTypeState;
+            public MaskItem<TItem, AmmoData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -426,12 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
                 if (!object.Equals(this.Enchantment, rhs.Enchantment)) return false;
                 if (!object.Equals(this.EnchantmentPoints, rhs.EnchantmentPoints)) return false;
-                if (!object.Equals(this.Speed, rhs.Speed)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Value, rhs.Value)) return false;
-                if (!object.Equals(this.Weight, rhs.Weight)) return false;
-                if (!object.Equals(this.Damage, rhs.Damage)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -442,12 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Icon);
                 hash.Add(this.Enchantment);
                 hash.Add(this.EnchantmentPoints);
-                hash.Add(this.Speed);
-                hash.Add(this.Flags);
-                hash.Add(this.Value);
-                hash.Add(this.Weight);
-                hash.Add(this.Damage);
-                hash.Add(this.DATADataTypeState);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -467,12 +380,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Icon)) return false;
                 if (!eval(this.Enchantment)) return false;
                 if (!eval(this.EnchantmentPoints)) return false;
-                if (!eval(this.Speed)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.Value)) return false;
-                if (!eval(this.Weight)) return false;
-                if (!eval(this.Damage)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -490,12 +402,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Icon)) return true;
                 if (eval(this.Enchantment)) return true;
                 if (eval(this.EnchantmentPoints)) return true;
-                if (eval(this.Speed)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.Value)) return true;
-                if (eval(this.Weight)) return true;
-                if (eval(this.Damage)) return true;
-                if (eval(this.DATADataTypeState)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -516,12 +427,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Icon = eval(this.Icon);
                 obj.Enchantment = eval(this.Enchantment);
                 obj.EnchantmentPoints = eval(this.EnchantmentPoints);
-                obj.Speed = eval(this.Speed);
-                obj.Flags = eval(this.Flags);
-                obj.Value = eval(this.Value);
-                obj.Weight = eval(this.Weight);
-                obj.Damage = eval(this.Damage);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
+                obj.Data = this.Data == null ? null : new MaskItem<R, AmmoData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -564,29 +470,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
                     }
-                    if (printMask?.Speed ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.Value ?? true)
-                    {
-                        fg.AppendItem(Value, "Value");
-                    }
-                    if (printMask?.Weight ?? true)
-                    {
-                        fg.AppendItem(Weight, "Weight");
-                    }
-                    if (printMask?.Damage ?? true)
-                    {
-                        fg.AppendItem(Damage, "Damage");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        Data?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -605,12 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Icon;
             public Exception? Enchantment;
             public Exception? EnchantmentPoints;
-            public Exception? Speed;
-            public Exception? Flags;
-            public Exception? Value;
-            public Exception? Weight;
-            public Exception? Damage;
-            public Exception? DATADataTypeState;
+            public MaskItem<Exception?, AmmoData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
@@ -629,18 +510,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Enchantment;
                     case Ammo_FieldIndex.EnchantmentPoints:
                         return EnchantmentPoints;
-                    case Ammo_FieldIndex.Speed:
-                        return Speed;
-                    case Ammo_FieldIndex.Flags:
-                        return Flags;
-                    case Ammo_FieldIndex.Value:
-                        return Value;
-                    case Ammo_FieldIndex.Weight:
-                        return Weight;
-                    case Ammo_FieldIndex.Damage:
-                        return Damage;
-                    case Ammo_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
+                    case Ammo_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -666,23 +537,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Ammo_FieldIndex.EnchantmentPoints:
                         this.EnchantmentPoints = ex;
                         break;
-                    case Ammo_FieldIndex.Speed:
-                        this.Speed = ex;
-                        break;
-                    case Ammo_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case Ammo_FieldIndex.Value:
-                        this.Value = ex;
-                        break;
-                    case Ammo_FieldIndex.Weight:
-                        this.Weight = ex;
-                        break;
-                    case Ammo_FieldIndex.Damage:
-                        this.Damage = ex;
-                        break;
-                    case Ammo_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
+                    case Ammo_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, AmmoData.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -710,23 +566,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Ammo_FieldIndex.EnchantmentPoints:
                         this.EnchantmentPoints = (Exception?)obj;
                         break;
-                    case Ammo_FieldIndex.Speed:
-                        this.Speed = (Exception?)obj;
-                        break;
-                    case Ammo_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case Ammo_FieldIndex.Value:
-                        this.Value = (Exception?)obj;
-                        break;
-                    case Ammo_FieldIndex.Weight:
-                        this.Weight = (Exception?)obj;
-                        break;
-                    case Ammo_FieldIndex.Damage:
-                        this.Damage = (Exception?)obj;
-                        break;
-                    case Ammo_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
+                    case Ammo_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, AmmoData.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -742,12 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Icon != null) return true;
                 if (Enchantment != null) return true;
                 if (EnchantmentPoints != null) return true;
-                if (Speed != null) return true;
-                if (Flags != null) return true;
-                if (Value != null) return true;
-                if (Weight != null) return true;
-                if (Damage != null) return true;
-                if (DATADataTypeState != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -788,12 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Icon, "Icon");
                 fg.AppendItem(Enchantment, "Enchantment");
                 fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(Damage, "Damage");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                Data?.ToString(fg);
             }
             #endregion
 
@@ -807,12 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
                 ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
-                ret.Speed = this.Speed.Combine(rhs.Speed);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Value = this.Value.Combine(rhs.Value);
-                ret.Weight = this.Weight.Combine(rhs.Weight);
-                ret.Damage = this.Damage.Combine(rhs.Damage);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -840,12 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Icon;
             public bool Enchantment;
             public bool EnchantmentPoints;
-            public bool Speed;
-            public bool Flags;
-            public bool Value;
-            public bool Weight;
-            public bool Damage;
-            public bool DATADataTypeState;
+            public MaskItem<bool, AmmoData.TranslationMask?> Data;
             #endregion
 
             #region Ctors
@@ -857,12 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = defaultOn;
                 this.Enchantment = defaultOn;
                 this.EnchantmentPoints = defaultOn;
-                this.Speed = defaultOn;
-                this.Flags = defaultOn;
-                this.Value = defaultOn;
-                this.Weight = defaultOn;
-                this.Damage = defaultOn;
-                this.DATADataTypeState = defaultOn;
+                this.Data = new MaskItem<bool, AmmoData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -875,23 +691,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Icon, null));
                 ret.Add((Enchantment, null));
                 ret.Add((EnchantmentPoints, null));
-                ret.Add((Speed, null));
-                ret.Add((Flags, null));
-                ret.Add((Value, null));
-                ret.Add((Weight, null));
-                ret.Add((Damage, null));
-                ret.Add((DATADataTypeState, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Ammo_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => AmmoCommon.Instance.GetLinks(this);
         public Ammo(FormKey formKey)
@@ -978,12 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new IFormLinkNullable<Enchantment> Enchantment { get; }
         new UInt16? EnchantmentPoints { get; set; }
-        new Single Speed { get; set; }
-        new Ammo.AmmoFlag Flags { get; set; }
-        new UInt32 Value { get; set; }
-        new Single Weight { get; set; }
-        new UInt16 Damage { get; set; }
-        new Ammo.DATADataType DATADataTypeState { get; set; }
+        new AmmoData? Data { get; set; }
     }
 
     public partial interface IAmmoInternal :
@@ -1005,12 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Icon { get; }
         IFormLinkNullableGetter<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
-        Single Speed { get; }
-        Ammo.AmmoFlag Flags { get; }
-        UInt32 Value { get; }
-        Single Weight { get; }
-        UInt16 Damage { get; }
-        Ammo.DATADataType DATADataTypeState { get; }
+        IAmmoDataGetter? Data { get; }
 
     }
 
@@ -1315,12 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Icon = 7,
         Enchantment = 8,
         EnchantmentPoints = 9,
-        Speed = 10,
-        Flags = 11,
-        Value = 12,
-        Weight = 13,
-        Damage = 14,
-        DATADataTypeState = 15,
+        Data = 10,
     }
     #endregion
 
@@ -1338,9 +1129,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b9883ff5-be2f-44d5-acf7-69751cd6e87f";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Ammo.Mask<>);
 
@@ -1380,18 +1171,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Ammo_FieldIndex.Enchantment;
                 case "ENCHANTMENTPOINTS":
                     return (ushort)Ammo_FieldIndex.EnchantmentPoints;
-                case "SPEED":
-                    return (ushort)Ammo_FieldIndex.Speed;
-                case "FLAGS":
-                    return (ushort)Ammo_FieldIndex.Flags;
-                case "VALUE":
-                    return (ushort)Ammo_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)Ammo_FieldIndex.Weight;
-                case "DAMAGE":
-                    return (ushort)Ammo_FieldIndex.Damage;
-                case "DATADATATYPESTATE":
-                    return (ushort)Ammo_FieldIndex.DATADataTypeState;
+                case "DATA":
+                    return (ushort)Ammo_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -1407,12 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.Icon:
                 case Ammo_FieldIndex.Enchantment:
                 case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Speed:
-                case Ammo_FieldIndex.Flags:
-                case Ammo_FieldIndex.Value:
-                case Ammo_FieldIndex.Weight:
-                case Ammo_FieldIndex.Damage:
-                case Ammo_FieldIndex.DATADataTypeState:
+                case Ammo_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsEnumerable(index);
@@ -1425,17 +1201,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Ammo_FieldIndex.Model:
+                case Ammo_FieldIndex.Data:
                     return true;
                 case Ammo_FieldIndex.Name:
                 case Ammo_FieldIndex.Icon:
                 case Ammo_FieldIndex.Enchantment:
                 case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Speed:
-                case Ammo_FieldIndex.Flags:
-                case Ammo_FieldIndex.Value:
-                case Ammo_FieldIndex.Weight:
-                case Ammo_FieldIndex.Damage:
-                case Ammo_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsLoqui(index);
@@ -1452,12 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.Icon:
                 case Ammo_FieldIndex.Enchantment:
                 case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Speed:
-                case Ammo_FieldIndex.Flags:
-                case Ammo_FieldIndex.Value:
-                case Ammo_FieldIndex.Weight:
-                case Ammo_FieldIndex.Damage:
-                case Ammo_FieldIndex.DATADataTypeState:
+                case Ammo_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsSingleton(index);
@@ -1479,18 +1245,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Enchantment";
                 case Ammo_FieldIndex.EnchantmentPoints:
                     return "EnchantmentPoints";
-                case Ammo_FieldIndex.Speed:
-                    return "Speed";
-                case Ammo_FieldIndex.Flags:
-                    return "Flags";
-                case Ammo_FieldIndex.Value:
-                    return "Value";
-                case Ammo_FieldIndex.Weight:
-                    return "Weight";
-                case Ammo_FieldIndex.Damage:
-                    return "Damage";
-                case Ammo_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
+                case Ammo_FieldIndex.Data:
+                    return "Data";
                 default:
                     return AItem_Registration.GetNthName(index);
             }
@@ -1506,12 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.Icon:
                 case Ammo_FieldIndex.Enchantment:
                 case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Speed:
-                case Ammo_FieldIndex.Flags:
-                case Ammo_FieldIndex.Value:
-                case Ammo_FieldIndex.Weight:
-                case Ammo_FieldIndex.Damage:
-                case Ammo_FieldIndex.DATADataTypeState:
+                case Ammo_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.IsNthDerivative(index);
@@ -1528,12 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Ammo_FieldIndex.Icon:
                 case Ammo_FieldIndex.Enchantment:
                 case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Speed:
-                case Ammo_FieldIndex.Flags:
-                case Ammo_FieldIndex.Value:
-                case Ammo_FieldIndex.Weight:
-                case Ammo_FieldIndex.Damage:
-                case Ammo_FieldIndex.DATADataTypeState:
+                case Ammo_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.IsProtected(index);
@@ -1555,18 +1301,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IFormLinkNullable<Enchantment>);
                 case Ammo_FieldIndex.EnchantmentPoints:
                     return typeof(UInt16);
-                case Ammo_FieldIndex.Speed:
-                    return typeof(Single);
-                case Ammo_FieldIndex.Flags:
-                    return typeof(Ammo.AmmoFlag);
-                case Ammo_FieldIndex.Value:
-                    return typeof(UInt32);
-                case Ammo_FieldIndex.Weight:
-                    return typeof(Single);
-                case Ammo_FieldIndex.Damage:
-                    return typeof(UInt16);
-                case Ammo_FieldIndex.DATADataTypeState:
-                    return typeof(Ammo.DATADataType);
+                case Ammo_FieldIndex.Data:
+                    return typeof(AmmoData);
                 default:
                     return AItem_Registration.GetNthType(index);
             }
@@ -1582,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = AMMO_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
+        public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(AmmoBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1630,12 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon = default;
             item.Enchantment.FormKey = null;
             item.EnchantmentPoints = default;
-            item.Speed = default;
-            item.Flags = default;
-            item.Value = default;
-            item.Weight = default;
-            item.Damage = default;
-            item.DATADataTypeState = default;
+            item.Data = null;
             base.Clear(item);
         }
         
@@ -1664,9 +1395,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Ammo.DATADataType.Has;
-                    break;
                 default:
                     AItemSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1808,18 +1536,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = Ammo.DATADataType.Has;
-                    }
-                    item.Speed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Flags = EnumBinaryTranslation<Ammo.AmmoFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Value = dataFrame.ReadUInt32();
-                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Damage = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Damage);
+                    item.Data = Mutagen.Bethesda.Oblivion.AmmoData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Data);
                 }
                 default:
                     return AItemSetterCommon.FillBinaryRecordTypes(
@@ -1915,12 +1633,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
             ret.EnchantmentPoints = item.EnchantmentPoints == rhs.EnchantmentPoints;
-            ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Value = item.Value == rhs.Value;
-            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ret.Damage = item.Damage == rhs.Damage;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1997,29 +1714,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(EnchantmentPointsItem, "EnchantmentPoints");
             }
-            if (printMask?.Speed ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Speed, "Speed");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.Value ?? true)
-            {
-                fg.AppendItem(item.Value, "Value");
-            }
-            if (printMask?.Weight ?? true)
-            {
-                fg.AppendItem(item.Weight, "Weight");
-            }
-            if (printMask?.Damage ?? true)
-            {
-                fg.AppendItem(item.Damage, "Damage");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                DataItem?.ToString(fg, "Data");
             }
         }
         
@@ -2033,6 +1731,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != (item.Enchantment.FormKey != null)) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != (item.EnchantmentPoints != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2048,12 +1748,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Icon = (item.Icon != null);
             mask.Enchantment = (item.Enchantment.FormKey != null);
             mask.EnchantmentPoints = (item.EnchantmentPoints != null);
-            mask.Speed = true;
-            mask.Flags = true;
-            mask.Value = true;
-            mask.Weight = true;
-            mask.Damage = true;
-            mask.DATADataTypeState = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, AmmoData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2127,12 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
             if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
-            if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.Damage != rhs.Damage) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
         
@@ -2186,12 +1877,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(EnchantmentPointsitem);
             }
-            hash.Add(item.Speed);
-            hash.Add(item.Flags);
-            hash.Add(item.Value);
-            hash.Add(item.Weight);
-            hash.Add(item.Damage);
-            hash.Add(item.DATADataTypeState);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2315,29 +2004,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.EnchantmentPoints = rhs.EnchantmentPoints;
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Speed) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Data) ?? true))
             {
-                item.Speed = rhs.Speed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Value) ?? true))
-            {
-                item.Value = rhs.Value;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Weight) ?? true))
-            {
-                item.Weight = rhs.Weight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Damage) ?? true))
-            {
-                item.Damage = rhs.Damage;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
+                errorMask?.PushIndex((int)Ammo_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ammo_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2561,62 +2252,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Ammo_FieldIndex.EnchantmentPoints,
                     errorMask: errorMask);
             }
-            if (item.DATADataTypeState.HasFlag(Ammo.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Speed) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    FloatXmlTranslation.Instance.Write(
+                    ((AmmoDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.Speed),
-                        item: item.Speed,
-                        fieldIndex: (int)Ammo_FieldIndex.Speed,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Ammo_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Ammo_FieldIndex.Data));
                 }
-                if ((translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<Ammo.AmmoFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Ammo_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)Ammo_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)Ammo_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Damage) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Damage),
-                        item: item.Damage,
-                        fieldIndex: (int)Ammo_FieldIndex.Damage,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Ammo.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Ammo_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -2831,104 +2479,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Speed":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Speed);
+                case "Data":
+                    errorMask?.PushIndex((int)Ammo_FieldIndex.Data);
                     try
                     {
-                        item.Speed = FloatXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<AmmoData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= Ammo.DATADataType.Has;
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Ammo.AmmoFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Value);
-                    try
-                    {
-                        item.Value = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Damage":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Damage);
-                    try
-                    {
-                        item.Damage = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Ammo.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Ammo_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3026,15 +2584,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AmmoBinaryWriteTranslation Instance = new AmmoBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IAmmoGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IAmmoGetter item,
             MutagenWriter writer,
@@ -3068,23 +2617,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.EnchantmentPoints,
                 header: recordTypeConverter.ConvertToCustom(Ammo_Registration.ANAM_HEADER));
-            if (item.DATADataTypeState.HasFlag(Ammo.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Ammo_Registration.DATA_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Speed);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ammo.AmmoFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
-                    writer.Write(item.Value);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Weight);
-                    writer.Write(item.Damage);
-                }
+                ((AmmoDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer);
             }
         }
 
@@ -3098,7 +2635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Ammo_Registration.AMMO_HEADER,
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3241,32 +2778,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _EnchantmentPointsLocation;
         public UInt16? EnchantmentPoints => _EnchantmentPointsLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentPointsLocation.Value, _package.Meta)) : default(UInt16?);
         #endregion
-        private int? _DATALocation;
-        public Ammo.DATADataType DATADataTypeState { get; private set; }
-        #region Speed
-        private int _SpeedLocation => _DATALocation!.Value + 0x0;
-        private bool _Speed_IsSet => _DATALocation.HasValue;
-        public Single Speed => _Speed_IsSet ? SpanExt.GetFloat(_data.Slice(_SpeedLocation, 4)) : default;
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x4;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Ammo.AmmoFlag Flags => _Flags_IsSet ? (Ammo.AmmoFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
-        #endregion
-        #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0x8;
-        private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
-        #endregion
-        #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0xC;
-        private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
-        #endregion
-        #region Damage
-        private int _DamageLocation => _DATALocation!.Value + 0x10;
-        private bool _Damage_IsSet => _DATALocation.HasValue;
-        public UInt16 Damage => _Damage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DamageLocation, 2)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IAmmoDataGetter? Data => _Data_IsSet ? AmmoDataBinaryOverlay.AmmoDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3348,9 +2864,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = Ammo.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Damage);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Data);
                 }
                 default:
                     return base.FillRecordType(

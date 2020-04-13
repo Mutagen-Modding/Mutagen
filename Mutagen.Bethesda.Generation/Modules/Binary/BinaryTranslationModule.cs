@@ -105,6 +105,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(NothingType)] = new NothingBinaryTranslationGeneration();
             this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
             this._typeGenerations[typeof(GenderedType)] = new GenderedTypeBinaryTranslationGeneration();
+            this._typeGenerations[typeof(BreakType)] = new BreakBinaryTranslationGeneration();
             APILine[] modAPILines = new APILine[]
             {
                 new APILine(
@@ -412,6 +413,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("frame: frame");
                         }
                     }
+                    int breakIndex = 0;
                     foreach (var field in obj.IterateFields(
                         nonIntegrated: true,
                         expandSets: SetMarkerType.ExpandSets.False))
@@ -424,11 +426,23 @@ namespace Mutagen.Bethesda.Generation
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
+                            if (!field.IntegrateField) continue;
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
                         if (field.HasBeenSet)
                         {
                             fg.AppendLine($"if (frame.Complete) return;");
+                        }
+
+                        if (field is BreakType)
+                        {
+                            fg.AppendLine("if (frame.Complete)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"item.{DataTypeModule.VersioningFieldName} |= {obj.Name}.{DataTypeModule.VersioningEnumName}.Break{breakIndex++};");
+                                fg.AppendLine("return;");
+                            }
+                            continue;
                         }
                         GenerateFillSnippet(obj, fg, field, generator, "frame");
                     }
@@ -1252,6 +1266,12 @@ namespace Mutagen.Bethesda.Generation
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
+                        if (fieldData.BreakIndex.HasValue)
+                        {
+                            fg.AppendLine($"if (!item.{DataTypeModule.VersioningFieldName}.HasFlag({obj.Name}.{DataTypeModule.VersioningEnumName}.Break{fieldData.BreakIndex}))");
+                            fg.AppendLine("{");
+                            fg.Depth++;
+                        }
                         List<string> conditions = new List<string>();
                         if (conditions.Count > 0)
                         {
@@ -1277,6 +1297,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                             {
+                                if (!field.IntegrateField) continue;
                                 throw new ArgumentException("Unsupported type generator: " + field);
                             }
                             generator.GenerateWrite(
@@ -1289,6 +1310,11 @@ namespace Mutagen.Bethesda.Generation
                                 errorMaskAccessor: null,
                                 converterAccessor: null);
                         }
+                    }
+                    for (int i = 0; i < obj.Fields.WhereCastable<TypeGeneration, BreakType>().Count(); i++)
+                    {
+                        fg.Depth--;
+                        fg.AppendLine("}");
                     }
                 }
                 fg.AppendLine();
@@ -1573,12 +1599,18 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
 
+                if (obj.Fields.Any(f => f is BreakType))
+                {
+                    fg.AppendLine($"public {obj.ObjectName}.{DataTypeModule.VersioningEnumName} {DataTypeModule.VersioningFieldName} {{ get; private set; }}");
+                }
+
                 foreach (var field in obj.IterateFields(
                     expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                     nonIntegrated: true))
                 {
                     if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen))
                     {
+                        if (!field.IntegrateField) continue;
                         throw new NotImplementedException();
                     }
                     using (new RegionWrapper(fg, field.Name)
@@ -1891,6 +1923,7 @@ namespace Mutagen.Bethesda.Generation
                                     args.Add($"offset: 0");
                                 }
                             }
+
                             string call;
                             switch (obj.GetObjectType())
                             {
@@ -1967,7 +2000,40 @@ namespace Mutagen.Bethesda.Generation
                                     default:
                                         throw new NotImplementedException();
                                 }
-                                fg.AppendLine($"stream.Position += 0x{(passedLength).Value.ToString("X")}{headerAddition};");
+                                var breaks = obj.Fields.WhereCastable<TypeGeneration, BreakType>().ToList();
+                                if (breaks.Count > 0)
+                                {
+                                    int? passedLen = 0;
+                                    int breakIndex = 0;
+                                    foreach (var field in obj.IterateFields(
+                                        nonIntegrated: true,
+                                        expandSets: SetMarkerType.ExpandSets.False,
+                                        includeBaseClass: true))
+                                    {
+                                        if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen))
+                                        {
+                                            throw new NotImplementedException();
+                                        }
+                                        if (field is BreakType breakType)
+                                        {
+                                            fg.AppendLine($"if (ret._data.Length <= 0x{passedLen.Value:X})");
+                                            using (new BraceWrapper(fg))
+                                            {
+                                                fg.AppendLine($"ret.{DataTypeModule.VersioningFieldName} |= {obj.ObjectName}.{DataTypeModule.VersioningEnumName}.Break{breakIndex++};");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            passedLen += typeGen.ExpectedLength(obj, field).Value;
+                                        }
+                                    }
+                                    // Not advancing stream position, but only because breaks only occur in situations
+                                    // that stream position doesn't matter
+                                }
+                                else
+                                {
+                                    fg.AppendLine($"stream.Position += 0x{passedLength.Value:X}{headerAddition};");
+                                }
                             }
                             using (var args = new ArgsWrapper(fg,
                                 $"ret.CustomCtor"))

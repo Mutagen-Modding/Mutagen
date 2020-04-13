@@ -262,15 +262,13 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Script,
                 TItem Enchantment,
                 TItem EnchantmentPoints,
-                TItem BipedFlags,
-                TItem Flags,
+                TItem ClothingFlags,
                 TItem MaleBipedModel,
                 TItem MaleWorldModel,
                 TItem MaleIcon,
                 TItem FemaleBipedModel,
                 TItem FemaleWorldModel,
                 TItem FemaleIcon,
-                TItem BMDTDataTypeState,
                 TItem Value,
                 TItem Weight,
                 TItem DATADataTypeState)
@@ -284,15 +282,13 @@ namespace Mutagen.Bethesda.Oblivion
                 Script: Script,
                 Enchantment: Enchantment,
                 EnchantmentPoints: EnchantmentPoints,
-                BipedFlags: BipedFlags,
-                Flags: Flags,
+                ClothingFlags: ClothingFlags,
                 MaleBipedModel: MaleBipedModel,
                 MaleWorldModel: MaleWorldModel,
                 MaleIcon: MaleIcon,
                 FemaleBipedModel: FemaleBipedModel,
                 FemaleWorldModel: FemaleWorldModel,
-                FemaleIcon: FemaleIcon,
-                BMDTDataTypeState: BMDTDataTypeState)
+                FemaleIcon: FemaleIcon)
             {
                 this.Value = Value;
                 this.Weight = Weight;
@@ -998,18 +994,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Script = 6,
         Enchantment = 7,
         EnchantmentPoints = 8,
-        BipedFlags = 9,
-        Flags = 10,
-        MaleBipedModel = 11,
-        MaleWorldModel = 12,
-        MaleIcon = 13,
-        FemaleBipedModel = 14,
-        FemaleWorldModel = 15,
-        FemaleIcon = 16,
-        BMDTDataTypeState = 17,
-        Value = 18,
-        Weight = 19,
-        DATADataTypeState = 20,
+        ClothingFlags = 9,
+        MaleBipedModel = 10,
+        MaleWorldModel = 11,
+        MaleIcon = 12,
+        FemaleBipedModel = 13,
+        FemaleWorldModel = 14,
+        FemaleIcon = 15,
+        Value = 16,
+        Weight = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -1029,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Clothing.Mask<>);
 
@@ -1595,9 +1589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Clothing_FieldIndex)((int)index);
                 case AClothing_FieldIndex.EnchantmentPoints:
                     return (Clothing_FieldIndex)((int)index);
-                case AClothing_FieldIndex.BipedFlags:
-                    return (Clothing_FieldIndex)((int)index);
-                case AClothing_FieldIndex.Flags:
+                case AClothing_FieldIndex.ClothingFlags:
                     return (Clothing_FieldIndex)((int)index);
                 case AClothing_FieldIndex.MaleBipedModel:
                     return (Clothing_FieldIndex)((int)index);
@@ -1610,8 +1602,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AClothing_FieldIndex.FemaleWorldModel:
                     return (Clothing_FieldIndex)((int)index);
                 case AClothing_FieldIndex.FemaleIcon:
-                    return (Clothing_FieldIndex)((int)index);
-                case AClothing_FieldIndex.BMDTDataTypeState:
                     return (Clothing_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -2332,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingGetter item,
             MutagenWriter writer)
         {
-            AClothingBinaryWriteTranslation.WriteEmbedded(
+            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
         }

@@ -83,6 +83,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                     {
+                        if (!field.IntegrateField) continue;
                         throw new ArgumentException("Unsupported type generator: " + field);
                     }
 

@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Armor" baseClass="AClothing" objType="Record" recordType="ARMO" GUID="484e38f3-afde-4661-9c39-a8bc1e92eb99" ID="67">
     <Fields>
-      <Data recordType="DATA">
-        <Fields>
-          <Float name="ArmorValue" binary="Custom" byteLength="2" />
-          <UInt32 name="Value" />
-          <UInt32 name="Health" />
-          <Float name="Weight" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="ArmorData" />
+    </Fields>
+  </Object>
+  <Object name="ArmorData" recordType="DATA" objType="Subrecord" GUID="71b5ef4b-2567-4534-9a54-b8fd5a40d323" ID="176">
+    <Fields>
+      <Float name="ArmorValue" binary="Custom" byteLength="2" />
+      <UInt32 name="Value" />
+      <UInt32 name="Health" />
+      <Float name="Weight" />
     </Fields>
   </Object>
 </Loqui>

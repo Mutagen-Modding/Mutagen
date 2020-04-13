@@ -29,13 +29,14 @@ namespace Mutagen.Bethesda.Generation
             var subGen = this.Module.GetTypeGeneration(arr.SubTypeGeneration.GetType());
             if (arr.FixedSize.HasValue)
             {
-                var posStr = $"_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}";
                 if (arr.SubTypeGeneration is EnumType e)
                 {
-                    fg.AppendLine($"public {arr.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
+                    var posStr = currentPosition == null ? null : $"{currentPosition}";
+                    fg.AppendLine($"public {arr.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>({dataAccessor}.Slice({posStr}), amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
                 }
                 else if (arr.SubTypeGeneration is LoquiType loqui)
                 {
+                    var posStr = $"_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}";
                     string recConverter = "null";
                     if (data?.RecordTypeConverter != null
                         && data.RecordTypeConverter.FromConversions.Count > 0)

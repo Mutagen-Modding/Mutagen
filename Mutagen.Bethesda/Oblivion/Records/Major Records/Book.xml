@@ -10,14 +10,15 @@
       <FormLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
       <UInt16 name="EnchantmentPoints" recordType="ANAM" />
       <String name="Description" recordType="DESC" />
-      <Data>
-        <Fields>
-          <Enum name="Flags" enumName="Book.BookFlag" byteLength="1" />
-          <Enum name="Teaches" enumName="Skill" byteLength="1" />
-          <Float name="Value" />
-          <Float name="Weight" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="BookData" />
+    </Fields>
+  </Object>
+  <Object name="BookData" recordType="DATA" objType="Subrecord" GUID="aefa2aca-68c8-4782-941f-593ea5528f3e" ID="177">
+    <Fields>
+      <Enum name="Flags" enumName="Book.BookFlag" byteLength="1" />
+      <Enum name="Teaches" enumName="Skill" byteLength="1" />
+      <Float name="Value" />
+      <Float name="Weight" />
     </Fields>
   </Object>
 </Loqui>

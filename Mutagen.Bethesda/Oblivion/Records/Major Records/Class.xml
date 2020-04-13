@@ -6,21 +6,7 @@
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" />
       <String name="Icon" recordType="ICON" />
-      <Data>
-        <Fields>
-          <Array name="PrimaryAttributes" fixedSize="2" nullable="false">
-            <Enum enumName="ActorValue" />
-          </Array>
-          <Enum name="Specialization" enumName="Class.SpecializationFlag" />
-          <Array name="SecondaryAttributes" fixedSize="7" nullable="false">
-            <Enum enumName="ActorValue" />
-          </Array>
-          <Enum name="Flags" enumName="ClassFlag" />
-          <Enum name="ClassServices" enumName="ClassService" />
-          <Break />
-          <RefDirect name="Training" refName="ClassTraining" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="ClassData" />
     </Fields>
   </Object>
   <Object name="ClassTraining" objType="Subrecord" GUID="db3e6d59-8545-4d81-8531-4eb0b56c4a47" ID="19">
@@ -28,6 +14,21 @@
       <Enum name="TrainedSkill" enumName="Skill" byteLength="1" />
       <UInt8 name="MaximumTrainingLevel" max="100" min="0" />
       <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
+    </Fields>
+  </Object>
+  <Object name="ClassData" recordType="DATA" objType="Subrecord" GUID="3c5fc61b-fde2-42c8-adf4-66340f5e4d61" ID="178">
+    <Fields>
+      <Array name="PrimaryAttributes" fixedSize="2" nullable="false">
+        <Enum enumName="ActorValue" />
+      </Array>
+      <Enum name="Specialization" enumName="Class.SpecializationFlag" />
+      <Array name="SecondaryAttributes" fixedSize="7" nullable="false">
+        <Enum enumName="ActorValue" />
+      </Array>
+      <Enum name="Flags" enumName="ClassFlag" />
+      <Enum name="ClassServices" enumName="ClassService" />
+      <Break />
+      <RefDirect name="Training" refName="ClassTraining" />
     </Fields>
   </Object>
 </Loqui>

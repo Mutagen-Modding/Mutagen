@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Generation
             await base.PostFieldLoad(obj, field, node);
             data.Length = node.GetAttribute<int?>(Constants.ByteLength, null);
             if (data.Length.HasValue) return;
-            if (!FieldFilter(field))
+            if (field.IntegrateField && !FieldFilter(field))
             {
                 throw new ArgumentException($"{obj.Name} {field.Name} have to define either length or record type.");
             }

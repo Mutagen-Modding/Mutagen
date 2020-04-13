@@ -137,7 +137,7 @@
     <Compile Include="Oblivion\Records\Major Records\AnimatedObject_LoquiGenerated.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\Armor.cs">
+    <Compile Include="Oblivion\Records\Major Records\ArmorData.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\Armor_LoquiGenerated.cs">
@@ -1229,6 +1229,27 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\HavokData_LoquiGenerated.cs">
       <DependentUpon>LandTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ClothingFlags_LoquiGenerated.cs">
+      <DependentUpon>AClothing.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\AIPackageData_LoquiGenerated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\AlchemicalApparatusData_LoquiGenerated.cs">
+      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\AmmoData_LoquiGenerated.cs">
+      <DependentUpon>Ammo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ArmorData_LoquiGenerated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\BookData_LoquiGenerated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ClassData_LoquiGenerated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
