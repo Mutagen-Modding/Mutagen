@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         static Group()
         {
-            T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Constants.TriggeringRecordTypeMember).GetValue(null);
+            T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember).GetValue(null);
         }
 
         #region GroupType

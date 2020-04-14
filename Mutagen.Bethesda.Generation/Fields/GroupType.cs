@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Generation
             gen.Add(new XAttribute("TypeToSpecify", "T"));
             dir.Add(gen);
             this.ThisConstruction = true;
-            this.CustomData[Mutagen.Bethesda.Constants.EdidLinked] = node.GetAttribute<bool>(Mutagen.Bethesda.Constants.EdidLinked, false);
+            this.CustomData[Mutagen.Bethesda.Internals.Constants.EdidLinked] = node.GetAttribute<bool>(Mutagen.Bethesda.Internals.Constants.EdidLinked, false);
             return base.Load(convert, requireName);
         }
     }

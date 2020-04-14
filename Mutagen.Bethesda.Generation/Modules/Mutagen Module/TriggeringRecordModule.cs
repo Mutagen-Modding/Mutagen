@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Generation
             var count = trigRecordTypes.Count();
             if (count == 1)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.TriggeringRecordTypeMember} = {trigRecordTypes.First().Type}_HEADER;");
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember} = {trigRecordTypes.First().Type}_HEADER;");
             }
             else if (count > 1)
             {
@@ -570,13 +570,13 @@ namespace Mutagen.Bethesda.Generation
                 var grupLoqui = await obj.GetGroupLoquiType();
                 if (grupLoqui.GenericDef == null)
                 {
-                    fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.GrupRecordTypeMember} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Mutagen.Bethesda.Constants.GrupRecordTypeMember};");
+                    fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember};");
                 }
             }
             else if (await obj.IsSingleTriggerSource())
             {
                 await obj.IsSingleTriggerSource();
-                fg.AppendLine($"public new static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Mutagen.Bethesda.Constants.TriggeringRecordTypeMember};");
+                fg.AppendLine($"public new static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember};");
             }
             await base.GenerateInClass(obj, fg);
         }

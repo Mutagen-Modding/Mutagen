@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Binary
         public int MajorRecordFlags => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(8, 4));
         public FormID FormID => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(12, 4)));
         public long TotalLength => this.HeaderLength + this.ContentLength;
-        public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Constants.CompressedFlag) > 0;
+        public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Internals.Constants.CompressedFlag) > 0;
     }
 
     public ref struct MajorRecordHeaderWritable
@@ -64,16 +64,16 @@ namespace Mutagen.Bethesda.Binary
         public long TotalLength => this.HeaderLength + this.RecordLength;
         public bool IsCompressed
         {
-            get => (this.MajorRecordFlags & Mutagen.Bethesda.Constants.CompressedFlag) > 0;
+            get => (this.MajorRecordFlags & Mutagen.Bethesda.Internals.Constants.CompressedFlag) > 0;
             set
             {
                 if (value)
                 {
-                    this.MajorRecordFlags |= Mutagen.Bethesda.Constants.CompressedFlag;
+                    this.MajorRecordFlags |= Mutagen.Bethesda.Internals.Constants.CompressedFlag;
                 }
                 else
                 {
-                    this.MajorRecordFlags &= ~Mutagen.Bethesda.Constants.CompressedFlag;
+                    this.MajorRecordFlags &= ~Mutagen.Bethesda.Internals.Constants.CompressedFlag;
                 }
             }
         }

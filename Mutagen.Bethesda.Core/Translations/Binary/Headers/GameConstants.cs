@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Binary
         public VariableHeader NextRecordVariableMeta(ReadOnlySpan<byte> span)
         {
             RecordType rec = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(span));
-            if (rec == Mutagen.Bethesda.Constants.Group)
+            if (rec == Mutagen.Bethesda.Internals.Constants.Group)
             {
                 return this.GroupConstants.VariableMeta(span);
             }
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Binary
         public VariableHeader GetNextRecordVariableMeta(IBinaryReadStream stream)
         {
             RecordType rec = new RecordType(stream.GetInt32());
-            if (rec == Mutagen.Bethesda.Constants.Group)
+            if (rec == Mutagen.Bethesda.Internals.Constants.Group)
             {
                 return this.GroupConstants.VariableMeta(stream.GetSpan(this.GroupConstants.HeaderLength));
             }
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Binary
         public VariableHeader ReadNextRecordVariableMeta(IBinaryReadStream stream)
         {
             RecordType rec = new RecordType(stream.GetInt32());
-            if (rec == Mutagen.Bethesda.Constants.Group)
+            if (rec == Mutagen.Bethesda.Internals.Constants.Group)
             {
                 return this.GroupConstants.VariableMeta(stream.ReadSpan(this.GroupConstants.HeaderLength));
             }

@@ -2048,7 +2048,7 @@ namespace Mutagen.Bethesda.Generation
                             foreach (var field in obj.IterateFields())
                             {
                                 if (!(field is GroupType group)) continue;
-                                if (!((bool)group.CustomData[Mutagen.Bethesda.Constants.EdidLinked])) continue;
+                                if (!((bool)group.CustomData[Mutagen.Bethesda.Internals.Constants.EdidLinked])) continue;
                                 using (var args = new ArgsWrapper(fg,
                                     $"{nameof(UtilityTranslation)}.{nameof(UtilityTranslation.FillEdidLinkCache)}<{group.GetGroupTarget().GetTypeName(LoquiInterfaceType.IGetter)}>"))
                                 {

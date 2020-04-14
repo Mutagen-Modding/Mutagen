@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Tests
         {
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordFrame();
-            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, Mutagen.Bethesda.Constants.EditorID);
+            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, Mutagen.Bethesda.Internals.Constants.EditorID);
             if (edidLoc == -1) return;
             ProcessStringTermination(
                 stream,
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: loc + Constants.HeaderLength,
+                loc: loc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                 sub: lenData);
         }
 
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(majorMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: recordLoc + Constants.HeaderLength,
+                loc: recordLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                 sub: lenData);
 
             if (subRecordLoc != null)
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Tests
                 lenData = new byte[2];
                 BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
                 this._Instructions.SetSubstitution(
-                    loc: subRecordLoc.Value + Constants.HeaderLength,
+                    loc: subRecordLoc.Value + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                     sub: lenData);
             }
         }

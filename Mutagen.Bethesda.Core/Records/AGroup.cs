@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda
             {
                 var regis = LoquiRegistration.GetRegister(typeof(T));
                 if (regis == null) throw new ArgumentException();
-                GRUP_RECORD_TYPE = (RecordType)regis.ClassType.GetField(Mutagen.Bethesda.Constants.GrupRecordTypeMember).GetValue(null);
+                GRUP_RECORD_TYPE = (RecordType)regis.ClassType.GetField(Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember).GetValue(null);
             }
         }
 

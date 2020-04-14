@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Tests
             else
             {
                 // Modify Length
-                stream.Position = loc.Min + Constants.HeaderLength;
+                stream.Position = loc.Min + Mutagen.Bethesda.Internals.Constants.HeaderLength;
                 var existingLen = stream.ReadUInt16();
                 byte[] lenData = new byte[2];
                 using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameMode))
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Tests
                     writer.Write((ushort)(existingLen - 7));
                 }
                 this._Instructions.SetSubstitution(
-                    loc: loc.Min + Constants.HeaderLength,
+                    loc: loc.Min + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                     sub: lenData);
             }
 
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     throw new ArgumentException();
                 }
-                stream.Position = edidIndex + loc.Min + Constants.HeaderLength;
+                stream.Position = edidIndex + loc.Min + Mutagen.Bethesda.Internals.Constants.HeaderLength;
                 var edidLen = stream.ReadUInt16();
                 stream.Position += edidLen;
                 var locToPlace = stream.Position;
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x02)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Constants.HeaderLength,
+                        loc: loc.Min + dataIndex + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x56)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Constants.HeaderLength,
+                        loc: loc.Min + dataIndex + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x54, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x2A)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Constants.HeaderLength,
+                        loc: loc.Min + dataIndex + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x28, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x3E)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Constants.HeaderLength,
+                        loc: loc.Min + dataIndex + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x3C, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
