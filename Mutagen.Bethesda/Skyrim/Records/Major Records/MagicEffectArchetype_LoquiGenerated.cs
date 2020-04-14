@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((MagicEffectArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((MagicEffectArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         partial void CustomCtor(

@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((MapDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: MapData_Registration.MNAM_HEADER,
+                record: recordTypeConverter.ConvertToCustom(MapData_Registration.MNAM_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((MapDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Slice(0, 8));

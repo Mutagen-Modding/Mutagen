@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ASpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ASpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         partial void CustomCtor(

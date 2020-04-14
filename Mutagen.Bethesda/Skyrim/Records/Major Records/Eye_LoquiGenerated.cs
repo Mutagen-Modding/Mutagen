@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((EyeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Eye_Registration.EYES_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Eye_Registration.EYES_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2233,7 +2233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((EyeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

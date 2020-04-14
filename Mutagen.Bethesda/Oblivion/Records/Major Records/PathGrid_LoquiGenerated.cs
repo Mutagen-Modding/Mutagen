@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((PathGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2698,7 +2698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: PathGrid_Registration.PGRD_HEADER,
+                record: recordTypeConverter.ConvertToCustom(PathGrid_Registration.PGRD_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2822,7 +2822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((PathGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region PointToPointConnections

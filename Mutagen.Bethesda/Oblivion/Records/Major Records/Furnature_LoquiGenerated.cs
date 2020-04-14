@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((FurnatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2253,7 +2253,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2272,7 +2273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Furnature_Registration.FURN_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Furnature_Registration.FURN_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2383,7 +2384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((FurnatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

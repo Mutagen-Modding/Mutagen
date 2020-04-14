@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((AcousticSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2245,7 +2245,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                     item: ObjectBoundsItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2268,7 +2269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: AcousticSpace_Registration.ASPC_HEADER,
+                record: recordTypeConverter.ConvertToCustom(AcousticSpace_Registration.ASPC_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2379,7 +2380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((AcousticSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region ObjectBounds

@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: LockInformation_Registration.XLOC_HEADER,
+                record: recordTypeConverter.ConvertToCustom(LockInformation_Registration.XLOC_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Byte LockLevel => _data.Span[0];

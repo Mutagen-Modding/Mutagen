@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AlchemicalApparatusDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1928,7 +1928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: AlchemicalApparatusData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(AlchemicalApparatusData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((AlchemicalApparatusDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public AlchemicalApparatus.ApparatusType Type => (AlchemicalApparatus.ApparatusType)_data.Span.Slice(0, 1)[0];

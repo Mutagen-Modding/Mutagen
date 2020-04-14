@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GameSettingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -1686,7 +1686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: GameSetting_Registration.GMST_HEADER,
+                record: recordTypeConverter.ConvertToCustom(GameSetting_Registration.GMST_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1796,7 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((GameSettingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         partial void CustomCtor(

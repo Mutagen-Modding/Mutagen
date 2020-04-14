@@ -3,6 +3,7 @@ using Loqui.Generation;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -13,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
             return 0;
         }
 
-        public override void GenerateCopyIn(
+        public override async Task GenerateCopyIn(
             FileGeneration fg, 
             ObjectGeneration objGen, 
             TypeGeneration typeGen,

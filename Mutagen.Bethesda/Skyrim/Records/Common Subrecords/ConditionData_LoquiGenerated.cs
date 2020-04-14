@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         partial void CustomCtor(

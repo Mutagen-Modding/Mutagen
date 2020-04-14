@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ScriptStringPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ScriptStringPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0), lengthLength: 2);

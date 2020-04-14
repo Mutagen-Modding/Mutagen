@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((QuestTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2274,7 +2274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((QuestTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         private int? _QSTALocation;

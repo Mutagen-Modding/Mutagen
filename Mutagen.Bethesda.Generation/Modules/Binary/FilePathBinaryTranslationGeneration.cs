@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateCopyIn(
+        public override async Task GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

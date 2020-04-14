@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((HeadPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2976,7 +2976,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<HeadPart.Flag>.Instance.WriteNullable(
                 writer,
@@ -3028,7 +3029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: HeadPart_Registration.HDPT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(HeadPart_Registration.HDPT_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3139,7 +3140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((HeadPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

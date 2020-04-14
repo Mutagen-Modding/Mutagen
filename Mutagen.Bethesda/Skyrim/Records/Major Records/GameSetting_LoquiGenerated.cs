@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((GameSettingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: GameSetting_Registration.GMST_HEADER,
+                record: recordTypeConverter.ConvertToCustom(GameSetting_Registration.GMST_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((GameSettingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         partial void CustomCtor(

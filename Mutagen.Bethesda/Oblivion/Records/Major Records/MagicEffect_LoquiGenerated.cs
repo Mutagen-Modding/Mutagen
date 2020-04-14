@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3627,7 +3627,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Has))
             {
@@ -3690,7 +3691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: MagicEffect_Registration.MGEF_HEADER,
+                record: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.MGEF_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3801,7 +3802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

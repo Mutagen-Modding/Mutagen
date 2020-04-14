@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CreatureAIDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2189,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: CreatureAIData_Registration.AIDT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(CreatureAIData_Registration.AIDT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2293,7 +2293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((CreatureAIDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Byte Aggression => _data.Span[0];

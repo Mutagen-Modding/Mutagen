@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((HavokDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1836,7 +1836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: HavokData_Registration.HNAM_HEADER,
+                record: recordTypeConverter.ConvertToCustom(HavokData_Registration.HNAM_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((HavokDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public HavokData.MaterialType Material => (HavokData.MaterialType)_data.Span.Slice(0, 1)[0];

@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CreatureConfigurationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: CreatureConfiguration_Registration.ACBS_HEADER,
+                record: recordTypeConverter.ConvertToCustom(CreatureConfiguration_Registration.ACBS_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2288,7 +2288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((CreatureConfigurationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Creature.CreatureFlag Flags => (Creature.CreatureFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

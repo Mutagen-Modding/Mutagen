@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2036,7 +2036,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((SoundDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -2047,7 +2048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Sound_Registration.SOUN_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Sound_Registration.SOUN_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2157,7 +2158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((SoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region File

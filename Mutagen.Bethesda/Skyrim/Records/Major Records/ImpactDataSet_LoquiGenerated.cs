@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ImpactDataSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ImpactDataSet_Registration.IPDS_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ImpactDataSet_Registration.IPDS_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ImpactDataSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         partial void CustomCtor(

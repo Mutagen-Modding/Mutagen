@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3195,7 +3195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RegionDataObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));

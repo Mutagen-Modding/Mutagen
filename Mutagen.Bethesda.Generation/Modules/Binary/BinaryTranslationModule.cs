@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             continue;
                         }
-                        GenerateFillSnippet(obj, fg, field, generator, "frame");
+                        await GenerateFillSnippet(obj, fg, field, generator, "frame");
                     }
                 }
                 fg.AppendLine();
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Generation
                                                 }
                                                 using (new BraceWrapper(fg, doIt: groupMask))
                                                 {
-                                                    GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                                    await GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
                                                 }
                                                 if (groupMask)
                                                 {
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Generation
                                     first = false;
                                     using (new BraceWrapper(fg))
                                     {
-                                        GenerateFillSnippet(obj, fg, field.Field, generator, "frame");
+                                        await GenerateFillSnippet(obj, fg, field.Field, generator, "frame");
                                         fg.AppendLine($"return TryGet<int?>.Failure;");
                                     }
                                 }
@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
+        private async Task GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
         {
             if (field is DataType set)
             {
@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.Depth--;
                         fg.AppendLine("}");
                     }
-                    GenerateFillSnippet(obj, fg, subField.Field, subGenerator, "dataFrame");
+                    await GenerateFillSnippet(obj, fg, subField.Field, subGenerator, "dataFrame");
                 }
                 if (isInRange)
                 {
@@ -900,7 +900,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("contentLength = nextRec.RecordLength;");
             }
 
-            generator.GenerateCopyIn(
+            await generator.GenerateCopyIn(
                 fg: fg,
                 objGen: obj,
                 typeGen: field,
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Generation
                     semiColon: false))
                 {
                     args.Add("writer: writer");
-                    args.Add($"record: {obj.RecordTypeHeaderName(obj.GetRecordType())}");
+                    args.Add($"record: recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
                     args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }
@@ -1488,7 +1488,7 @@ namespace Mutagen.Bethesda.Generation
                                     itemAccessor: accessor,
                                     translationAccessor: null,
                                     errorMaskAccessor: null,
-                                    converterAccessor: null);
+                                    converterAccessor: "recordTypeConverter");
                             }
                         }
                     }

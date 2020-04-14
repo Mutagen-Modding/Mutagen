@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundDataExtendedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1911,7 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: SoundDataExtended_Registration.SNDX_HEADER,
+                record: recordTypeConverter.ConvertToCustom(SoundDataExtended_Registration.SNDX_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((SoundDataExtendedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Single StaticAttenuation => GetStaticAttenuationCustom(location: 8);

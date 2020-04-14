@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptFieldsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2492,7 +2492,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var MetadataSummaryItem = item.MetadataSummary;
             ((ScriptMetaSummaryBinaryWriteTranslation)((IBinaryItem)MetadataSummaryItem).BinaryWriteTranslator).Write(
                 item: MetadataSummaryItem,
-                writer: writer);
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             ScriptFieldsBinaryWriteTranslation.WriteBinaryMetadataSummaryOld(
                 writer: writer,
                 item: item);
@@ -2653,7 +2654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ScriptFieldsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region MetadataSummary

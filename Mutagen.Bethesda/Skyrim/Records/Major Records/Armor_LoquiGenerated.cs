@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ArmorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Armor_Registration.ARMO_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Armor_Registration.ARMO_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ArmorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         partial void CustomCtor(

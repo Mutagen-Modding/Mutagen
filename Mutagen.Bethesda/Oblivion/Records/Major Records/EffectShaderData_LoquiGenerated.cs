@@ -2235,7 +2235,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((EffectShaderDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -6679,7 +6679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: EffectShaderData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(EffectShaderData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -6783,7 +6783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((EffectShaderDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public EffectShaderData.VersioningBreaks Versioning { get; private set; }

@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
             return $"ByteArrayBinaryTranslation.Instance";
         }
 
-        public override void GenerateCopyIn(
+        public override async Task GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

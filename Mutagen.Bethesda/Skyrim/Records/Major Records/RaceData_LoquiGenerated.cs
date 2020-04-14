@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((RaceDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -4864,7 +4864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: RaceData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(RaceData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -4994,7 +4994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((RaceDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public ISkillBoostGetter SkillBoost0 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0)), _package, default(RecordTypeConverter));

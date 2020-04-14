@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((HavokDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: HavokData_Registration.HNAM_HEADER,
+                record: recordTypeConverter.ConvertToCustom(HavokData_Registration.HNAM_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((HavokDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Byte Friction => _data.Span[0];

@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeatherChanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((WeatherChanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IFormLinkGetter<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));

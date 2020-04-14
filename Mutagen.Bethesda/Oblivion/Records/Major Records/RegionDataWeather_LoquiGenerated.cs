@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataWeatherBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RegionDataWeatherBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IReadOnlyList<IWeatherChanceGetter>? Weathers { get; private set; }

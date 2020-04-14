@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GrassDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2630,7 +2630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: GrassData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(GrassData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2734,7 +2734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((GrassDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Byte Density => _data.Span[0];

@@ -1745,7 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ClassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -4872,7 +4872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Class_Registration.CLAS_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Class_Registration.CLAS_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -4982,7 +4982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ClassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((SpeedOverridesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2551,7 +2551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: SpeedOverrides_Registration.SPED_HEADER,
+                record: recordTypeConverter.ConvertToCustom(SpeedOverrides_Registration.SPED_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2655,7 +2655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((SpeedOverridesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Single LeftWalk => SpanExt.GetFloat(_data.Slice(0, 4));

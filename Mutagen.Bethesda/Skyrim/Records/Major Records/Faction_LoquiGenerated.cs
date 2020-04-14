@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -5123,13 +5123,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((VendorValuesBinaryWriteTranslation)((IBinaryItem)VendorValuesItem).BinaryWriteTranslator).Write(
                     item: VendorValuesItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.VendorLocation.TryGet(out var VendorLocationItem))
             {
                 ((VendorLocationBinaryWriteTranslation)((IBinaryItem)VendorLocationItem).BinaryWriteTranslator).Write(
                     item: VendorLocationItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             FactionBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
@@ -5143,7 +5145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Faction_Registration.FACT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Faction_Registration.FACT_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -5267,7 +5269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

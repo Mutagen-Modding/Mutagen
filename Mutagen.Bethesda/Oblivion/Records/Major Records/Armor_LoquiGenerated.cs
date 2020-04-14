@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ArmorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2177,7 +2177,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ArmorDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -2188,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Armor_Registration.ARMO_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Armor_Registration.ARMO_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2320,7 +2321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ArmorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Data

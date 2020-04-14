@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Generation
 
         public abstract string GetTranslatorInstance(TypeGeneration typeGen, bool getter);
 
-        public abstract void GenerateCopyIn(
+        public abstract Task GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

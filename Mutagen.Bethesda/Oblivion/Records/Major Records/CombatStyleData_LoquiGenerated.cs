@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CombatStyleDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -4930,7 +4930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: CombatStyleData_Registration.CSTD_HEADER,
+                record: recordTypeConverter.ConvertToCustom(CombatStyleData_Registration.CSTD_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -5047,7 +5047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((CombatStyleDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public CombatStyleData.VersioningBreaks Versioning { get; private set; }

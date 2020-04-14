@@ -2223,7 +2223,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeatherBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -5971,7 +5971,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
                 writer: writer,
@@ -6097,7 +6098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Weather_Registration.WTHR_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Weather_Registration.WTHR_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -6208,7 +6209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((WeatherBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region TextureLowerLayer

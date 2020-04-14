@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2253,7 +2253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0, 2));

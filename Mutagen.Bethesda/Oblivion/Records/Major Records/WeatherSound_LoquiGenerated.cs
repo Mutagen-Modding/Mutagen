@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeatherSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: WeatherSound_Registration.SNAM_HEADER,
+                record: recordTypeConverter.ConvertToCustom(WeatherSound_Registration.SNAM_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1866,7 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((WeatherSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IFormLinkGetter<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));

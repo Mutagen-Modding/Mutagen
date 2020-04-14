@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptMetaSummaryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2027,7 +2027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ScriptMetaSummary_Registration.SCHR_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ScriptMetaSummary_Registration.SCHR_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2144,7 +2144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ScriptMetaSummaryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0, 4).ToArray();

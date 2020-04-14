@@ -3662,7 +3662,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -9696,7 +9696,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.ACBSDataTypeState.HasFlag(Npc.ACBSDataType.Has))
             {
@@ -9891,7 +9892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Npc_Registration.NPC__HEADER,
+                record: recordTypeConverter.ConvertToCustom(Npc_Registration.NPC__HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -10024,7 +10025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

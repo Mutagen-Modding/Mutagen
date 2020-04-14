@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ScriptFloatPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ScriptFloatPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Single Data => SpanExt.GetFloat(_data.Slice(0, 4));

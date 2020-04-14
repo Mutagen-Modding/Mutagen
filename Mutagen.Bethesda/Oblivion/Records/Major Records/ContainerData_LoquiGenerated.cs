@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ContainerDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1751,7 +1751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ContainerData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ContainerData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ContainerDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Container.ContainerFlag Flags => (Container.ContainerFlag)_data.Span.Slice(0, 1)[0];

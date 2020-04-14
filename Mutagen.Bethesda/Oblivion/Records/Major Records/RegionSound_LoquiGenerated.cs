@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RegionSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IFormLinkGetter<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));

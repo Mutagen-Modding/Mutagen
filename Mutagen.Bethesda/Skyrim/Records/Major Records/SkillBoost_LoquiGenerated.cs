@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public ActorValueExtended Skill => (ActorValueExtended)_data.Span.Slice(0, 1)[0];

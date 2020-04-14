@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -4039,7 +4039,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((MapDataBinaryWriteTranslation)((IBinaryItem)MapDataItem).BinaryWriteTranslator).Write(
                     item: MapDataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.WriteNullable(
                 writer,
@@ -4074,7 +4075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Worldspace_Registration.WRLD_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WRLD_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -4240,7 +4241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

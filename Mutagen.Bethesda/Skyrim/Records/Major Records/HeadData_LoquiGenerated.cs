@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3521,7 +3521,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((AvailableMorphsBinaryWriteTranslation)((IBinaryItem)AvailableMorphsItem).BinaryWriteTranslator).Write(
                     item: AvailableMorphsItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
@@ -3574,7 +3575,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3693,7 +3695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = ListExt.Empty<HeadPartReferenceBinaryOverlay>();

@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((FaceFxPhonemesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3988,7 +3988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((FaceFxPhonemesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         partial void CustomCtor(

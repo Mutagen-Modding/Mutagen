@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ConditionGlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ConditionGlobal_Registration.CTDA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ConditionGlobal_Registration.CTDA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ConditionGlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));

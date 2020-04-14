@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CombatStyleAdvancedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3441,7 +3441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: CombatStyleAdvanced_Registration.CSAD_HEADER,
+                record: recordTypeConverter.ConvertToCustom(CombatStyleAdvanced_Registration.CSAD_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -3545,7 +3545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((CombatStyleAdvancedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Single DodgeFatigueModMult => SpanExt.GetFloat(_data.Slice(0, 4));

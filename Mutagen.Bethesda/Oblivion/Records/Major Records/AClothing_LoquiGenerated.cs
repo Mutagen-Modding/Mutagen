@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AClothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -3283,13 +3283,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ClothingFlagsBinaryWriteTranslation)((IBinaryItem)ClothingFlagsItem).BinaryWriteTranslator).Write(
                     item: ClothingFlagsItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)MaleBipedModelItem).BinaryWriteTranslator).Write(
                     item: MaleBipedModelItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.MaleWorldModel.TryGet(out var MaleWorldModelItem))
             {
@@ -3447,7 +3449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((AClothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

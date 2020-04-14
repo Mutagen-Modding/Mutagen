@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -1833,7 +1833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Condition_Registration.CTDA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Condition_Registration.CTDA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1951,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Condition.Flag Flags => GetFlagsCustom(location: 0);

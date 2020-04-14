@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ClimateDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2284,7 +2284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ClimateData_Registration.TNAM_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ClimateData_Registration.TNAM_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2466,7 +2466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ClimateDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public DateTime SunriseBegin => GetSunriseBeginCustom(location: 0);

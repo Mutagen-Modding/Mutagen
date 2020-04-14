@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3442,7 +3442,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3468,7 +3469,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((MagicEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
@@ -3509,7 +3511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: MagicEffect_Registration.MGEF_HEADER,
+                record: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.MGEF_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3633,7 +3635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region VirtualMachineAdapter

@@ -2748,7 +2748,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -7930,7 +7930,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
                     item: BodyTemplateItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
@@ -7947,7 +7948,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((RaceDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
@@ -8205,7 +8207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Race_Registration.RACE_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Race_Registration.RACE_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -8368,7 +8370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DialogItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3522,7 +3522,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((DialogItemDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3591,7 +3592,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ScriptItem = item.Script;
             ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)ScriptItem).BinaryWriteTranslator).Write(
                 item: ScriptItem,
-                writer: writer);
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
@@ -3601,7 +3603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: DialogItem_Registration.INFO_HEADER,
+                record: recordTypeConverter.ConvertToCustom(DialogItem_Registration.INFO_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3712,7 +3714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((DialogItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Data

@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((RaceMovementTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1853,7 +1853,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((SpeedOverridesBinaryWriteTranslation)((IBinaryItem)OverridesItem).BinaryWriteTranslator).Write(
                     item: OverridesItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -1964,7 +1965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((RaceMovementTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region MovementType

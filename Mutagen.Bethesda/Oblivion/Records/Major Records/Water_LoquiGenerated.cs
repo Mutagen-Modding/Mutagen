@@ -1885,7 +1885,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -5381,7 +5381,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)RelatedWatersItem).BinaryWriteTranslator).Write(
                     item: RelatedWatersItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -5392,7 +5393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Water_Registration.WATR_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Water_Registration.WATR_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -5555,7 +5556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Texture

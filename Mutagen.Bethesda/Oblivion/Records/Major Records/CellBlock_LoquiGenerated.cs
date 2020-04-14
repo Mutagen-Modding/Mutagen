@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2242,7 +2242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: CellBlock_Registration.GRUP_HEADER,
+                record: recordTypeConverter.ConvertToCustom(CellBlock_Registration.GRUP_HEADER),
                 type: ObjectType.Group))
             {
                 WriteEmbedded(
@@ -2355,7 +2355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((CellBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));

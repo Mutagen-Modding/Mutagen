@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DialogItemDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: DialogItemData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(DialogItemData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1954,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((DialogItemDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public DialogItemData.VersioningBreaks Versioning { get; private set; }

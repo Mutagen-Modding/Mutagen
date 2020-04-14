@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AlphaLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((AlphaLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region AlphaLayerData

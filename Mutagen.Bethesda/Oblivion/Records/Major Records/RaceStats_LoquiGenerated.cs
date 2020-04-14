@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RaceStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2357,7 +2357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RaceStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Byte Strength => _data.Span[0];

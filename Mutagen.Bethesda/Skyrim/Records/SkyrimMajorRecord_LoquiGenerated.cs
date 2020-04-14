@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((SkyrimMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((SkyrimMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(12, 2));

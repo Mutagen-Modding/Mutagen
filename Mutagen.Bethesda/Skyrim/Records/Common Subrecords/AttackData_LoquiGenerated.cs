@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((AttackDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2569,7 +2569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: AttackData_Registration.ATKD_HEADER,
+                record: recordTypeConverter.ConvertToCustom(AttackData_Registration.ATKD_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2674,7 +2674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((AttackDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Single DamageMult => SpanExt.GetFloat(_data.Slice(0, 4));

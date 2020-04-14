@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LoadScreenLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: LoadScreenLocation_Registration.LNAM_HEADER,
+                record: recordTypeConverter.ConvertToCustom(LoadScreenLocation_Registration.LNAM_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((LoadScreenLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IFormLinkGetter<IPlaceGetter> Direct => new FormLink<IPlaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));

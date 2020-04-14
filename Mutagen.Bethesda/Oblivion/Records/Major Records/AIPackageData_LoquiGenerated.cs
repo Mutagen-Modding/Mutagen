@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AIPackageDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: AIPackageData_Registration.PKDT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(AIPackageData_Registration.PKDT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((AIPackageDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public AIPackage.Flag Flags => GetFlagsCustom(location: 0);

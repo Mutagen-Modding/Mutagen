@@ -4941,7 +4941,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.Keywords ?? true)
@@ -4951,7 +4952,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.LocationReferenceTypes ?? true)
@@ -4961,7 +4963,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
                         item: LocationReferenceTypesItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.Actions ?? true)
@@ -4971,7 +4974,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.TextureSets ?? true)
@@ -4981,7 +4985,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
                         item: TextureSetsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.Globals ?? true)
@@ -4991,7 +4996,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.Classes ?? true)
@@ -5001,7 +5007,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.Factions ?? true)
@@ -5011,7 +5018,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.HeadParts ?? true)
@@ -5021,7 +5029,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: HeadPartsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.Hairs ?? true)
@@ -5031,7 +5040,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
                         item: HairsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.Eyes ?? true)
@@ -5041,7 +5051,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
                         item: EyesItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.Races ?? true)
@@ -5051,7 +5062,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
                         item: RacesItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.SoundMarkers ?? true)
@@ -5061,7 +5073,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SoundMarkersItem).BinaryWriteTranslator).Write<ISoundMarkerGetter>(
                         item: SoundMarkersItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.AcousticSpaces ?? true)
@@ -5071,7 +5084,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AcousticSpacesItem).BinaryWriteTranslator).Write<IAcousticSpaceGetter>(
                         item: AcousticSpacesItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.MagicEffects ?? true)
@@ -5081,7 +5095,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
                         item: MagicEffectsItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
             if (importMask?.LandTextures ?? true)
@@ -5091,7 +5106,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LandTexturesItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
                         item: LandTexturesItem,
-                        writer: writer);
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
         }

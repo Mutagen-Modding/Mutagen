@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Generation
             return loquiGen.SingletonType != SingletonLevel.Singleton || loquiGen.SetterInterfaceType != LoquiInterfaceType.IGetter;
         }
 
-        public override void GenerateCopyIn(
+        public override async Task GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -142,14 +142,13 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
+            if (loquiGen.TryGetFieldData(out var data)
+                && data.MarkerType.HasValue)
+            {
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
+            }
             if (loquiGen.TargetObjectGeneration != null)
             {
-                if (loquiGen.TryGetFieldData(out var data)
-                    && data.MarkerType.HasValue)
-                {
-                    fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
-                }
-
                 if (loquiGen.SetterInterfaceType == LoquiInterfaceType.IGetter) return;
                 if (loquiGen.SingletonType == SingletonLevel.Singleton)
                 {
@@ -175,6 +174,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                         }
+                        else if (await NeedsRecordTypeConverter(objGen))
+                        {
+                            args.AddPassArg($"recordTypeConverter");
+                        }
                     }
                 }
             }
@@ -182,6 +185,15 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new NotImplementedException();
             }
+        }
+
+        public static async Task<bool> NeedsRecordTypeConverter(ObjectGeneration objGen)
+        {
+            foreach (var subObj in await objGen.InheritingObjects())
+            {
+                if (subObj.GetObjectData().BaseRecordTypeConverter != null) return true;
+            }
+            return false;
         }
 
         public override void GenerateCopyInRet(

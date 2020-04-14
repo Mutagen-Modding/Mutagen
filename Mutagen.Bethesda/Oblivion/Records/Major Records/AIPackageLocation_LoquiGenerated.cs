@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AIPackageLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: AIPackageLocation_Registration.PLDT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(AIPackageLocation_Registration.PLDT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((AIPackageLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

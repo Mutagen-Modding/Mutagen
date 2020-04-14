@@ -4,6 +4,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
             return null;
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor readerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
+        public override async Task GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor readerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
         {
             var fieldData = typeGen.GetFieldData();
             if (fieldData.BreakIndex == null) return;

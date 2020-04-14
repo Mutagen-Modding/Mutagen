@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((FloraBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2390,7 +2390,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2404,7 +2405,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((SeasonalIngredientProductionBinaryWriteTranslation)((IBinaryItem)SeasonalIngredientProductionItem).BinaryWriteTranslator).Write(
                     item: SeasonalIngredientProductionItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -2415,7 +2417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Flora_Registration.FLOR_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Flora_Registration.FLOR_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2526,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((FloraBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

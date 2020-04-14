@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Generation
             return expected.Value * 2;
         }
 
-        public override void GenerateCopyIn(
+        public override async Task GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

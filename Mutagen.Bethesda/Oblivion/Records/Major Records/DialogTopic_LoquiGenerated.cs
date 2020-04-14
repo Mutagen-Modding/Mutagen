@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DialogTopicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2731,7 +2731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: DialogTopic_Registration.DIAL_HEADER,
+                record: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DIAL_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2860,7 +2860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((DialogTopicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IReadOnlyList<IFormLinkGetter<IQuestGetter>>? Quests { get; private set; }

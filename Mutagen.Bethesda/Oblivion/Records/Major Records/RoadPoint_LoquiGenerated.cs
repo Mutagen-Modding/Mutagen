@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2075,7 +2075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0, 12));

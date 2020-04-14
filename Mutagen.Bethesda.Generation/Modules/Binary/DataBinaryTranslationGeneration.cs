@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool ShouldGenerateCopyIn(TypeGeneration typeGen) => true;
         public override bool ShouldGenerateWrite(TypeGeneration typeGen) => true;
 
-        public override void GenerateCopyIn(
+        public override async Task GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

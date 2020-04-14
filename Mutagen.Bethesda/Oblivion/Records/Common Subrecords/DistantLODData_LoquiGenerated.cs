@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: DistantLODData_Registration.XLOD_HEADER,
+                record: recordTypeConverter.ConvertToCustom(DistantLODData_Registration.XLOD_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Single Unknown0 => SpanExt.GetFloat(_data.Slice(0, 4));

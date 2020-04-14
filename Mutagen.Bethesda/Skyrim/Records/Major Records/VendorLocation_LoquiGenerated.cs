@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((VendorLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1848,7 +1848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: VendorLocation_Registration.PLVD_HEADER,
+                record: recordTypeConverter.ConvertToCustom(VendorLocation_Registration.PLVD_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1953,7 +1953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((VendorLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public VendorLocation.LocationType Type => (VendorLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ClothingFlagsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ClothingFlags_Registration.BMDT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ClothingFlags_Registration.BMDT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ClothingFlagsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public BipedFlag BipedFlags => (BipedFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0, 2));

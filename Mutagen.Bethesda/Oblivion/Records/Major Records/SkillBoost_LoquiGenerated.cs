@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public ActorValue Skill => (ActorValue)_data.Span.Slice(0, 1)[0];

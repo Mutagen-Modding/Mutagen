@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((VirtualMachineAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: VirtualMachineAdapter_Registration.VMAD_HEADER,
+                record: recordTypeConverter.ConvertToCustom(VirtualMachineAdapter_Registration.VMAD_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2127,7 +2127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((VirtualMachineAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0, 2));

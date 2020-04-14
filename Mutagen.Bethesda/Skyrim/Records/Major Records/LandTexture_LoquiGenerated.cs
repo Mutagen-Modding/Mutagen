@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((LandTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2505,7 +2505,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((HavokDataBinaryWriteTranslation)((IBinaryItem)HavokDataItem).BinaryWriteTranslator).Write(
                     item: HavokDataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2530,7 +2531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: LandTexture_Registration.LTEX_HEADER,
+                record: recordTypeConverter.ConvertToCustom(LandTexture_Registration.LTEX_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2641,7 +2642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((LandTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region TextureSet

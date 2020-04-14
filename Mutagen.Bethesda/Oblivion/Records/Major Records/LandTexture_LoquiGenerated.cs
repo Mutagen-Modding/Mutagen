@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LandTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2390,7 +2390,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((HavokDataBinaryWriteTranslation)((IBinaryItem)HavokItem).BinaryWriteTranslator).Write(
                     item: HavokItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2415,7 +2416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: LandTexture_Registration.LTEX_HEADER,
+                record: recordTypeConverter.ConvertToCustom(LandTexture_Registration.LTEX_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2526,7 +2527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((LandTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Icon

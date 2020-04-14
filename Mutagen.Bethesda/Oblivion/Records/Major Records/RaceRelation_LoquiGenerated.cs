@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RaceRelationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1758,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: RaceRelation_Registration.XNAM_HEADER,
+                record: recordTypeConverter.ConvertToCustom(RaceRelation_Registration.XNAM_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RaceRelationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IFormLinkGetter<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));

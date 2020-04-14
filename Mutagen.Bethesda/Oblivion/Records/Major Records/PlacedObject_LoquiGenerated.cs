@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -4772,13 +4772,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((TeleportDestinationBinaryWriteTranslation)((IBinaryItem)TeleportDestinationItem).BinaryWriteTranslator).Write(
                     item: TeleportDestinationItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.Lock.TryGet(out var LockItem))
             {
                 ((LockInformationBinaryWriteTranslation)((IBinaryItem)LockItem).BinaryWriteTranslator).Write(
                     item: LockItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4796,7 +4798,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4810,7 +4813,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)DistantLODDataItem).BinaryWriteTranslator).Write(
                     item: DistantLODDataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4842,7 +4846,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XMRK_HEADER, ObjectType.Subrecord)) { }
                 ((MapMarkerBinaryWriteTranslation)((IBinaryItem)MapMarkerItem).BinaryWriteTranslator).Write(
                     item: MapMarkerItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             PlacedObjectBinaryWriteTranslation.WriteBinaryOpenByDefault(
                 writer: writer,
@@ -4880,7 +4885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: PlacedObject_Registration.REFR_HEADER,
+                record: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.REFR_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -5004,7 +5009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Base

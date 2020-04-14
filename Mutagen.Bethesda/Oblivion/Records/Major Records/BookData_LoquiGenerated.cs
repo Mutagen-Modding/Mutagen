@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((BookDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: BookData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(BookData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2034,7 +2034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((BookDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Book.BookFlag Flags => (Book.BookFlag)_data.Span.Slice(0, 1)[0];

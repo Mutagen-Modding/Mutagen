@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda
             ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -2403,7 +2403,7 @@ namespace Mutagen.Bethesda.Internals
             ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));

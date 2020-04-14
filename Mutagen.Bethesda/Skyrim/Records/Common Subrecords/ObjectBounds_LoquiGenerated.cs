@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ObjectBoundsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1750,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ObjectBounds_Registration.OBND_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ObjectBounds_Registration.OBND_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ObjectBoundsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public P3Int16 First => P3Int16BinaryTranslation.Read(_data.Slice(0, 6));

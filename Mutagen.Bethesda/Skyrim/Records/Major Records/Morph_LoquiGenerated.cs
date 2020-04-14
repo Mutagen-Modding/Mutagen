@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((MorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1753,7 +1753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((MorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public ReadOnlyMemorySlice<Byte> Data => _data.Span.Slice(0, 32).ToArray();

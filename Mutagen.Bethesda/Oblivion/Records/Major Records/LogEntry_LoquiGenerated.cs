@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LogEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2249,7 +2249,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)ResultScriptItem).BinaryWriteTranslator).Write(
                     item: ResultScriptItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -2360,7 +2361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((LogEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Flags

@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((SoundMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2261,7 +2261,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                     item: ObjectBoundsItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2284,7 +2285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: SoundMarker_Registration.SOUN_HEADER,
+                record: recordTypeConverter.ConvertToCustom(SoundMarker_Registration.SOUN_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2395,7 +2396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((SoundMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region ObjectBounds

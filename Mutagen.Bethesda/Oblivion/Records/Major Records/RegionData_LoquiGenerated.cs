@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
 
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: RegionData_Registration.RDAT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2134,7 +2134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RegionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         private int? _RDATLocation;

@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((FaceGenDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2047,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((FaceGenDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region SymmetricGeometry

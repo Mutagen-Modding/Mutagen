@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((InterCellPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((InterCellPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Int32 PointID => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));

@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region RankNumber

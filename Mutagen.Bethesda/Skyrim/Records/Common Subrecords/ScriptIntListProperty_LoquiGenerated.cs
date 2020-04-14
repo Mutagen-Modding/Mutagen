@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ScriptIntListPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1857,7 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ScriptIntListPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IReadOnlyList<Int32> Data => BinaryOverlaySetList<Int32>.FactoryByStartIndex(_data.Slice(0), _package, 4, (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));

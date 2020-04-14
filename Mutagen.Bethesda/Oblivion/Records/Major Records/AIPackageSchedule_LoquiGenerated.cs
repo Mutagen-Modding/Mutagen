@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2013,7 +2013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: AIPackageSchedule_Registration.PSDT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(AIPackageSchedule_Registration.PSDT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2117,7 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Month Month => (Month)_data.Span.Slice(0, 1)[0];

@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((BodyDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1862,7 +1862,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)PartItem).BinaryWriteTranslator).Write(
                     item: PartItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -1973,7 +1974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((BodyDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Index

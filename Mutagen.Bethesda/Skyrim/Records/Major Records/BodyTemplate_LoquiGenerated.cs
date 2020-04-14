@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: BodyTemplate_Registration.BODT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(BodyTemplate_Registration.BODT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

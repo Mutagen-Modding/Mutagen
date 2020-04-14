@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DialogResponseDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: DialogResponseData_Registration.TRDT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(DialogResponseData_Registration.TRDT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2136,7 +2136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((DialogResponseDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public EmotionType Emotion => (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

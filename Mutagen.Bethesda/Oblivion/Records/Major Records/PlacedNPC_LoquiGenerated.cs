@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((PlacedNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3156,13 +3156,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)DistantLODDataItem).BinaryWriteTranslator).Write(
                     item: DistantLODDataItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.EnableParent.TryGet(out var EnableParentItem))
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3201,7 +3203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: PlacedNpc_Registration.ACHR_HEADER,
+                record: recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.ACHR_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3312,7 +3314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((PlacedNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Base

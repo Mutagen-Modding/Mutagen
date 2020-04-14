@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GlobalFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1988,7 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: GlobalFloat_Registration.GLOB_HEADER,
+                record: recordTypeConverter.ConvertToCustom(GlobalFloat_Registration.GLOB_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2109,7 +2109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((GlobalFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Data

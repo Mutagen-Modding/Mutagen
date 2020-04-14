@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ArmorDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ArmorData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ArmorData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ArmorDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Single ArmorValue => GetArmorValueCustom(location: 0);

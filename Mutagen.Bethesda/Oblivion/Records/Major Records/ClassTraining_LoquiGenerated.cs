@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ClassTrainingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((ClassTrainingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Skill TrainedSkill => (Skill)_data.Span.Slice(0, 1)[0];

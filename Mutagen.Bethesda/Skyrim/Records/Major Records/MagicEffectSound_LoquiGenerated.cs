@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((MagicEffectSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((MagicEffectSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public MagicEffect.SoundType Type => (MagicEffect.SoundType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

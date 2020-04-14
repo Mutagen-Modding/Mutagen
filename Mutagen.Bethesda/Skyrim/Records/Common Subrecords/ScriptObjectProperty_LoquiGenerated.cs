@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ScriptObjectPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1908,7 +1908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ScriptObjectPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));

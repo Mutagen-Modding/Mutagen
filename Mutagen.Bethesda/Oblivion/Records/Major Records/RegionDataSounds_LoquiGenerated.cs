@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataSoundsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2129,7 +2129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((RegionDataSoundsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region MusicType

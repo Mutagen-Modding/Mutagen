@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -4928,7 +4928,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ((CellLightingBinaryWriteTranslation)((IBinaryItem)LightingItem).BinaryWriteTranslator).Write(
                     item: LightingItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
                 writer: writer,
@@ -4978,7 +4979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: Cell_Registration.CELL_HEADER,
+                record: recordTypeConverter.ConvertToCustom(Cell_Registration.CELL_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -5118,7 +5119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Name

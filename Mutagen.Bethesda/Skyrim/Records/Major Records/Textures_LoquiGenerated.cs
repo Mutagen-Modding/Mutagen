@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((TexturesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2610,7 +2610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((TexturesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region Diffuse

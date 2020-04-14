@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((EnchantmentDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: EnchantmentData_Registration.ENIT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(EnchantmentData_Registration.ENIT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((EnchantmentDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Enchantment.EnchantmentType Type => (Enchantment.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

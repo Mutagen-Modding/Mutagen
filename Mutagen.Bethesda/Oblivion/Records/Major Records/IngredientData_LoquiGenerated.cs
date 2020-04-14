@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((IngredientDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: IngredientData_Registration.ENIT_HEADER,
+                record: recordTypeConverter.ConvertToCustom(IngredientData_Registration.ENIT_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1853,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((IngredientDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0, 4));

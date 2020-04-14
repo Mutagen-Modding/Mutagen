@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -1906,7 +1906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region File

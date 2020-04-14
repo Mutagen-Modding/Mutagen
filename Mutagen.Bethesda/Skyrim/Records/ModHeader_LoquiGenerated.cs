@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -3315,7 +3315,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var StatsItem = item.Stats;
             ((ModStatsBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
                 item: StatsItem,
-                writer: writer);
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
@@ -3372,7 +3373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: ModHeader_Registration.TES4_HEADER,
+                record: recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3481,7 +3482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public ModHeader.HeaderFlag Flags => (ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

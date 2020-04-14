@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeatherTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ((WeatherTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public Color Sunrise => _data.Slice(0, 4).ReadColor();

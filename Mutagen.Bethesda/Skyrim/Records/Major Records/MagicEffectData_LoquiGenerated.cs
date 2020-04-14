@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((MagicEffectDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -5039,7 +5039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: MagicEffectData_Registration.DATA_HEADER,
+                record: recordTypeConverter.ConvertToCustom(MagicEffectData_Registration.DATA_HEADER),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -5170,7 +5170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((MagicEffectDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public MagicEffect.Flag Flags => (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

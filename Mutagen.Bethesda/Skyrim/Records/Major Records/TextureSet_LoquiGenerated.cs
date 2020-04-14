@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -2339,19 +2339,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                     item: ObjectBoundsItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.Textures.TryGet(out var TexturesItem))
             {
                 ((TexturesBinaryWriteTranslation)((IBinaryItem)TexturesItem).BinaryWriteTranslator).Write(
                     item: TexturesItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             if (item.Decal.TryGet(out var DecalItem))
             {
                 ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
                     item: DecalItem,
-                    writer: writer);
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<TextureSet.Flag>.Instance.WriteNullable(
                 writer,
@@ -2367,7 +2370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: TextureSet_Registration.TXST_HEADER,
+                record: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TXST_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2477,7 +2480,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #region ObjectBounds
