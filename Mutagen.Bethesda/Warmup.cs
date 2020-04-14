@@ -8,13 +8,13 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// A static class to house initialization warmup logic
     /// </summary>
-    public static class Init
+    public static class Warmup
     {
         /// <summary>
         /// Will initialize internals in a more efficient way that avoids reflection.
         /// Not required to call, but can be used to warm up ahead of time.
         /// </summary>
-        public static void SpinUp()
+        public static void Init()
         {
             LoquiRegistrationSettings.AutomaticRegistration = false;
             ProtocolDefinition_Oblivion.Register();

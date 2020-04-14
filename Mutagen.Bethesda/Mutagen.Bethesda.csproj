@@ -16,7 +16,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Init.cs" />
+    <Compile Include="Warmup.cs" />
     <Compile Include="Oblivion\Constants.cs" />
     <Compile Include="Oblivion\Interfaces\IOwner.cs" />
     <Compile Include="Oblivion\Interfaces\IPlaced.cs" />
