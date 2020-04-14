@@ -250,11 +250,12 @@
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
         <xs:element name="SpecialParse" type="NSpecialParse"/>
-        <xs:element name="Zero" type="ZeroType"/>
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Group" type="GroupType" />
         <xs:element name="CustomLogic" type="CustomLogic" />
         <xs:element name="Gendered" type="NGenderedItem" />
+        <xs:element name="Break" />
+        <xs:element name="Zero" type="ZeroType"/>
       </xs:choice>
     </xs:group>
 
@@ -270,6 +271,7 @@
         <xs:element name="Zero" type="ZeroType"/>
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Gendered" type="GenderedItem" />
+        <xs:element name="Break" />
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -460,7 +462,6 @@
   <xs:complexType name="DataTypeFields" >
     <xs:choice minOccurs="0" maxOccurs="unbounded" >
       <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="Break" />
       <xs:element name="Range" type="DataTypeFieldRangeType" />
     </xs:choice>
   </xs:complexType>

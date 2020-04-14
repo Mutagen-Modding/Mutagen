@@ -7,12 +7,13 @@
       <RefDirect name="Model" refName="Model" />
       <String name="Icon" recordType="ICON" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
-      <Data>
-        <Fields>
-          <UInt32 name="Value" />
-          <Float name="Weight" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="KeyData" />
+    </Fields>
+  </Object>
+  <Object name="KeyData" recordType="DATA" objType="Subrecord" GUID="01f6df94-7cf4-41f7-9a02-1996484507a7" ID="193">
+    <Fields>
+      <UInt32 name="Value" />
+      <Float name="Weight" />
     </Fields>
   </Object>
 </Loqui>

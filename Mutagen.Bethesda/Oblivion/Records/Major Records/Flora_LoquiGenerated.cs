@@ -85,60 +85,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;
         #endregion
-        #region Spring
+        #region SeasonalIngredientProduction
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Spring;
-        public Byte Spring
+        private SeasonalIngredientProduction? _SeasonalIngredientProduction;
+        public SeasonalIngredientProduction? SeasonalIngredientProduction
         {
-            get => this._Spring;
-            set
-            {
-                this.PFPCDataTypeState |= PFPCDataType.Has;
-                this._Spring = value;
-            }
+            get => _SeasonalIngredientProduction;
+            set => _SeasonalIngredientProduction = value;
         }
-        #endregion
-        #region Summer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Summer;
-        public Byte Summer
-        {
-            get => this._Summer;
-            set
-            {
-                this.PFPCDataTypeState |= PFPCDataType.Has;
-                this._Summer = value;
-            }
-        }
-        #endregion
-        #region Fall
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Fall;
-        public Byte Fall
-        {
-            get => this._Fall;
-            set
-            {
-                this.PFPCDataTypeState |= PFPCDataType.Has;
-                this._Fall = value;
-            }
-        }
-        #endregion
-        #region Winter
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Winter;
-        public Byte Winter
-        {
-            get => this._Winter;
-            set
-            {
-                this.PFPCDataTypeState |= PFPCDataType.Has;
-                this._Winter = value;
-            }
-        }
-        #endregion
-        #region PFPCDataTypeState
-        public Flora.PFPCDataType PFPCDataTypeState { get; set; } = default;
+        ISeasonalIngredientProductionGetter? IFloraGetter.SeasonalIngredientProduction => this.SeasonalIngredientProduction;
         #endregion
 
         #region To String
@@ -314,11 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Script = initialValue;
                 this.Ingredient = initialValue;
-                this.Spring = initialValue;
-                this.Summer = initialValue;
-                this.Fall = initialValue;
-                this.Winter = initialValue;
-                this.PFPCDataTypeState = initialValue;
+                this.SeasonalIngredientProduction = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(initialValue, new SeasonalIngredientProduction.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -331,11 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Model,
                 TItem Script,
                 TItem Ingredient,
-                TItem Spring,
-                TItem Summer,
-                TItem Fall,
-                TItem Winter,
-                TItem PFPCDataTypeState)
+                TItem SeasonalIngredientProduction)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -347,11 +295,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Script = Script;
                 this.Ingredient = Ingredient;
-                this.Spring = Spring;
-                this.Summer = Summer;
-                this.Fall = Fall;
-                this.Winter = Winter;
-                this.PFPCDataTypeState = PFPCDataTypeState;
+                this.SeasonalIngredientProduction = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(SeasonalIngredientProduction, new SeasonalIngredientProduction.Mask<TItem>(SeasonalIngredientProduction));
             }
 
             #pragma warning disable CS8618
@@ -367,11 +311,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Script;
             public TItem Ingredient;
-            public TItem Spring;
-            public TItem Summer;
-            public TItem Fall;
-            public TItem Winter;
-            public TItem PFPCDataTypeState;
+            public MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>? SeasonalIngredientProduction { get; set; }
             #endregion
 
             #region Equals
@@ -389,11 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Script, rhs.Script)) return false;
                 if (!object.Equals(this.Ingredient, rhs.Ingredient)) return false;
-                if (!object.Equals(this.Spring, rhs.Spring)) return false;
-                if (!object.Equals(this.Summer, rhs.Summer)) return false;
-                if (!object.Equals(this.Fall, rhs.Fall)) return false;
-                if (!object.Equals(this.Winter, rhs.Winter)) return false;
-                if (!object.Equals(this.PFPCDataTypeState, rhs.PFPCDataTypeState)) return false;
+                if (!object.Equals(this.SeasonalIngredientProduction, rhs.SeasonalIngredientProduction)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -403,11 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Model);
                 hash.Add(this.Script);
                 hash.Add(this.Ingredient);
-                hash.Add(this.Spring);
-                hash.Add(this.Summer);
-                hash.Add(this.Fall);
-                hash.Add(this.Winter);
-                hash.Add(this.PFPCDataTypeState);
+                hash.Add(this.SeasonalIngredientProduction);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -426,11 +358,11 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (!eval(this.Script)) return false;
                 if (!eval(this.Ingredient)) return false;
-                if (!eval(this.Spring)) return false;
-                if (!eval(this.Summer)) return false;
-                if (!eval(this.Fall)) return false;
-                if (!eval(this.Winter)) return false;
-                if (!eval(this.PFPCDataTypeState)) return false;
+                if (SeasonalIngredientProduction != null)
+                {
+                    if (!eval(this.SeasonalIngredientProduction.Overall)) return false;
+                    if (this.SeasonalIngredientProduction.Specific != null && !this.SeasonalIngredientProduction.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -447,11 +379,11 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (eval(this.Script)) return true;
                 if (eval(this.Ingredient)) return true;
-                if (eval(this.Spring)) return true;
-                if (eval(this.Summer)) return true;
-                if (eval(this.Fall)) return true;
-                if (eval(this.Winter)) return true;
-                if (eval(this.PFPCDataTypeState)) return true;
+                if (SeasonalIngredientProduction != null)
+                {
+                    if (eval(this.SeasonalIngredientProduction.Overall)) return true;
+                    if (this.SeasonalIngredientProduction.Specific != null && this.SeasonalIngredientProduction.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -471,11 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Script = eval(this.Script);
                 obj.Ingredient = eval(this.Ingredient);
-                obj.Spring = eval(this.Spring);
-                obj.Summer = eval(this.Summer);
-                obj.Fall = eval(this.Fall);
-                obj.Winter = eval(this.Winter);
-                obj.PFPCDataTypeState = eval(this.PFPCDataTypeState);
+                obj.SeasonalIngredientProduction = this.SeasonalIngredientProduction == null ? null : new MaskItem<R, SeasonalIngredientProduction.Mask<R>?>(eval(this.SeasonalIngredientProduction.Overall), this.SeasonalIngredientProduction.Specific?.Translate(eval));
             }
             #endregion
 
@@ -514,25 +442,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Ingredient, "Ingredient");
                     }
-                    if (printMask?.Spring ?? true)
+                    if (printMask?.SeasonalIngredientProduction?.Overall ?? true)
                     {
-                        fg.AppendItem(Spring, "Spring");
-                    }
-                    if (printMask?.Summer ?? true)
-                    {
-                        fg.AppendItem(Summer, "Summer");
-                    }
-                    if (printMask?.Fall ?? true)
-                    {
-                        fg.AppendItem(Fall, "Fall");
-                    }
-                    if (printMask?.Winter ?? true)
-                    {
-                        fg.AppendItem(Winter, "Winter");
-                    }
-                    if (printMask?.PFPCDataTypeState ?? true)
-                    {
-                        fg.AppendItem(PFPCDataTypeState, "PFPCDataTypeState");
+                        SeasonalIngredientProduction?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -550,11 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? Script;
             public Exception? Ingredient;
-            public Exception? Spring;
-            public Exception? Summer;
-            public Exception? Fall;
-            public Exception? Winter;
-            public Exception? PFPCDataTypeState;
+            public MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>? SeasonalIngredientProduction;
             #endregion
 
             #region IErrorMask
@@ -571,16 +479,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Script;
                     case Flora_FieldIndex.Ingredient:
                         return Ingredient;
-                    case Flora_FieldIndex.Spring:
-                        return Spring;
-                    case Flora_FieldIndex.Summer:
-                        return Summer;
-                    case Flora_FieldIndex.Fall:
-                        return Fall;
-                    case Flora_FieldIndex.Winter:
-                        return Winter;
-                    case Flora_FieldIndex.PFPCDataTypeState:
-                        return PFPCDataTypeState;
+                    case Flora_FieldIndex.SeasonalIngredientProduction:
+                        return SeasonalIngredientProduction;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -603,20 +503,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Flora_FieldIndex.Ingredient:
                         this.Ingredient = ex;
                         break;
-                    case Flora_FieldIndex.Spring:
-                        this.Spring = ex;
-                        break;
-                    case Flora_FieldIndex.Summer:
-                        this.Summer = ex;
-                        break;
-                    case Flora_FieldIndex.Fall:
-                        this.Fall = ex;
-                        break;
-                    case Flora_FieldIndex.Winter:
-                        this.Winter = ex;
-                        break;
-                    case Flora_FieldIndex.PFPCDataTypeState:
-                        this.PFPCDataTypeState = ex;
+                    case Flora_FieldIndex.SeasonalIngredientProduction:
+                        this.SeasonalIngredientProduction = new MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -641,20 +529,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Flora_FieldIndex.Ingredient:
                         this.Ingredient = (Exception?)obj;
                         break;
-                    case Flora_FieldIndex.Spring:
-                        this.Spring = (Exception?)obj;
-                        break;
-                    case Flora_FieldIndex.Summer:
-                        this.Summer = (Exception?)obj;
-                        break;
-                    case Flora_FieldIndex.Fall:
-                        this.Fall = (Exception?)obj;
-                        break;
-                    case Flora_FieldIndex.Winter:
-                        this.Winter = (Exception?)obj;
-                        break;
-                    case Flora_FieldIndex.PFPCDataTypeState:
-                        this.PFPCDataTypeState = (Exception?)obj;
+                    case Flora_FieldIndex.SeasonalIngredientProduction:
+                        this.SeasonalIngredientProduction = (MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -669,11 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Model != null) return true;
                 if (Script != null) return true;
                 if (Ingredient != null) return true;
-                if (Spring != null) return true;
-                if (Summer != null) return true;
-                if (Fall != null) return true;
-                if (Winter != null) return true;
-                if (PFPCDataTypeState != null) return true;
+                if (SeasonalIngredientProduction != null) return true;
                 return false;
             }
             #endregion
@@ -713,11 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Model?.ToString(fg);
                 fg.AppendItem(Script, "Script");
                 fg.AppendItem(Ingredient, "Ingredient");
-                fg.AppendItem(Spring, "Spring");
-                fg.AppendItem(Summer, "Summer");
-                fg.AppendItem(Fall, "Fall");
-                fg.AppendItem(Winter, "Winter");
-                fg.AppendItem(PFPCDataTypeState, "PFPCDataTypeState");
+                SeasonalIngredientProduction?.ToString(fg);
             }
             #endregion
 
@@ -730,11 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Ingredient = this.Ingredient.Combine(rhs.Ingredient);
-                ret.Spring = this.Spring.Combine(rhs.Spring);
-                ret.Summer = this.Summer.Combine(rhs.Summer);
-                ret.Fall = this.Fall.Combine(rhs.Fall);
-                ret.Winter = this.Winter.Combine(rhs.Winter);
-                ret.PFPCDataTypeState = this.PFPCDataTypeState.Combine(rhs.PFPCDataTypeState);
+                ret.SeasonalIngredientProduction = this.SeasonalIngredientProduction.Combine(rhs.SeasonalIngredientProduction, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -761,11 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<bool, Model.TranslationMask?> Model;
             public bool Script;
             public bool Ingredient;
-            public bool Spring;
-            public bool Summer;
-            public bool Fall;
-            public bool Winter;
-            public bool PFPCDataTypeState;
+            public MaskItem<bool, SeasonalIngredientProduction.TranslationMask?> SeasonalIngredientProduction;
             #endregion
 
             #region Ctors
@@ -776,11 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Script = defaultOn;
                 this.Ingredient = defaultOn;
-                this.Spring = defaultOn;
-                this.Summer = defaultOn;
-                this.Fall = defaultOn;
-                this.Winter = defaultOn;
-                this.PFPCDataTypeState = defaultOn;
+                this.SeasonalIngredientProduction = new MaskItem<bool, SeasonalIngredientProduction.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -792,22 +648,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((Script, null));
                 ret.Add((Ingredient, null));
-                ret.Add((Spring, null));
-                ret.Add((Summer, null));
-                ret.Add((Fall, null));
-                ret.Add((Winter, null));
-                ret.Add((PFPCDataTypeState, null));
+                ret.Add((SeasonalIngredientProduction?.Overall ?? true, SeasonalIngredientProduction?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Flora_Registration.TriggeringRecordType;
-        [Flags]
-        public enum PFPCDataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => FloraCommon.Instance.GetLinks(this);
         public Flora(FormKey formKey)
@@ -893,11 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new IFormLinkNullable<Script> Script { get; }
         new IFormLinkNullable<Ingredient> Ingredient { get; }
-        new Byte Spring { get; set; }
-        new Byte Summer { get; set; }
-        new Byte Fall { get; set; }
-        new Byte Winter { get; set; }
-        new Flora.PFPCDataType PFPCDataTypeState { get; set; }
+        new SeasonalIngredientProduction? SeasonalIngredientProduction { get; set; }
     }
 
     public partial interface IFloraInternal :
@@ -918,11 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? Model { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IFormLinkNullableGetter<IIngredientGetter> Ingredient { get; }
-        Byte Spring { get; }
-        Byte Summer { get; }
-        Byte Fall { get; }
-        Byte Winter { get; }
-        Flora.PFPCDataType PFPCDataTypeState { get; }
+        ISeasonalIngredientProductionGetter? SeasonalIngredientProduction { get; }
 
     }
 
@@ -1226,11 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Model = 6,
         Script = 7,
         Ingredient = 8,
-        Spring = 9,
-        Summer = 10,
-        Fall = 11,
-        Winter = 12,
-        PFPCDataTypeState = 13,
+        SeasonalIngredientProduction = 9,
     }
     #endregion
 
@@ -1248,9 +1083,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "5cc7a37a-95ea-4486-8c4c-02c55c3a4566";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Flora.Mask<>);
 
@@ -1288,16 +1123,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Flora_FieldIndex.Script;
                 case "INGREDIENT":
                     return (ushort)Flora_FieldIndex.Ingredient;
-                case "SPRING":
-                    return (ushort)Flora_FieldIndex.Spring;
-                case "SUMMER":
-                    return (ushort)Flora_FieldIndex.Summer;
-                case "FALL":
-                    return (ushort)Flora_FieldIndex.Fall;
-                case "WINTER":
-                    return (ushort)Flora_FieldIndex.Winter;
-                case "PFPCDATATYPESTATE":
-                    return (ushort)Flora_FieldIndex.PFPCDataTypeState;
+                case "SEASONALINGREDIENTPRODUCTION":
+                    return (ushort)Flora_FieldIndex.SeasonalIngredientProduction;
                 default:
                     return null;
             }
@@ -1312,11 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Model:
                 case Flora_FieldIndex.Script:
                 case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                case Flora_FieldIndex.PFPCDataTypeState:
+                case Flora_FieldIndex.SeasonalIngredientProduction:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1329,15 +1152,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Flora_FieldIndex.Model:
+                case Flora_FieldIndex.SeasonalIngredientProduction:
                     return true;
                 case Flora_FieldIndex.Name:
                 case Flora_FieldIndex.Script:
                 case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                case Flora_FieldIndex.PFPCDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1353,11 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Model:
                 case Flora_FieldIndex.Script:
                 case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                case Flora_FieldIndex.PFPCDataTypeState:
+                case Flora_FieldIndex.SeasonalIngredientProduction:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1377,16 +1192,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Script";
                 case Flora_FieldIndex.Ingredient:
                     return "Ingredient";
-                case Flora_FieldIndex.Spring:
-                    return "Spring";
-                case Flora_FieldIndex.Summer:
-                    return "Summer";
-                case Flora_FieldIndex.Fall:
-                    return "Fall";
-                case Flora_FieldIndex.Winter:
-                    return "Winter";
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    return "PFPCDataTypeState";
+                case Flora_FieldIndex.SeasonalIngredientProduction:
+                    return "SeasonalIngredientProduction";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1401,11 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Model:
                 case Flora_FieldIndex.Script:
                 case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                case Flora_FieldIndex.PFPCDataTypeState:
+                case Flora_FieldIndex.SeasonalIngredientProduction:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1421,11 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Model:
                 case Flora_FieldIndex.Script:
                 case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                case Flora_FieldIndex.PFPCDataTypeState:
+                case Flora_FieldIndex.SeasonalIngredientProduction:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1445,16 +1244,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IFormLinkNullable<Script>);
                 case Flora_FieldIndex.Ingredient:
                     return typeof(IFormLinkNullable<Ingredient>);
-                case Flora_FieldIndex.Spring:
-                    return typeof(Byte);
-                case Flora_FieldIndex.Summer:
-                    return typeof(Byte);
-                case Flora_FieldIndex.Fall:
-                    return typeof(Byte);
-                case Flora_FieldIndex.Winter:
-                    return typeof(Byte);
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    return typeof(Flora.PFPCDataType);
+                case Flora_FieldIndex.SeasonalIngredientProduction:
+                    return typeof(SeasonalIngredientProduction);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1469,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PFPC_HEADER = new RecordType("PFPC");
         public static readonly RecordType TriggeringRecordType = FLOR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
+        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(FloraBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1516,11 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Model = null;
             item.Script.FormKey = null;
             item.Ingredient.FormKey = null;
-            item.Spring = default;
-            item.Summer = default;
-            item.Fall = default;
-            item.Winter = default;
-            item.PFPCDataTypeState = default;
+            item.SeasonalIngredientProduction = null;
             base.Clear(item);
         }
         
@@ -1544,9 +1331,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasPFPCDataType":
-                    item.PFPCDataTypeState |= Flora.PFPCDataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1669,17 +1453,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x43504650: // PFPC
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.PFPCDataTypeState = Flora.PFPCDataType.Has;
-                    }
-                    item.Spring = dataFrame.ReadUInt8();
-                    item.Summer = dataFrame.ReadUInt8();
-                    item.Fall = dataFrame.ReadUInt8();
-                    item.Winter = dataFrame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Winter);
+                    item.SeasonalIngredientProduction = Mutagen.Bethesda.Oblivion.SeasonalIngredientProduction.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.SeasonalIngredientProduction);
                 }
                 default:
                     return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -1763,11 +1538,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Script = object.Equals(item.Script, rhs.Script);
             ret.Ingredient = object.Equals(item.Ingredient, rhs.Ingredient);
-            ret.Spring = item.Spring == rhs.Spring;
-            ret.Summer = item.Summer == rhs.Summer;
-            ret.Fall = item.Fall == rhs.Fall;
-            ret.Winter = item.Winter == rhs.Winter;
-            ret.PFPCDataTypeState = item.PFPCDataTypeState == rhs.PFPCDataTypeState;
+            ret.SeasonalIngredientProduction = EqualsMaskHelper.EqualsHelper(
+                item.SeasonalIngredientProduction,
+                rhs.SeasonalIngredientProduction,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1839,25 +1614,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IngredientItem, "Ingredient");
             }
-            if (printMask?.Spring ?? true)
+            if ((printMask?.SeasonalIngredientProduction?.Overall ?? true)
+                && item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
             {
-                fg.AppendItem(item.Spring, "Spring");
-            }
-            if (printMask?.Summer ?? true)
-            {
-                fg.AppendItem(item.Summer, "Summer");
-            }
-            if (printMask?.Fall ?? true)
-            {
-                fg.AppendItem(item.Fall, "Fall");
-            }
-            if (printMask?.Winter ?? true)
-            {
-                fg.AppendItem(item.Winter, "Winter");
-            }
-            if (printMask?.PFPCDataTypeState ?? true)
-            {
-                fg.AppendItem(item.PFPCDataTypeState, "PFPCDataTypeState");
+                SeasonalIngredientProductionItem?.ToString(fg, "SeasonalIngredientProduction");
             }
         }
         
@@ -1870,6 +1630,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != (item.Ingredient.FormKey != null)) return false;
+            if (checkMask.SeasonalIngredientProduction?.Overall.HasValue ?? false && checkMask.SeasonalIngredientProduction.Overall.Value != (item.SeasonalIngredientProduction != null)) return false;
+            if (checkMask.SeasonalIngredientProduction?.Specific != null && (item.SeasonalIngredientProduction == null || !item.SeasonalIngredientProduction.HasBeenSet(checkMask.SeasonalIngredientProduction.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1884,11 +1646,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = (item.Script.FormKey != null);
             mask.Ingredient = (item.Ingredient.FormKey != null);
-            mask.Spring = true;
-            mask.Summer = true;
-            mask.Fall = true;
-            mask.Winter = true;
-            mask.PFPCDataTypeState = true;
+            var itemSeasonalIngredientProduction = item.SeasonalIngredientProduction;
+            mask.SeasonalIngredientProduction = new MaskItem<bool, SeasonalIngredientProduction.Mask<bool>?>(itemSeasonalIngredientProduction != null, itemSeasonalIngredientProduction?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1942,11 +1701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
-            if (lhs.Spring != rhs.Spring) return false;
-            if (lhs.Summer != rhs.Summer) return false;
-            if (lhs.Fall != rhs.Fall) return false;
-            if (lhs.Winter != rhs.Winter) return false;
-            if (lhs.PFPCDataTypeState != rhs.PFPCDataTypeState) return false;
+            if (!object.Equals(lhs.SeasonalIngredientProduction, rhs.SeasonalIngredientProduction)) return false;
             return true;
         }
         
@@ -1987,11 +1742,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Ingredientitem);
             }
-            hash.Add(item.Spring);
-            hash.Add(item.Summer);
-            hash.Add(item.Fall);
-            hash.Add(item.Winter);
-            hash.Add(item.PFPCDataTypeState);
+            if (item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionitem))
+            {
+                hash.Add(SeasonalIngredientProductionitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2107,25 +1861,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Ingredient.FormKey = rhs.Ingredient.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.SeasonalIngredientProduction) ?? true))
             {
-                item.Spring = rhs.Spring;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
-            {
-                item.Summer = rhs.Summer;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
-            {
-                item.Fall = rhs.Fall;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
-            {
-                item.Winter = rhs.Winter;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.PFPCDataTypeState) ?? true))
-            {
-                item.PFPCDataTypeState = rhs.PFPCDataTypeState;
+                errorMask?.PushIndex((int)Flora_FieldIndex.SeasonalIngredientProduction);
+                try
+                {
+                    if(rhs.SeasonalIngredientProduction.TryGet(out var rhsSeasonalIngredientProduction))
+                    {
+                        item.SeasonalIngredientProduction = rhsSeasonalIngredientProduction.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.SeasonalIngredientProduction));
+                    }
+                    else
+                    {
+                        item.SeasonalIngredientProduction = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2313,53 +2073,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Flora_FieldIndex.Ingredient,
                     errorMask: errorMask);
             }
-            if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
+            if ((item.SeasonalIngredientProduction != null)
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.SeasonalIngredientProduction) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
+                if (item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
                 {
-                    ByteXmlTranslation.Instance.Write(
+                    ((SeasonalIngredientProductionXmlWriteTranslation)((IXmlItem)SeasonalIngredientProductionItem).XmlWriteTranslator).Write(
+                        item: SeasonalIngredientProductionItem,
                         node: node,
-                        name: nameof(item.Spring),
-                        item: item.Spring,
-                        fieldIndex: (int)Flora_FieldIndex.Spring,
-                        errorMask: errorMask);
+                        name: nameof(item.SeasonalIngredientProduction),
+                        fieldIndex: (int)Flora_FieldIndex.SeasonalIngredientProduction,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.SeasonalIngredientProduction));
                 }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Summer),
-                        item: item.Summer,
-                        fieldIndex: (int)Flora_FieldIndex.Summer,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fall),
-                        item: item.Fall,
-                        fieldIndex: (int)Flora_FieldIndex.Fall,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Winter),
-                        item: item.Winter,
-                        fieldIndex: (int)Flora_FieldIndex.Winter,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.PFPCDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Flora.PFPCDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PFPCDataTypeState),
-                    item: item.PFPCDataTypeState,
-                    fieldIndex: (int)Flora_FieldIndex.PFPCDataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -2541,86 +2267,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Spring":
-                    errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
+                case "SeasonalIngredientProduction":
+                    errorMask?.PushIndex((int)Flora_FieldIndex.SeasonalIngredientProduction);
                     try
                     {
-                        item.Spring = ByteXmlTranslation.Instance.Parse(
+                        item.SeasonalIngredientProduction = LoquiXmlTranslation<SeasonalIngredientProduction>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.PFPCDataTypeState |= Flora.PFPCDataType.Has;
-                    break;
-                case "Summer":
-                    errorMask?.PushIndex((int)Flora_FieldIndex.Summer);
-                    try
-                    {
-                        item.Summer = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fall":
-                    errorMask?.PushIndex((int)Flora_FieldIndex.Fall);
-                    try
-                    {
-                        item.Fall = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Winter":
-                    errorMask?.PushIndex((int)Flora_FieldIndex.Winter);
-                    try
-                    {
-                        item.Winter = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PFPCDataTypeState":
-                    errorMask?.PushIndex((int)Flora_FieldIndex.PFPCDataTypeState);
-                    try
-                    {
-                        item.PFPCDataTypeState = EnumXmlTranslation<Flora.PFPCDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.SeasonalIngredientProduction));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2718,15 +2372,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static FloraBinaryWriteTranslation Instance = new FloraBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IFloraGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IFloraGetter item,
             MutagenWriter writer,
@@ -2755,15 +2400,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Ingredient,
                 header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER));
-            if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
+            if (item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
-                {
-                    writer.Write(item.Spring);
-                    writer.Write(item.Summer);
-                    writer.Write(item.Fall);
-                    writer.Write(item.Winter);
-                }
+                ((SeasonalIngredientProductionBinaryWriteTranslation)((IBinaryItem)SeasonalIngredientProductionItem).BinaryWriteTranslator).Write(
+                    item: SeasonalIngredientProductionItem,
+                    writer: writer);
             }
         }
 
@@ -2777,7 +2418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Flora_Registration.FLOR_HEADER,
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -2906,27 +2547,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Ingredient_IsSet => _IngredientLocation.HasValue;
         public IFormLinkNullableGetter<IIngredientGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IIngredientGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IngredientLocation.Value, _package.Meta)))) : FormLinkNullable<IIngredientGetter>.Empty;
         #endregion
-        private int? _PFPCLocation;
-        public Flora.PFPCDataType PFPCDataTypeState { get; private set; }
-        #region Spring
-        private int _SpringLocation => _PFPCLocation!.Value + 0x0;
-        private bool _Spring_IsSet => _PFPCLocation.HasValue;
-        public Byte Spring => _Spring_IsSet ? _data.Span[_SpringLocation] : default;
-        #endregion
-        #region Summer
-        private int _SummerLocation => _PFPCLocation!.Value + 0x1;
-        private bool _Summer_IsSet => _PFPCLocation.HasValue;
-        public Byte Summer => _Summer_IsSet ? _data.Span[_SummerLocation] : default;
-        #endregion
-        #region Fall
-        private int _FallLocation => _PFPCLocation!.Value + 0x2;
-        private bool _Fall_IsSet => _PFPCLocation.HasValue;
-        public Byte Fall => _Fall_IsSet ? _data.Span[_FallLocation] : default;
-        #endregion
-        #region Winter
-        private int _WinterLocation => _PFPCLocation!.Value + 0x3;
-        private bool _Winter_IsSet => _PFPCLocation.HasValue;
-        public Byte Winter => _Winter_IsSet ? _data.Span[_WinterLocation] : default;
+        #region SeasonalIngredientProduction
+        private RangeInt32? _SeasonalIngredientProductionLocation;
+        private bool _SeasonalIngredientProduction_IsSet => _SeasonalIngredientProductionLocation.HasValue;
+        public ISeasonalIngredientProductionGetter? SeasonalIngredientProduction => _SeasonalIngredientProduction_IsSet ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new BinaryMemoryReadStream(_data.Slice(_SeasonalIngredientProductionLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool SeasonalIngredientProduction_IsSet => _SeasonalIngredientProductionLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3003,9 +2628,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x43504650: // PFPC
                 {
-                    _PFPCLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.PFPCDataTypeState = Flora.PFPCDataType.Has;
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Winter);
+                    _SeasonalIngredientProductionLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.SeasonalIngredientProduction);
                 }
                 default:
                     return base.FillRecordType(

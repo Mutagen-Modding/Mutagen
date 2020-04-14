@@ -4,15 +4,16 @@
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
-      <Data recordType="ENIT">
-        <Fields>
-          <Enum name="Type" enumName="Enchantment.EnchantmentType" byteLength="4" />
-          <UInt32 name="ChargeAmount" />
-          <UInt32 name="EnchantCost" />
-          <Enum name="Flags" enumName="Enchantment.Flag" byteLength="4" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="EnchantmentData" />
       <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+  <Object name="EnchantmentData" objType="Subrecord" recordType="ENIT" GUID="76cd10d5-9756-4d70-92e8-be1435a44a35" ID="189">
+    <Fields>
+      <Enum name="Type" enumName="Enchantment.EnchantmentType" byteLength="4" />
+      <UInt32 name="ChargeAmount" />
+      <UInt32 name="EnchantCost" />
+      <Enum name="Flags" enumName="Enchantment.Flag" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

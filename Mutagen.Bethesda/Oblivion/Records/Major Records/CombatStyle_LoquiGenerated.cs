@@ -48,507 +48,16 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region DodgePercentChance
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _DodgePercentChance;
-        public Byte DodgePercentChance
+        private CombatStyleData? _Data;
+        public CombatStyleData? Data
         {
-            get => this._DodgePercentChance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._DodgePercentChance = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        public static RangeUInt8 DodgePercentChance_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region LeftRightPercentChance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _LeftRightPercentChance;
-        public Byte LeftRightPercentChance
-        {
-            get => this._LeftRightPercentChance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._LeftRightPercentChance = value;
-            }
-        }
-        public static RangeUInt8 LeftRightPercentChance_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region DodgeLeftRightTimerMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DodgeLeftRightTimerMin;
-        public Single DodgeLeftRightTimerMin
-        {
-            get => this._DodgeLeftRightTimerMin;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._DodgeLeftRightTimerMin = value;
-            }
-        }
-        #endregion
-        #region DodgeLeftRightTimerMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DodgeLeftRightTimerMax;
-        public Single DodgeLeftRightTimerMax
-        {
-            get => this._DodgeLeftRightTimerMax;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._DodgeLeftRightTimerMax = value;
-            }
-        }
-        #endregion
-        #region DodgeForwardTimerMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DodgeForwardTimerMin;
-        public Single DodgeForwardTimerMin
-        {
-            get => this._DodgeForwardTimerMin;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._DodgeForwardTimerMin = value;
-            }
-        }
-        #endregion
-        #region DodgeForwardTimerMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DodgeForwardTimerMax;
-        public Single DodgeForwardTimerMax
-        {
-            get => this._DodgeForwardTimerMax;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._DodgeForwardTimerMax = value;
-            }
-        }
-        #endregion
-        #region DodgeBackTimerMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DodgeBackTimerMin;
-        public Single DodgeBackTimerMin
-        {
-            get => this._DodgeBackTimerMin;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._DodgeBackTimerMin = value;
-            }
-        }
-        #endregion
-        #region DodgeBackTimerMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DodgeBackTimerMax;
-        public Single DodgeBackTimerMax
-        {
-            get => this._DodgeBackTimerMax;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._DodgeBackTimerMax = value;
-            }
-        }
-        #endregion
-        #region IdleTimerMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _IdleTimerMin;
-        public Single IdleTimerMin
-        {
-            get => this._IdleTimerMin;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._IdleTimerMin = value;
-            }
-        }
-        #endregion
-        #region IdleTimerMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _IdleTimerMax;
-        public Single IdleTimerMax
-        {
-            get => this._IdleTimerMax;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._IdleTimerMax = value;
-            }
-        }
-        #endregion
-        #region BlockPercentChance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _BlockPercentChance;
-        public Byte BlockPercentChance
-        {
-            get => this._BlockPercentChance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._BlockPercentChance = value;
-            }
-        }
-        public static RangeUInt8 BlockPercentChance_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region AttackPercentChance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _AttackPercentChance;
-        public Byte AttackPercentChance
-        {
-            get => this._AttackPercentChance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._AttackPercentChance = value;
-            }
-        }
-        public static RangeUInt8 AttackPercentChance_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region RecoilStaggerBonusToAttack
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RecoilStaggerBonusToAttack;
-        public Single RecoilStaggerBonusToAttack
-        {
-            get => this._RecoilStaggerBonusToAttack;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._RecoilStaggerBonusToAttack = value;
-            }
-        }
-        #endregion
-        #region UnconsciousBonusToAttack
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _UnconsciousBonusToAttack;
-        public Single UnconsciousBonusToAttack
-        {
-            get => this._UnconsciousBonusToAttack;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._UnconsciousBonusToAttack = value;
-            }
-        }
-        #endregion
-        #region HandToHandBonusToAttack
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HandToHandBonusToAttack;
-        public Single HandToHandBonusToAttack
-        {
-            get => this._HandToHandBonusToAttack;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._HandToHandBonusToAttack = value;
-            }
-        }
-        #endregion
-        #region PowerAttackPercentChance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PowerAttackPercentChance;
-        public Byte PowerAttackPercentChance
-        {
-            get => this._PowerAttackPercentChance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._PowerAttackPercentChance = value;
-            }
-        }
-        public static RangeUInt8 PowerAttackPercentChance_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region RecoilStaggerBonusToPowerAttack
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RecoilStaggerBonusToPowerAttack;
-        public Single RecoilStaggerBonusToPowerAttack
-        {
-            get => this._RecoilStaggerBonusToPowerAttack;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._RecoilStaggerBonusToPowerAttack = value;
-            }
-        }
-        #endregion
-        #region UnconsciousBonusToPowerAttack
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _UnconsciousBonusToPowerAttack;
-        public Single UnconsciousBonusToPowerAttack
-        {
-            get => this._UnconsciousBonusToPowerAttack;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._UnconsciousBonusToPowerAttack = value;
-            }
-        }
-        #endregion
-        #region PowerAttackNormal
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PowerAttackNormal;
-        public Byte PowerAttackNormal
-        {
-            get => this._PowerAttackNormal;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._PowerAttackNormal = value;
-            }
-        }
-        public static RangeUInt8 PowerAttackNormal_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region PowerAttackForward
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PowerAttackForward;
-        public Byte PowerAttackForward
-        {
-            get => this._PowerAttackForward;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._PowerAttackForward = value;
-            }
-        }
-        public static RangeUInt8 PowerAttackForward_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region PowerAttackBack
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PowerAttackBack;
-        public Byte PowerAttackBack
-        {
-            get => this._PowerAttackBack;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._PowerAttackBack = value;
-            }
-        }
-        public static RangeUInt8 PowerAttackBack_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region PowerAttackLeft
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PowerAttackLeft;
-        public Byte PowerAttackLeft
-        {
-            get => this._PowerAttackLeft;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._PowerAttackLeft = value;
-            }
-        }
-        public static RangeUInt8 PowerAttackLeft_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region PowerAttackRight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PowerAttackRight;
-        public Byte PowerAttackRight
-        {
-            get => this._PowerAttackRight;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._PowerAttackRight = value;
-            }
-        }
-        public static RangeUInt8 PowerAttackRight_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region HoldTimerMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HoldTimerMin;
-        public Single HoldTimerMin
-        {
-            get => this._HoldTimerMin;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._HoldTimerMin = value;
-            }
-        }
-        #endregion
-        #region HoldTimerMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HoldTimerMax;
-        public Single HoldTimerMax
-        {
-            get => this._HoldTimerMax;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._HoldTimerMax = value;
-            }
-        }
-        #endregion
-        #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private CombatStyle.Flag _Flags;
-        public CombatStyle.Flag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._Flags = value;
-            }
-        }
-        #endregion
-        #region AcrobaticDodgePercentChance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _AcrobaticDodgePercentChance;
-        public Byte AcrobaticDodgePercentChance
-        {
-            get => this._AcrobaticDodgePercentChance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this._AcrobaticDodgePercentChance = value;
-            }
-        }
-        public static RangeUInt8 AcrobaticDodgePercentChance_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region RangeMultOptimal
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RangeMultOptimal;
-        public Single RangeMultOptimal
-        {
-            get => this._RangeMultOptimal;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this._RangeMultOptimal = value;
-            }
-        }
-        #endregion
-        #region RangeMultMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RangeMultMax;
-        public Single RangeMultMax
-        {
-            get => this._RangeMultMax;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this._RangeMultMax = value;
-            }
-        }
-        #endregion
-        #region SwitchDistanceMelee
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _SwitchDistanceMelee;
-        public Single SwitchDistanceMelee
-        {
-            get => this._SwitchDistanceMelee;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this._SwitchDistanceMelee = value;
-            }
-        }
-        #endregion
-        #region SwitchDistanceRanged
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _SwitchDistanceRanged;
-        public Single SwitchDistanceRanged
-        {
-            get => this._SwitchDistanceRanged;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this._SwitchDistanceRanged = value;
-            }
-        }
-        #endregion
-        #region BuffStandoffDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _BuffStandoffDistance;
-        public Single BuffStandoffDistance
-        {
-            get => this._BuffStandoffDistance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this._BuffStandoffDistance = value;
-            }
-        }
-        #endregion
-        #region RangedStandoffDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RangedStandoffDistance;
-        public Single RangedStandoffDistance
-        {
-            get => this._RangedStandoffDistance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break2;
-                this._RangedStandoffDistance = value;
-            }
-        }
-        #endregion
-        #region GroupStandoffDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _GroupStandoffDistance;
-        public Single GroupStandoffDistance
-        {
-            get => this._GroupStandoffDistance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break2;
-                this._GroupStandoffDistance = value;
-            }
-        }
-        #endregion
-        #region RushingAttackPercentChance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _RushingAttackPercentChance;
-        public Byte RushingAttackPercentChance
-        {
-            get => this._RushingAttackPercentChance;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break2;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break3;
-                this._RushingAttackPercentChance = value;
-            }
-        }
-        public static RangeUInt8 RushingAttackPercentChance_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region RushingAttackDistanceMult
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RushingAttackDistanceMult;
-        public Single RushingAttackDistanceMult
-        {
-            get => this._RushingAttackDistanceMult;
-            set
-            {
-                this.CSTDDataTypeState |= CSTDDataType.Has;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break2;
-                this.CSTDDataTypeState &= ~CSTDDataType.Break3;
-                this._RushingAttackDistanceMult = value;
-            }
-        }
+        ICombatStyleDataGetter? ICombatStyleGetter.Data => this.Data;
         #endregion
         #region Advanced
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -560,9 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ICombatStyleAdvancedGetter? ICombatStyleGetter.Advanced => this.Advanced;
-        #endregion
-        #region CSTDDataTypeState
-        public CombatStyle.CSTDDataType CSTDDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -734,44 +240,8 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.DodgePercentChance = initialValue;
-                this.LeftRightPercentChance = initialValue;
-                this.DodgeLeftRightTimerMin = initialValue;
-                this.DodgeLeftRightTimerMax = initialValue;
-                this.DodgeForwardTimerMin = initialValue;
-                this.DodgeForwardTimerMax = initialValue;
-                this.DodgeBackTimerMin = initialValue;
-                this.DodgeBackTimerMax = initialValue;
-                this.IdleTimerMin = initialValue;
-                this.IdleTimerMax = initialValue;
-                this.BlockPercentChance = initialValue;
-                this.AttackPercentChance = initialValue;
-                this.RecoilStaggerBonusToAttack = initialValue;
-                this.UnconsciousBonusToAttack = initialValue;
-                this.HandToHandBonusToAttack = initialValue;
-                this.PowerAttackPercentChance = initialValue;
-                this.RecoilStaggerBonusToPowerAttack = initialValue;
-                this.UnconsciousBonusToPowerAttack = initialValue;
-                this.PowerAttackNormal = initialValue;
-                this.PowerAttackForward = initialValue;
-                this.PowerAttackBack = initialValue;
-                this.PowerAttackLeft = initialValue;
-                this.PowerAttackRight = initialValue;
-                this.HoldTimerMin = initialValue;
-                this.HoldTimerMax = initialValue;
-                this.Flags = initialValue;
-                this.AcrobaticDodgePercentChance = initialValue;
-                this.RangeMultOptimal = initialValue;
-                this.RangeMultMax = initialValue;
-                this.SwitchDistanceMelee = initialValue;
-                this.SwitchDistanceRanged = initialValue;
-                this.BuffStandoffDistance = initialValue;
-                this.RangedStandoffDistance = initialValue;
-                this.GroupStandoffDistance = initialValue;
-                this.RushingAttackPercentChance = initialValue;
-                this.RushingAttackDistanceMult = initialValue;
+                this.Data = new MaskItem<TItem, CombatStyleData.Mask<TItem>?>(initialValue, new CombatStyleData.Mask<TItem>(initialValue));
                 this.Advanced = new MaskItem<TItem, CombatStyleAdvanced.Mask<TItem>?>(initialValue, new CombatStyleAdvanced.Mask<TItem>(initialValue));
-                this.CSTDDataTypeState = initialValue;
             }
 
             public Mask(
@@ -780,44 +250,8 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Version,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
-                TItem DodgePercentChance,
-                TItem LeftRightPercentChance,
-                TItem DodgeLeftRightTimerMin,
-                TItem DodgeLeftRightTimerMax,
-                TItem DodgeForwardTimerMin,
-                TItem DodgeForwardTimerMax,
-                TItem DodgeBackTimerMin,
-                TItem DodgeBackTimerMax,
-                TItem IdleTimerMin,
-                TItem IdleTimerMax,
-                TItem BlockPercentChance,
-                TItem AttackPercentChance,
-                TItem RecoilStaggerBonusToAttack,
-                TItem UnconsciousBonusToAttack,
-                TItem HandToHandBonusToAttack,
-                TItem PowerAttackPercentChance,
-                TItem RecoilStaggerBonusToPowerAttack,
-                TItem UnconsciousBonusToPowerAttack,
-                TItem PowerAttackNormal,
-                TItem PowerAttackForward,
-                TItem PowerAttackBack,
-                TItem PowerAttackLeft,
-                TItem PowerAttackRight,
-                TItem HoldTimerMin,
-                TItem HoldTimerMax,
-                TItem Flags,
-                TItem AcrobaticDodgePercentChance,
-                TItem RangeMultOptimal,
-                TItem RangeMultMax,
-                TItem SwitchDistanceMelee,
-                TItem SwitchDistanceRanged,
-                TItem BuffStandoffDistance,
-                TItem RangedStandoffDistance,
-                TItem GroupStandoffDistance,
-                TItem RushingAttackPercentChance,
-                TItem RushingAttackDistanceMult,
-                TItem Advanced,
-                TItem CSTDDataTypeState)
+                TItem Data,
+                TItem Advanced)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -825,44 +259,8 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.DodgePercentChance = DodgePercentChance;
-                this.LeftRightPercentChance = LeftRightPercentChance;
-                this.DodgeLeftRightTimerMin = DodgeLeftRightTimerMin;
-                this.DodgeLeftRightTimerMax = DodgeLeftRightTimerMax;
-                this.DodgeForwardTimerMin = DodgeForwardTimerMin;
-                this.DodgeForwardTimerMax = DodgeForwardTimerMax;
-                this.DodgeBackTimerMin = DodgeBackTimerMin;
-                this.DodgeBackTimerMax = DodgeBackTimerMax;
-                this.IdleTimerMin = IdleTimerMin;
-                this.IdleTimerMax = IdleTimerMax;
-                this.BlockPercentChance = BlockPercentChance;
-                this.AttackPercentChance = AttackPercentChance;
-                this.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttack;
-                this.UnconsciousBonusToAttack = UnconsciousBonusToAttack;
-                this.HandToHandBonusToAttack = HandToHandBonusToAttack;
-                this.PowerAttackPercentChance = PowerAttackPercentChance;
-                this.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttack;
-                this.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttack;
-                this.PowerAttackNormal = PowerAttackNormal;
-                this.PowerAttackForward = PowerAttackForward;
-                this.PowerAttackBack = PowerAttackBack;
-                this.PowerAttackLeft = PowerAttackLeft;
-                this.PowerAttackRight = PowerAttackRight;
-                this.HoldTimerMin = HoldTimerMin;
-                this.HoldTimerMax = HoldTimerMax;
-                this.Flags = Flags;
-                this.AcrobaticDodgePercentChance = AcrobaticDodgePercentChance;
-                this.RangeMultOptimal = RangeMultOptimal;
-                this.RangeMultMax = RangeMultMax;
-                this.SwitchDistanceMelee = SwitchDistanceMelee;
-                this.SwitchDistanceRanged = SwitchDistanceRanged;
-                this.BuffStandoffDistance = BuffStandoffDistance;
-                this.RangedStandoffDistance = RangedStandoffDistance;
-                this.GroupStandoffDistance = GroupStandoffDistance;
-                this.RushingAttackPercentChance = RushingAttackPercentChance;
-                this.RushingAttackDistanceMult = RushingAttackDistanceMult;
+                this.Data = new MaskItem<TItem, CombatStyleData.Mask<TItem>?>(Data, new CombatStyleData.Mask<TItem>(Data));
                 this.Advanced = new MaskItem<TItem, CombatStyleAdvanced.Mask<TItem>?>(Advanced, new CombatStyleAdvanced.Mask<TItem>(Advanced));
-                this.CSTDDataTypeState = CSTDDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -874,44 +272,8 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem DodgePercentChance;
-            public TItem LeftRightPercentChance;
-            public TItem DodgeLeftRightTimerMin;
-            public TItem DodgeLeftRightTimerMax;
-            public TItem DodgeForwardTimerMin;
-            public TItem DodgeForwardTimerMax;
-            public TItem DodgeBackTimerMin;
-            public TItem DodgeBackTimerMax;
-            public TItem IdleTimerMin;
-            public TItem IdleTimerMax;
-            public TItem BlockPercentChance;
-            public TItem AttackPercentChance;
-            public TItem RecoilStaggerBonusToAttack;
-            public TItem UnconsciousBonusToAttack;
-            public TItem HandToHandBonusToAttack;
-            public TItem PowerAttackPercentChance;
-            public TItem RecoilStaggerBonusToPowerAttack;
-            public TItem UnconsciousBonusToPowerAttack;
-            public TItem PowerAttackNormal;
-            public TItem PowerAttackForward;
-            public TItem PowerAttackBack;
-            public TItem PowerAttackLeft;
-            public TItem PowerAttackRight;
-            public TItem HoldTimerMin;
-            public TItem HoldTimerMax;
-            public TItem Flags;
-            public TItem AcrobaticDodgePercentChance;
-            public TItem RangeMultOptimal;
-            public TItem RangeMultMax;
-            public TItem SwitchDistanceMelee;
-            public TItem SwitchDistanceRanged;
-            public TItem BuffStandoffDistance;
-            public TItem RangedStandoffDistance;
-            public TItem GroupStandoffDistance;
-            public TItem RushingAttackPercentChance;
-            public TItem RushingAttackDistanceMult;
+            public MaskItem<TItem, CombatStyleData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, CombatStyleAdvanced.Mask<TItem>?>? Advanced { get; set; }
-            public TItem CSTDDataTypeState;
             #endregion
 
             #region Equals
@@ -925,87 +287,15 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.DodgePercentChance, rhs.DodgePercentChance)) return false;
-                if (!object.Equals(this.LeftRightPercentChance, rhs.LeftRightPercentChance)) return false;
-                if (!object.Equals(this.DodgeLeftRightTimerMin, rhs.DodgeLeftRightTimerMin)) return false;
-                if (!object.Equals(this.DodgeLeftRightTimerMax, rhs.DodgeLeftRightTimerMax)) return false;
-                if (!object.Equals(this.DodgeForwardTimerMin, rhs.DodgeForwardTimerMin)) return false;
-                if (!object.Equals(this.DodgeForwardTimerMax, rhs.DodgeForwardTimerMax)) return false;
-                if (!object.Equals(this.DodgeBackTimerMin, rhs.DodgeBackTimerMin)) return false;
-                if (!object.Equals(this.DodgeBackTimerMax, rhs.DodgeBackTimerMax)) return false;
-                if (!object.Equals(this.IdleTimerMin, rhs.IdleTimerMin)) return false;
-                if (!object.Equals(this.IdleTimerMax, rhs.IdleTimerMax)) return false;
-                if (!object.Equals(this.BlockPercentChance, rhs.BlockPercentChance)) return false;
-                if (!object.Equals(this.AttackPercentChance, rhs.AttackPercentChance)) return false;
-                if (!object.Equals(this.RecoilStaggerBonusToAttack, rhs.RecoilStaggerBonusToAttack)) return false;
-                if (!object.Equals(this.UnconsciousBonusToAttack, rhs.UnconsciousBonusToAttack)) return false;
-                if (!object.Equals(this.HandToHandBonusToAttack, rhs.HandToHandBonusToAttack)) return false;
-                if (!object.Equals(this.PowerAttackPercentChance, rhs.PowerAttackPercentChance)) return false;
-                if (!object.Equals(this.RecoilStaggerBonusToPowerAttack, rhs.RecoilStaggerBonusToPowerAttack)) return false;
-                if (!object.Equals(this.UnconsciousBonusToPowerAttack, rhs.UnconsciousBonusToPowerAttack)) return false;
-                if (!object.Equals(this.PowerAttackNormal, rhs.PowerAttackNormal)) return false;
-                if (!object.Equals(this.PowerAttackForward, rhs.PowerAttackForward)) return false;
-                if (!object.Equals(this.PowerAttackBack, rhs.PowerAttackBack)) return false;
-                if (!object.Equals(this.PowerAttackLeft, rhs.PowerAttackLeft)) return false;
-                if (!object.Equals(this.PowerAttackRight, rhs.PowerAttackRight)) return false;
-                if (!object.Equals(this.HoldTimerMin, rhs.HoldTimerMin)) return false;
-                if (!object.Equals(this.HoldTimerMax, rhs.HoldTimerMax)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.AcrobaticDodgePercentChance, rhs.AcrobaticDodgePercentChance)) return false;
-                if (!object.Equals(this.RangeMultOptimal, rhs.RangeMultOptimal)) return false;
-                if (!object.Equals(this.RangeMultMax, rhs.RangeMultMax)) return false;
-                if (!object.Equals(this.SwitchDistanceMelee, rhs.SwitchDistanceMelee)) return false;
-                if (!object.Equals(this.SwitchDistanceRanged, rhs.SwitchDistanceRanged)) return false;
-                if (!object.Equals(this.BuffStandoffDistance, rhs.BuffStandoffDistance)) return false;
-                if (!object.Equals(this.RangedStandoffDistance, rhs.RangedStandoffDistance)) return false;
-                if (!object.Equals(this.GroupStandoffDistance, rhs.GroupStandoffDistance)) return false;
-                if (!object.Equals(this.RushingAttackPercentChance, rhs.RushingAttackPercentChance)) return false;
-                if (!object.Equals(this.RushingAttackDistanceMult, rhs.RushingAttackDistanceMult)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Advanced, rhs.Advanced)) return false;
-                if (!object.Equals(this.CSTDDataTypeState, rhs.CSTDDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.DodgePercentChance);
-                hash.Add(this.LeftRightPercentChance);
-                hash.Add(this.DodgeLeftRightTimerMin);
-                hash.Add(this.DodgeLeftRightTimerMax);
-                hash.Add(this.DodgeForwardTimerMin);
-                hash.Add(this.DodgeForwardTimerMax);
-                hash.Add(this.DodgeBackTimerMin);
-                hash.Add(this.DodgeBackTimerMax);
-                hash.Add(this.IdleTimerMin);
-                hash.Add(this.IdleTimerMax);
-                hash.Add(this.BlockPercentChance);
-                hash.Add(this.AttackPercentChance);
-                hash.Add(this.RecoilStaggerBonusToAttack);
-                hash.Add(this.UnconsciousBonusToAttack);
-                hash.Add(this.HandToHandBonusToAttack);
-                hash.Add(this.PowerAttackPercentChance);
-                hash.Add(this.RecoilStaggerBonusToPowerAttack);
-                hash.Add(this.UnconsciousBonusToPowerAttack);
-                hash.Add(this.PowerAttackNormal);
-                hash.Add(this.PowerAttackForward);
-                hash.Add(this.PowerAttackBack);
-                hash.Add(this.PowerAttackLeft);
-                hash.Add(this.PowerAttackRight);
-                hash.Add(this.HoldTimerMin);
-                hash.Add(this.HoldTimerMax);
-                hash.Add(this.Flags);
-                hash.Add(this.AcrobaticDodgePercentChance);
-                hash.Add(this.RangeMultOptimal);
-                hash.Add(this.RangeMultMax);
-                hash.Add(this.SwitchDistanceMelee);
-                hash.Add(this.SwitchDistanceRanged);
-                hash.Add(this.BuffStandoffDistance);
-                hash.Add(this.RangedStandoffDistance);
-                hash.Add(this.GroupStandoffDistance);
-                hash.Add(this.RushingAttackPercentChance);
-                hash.Add(this.RushingAttackDistanceMult);
+                hash.Add(this.Data);
                 hash.Add(this.Advanced);
-                hash.Add(this.CSTDDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1016,48 +306,16 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.DodgePercentChance)) return false;
-                if (!eval(this.LeftRightPercentChance)) return false;
-                if (!eval(this.DodgeLeftRightTimerMin)) return false;
-                if (!eval(this.DodgeLeftRightTimerMax)) return false;
-                if (!eval(this.DodgeForwardTimerMin)) return false;
-                if (!eval(this.DodgeForwardTimerMax)) return false;
-                if (!eval(this.DodgeBackTimerMin)) return false;
-                if (!eval(this.DodgeBackTimerMax)) return false;
-                if (!eval(this.IdleTimerMin)) return false;
-                if (!eval(this.IdleTimerMax)) return false;
-                if (!eval(this.BlockPercentChance)) return false;
-                if (!eval(this.AttackPercentChance)) return false;
-                if (!eval(this.RecoilStaggerBonusToAttack)) return false;
-                if (!eval(this.UnconsciousBonusToAttack)) return false;
-                if (!eval(this.HandToHandBonusToAttack)) return false;
-                if (!eval(this.PowerAttackPercentChance)) return false;
-                if (!eval(this.RecoilStaggerBonusToPowerAttack)) return false;
-                if (!eval(this.UnconsciousBonusToPowerAttack)) return false;
-                if (!eval(this.PowerAttackNormal)) return false;
-                if (!eval(this.PowerAttackForward)) return false;
-                if (!eval(this.PowerAttackBack)) return false;
-                if (!eval(this.PowerAttackLeft)) return false;
-                if (!eval(this.PowerAttackRight)) return false;
-                if (!eval(this.HoldTimerMin)) return false;
-                if (!eval(this.HoldTimerMax)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.AcrobaticDodgePercentChance)) return false;
-                if (!eval(this.RangeMultOptimal)) return false;
-                if (!eval(this.RangeMultMax)) return false;
-                if (!eval(this.SwitchDistanceMelee)) return false;
-                if (!eval(this.SwitchDistanceRanged)) return false;
-                if (!eval(this.BuffStandoffDistance)) return false;
-                if (!eval(this.RangedStandoffDistance)) return false;
-                if (!eval(this.GroupStandoffDistance)) return false;
-                if (!eval(this.RushingAttackPercentChance)) return false;
-                if (!eval(this.RushingAttackDistanceMult)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (Advanced != null)
                 {
                     if (!eval(this.Advanced.Overall)) return false;
                     if (this.Advanced.Specific != null && !this.Advanced.Specific.All(eval)) return false;
                 }
-                if (!eval(this.CSTDDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1066,48 +324,16 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.DodgePercentChance)) return true;
-                if (eval(this.LeftRightPercentChance)) return true;
-                if (eval(this.DodgeLeftRightTimerMin)) return true;
-                if (eval(this.DodgeLeftRightTimerMax)) return true;
-                if (eval(this.DodgeForwardTimerMin)) return true;
-                if (eval(this.DodgeForwardTimerMax)) return true;
-                if (eval(this.DodgeBackTimerMin)) return true;
-                if (eval(this.DodgeBackTimerMax)) return true;
-                if (eval(this.IdleTimerMin)) return true;
-                if (eval(this.IdleTimerMax)) return true;
-                if (eval(this.BlockPercentChance)) return true;
-                if (eval(this.AttackPercentChance)) return true;
-                if (eval(this.RecoilStaggerBonusToAttack)) return true;
-                if (eval(this.UnconsciousBonusToAttack)) return true;
-                if (eval(this.HandToHandBonusToAttack)) return true;
-                if (eval(this.PowerAttackPercentChance)) return true;
-                if (eval(this.RecoilStaggerBonusToPowerAttack)) return true;
-                if (eval(this.UnconsciousBonusToPowerAttack)) return true;
-                if (eval(this.PowerAttackNormal)) return true;
-                if (eval(this.PowerAttackForward)) return true;
-                if (eval(this.PowerAttackBack)) return true;
-                if (eval(this.PowerAttackLeft)) return true;
-                if (eval(this.PowerAttackRight)) return true;
-                if (eval(this.HoldTimerMin)) return true;
-                if (eval(this.HoldTimerMax)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.AcrobaticDodgePercentChance)) return true;
-                if (eval(this.RangeMultOptimal)) return true;
-                if (eval(this.RangeMultMax)) return true;
-                if (eval(this.SwitchDistanceMelee)) return true;
-                if (eval(this.SwitchDistanceRanged)) return true;
-                if (eval(this.BuffStandoffDistance)) return true;
-                if (eval(this.RangedStandoffDistance)) return true;
-                if (eval(this.GroupStandoffDistance)) return true;
-                if (eval(this.RushingAttackPercentChance)) return true;
-                if (eval(this.RushingAttackDistanceMult)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (Advanced != null)
                 {
                     if (eval(this.Advanced.Overall)) return true;
                     if (this.Advanced.Specific != null && this.Advanced.Specific.Any(eval)) return true;
                 }
-                if (eval(this.CSTDDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1123,44 +349,8 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.DodgePercentChance = eval(this.DodgePercentChance);
-                obj.LeftRightPercentChance = eval(this.LeftRightPercentChance);
-                obj.DodgeLeftRightTimerMin = eval(this.DodgeLeftRightTimerMin);
-                obj.DodgeLeftRightTimerMax = eval(this.DodgeLeftRightTimerMax);
-                obj.DodgeForwardTimerMin = eval(this.DodgeForwardTimerMin);
-                obj.DodgeForwardTimerMax = eval(this.DodgeForwardTimerMax);
-                obj.DodgeBackTimerMin = eval(this.DodgeBackTimerMin);
-                obj.DodgeBackTimerMax = eval(this.DodgeBackTimerMax);
-                obj.IdleTimerMin = eval(this.IdleTimerMin);
-                obj.IdleTimerMax = eval(this.IdleTimerMax);
-                obj.BlockPercentChance = eval(this.BlockPercentChance);
-                obj.AttackPercentChance = eval(this.AttackPercentChance);
-                obj.RecoilStaggerBonusToAttack = eval(this.RecoilStaggerBonusToAttack);
-                obj.UnconsciousBonusToAttack = eval(this.UnconsciousBonusToAttack);
-                obj.HandToHandBonusToAttack = eval(this.HandToHandBonusToAttack);
-                obj.PowerAttackPercentChance = eval(this.PowerAttackPercentChance);
-                obj.RecoilStaggerBonusToPowerAttack = eval(this.RecoilStaggerBonusToPowerAttack);
-                obj.UnconsciousBonusToPowerAttack = eval(this.UnconsciousBonusToPowerAttack);
-                obj.PowerAttackNormal = eval(this.PowerAttackNormal);
-                obj.PowerAttackForward = eval(this.PowerAttackForward);
-                obj.PowerAttackBack = eval(this.PowerAttackBack);
-                obj.PowerAttackLeft = eval(this.PowerAttackLeft);
-                obj.PowerAttackRight = eval(this.PowerAttackRight);
-                obj.HoldTimerMin = eval(this.HoldTimerMin);
-                obj.HoldTimerMax = eval(this.HoldTimerMax);
-                obj.Flags = eval(this.Flags);
-                obj.AcrobaticDodgePercentChance = eval(this.AcrobaticDodgePercentChance);
-                obj.RangeMultOptimal = eval(this.RangeMultOptimal);
-                obj.RangeMultMax = eval(this.RangeMultMax);
-                obj.SwitchDistanceMelee = eval(this.SwitchDistanceMelee);
-                obj.SwitchDistanceRanged = eval(this.SwitchDistanceRanged);
-                obj.BuffStandoffDistance = eval(this.BuffStandoffDistance);
-                obj.RangedStandoffDistance = eval(this.RangedStandoffDistance);
-                obj.GroupStandoffDistance = eval(this.GroupStandoffDistance);
-                obj.RushingAttackPercentChance = eval(this.RushingAttackPercentChance);
-                obj.RushingAttackDistanceMult = eval(this.RushingAttackDistanceMult);
+                obj.Data = this.Data == null ? null : new MaskItem<R, CombatStyleData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.Advanced = this.Advanced == null ? null : new MaskItem<R, CombatStyleAdvanced.Mask<R>?>(eval(this.Advanced.Overall), this.Advanced.Specific?.Translate(eval));
-                obj.CSTDDataTypeState = eval(this.CSTDDataTypeState);
             }
             #endregion
 
@@ -1183,157 +373,13 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.DodgePercentChance ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(DodgePercentChance, "DodgePercentChance");
-                    }
-                    if (printMask?.LeftRightPercentChance ?? true)
-                    {
-                        fg.AppendItem(LeftRightPercentChance, "LeftRightPercentChance");
-                    }
-                    if (printMask?.DodgeLeftRightTimerMin ?? true)
-                    {
-                        fg.AppendItem(DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
-                    }
-                    if (printMask?.DodgeLeftRightTimerMax ?? true)
-                    {
-                        fg.AppendItem(DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
-                    }
-                    if (printMask?.DodgeForwardTimerMin ?? true)
-                    {
-                        fg.AppendItem(DodgeForwardTimerMin, "DodgeForwardTimerMin");
-                    }
-                    if (printMask?.DodgeForwardTimerMax ?? true)
-                    {
-                        fg.AppendItem(DodgeForwardTimerMax, "DodgeForwardTimerMax");
-                    }
-                    if (printMask?.DodgeBackTimerMin ?? true)
-                    {
-                        fg.AppendItem(DodgeBackTimerMin, "DodgeBackTimerMin");
-                    }
-                    if (printMask?.DodgeBackTimerMax ?? true)
-                    {
-                        fg.AppendItem(DodgeBackTimerMax, "DodgeBackTimerMax");
-                    }
-                    if (printMask?.IdleTimerMin ?? true)
-                    {
-                        fg.AppendItem(IdleTimerMin, "IdleTimerMin");
-                    }
-                    if (printMask?.IdleTimerMax ?? true)
-                    {
-                        fg.AppendItem(IdleTimerMax, "IdleTimerMax");
-                    }
-                    if (printMask?.BlockPercentChance ?? true)
-                    {
-                        fg.AppendItem(BlockPercentChance, "BlockPercentChance");
-                    }
-                    if (printMask?.AttackPercentChance ?? true)
-                    {
-                        fg.AppendItem(AttackPercentChance, "AttackPercentChance");
-                    }
-                    if (printMask?.RecoilStaggerBonusToAttack ?? true)
-                    {
-                        fg.AppendItem(RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
-                    }
-                    if (printMask?.UnconsciousBonusToAttack ?? true)
-                    {
-                        fg.AppendItem(UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
-                    }
-                    if (printMask?.HandToHandBonusToAttack ?? true)
-                    {
-                        fg.AppendItem(HandToHandBonusToAttack, "HandToHandBonusToAttack");
-                    }
-                    if (printMask?.PowerAttackPercentChance ?? true)
-                    {
-                        fg.AppendItem(PowerAttackPercentChance, "PowerAttackPercentChance");
-                    }
-                    if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
-                    {
-                        fg.AppendItem(RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
-                    }
-                    if (printMask?.UnconsciousBonusToPowerAttack ?? true)
-                    {
-                        fg.AppendItem(UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
-                    }
-                    if (printMask?.PowerAttackNormal ?? true)
-                    {
-                        fg.AppendItem(PowerAttackNormal, "PowerAttackNormal");
-                    }
-                    if (printMask?.PowerAttackForward ?? true)
-                    {
-                        fg.AppendItem(PowerAttackForward, "PowerAttackForward");
-                    }
-                    if (printMask?.PowerAttackBack ?? true)
-                    {
-                        fg.AppendItem(PowerAttackBack, "PowerAttackBack");
-                    }
-                    if (printMask?.PowerAttackLeft ?? true)
-                    {
-                        fg.AppendItem(PowerAttackLeft, "PowerAttackLeft");
-                    }
-                    if (printMask?.PowerAttackRight ?? true)
-                    {
-                        fg.AppendItem(PowerAttackRight, "PowerAttackRight");
-                    }
-                    if (printMask?.HoldTimerMin ?? true)
-                    {
-                        fg.AppendItem(HoldTimerMin, "HoldTimerMin");
-                    }
-                    if (printMask?.HoldTimerMax ?? true)
-                    {
-                        fg.AppendItem(HoldTimerMax, "HoldTimerMax");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.AcrobaticDodgePercentChance ?? true)
-                    {
-                        fg.AppendItem(AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
-                    }
-                    if (printMask?.RangeMultOptimal ?? true)
-                    {
-                        fg.AppendItem(RangeMultOptimal, "RangeMultOptimal");
-                    }
-                    if (printMask?.RangeMultMax ?? true)
-                    {
-                        fg.AppendItem(RangeMultMax, "RangeMultMax");
-                    }
-                    if (printMask?.SwitchDistanceMelee ?? true)
-                    {
-                        fg.AppendItem(SwitchDistanceMelee, "SwitchDistanceMelee");
-                    }
-                    if (printMask?.SwitchDistanceRanged ?? true)
-                    {
-                        fg.AppendItem(SwitchDistanceRanged, "SwitchDistanceRanged");
-                    }
-                    if (printMask?.BuffStandoffDistance ?? true)
-                    {
-                        fg.AppendItem(BuffStandoffDistance, "BuffStandoffDistance");
-                    }
-                    if (printMask?.RangedStandoffDistance ?? true)
-                    {
-                        fg.AppendItem(RangedStandoffDistance, "RangedStandoffDistance");
-                    }
-                    if (printMask?.GroupStandoffDistance ?? true)
-                    {
-                        fg.AppendItem(GroupStandoffDistance, "GroupStandoffDistance");
-                    }
-                    if (printMask?.RushingAttackPercentChance ?? true)
-                    {
-                        fg.AppendItem(RushingAttackPercentChance, "RushingAttackPercentChance");
-                    }
-                    if (printMask?.RushingAttackDistanceMult ?? true)
-                    {
-                        fg.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                        Data?.ToString(fg);
                     }
                     if (printMask?.Advanced?.Overall ?? true)
                     {
                         Advanced?.ToString(fg);
-                    }
-                    if (printMask?.CSTDDataTypeState ?? true)
-                    {
-                        fg.AppendItem(CSTDDataTypeState, "CSTDDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -1347,44 +393,8 @@ namespace Mutagen.Bethesda.Oblivion
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? DodgePercentChance;
-            public Exception? LeftRightPercentChance;
-            public Exception? DodgeLeftRightTimerMin;
-            public Exception? DodgeLeftRightTimerMax;
-            public Exception? DodgeForwardTimerMin;
-            public Exception? DodgeForwardTimerMax;
-            public Exception? DodgeBackTimerMin;
-            public Exception? DodgeBackTimerMax;
-            public Exception? IdleTimerMin;
-            public Exception? IdleTimerMax;
-            public Exception? BlockPercentChance;
-            public Exception? AttackPercentChance;
-            public Exception? RecoilStaggerBonusToAttack;
-            public Exception? UnconsciousBonusToAttack;
-            public Exception? HandToHandBonusToAttack;
-            public Exception? PowerAttackPercentChance;
-            public Exception? RecoilStaggerBonusToPowerAttack;
-            public Exception? UnconsciousBonusToPowerAttack;
-            public Exception? PowerAttackNormal;
-            public Exception? PowerAttackForward;
-            public Exception? PowerAttackBack;
-            public Exception? PowerAttackLeft;
-            public Exception? PowerAttackRight;
-            public Exception? HoldTimerMin;
-            public Exception? HoldTimerMax;
-            public Exception? Flags;
-            public Exception? AcrobaticDodgePercentChance;
-            public Exception? RangeMultOptimal;
-            public Exception? RangeMultMax;
-            public Exception? SwitchDistanceMelee;
-            public Exception? SwitchDistanceRanged;
-            public Exception? BuffStandoffDistance;
-            public Exception? RangedStandoffDistance;
-            public Exception? GroupStandoffDistance;
-            public Exception? RushingAttackPercentChance;
-            public Exception? RushingAttackDistanceMult;
+            public MaskItem<Exception?, CombatStyleData.ErrorMask?>? Data;
             public MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>? Advanced;
-            public Exception? CSTDDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1393,82 +403,10 @@ namespace Mutagen.Bethesda.Oblivion
                 CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
-                    case CombatStyle_FieldIndex.DodgePercentChance:
-                        return DodgePercentChance;
-                    case CombatStyle_FieldIndex.LeftRightPercentChance:
-                        return LeftRightPercentChance;
-                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                        return DodgeLeftRightTimerMin;
-                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                        return DodgeLeftRightTimerMax;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                        return DodgeForwardTimerMin;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                        return DodgeForwardTimerMax;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                        return DodgeBackTimerMin;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                        return DodgeBackTimerMax;
-                    case CombatStyle_FieldIndex.IdleTimerMin:
-                        return IdleTimerMin;
-                    case CombatStyle_FieldIndex.IdleTimerMax:
-                        return IdleTimerMax;
-                    case CombatStyle_FieldIndex.BlockPercentChance:
-                        return BlockPercentChance;
-                    case CombatStyle_FieldIndex.AttackPercentChance:
-                        return AttackPercentChance;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                        return RecoilStaggerBonusToAttack;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                        return UnconsciousBonusToAttack;
-                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                        return HandToHandBonusToAttack;
-                    case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                        return PowerAttackPercentChance;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                        return RecoilStaggerBonusToPowerAttack;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                        return UnconsciousBonusToPowerAttack;
-                    case CombatStyle_FieldIndex.PowerAttackNormal:
-                        return PowerAttackNormal;
-                    case CombatStyle_FieldIndex.PowerAttackForward:
-                        return PowerAttackForward;
-                    case CombatStyle_FieldIndex.PowerAttackBack:
-                        return PowerAttackBack;
-                    case CombatStyle_FieldIndex.PowerAttackLeft:
-                        return PowerAttackLeft;
-                    case CombatStyle_FieldIndex.PowerAttackRight:
-                        return PowerAttackRight;
-                    case CombatStyle_FieldIndex.HoldTimerMin:
-                        return HoldTimerMin;
-                    case CombatStyle_FieldIndex.HoldTimerMax:
-                        return HoldTimerMax;
-                    case CombatStyle_FieldIndex.Flags:
-                        return Flags;
-                    case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                        return AcrobaticDodgePercentChance;
-                    case CombatStyle_FieldIndex.RangeMultOptimal:
-                        return RangeMultOptimal;
-                    case CombatStyle_FieldIndex.RangeMultMax:
-                        return RangeMultMax;
-                    case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                        return SwitchDistanceMelee;
-                    case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                        return SwitchDistanceRanged;
-                    case CombatStyle_FieldIndex.BuffStandoffDistance:
-                        return BuffStandoffDistance;
-                    case CombatStyle_FieldIndex.RangedStandoffDistance:
-                        return RangedStandoffDistance;
-                    case CombatStyle_FieldIndex.GroupStandoffDistance:
-                        return GroupStandoffDistance;
-                    case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                        return RushingAttackPercentChance;
-                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                        return RushingAttackDistanceMult;
+                    case CombatStyle_FieldIndex.Data:
+                        return Data;
                     case CombatStyle_FieldIndex.Advanced:
                         return Advanced;
-                    case CombatStyle_FieldIndex.CSTDDataTypeState:
-                        return CSTDDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1479,119 +417,11 @@ namespace Mutagen.Bethesda.Oblivion
                 CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
-                    case CombatStyle_FieldIndex.DodgePercentChance:
-                        this.DodgePercentChance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.LeftRightPercentChance:
-                        this.LeftRightPercentChance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                        this.DodgeLeftRightTimerMin = ex;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                        this.DodgeLeftRightTimerMax = ex;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                        this.DodgeForwardTimerMin = ex;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                        this.DodgeForwardTimerMax = ex;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                        this.DodgeBackTimerMin = ex;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                        this.DodgeBackTimerMax = ex;
-                        break;
-                    case CombatStyle_FieldIndex.IdleTimerMin:
-                        this.IdleTimerMin = ex;
-                        break;
-                    case CombatStyle_FieldIndex.IdleTimerMax:
-                        this.IdleTimerMax = ex;
-                        break;
-                    case CombatStyle_FieldIndex.BlockPercentChance:
-                        this.BlockPercentChance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.AttackPercentChance:
-                        this.AttackPercentChance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                        this.RecoilStaggerBonusToAttack = ex;
-                        break;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                        this.UnconsciousBonusToAttack = ex;
-                        break;
-                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                        this.HandToHandBonusToAttack = ex;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                        this.PowerAttackPercentChance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                        this.RecoilStaggerBonusToPowerAttack = ex;
-                        break;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                        this.UnconsciousBonusToPowerAttack = ex;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackNormal:
-                        this.PowerAttackNormal = ex;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackForward:
-                        this.PowerAttackForward = ex;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackBack:
-                        this.PowerAttackBack = ex;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackLeft:
-                        this.PowerAttackLeft = ex;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackRight:
-                        this.PowerAttackRight = ex;
-                        break;
-                    case CombatStyle_FieldIndex.HoldTimerMin:
-                        this.HoldTimerMin = ex;
-                        break;
-                    case CombatStyle_FieldIndex.HoldTimerMax:
-                        this.HoldTimerMax = ex;
-                        break;
-                    case CombatStyle_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                        this.AcrobaticDodgePercentChance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.RangeMultOptimal:
-                        this.RangeMultOptimal = ex;
-                        break;
-                    case CombatStyle_FieldIndex.RangeMultMax:
-                        this.RangeMultMax = ex;
-                        break;
-                    case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                        this.SwitchDistanceMelee = ex;
-                        break;
-                    case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                        this.SwitchDistanceRanged = ex;
-                        break;
-                    case CombatStyle_FieldIndex.BuffStandoffDistance:
-                        this.BuffStandoffDistance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.RangedStandoffDistance:
-                        this.RangedStandoffDistance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.GroupStandoffDistance:
-                        this.GroupStandoffDistance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                        this.RushingAttackPercentChance = ex;
-                        break;
-                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                        this.RushingAttackDistanceMult = ex;
+                    case CombatStyle_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, CombatStyleData.ErrorMask?>(ex, null);
                         break;
                     case CombatStyle_FieldIndex.Advanced:
                         this.Advanced = new MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>(ex, null);
-                        break;
-                    case CombatStyle_FieldIndex.CSTDDataTypeState:
-                        this.CSTDDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1604,119 +434,11 @@ namespace Mutagen.Bethesda.Oblivion
                 CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
-                    case CombatStyle_FieldIndex.DodgePercentChance:
-                        this.DodgePercentChance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.LeftRightPercentChance:
-                        this.LeftRightPercentChance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                        this.DodgeLeftRightTimerMin = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                        this.DodgeLeftRightTimerMax = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                        this.DodgeForwardTimerMin = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                        this.DodgeForwardTimerMax = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                        this.DodgeBackTimerMin = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                        this.DodgeBackTimerMax = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.IdleTimerMin:
-                        this.IdleTimerMin = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.IdleTimerMax:
-                        this.IdleTimerMax = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.BlockPercentChance:
-                        this.BlockPercentChance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.AttackPercentChance:
-                        this.AttackPercentChance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                        this.RecoilStaggerBonusToAttack = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                        this.UnconsciousBonusToAttack = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                        this.HandToHandBonusToAttack = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                        this.PowerAttackPercentChance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                        this.RecoilStaggerBonusToPowerAttack = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                        this.UnconsciousBonusToPowerAttack = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackNormal:
-                        this.PowerAttackNormal = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackForward:
-                        this.PowerAttackForward = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackBack:
-                        this.PowerAttackBack = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackLeft:
-                        this.PowerAttackLeft = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.PowerAttackRight:
-                        this.PowerAttackRight = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.HoldTimerMin:
-                        this.HoldTimerMin = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.HoldTimerMax:
-                        this.HoldTimerMax = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                        this.AcrobaticDodgePercentChance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.RangeMultOptimal:
-                        this.RangeMultOptimal = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.RangeMultMax:
-                        this.RangeMultMax = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                        this.SwitchDistanceMelee = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                        this.SwitchDistanceRanged = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.BuffStandoffDistance:
-                        this.BuffStandoffDistance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.RangedStandoffDistance:
-                        this.RangedStandoffDistance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.GroupStandoffDistance:
-                        this.GroupStandoffDistance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                        this.RushingAttackPercentChance = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                        this.RushingAttackDistanceMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, CombatStyleData.ErrorMask?>?)obj;
                         break;
                     case CombatStyle_FieldIndex.Advanced:
                         this.Advanced = (MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.CSTDDataTypeState:
-                        this.CSTDDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1727,44 +449,8 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (DodgePercentChance != null) return true;
-                if (LeftRightPercentChance != null) return true;
-                if (DodgeLeftRightTimerMin != null) return true;
-                if (DodgeLeftRightTimerMax != null) return true;
-                if (DodgeForwardTimerMin != null) return true;
-                if (DodgeForwardTimerMax != null) return true;
-                if (DodgeBackTimerMin != null) return true;
-                if (DodgeBackTimerMax != null) return true;
-                if (IdleTimerMin != null) return true;
-                if (IdleTimerMax != null) return true;
-                if (BlockPercentChance != null) return true;
-                if (AttackPercentChance != null) return true;
-                if (RecoilStaggerBonusToAttack != null) return true;
-                if (UnconsciousBonusToAttack != null) return true;
-                if (HandToHandBonusToAttack != null) return true;
-                if (PowerAttackPercentChance != null) return true;
-                if (RecoilStaggerBonusToPowerAttack != null) return true;
-                if (UnconsciousBonusToPowerAttack != null) return true;
-                if (PowerAttackNormal != null) return true;
-                if (PowerAttackForward != null) return true;
-                if (PowerAttackBack != null) return true;
-                if (PowerAttackLeft != null) return true;
-                if (PowerAttackRight != null) return true;
-                if (HoldTimerMin != null) return true;
-                if (HoldTimerMax != null) return true;
-                if (Flags != null) return true;
-                if (AcrobaticDodgePercentChance != null) return true;
-                if (RangeMultOptimal != null) return true;
-                if (RangeMultMax != null) return true;
-                if (SwitchDistanceMelee != null) return true;
-                if (SwitchDistanceRanged != null) return true;
-                if (BuffStandoffDistance != null) return true;
-                if (RangedStandoffDistance != null) return true;
-                if (GroupStandoffDistance != null) return true;
-                if (RushingAttackPercentChance != null) return true;
-                if (RushingAttackDistanceMult != null) return true;
+                if (Data != null) return true;
                 if (Advanced != null) return true;
-                if (CSTDDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1800,44 +486,8 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(DodgePercentChance, "DodgePercentChance");
-                fg.AppendItem(LeftRightPercentChance, "LeftRightPercentChance");
-                fg.AppendItem(DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
-                fg.AppendItem(DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
-                fg.AppendItem(DodgeForwardTimerMin, "DodgeForwardTimerMin");
-                fg.AppendItem(DodgeForwardTimerMax, "DodgeForwardTimerMax");
-                fg.AppendItem(DodgeBackTimerMin, "DodgeBackTimerMin");
-                fg.AppendItem(DodgeBackTimerMax, "DodgeBackTimerMax");
-                fg.AppendItem(IdleTimerMin, "IdleTimerMin");
-                fg.AppendItem(IdleTimerMax, "IdleTimerMax");
-                fg.AppendItem(BlockPercentChance, "BlockPercentChance");
-                fg.AppendItem(AttackPercentChance, "AttackPercentChance");
-                fg.AppendItem(RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
-                fg.AppendItem(UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
-                fg.AppendItem(HandToHandBonusToAttack, "HandToHandBonusToAttack");
-                fg.AppendItem(PowerAttackPercentChance, "PowerAttackPercentChance");
-                fg.AppendItem(RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
-                fg.AppendItem(UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
-                fg.AppendItem(PowerAttackNormal, "PowerAttackNormal");
-                fg.AppendItem(PowerAttackForward, "PowerAttackForward");
-                fg.AppendItem(PowerAttackBack, "PowerAttackBack");
-                fg.AppendItem(PowerAttackLeft, "PowerAttackLeft");
-                fg.AppendItem(PowerAttackRight, "PowerAttackRight");
-                fg.AppendItem(HoldTimerMin, "HoldTimerMin");
-                fg.AppendItem(HoldTimerMax, "HoldTimerMax");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
-                fg.AppendItem(RangeMultOptimal, "RangeMultOptimal");
-                fg.AppendItem(RangeMultMax, "RangeMultMax");
-                fg.AppendItem(SwitchDistanceMelee, "SwitchDistanceMelee");
-                fg.AppendItem(SwitchDistanceRanged, "SwitchDistanceRanged");
-                fg.AppendItem(BuffStandoffDistance, "BuffStandoffDistance");
-                fg.AppendItem(RangedStandoffDistance, "RangedStandoffDistance");
-                fg.AppendItem(GroupStandoffDistance, "GroupStandoffDistance");
-                fg.AppendItem(RushingAttackPercentChance, "RushingAttackPercentChance");
-                fg.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                Data?.ToString(fg);
                 Advanced?.ToString(fg);
-                fg.AppendItem(CSTDDataTypeState, "CSTDDataTypeState");
             }
             #endregion
 
@@ -1846,44 +496,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DodgePercentChance = this.DodgePercentChance.Combine(rhs.DodgePercentChance);
-                ret.LeftRightPercentChance = this.LeftRightPercentChance.Combine(rhs.LeftRightPercentChance);
-                ret.DodgeLeftRightTimerMin = this.DodgeLeftRightTimerMin.Combine(rhs.DodgeLeftRightTimerMin);
-                ret.DodgeLeftRightTimerMax = this.DodgeLeftRightTimerMax.Combine(rhs.DodgeLeftRightTimerMax);
-                ret.DodgeForwardTimerMin = this.DodgeForwardTimerMin.Combine(rhs.DodgeForwardTimerMin);
-                ret.DodgeForwardTimerMax = this.DodgeForwardTimerMax.Combine(rhs.DodgeForwardTimerMax);
-                ret.DodgeBackTimerMin = this.DodgeBackTimerMin.Combine(rhs.DodgeBackTimerMin);
-                ret.DodgeBackTimerMax = this.DodgeBackTimerMax.Combine(rhs.DodgeBackTimerMax);
-                ret.IdleTimerMin = this.IdleTimerMin.Combine(rhs.IdleTimerMin);
-                ret.IdleTimerMax = this.IdleTimerMax.Combine(rhs.IdleTimerMax);
-                ret.BlockPercentChance = this.BlockPercentChance.Combine(rhs.BlockPercentChance);
-                ret.AttackPercentChance = this.AttackPercentChance.Combine(rhs.AttackPercentChance);
-                ret.RecoilStaggerBonusToAttack = this.RecoilStaggerBonusToAttack.Combine(rhs.RecoilStaggerBonusToAttack);
-                ret.UnconsciousBonusToAttack = this.UnconsciousBonusToAttack.Combine(rhs.UnconsciousBonusToAttack);
-                ret.HandToHandBonusToAttack = this.HandToHandBonusToAttack.Combine(rhs.HandToHandBonusToAttack);
-                ret.PowerAttackPercentChance = this.PowerAttackPercentChance.Combine(rhs.PowerAttackPercentChance);
-                ret.RecoilStaggerBonusToPowerAttack = this.RecoilStaggerBonusToPowerAttack.Combine(rhs.RecoilStaggerBonusToPowerAttack);
-                ret.UnconsciousBonusToPowerAttack = this.UnconsciousBonusToPowerAttack.Combine(rhs.UnconsciousBonusToPowerAttack);
-                ret.PowerAttackNormal = this.PowerAttackNormal.Combine(rhs.PowerAttackNormal);
-                ret.PowerAttackForward = this.PowerAttackForward.Combine(rhs.PowerAttackForward);
-                ret.PowerAttackBack = this.PowerAttackBack.Combine(rhs.PowerAttackBack);
-                ret.PowerAttackLeft = this.PowerAttackLeft.Combine(rhs.PowerAttackLeft);
-                ret.PowerAttackRight = this.PowerAttackRight.Combine(rhs.PowerAttackRight);
-                ret.HoldTimerMin = this.HoldTimerMin.Combine(rhs.HoldTimerMin);
-                ret.HoldTimerMax = this.HoldTimerMax.Combine(rhs.HoldTimerMax);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.AcrobaticDodgePercentChance = this.AcrobaticDodgePercentChance.Combine(rhs.AcrobaticDodgePercentChance);
-                ret.RangeMultOptimal = this.RangeMultOptimal.Combine(rhs.RangeMultOptimal);
-                ret.RangeMultMax = this.RangeMultMax.Combine(rhs.RangeMultMax);
-                ret.SwitchDistanceMelee = this.SwitchDistanceMelee.Combine(rhs.SwitchDistanceMelee);
-                ret.SwitchDistanceRanged = this.SwitchDistanceRanged.Combine(rhs.SwitchDistanceRanged);
-                ret.BuffStandoffDistance = this.BuffStandoffDistance.Combine(rhs.BuffStandoffDistance);
-                ret.RangedStandoffDistance = this.RangedStandoffDistance.Combine(rhs.RangedStandoffDistance);
-                ret.GroupStandoffDistance = this.GroupStandoffDistance.Combine(rhs.GroupStandoffDistance);
-                ret.RushingAttackPercentChance = this.RushingAttackPercentChance.Combine(rhs.RushingAttackPercentChance);
-                ret.RushingAttackDistanceMult = this.RushingAttackDistanceMult.Combine(rhs.RushingAttackDistanceMult);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Advanced = this.Advanced.Combine(rhs.Advanced, (l, r) => l.Combine(r));
-                ret.CSTDDataTypeState = this.CSTDDataTypeState.Combine(rhs.CSTDDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1906,88 +520,16 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public bool DodgePercentChance;
-            public bool LeftRightPercentChance;
-            public bool DodgeLeftRightTimerMin;
-            public bool DodgeLeftRightTimerMax;
-            public bool DodgeForwardTimerMin;
-            public bool DodgeForwardTimerMax;
-            public bool DodgeBackTimerMin;
-            public bool DodgeBackTimerMax;
-            public bool IdleTimerMin;
-            public bool IdleTimerMax;
-            public bool BlockPercentChance;
-            public bool AttackPercentChance;
-            public bool RecoilStaggerBonusToAttack;
-            public bool UnconsciousBonusToAttack;
-            public bool HandToHandBonusToAttack;
-            public bool PowerAttackPercentChance;
-            public bool RecoilStaggerBonusToPowerAttack;
-            public bool UnconsciousBonusToPowerAttack;
-            public bool PowerAttackNormal;
-            public bool PowerAttackForward;
-            public bool PowerAttackBack;
-            public bool PowerAttackLeft;
-            public bool PowerAttackRight;
-            public bool HoldTimerMin;
-            public bool HoldTimerMax;
-            public bool Flags;
-            public bool AcrobaticDodgePercentChance;
-            public bool RangeMultOptimal;
-            public bool RangeMultMax;
-            public bool SwitchDistanceMelee;
-            public bool SwitchDistanceRanged;
-            public bool BuffStandoffDistance;
-            public bool RangedStandoffDistance;
-            public bool GroupStandoffDistance;
-            public bool RushingAttackPercentChance;
-            public bool RushingAttackDistanceMult;
+            public MaskItem<bool, CombatStyleData.TranslationMask?> Data;
             public MaskItem<bool, CombatStyleAdvanced.TranslationMask?> Advanced;
-            public bool CSTDDataTypeState;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.DodgePercentChance = defaultOn;
-                this.LeftRightPercentChance = defaultOn;
-                this.DodgeLeftRightTimerMin = defaultOn;
-                this.DodgeLeftRightTimerMax = defaultOn;
-                this.DodgeForwardTimerMin = defaultOn;
-                this.DodgeForwardTimerMax = defaultOn;
-                this.DodgeBackTimerMin = defaultOn;
-                this.DodgeBackTimerMax = defaultOn;
-                this.IdleTimerMin = defaultOn;
-                this.IdleTimerMax = defaultOn;
-                this.BlockPercentChance = defaultOn;
-                this.AttackPercentChance = defaultOn;
-                this.RecoilStaggerBonusToAttack = defaultOn;
-                this.UnconsciousBonusToAttack = defaultOn;
-                this.HandToHandBonusToAttack = defaultOn;
-                this.PowerAttackPercentChance = defaultOn;
-                this.RecoilStaggerBonusToPowerAttack = defaultOn;
-                this.UnconsciousBonusToPowerAttack = defaultOn;
-                this.PowerAttackNormal = defaultOn;
-                this.PowerAttackForward = defaultOn;
-                this.PowerAttackBack = defaultOn;
-                this.PowerAttackLeft = defaultOn;
-                this.PowerAttackRight = defaultOn;
-                this.HoldTimerMin = defaultOn;
-                this.HoldTimerMax = defaultOn;
-                this.Flags = defaultOn;
-                this.AcrobaticDodgePercentChance = defaultOn;
-                this.RangeMultOptimal = defaultOn;
-                this.RangeMultMax = defaultOn;
-                this.SwitchDistanceMelee = defaultOn;
-                this.SwitchDistanceRanged = defaultOn;
-                this.BuffStandoffDistance = defaultOn;
-                this.RangedStandoffDistance = defaultOn;
-                this.GroupStandoffDistance = defaultOn;
-                this.RushingAttackPercentChance = defaultOn;
-                this.RushingAttackDistanceMult = defaultOn;
+                this.Data = new MaskItem<bool, CombatStyleData.TranslationMask?>(defaultOn, null);
                 this.Advanced = new MaskItem<bool, CombatStyleAdvanced.TranslationMask?>(defaultOn, null);
-                this.CSTDDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1995,60 +537,14 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((DodgePercentChance, null));
-                ret.Add((LeftRightPercentChance, null));
-                ret.Add((DodgeLeftRightTimerMin, null));
-                ret.Add((DodgeLeftRightTimerMax, null));
-                ret.Add((DodgeForwardTimerMin, null));
-                ret.Add((DodgeForwardTimerMax, null));
-                ret.Add((DodgeBackTimerMin, null));
-                ret.Add((DodgeBackTimerMax, null));
-                ret.Add((IdleTimerMin, null));
-                ret.Add((IdleTimerMax, null));
-                ret.Add((BlockPercentChance, null));
-                ret.Add((AttackPercentChance, null));
-                ret.Add((RecoilStaggerBonusToAttack, null));
-                ret.Add((UnconsciousBonusToAttack, null));
-                ret.Add((HandToHandBonusToAttack, null));
-                ret.Add((PowerAttackPercentChance, null));
-                ret.Add((RecoilStaggerBonusToPowerAttack, null));
-                ret.Add((UnconsciousBonusToPowerAttack, null));
-                ret.Add((PowerAttackNormal, null));
-                ret.Add((PowerAttackForward, null));
-                ret.Add((PowerAttackBack, null));
-                ret.Add((PowerAttackLeft, null));
-                ret.Add((PowerAttackRight, null));
-                ret.Add((HoldTimerMin, null));
-                ret.Add((HoldTimerMax, null));
-                ret.Add((Flags, null));
-                ret.Add((AcrobaticDodgePercentChance, null));
-                ret.Add((RangeMultOptimal, null));
-                ret.Add((RangeMultMax, null));
-                ret.Add((SwitchDistanceMelee, null));
-                ret.Add((SwitchDistanceRanged, null));
-                ret.Add((BuffStandoffDistance, null));
-                ret.Add((RangedStandoffDistance, null));
-                ret.Add((GroupStandoffDistance, null));
-                ret.Add((RushingAttackPercentChance, null));
-                ret.Add((RushingAttackDistanceMult, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((Advanced?.Overall ?? true, Advanced?.Specific?.GetCrystal()));
-                ret.Add((CSTDDataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = CombatStyle_Registration.TriggeringRecordType;
-        [Flags]
-        public enum CSTDDataType
-        {
-            Has = 1,
-            Break0 = 2,
-            Break1 = 4,
-            Break2 = 8,
-            Break3 = 16,
-            Break4 = 32
-        }
         public CombatStyle(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -2128,44 +624,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<ICombatStyleInternal>
     {
-        new Byte DodgePercentChance { get; set; }
-        new Byte LeftRightPercentChance { get; set; }
-        new Single DodgeLeftRightTimerMin { get; set; }
-        new Single DodgeLeftRightTimerMax { get; set; }
-        new Single DodgeForwardTimerMin { get; set; }
-        new Single DodgeForwardTimerMax { get; set; }
-        new Single DodgeBackTimerMin { get; set; }
-        new Single DodgeBackTimerMax { get; set; }
-        new Single IdleTimerMin { get; set; }
-        new Single IdleTimerMax { get; set; }
-        new Byte BlockPercentChance { get; set; }
-        new Byte AttackPercentChance { get; set; }
-        new Single RecoilStaggerBonusToAttack { get; set; }
-        new Single UnconsciousBonusToAttack { get; set; }
-        new Single HandToHandBonusToAttack { get; set; }
-        new Byte PowerAttackPercentChance { get; set; }
-        new Single RecoilStaggerBonusToPowerAttack { get; set; }
-        new Single UnconsciousBonusToPowerAttack { get; set; }
-        new Byte PowerAttackNormal { get; set; }
-        new Byte PowerAttackForward { get; set; }
-        new Byte PowerAttackBack { get; set; }
-        new Byte PowerAttackLeft { get; set; }
-        new Byte PowerAttackRight { get; set; }
-        new Single HoldTimerMin { get; set; }
-        new Single HoldTimerMax { get; set; }
-        new CombatStyle.Flag Flags { get; set; }
-        new Byte AcrobaticDodgePercentChance { get; set; }
-        new Single RangeMultOptimal { get; set; }
-        new Single RangeMultMax { get; set; }
-        new Single SwitchDistanceMelee { get; set; }
-        new Single SwitchDistanceRanged { get; set; }
-        new Single BuffStandoffDistance { get; set; }
-        new Single RangedStandoffDistance { get; set; }
-        new Single GroupStandoffDistance { get; set; }
-        new Byte RushingAttackPercentChance { get; set; }
-        new Single RushingAttackDistanceMult { get; set; }
+        new CombatStyleData? Data { get; set; }
         new CombatStyleAdvanced? Advanced { get; set; }
-        new CombatStyle.CSTDDataType CSTDDataTypeState { get; set; }
     }
 
     public partial interface ICombatStyleInternal :
@@ -2181,44 +641,8 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        Byte DodgePercentChance { get; }
-        Byte LeftRightPercentChance { get; }
-        Single DodgeLeftRightTimerMin { get; }
-        Single DodgeLeftRightTimerMax { get; }
-        Single DodgeForwardTimerMin { get; }
-        Single DodgeForwardTimerMax { get; }
-        Single DodgeBackTimerMin { get; }
-        Single DodgeBackTimerMax { get; }
-        Single IdleTimerMin { get; }
-        Single IdleTimerMax { get; }
-        Byte BlockPercentChance { get; }
-        Byte AttackPercentChance { get; }
-        Single RecoilStaggerBonusToAttack { get; }
-        Single UnconsciousBonusToAttack { get; }
-        Single HandToHandBonusToAttack { get; }
-        Byte PowerAttackPercentChance { get; }
-        Single RecoilStaggerBonusToPowerAttack { get; }
-        Single UnconsciousBonusToPowerAttack { get; }
-        Byte PowerAttackNormal { get; }
-        Byte PowerAttackForward { get; }
-        Byte PowerAttackBack { get; }
-        Byte PowerAttackLeft { get; }
-        Byte PowerAttackRight { get; }
-        Single HoldTimerMin { get; }
-        Single HoldTimerMax { get; }
-        CombatStyle.Flag Flags { get; }
-        Byte AcrobaticDodgePercentChance { get; }
-        Single RangeMultOptimal { get; }
-        Single RangeMultMax { get; }
-        Single SwitchDistanceMelee { get; }
-        Single SwitchDistanceRanged { get; }
-        Single BuffStandoffDistance { get; }
-        Single RangedStandoffDistance { get; }
-        Single GroupStandoffDistance { get; }
-        Byte RushingAttackPercentChance { get; }
-        Single RushingAttackDistanceMult { get; }
+        ICombatStyleDataGetter? Data { get; }
         ICombatStyleAdvancedGetter? Advanced { get; }
-        CombatStyle.CSTDDataType CSTDDataTypeState { get; }
 
     }
 
@@ -2518,44 +942,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Version = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
-        DodgePercentChance = 5,
-        LeftRightPercentChance = 6,
-        DodgeLeftRightTimerMin = 7,
-        DodgeLeftRightTimerMax = 8,
-        DodgeForwardTimerMin = 9,
-        DodgeForwardTimerMax = 10,
-        DodgeBackTimerMin = 11,
-        DodgeBackTimerMax = 12,
-        IdleTimerMin = 13,
-        IdleTimerMax = 14,
-        BlockPercentChance = 15,
-        AttackPercentChance = 16,
-        RecoilStaggerBonusToAttack = 17,
-        UnconsciousBonusToAttack = 18,
-        HandToHandBonusToAttack = 19,
-        PowerAttackPercentChance = 20,
-        RecoilStaggerBonusToPowerAttack = 21,
-        UnconsciousBonusToPowerAttack = 22,
-        PowerAttackNormal = 23,
-        PowerAttackForward = 24,
-        PowerAttackBack = 25,
-        PowerAttackLeft = 26,
-        PowerAttackRight = 27,
-        HoldTimerMin = 28,
-        HoldTimerMax = 29,
-        Flags = 30,
-        AcrobaticDodgePercentChance = 31,
-        RangeMultOptimal = 32,
-        RangeMultMax = 33,
-        SwitchDistanceMelee = 34,
-        SwitchDistanceRanged = 35,
-        BuffStandoffDistance = 36,
-        RangedStandoffDistance = 37,
-        GroupStandoffDistance = 38,
-        RushingAttackPercentChance = 39,
-        RushingAttackDistanceMult = 40,
-        Advanced = 41,
-        CSTDDataTypeState = 42,
+        Data = 5,
+        Advanced = 6,
     }
     #endregion
 
@@ -2573,9 +961,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "5a84afb8-6c2a-4274-aa72-155f9fcddd71";
 
-        public const ushort AdditionalFieldCount = 38;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(CombatStyle.Mask<>);
 
@@ -2605,82 +993,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DODGEPERCENTCHANCE":
-                    return (ushort)CombatStyle_FieldIndex.DodgePercentChance;
-                case "LEFTRIGHTPERCENTCHANCE":
-                    return (ushort)CombatStyle_FieldIndex.LeftRightPercentChance;
-                case "DODGELEFTRIGHTTIMERMIN":
-                    return (ushort)CombatStyle_FieldIndex.DodgeLeftRightTimerMin;
-                case "DODGELEFTRIGHTTIMERMAX":
-                    return (ushort)CombatStyle_FieldIndex.DodgeLeftRightTimerMax;
-                case "DODGEFORWARDTIMERMIN":
-                    return (ushort)CombatStyle_FieldIndex.DodgeForwardTimerMin;
-                case "DODGEFORWARDTIMERMAX":
-                    return (ushort)CombatStyle_FieldIndex.DodgeForwardTimerMax;
-                case "DODGEBACKTIMERMIN":
-                    return (ushort)CombatStyle_FieldIndex.DodgeBackTimerMin;
-                case "DODGEBACKTIMERMAX":
-                    return (ushort)CombatStyle_FieldIndex.DodgeBackTimerMax;
-                case "IDLETIMERMIN":
-                    return (ushort)CombatStyle_FieldIndex.IdleTimerMin;
-                case "IDLETIMERMAX":
-                    return (ushort)CombatStyle_FieldIndex.IdleTimerMax;
-                case "BLOCKPERCENTCHANCE":
-                    return (ushort)CombatStyle_FieldIndex.BlockPercentChance;
-                case "ATTACKPERCENTCHANCE":
-                    return (ushort)CombatStyle_FieldIndex.AttackPercentChance;
-                case "RECOILSTAGGERBONUSTOATTACK":
-                    return (ushort)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack;
-                case "UNCONSCIOUSBONUSTOATTACK":
-                    return (ushort)CombatStyle_FieldIndex.UnconsciousBonusToAttack;
-                case "HANDTOHANDBONUSTOATTACK":
-                    return (ushort)CombatStyle_FieldIndex.HandToHandBonusToAttack;
-                case "POWERATTACKPERCENTCHANCE":
-                    return (ushort)CombatStyle_FieldIndex.PowerAttackPercentChance;
-                case "RECOILSTAGGERBONUSTOPOWERATTACK":
-                    return (ushort)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack;
-                case "UNCONSCIOUSBONUSTOPOWERATTACK":
-                    return (ushort)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack;
-                case "POWERATTACKNORMAL":
-                    return (ushort)CombatStyle_FieldIndex.PowerAttackNormal;
-                case "POWERATTACKFORWARD":
-                    return (ushort)CombatStyle_FieldIndex.PowerAttackForward;
-                case "POWERATTACKBACK":
-                    return (ushort)CombatStyle_FieldIndex.PowerAttackBack;
-                case "POWERATTACKLEFT":
-                    return (ushort)CombatStyle_FieldIndex.PowerAttackLeft;
-                case "POWERATTACKRIGHT":
-                    return (ushort)CombatStyle_FieldIndex.PowerAttackRight;
-                case "HOLDTIMERMIN":
-                    return (ushort)CombatStyle_FieldIndex.HoldTimerMin;
-                case "HOLDTIMERMAX":
-                    return (ushort)CombatStyle_FieldIndex.HoldTimerMax;
-                case "FLAGS":
-                    return (ushort)CombatStyle_FieldIndex.Flags;
-                case "ACROBATICDODGEPERCENTCHANCE":
-                    return (ushort)CombatStyle_FieldIndex.AcrobaticDodgePercentChance;
-                case "RANGEMULTOPTIMAL":
-                    return (ushort)CombatStyle_FieldIndex.RangeMultOptimal;
-                case "RANGEMULTMAX":
-                    return (ushort)CombatStyle_FieldIndex.RangeMultMax;
-                case "SWITCHDISTANCEMELEE":
-                    return (ushort)CombatStyle_FieldIndex.SwitchDistanceMelee;
-                case "SWITCHDISTANCERANGED":
-                    return (ushort)CombatStyle_FieldIndex.SwitchDistanceRanged;
-                case "BUFFSTANDOFFDISTANCE":
-                    return (ushort)CombatStyle_FieldIndex.BuffStandoffDistance;
-                case "RANGEDSTANDOFFDISTANCE":
-                    return (ushort)CombatStyle_FieldIndex.RangedStandoffDistance;
-                case "GROUPSTANDOFFDISTANCE":
-                    return (ushort)CombatStyle_FieldIndex.GroupStandoffDistance;
-                case "RUSHINGATTACKPERCENTCHANCE":
-                    return (ushort)CombatStyle_FieldIndex.RushingAttackPercentChance;
-                case "RUSHINGATTACKDISTANCEMULT":
-                    return (ushort)CombatStyle_FieldIndex.RushingAttackDistanceMult;
+                case "DATA":
+                    return (ushort)CombatStyle_FieldIndex.Data;
                 case "ADVANCED":
                     return (ushort)CombatStyle_FieldIndex.Advanced;
-                case "CSTDDATATYPESTATE":
-                    return (ushort)CombatStyle_FieldIndex.CSTDDataTypeState;
                 default:
                     return null;
             }
@@ -2691,44 +1007,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
             switch (enu)
             {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                case CombatStyle_FieldIndex.Flags:
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                case CombatStyle_FieldIndex.RangeMultMax:
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
+                case CombatStyle_FieldIndex.Data:
                 case CombatStyle_FieldIndex.Advanced:
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2740,46 +1020,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
             switch (enu)
             {
+                case CombatStyle_FieldIndex.Data:
                 case CombatStyle_FieldIndex.Advanced:
                     return true;
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                case CombatStyle_FieldIndex.Flags:
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                case CombatStyle_FieldIndex.RangeMultMax:
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
-                    return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -2790,44 +1033,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
             switch (enu)
             {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                case CombatStyle_FieldIndex.Flags:
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                case CombatStyle_FieldIndex.RangeMultMax:
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
+                case CombatStyle_FieldIndex.Data:
                 case CombatStyle_FieldIndex.Advanced:
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2839,82 +1046,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
             switch (enu)
             {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    return "DodgePercentChance";
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    return "LeftRightPercentChance";
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    return "DodgeLeftRightTimerMin";
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    return "DodgeLeftRightTimerMax";
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    return "DodgeForwardTimerMin";
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    return "DodgeForwardTimerMax";
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    return "DodgeBackTimerMin";
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    return "DodgeBackTimerMax";
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    return "IdleTimerMin";
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    return "IdleTimerMax";
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    return "BlockPercentChance";
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    return "AttackPercentChance";
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    return "RecoilStaggerBonusToAttack";
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    return "UnconsciousBonusToAttack";
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    return "HandToHandBonusToAttack";
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    return "PowerAttackPercentChance";
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    return "RecoilStaggerBonusToPowerAttack";
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    return "UnconsciousBonusToPowerAttack";
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    return "PowerAttackNormal";
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    return "PowerAttackForward";
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    return "PowerAttackBack";
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    return "PowerAttackLeft";
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    return "PowerAttackRight";
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    return "HoldTimerMin";
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    return "HoldTimerMax";
-                case CombatStyle_FieldIndex.Flags:
-                    return "Flags";
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    return "AcrobaticDodgePercentChance";
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    return "RangeMultOptimal";
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    return "RangeMultMax";
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    return "SwitchDistanceMelee";
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    return "SwitchDistanceRanged";
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    return "BuffStandoffDistance";
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    return "RangedStandoffDistance";
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    return "GroupStandoffDistance";
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    return "RushingAttackPercentChance";
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    return "RushingAttackDistanceMult";
+                case CombatStyle_FieldIndex.Data:
+                    return "Data";
                 case CombatStyle_FieldIndex.Advanced:
                     return "Advanced";
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
-                    return "CSTDDataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -2925,44 +1060,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
             switch (enu)
             {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                case CombatStyle_FieldIndex.Flags:
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                case CombatStyle_FieldIndex.RangeMultMax:
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
+                case CombatStyle_FieldIndex.Data:
                 case CombatStyle_FieldIndex.Advanced:
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -2974,44 +1073,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
             switch (enu)
             {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                case CombatStyle_FieldIndex.Flags:
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                case CombatStyle_FieldIndex.RangeMultMax:
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
+                case CombatStyle_FieldIndex.Data:
                 case CombatStyle_FieldIndex.Advanced:
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -3023,82 +1086,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
             switch (enu)
             {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.Flags:
-                    return typeof(CombatStyle.Flag);
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    return typeof(Single);
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    return typeof(Byte);
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    return typeof(Single);
+                case CombatStyle_FieldIndex.Data:
+                    return typeof(CombatStyleData);
                 case CombatStyle_FieldIndex.Advanced:
                     return typeof(CombatStyleAdvanced);
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
-                    return typeof(CombatStyle.CSTDDataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -3110,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CSAD_HEADER = new RecordType("CSAD");
         public static readonly RecordType TriggeringRecordType = CSTY_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
+        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3153,44 +1144,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ICombatStyleInternal item)
         {
             ClearPartial();
-            item.DodgePercentChance = default;
-            item.LeftRightPercentChance = default;
-            item.DodgeLeftRightTimerMin = default;
-            item.DodgeLeftRightTimerMax = default;
-            item.DodgeForwardTimerMin = default;
-            item.DodgeForwardTimerMax = default;
-            item.DodgeBackTimerMin = default;
-            item.DodgeBackTimerMax = default;
-            item.IdleTimerMin = default;
-            item.IdleTimerMax = default;
-            item.BlockPercentChance = default;
-            item.AttackPercentChance = default;
-            item.RecoilStaggerBonusToAttack = default;
-            item.UnconsciousBonusToAttack = default;
-            item.HandToHandBonusToAttack = default;
-            item.PowerAttackPercentChance = default;
-            item.RecoilStaggerBonusToPowerAttack = default;
-            item.UnconsciousBonusToPowerAttack = default;
-            item.PowerAttackNormal = default;
-            item.PowerAttackForward = default;
-            item.PowerAttackBack = default;
-            item.PowerAttackLeft = default;
-            item.PowerAttackRight = default;
-            item.HoldTimerMin = default;
-            item.HoldTimerMax = default;
-            item.Flags = default;
-            item.AcrobaticDodgePercentChance = default;
-            item.RangeMultOptimal = default;
-            item.RangeMultMax = default;
-            item.SwitchDistanceMelee = default;
-            item.SwitchDistanceRanged = default;
-            item.BuffStandoffDistance = default;
-            item.RangedStandoffDistance = default;
-            item.GroupStandoffDistance = default;
-            item.RushingAttackPercentChance = default;
-            item.RushingAttackDistanceMult = default;
+            item.Data = null;
             item.Advanced = null;
-            item.CSTDDataTypeState = default;
             base.Clear(item);
         }
         
@@ -3214,9 +1169,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasCSTDDataType":
-                    item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -3236,11 +1188,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
-                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
-                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
-                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
-                item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -3315,83 +1262,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x44545343: // CSTD
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState = CombatStyle.CSTDDataType.Has;
-                    }
-                    item.DodgePercentChance = dataFrame.ReadUInt8();
-                    item.LeftRightPercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 2);
-                    item.DodgeLeftRightTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DodgeLeftRightTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DodgeForwardTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DodgeForwardTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DodgeBackTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DodgeBackTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.IdleTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.IdleTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BlockPercentChance = dataFrame.ReadUInt8();
-                    item.AttackPercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 2);
-                    item.RecoilStaggerBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.UnconsciousBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HandToHandBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.PowerAttackPercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 3);
-                    item.RecoilStaggerBonusToPowerAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.UnconsciousBonusToPowerAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.PowerAttackNormal = dataFrame.ReadUInt8();
-                    item.PowerAttackForward = dataFrame.ReadUInt8();
-                    item.PowerAttackBack = dataFrame.ReadUInt8();
-                    item.PowerAttackLeft = dataFrame.ReadUInt8();
-                    item.PowerAttackRight = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 3);
-                    item.HoldTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HoldTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Flags = EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.AcrobaticDodgePercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 2);
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
-                    }
-                    item.RangeMultOptimal = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RangeMultMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RangeMultMax);
-                    }
-                    item.SwitchDistanceMelee = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.SwitchDistanceRanged = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BuffStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.BuffStandoffDistance);
-                    }
-                    item.RangedStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.GroupStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.GroupStandoffDistance);
-                    }
-                    item.RushingAttackPercentChance = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 3);
-                    item.RushingAttackDistanceMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
-                    }
-                    CombatStyleBinaryCreateTranslation.FillBinarySecondaryFlagsCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
+                    item.Data = Mutagen.Bethesda.Oblivion.CombatStyleData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Data);
                 }
                 case 0x44415343: // CSAD
                 {
@@ -3472,48 +1344,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.DodgePercentChance = item.DodgePercentChance == rhs.DodgePercentChance;
-            ret.LeftRightPercentChance = item.LeftRightPercentChance == rhs.LeftRightPercentChance;
-            ret.DodgeLeftRightTimerMin = item.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin);
-            ret.DodgeLeftRightTimerMax = item.DodgeLeftRightTimerMax.EqualsWithin(rhs.DodgeLeftRightTimerMax);
-            ret.DodgeForwardTimerMin = item.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin);
-            ret.DodgeForwardTimerMax = item.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax);
-            ret.DodgeBackTimerMin = item.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin);
-            ret.DodgeBackTimerMax = item.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax);
-            ret.IdleTimerMin = item.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin);
-            ret.IdleTimerMax = item.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax);
-            ret.BlockPercentChance = item.BlockPercentChance == rhs.BlockPercentChance;
-            ret.AttackPercentChance = item.AttackPercentChance == rhs.AttackPercentChance;
-            ret.RecoilStaggerBonusToAttack = item.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack);
-            ret.UnconsciousBonusToAttack = item.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack);
-            ret.HandToHandBonusToAttack = item.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack);
-            ret.PowerAttackPercentChance = item.PowerAttackPercentChance == rhs.PowerAttackPercentChance;
-            ret.RecoilStaggerBonusToPowerAttack = item.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack);
-            ret.UnconsciousBonusToPowerAttack = item.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack);
-            ret.PowerAttackNormal = item.PowerAttackNormal == rhs.PowerAttackNormal;
-            ret.PowerAttackForward = item.PowerAttackForward == rhs.PowerAttackForward;
-            ret.PowerAttackBack = item.PowerAttackBack == rhs.PowerAttackBack;
-            ret.PowerAttackLeft = item.PowerAttackLeft == rhs.PowerAttackLeft;
-            ret.PowerAttackRight = item.PowerAttackRight == rhs.PowerAttackRight;
-            ret.HoldTimerMin = item.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin);
-            ret.HoldTimerMax = item.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.AcrobaticDodgePercentChance = item.AcrobaticDodgePercentChance == rhs.AcrobaticDodgePercentChance;
-            ret.RangeMultOptimal = item.RangeMultOptimal.EqualsWithin(rhs.RangeMultOptimal);
-            ret.RangeMultMax = item.RangeMultMax.EqualsWithin(rhs.RangeMultMax);
-            ret.SwitchDistanceMelee = item.SwitchDistanceMelee.EqualsWithin(rhs.SwitchDistanceMelee);
-            ret.SwitchDistanceRanged = item.SwitchDistanceRanged.EqualsWithin(rhs.SwitchDistanceRanged);
-            ret.BuffStandoffDistance = item.BuffStandoffDistance.EqualsWithin(rhs.BuffStandoffDistance);
-            ret.RangedStandoffDistance = item.RangedStandoffDistance.EqualsWithin(rhs.RangedStandoffDistance);
-            ret.GroupStandoffDistance = item.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance);
-            ret.RushingAttackPercentChance = item.RushingAttackPercentChance == rhs.RushingAttackPercentChance;
-            ret.RushingAttackDistanceMult = item.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Advanced = EqualsMaskHelper.EqualsHelper(
                 item.Advanced,
                 rhs.Advanced,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.CSTDDataTypeState = item.CSTDDataTypeState == rhs.CSTDDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3565,158 +1405,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.DodgePercentChance ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.DodgePercentChance, "DodgePercentChance");
-            }
-            if (printMask?.LeftRightPercentChance ?? true)
-            {
-                fg.AppendItem(item.LeftRightPercentChance, "LeftRightPercentChance");
-            }
-            if (printMask?.DodgeLeftRightTimerMin ?? true)
-            {
-                fg.AppendItem(item.DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
-            }
-            if (printMask?.DodgeLeftRightTimerMax ?? true)
-            {
-                fg.AppendItem(item.DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
-            }
-            if (printMask?.DodgeForwardTimerMin ?? true)
-            {
-                fg.AppendItem(item.DodgeForwardTimerMin, "DodgeForwardTimerMin");
-            }
-            if (printMask?.DodgeForwardTimerMax ?? true)
-            {
-                fg.AppendItem(item.DodgeForwardTimerMax, "DodgeForwardTimerMax");
-            }
-            if (printMask?.DodgeBackTimerMin ?? true)
-            {
-                fg.AppendItem(item.DodgeBackTimerMin, "DodgeBackTimerMin");
-            }
-            if (printMask?.DodgeBackTimerMax ?? true)
-            {
-                fg.AppendItem(item.DodgeBackTimerMax, "DodgeBackTimerMax");
-            }
-            if (printMask?.IdleTimerMin ?? true)
-            {
-                fg.AppendItem(item.IdleTimerMin, "IdleTimerMin");
-            }
-            if (printMask?.IdleTimerMax ?? true)
-            {
-                fg.AppendItem(item.IdleTimerMax, "IdleTimerMax");
-            }
-            if (printMask?.BlockPercentChance ?? true)
-            {
-                fg.AppendItem(item.BlockPercentChance, "BlockPercentChance");
-            }
-            if (printMask?.AttackPercentChance ?? true)
-            {
-                fg.AppendItem(item.AttackPercentChance, "AttackPercentChance");
-            }
-            if (printMask?.RecoilStaggerBonusToAttack ?? true)
-            {
-                fg.AppendItem(item.RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
-            }
-            if (printMask?.UnconsciousBonusToAttack ?? true)
-            {
-                fg.AppendItem(item.UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
-            }
-            if (printMask?.HandToHandBonusToAttack ?? true)
-            {
-                fg.AppendItem(item.HandToHandBonusToAttack, "HandToHandBonusToAttack");
-            }
-            if (printMask?.PowerAttackPercentChance ?? true)
-            {
-                fg.AppendItem(item.PowerAttackPercentChance, "PowerAttackPercentChance");
-            }
-            if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
-            {
-                fg.AppendItem(item.RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
-            }
-            if (printMask?.UnconsciousBonusToPowerAttack ?? true)
-            {
-                fg.AppendItem(item.UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
-            }
-            if (printMask?.PowerAttackNormal ?? true)
-            {
-                fg.AppendItem(item.PowerAttackNormal, "PowerAttackNormal");
-            }
-            if (printMask?.PowerAttackForward ?? true)
-            {
-                fg.AppendItem(item.PowerAttackForward, "PowerAttackForward");
-            }
-            if (printMask?.PowerAttackBack ?? true)
-            {
-                fg.AppendItem(item.PowerAttackBack, "PowerAttackBack");
-            }
-            if (printMask?.PowerAttackLeft ?? true)
-            {
-                fg.AppendItem(item.PowerAttackLeft, "PowerAttackLeft");
-            }
-            if (printMask?.PowerAttackRight ?? true)
-            {
-                fg.AppendItem(item.PowerAttackRight, "PowerAttackRight");
-            }
-            if (printMask?.HoldTimerMin ?? true)
-            {
-                fg.AppendItem(item.HoldTimerMin, "HoldTimerMin");
-            }
-            if (printMask?.HoldTimerMax ?? true)
-            {
-                fg.AppendItem(item.HoldTimerMax, "HoldTimerMax");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.AcrobaticDodgePercentChance ?? true)
-            {
-                fg.AppendItem(item.AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
-            }
-            if (printMask?.RangeMultOptimal ?? true)
-            {
-                fg.AppendItem(item.RangeMultOptimal, "RangeMultOptimal");
-            }
-            if (printMask?.RangeMultMax ?? true)
-            {
-                fg.AppendItem(item.RangeMultMax, "RangeMultMax");
-            }
-            if (printMask?.SwitchDistanceMelee ?? true)
-            {
-                fg.AppendItem(item.SwitchDistanceMelee, "SwitchDistanceMelee");
-            }
-            if (printMask?.SwitchDistanceRanged ?? true)
-            {
-                fg.AppendItem(item.SwitchDistanceRanged, "SwitchDistanceRanged");
-            }
-            if (printMask?.BuffStandoffDistance ?? true)
-            {
-                fg.AppendItem(item.BuffStandoffDistance, "BuffStandoffDistance");
-            }
-            if (printMask?.RangedStandoffDistance ?? true)
-            {
-                fg.AppendItem(item.RangedStandoffDistance, "RangedStandoffDistance");
-            }
-            if (printMask?.GroupStandoffDistance ?? true)
-            {
-                fg.AppendItem(item.GroupStandoffDistance, "GroupStandoffDistance");
-            }
-            if (printMask?.RushingAttackPercentChance ?? true)
-            {
-                fg.AppendItem(item.RushingAttackPercentChance, "RushingAttackPercentChance");
-            }
-            if (printMask?.RushingAttackDistanceMult ?? true)
-            {
-                fg.AppendItem(item.RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Advanced?.Overall ?? true)
                 && item.Advanced.TryGet(out var AdvancedItem))
             {
                 AdvancedItem?.ToString(fg, "Advanced");
-            }
-            if (printMask?.CSTDDataTypeState ?? true)
-            {
-                fg.AppendItem(item.CSTDDataTypeState, "CSTDDataTypeState");
             }
         }
         
@@ -3724,6 +1421,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleGetter item,
             CombatStyle.Mask<bool?> checkMask)
         {
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.Advanced?.Overall.HasValue ?? false && checkMask.Advanced.Overall.Value != (item.Advanced != null)) return false;
             if (checkMask.Advanced?.Specific != null && (item.Advanced == null || !item.Advanced.HasBeenSet(checkMask.Advanced.Specific))) return false;
             return base.HasBeenSet(
@@ -3735,45 +1434,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleGetter item,
             CombatStyle.Mask<bool> mask)
         {
-            mask.DodgePercentChance = true;
-            mask.LeftRightPercentChance = true;
-            mask.DodgeLeftRightTimerMin = true;
-            mask.DodgeLeftRightTimerMax = true;
-            mask.DodgeForwardTimerMin = true;
-            mask.DodgeForwardTimerMax = true;
-            mask.DodgeBackTimerMin = true;
-            mask.DodgeBackTimerMax = true;
-            mask.IdleTimerMin = true;
-            mask.IdleTimerMax = true;
-            mask.BlockPercentChance = true;
-            mask.AttackPercentChance = true;
-            mask.RecoilStaggerBonusToAttack = true;
-            mask.UnconsciousBonusToAttack = true;
-            mask.HandToHandBonusToAttack = true;
-            mask.PowerAttackPercentChance = true;
-            mask.RecoilStaggerBonusToPowerAttack = true;
-            mask.UnconsciousBonusToPowerAttack = true;
-            mask.PowerAttackNormal = true;
-            mask.PowerAttackForward = true;
-            mask.PowerAttackBack = true;
-            mask.PowerAttackLeft = true;
-            mask.PowerAttackRight = true;
-            mask.HoldTimerMin = true;
-            mask.HoldTimerMax = true;
-            mask.Flags = true;
-            mask.AcrobaticDodgePercentChance = true;
-            mask.RangeMultOptimal = true;
-            mask.RangeMultMax = true;
-            mask.SwitchDistanceMelee = true;
-            mask.SwitchDistanceRanged = true;
-            mask.BuffStandoffDistance = true;
-            mask.RangedStandoffDistance = true;
-            mask.GroupStandoffDistance = true;
-            mask.RushingAttackPercentChance = true;
-            mask.RushingAttackDistanceMult = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, CombatStyleData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             var itemAdvanced = item.Advanced;
             mask.Advanced = new MaskItem<bool, CombatStyleAdvanced.Mask<bool>?>(itemAdvanced != null, itemAdvanced?.GetHasBeenSetMask());
-            mask.CSTDDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3823,44 +1487,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.DodgePercentChance != rhs.DodgePercentChance) return false;
-            if (lhs.LeftRightPercentChance != rhs.LeftRightPercentChance) return false;
-            if (!lhs.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin)) return false;
-            if (!lhs.DodgeLeftRightTimerMax.EqualsWithin(rhs.DodgeLeftRightTimerMax)) return false;
-            if (!lhs.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin)) return false;
-            if (!lhs.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax)) return false;
-            if (!lhs.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin)) return false;
-            if (!lhs.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax)) return false;
-            if (!lhs.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin)) return false;
-            if (!lhs.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax)) return false;
-            if (lhs.BlockPercentChance != rhs.BlockPercentChance) return false;
-            if (lhs.AttackPercentChance != rhs.AttackPercentChance) return false;
-            if (!lhs.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack)) return false;
-            if (!lhs.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack)) return false;
-            if (!lhs.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack)) return false;
-            if (lhs.PowerAttackPercentChance != rhs.PowerAttackPercentChance) return false;
-            if (!lhs.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack)) return false;
-            if (!lhs.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack)) return false;
-            if (lhs.PowerAttackNormal != rhs.PowerAttackNormal) return false;
-            if (lhs.PowerAttackForward != rhs.PowerAttackForward) return false;
-            if (lhs.PowerAttackBack != rhs.PowerAttackBack) return false;
-            if (lhs.PowerAttackLeft != rhs.PowerAttackLeft) return false;
-            if (lhs.PowerAttackRight != rhs.PowerAttackRight) return false;
-            if (!lhs.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin)) return false;
-            if (!lhs.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.AcrobaticDodgePercentChance != rhs.AcrobaticDodgePercentChance) return false;
-            if (!lhs.RangeMultOptimal.EqualsWithin(rhs.RangeMultOptimal)) return false;
-            if (!lhs.RangeMultMax.EqualsWithin(rhs.RangeMultMax)) return false;
-            if (!lhs.SwitchDistanceMelee.EqualsWithin(rhs.SwitchDistanceMelee)) return false;
-            if (!lhs.SwitchDistanceRanged.EqualsWithin(rhs.SwitchDistanceRanged)) return false;
-            if (!lhs.BuffStandoffDistance.EqualsWithin(rhs.BuffStandoffDistance)) return false;
-            if (!lhs.RangedStandoffDistance.EqualsWithin(rhs.RangedStandoffDistance)) return false;
-            if (!lhs.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance)) return false;
-            if (lhs.RushingAttackPercentChance != rhs.RushingAttackPercentChance) return false;
-            if (!lhs.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!object.Equals(lhs.Advanced, rhs.Advanced)) return false;
-            if (lhs.CSTDDataTypeState != rhs.CSTDDataTypeState) return false;
             return true;
         }
         
@@ -3885,47 +1513,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ICombatStyleGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.DodgePercentChance);
-            hash.Add(item.LeftRightPercentChance);
-            hash.Add(item.DodgeLeftRightTimerMin);
-            hash.Add(item.DodgeLeftRightTimerMax);
-            hash.Add(item.DodgeForwardTimerMin);
-            hash.Add(item.DodgeForwardTimerMax);
-            hash.Add(item.DodgeBackTimerMin);
-            hash.Add(item.DodgeBackTimerMax);
-            hash.Add(item.IdleTimerMin);
-            hash.Add(item.IdleTimerMax);
-            hash.Add(item.BlockPercentChance);
-            hash.Add(item.AttackPercentChance);
-            hash.Add(item.RecoilStaggerBonusToAttack);
-            hash.Add(item.UnconsciousBonusToAttack);
-            hash.Add(item.HandToHandBonusToAttack);
-            hash.Add(item.PowerAttackPercentChance);
-            hash.Add(item.RecoilStaggerBonusToPowerAttack);
-            hash.Add(item.UnconsciousBonusToPowerAttack);
-            hash.Add(item.PowerAttackNormal);
-            hash.Add(item.PowerAttackForward);
-            hash.Add(item.PowerAttackBack);
-            hash.Add(item.PowerAttackLeft);
-            hash.Add(item.PowerAttackRight);
-            hash.Add(item.HoldTimerMin);
-            hash.Add(item.HoldTimerMax);
-            hash.Add(item.Flags);
-            hash.Add(item.AcrobaticDodgePercentChance);
-            hash.Add(item.RangeMultOptimal);
-            hash.Add(item.RangeMultMax);
-            hash.Add(item.SwitchDistanceMelee);
-            hash.Add(item.SwitchDistanceRanged);
-            hash.Add(item.BuffStandoffDistance);
-            hash.Add(item.RangedStandoffDistance);
-            hash.Add(item.GroupStandoffDistance);
-            hash.Add(item.RushingAttackPercentChance);
-            hash.Add(item.RushingAttackDistanceMult);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             if (item.Advanced.TryGet(out var Advanceditem))
             {
                 hash.Add(Advanceditem);
             }
-            hash.Add(item.CSTDDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4001,149 +1596,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgePercentChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Data) ?? true))
             {
-                item.DodgePercentChance = rhs.DodgePercentChance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LeftRightPercentChance) ?? true))
-            {
-                item.LeftRightPercentChance = rhs.LeftRightPercentChance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin) ?? true))
-            {
-                item.DodgeLeftRightTimerMin = rhs.DodgeLeftRightTimerMin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax) ?? true))
-            {
-                item.DodgeLeftRightTimerMax = rhs.DodgeLeftRightTimerMax;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMin) ?? true))
-            {
-                item.DodgeForwardTimerMin = rhs.DodgeForwardTimerMin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMax) ?? true))
-            {
-                item.DodgeForwardTimerMax = rhs.DodgeForwardTimerMax;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMin) ?? true))
-            {
-                item.DodgeBackTimerMin = rhs.DodgeBackTimerMin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMax) ?? true))
-            {
-                item.DodgeBackTimerMax = rhs.DodgeBackTimerMax;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMin) ?? true))
-            {
-                item.IdleTimerMin = rhs.IdleTimerMin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMax) ?? true))
-            {
-                item.IdleTimerMax = rhs.IdleTimerMax;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockPercentChance) ?? true))
-            {
-                item.BlockPercentChance = rhs.BlockPercentChance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackPercentChance) ?? true))
-            {
-                item.AttackPercentChance = rhs.AttackPercentChance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack) ?? true))
-            {
-                item.RecoilStaggerBonusToAttack = rhs.RecoilStaggerBonusToAttack;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack) ?? true))
-            {
-                item.UnconsciousBonusToAttack = rhs.UnconsciousBonusToAttack;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HandToHandBonusToAttack) ?? true))
-            {
-                item.HandToHandBonusToAttack = rhs.HandToHandBonusToAttack;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackPercentChance) ?? true))
-            {
-                item.PowerAttackPercentChance = rhs.PowerAttackPercentChance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack) ?? true))
-            {
-                item.RecoilStaggerBonusToPowerAttack = rhs.RecoilStaggerBonusToPowerAttack;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack) ?? true))
-            {
-                item.UnconsciousBonusToPowerAttack = rhs.UnconsciousBonusToPowerAttack;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackNormal) ?? true))
-            {
-                item.PowerAttackNormal = rhs.PowerAttackNormal;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackForward) ?? true))
-            {
-                item.PowerAttackForward = rhs.PowerAttackForward;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackBack) ?? true))
-            {
-                item.PowerAttackBack = rhs.PowerAttackBack;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackLeft) ?? true))
-            {
-                item.PowerAttackLeft = rhs.PowerAttackLeft;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackRight) ?? true))
-            {
-                item.PowerAttackRight = rhs.PowerAttackRight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMin) ?? true))
-            {
-                item.HoldTimerMin = rhs.HoldTimerMin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMax) ?? true))
-            {
-                item.HoldTimerMax = rhs.HoldTimerMax;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance) ?? true))
-            {
-                item.AcrobaticDodgePercentChance = rhs.AcrobaticDodgePercentChance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultOptimal) ?? true))
-            {
-                item.RangeMultOptimal = rhs.RangeMultOptimal;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultMax) ?? true))
-            {
-                item.RangeMultMax = rhs.RangeMultMax;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceMelee) ?? true))
-            {
-                item.SwitchDistanceMelee = rhs.SwitchDistanceMelee;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceRanged) ?? true))
-            {
-                item.SwitchDistanceRanged = rhs.SwitchDistanceRanged;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BuffStandoffDistance) ?? true))
-            {
-                item.BuffStandoffDistance = rhs.BuffStandoffDistance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedStandoffDistance) ?? true))
-            {
-                item.RangedStandoffDistance = rhs.RangedStandoffDistance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupStandoffDistance) ?? true))
-            {
-                item.GroupStandoffDistance = rhs.GroupStandoffDistance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackPercentChance) ?? true))
-            {
-                item.RushingAttackPercentChance = rhs.RushingAttackPercentChance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
-            {
-                item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
@@ -4170,10 +1647,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSTDDataTypeState) ?? true))
-            {
-                item.CSTDDataTypeState = rhs.CSTDDataTypeState;
             }
         }
         
@@ -4317,347 +1790,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgePercentChance) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    ByteXmlTranslation.Instance.Write(
+                    ((CombatStyleDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.DodgePercentChance),
-                        item: item.DodgePercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgePercentChance,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LeftRightPercentChance) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LeftRightPercentChance),
-                        item: item.LeftRightPercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DodgeLeftRightTimerMin),
-                        item: item.DodgeLeftRightTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DodgeLeftRightTimerMax),
-                        item: item.DodgeLeftRightTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMin) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DodgeForwardTimerMin),
-                        item: item.DodgeForwardTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMin,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMax) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DodgeForwardTimerMax),
-                        item: item.DodgeForwardTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMax,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMin) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DodgeBackTimerMin),
-                        item: item.DodgeBackTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMin,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMax) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DodgeBackTimerMax),
-                        item: item.DodgeBackTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMax,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMin) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.IdleTimerMin),
-                        item: item.IdleTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMin,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMax) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.IdleTimerMax),
-                        item: item.IdleTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMax,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockPercentChance) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BlockPercentChance),
-                        item: item.BlockPercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.BlockPercentChance,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackPercentChance) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.AttackPercentChance),
-                        item: item.AttackPercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.AttackPercentChance,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.RecoilStaggerBonusToAttack),
-                        item: item.RecoilStaggerBonusToAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UnconsciousBonusToAttack),
-                        item: item.UnconsciousBonusToAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HandToHandBonusToAttack) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HandToHandBonusToAttack),
-                        item: item.HandToHandBonusToAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.HandToHandBonusToAttack,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackPercentChance) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PowerAttackPercentChance),
-                        item: item.PowerAttackPercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.RecoilStaggerBonusToPowerAttack),
-                        item: item.RecoilStaggerBonusToPowerAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UnconsciousBonusToPowerAttack),
-                        item: item.UnconsciousBonusToPowerAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackNormal) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PowerAttackNormal),
-                        item: item.PowerAttackNormal,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackNormal,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackForward) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PowerAttackForward),
-                        item: item.PowerAttackForward,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackForward,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackBack) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PowerAttackBack),
-                        item: item.PowerAttackBack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackBack,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackLeft) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PowerAttackLeft),
-                        item: item.PowerAttackLeft,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackLeft,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackRight) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PowerAttackRight),
-                        item: item.PowerAttackRight,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackRight,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMin) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HoldTimerMin),
-                        item: item.HoldTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMin,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMax) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HoldTimerMax),
-                        item: item.HoldTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMax,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<CombatStyle.Flag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)CombatStyle_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.AcrobaticDodgePercentChance),
-                        item: item.AcrobaticDodgePercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
-                        errorMask: errorMask);
-                }
-                if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultOptimal) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.RangeMultOptimal),
-                            item: item.RangeMultOptimal,
-                            fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultMax) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.RangeMultMax),
-                            item: item.RangeMultMax,
-                            fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
-                            errorMask: errorMask);
-                    }
-                    if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceMelee) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.SwitchDistanceMelee),
-                                item: item.SwitchDistanceMelee,
-                                fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceRanged) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.SwitchDistanceRanged),
-                                item: item.SwitchDistanceRanged,
-                                fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BuffStandoffDistance) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.BuffStandoffDistance),
-                                item: item.BuffStandoffDistance,
-                                fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
-                                errorMask: errorMask);
-                        }
-                        if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2))
-                        {
-                            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedStandoffDistance) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RangedStandoffDistance),
-                                    item: item.RangedStandoffDistance,
-                                    fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupStandoffDistance) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.GroupStandoffDistance),
-                                    item: item.GroupStandoffDistance,
-                                    fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
-                                    errorMask: errorMask);
-                            }
-                            if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3))
-                            {
-                                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackPercentChance) ?? true))
-                                {
-                                    ByteXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.RushingAttackPercentChance),
-                                        item: item.RushingAttackPercentChance,
-                                        fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.RushingAttackDistanceMult),
-                                        item: item.RushingAttackDistanceMult,
-                                        fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
-                                        errorMask: errorMask);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasCSTDDataType"));
+                        name: nameof(item.Data),
+                        fieldIndex: (int)CombatStyle_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Data));
                 }
             }
             if ((item.Advanced != null)
@@ -4673,15 +1817,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask,
                         translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
                 }
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSTDDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<CombatStyle.CSTDDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CSTDDataTypeState),
-                    item: item.CSTDDataTypeState,
-                    fieldIndex: (int)CombatStyle_FieldIndex.CSTDDataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -4790,648 +1925,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "DodgePercentChance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
+                case "Data":
+                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.Data);
                     try
                     {
-                        item.DodgePercentChance = ByteXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<CombatStyleData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Has;
-                    break;
-                case "LeftRightPercentChance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
-                    try
-                    {
-                        item.LeftRightPercentChance = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeLeftRightTimerMin":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
-                    try
-                    {
-                        item.DodgeLeftRightTimerMin = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeLeftRightTimerMax":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
-                    try
-                    {
-                        item.DodgeLeftRightTimerMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeForwardTimerMin":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
-                    try
-                    {
-                        item.DodgeForwardTimerMin = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeForwardTimerMax":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
-                    try
-                    {
-                        item.DodgeForwardTimerMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeBackTimerMin":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
-                    try
-                    {
-                        item.DodgeBackTimerMin = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeBackTimerMax":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
-                    try
-                    {
-                        item.DodgeBackTimerMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleTimerMin":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
-                    try
-                    {
-                        item.IdleTimerMin = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleTimerMax":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
-                    try
-                    {
-                        item.IdleTimerMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockPercentChance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
-                    try
-                    {
-                        item.BlockPercentChance = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackPercentChance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
-                    try
-                    {
-                        item.AttackPercentChance = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RecoilStaggerBonusToAttack":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
-                    try
-                    {
-                        item.RecoilStaggerBonusToAttack = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnconsciousBonusToAttack":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
-                    try
-                    {
-                        item.UnconsciousBonusToAttack = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HandToHandBonusToAttack":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
-                    try
-                    {
-                        item.HandToHandBonusToAttack = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackPercentChance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
-                    try
-                    {
-                        item.PowerAttackPercentChance = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RecoilStaggerBonusToPowerAttack":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
-                    try
-                    {
-                        item.RecoilStaggerBonusToPowerAttack = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnconsciousBonusToPowerAttack":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
-                    try
-                    {
-                        item.UnconsciousBonusToPowerAttack = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackNormal":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
-                    try
-                    {
-                        item.PowerAttackNormal = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackForward":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
-                    try
-                    {
-                        item.PowerAttackForward = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackBack":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
-                    try
-                    {
-                        item.PowerAttackBack = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackLeft":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
-                    try
-                    {
-                        item.PowerAttackLeft = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackRight":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
-                    try
-                    {
-                        item.PowerAttackRight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HoldTimerMin":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
-                    try
-                    {
-                        item.HoldTimerMin = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HoldTimerMax":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
-                    try
-                    {
-                        item.HoldTimerMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<CombatStyle.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AcrobaticDodgePercentChance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
-                    try
-                    {
-                        item.AcrobaticDodgePercentChance = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RangeMultOptimal":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
-                    try
-                    {
-                        item.RangeMultOptimal = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CSTDDataTypeState &= ~CombatStyle.CSTDDataType.Break0;
-                    break;
-                case "RangeMultMax":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
-                    try
-                    {
-                        item.RangeMultMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SwitchDistanceMelee":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
-                    try
-                    {
-                        item.SwitchDistanceMelee = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CSTDDataTypeState &= ~CombatStyle.CSTDDataType.Break1;
-                    break;
-                case "SwitchDistanceRanged":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
-                    try
-                    {
-                        item.SwitchDistanceRanged = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BuffStandoffDistance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
-                    try
-                    {
-                        item.BuffStandoffDistance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RangedStandoffDistance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
-                    try
-                    {
-                        item.RangedStandoffDistance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CSTDDataTypeState &= ~CombatStyle.CSTDDataType.Break2;
-                    break;
-                case "GroupStandoffDistance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
-                    try
-                    {
-                        item.GroupStandoffDistance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RushingAttackPercentChance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
-                    try
-                    {
-                        item.RushingAttackPercentChance = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CSTDDataTypeState &= ~CombatStyle.CSTDDataType.Break3;
-                    break;
-                case "RushingAttackDistanceMult":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
-                    try
-                    {
-                        item.RushingAttackDistanceMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5451,24 +1952,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CSTDDataTypeState":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.CSTDDataTypeState);
-                    try
-                    {
-                        item.CSTDDataTypeState = EnumXmlTranslation<CombatStyle.CSTDDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5566,28 +2049,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static CombatStyleBinaryWriteTranslation Instance = new CombatStyleBinaryWriteTranslation();
 
-        static partial void WriteBinarySecondaryFlagsCustom(
-            MutagenWriter writer,
-            ICombatStyleGetter item);
-
-        public static void WriteBinarySecondaryFlags(
-            MutagenWriter writer,
-            ICombatStyleGetter item)
-        {
-            WriteBinarySecondaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            ICombatStyleGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ICombatStyleGetter item,
             MutagenWriter writer,
@@ -5597,120 +2058,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSTD_HEADER)))
-                {
-                    writer.Write(item.DodgePercentChance);
-                    writer.Write(item.LeftRightPercentChance);
-                    writer.WriteZeros(2);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.DodgeLeftRightTimerMin);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.DodgeLeftRightTimerMax);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.DodgeForwardTimerMin);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.DodgeForwardTimerMax);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.DodgeBackTimerMin);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.DodgeBackTimerMax);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.IdleTimerMin);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.IdleTimerMax);
-                    writer.Write(item.BlockPercentChance);
-                    writer.Write(item.AttackPercentChance);
-                    writer.WriteZeros(2);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.RecoilStaggerBonusToAttack);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.UnconsciousBonusToAttack);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HandToHandBonusToAttack);
-                    writer.Write(item.PowerAttackPercentChance);
-                    writer.WriteZeros(3);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.RecoilStaggerBonusToPowerAttack);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.UnconsciousBonusToPowerAttack);
-                    writer.Write(item.PowerAttackNormal);
-                    writer.Write(item.PowerAttackForward);
-                    writer.Write(item.PowerAttackBack);
-                    writer.Write(item.PowerAttackLeft);
-                    writer.Write(item.PowerAttackRight);
-                    writer.WriteZeros(3);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HoldTimerMin);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HoldTimerMax);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<CombatStyle.Flag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 1);
-                    writer.Write(item.AcrobaticDodgePercentChance);
-                    writer.WriteZeros(2);
-                    if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0))
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.RangeMultOptimal);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.RangeMultMax);
-                        if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1))
-                        {
-                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.SwitchDistanceMelee);
-                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.SwitchDistanceRanged);
-                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.BuffStandoffDistance);
-                            if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2))
-                            {
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RangedStandoffDistance);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.GroupStandoffDistance);
-                                if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3))
-                                {
-                                    writer.Write(item.RushingAttackPercentChance);
-                                    writer.WriteZeros(3);
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.RushingAttackDistanceMult);
-                                    if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break4))
-                                    {
-                                        CombatStyleBinaryWriteTranslation.WriteBinarySecondaryFlags(
-                                            writer: writer,
-                                            item: item);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                ((CombatStyleDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer);
             }
             if (item.Advanced.TryGet(out var AdvancedItem))
             {
@@ -5730,7 +2082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: CombatStyle_Registration.CSTY_HEADER,
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -5778,19 +2130,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class CombatStyleBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
-
-        static partial void FillBinarySecondaryFlagsCustom(
-            MutagenFrame frame,
-            ICombatStyleInternal item);
-
-        public static void FillBinarySecondaryFlagsCustomPublic(
-            MutagenFrame frame,
-            ICombatStyleInternal item)
-        {
-            FillBinarySecondaryFlagsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 
@@ -5853,192 +2192,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        private int? _CSTDLocation;
-        public CombatStyle.CSTDDataType CSTDDataTypeState { get; private set; }
-        #region DodgePercentChance
-        private int _DodgePercentChanceLocation => _CSTDLocation!.Value + 0x0;
-        private bool _DodgePercentChance_IsSet => _CSTDLocation.HasValue;
-        public Byte DodgePercentChance => _DodgePercentChance_IsSet ? _data.Span[_DodgePercentChanceLocation] : default;
-        #endregion
-        #region LeftRightPercentChance
-        private int _LeftRightPercentChanceLocation => _CSTDLocation!.Value + 0x1;
-        private bool _LeftRightPercentChance_IsSet => _CSTDLocation.HasValue;
-        public Byte LeftRightPercentChance => _LeftRightPercentChance_IsSet ? _data.Span[_LeftRightPercentChanceLocation] : default;
-        #endregion
-        #region DodgeLeftRightTimerMin
-        private int _DodgeLeftRightTimerMinLocation => _CSTDLocation!.Value + 0x4;
-        private bool _DodgeLeftRightTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeLeftRightTimerMin => _DodgeLeftRightTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeLeftRightTimerMinLocation, 4)) : default;
-        #endregion
-        #region DodgeLeftRightTimerMax
-        private int _DodgeLeftRightTimerMaxLocation => _CSTDLocation!.Value + 0x8;
-        private bool _DodgeLeftRightTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeLeftRightTimerMax => _DodgeLeftRightTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeLeftRightTimerMaxLocation, 4)) : default;
-        #endregion
-        #region DodgeForwardTimerMin
-        private int _DodgeForwardTimerMinLocation => _CSTDLocation!.Value + 0xC;
-        private bool _DodgeForwardTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeForwardTimerMin => _DodgeForwardTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeForwardTimerMinLocation, 4)) : default;
-        #endregion
-        #region DodgeForwardTimerMax
-        private int _DodgeForwardTimerMaxLocation => _CSTDLocation!.Value + 0x10;
-        private bool _DodgeForwardTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeForwardTimerMax => _DodgeForwardTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeForwardTimerMaxLocation, 4)) : default;
-        #endregion
-        #region DodgeBackTimerMin
-        private int _DodgeBackTimerMinLocation => _CSTDLocation!.Value + 0x14;
-        private bool _DodgeBackTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeBackTimerMin => _DodgeBackTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeBackTimerMinLocation, 4)) : default;
-        #endregion
-        #region DodgeBackTimerMax
-        private int _DodgeBackTimerMaxLocation => _CSTDLocation!.Value + 0x18;
-        private bool _DodgeBackTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeBackTimerMax => _DodgeBackTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_DodgeBackTimerMaxLocation, 4)) : default;
-        #endregion
-        #region IdleTimerMin
-        private int _IdleTimerMinLocation => _CSTDLocation!.Value + 0x1C;
-        private bool _IdleTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single IdleTimerMin => _IdleTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_IdleTimerMinLocation, 4)) : default;
-        #endregion
-        #region IdleTimerMax
-        private int _IdleTimerMaxLocation => _CSTDLocation!.Value + 0x20;
-        private bool _IdleTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single IdleTimerMax => _IdleTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_IdleTimerMaxLocation, 4)) : default;
-        #endregion
-        #region BlockPercentChance
-        private int _BlockPercentChanceLocation => _CSTDLocation!.Value + 0x24;
-        private bool _BlockPercentChance_IsSet => _CSTDLocation.HasValue;
-        public Byte BlockPercentChance => _BlockPercentChance_IsSet ? _data.Span[_BlockPercentChanceLocation] : default;
-        #endregion
-        #region AttackPercentChance
-        private int _AttackPercentChanceLocation => _CSTDLocation!.Value + 0x25;
-        private bool _AttackPercentChance_IsSet => _CSTDLocation.HasValue;
-        public Byte AttackPercentChance => _AttackPercentChance_IsSet ? _data.Span[_AttackPercentChanceLocation] : default;
-        #endregion
-        #region RecoilStaggerBonusToAttack
-        private int _RecoilStaggerBonusToAttackLocation => _CSTDLocation!.Value + 0x28;
-        private bool _RecoilStaggerBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single RecoilStaggerBonusToAttack => _RecoilStaggerBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_RecoilStaggerBonusToAttackLocation, 4)) : default;
-        #endregion
-        #region UnconsciousBonusToAttack
-        private int _UnconsciousBonusToAttackLocation => _CSTDLocation!.Value + 0x2C;
-        private bool _UnconsciousBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single UnconsciousBonusToAttack => _UnconsciousBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_UnconsciousBonusToAttackLocation, 4)) : default;
-        #endregion
-        #region HandToHandBonusToAttack
-        private int _HandToHandBonusToAttackLocation => _CSTDLocation!.Value + 0x30;
-        private bool _HandToHandBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single HandToHandBonusToAttack => _HandToHandBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_HandToHandBonusToAttackLocation, 4)) : default;
-        #endregion
-        #region PowerAttackPercentChance
-        private int _PowerAttackPercentChanceLocation => _CSTDLocation!.Value + 0x34;
-        private bool _PowerAttackPercentChance_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackPercentChance => _PowerAttackPercentChance_IsSet ? _data.Span[_PowerAttackPercentChanceLocation] : default;
-        #endregion
-        #region RecoilStaggerBonusToPowerAttack
-        private int _RecoilStaggerBonusToPowerAttackLocation => _CSTDLocation!.Value + 0x38;
-        private bool _RecoilStaggerBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
-        public Single RecoilStaggerBonusToPowerAttack => _RecoilStaggerBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_RecoilStaggerBonusToPowerAttackLocation, 4)) : default;
-        #endregion
-        #region UnconsciousBonusToPowerAttack
-        private int _UnconsciousBonusToPowerAttackLocation => _CSTDLocation!.Value + 0x3C;
-        private bool _UnconsciousBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
-        public Single UnconsciousBonusToPowerAttack => _UnconsciousBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Slice(_UnconsciousBonusToPowerAttackLocation, 4)) : default;
-        #endregion
-        #region PowerAttackNormal
-        private int _PowerAttackNormalLocation => _CSTDLocation!.Value + 0x40;
-        private bool _PowerAttackNormal_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackNormal => _PowerAttackNormal_IsSet ? _data.Span[_PowerAttackNormalLocation] : default;
-        #endregion
-        #region PowerAttackForward
-        private int _PowerAttackForwardLocation => _CSTDLocation!.Value + 0x41;
-        private bool _PowerAttackForward_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackForward => _PowerAttackForward_IsSet ? _data.Span[_PowerAttackForwardLocation] : default;
-        #endregion
-        #region PowerAttackBack
-        private int _PowerAttackBackLocation => _CSTDLocation!.Value + 0x42;
-        private bool _PowerAttackBack_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackBack => _PowerAttackBack_IsSet ? _data.Span[_PowerAttackBackLocation] : default;
-        #endregion
-        #region PowerAttackLeft
-        private int _PowerAttackLeftLocation => _CSTDLocation!.Value + 0x43;
-        private bool _PowerAttackLeft_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackLeft => _PowerAttackLeft_IsSet ? _data.Span[_PowerAttackLeftLocation] : default;
-        #endregion
-        #region PowerAttackRight
-        private int _PowerAttackRightLocation => _CSTDLocation!.Value + 0x44;
-        private bool _PowerAttackRight_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackRight => _PowerAttackRight_IsSet ? _data.Span[_PowerAttackRightLocation] : default;
-        #endregion
-        #region HoldTimerMin
-        private int _HoldTimerMinLocation => _CSTDLocation!.Value + 0x48;
-        private bool _HoldTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single HoldTimerMin => _HoldTimerMin_IsSet ? SpanExt.GetFloat(_data.Slice(_HoldTimerMinLocation, 4)) : default;
-        #endregion
-        #region HoldTimerMax
-        private int _HoldTimerMaxLocation => _CSTDLocation!.Value + 0x4C;
-        private bool _HoldTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single HoldTimerMax => _HoldTimerMax_IsSet ? SpanExt.GetFloat(_data.Slice(_HoldTimerMaxLocation, 4)) : default;
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _CSTDLocation!.Value + 0x50;
-        private bool _Flags_IsSet => GetFlagsIsSetCustom();
-        public CombatStyle.Flag Flags => GetFlagsCustom();
-        #endregion
-        #region AcrobaticDodgePercentChance
-        private int _AcrobaticDodgePercentChanceLocation => _CSTDLocation!.Value + 0x51;
-        private bool _AcrobaticDodgePercentChance_IsSet => _CSTDLocation.HasValue;
-        public Byte AcrobaticDodgePercentChance => _AcrobaticDodgePercentChance_IsSet ? _data.Span[_AcrobaticDodgePercentChanceLocation] : default;
-        #endregion
-        #region RangeMultOptimal
-        private int _RangeMultOptimalLocation => _CSTDLocation!.Value + 0x54;
-        private bool _RangeMultOptimal_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0);
-        public Single RangeMultOptimal => _RangeMultOptimal_IsSet ? SpanExt.GetFloat(_data.Slice(_RangeMultOptimalLocation, 4)) : default;
-        #endregion
-        #region RangeMultMax
-        private int _RangeMultMaxLocation => _CSTDLocation!.Value + 0x58;
-        private bool _RangeMultMax_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0);
-        public Single RangeMultMax => _RangeMultMax_IsSet ? SpanExt.GetFloat(_data.Slice(_RangeMultMaxLocation, 4)) : default;
-        #endregion
-        #region SwitchDistanceMelee
-        private int _SwitchDistanceMeleeLocation => _CSTDLocation!.Value + 0x5C;
-        private bool _SwitchDistanceMelee_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
-        public Single SwitchDistanceMelee => _SwitchDistanceMelee_IsSet ? SpanExt.GetFloat(_data.Slice(_SwitchDistanceMeleeLocation, 4)) : default;
-        #endregion
-        #region SwitchDistanceRanged
-        private int _SwitchDistanceRangedLocation => _CSTDLocation!.Value + 0x60;
-        private bool _SwitchDistanceRanged_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
-        public Single SwitchDistanceRanged => _SwitchDistanceRanged_IsSet ? SpanExt.GetFloat(_data.Slice(_SwitchDistanceRangedLocation, 4)) : default;
-        #endregion
-        #region BuffStandoffDistance
-        private int _BuffStandoffDistanceLocation => _CSTDLocation!.Value + 0x64;
-        private bool _BuffStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1);
-        public Single BuffStandoffDistance => _BuffStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_BuffStandoffDistanceLocation, 4)) : default;
-        #endregion
-        #region RangedStandoffDistance
-        private int _RangedStandoffDistanceLocation => _CSTDLocation!.Value + 0x68;
-        private bool _RangedStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2);
-        public Single RangedStandoffDistance => _RangedStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_RangedStandoffDistanceLocation, 4)) : default;
-        #endregion
-        #region GroupStandoffDistance
-        private int _GroupStandoffDistanceLocation => _CSTDLocation!.Value + 0x6C;
-        private bool _GroupStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2);
-        public Single GroupStandoffDistance => _GroupStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_GroupStandoffDistanceLocation, 4)) : default;
-        #endregion
-        #region RushingAttackPercentChance
-        private int _RushingAttackPercentChanceLocation => _CSTDLocation!.Value + 0x70;
-        private bool _RushingAttackPercentChance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3);
-        public Byte RushingAttackPercentChance => _RushingAttackPercentChance_IsSet ? _data.Span[_RushingAttackPercentChanceLocation] : default;
-        #endregion
-        #region RushingAttackDistanceMult
-        private int _RushingAttackDistanceMultLocation => _CSTDLocation!.Value + 0x74;
-        private bool _RushingAttackDistanceMult_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3);
-        public Single RushingAttackDistanceMult => _RushingAttackDistanceMult_IsSet ? SpanExt.GetFloat(_data.Slice(_RushingAttackDistanceMultLocation, 4)) : default;
-        #endregion
-        #region SecondaryFlags
-        partial void SecondaryFlagsCustomParse(
-            BinaryMemoryReadStream stream,
-            int offset);
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public ICombatStyleDataGetter? Data => _Data_IsSet ? CombatStyleDataBinaryOverlay.CombatStyleDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Advanced
         private RangeInt32? _AdvancedLocation;
@@ -6098,30 +2256,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x44545343: // CSTD
                 {
-                    _CSTDLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.CSTDDataTypeState = CombatStyle.CSTDDataType.Has;
-                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x54)
-                    {
-                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
-                    }
-                    if (subLen <= 0x5C)
-                    {
-                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
-                    }
-                    if (subLen <= 0x68)
-                    {
-                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
-                    }
-                    if (subLen <= 0x70)
-                    {
-                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
-                    }
-                    if (subLen <= 0x78)
-                    {
-                        this.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
-                    }
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Data);
                 }
                 case 0x44415343: // CSAD
                 {

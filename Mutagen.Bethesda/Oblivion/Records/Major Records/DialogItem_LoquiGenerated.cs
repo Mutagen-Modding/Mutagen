@@ -48,32 +48,16 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region DialogType
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DialogType _DialogType;
-        public DialogType DialogType
+        private DialogItemData? _Data;
+        public DialogItemData? Data
         {
-            get => this._DialogType;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._DialogType = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DialogItem.Flag _Flags;
-        public DialogItem.Flag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._Flags = value;
-            }
-        }
+        IDialogItemDataGetter? IDialogItemGetter.Data => this.Data;
         #endregion
         #region Quest
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -165,9 +149,6 @@ namespace Mutagen.Bethesda.Oblivion
         public ScriptFields Script => _Script_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IScriptFieldsGetter IDialogItemGetter.Script => _Script_Object;
-        #endregion
-        #region DATADataTypeState
-        public DialogItem.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -339,8 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.DialogType = initialValue;
-                this.Flags = initialValue;
+                this.Data = new MaskItem<TItem, DialogItemData.Mask<TItem>?>(initialValue, new DialogItemData.Mask<TItem>(initialValue));
                 this.Quest = initialValue;
                 this.PreviousTopic = initialValue;
                 this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -349,7 +329,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Choices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Script = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -358,8 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Version,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
-                TItem DialogType,
-                TItem Flags,
+                TItem Data,
                 TItem Quest,
                 TItem PreviousTopic,
                 TItem Topics,
@@ -367,8 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Conditions,
                 TItem Choices,
                 TItem LinkFrom,
-                TItem Script,
-                TItem DATADataTypeState)
+                TItem Script)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -376,8 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.DialogType = DialogType;
-                this.Flags = Flags;
+                this.Data = new MaskItem<TItem, DialogItemData.Mask<TItem>?>(Data, new DialogItemData.Mask<TItem>(Data));
                 this.Quest = Quest;
                 this.PreviousTopic = PreviousTopic;
                 this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Topics, Enumerable.Empty<(int Index, TItem Value)>());
@@ -386,7 +362,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Choices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Choices, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkFrom, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Script = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(Script, new ScriptFields.Mask<TItem>(Script));
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -398,8 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem DialogType;
-            public TItem Flags;
+            public MaskItem<TItem, DialogItemData.Mask<TItem>?>? Data { get; set; }
             public TItem Quest;
             public TItem PreviousTopic;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Topics;
@@ -408,7 +382,6 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Choices;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LinkFrom;
             public MaskItem<TItem, ScriptFields.Mask<TItem>?>? Script { get; set; }
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -422,8 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.DialogType, rhs.DialogType)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Quest, rhs.Quest)) return false;
                 if (!object.Equals(this.PreviousTopic, rhs.PreviousTopic)) return false;
                 if (!object.Equals(this.Topics, rhs.Topics)) return false;
@@ -432,14 +404,12 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Choices, rhs.Choices)) return false;
                 if (!object.Equals(this.LinkFrom, rhs.LinkFrom)) return false;
                 if (!object.Equals(this.Script, rhs.Script)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.DialogType);
-                hash.Add(this.Flags);
+                hash.Add(this.Data);
                 hash.Add(this.Quest);
                 hash.Add(this.PreviousTopic);
                 hash.Add(this.Topics);
@@ -448,7 +418,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Choices);
                 hash.Add(this.LinkFrom);
                 hash.Add(this.Script);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -459,8 +428,11 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.DialogType)) return false;
-                if (!eval(this.Flags)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Quest)) return false;
                 if (!eval(this.PreviousTopic)) return false;
                 if (this.Topics != null)
@@ -525,7 +497,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.Script.Overall)) return false;
                     if (this.Script.Specific != null && !this.Script.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -534,8 +505,11 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.DialogType)) return true;
-                if (eval(this.Flags)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Quest)) return true;
                 if (eval(this.PreviousTopic)) return true;
                 if (this.Topics != null)
@@ -600,7 +574,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.Script.Overall)) return true;
                     if (this.Script.Specific != null && this.Script.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -616,8 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.DialogType = eval(this.DialogType);
-                obj.Flags = eval(this.Flags);
+                obj.Data = this.Data == null ? null : new MaskItem<R, DialogItemData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.Quest = eval(this.Quest);
                 obj.PreviousTopic = eval(this.PreviousTopic);
                 if (Topics != null)
@@ -693,7 +665,6 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 obj.Script = this.Script == null ? null : new MaskItem<R, ScriptFields.Mask<R>?>(eval(this.Script.Overall), this.Script.Specific?.Translate(eval));
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -716,13 +687,9 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.DialogType ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(DialogType, "DialogType");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
+                        Data?.ToString(fg);
                     }
                     if (printMask?.Quest ?? true)
                     {
@@ -851,10 +818,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Script?.ToString(fg);
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -867,8 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? DialogType;
-            public Exception? Flags;
+            public MaskItem<Exception?, DialogItemData.ErrorMask?>? Data;
             public Exception? Quest;
             public Exception? PreviousTopic;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Topics;
@@ -877,7 +839,6 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Choices;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LinkFrom;
             public MaskItem<Exception?, ScriptFields.ErrorMask?>? Script;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -886,10 +847,8 @@ namespace Mutagen.Bethesda.Oblivion
                 DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogItem_FieldIndex.DialogType:
-                        return DialogType;
-                    case DialogItem_FieldIndex.Flags:
-                        return Flags;
+                    case DialogItem_FieldIndex.Data:
+                        return Data;
                     case DialogItem_FieldIndex.Quest:
                         return Quest;
                     case DialogItem_FieldIndex.PreviousTopic:
@@ -906,8 +865,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return LinkFrom;
                     case DialogItem_FieldIndex.Script:
                         return Script;
-                    case DialogItem_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -918,11 +875,8 @@ namespace Mutagen.Bethesda.Oblivion
                 DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogItem_FieldIndex.DialogType:
-                        this.DialogType = ex;
-                        break;
-                    case DialogItem_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case DialogItem_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, DialogItemData.ErrorMask?>(ex, null);
                         break;
                     case DialogItem_FieldIndex.Quest:
                         this.Quest = ex;
@@ -948,9 +902,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case DialogItem_FieldIndex.Script:
                         this.Script = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ex, null);
                         break;
-                    case DialogItem_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -962,11 +913,8 @@ namespace Mutagen.Bethesda.Oblivion
                 DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogItem_FieldIndex.DialogType:
-                        this.DialogType = (Exception?)obj;
-                        break;
-                    case DialogItem_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case DialogItem_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, DialogItemData.ErrorMask?>?)obj;
                         break;
                     case DialogItem_FieldIndex.Quest:
                         this.Quest = (Exception?)obj;
@@ -992,9 +940,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case DialogItem_FieldIndex.Script:
                         this.Script = (MaskItem<Exception?, ScriptFields.ErrorMask?>?)obj;
                         break;
-                    case DialogItem_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1004,8 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (DialogType != null) return true;
-                if (Flags != null) return true;
+                if (Data != null) return true;
                 if (Quest != null) return true;
                 if (PreviousTopic != null) return true;
                 if (Topics != null) return true;
@@ -1014,7 +958,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Choices != null) return true;
                 if (LinkFrom != null) return true;
                 if (Script != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1050,8 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(DialogType, "DialogType");
-                fg.AppendItem(Flags, "Flags");
+                Data?.ToString(fg);
                 fg.AppendItem(Quest, "Quest");
                 fg.AppendItem(PreviousTopic, "PreviousTopic");
                 if (Topics.TryGet(out var TopicsItem))
@@ -1165,7 +1107,6 @@ namespace Mutagen.Bethesda.Oblivion
                     fg.AppendLine("]");
                 }
                 Script?.ToString(fg);
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1174,8 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DialogType = this.DialogType.Combine(rhs.DialogType);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Quest = this.Quest.Combine(rhs.Quest);
                 ret.PreviousTopic = this.PreviousTopic.Combine(rhs.PreviousTopic);
                 ret.Topics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
@@ -1184,7 +1124,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Choices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Choices?.Overall, rhs.Choices?.Overall), ExceptionExt.Combine(this.Choices?.Specific, rhs.Choices?.Specific));
                 ret.LinkFrom = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkFrom?.Overall, rhs.LinkFrom?.Overall), ExceptionExt.Combine(this.LinkFrom?.Specific, rhs.LinkFrom?.Specific));
                 ret.Script = this.Script.Combine(rhs.Script, (l, r) => l.Combine(r));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1207,8 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public bool DialogType;
-            public bool Flags;
+            public MaskItem<bool, DialogItemData.TranslationMask?> Data;
             public bool Quest;
             public bool PreviousTopic;
             public bool Topics;
@@ -1217,15 +1155,13 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Choices;
             public bool LinkFrom;
             public MaskItem<bool, ScriptFields.TranslationMask?> Script;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.DialogType = defaultOn;
-                this.Flags = defaultOn;
+                this.Data = new MaskItem<bool, DialogItemData.TranslationMask?>(defaultOn, null);
                 this.Quest = defaultOn;
                 this.PreviousTopic = defaultOn;
                 this.Topics = defaultOn;
@@ -1234,7 +1170,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Choices = defaultOn;
                 this.LinkFrom = defaultOn;
                 this.Script = new MaskItem<bool, ScriptFields.TranslationMask?>(defaultOn, null);
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1242,8 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((DialogType, null));
-                ret.Add((Flags, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((Quest, null));
                 ret.Add((PreviousTopic, null));
                 ret.Add((Topics, null));
@@ -1252,19 +1186,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Choices, null));
                 ret.Add((LinkFrom, null));
                 ret.Add((Script?.Overall ?? true, Script?.Specific?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1,
-            Break0 = 2
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => DialogItemCommon.Instance.GetLinks(this);
         public DialogItem(FormKey formKey)
@@ -1346,8 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IDialogItemInternal>
     {
-        new DialogType DialogType { get; set; }
-        new DialogItem.Flag Flags { get; set; }
+        new DialogItemData? Data { get; set; }
         new IFormLinkNullable<Quest> Quest { get; }
         new IFormLinkNullable<DialogItem> PreviousTopic { get; }
         new ExtendedList<IFormLink<DialogTopic>>? Topics { get; set; }
@@ -1356,7 +1282,6 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<IFormLink<DialogTopic>>? Choices { get; set; }
         new ExtendedList<IFormLink<DialogTopic>>? LinkFrom { get; set; }
         new ScriptFields Script { get; }
-        new DialogItem.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IDialogItemInternal :
@@ -1374,8 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        DialogType DialogType { get; }
-        DialogItem.Flag Flags { get; }
+        IDialogItemDataGetter? Data { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic { get; }
         IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? Topics { get; }
@@ -1384,7 +1308,6 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? Choices { get; }
         IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>>? LinkFrom { get; }
         IScriptFieldsGetter Script { get; }
-        DialogItem.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1684,17 +1607,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Version = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
-        DialogType = 5,
-        Flags = 6,
-        Quest = 7,
-        PreviousTopic = 8,
-        Topics = 9,
-        Responses = 10,
-        Conditions = 11,
-        Choices = 12,
-        LinkFrom = 13,
-        Script = 14,
-        DATADataTypeState = 15,
+        Data = 5,
+        Quest = 6,
+        PreviousTopic = 7,
+        Topics = 8,
+        Responses = 9,
+        Conditions = 10,
+        Choices = 11,
+        LinkFrom = 12,
+        Script = 13,
     }
     #endregion
 
@@ -1712,9 +1633,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "2d9149e0-aa5e-4b4e-8bef-93b32f602f3b";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(DialogItem.Mask<>);
 
@@ -1744,10 +1665,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DIALOGTYPE":
-                    return (ushort)DialogItem_FieldIndex.DialogType;
-                case "FLAGS":
-                    return (ushort)DialogItem_FieldIndex.Flags;
+                case "DATA":
+                    return (ushort)DialogItem_FieldIndex.Data;
                 case "QUEST":
                     return (ushort)DialogItem_FieldIndex.Quest;
                 case "PREVIOUSTOPIC":
@@ -1764,8 +1683,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)DialogItem_FieldIndex.LinkFrom;
                 case "SCRIPT":
                     return (ushort)DialogItem_FieldIndex.Script;
-                case "DATADATATYPESTATE":
-                    return (ushort)DialogItem_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1782,12 +1699,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
                     return true;
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
+                case DialogItem_FieldIndex.Data:
                 case DialogItem_FieldIndex.Quest:
                 case DialogItem_FieldIndex.PreviousTopic:
                 case DialogItem_FieldIndex.Script:
-                case DialogItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1799,18 +1714,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
             switch (enu)
             {
+                case DialogItem_FieldIndex.Data:
                 case DialogItem_FieldIndex.Responses:
                 case DialogItem_FieldIndex.Conditions:
                 case DialogItem_FieldIndex.Script:
                     return true;
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
                 case DialogItem_FieldIndex.Quest:
                 case DialogItem_FieldIndex.PreviousTopic:
                 case DialogItem_FieldIndex.Topics:
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1824,8 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case DialogItem_FieldIndex.Script:
                     return true;
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
+                case DialogItem_FieldIndex.Data:
                 case DialogItem_FieldIndex.Quest:
                 case DialogItem_FieldIndex.PreviousTopic:
                 case DialogItem_FieldIndex.Topics:
@@ -1833,7 +1745,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Conditions:
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1845,10 +1756,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
             switch (enu)
             {
-                case DialogItem_FieldIndex.DialogType:
-                    return "DialogType";
-                case DialogItem_FieldIndex.Flags:
-                    return "Flags";
+                case DialogItem_FieldIndex.Data:
+                    return "Data";
                 case DialogItem_FieldIndex.Quest:
                     return "Quest";
                 case DialogItem_FieldIndex.PreviousTopic:
@@ -1865,8 +1774,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "LinkFrom";
                 case DialogItem_FieldIndex.Script:
                     return "Script";
-                case DialogItem_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1877,8 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
             switch (enu)
             {
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
+                case DialogItem_FieldIndex.Data:
                 case DialogItem_FieldIndex.Quest:
                 case DialogItem_FieldIndex.PreviousTopic:
                 case DialogItem_FieldIndex.Topics:
@@ -1887,7 +1793,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
                 case DialogItem_FieldIndex.Script:
-                case DialogItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1901,8 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case DialogItem_FieldIndex.Script:
                     return true;
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
+                case DialogItem_FieldIndex.Data:
                 case DialogItem_FieldIndex.Quest:
                 case DialogItem_FieldIndex.PreviousTopic:
                 case DialogItem_FieldIndex.Topics:
@@ -1910,7 +1814,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Conditions:
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1922,10 +1825,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
             switch (enu)
             {
-                case DialogItem_FieldIndex.DialogType:
-                    return typeof(DialogType);
-                case DialogItem_FieldIndex.Flags:
-                    return typeof(DialogItem.Flag);
+                case DialogItem_FieldIndex.Data:
+                    return typeof(DialogItemData);
                 case DialogItem_FieldIndex.Quest:
                     return typeof(IFormLinkNullable<Quest>);
                 case DialogItem_FieldIndex.PreviousTopic:
@@ -1942,8 +1843,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(ExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Script:
                     return typeof(ScriptFields);
-                case DialogItem_FieldIndex.DATADataTypeState:
-                    return typeof(DialogItem.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1956,6 +1855,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
         public static readonly RecordType NAME_HEADER = new RecordType("NAME");
         public static readonly RecordType TRDT_HEADER = new RecordType("TRDT");
+        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
+        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
         public static readonly RecordType TCLT_HEADER = new RecordType("TCLT");
@@ -1964,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
         public static readonly RecordType TriggeringRecordType = INFO_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
+        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2007,8 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IDialogItemInternal item)
         {
             ClearPartial();
-            item.DialogType = default;
-            item.Flags = default;
+            item.Data = null;
             item.Quest.FormKey = null;
             item.PreviousTopic.FormKey = null;
             item.Topics = null;
@@ -2016,7 +1916,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Conditions.Clear();
             item.Choices = null;
             item.LinkFrom = null;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2040,9 +1939,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= DialogItem.DATADataType.Has;
-                    break;
                 case "Script":
                     errorMask?.PushIndex((int)DialogItem_FieldIndex.Script);
                     try
@@ -2081,7 +1977,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                item.DATADataTypeState |= DialogItem.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -2156,20 +2051,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = DialogItem.DATADataType.Has;
-                    }
-                    item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= DialogItem.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.DialogType);
-                    }
-                    item.Flags = EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Flags);
+                    item.Data = Mutagen.Bethesda.Oblivion.DialogItemData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
                 }
                 case 0x49545351: // QSTI
                 {
@@ -2199,11 +2082,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
                 case 0x54445254: // TRDT
+                case 0x314D414E: // NAM1
+                case 0x324D414E: // NAM2
                 {
                     item.Responses.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: DialogItem_Registration.TRDT_HEADER,
+                            triggeringRecord: DialogResponse_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out DialogResponse listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2335,8 +2220,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.DialogType = item.DialogType == rhs.DialogType;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Quest = object.Equals(item.Quest, rhs.Quest);
             ret.PreviousTopic = object.Equals(item.PreviousTopic, rhs.PreviousTopic);
             ret.Topics = item.Topics.CollectionEqualsHelper(
@@ -2360,7 +2248,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Script = MaskItemExt.Factory(item.Script.GetEqualsMask(rhs.Script, include), include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2412,13 +2299,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.DialogType ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.DialogType, "DialogType");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
+                DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Quest ?? true)
                 && item.Quest.TryGet(out var QuestItem))
@@ -2527,16 +2411,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Script?.ToString(fg, "Script");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public bool HasBeenSet(
             IDialogItemGetter item,
             DialogItem.Mask<bool?> checkMask)
         {
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.Quest.HasValue && checkMask.Quest.Value != (item.Quest.FormKey != null)) return false;
             if (checkMask.PreviousTopic.HasValue && checkMask.PreviousTopic.Value != (item.PreviousTopic.FormKey != null)) return false;
             if (checkMask.Topics?.Overall.HasValue ?? false && checkMask.Topics!.Overall.Value != (item.Topics != null)) return false;
@@ -2551,8 +2433,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemGetter item,
             DialogItem.Mask<bool> mask)
         {
-            mask.DialogType = true;
-            mask.Flags = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, DialogItemData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             mask.Quest = (item.Quest.FormKey != null);
             mask.PreviousTopic = (item.PreviousTopic.FormKey != null);
             mask.Topics = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Topics != null), default);
@@ -2563,7 +2445,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Choices = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Choices != null), default);
             mask.LinkFrom = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.LinkFrom != null), default);
             mask.Script = new MaskItem<bool, ScriptFields.Mask<bool>?>(true, item.Script?.GetHasBeenSetMask());
-            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2613,8 +2494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.DialogType != rhs.DialogType) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
             if (!lhs.PreviousTopic.Equals(rhs.PreviousTopic)) return false;
             if (!lhs.Topics.SequenceEqual(rhs.Topics)) return false;
@@ -2623,7 +2503,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Choices.SequenceEqual(rhs.Choices)) return false;
             if (!lhs.LinkFrom.SequenceEqual(rhs.LinkFrom)) return false;
             if (!object.Equals(lhs.Script, rhs.Script)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -2648,8 +2527,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IDialogItemGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.DialogType);
-            hash.Add(item.Flags);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             if (item.Quest.TryGet(out var Questitem))
             {
                 hash.Add(Questitem);
@@ -2664,7 +2545,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Choices);
             hash.Add(item.LinkFrom);
             hash.Add(item.Script);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2770,13 +2650,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.DialogType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Data) ?? true))
             {
-                item.DialogType = rhs.DialogType;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
+                errorMask?.PushIndex((int)DialogItem_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DialogItem_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
             {
@@ -2935,10 +2833,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -3081,32 +2975,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.DialogType) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    EnumXmlTranslation<DialogType>.Instance.Write(
+                    ((DialogItemDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.DialogType),
-                        item: item.DialogType,
-                        fieldIndex: (int)DialogItem_FieldIndex.DialogType,
-                        errorMask: errorMask);
-                }
-                if (!item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Flags) ?? true))
-                    {
-                        EnumXmlTranslation<DialogItem.Flag>.Instance.Write(
-                            node: node,
-                            name: nameof(item.Flags),
-                            item: item.Flags,
-                            fieldIndex: (int)DialogItem_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasDATADataType"));
+                        name: nameof(item.Data),
+                        fieldIndex: (int)DialogItem_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Data));
                 }
             }
             if ((item.Quest.FormKey != null)
@@ -3241,15 +3121,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Script));
             }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<DialogItem.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)DialogItem_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
         }
 
         public void Write(
@@ -3357,13 +3228,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "DialogType":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
+                case "Data":
+                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Data);
                     try
                     {
-                        item.DialogType = EnumXmlTranslation<DialogType>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<DialogItemData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3374,26 +3246,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
-                    item.DATADataTypeState |= DialogItem.DATADataType.Has;
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<DialogItem.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~DialogItem.DATADataType.Break0;
                     break;
                 case "Quest":
                     errorMask?.PushIndex((int)DialogItem_FieldIndex.Quest);
@@ -3571,24 +3423,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<DialogItem.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -3675,15 +3509,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static DialogItemBinaryWriteTranslation Instance = new DialogItemBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IDialogItemGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IDialogItemGetter item,
             MutagenWriter writer,
@@ -3693,22 +3518,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogItem_Registration.DATA_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogType>.Instance.Write(
-                        writer,
-                        item.DialogType,
-                        length: 2);
-                    if (!item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0))
-                    {
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogItem.Flag>.Instance.Write(
-                            writer,
-                            item.Flags,
-                            length: 1);
-                    }
-                }
+                ((DialogItemDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3790,7 +3604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: DialogItem_Registration.INFO_HEADER,
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3901,17 +3715,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        private int? _DATALocation;
-        public DialogItem.DATADataType DATADataTypeState { get; private set; }
-        #region DialogType
-        private int _DialogTypeLocation => _DATALocation!.Value + 0x0;
-        private bool _DialogType_IsSet => _DATALocation.HasValue;
-        public DialogType DialogType => _DialogType_IsSet ? (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DialogTypeLocation, 2)) : default;
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x2;
-        private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0);
-        public DialogItem.Flag Flags => _Flags_IsSet ? (DialogItem.Flag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IDialogItemDataGetter? Data => _Data_IsSet ? DialogItemDataBinaryOverlay.DialogItemDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Quest
         private int? _QuestLocation;
@@ -3984,14 +3792,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = DialogItem.DATADataType.Has;
-                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x2)
-                    {
-                        this.DATADataTypeState |= DialogItem.DATADataType.Break0;
-                    }
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Flags);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
                 }
                 case 0x49545351: // QSTI
                 {
@@ -4019,11 +3821,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
                 case 0x54445254: // TRDT
+                case 0x314D414E: // NAM1
+                case 0x324D414E: // NAM2
                 {
                     this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: DialogItem_Registration.TRDT_HEADER,
+                        trigger: DialogResponse_Registration.TriggeringRecordTypes,
                         factory:  DialogResponseBinaryOverlay.DialogResponseFactory);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
                 }

@@ -127,9 +127,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         breaks++;
                     }
-                }
-                else if (breaks != null)
-                {
                     field.GetFieldData().BreakIndex = breaks;
                 }
             }

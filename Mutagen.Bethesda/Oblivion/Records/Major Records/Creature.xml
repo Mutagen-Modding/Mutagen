@@ -15,59 +15,20 @@
         <String />
       </List>
       <ByteArray name="NIFT" recordType="NIFT" />
-      <Data recordType="ACBS">
-        <Fields>
-          <Enum name="Flags" enumName="Creature.CreatureFlag" byteLength="4" />
-          <UInt16 name="BaseSpellPoints" />
-          <UInt16 name="Fatigue" />
-          <UInt16 name="BarterGold" />
-          <Int16 name="LevelOffset" />
-          <UInt16 name="CalcMin" />
-          <UInt16 name="CalcMax" />
-        </Fields>
-      </Data>
+      <RefDirect name="Configuration" refName="CreatureConfiguration" />
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
       <FormLink name="DeathItem" refName="AItem" recordType="INAM" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
-      <Data recordType="AIDT">
-        <Fields>
-          <UInt8 name="Aggression" />
-          <UInt8 name="Confidence" />
-          <UInt8 name="EnergyLevel" />
-          <UInt8 name="Responsibility" />
-          <Enum name="BuySellServices" enumName="Npc.BuySellServiceFlag" byteLength="4" />
-          <Enum name="Teaches" enumName="Skill" byteLength="1" />
-          <UInt8 name="MaximumTrainingLevel" />
-          <Zero byteLength="2" />
-        </Fields>
-      </Data>
+      <RefDirect name="AIData" refName="CreatureAIData" />
       <List name="AIPackages">
         <FormLink refName="AIPackage" recordType="PKID" />
       </List>
       <List name="Animations" recordType="KFFZ">
         <String />
       </List>
-      <Data>
-        <Fields>
-          <Enum name="CreatureType" enumName="Creature.CreatureTypeEnum" byteLength="1" />
-          <UInt8 name="CombatSkill" />
-          <UInt8 name="MagicSkill" />
-          <UInt8 name="StealthSkill" />
-          <Enum name="SoulLevel" enumName="SoulLevel" byteLength="2" />
-          <UInt32 name="Health" />
-          <UInt16 name="AttackDamage" />
-          <UInt8 name="Strength" />
-          <UInt8 name="Intelligence" />
-          <UInt8 name="Willpower" />
-          <UInt8 name="Agility" />
-          <UInt8 name="Speed" />
-          <UInt8 name="Endurance" />
-          <UInt8 name="Personality" />
-          <UInt8 name="Luck" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="CreatureData" />
       <UInt8 name="AttackReach" recordType="RNAM" />
       <FormLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
       <Float name="TurningSpeed" recordType="TNAM" />
@@ -77,6 +38,48 @@
       <String name="BloodDecal" recordType="NAM1" />
       <FormLink name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
       <RefList name="Sounds" refName="CreatureSound" />
+    </Fields>
+  </Object>
+  <Object name="CreatureConfiguration" objType="Subrecord" recordType="ACBS" GUID="47d2aad4-4bca-4222-8f0c-6a7ed5899187" ID="183">
+    <Fields>
+      <Enum name="Flags" enumName="Creature.CreatureFlag" byteLength="4" />
+      <UInt16 name="BaseSpellPoints" />
+      <UInt16 name="Fatigue" />
+      <UInt16 name="BarterGold" />
+      <Int16 name="LevelOffset" />
+      <UInt16 name="CalcMin" />
+      <UInt16 name="CalcMax" />
+    </Fields>
+  </Object>
+  <Object name="CreatureAIData" objType="Subrecord" recordType="AIDT" GUID="0776da7a-c4ea-4359-86dc-ef07a4bc558e" ID="184">
+    <Fields>
+      <UInt8 name="Aggression" />
+      <UInt8 name="Confidence" />
+      <UInt8 name="EnergyLevel" />
+      <UInt8 name="Responsibility" />
+      <Enum name="BuySellServices" enumName="Npc.BuySellServiceFlag" byteLength="4" />
+      <Enum name="Teaches" enumName="Skill" byteLength="1" />
+      <UInt8 name="MaximumTrainingLevel" />
+      <Zero byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="CreatureData" objType="Subrecord" recordType="DATA" GUID="20d1cf07-b67d-4565-835c-0dc6b3249a60" ID="185">
+    <Fields>
+      <Enum name="CreatureType" enumName="Creature.CreatureTypeEnum" byteLength="1" />
+      <UInt8 name="CombatSkill" />
+      <UInt8 name="MagicSkill" />
+      <UInt8 name="StealthSkill" />
+      <Enum name="SoulLevel" enumName="SoulLevel" byteLength="2" />
+      <UInt32 name="Health" />
+      <UInt16 name="AttackDamage" />
+      <UInt8 name="Strength" />
+      <UInt8 name="Intelligence" />
+      <UInt8 name="Willpower" />
+      <UInt8 name="Agility" />
+      <UInt8 name="Speed" />
+      <UInt8 name="Endurance" />
+      <UInt8 name="Personality" />
+      <UInt8 name="Luck" />
     </Fields>
   </Object>
   <Object name="CreatureSound" objType="Subrecord" GUID="f3d5081c-a137-4a9e-8dd9-c79a8bf94fc3" ID="90">

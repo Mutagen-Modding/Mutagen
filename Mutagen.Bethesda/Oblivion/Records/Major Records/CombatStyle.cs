@@ -32,9 +32,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class CombatStyleBinaryCreateTranslation
+        public partial class CombatStyleDataBinaryCreateTranslation
         {
-            static partial void FillBinarySecondaryFlagsCustom(MutagenFrame frame, ICombatStyleInternal item)
+            static partial void FillBinarySecondaryFlagsCustom(MutagenFrame frame, ICombatStyleData item)
             {
                 int flags = frame.ReadInt32();
                 var otherFlag = (CombatStyle.Flag)(flags << 8);
@@ -42,9 +42,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class CombatStyleBinaryWriteTranslation
+        public partial class CombatStyleDataBinaryWriteTranslation
         {
-            static partial void WriteBinarySecondaryFlagsCustom(MutagenWriter writer, ICombatStyleGetter item)
+            static partial void WriteBinarySecondaryFlagsCustom(MutagenWriter writer, ICombatStyleDataGetter item)
             {
                 int flags = (int)item.Flags;
                 flags >>= 8;
@@ -52,16 +52,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class CombatStyleBinaryOverlay
+        public partial class CombatStyleDataBinaryOverlay
         {
-            private bool GetFlagsIsSetCustom() => _CSTDLocation.HasValue;
-            private CombatStyle.Flag GetFlagsCustom()
+            private bool GetFlagsIsSetCustom() => true;
+            private CombatStyle.Flag GetFlagsCustom(int location)
             {
-                if (!_Flags_IsSet) return default;
-                var ret = (CombatStyle.Flag)_data.Span.Slice(_FlagsLocation, 1)[0];
-                if (!this.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break4))
+                var ret = (CombatStyle.Flag)_data[0x50];
+                if (!this.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break4))
                 {
-                    int flags = BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CSTDLocation!.Value + 0x78));
+                    int flags = BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x78));
                     var otherFlag = (CombatStyle.Flag)(flags << 8);
                     ret |= otherFlag;
                 }

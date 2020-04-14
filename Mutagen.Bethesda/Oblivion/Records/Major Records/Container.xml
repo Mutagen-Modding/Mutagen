@@ -7,12 +7,7 @@
       <RefDirect name="Model" refName="Model" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <RefList name="Items" refName="ContainerItem" />
-      <Data>
-        <Fields>
-          <Enum name="Flags" enumName="Container.ContainerFlag" byteLength="1" />
-          <Float name="Weight" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="ContainerData" />
       <FormLink name="OpenSound" refName="Sound" recordType="SNAM" />
       <FormLink name="CloseSound" refName="Sound" recordType="QNAM" />
     </Fields>
@@ -21,6 +16,12 @@
     <Fields>
       <FormLink name="Item" refName="AItem" />
       <UInt32 name="Count" />
+    </Fields>
+  </Object>
+  <Object name="ContainerData" objType="Subrecord" recordType="DATA" GUID="f61ee128-2b60-4a7b-8b86-201b1d2ae2e6" ID="182">
+    <Fields>
+      <Enum name="Flags" enumName="Container.ContainerFlag" byteLength="1" />
+      <Float name="Weight" />
     </Fields>
   </Object>
 </Loqui>

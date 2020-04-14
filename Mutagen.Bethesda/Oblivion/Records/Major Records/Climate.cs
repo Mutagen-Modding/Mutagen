@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class ClimateBinaryWriteTranslation
+        public partial class ClimateDataBinaryWriteTranslation
         {
             private static byte GetByte(DateTime d)
             {
@@ -31,39 +31,39 @@ namespace Mutagen.Bethesda.Oblivion
                 return (byte)(mins / 10);
             }
 
-            static partial void WriteBinarySunriseBeginCustom(MutagenWriter writer, IClimateGetter item)
+            static partial void WriteBinarySunriseBeginCustom(MutagenWriter writer, IClimateDataGetter item)
             {
                 writer.Write(GetByte(item.SunriseBegin));
             }
 
-            static partial void WriteBinarySunriseEndCustom(MutagenWriter writer, IClimateGetter item)
+            static partial void WriteBinarySunriseEndCustom(MutagenWriter writer, IClimateDataGetter item)
             {
                 writer.Write(GetByte(item.SunriseEnd));
             }
 
-            static partial void WriteBinarySunsetBeginCustom(MutagenWriter writer, IClimateGetter item)
+            static partial void WriteBinarySunsetBeginCustom(MutagenWriter writer, IClimateDataGetter item)
             {
                 writer.Write(GetByte(item.SunsetBegin));
             }
 
-            static partial void WriteBinarySunsetEndCustom(MutagenWriter writer, IClimateGetter item)
+            static partial void WriteBinarySunsetEndCustom(MutagenWriter writer, IClimateDataGetter item)
             {
                 writer.Write(GetByte(item.SunsetEnd));
             }
 
-            static partial void WriteBinaryPhaseCustom(MutagenWriter writer, IClimateGetter item)
+            static partial void WriteBinaryPhaseCustom(MutagenWriter writer, IClimateDataGetter item)
             {
                 var eInt = (byte)(((int)item.Phase) * 64);
                 eInt += item.PhaseLength;
                 writer.Write(eInt);
             }
 
-            static partial void WriteBinaryPhaseLengthCustom(MutagenWriter writer, IClimateGetter item)
+            static partial void WriteBinaryPhaseLengthCustom(MutagenWriter writer, IClimateDataGetter item)
             { // Handled in Phase section
             }
         }
 
-        public partial class ClimateBinaryCreateTranslation
+        public partial class ClimateDataBinaryCreateTranslation
         {
             private static DateTime DateConverter(DateTime d)
             {
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return DateTime.MinValue.AddMinutes(b * 10);
             }
 
-            static partial void FillBinarySunriseBeginCustom(MutagenFrame frame, IClimateInternal item)
+            static partial void FillBinarySunriseBeginCustom(MutagenFrame frame, IClimateData item)
             {
                 if (GetDate(frame.Reader.ReadUInt8(), out var date))
                 {
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinarySunriseEndCustom(MutagenFrame frame, IClimateInternal item)
+            static partial void FillBinarySunriseEndCustom(MutagenFrame frame, IClimateData item)
             {
                 if (GetDate(frame.Reader.ReadUInt8(), out var date))
                 {
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinarySunsetBeginCustom(MutagenFrame frame, IClimateInternal item)
+            static partial void FillBinarySunsetBeginCustom(MutagenFrame frame, IClimateData item)
             {
                 if (GetDate(frame.Reader.ReadUInt8(), out var date))
                 {
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinarySunsetEndCustom(MutagenFrame frame, IClimateInternal item)
+            static partial void FillBinarySunsetEndCustom(MutagenFrame frame, IClimateData item)
             {
                 if (GetDate(frame.Reader.ReadUInt8(), out var date))
                 {
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Oblivion
             public static int GetPhaseInt(byte b) => b / 64;
             public static byte GetPhaseLen(byte b) => (byte)(b % 64);
 
-            static partial void FillBinaryPhaseCustom(MutagenFrame frame, IClimateInternal item)
+            static partial void FillBinaryPhaseCustom(MutagenFrame frame, IClimateData item)
             {
                 var b = frame.Reader.ReadUInt8();
                 if (EnumExt.TryParse<Climate.MoonPhase>(GetPhaseInt(b), out var e))
@@ -142,25 +142,19 @@ namespace Mutagen.Bethesda.Oblivion
                 item.PhaseLength = GetPhaseLen(b);
             }
 
-            static partial void FillBinaryPhaseLengthCustom(MutagenFrame frame, IClimateInternal item)
+            static partial void FillBinaryPhaseLengthCustom(MutagenFrame frame, IClimateData item)
             { // Handled in Phase section
             }
         }
 
-        public partial class ClimateBinaryOverlay
+        public partial class ClimateDataBinaryOverlay
         {
-            private bool GetSunriseBeginIsSetCustom() => _TNAMLocation.HasValue;
-            private bool GetSunriseEndIsSetCustom() => _TNAMLocation.HasValue;
-            private bool GetSunsetBeginIsSetCustom() => _TNAMLocation.HasValue;
-            private bool GetSunsetEndIsSetCustom() => _TNAMLocation.HasValue;
-            private bool GetPhaseIsSetCustom() => _TNAMLocation.HasValue;
-            private bool GetPhaseLengthIsSetCustom() => _TNAMLocation.HasValue;
-            private DateTime GetSunriseBeginCustom() => ClimateBinaryCreateTranslation.GetDate(_data.Span[_SunriseBeginLocation]);
-            private DateTime GetSunriseEndCustom() => ClimateBinaryCreateTranslation.GetDate(_data.Span[_SunriseEndLocation]);
-            private DateTime GetSunsetBeginCustom() => ClimateBinaryCreateTranslation.GetDate(_data.Span[_SunsetBeginLocation]);
-            private DateTime GetSunsetEndCustom() => ClimateBinaryCreateTranslation.GetDate(_data.Span[_SunsetEndLocation]);
-            private Climate.MoonPhase GetPhaseCustom() => (Climate.MoonPhase)ClimateBinaryCreateTranslation.GetPhaseInt(_data.Span[_PhaseLocation]);
-            private byte GetPhaseLengthCustom() => ClimateBinaryCreateTranslation.GetPhaseLen(_data.Span[_PhaseLocation]);
+            private DateTime GetSunriseBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_data.Span[0]);
+            private DateTime GetSunriseEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_data.Span[1]);
+            private DateTime GetSunsetBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_data.Span[2]);
+            private DateTime GetSunsetEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_data.Span[3]);
+            private Climate.MoonPhase GetPhaseCustom(int location) => (Climate.MoonPhase)ClimateDataBinaryCreateTranslation.GetPhaseInt(_data.Span[5]);
+            private byte GetPhaseLengthCustom(int location) => ClimateDataBinaryCreateTranslation.GetPhaseLen(_data.Span[5]);
         }
     }
 }

@@ -1251,6 +1251,51 @@
     <Compile Include="Oblivion\Records\Major Records\ClassData_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ClimateData_LoquiGenerated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ClothingData_LoquiGenerated.cs">
+      <DependentUpon>Clothing.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\CombatStyleData_LoquiGenerated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ContainerData_LoquiGenerated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\CreatureConfiguration_LoquiGenerated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\CreatureAIData_LoquiGenerated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\CreatureData_LoquiGenerated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\DialogItemData_LoquiGenerated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\DialogResponseData_LoquiGenerated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\EffectShaderData_LoquiGenerated.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\EnchantmentData_LoquiGenerated.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\SeasonalIngredientProduction_LoquiGenerated.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\GrassData_LoquiGenerated.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\IngredientData_LoquiGenerated.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\KeyData_LoquiGenerated.cs">
+      <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />

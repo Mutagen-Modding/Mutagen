@@ -60,57 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IEnchantmentGetter.Name => this.Name;
         #endregion
-        #region Type
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Enchantment.EnchantmentType _Type;
-        public Enchantment.EnchantmentType Type
+        private EnchantmentData? _Data;
+        public EnchantmentData? Data
         {
-            get => this._Type;
-            set
-            {
-                this.ENITDataTypeState |= ENITDataType.Has;
-                this._Type = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region ChargeAmount
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _ChargeAmount;
-        public UInt32 ChargeAmount
-        {
-            get => this._ChargeAmount;
-            set
-            {
-                this.ENITDataTypeState |= ENITDataType.Has;
-                this._ChargeAmount = value;
-            }
-        }
-        #endregion
-        #region EnchantCost
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _EnchantCost;
-        public UInt32 EnchantCost
-        {
-            get => this._EnchantCost;
-            set
-            {
-                this.ENITDataTypeState |= ENITDataType.Has;
-                this._EnchantCost = value;
-            }
-        }
-        #endregion
-        #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Enchantment.Flag _Flags;
-        public Enchantment.Flag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.ENITDataTypeState |= ENITDataType.Has;
-                this._Flags = value;
-            }
-        }
+        IEnchantmentDataGetter? IEnchantmentGetter.Data => this.Data;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -125,9 +84,6 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IEffectGetter> IEnchantmentGetter.Effects => _Effects;
         #endregion
 
-        #endregion
-        #region ENITDataTypeState
-        public Enchantment.ENITDataType ENITDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -300,12 +256,8 @@ namespace Mutagen.Bethesda.Oblivion
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Type = initialValue;
-                this.ChargeAmount = initialValue;
-                this.EnchantCost = initialValue;
-                this.Flags = initialValue;
+                this.Data = new MaskItem<TItem, EnchantmentData.Mask<TItem>?>(initialValue, new EnchantmentData.Mask<TItem>(initialValue));
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.ENITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -315,12 +267,8 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem Name,
-                TItem Type,
-                TItem ChargeAmount,
-                TItem EnchantCost,
-                TItem Flags,
-                TItem Effects,
-                TItem ENITDataTypeState)
+                TItem Data,
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -329,12 +277,8 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Type = Type;
-                this.ChargeAmount = ChargeAmount;
-                this.EnchantCost = EnchantCost;
-                this.Flags = Flags;
+                this.Data = new MaskItem<TItem, EnchantmentData.Mask<TItem>?>(Data, new EnchantmentData.Mask<TItem>(Data));
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.ENITDataTypeState = ENITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -347,12 +291,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public TItem Name;
-            public TItem Type;
-            public TItem ChargeAmount;
-            public TItem EnchantCost;
-            public TItem Flags;
+            public MaskItem<TItem, EnchantmentData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
-            public TItem ENITDataTypeState;
             #endregion
 
             #region Equals
@@ -367,24 +307,16 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Type, rhs.Type)) return false;
-                if (!object.Equals(this.ChargeAmount, rhs.ChargeAmount)) return false;
-                if (!object.Equals(this.EnchantCost, rhs.EnchantCost)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Name);
-                hash.Add(this.Type);
-                hash.Add(this.ChargeAmount);
-                hash.Add(this.EnchantCost);
-                hash.Add(this.Flags);
+                hash.Add(this.Data);
                 hash.Add(this.Effects);
-                hash.Add(this.ENITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -396,10 +328,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
-                if (!eval(this.Type)) return false;
-                if (!eval(this.ChargeAmount)) return false;
-                if (!eval(this.EnchantCost)) return false;
-                if (!eval(this.Flags)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (this.Effects != null)
                 {
                     if (!eval(this.Effects.Overall)) return false;
@@ -412,7 +345,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (!eval(this.ENITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -422,10 +354,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
-                if (eval(this.Type)) return true;
-                if (eval(this.ChargeAmount)) return true;
-                if (eval(this.EnchantCost)) return true;
-                if (eval(this.Flags)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (this.Effects != null)
                 {
                     if (eval(this.Effects.Overall)) return true;
@@ -438,7 +371,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (eval(this.ENITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -455,10 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
-                obj.Type = eval(this.Type);
-                obj.ChargeAmount = eval(this.ChargeAmount);
-                obj.EnchantCost = eval(this.EnchantCost);
-                obj.Flags = eval(this.Flags);
+                obj.Data = this.Data == null ? null : new MaskItem<R, EnchantmentData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Effects != null)
                 {
                     obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
@@ -474,7 +403,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                obj.ENITDataTypeState = eval(this.ENITDataTypeState);
             }
             #endregion
 
@@ -501,21 +429,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.Type ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
-                    }
-                    if (printMask?.ChargeAmount ?? true)
-                    {
-                        fg.AppendItem(ChargeAmount, "ChargeAmount");
-                    }
-                    if (printMask?.EnchantCost ?? true)
-                    {
-                        fg.AppendItem(EnchantCost, "EnchantCost");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
+                        Data?.ToString(fg);
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects.TryGet(out var EffectsItem))
@@ -540,10 +456,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.ENITDataTypeState ?? true)
-                    {
-                        fg.AppendItem(ENITDataTypeState, "ENITDataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -557,12 +469,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public Exception? Name;
-            public Exception? Type;
-            public Exception? ChargeAmount;
-            public Exception? EnchantCost;
-            public Exception? Flags;
+            public MaskItem<Exception?, EnchantmentData.ErrorMask?>? Data;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
-            public Exception? ENITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -573,18 +481,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     case Enchantment_FieldIndex.Name:
                         return Name;
-                    case Enchantment_FieldIndex.Type:
-                        return Type;
-                    case Enchantment_FieldIndex.ChargeAmount:
-                        return ChargeAmount;
-                    case Enchantment_FieldIndex.EnchantCost:
-                        return EnchantCost;
-                    case Enchantment_FieldIndex.Flags:
-                        return Flags;
+                    case Enchantment_FieldIndex.Data:
+                        return Data;
                     case Enchantment_FieldIndex.Effects:
                         return Effects;
-                    case Enchantment_FieldIndex.ENITDataTypeState:
-                        return ENITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -598,23 +498,11 @@ namespace Mutagen.Bethesda.Oblivion
                     case Enchantment_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Enchantment_FieldIndex.Type:
-                        this.Type = ex;
-                        break;
-                    case Enchantment_FieldIndex.ChargeAmount:
-                        this.ChargeAmount = ex;
-                        break;
-                    case Enchantment_FieldIndex.EnchantCost:
-                        this.EnchantCost = ex;
-                        break;
-                    case Enchantment_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case Enchantment_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, EnchantmentData.ErrorMask?>(ex, null);
                         break;
                     case Enchantment_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Enchantment_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -630,23 +518,11 @@ namespace Mutagen.Bethesda.Oblivion
                     case Enchantment_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Enchantment_FieldIndex.Type:
-                        this.Type = (Exception?)obj;
-                        break;
-                    case Enchantment_FieldIndex.ChargeAmount:
-                        this.ChargeAmount = (Exception?)obj;
-                        break;
-                    case Enchantment_FieldIndex.EnchantCost:
-                        this.EnchantCost = (Exception?)obj;
-                        break;
-                    case Enchantment_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case Enchantment_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, EnchantmentData.ErrorMask?>?)obj;
                         break;
                     case Enchantment_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
-                        break;
-                    case Enchantment_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -658,12 +534,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Overall != null) return true;
                 if (Name != null) return true;
-                if (Type != null) return true;
-                if (ChargeAmount != null) return true;
-                if (EnchantCost != null) return true;
-                if (Flags != null) return true;
+                if (Data != null) return true;
                 if (Effects != null) return true;
-                if (ENITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -700,10 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(ChargeAmount, "ChargeAmount");
-                fg.AppendItem(EnchantCost, "EnchantCost");
-                fg.AppendItem(Flags, "Flags");
+                Data?.ToString(fg);
                 if (Effects.TryGet(out var EffectsItem))
                 {
                     fg.AppendLine("Effects =>");
@@ -726,7 +595,6 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(ENITDataTypeState, "ENITDataTypeState");
             }
             #endregion
 
@@ -736,12 +604,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Type = this.Type.Combine(rhs.Type);
-                ret.ChargeAmount = this.ChargeAmount.Combine(rhs.ChargeAmount);
-                ret.EnchantCost = this.EnchantCost.Combine(rhs.EnchantCost);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -765,12 +629,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Name;
-            public bool Type;
-            public bool ChargeAmount;
-            public bool EnchantCost;
-            public bool Flags;
+            public MaskItem<bool, EnchantmentData.TranslationMask?> Data;
             public MaskItem<bool, Effect.TranslationMask?> Effects;
-            public bool ENITDataTypeState;
             #endregion
 
             #region Ctors
@@ -778,12 +638,8 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Type = defaultOn;
-                this.ChargeAmount = defaultOn;
-                this.EnchantCost = defaultOn;
-                this.Flags = defaultOn;
+                this.Data = new MaskItem<bool, EnchantmentData.TranslationMask?>(defaultOn, null);
                 this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
-                this.ENITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -792,23 +648,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Type, null));
-                ret.Add((ChargeAmount, null));
-                ret.Add((EnchantCost, null));
-                ret.Add((Flags, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
-                ret.Add((ENITDataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Enchantment_Registration.TriggeringRecordType;
-        [Flags]
-        public enum ENITDataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => EnchantmentCommon.Instance.GetLinks(this);
         public Enchantment(FormKey formKey)
@@ -891,12 +738,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IEnchantmentInternal>
     {
         new String? Name { get; set; }
-        new Enchantment.EnchantmentType Type { get; set; }
-        new UInt32 ChargeAmount { get; set; }
-        new UInt32 EnchantCost { get; set; }
-        new Enchantment.Flag Flags { get; set; }
+        new EnchantmentData? Data { get; set; }
         new ExtendedList<Effect> Effects { get; }
-        new Enchantment.ENITDataType ENITDataTypeState { get; set; }
     }
 
     public partial interface IEnchantmentInternal :
@@ -914,12 +757,8 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         String? Name { get; }
-        Enchantment.EnchantmentType Type { get; }
-        UInt32 ChargeAmount { get; }
-        UInt32 EnchantCost { get; }
-        Enchantment.Flag Flags { get; }
+        IEnchantmentDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
-        Enchantment.ENITDataType ENITDataTypeState { get; }
 
     }
 
@@ -1220,12 +1059,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         Name = 5,
-        Type = 6,
-        ChargeAmount = 7,
-        EnchantCost = 8,
-        Flags = 9,
-        Effects = 10,
-        ENITDataTypeState = 11,
+        Data = 6,
+        Effects = 7,
     }
     #endregion
 
@@ -1243,9 +1078,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "70c1ef12-4d5f-4f6a-8899-5518fcba82ed";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Enchantment.Mask<>);
 
@@ -1277,18 +1112,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "NAME":
                     return (ushort)Enchantment_FieldIndex.Name;
-                case "TYPE":
-                    return (ushort)Enchantment_FieldIndex.Type;
-                case "CHARGEAMOUNT":
-                    return (ushort)Enchantment_FieldIndex.ChargeAmount;
-                case "ENCHANTCOST":
-                    return (ushort)Enchantment_FieldIndex.EnchantCost;
-                case "FLAGS":
-                    return (ushort)Enchantment_FieldIndex.Flags;
+                case "DATA":
+                    return (ushort)Enchantment_FieldIndex.Data;
                 case "EFFECTS":
                     return (ushort)Enchantment_FieldIndex.Effects;
-                case "ENITDATATYPESTATE":
-                    return (ushort)Enchantment_FieldIndex.ENITDataTypeState;
                 default:
                     return null;
             }
@@ -1302,11 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Effects:
                     return true;
                 case Enchantment_FieldIndex.Name:
-                case Enchantment_FieldIndex.Type:
-                case Enchantment_FieldIndex.ChargeAmount:
-                case Enchantment_FieldIndex.EnchantCost:
-                case Enchantment_FieldIndex.Flags:
-                case Enchantment_FieldIndex.ENITDataTypeState:
+                case Enchantment_FieldIndex.Data:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1318,14 +1141,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Data:
                 case Enchantment_FieldIndex.Effects:
                     return true;
                 case Enchantment_FieldIndex.Name:
-                case Enchantment_FieldIndex.Type:
-                case Enchantment_FieldIndex.ChargeAmount:
-                case Enchantment_FieldIndex.EnchantCost:
-                case Enchantment_FieldIndex.Flags:
-                case Enchantment_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1338,12 +1157,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Enchantment_FieldIndex.Name:
-                case Enchantment_FieldIndex.Type:
-                case Enchantment_FieldIndex.ChargeAmount:
-                case Enchantment_FieldIndex.EnchantCost:
-                case Enchantment_FieldIndex.Flags:
+                case Enchantment_FieldIndex.Data:
                 case Enchantment_FieldIndex.Effects:
-                case Enchantment_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1357,18 +1172,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Enchantment_FieldIndex.Name:
                     return "Name";
-                case Enchantment_FieldIndex.Type:
-                    return "Type";
-                case Enchantment_FieldIndex.ChargeAmount:
-                    return "ChargeAmount";
-                case Enchantment_FieldIndex.EnchantCost:
-                    return "EnchantCost";
-                case Enchantment_FieldIndex.Flags:
-                    return "Flags";
+                case Enchantment_FieldIndex.Data:
+                    return "Data";
                 case Enchantment_FieldIndex.Effects:
                     return "Effects";
-                case Enchantment_FieldIndex.ENITDataTypeState:
-                    return "ENITDataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1380,12 +1187,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Enchantment_FieldIndex.Name:
-                case Enchantment_FieldIndex.Type:
-                case Enchantment_FieldIndex.ChargeAmount:
-                case Enchantment_FieldIndex.EnchantCost:
-                case Enchantment_FieldIndex.Flags:
+                case Enchantment_FieldIndex.Data:
                 case Enchantment_FieldIndex.Effects:
-                case Enchantment_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1398,12 +1201,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Enchantment_FieldIndex.Name:
-                case Enchantment_FieldIndex.Type:
-                case Enchantment_FieldIndex.ChargeAmount:
-                case Enchantment_FieldIndex.EnchantCost:
-                case Enchantment_FieldIndex.Flags:
+                case Enchantment_FieldIndex.Data:
                 case Enchantment_FieldIndex.Effects:
-                case Enchantment_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1417,18 +1216,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Enchantment_FieldIndex.Name:
                     return typeof(String);
-                case Enchantment_FieldIndex.Type:
-                    return typeof(Enchantment.EnchantmentType);
-                case Enchantment_FieldIndex.ChargeAmount:
-                    return typeof(UInt32);
-                case Enchantment_FieldIndex.EnchantCost:
-                    return typeof(UInt32);
-                case Enchantment_FieldIndex.Flags:
-                    return typeof(Enchantment.Flag);
+                case Enchantment_FieldIndex.Data:
+                    return typeof(EnchantmentData);
                 case Enchantment_FieldIndex.Effects:
                     return typeof(ExtendedList<Effect>);
-                case Enchantment_FieldIndex.ENITDataTypeState:
-                    return typeof(Enchantment.ENITDataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1441,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
         public static readonly RecordType TriggeringRecordType = ENCH_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(EnchantmentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1485,12 +1276,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.Type = default;
-            item.ChargeAmount = default;
-            item.EnchantCost = default;
-            item.Flags = default;
+            item.Data = null;
             item.Effects.Clear();
-            item.ENITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1514,9 +1301,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasENITDataType":
-                    item.ENITDataTypeState |= Enchantment.ENITDataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1618,17 +1402,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54494E45: // ENIT
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.ENITDataTypeState = Enchantment.ENITDataType.Has;
-                    }
-                    item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.ChargeAmount = dataFrame.ReadUInt32();
-                    item.EnchantCost = dataFrame.ReadUInt32();
-                    item.Flags = EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Flags);
+                    item.Data = Mutagen.Bethesda.Oblivion.EnchantmentData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Data);
                 }
                 case 0x44494645: // EFID
                 {
@@ -1721,15 +1496,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Type = item.Type == rhs.Type;
-            ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
-            ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ENITDataTypeState = item.ENITDataTypeState == rhs.ENITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1786,21 +1561,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Type ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Type, "Type");
-            }
-            if (printMask?.ChargeAmount ?? true)
-            {
-                fg.AppendItem(item.ChargeAmount, "ChargeAmount");
-            }
-            if (printMask?.EnchantCost ?? true)
-            {
-                fg.AppendItem(item.EnchantCost, "EnchantCost");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
+                DataItem?.ToString(fg, "Data");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1820,10 +1584,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.ENITDataTypeState ?? true)
-            {
-                fg.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
-            }
         }
         
         public bool HasBeenSet(
@@ -1831,6 +1591,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1841,13 +1603,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
-            mask.Type = true;
-            mask.ChargeAmount = true;
-            mask.EnchantCost = true;
-            mask.Flags = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, EnchantmentData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             var EffectsItem = item.Effects;
             mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.ENITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1898,12 +1657,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.ChargeAmount != rhs.ChargeAmount) return false;
-            if (lhs.EnchantCost != rhs.EnchantCost) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
-            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
             return true;
         }
         
@@ -1932,12 +1687,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.Type);
-            hash.Add(item.ChargeAmount);
-            hash.Add(item.EnchantCost);
-            hash.Add(item.Flags);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(item.Effects);
-            hash.Add(item.ENITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2021,21 +1775,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Type) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Data) ?? true))
             {
-                item.Type = rhs.Type;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Enchantment_FieldIndex.ChargeAmount) ?? true))
-            {
-                item.ChargeAmount = rhs.ChargeAmount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Enchantment_FieldIndex.EnchantCost) ?? true))
-            {
-                item.EnchantCost = rhs.EnchantCost;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Enchantment_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Effects) ?? true))
             {
@@ -2060,10 +1824,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Enchantment_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                item.ENITDataTypeState = rhs.ENITDataTypeState;
             }
         }
         
@@ -2217,43 +1977,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Enchantment_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.ENITDataTypeState.HasFlag(Enchantment.ENITDataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Type) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
+                    ((EnchantmentDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.Type),
-                        item: item.Type,
-                        fieldIndex: (int)Enchantment_FieldIndex.Type,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.ChargeAmount) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ChargeAmount),
-                        item: item.ChargeAmount,
-                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.EnchantCost) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EnchantCost),
-                        item: item.EnchantCost,
-                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Enchantment_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Enchantment_FieldIndex.Data));
                 }
             }
             if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Effects) ?? true))
@@ -2277,15 +2012,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: listTranslMask);
                         }
                     });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Enchantment.ENITDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ENITDataTypeState),
-                    item: item.ENITDataTypeState,
-                    fieldIndex: (int)Enchantment_FieldIndex.ENITDataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -2412,68 +2138,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Type":
-                    errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
+                case "Data":
+                    errorMask?.PushIndex((int)Enchantment_FieldIndex.Data);
                     try
                     {
-                        item.Type = EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<EnchantmentData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.ENITDataTypeState |= Enchantment.ENITDataType.Has;
-                    break;
-                case "ChargeAmount":
-                    errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
-                    try
-                    {
-                        item.ChargeAmount = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnchantCost":
-                    errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
-                    try
-                    {
-                        item.EnchantCost = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Enchantment_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2502,24 +2174,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             item.Effects.Clear();
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ENITDataTypeState":
-                    errorMask?.PushIndex((int)Enchantment_FieldIndex.ENITDataTypeState);
-                    try
-                    {
-                        item.ENITDataTypeState = EnumXmlTranslation<Enchantment.ENITDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2617,15 +2271,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static EnchantmentBinaryWriteTranslation Instance = new EnchantmentBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IEnchantmentGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IEnchantmentGetter item,
             MutagenWriter writer,
@@ -2640,21 +2285,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Enchantment_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.ENITDataTypeState.HasFlag(Enchantment.ENITDataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                        writer,
-                        item.Type,
-                        length: 4);
-                    writer.Write(item.ChargeAmount);
-                    writer.Write(item.EnchantCost);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
-                }
+                ((EnchantmentDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
@@ -2681,7 +2316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Enchantment_Registration.ENCH_HEADER,
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -2796,27 +2431,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        private int? _ENITLocation;
-        public Enchantment.ENITDataType ENITDataTypeState { get; private set; }
-        #region Type
-        private int _TypeLocation => _ENITLocation!.Value + 0x0;
-        private bool _Type_IsSet => _ENITLocation.HasValue;
-        public Enchantment.EnchantmentType Type => _Type_IsSet ? (Enchantment.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 4)) : default;
-        #endregion
-        #region ChargeAmount
-        private int _ChargeAmountLocation => _ENITLocation!.Value + 0x4;
-        private bool _ChargeAmount_IsSet => _ENITLocation.HasValue;
-        public UInt32 ChargeAmount => _ChargeAmount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ChargeAmountLocation, 4)) : default;
-        #endregion
-        #region EnchantCost
-        private int _EnchantCostLocation => _ENITLocation!.Value + 0x8;
-        private bool _EnchantCost_IsSet => _ENITLocation.HasValue;
-        public UInt32 EnchantCost => _EnchantCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_EnchantCostLocation, 4)) : default;
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _ENITLocation!.Value + 0xC;
-        private bool _Flags_IsSet => _ENITLocation.HasValue;
-        public Enchantment.Flag Flags => _Flags_IsSet ? (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IEnchantmentDataGetter? Data => _Data_IsSet ? EnchantmentDataBinaryOverlay.EnchantmentDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(
@@ -2876,9 +2495,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54494E45: // ENIT
                 {
-                    _ENITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.ENITDataTypeState = Enchantment.ENITDataType.Has;
-                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Flags);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Data);
                 }
                 case 0x44494645: // EFID
                 {

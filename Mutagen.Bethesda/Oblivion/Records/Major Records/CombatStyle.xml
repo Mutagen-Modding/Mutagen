@@ -2,58 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="CombatStyle" objType="Record" baseClass="OblivionMajorRecord" recordType="CSTY" GUID="5a84afb8-6c2a-4274-aa72-155f9fcddd71" ID="88">
     <Fields>
-      <Data recordType="CSTD">
-        <Fields>
-          <UInt8 name="DodgePercentChance" min="0" max="100" />
-          <UInt8 name="LeftRightPercentChance" min="0" max="100" />
-          <Zero byteLength="2" />
-          <Float name="DodgeLeftRightTimerMin" />
-          <Float name="DodgeLeftRightTimerMax" />
-          <Float name="DodgeForwardTimerMin" />
-          <Float name="DodgeForwardTimerMax" />
-          <Float name="DodgeBackTimerMin" />
-          <Float name="DodgeBackTimerMax" />
-          <Float name="IdleTimerMin" />
-          <Float name="IdleTimerMax" />
-          <UInt8 name="BlockPercentChance" min="0" max="100" />
-          <UInt8 name="AttackPercentChance" min="0" max="100" />
-          <Zero byteLength="2" />
-          <Float name="RecoilStaggerBonusToAttack" />
-          <Float name="UnconsciousBonusToAttack" />
-          <Float name="HandToHandBonusToAttack" />
-          <UInt8 name="PowerAttackPercentChance" min="0" max="100" />
-          <Zero byteLength="3" />
-          <Float name="RecoilStaggerBonusToPowerAttack" />
-          <Float name="UnconsciousBonusToPowerAttack" />
-          <UInt8 name="PowerAttackNormal" min="0" max="100" />
-          <UInt8 name="PowerAttackForward" min="0" max="100" />
-          <UInt8 name="PowerAttackBack" min="0" max="100" />
-          <UInt8 name="PowerAttackLeft" min="0" max="100" />
-          <UInt8 name="PowerAttackRight" min="0" max="100" />
-          <Zero byteLength="3" />
-          <Float name="HoldTimerMin" />
-          <Float name="HoldTimerMax" />
-          <Enum name="Flags" enumName="CombatStyle.Flag" byteLength="1" binaryOverlay="Custom" />
-          <UInt8 name="AcrobaticDodgePercentChance" min="0" max="100" />
-          <Zero byteLength="2" />
-          <Break />
-          <Float name="RangeMultOptimal" />
-          <Float name="RangeMultMax" />
-          <Break />
-          <Float name="SwitchDistanceMelee" />
-          <Float name="SwitchDistanceRanged" />
-          <Float name="BuffStandoffDistance" />
-          <Break />
-          <Float name="RangedStandoffDistance" />
-          <Float name="GroupStandoffDistance" />
-          <Break />
-          <UInt8 name="RushingAttackPercentChance" min="0" max="100" />
-          <Zero byteLength="3" />
-          <Float name="RushingAttackDistanceMult" />
-          <Break />
-          <CustomLogic name="SecondaryFlags" byteLength="4" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="CombatStyleData" />
       <RefDirect name="Advanced" refName="CombatStyleAdvanced" />
     </Fields>
   </Object>
@@ -80,6 +29,58 @@
       <Float name="AttackDuringBlockMult" />
       <Float name="PowerAttackFatigueModBase" />
       <Float name="PowerAttackFatigueModMult" />
+    </Fields>
+  </Object>
+  <Object name="CombatStyleData" objType="Subrecord" recordType="CSTD" GUID="e011eee4-3551-4cd2-82ef-34a1038a1fc2" ID="181">
+    <Fields>
+      <UInt8 name="DodgePercentChance" min="0" max="100" />
+      <UInt8 name="LeftRightPercentChance" min="0" max="100" />
+      <Zero byteLength="2" />
+      <Float name="DodgeLeftRightTimerMin" />
+      <Float name="DodgeLeftRightTimerMax" />
+      <Float name="DodgeForwardTimerMin" />
+      <Float name="DodgeForwardTimerMax" />
+      <Float name="DodgeBackTimerMin" />
+      <Float name="DodgeBackTimerMax" />
+      <Float name="IdleTimerMin" />
+      <Float name="IdleTimerMax" />
+      <UInt8 name="BlockPercentChance" min="0" max="100" />
+      <UInt8 name="AttackPercentChance" min="0" max="100" />
+      <Zero byteLength="2" />
+      <Float name="RecoilStaggerBonusToAttack" />
+      <Float name="UnconsciousBonusToAttack" />
+      <Float name="HandToHandBonusToAttack" />
+      <UInt8 name="PowerAttackPercentChance" min="0" max="100" />
+      <Zero byteLength="3" />
+      <Float name="RecoilStaggerBonusToPowerAttack" />
+      <Float name="UnconsciousBonusToPowerAttack" />
+      <UInt8 name="PowerAttackNormal" min="0" max="100" />
+      <UInt8 name="PowerAttackForward" min="0" max="100" />
+      <UInt8 name="PowerAttackBack" min="0" max="100" />
+      <UInt8 name="PowerAttackLeft" min="0" max="100" />
+      <UInt8 name="PowerAttackRight" min="0" max="100" />
+      <Zero byteLength="3" />
+      <Float name="HoldTimerMin" />
+      <Float name="HoldTimerMax" />
+      <Enum name="Flags" enumName="CombatStyle.Flag" byteLength="1" binaryOverlay="Custom" />
+      <UInt8 name="AcrobaticDodgePercentChance" min="0" max="100" />
+      <Zero byteLength="2" />
+      <Break />
+      <Float name="RangeMultOptimal" />
+      <Float name="RangeMultMax" />
+      <Break />
+      <Float name="SwitchDistanceMelee" />
+      <Float name="SwitchDistanceRanged" />
+      <Float name="BuffStandoffDistance" />
+      <Break />
+      <Float name="RangedStandoffDistance" />
+      <Float name="GroupStandoffDistance" />
+      <Break />
+      <UInt8 name="RushingAttackPercentChance" min="0" max="100" />
+      <Zero byteLength="3" />
+      <Float name="RushingAttackDistanceMult" />
+      <Break />
+      <CustomLogic name="SecondaryFlags" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

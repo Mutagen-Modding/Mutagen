@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Generation
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
-                        if (fieldData.BreakIndex.HasValue)
+                        if (field is BreakType)
                         {
                             fg.AppendLine($"if (!item.{DataTypeModule.VersioningFieldName}.HasFlag({obj.Name}.{DataTypeModule.VersioningEnumName}.Break{fieldData.BreakIndex}))");
                             fg.AppendLine("{");

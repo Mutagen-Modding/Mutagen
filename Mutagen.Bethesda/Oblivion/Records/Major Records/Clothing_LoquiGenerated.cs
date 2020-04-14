@@ -48,34 +48,16 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region Value
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _Value;
-        public UInt32 Value
+        private ClothingData? _Data;
+        public ClothingData? Data
         {
-            get => this._Value;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Value = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _Weight;
-        public Single Weight
-        {
-            get => this._Weight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Weight = value;
-            }
-        }
-        #endregion
-        #region DATADataTypeState
-        public Clothing.DATADataType DATADataTypeState { get; set; } = default;
+        IClothingDataGetter? IClothingGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -247,9 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Value = initialValue;
-                this.Weight = initialValue;
-                this.DATADataTypeState = initialValue;
+                this.Data = new MaskItem<TItem, ClothingData.Mask<TItem>?>(initialValue, new ClothingData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -269,9 +249,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem FemaleBipedModel,
                 TItem FemaleWorldModel,
                 TItem FemaleIcon,
-                TItem Value,
-                TItem Weight,
-                TItem DATADataTypeState)
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -290,9 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
                 FemaleWorldModel: FemaleWorldModel,
                 FemaleIcon: FemaleIcon)
             {
-                this.Value = Value;
-                this.Weight = Weight;
-                this.DATADataTypeState = DATADataTypeState;
+                this.Data = new MaskItem<TItem, ClothingData.Mask<TItem>?>(Data, new ClothingData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -304,9 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem Value;
-            public TItem Weight;
-            public TItem DATADataTypeState;
+            public MaskItem<TItem, ClothingData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -320,17 +294,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Value, rhs.Value)) return false;
-                if (!object.Equals(this.Weight, rhs.Weight)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Value);
-                hash.Add(this.Weight);
-                hash.Add(this.DATADataTypeState);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -341,9 +311,11 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Value)) return false;
-                if (!eval(this.Weight)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -352,9 +324,11 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Value)) return true;
-                if (eval(this.Weight)) return true;
-                if (eval(this.DATADataTypeState)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -370,9 +344,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Value = eval(this.Value);
-                obj.Weight = eval(this.Weight);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ClothingData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -395,17 +367,9 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Value ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
-                    }
-                    if (printMask?.Weight ?? true)
-                    {
-                        fg.AppendItem(Weight, "Weight");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        Data?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -419,9 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Value;
-            public Exception? Weight;
-            public Exception? DATADataTypeState;
+            public MaskItem<Exception?, ClothingData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
@@ -430,12 +392,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
                 switch (enu)
                 {
-                    case Clothing_FieldIndex.Value:
-                        return Value;
-                    case Clothing_FieldIndex.Weight:
-                        return Weight;
-                    case Clothing_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
+                    case Clothing_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -446,14 +404,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
                 switch (enu)
                 {
-                    case Clothing_FieldIndex.Value:
-                        this.Value = ex;
-                        break;
-                    case Clothing_FieldIndex.Weight:
-                        this.Weight = ex;
-                        break;
-                    case Clothing_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
+                    case Clothing_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ClothingData.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -466,14 +418,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
                 switch (enu)
                 {
-                    case Clothing_FieldIndex.Value:
-                        this.Value = (Exception?)obj;
-                        break;
-                    case Clothing_FieldIndex.Weight:
-                        this.Weight = (Exception?)obj;
-                        break;
-                    case Clothing_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
+                    case Clothing_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ClothingData.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -484,9 +430,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Value != null) return true;
-                if (Weight != null) return true;
-                if (DATADataTypeState != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -522,9 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                Data?.ToString(fg);
             }
             #endregion
 
@@ -533,9 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Value = this.Value.Combine(rhs.Value);
-                ret.Weight = this.Weight.Combine(rhs.Weight);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -558,18 +498,14 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public bool Value;
-            public bool Weight;
-            public bool DATADataTypeState;
+            public MaskItem<bool, ClothingData.TranslationMask?> Data;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Value = defaultOn;
-                this.Weight = defaultOn;
-                this.DATADataTypeState = defaultOn;
+                this.Data = new MaskItem<bool, ClothingData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -577,20 +513,13 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Value, null));
-                ret.Add((Weight, null));
-                ret.Add((DATADataTypeState, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Clothing_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         public Clothing(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -670,9 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAClothing,
         ILoquiObjectSetter<IClothingInternal>
     {
-        new UInt32 Value { get; set; }
-        new Single Weight { get; set; }
-        new Clothing.DATADataType DATADataTypeState { get; set; }
+        new ClothingData? Data { get; set; }
     }
 
     public partial interface IClothingInternal :
@@ -688,9 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        UInt32 Value { get; }
-        Single Weight { get; }
-        Clothing.DATADataType DATADataTypeState { get; }
+        IClothingDataGetter? Data { get; }
 
     }
 
@@ -1001,9 +926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FemaleBipedModel = 13,
         FemaleWorldModel = 14,
         FemaleIcon = 15,
-        Value = 16,
-        Weight = 17,
-        DATADataTypeState = 18,
+        Data = 16,
     }
     #endregion
 
@@ -1021,9 +944,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "961523f7-15f4-402b-9446-4bac4a46f998";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(Clothing.Mask<>);
 
@@ -1053,12 +976,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "VALUE":
-                    return (ushort)Clothing_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)Clothing_FieldIndex.Weight;
-                case "DATADATATYPESTATE":
-                    return (ushort)Clothing_FieldIndex.DATADataTypeState;
+                case "DATA":
+                    return (ushort)Clothing_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -1069,9 +988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
             switch (enu)
             {
-                case Clothing_FieldIndex.Value:
-                case Clothing_FieldIndex.Weight:
-                case Clothing_FieldIndex.DATADataTypeState:
+                case Clothing_FieldIndex.Data:
                     return false;
                 default:
                     return AClothing_Registration.GetNthIsEnumerable(index);
@@ -1083,10 +1000,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
             switch (enu)
             {
-                case Clothing_FieldIndex.Value:
-                case Clothing_FieldIndex.Weight:
-                case Clothing_FieldIndex.DATADataTypeState:
-                    return false;
+                case Clothing_FieldIndex.Data:
+                    return true;
                 default:
                     return AClothing_Registration.GetNthIsLoqui(index);
             }
@@ -1097,9 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
             switch (enu)
             {
-                case Clothing_FieldIndex.Value:
-                case Clothing_FieldIndex.Weight:
-                case Clothing_FieldIndex.DATADataTypeState:
+                case Clothing_FieldIndex.Data:
                     return false;
                 default:
                     return AClothing_Registration.GetNthIsSingleton(index);
@@ -1111,12 +1024,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
             switch (enu)
             {
-                case Clothing_FieldIndex.Value:
-                    return "Value";
-                case Clothing_FieldIndex.Weight:
-                    return "Weight";
-                case Clothing_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
+                case Clothing_FieldIndex.Data:
+                    return "Data";
                 default:
                     return AClothing_Registration.GetNthName(index);
             }
@@ -1127,9 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
             switch (enu)
             {
-                case Clothing_FieldIndex.Value:
-                case Clothing_FieldIndex.Weight:
-                case Clothing_FieldIndex.DATADataTypeState:
+                case Clothing_FieldIndex.Data:
                     return false;
                 default:
                     return AClothing_Registration.IsNthDerivative(index);
@@ -1141,9 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
             switch (enu)
             {
-                case Clothing_FieldIndex.Value:
-                case Clothing_FieldIndex.Weight:
-                case Clothing_FieldIndex.DATADataTypeState:
+                case Clothing_FieldIndex.Data:
                     return false;
                 default:
                     return AClothing_Registration.IsProtected(index);
@@ -1155,12 +1060,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
             switch (enu)
             {
-                case Clothing_FieldIndex.Value:
-                    return typeof(UInt32);
-                case Clothing_FieldIndex.Weight:
-                    return typeof(Single);
-                case Clothing_FieldIndex.DATADataTypeState:
-                    return typeof(Clothing.DATADataType);
+                case Clothing_FieldIndex.Data:
+                    return typeof(ClothingData);
                 default:
                     return AClothing_Registration.GetNthType(index);
             }
@@ -1171,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = CLOT_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ClothingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1214,9 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IClothingInternal item)
         {
             ClearPartial();
-            item.Value = default;
-            item.Weight = default;
-            item.DATADataTypeState = default;
+            item.Data = null;
             base.Clear(item);
         }
         
@@ -1250,9 +1149,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Clothing.DATADataType.Has;
-                    break;
                 default:
                     AClothingSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1372,15 +1268,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = Clothing.DATADataType.Has;
-                    }
-                    item.Value = dataFrame.ReadUInt32();
-                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Weight);
+                    item.Data = Mutagen.Bethesda.Oblivion.ClothingData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Data);
                 }
                 default:
                     return AClothingSetterCommon.FillBinaryRecordTypes(
@@ -1478,9 +1367,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Value = item.Value == rhs.Value;
-            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1532,17 +1423,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Value ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Value, "Value");
-            }
-            if (printMask?.Weight ?? true)
-            {
-                fg.AppendItem(item.Weight, "Weight");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                DataItem?.ToString(fg, "Data");
             }
         }
         
@@ -1550,6 +1434,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingGetter item,
             Clothing.Mask<bool?> checkMask)
         {
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1559,9 +1445,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingGetter item,
             Clothing.Mask<bool> mask)
         {
-            mask.Value = true;
-            mask.Weight = true;
-            mask.DATADataTypeState = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, ClothingData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1671,9 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
         
@@ -1716,9 +1599,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IClothingGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Value);
-            hash.Add(item.Weight);
-            hash.Add(item.DATADataTypeState);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1804,17 +1688,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)Clothing_FieldIndex.Value) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Clothing_FieldIndex.Data) ?? true))
             {
-                item.Value = rhs.Value;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Clothing_FieldIndex.Weight) ?? true))
-            {
-                item.Weight = rhs.Weight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Clothing_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
+                errorMask?.PushIndex((int)Clothing_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Clothing_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2010,35 +1908,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.DATADataTypeState.HasFlag(Clothing.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.Value) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    UInt32XmlTranslation.Instance.Write(
+                    ((ClothingDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)Clothing_FieldIndex.Value,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Clothing_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Clothing_FieldIndex.Data));
                 }
-                if ((translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)Clothing_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Clothing.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Clothing_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -2177,50 +2059,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Value":
-                    errorMask?.PushIndex((int)Clothing_FieldIndex.Value);
+                case "Data":
+                    errorMask?.PushIndex((int)Clothing_FieldIndex.Data);
                     try
                     {
-                        item.Value = UInt32XmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<ClothingData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= Clothing.DATADataType.Has;
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Clothing_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Clothing_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Clothing.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Clothing_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2318,15 +2164,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ClothingBinaryWriteTranslation Instance = new ClothingBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IClothingGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IClothingGetter item,
             MutagenWriter writer,
@@ -2336,15 +2173,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.DATADataTypeState.HasFlag(Clothing.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Clothing_Registration.DATA_HEADER)))
-                {
-                    writer.Write(item.Value);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Weight);
-                }
+                ((ClothingDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer);
             }
         }
 
@@ -2358,7 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Clothing_Registration.CLOT_HEADER,
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -2490,17 +2323,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        private int? _DATALocation;
-        public Clothing.DATADataType DATADataTypeState { get; private set; }
-        #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0x0;
-        private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
-        #endregion
-        #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x4;
-        private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IClothingDataGetter? Data => _Data_IsSet ? ClothingDataBinaryOverlay.ClothingDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2554,9 +2381,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = Clothing.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Weight);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Data);
                 }
                 default:
                     return base.FillRecordType(

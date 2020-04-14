@@ -3,22 +3,23 @@
   <Object name="Grass" objType="Record" recordType="GRAS" baseClass="OblivionMajorRecord" GUID="08091e89-54fe-4950-b16d-c11d6c7faef3" ID="58">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <Data>
-        <Fields>
-          <UInt8 name="Density" />
-          <UInt8 name="MinSlope" />
-          <UInt8 name="MaxSlope" />
-          <UInt8 name="Fluff1" />
-          <UInt16 name="UnitFromWaterAmount" />
-          <UInt16 name="Fluff2" />
-          <Enum name="UnitFromWaterMode" enumName="Grass.UnitFromWaterType" byteLength="4" />
-          <Float name="PositionRange" />
-          <Float name="HeightRange" />
-          <Float name="ColorRange" />
-          <Float name="WavePeriod" />
-          <Enum name="Flags" enumName="Grass.GrassFlag" byteLength="4" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="GrassData" />
+    </Fields>
+  </Object>
+  <Object name="GrassData" recordType="DATA" objType="Subrecord" GUID="a9d48b61-993d-4ffd-903d-0df457ae9dff" ID="191">
+    <Fields>
+      <UInt8 name="Density" />
+      <UInt8 name="MinSlope" />
+      <UInt8 name="MaxSlope" />
+      <UInt8 name="Fluff1" />
+      <UInt16 name="UnitFromWaterAmount" />
+      <UInt16 name="Fluff2" />
+      <Enum name="UnitFromWaterMode" enumName="Grass.UnitFromWaterType" byteLength="4" />
+      <Float name="PositionRange" />
+      <Float name="HeightRange" />
+      <Float name="ColorRange" />
+      <Float name="WavePeriod" />
+      <Enum name="Flags" enumName="Grass.GrassFlag" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

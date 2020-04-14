@@ -7,14 +7,15 @@
       <RefDirect name="Model" refName="Model" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <FormLink name="Ingredient" refName="Ingredient" recordType="PFIG" />
-      <Data recordType="PFPC">
-        <Fields>
-          <UInt8 name="Spring" />
-          <UInt8 name="Summer" />
-          <UInt8 name="Fall" />
-          <UInt8 name="Winter" />
-        </Fields>
-      </Data>
+      <RefDirect name="SeasonalIngredientProduction" refName="SeasonalIngredientProduction" />
+    </Fields>
+  </Object>
+  <Object name="SeasonalIngredientProduction" recordType="PFPC" objType="Subrecord" GUID="00b07de3-bac8-4cf6-8f3d-947654512854" ID="190">
+    <Fields>
+      <UInt8 name="Spring" />
+      <UInt8 name="Summer" />
+      <UInt8 name="Fall" />
+      <UInt8 name="Winter" />
     </Fields>
   </Object>
 </Loqui>

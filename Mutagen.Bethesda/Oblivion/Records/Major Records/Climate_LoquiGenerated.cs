@@ -95,100 +95,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IClimateGetter.Model => this.Model;
         #endregion
-        #region SunriseBegin
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DateTime _SunriseBegin;
-        public DateTime SunriseBegin
+        private ClimateData? _Data;
+        public ClimateData? Data
         {
-            get => this._SunriseBegin;
-            set
-            {
-                this.TNAMDataTypeState |= TNAMDataType.Has;
-                this._SunriseBegin = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region SunriseEnd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DateTime _SunriseEnd;
-        public DateTime SunriseEnd
-        {
-            get => this._SunriseEnd;
-            set
-            {
-                this.TNAMDataTypeState |= TNAMDataType.Has;
-                this._SunriseEnd = value;
-            }
-        }
-        #endregion
-        #region SunsetBegin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DateTime _SunsetBegin;
-        public DateTime SunsetBegin
-        {
-            get => this._SunsetBegin;
-            set
-            {
-                this.TNAMDataTypeState |= TNAMDataType.Has;
-                this._SunsetBegin = value;
-            }
-        }
-        #endregion
-        #region SunsetEnd
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DateTime _SunsetEnd;
-        public DateTime SunsetEnd
-        {
-            get => this._SunsetEnd;
-            set
-            {
-                this.TNAMDataTypeState |= TNAMDataType.Has;
-                this._SunsetEnd = value;
-            }
-        }
-        #endregion
-        #region Volatility
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Volatility;
-        public Byte Volatility
-        {
-            get => this._Volatility;
-            set
-            {
-                this.TNAMDataTypeState |= TNAMDataType.Has;
-                this._Volatility = value;
-            }
-        }
-        #endregion
-        #region Phase
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Climate.MoonPhase _Phase;
-        public Climate.MoonPhase Phase
-        {
-            get => this._Phase;
-            set
-            {
-                this.TNAMDataTypeState |= TNAMDataType.Has;
-                this._Phase = value;
-            }
-        }
-        #endregion
-        #region PhaseLength
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PhaseLength;
-        public Byte PhaseLength
-        {
-            get => this._PhaseLength;
-            set
-            {
-                this.TNAMDataTypeState |= TNAMDataType.Has;
-                this._PhaseLength = value;
-            }
-        }
-        public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 63);
-        #endregion
-        #region TNAMDataTypeState
-        public Climate.TNAMDataType TNAMDataTypeState { get; set; } = default;
+        IClimateDataGetter? IClimateGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -364,14 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.SunTexture = initialValue;
                 this.SunGlareTexture = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.SunriseBegin = initialValue;
-                this.SunriseEnd = initialValue;
-                this.SunsetBegin = initialValue;
-                this.SunsetEnd = initialValue;
-                this.Volatility = initialValue;
-                this.Phase = initialValue;
-                this.PhaseLength = initialValue;
-                this.TNAMDataTypeState = initialValue;
+                this.Data = new MaskItem<TItem, ClimateData.Mask<TItem>?>(initialValue, new ClimateData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -384,14 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem SunTexture,
                 TItem SunGlareTexture,
                 TItem Model,
-                TItem SunriseBegin,
-                TItem SunriseEnd,
-                TItem SunsetBegin,
-                TItem SunsetEnd,
-                TItem Volatility,
-                TItem Phase,
-                TItem PhaseLength,
-                TItem TNAMDataTypeState)
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -403,14 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.SunTexture = SunTexture;
                 this.SunGlareTexture = SunGlareTexture;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.SunriseBegin = SunriseBegin;
-                this.SunriseEnd = SunriseEnd;
-                this.SunsetBegin = SunsetBegin;
-                this.SunsetEnd = SunsetEnd;
-                this.Volatility = Volatility;
-                this.Phase = Phase;
-                this.PhaseLength = PhaseLength;
-                this.TNAMDataTypeState = TNAMDataTypeState;
+                this.Data = new MaskItem<TItem, ClimateData.Mask<TItem>?>(Data, new ClimateData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -426,14 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem SunTexture;
             public TItem SunGlareTexture;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem SunriseBegin;
-            public TItem SunriseEnd;
-            public TItem SunsetBegin;
-            public TItem SunsetEnd;
-            public TItem Volatility;
-            public TItem Phase;
-            public TItem PhaseLength;
-            public TItem TNAMDataTypeState;
+            public MaskItem<TItem, ClimateData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -451,14 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.SunTexture, rhs.SunTexture)) return false;
                 if (!object.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.SunriseBegin, rhs.SunriseBegin)) return false;
-                if (!object.Equals(this.SunriseEnd, rhs.SunriseEnd)) return false;
-                if (!object.Equals(this.SunsetBegin, rhs.SunsetBegin)) return false;
-                if (!object.Equals(this.SunsetEnd, rhs.SunsetEnd)) return false;
-                if (!object.Equals(this.Volatility, rhs.Volatility)) return false;
-                if (!object.Equals(this.Phase, rhs.Phase)) return false;
-                if (!object.Equals(this.PhaseLength, rhs.PhaseLength)) return false;
-                if (!object.Equals(this.TNAMDataTypeState, rhs.TNAMDataTypeState)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -468,14 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.SunTexture);
                 hash.Add(this.SunGlareTexture);
                 hash.Add(this.Model);
-                hash.Add(this.SunriseBegin);
-                hash.Add(this.SunriseEnd);
-                hash.Add(this.SunsetBegin);
-                hash.Add(this.SunsetEnd);
-                hash.Add(this.Volatility);
-                hash.Add(this.Phase);
-                hash.Add(this.PhaseLength);
-                hash.Add(this.TNAMDataTypeState);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -505,14 +379,11 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.SunriseBegin)) return false;
-                if (!eval(this.SunriseEnd)) return false;
-                if (!eval(this.SunsetBegin)) return false;
-                if (!eval(this.SunsetEnd)) return false;
-                if (!eval(this.Volatility)) return false;
-                if (!eval(this.Phase)) return false;
-                if (!eval(this.PhaseLength)) return false;
-                if (!eval(this.TNAMDataTypeState)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -540,14 +411,11 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.SunriseBegin)) return true;
-                if (eval(this.SunriseEnd)) return true;
-                if (eval(this.SunsetBegin)) return true;
-                if (eval(this.SunsetEnd)) return true;
-                if (eval(this.Volatility)) return true;
-                if (eval(this.Phase)) return true;
-                if (eval(this.PhaseLength)) return true;
-                if (eval(this.TNAMDataTypeState)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -581,14 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SunTexture = eval(this.SunTexture);
                 obj.SunGlareTexture = eval(this.SunGlareTexture);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.SunriseBegin = eval(this.SunriseBegin);
-                obj.SunriseEnd = eval(this.SunriseEnd);
-                obj.SunsetBegin = eval(this.SunsetBegin);
-                obj.SunsetEnd = eval(this.SunsetEnd);
-                obj.Volatility = eval(this.Volatility);
-                obj.Phase = eval(this.Phase);
-                obj.PhaseLength = eval(this.PhaseLength);
-                obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ClimateData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -646,37 +507,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Model?.ToString(fg);
                     }
-                    if (printMask?.SunriseBegin ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(SunriseBegin, "SunriseBegin");
-                    }
-                    if (printMask?.SunriseEnd ?? true)
-                    {
-                        fg.AppendItem(SunriseEnd, "SunriseEnd");
-                    }
-                    if (printMask?.SunsetBegin ?? true)
-                    {
-                        fg.AppendItem(SunsetBegin, "SunsetBegin");
-                    }
-                    if (printMask?.SunsetEnd ?? true)
-                    {
-                        fg.AppendItem(SunsetEnd, "SunsetEnd");
-                    }
-                    if (printMask?.Volatility ?? true)
-                    {
-                        fg.AppendItem(Volatility, "Volatility");
-                    }
-                    if (printMask?.Phase ?? true)
-                    {
-                        fg.AppendItem(Phase, "Phase");
-                    }
-                    if (printMask?.PhaseLength ?? true)
-                    {
-                        fg.AppendItem(PhaseLength, "PhaseLength");
-                    }
-                    if (printMask?.TNAMDataTypeState ?? true)
-                    {
-                        fg.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                        Data?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -694,14 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? SunTexture;
             public Exception? SunGlareTexture;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? SunriseBegin;
-            public Exception? SunriseEnd;
-            public Exception? SunsetBegin;
-            public Exception? SunsetEnd;
-            public Exception? Volatility;
-            public Exception? Phase;
-            public Exception? PhaseLength;
-            public Exception? TNAMDataTypeState;
+            public MaskItem<Exception?, ClimateData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
@@ -718,22 +544,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return SunGlareTexture;
                     case Climate_FieldIndex.Model:
                         return Model;
-                    case Climate_FieldIndex.SunriseBegin:
-                        return SunriseBegin;
-                    case Climate_FieldIndex.SunriseEnd:
-                        return SunriseEnd;
-                    case Climate_FieldIndex.SunsetBegin:
-                        return SunsetBegin;
-                    case Climate_FieldIndex.SunsetEnd:
-                        return SunsetEnd;
-                    case Climate_FieldIndex.Volatility:
-                        return Volatility;
-                    case Climate_FieldIndex.Phase:
-                        return Phase;
-                    case Climate_FieldIndex.PhaseLength:
-                        return PhaseLength;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        return TNAMDataTypeState;
+                    case Climate_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -756,29 +568,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Climate_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Climate_FieldIndex.SunriseBegin:
-                        this.SunriseBegin = ex;
-                        break;
-                    case Climate_FieldIndex.SunriseEnd:
-                        this.SunriseEnd = ex;
-                        break;
-                    case Climate_FieldIndex.SunsetBegin:
-                        this.SunsetBegin = ex;
-                        break;
-                    case Climate_FieldIndex.SunsetEnd:
-                        this.SunsetEnd = ex;
-                        break;
-                    case Climate_FieldIndex.Volatility:
-                        this.Volatility = ex;
-                        break;
-                    case Climate_FieldIndex.Phase:
-                        this.Phase = ex;
-                        break;
-                    case Climate_FieldIndex.PhaseLength:
-                        this.PhaseLength = ex;
-                        break;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = ex;
+                    case Climate_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ClimateData.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -803,29 +594,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Climate_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Climate_FieldIndex.SunriseBegin:
-                        this.SunriseBegin = (Exception?)obj;
-                        break;
-                    case Climate_FieldIndex.SunriseEnd:
-                        this.SunriseEnd = (Exception?)obj;
-                        break;
-                    case Climate_FieldIndex.SunsetBegin:
-                        this.SunsetBegin = (Exception?)obj;
-                        break;
-                    case Climate_FieldIndex.SunsetEnd:
-                        this.SunsetEnd = (Exception?)obj;
-                        break;
-                    case Climate_FieldIndex.Volatility:
-                        this.Volatility = (Exception?)obj;
-                        break;
-                    case Climate_FieldIndex.Phase:
-                        this.Phase = (Exception?)obj;
-                        break;
-                    case Climate_FieldIndex.PhaseLength:
-                        this.PhaseLength = (Exception?)obj;
-                        break;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = (Exception?)obj;
+                    case Climate_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ClimateData.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -840,14 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (SunTexture != null) return true;
                 if (SunGlareTexture != null) return true;
                 if (Model != null) return true;
-                if (SunriseBegin != null) return true;
-                if (SunriseEnd != null) return true;
-                if (SunsetBegin != null) return true;
-                if (SunsetEnd != null) return true;
-                if (Volatility != null) return true;
-                if (Phase != null) return true;
-                if (PhaseLength != null) return true;
-                if (TNAMDataTypeState != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -908,14 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(SunTexture, "SunTexture");
                 fg.AppendItem(SunGlareTexture, "SunGlareTexture");
                 Model?.ToString(fg);
-                fg.AppendItem(SunriseBegin, "SunriseBegin");
-                fg.AppendItem(SunriseEnd, "SunriseEnd");
-                fg.AppendItem(SunsetBegin, "SunsetBegin");
-                fg.AppendItem(SunsetEnd, "SunsetEnd");
-                fg.AppendItem(Volatility, "Volatility");
-                fg.AppendItem(Phase, "Phase");
-                fg.AppendItem(PhaseLength, "PhaseLength");
-                fg.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                Data?.ToString(fg);
             }
             #endregion
 
@@ -928,14 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.SunTexture = this.SunTexture.Combine(rhs.SunTexture);
                 ret.SunGlareTexture = this.SunGlareTexture.Combine(rhs.SunGlareTexture);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.SunriseBegin = this.SunriseBegin.Combine(rhs.SunriseBegin);
-                ret.SunriseEnd = this.SunriseEnd.Combine(rhs.SunriseEnd);
-                ret.SunsetBegin = this.SunsetBegin.Combine(rhs.SunsetBegin);
-                ret.SunsetEnd = this.SunsetEnd.Combine(rhs.SunsetEnd);
-                ret.Volatility = this.Volatility.Combine(rhs.Volatility);
-                ret.Phase = this.Phase.Combine(rhs.Phase);
-                ret.PhaseLength = this.PhaseLength.Combine(rhs.PhaseLength);
-                ret.TNAMDataTypeState = this.TNAMDataTypeState.Combine(rhs.TNAMDataTypeState);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -962,14 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool SunTexture;
             public bool SunGlareTexture;
             public MaskItem<bool, Model.TranslationMask?> Model;
-            public bool SunriseBegin;
-            public bool SunriseEnd;
-            public bool SunsetBegin;
-            public bool SunsetEnd;
-            public bool Volatility;
-            public bool Phase;
-            public bool PhaseLength;
-            public bool TNAMDataTypeState;
+            public MaskItem<bool, ClimateData.TranslationMask?> Data;
             #endregion
 
             #region Ctors
@@ -980,14 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.SunTexture = defaultOn;
                 this.SunGlareTexture = defaultOn;
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.SunriseBegin = defaultOn;
-                this.SunriseEnd = defaultOn;
-                this.SunsetBegin = defaultOn;
-                this.SunsetEnd = defaultOn;
-                this.Volatility = defaultOn;
-                this.Phase = defaultOn;
-                this.PhaseLength = defaultOn;
-                this.TNAMDataTypeState = defaultOn;
+                this.Data = new MaskItem<bool, ClimateData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -999,25 +734,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((SunriseBegin, null));
-                ret.Add((SunriseEnd, null));
-                ret.Add((SunsetBegin, null));
-                ret.Add((SunsetEnd, null));
-                ret.Add((Volatility, null));
-                ret.Add((Phase, null));
-                ret.Add((PhaseLength, null));
-                ret.Add((TNAMDataTypeState, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Climate_Registration.TriggeringRecordType;
-        [Flags]
-        public enum TNAMDataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => ClimateCommon.Instance.GetLinks(this);
         public Climate(FormKey formKey)
@@ -1103,14 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? SunTexture { get; set; }
         new String? SunGlareTexture { get; set; }
         new Model? Model { get; set; }
-        new DateTime SunriseBegin { get; set; }
-        new DateTime SunriseEnd { get; set; }
-        new DateTime SunsetBegin { get; set; }
-        new DateTime SunsetEnd { get; set; }
-        new Byte Volatility { get; set; }
-        new Climate.MoonPhase Phase { get; set; }
-        new Byte PhaseLength { get; set; }
-        new Climate.TNAMDataType TNAMDataTypeState { get; set; }
+        new ClimateData? Data { get; set; }
     }
 
     public partial interface IClimateInternal :
@@ -1131,14 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? SunTexture { get; }
         String? SunGlareTexture { get; }
         IModelGetter? Model { get; }
-        DateTime SunriseBegin { get; }
-        DateTime SunriseEnd { get; }
-        DateTime SunsetBegin { get; }
-        DateTime SunsetEnd { get; }
-        Byte Volatility { get; }
-        Climate.MoonPhase Phase { get; }
-        Byte PhaseLength { get; }
-        Climate.TNAMDataType TNAMDataTypeState { get; }
+        IClimateDataGetter? Data { get; }
 
     }
 
@@ -1442,14 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         SunTexture = 6,
         SunGlareTexture = 7,
         Model = 8,
-        SunriseBegin = 9,
-        SunriseEnd = 10,
-        SunsetBegin = 11,
-        SunsetEnd = 12,
-        Volatility = 13,
-        Phase = 14,
-        PhaseLength = 15,
-        TNAMDataTypeState = 16,
+        Data = 9,
     }
     #endregion
 
@@ -1467,9 +1169,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "25ca8fab-7f62-4f8b-9c32-d65a3261ac05";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Climate.Mask<>);
 
@@ -1507,22 +1209,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Climate_FieldIndex.SunGlareTexture;
                 case "MODEL":
                     return (ushort)Climate_FieldIndex.Model;
-                case "SUNRISEBEGIN":
-                    return (ushort)Climate_FieldIndex.SunriseBegin;
-                case "SUNRISEEND":
-                    return (ushort)Climate_FieldIndex.SunriseEnd;
-                case "SUNSETBEGIN":
-                    return (ushort)Climate_FieldIndex.SunsetBegin;
-                case "SUNSETEND":
-                    return (ushort)Climate_FieldIndex.SunsetEnd;
-                case "VOLATILITY":
-                    return (ushort)Climate_FieldIndex.Volatility;
-                case "PHASE":
-                    return (ushort)Climate_FieldIndex.Phase;
-                case "PHASELENGTH":
-                    return (ushort)Climate_FieldIndex.PhaseLength;
-                case "TNAMDATATYPESTATE":
-                    return (ushort)Climate_FieldIndex.TNAMDataTypeState;
+                case "DATA":
+                    return (ushort)Climate_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -1538,14 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.SunTexture:
                 case Climate_FieldIndex.SunGlareTexture:
                 case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                case Climate_FieldIndex.TNAMDataTypeState:
+                case Climate_FieldIndex.Data:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1559,17 +1240,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Climate_FieldIndex.Weathers:
                 case Climate_FieldIndex.Model:
+                case Climate_FieldIndex.Data:
                     return true;
                 case Climate_FieldIndex.SunTexture:
                 case Climate_FieldIndex.SunGlareTexture:
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                case Climate_FieldIndex.TNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1585,14 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.SunTexture:
                 case Climate_FieldIndex.SunGlareTexture:
                 case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                case Climate_FieldIndex.TNAMDataTypeState:
+                case Climate_FieldIndex.Data:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1612,22 +1279,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "SunGlareTexture";
                 case Climate_FieldIndex.Model:
                     return "Model";
-                case Climate_FieldIndex.SunriseBegin:
-                    return "SunriseBegin";
-                case Climate_FieldIndex.SunriseEnd:
-                    return "SunriseEnd";
-                case Climate_FieldIndex.SunsetBegin:
-                    return "SunsetBegin";
-                case Climate_FieldIndex.SunsetEnd:
-                    return "SunsetEnd";
-                case Climate_FieldIndex.Volatility:
-                    return "Volatility";
-                case Climate_FieldIndex.Phase:
-                    return "Phase";
-                case Climate_FieldIndex.PhaseLength:
-                    return "PhaseLength";
-                case Climate_FieldIndex.TNAMDataTypeState:
-                    return "TNAMDataTypeState";
+                case Climate_FieldIndex.Data:
+                    return "Data";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1642,14 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.SunTexture:
                 case Climate_FieldIndex.SunGlareTexture:
                 case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                case Climate_FieldIndex.TNAMDataTypeState:
+                case Climate_FieldIndex.Data:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1665,14 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.SunTexture:
                 case Climate_FieldIndex.SunGlareTexture:
                 case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                case Climate_FieldIndex.TNAMDataTypeState:
+                case Climate_FieldIndex.Data:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1692,22 +1331,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case Climate_FieldIndex.Model:
                     return typeof(Model);
-                case Climate_FieldIndex.SunriseBegin:
-                    return typeof(DateTime);
-                case Climate_FieldIndex.SunriseEnd:
-                    return typeof(DateTime);
-                case Climate_FieldIndex.SunsetBegin:
-                    return typeof(DateTime);
-                case Climate_FieldIndex.SunsetEnd:
-                    return typeof(DateTime);
-                case Climate_FieldIndex.Volatility:
-                    return typeof(Byte);
-                case Climate_FieldIndex.Phase:
-                    return typeof(Climate.MoonPhase);
-                case Climate_FieldIndex.PhaseLength:
-                    return typeof(Byte);
-                case Climate_FieldIndex.TNAMDataTypeState:
-                    return typeof(Climate.TNAMDataType);
+                case Climate_FieldIndex.Data:
+                    return typeof(ClimateData);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1722,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static readonly RecordType TriggeringRecordType = CLMT_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
+        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(ClimateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1769,14 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SunTexture = default;
             item.SunGlareTexture = default;
             item.Model = null;
-            item.SunriseBegin = default;
-            item.SunriseEnd = default;
-            item.SunsetBegin = default;
-            item.SunsetEnd = default;
-            item.Volatility = default;
-            item.Phase = default;
-            item.PhaseLength = default;
-            item.TNAMDataTypeState = default;
+            item.Data = null;
             base.Clear(item);
         }
         
@@ -1800,9 +1418,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasTNAMDataType":
-                    item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1932,32 +1547,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.TNAMDataTypeState = Climate.TNAMDataType.Has;
-                    }
-                    ClimateBinaryCreateTranslation.FillBinarySunriseBeginCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    ClimateBinaryCreateTranslation.FillBinarySunriseEndCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    ClimateBinaryCreateTranslation.FillBinarySunsetBeginCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    ClimateBinaryCreateTranslation.FillBinarySunsetEndCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    item.Volatility = dataFrame.ReadUInt8();
-                    ClimateBinaryCreateTranslation.FillBinaryPhaseCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    ClimateBinaryCreateTranslation.FillBinaryPhaseLengthCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
+                    item.Data = Mutagen.Bethesda.Oblivion.ClimateData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Data);
                 }
                 default:
                     return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -2044,14 +1635,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.SunriseBegin = item.SunriseBegin == rhs.SunriseBegin;
-            ret.SunriseEnd = item.SunriseEnd == rhs.SunriseEnd;
-            ret.SunsetBegin = item.SunsetBegin == rhs.SunsetBegin;
-            ret.SunsetEnd = item.SunsetEnd == rhs.SunsetEnd;
-            ret.Volatility = item.Volatility == rhs.Volatility;
-            ret.Phase = item.Phase == rhs.Phase;
-            ret.PhaseLength = item.PhaseLength == rhs.PhaseLength;
-            ret.TNAMDataTypeState = item.TNAMDataTypeState == rhs.TNAMDataTypeState;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2137,37 +1725,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.SunriseBegin ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.SunriseBegin, "SunriseBegin");
-            }
-            if (printMask?.SunriseEnd ?? true)
-            {
-                fg.AppendItem(item.SunriseEnd, "SunriseEnd");
-            }
-            if (printMask?.SunsetBegin ?? true)
-            {
-                fg.AppendItem(item.SunsetBegin, "SunsetBegin");
-            }
-            if (printMask?.SunsetEnd ?? true)
-            {
-                fg.AppendItem(item.SunsetEnd, "SunsetEnd");
-            }
-            if (printMask?.Volatility ?? true)
-            {
-                fg.AppendItem(item.Volatility, "Volatility");
-            }
-            if (printMask?.Phase ?? true)
-            {
-                fg.AppendItem(item.Phase, "Phase");
-            }
-            if (printMask?.PhaseLength ?? true)
-            {
-                fg.AppendItem(item.PhaseLength, "PhaseLength");
-            }
-            if (printMask?.TNAMDataTypeState ?? true)
-            {
-                fg.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
+                DataItem?.ToString(fg, "Data");
             }
         }
         
@@ -2180,6 +1741,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.SunGlareTexture.HasValue && checkMask.SunGlareTexture.Value != (item.SunGlareTexture != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2197,14 +1760,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.SunGlareTexture = (item.SunGlareTexture != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.SunriseBegin = true;
-            mask.SunriseEnd = true;
-            mask.SunsetBegin = true;
-            mask.SunsetEnd = true;
-            mask.Volatility = true;
-            mask.Phase = true;
-            mask.PhaseLength = true;
-            mask.TNAMDataTypeState = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, ClimateData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2258,14 +1815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
             if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.SunriseBegin != rhs.SunriseBegin) return false;
-            if (lhs.SunriseEnd != rhs.SunriseEnd) return false;
-            if (lhs.SunsetBegin != rhs.SunsetBegin) return false;
-            if (lhs.SunsetEnd != rhs.SunsetEnd) return false;
-            if (lhs.Volatility != rhs.Volatility) return false;
-            if (lhs.Phase != rhs.Phase) return false;
-            if (lhs.PhaseLength != rhs.PhaseLength) return false;
-            if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
         
@@ -2303,14 +1853,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.SunriseBegin);
-            hash.Add(item.SunriseEnd);
-            hash.Add(item.SunsetBegin);
-            hash.Add(item.SunsetEnd);
-            hash.Add(item.Volatility);
-            hash.Add(item.Phase);
-            hash.Add(item.PhaseLength);
-            hash.Add(item.TNAMDataTypeState);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2459,37 +2005,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Data) ?? true))
             {
-                item.SunriseBegin = rhs.SunriseBegin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEnd) ?? true))
-            {
-                item.SunriseEnd = rhs.SunriseEnd;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBegin) ?? true))
-            {
-                item.SunsetBegin = rhs.SunsetBegin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEnd) ?? true))
-            {
-                item.SunsetEnd = rhs.SunsetEnd;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
-            {
-                item.Volatility = rhs.Volatility;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Phase) ?? true))
-            {
-                item.Phase = rhs.Phase;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.PhaseLength) ?? true))
-            {
-                item.PhaseLength = rhs.PhaseLength;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                item.TNAMDataTypeState = rhs.TNAMDataTypeState;
+                errorMask?.PushIndex((int)Climate_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Climate_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2688,80 +2228,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Model));
                 }
             }
-            if (item.TNAMDataTypeState.HasFlag(Climate.TNAMDataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    DateTimeXmlTranslation.Instance.Write(
+                    ((ClimateDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.SunriseBegin),
-                        item: item.SunriseBegin,
-                        fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Climate_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Data));
                 }
-                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEnd) ?? true))
-                {
-                    DateTimeXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.SunriseEnd),
-                        item: item.SunriseEnd,
-                        fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBegin) ?? true))
-                {
-                    DateTimeXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.SunsetBegin),
-                        item: item.SunsetBegin,
-                        fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEnd) ?? true))
-                {
-                    DateTimeXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.SunsetEnd),
-                        item: item.SunsetEnd,
-                        fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Volatility),
-                        item: item.Volatility,
-                        fieldIndex: (int)Climate_FieldIndex.Volatility,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Phase) ?? true))
-                {
-                    EnumXmlTranslation<Climate.MoonPhase>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Phase),
-                        item: item.Phase,
-                        fieldIndex: (int)Climate_FieldIndex.Phase,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.PhaseLength) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PhaseLength),
-                        item: item.PhaseLength,
-                        fieldIndex: (int)Climate_FieldIndex.PhaseLength,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Climate.TNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.TNAMDataTypeState),
-                    item: item.TNAMDataTypeState,
-                    fieldIndex: (int)Climate_FieldIndex.TNAMDataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -2953,140 +2432,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "SunriseBegin":
-                    errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
+                case "Data":
+                    errorMask?.PushIndex((int)Climate_FieldIndex.Data);
                     try
                     {
-                        item.SunriseBegin = DateTimeXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<ClimateData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
-                    break;
-                case "SunriseEnd":
-                    errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
-                    try
-                    {
-                        item.SunriseEnd = DateTimeXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunsetBegin":
-                    errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
-                    try
-                    {
-                        item.SunsetBegin = DateTimeXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunsetEnd":
-                    errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
-                    try
-                    {
-                        item.SunsetEnd = DateTimeXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Volatility":
-                    errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
-                    try
-                    {
-                        item.Volatility = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Phase":
-                    errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
-                    try
-                    {
-                        item.Phase = EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PhaseLength":
-                    errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
-                    try
-                    {
-                        item.PhaseLength = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TNAMDataTypeState":
-                    errorMask?.PushIndex((int)Climate_FieldIndex.TNAMDataTypeState);
-                    try
-                    {
-                        item.TNAMDataTypeState = EnumXmlTranslation<Climate.TNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3184,93 +2537,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ClimateBinaryWriteTranslation Instance = new ClimateBinaryWriteTranslation();
 
-        static partial void WriteBinarySunriseBeginCustom(
-            MutagenWriter writer,
-            IClimateGetter item);
-
-        public static void WriteBinarySunriseBegin(
-            MutagenWriter writer,
-            IClimateGetter item)
-        {
-            WriteBinarySunriseBeginCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinarySunriseEndCustom(
-            MutagenWriter writer,
-            IClimateGetter item);
-
-        public static void WriteBinarySunriseEnd(
-            MutagenWriter writer,
-            IClimateGetter item)
-        {
-            WriteBinarySunriseEndCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinarySunsetBeginCustom(
-            MutagenWriter writer,
-            IClimateGetter item);
-
-        public static void WriteBinarySunsetBegin(
-            MutagenWriter writer,
-            IClimateGetter item)
-        {
-            WriteBinarySunsetBeginCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinarySunsetEndCustom(
-            MutagenWriter writer,
-            IClimateGetter item);
-
-        public static void WriteBinarySunsetEnd(
-            MutagenWriter writer,
-            IClimateGetter item)
-        {
-            WriteBinarySunsetEndCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryPhaseCustom(
-            MutagenWriter writer,
-            IClimateGetter item);
-
-        public static void WriteBinaryPhase(
-            MutagenWriter writer,
-            IClimateGetter item)
-        {
-            WriteBinaryPhaseCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryPhaseLengthCustom(
-            MutagenWriter writer,
-            IClimateGetter item);
-
-        public static void WriteBinaryPhaseLength(
-            MutagenWriter writer,
-            IClimateGetter item)
-        {
-            WriteBinaryPhaseLengthCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IClimateGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IClimateGetter item,
             MutagenWriter writer,
@@ -3308,30 +2574,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: ModelItem,
                     writer: writer);
             }
-            if (item.TNAMDataTypeState.HasFlag(Climate.TNAMDataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Climate_Registration.TNAM_HEADER)))
-                {
-                    ClimateBinaryWriteTranslation.WriteBinarySunriseBegin(
-                        writer: writer,
-                        item: item);
-                    ClimateBinaryWriteTranslation.WriteBinarySunriseEnd(
-                        writer: writer,
-                        item: item);
-                    ClimateBinaryWriteTranslation.WriteBinarySunsetBegin(
-                        writer: writer,
-                        item: item);
-                    ClimateBinaryWriteTranslation.WriteBinarySunsetEnd(
-                        writer: writer,
-                        item: item);
-                    writer.Write(item.Volatility);
-                    ClimateBinaryWriteTranslation.WriteBinaryPhase(
-                        writer: writer,
-                        item: item);
-                    ClimateBinaryWriteTranslation.WriteBinaryPhaseLength(
-                        writer: writer,
-                        item: item);
-                }
+                ((ClimateDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer);
             }
         }
 
@@ -3345,7 +2592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Climate_Registration.CLMT_HEADER,
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3393,84 +2640,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ClimateBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
-
-        static partial void FillBinarySunriseBeginCustom(
-            MutagenFrame frame,
-            IClimateInternal item);
-
-        public static void FillBinarySunriseBeginCustomPublic(
-            MutagenFrame frame,
-            IClimateInternal item)
-        {
-            FillBinarySunriseBeginCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinarySunriseEndCustom(
-            MutagenFrame frame,
-            IClimateInternal item);
-
-        public static void FillBinarySunriseEndCustomPublic(
-            MutagenFrame frame,
-            IClimateInternal item)
-        {
-            FillBinarySunriseEndCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinarySunsetBeginCustom(
-            MutagenFrame frame,
-            IClimateInternal item);
-
-        public static void FillBinarySunsetBeginCustomPublic(
-            MutagenFrame frame,
-            IClimateInternal item)
-        {
-            FillBinarySunsetBeginCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinarySunsetEndCustom(
-            MutagenFrame frame,
-            IClimateInternal item);
-
-        public static void FillBinarySunsetEndCustomPublic(
-            MutagenFrame frame,
-            IClimateInternal item)
-        {
-            FillBinarySunsetEndCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinaryPhaseCustom(
-            MutagenFrame frame,
-            IClimateInternal item);
-
-        public static void FillBinaryPhaseCustomPublic(
-            MutagenFrame frame,
-            IClimateInternal item)
-        {
-            FillBinaryPhaseCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinaryPhaseLengthCustom(
-            MutagenFrame frame,
-            IClimateInternal item);
-
-        public static void FillBinaryPhaseLengthCustomPublic(
-            MutagenFrame frame,
-            IClimateInternal item)
-        {
-            FillBinaryPhaseLengthCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 
@@ -3547,42 +2716,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        private int? _TNAMLocation;
-        public Climate.TNAMDataType TNAMDataTypeState { get; private set; }
-        #region SunriseBegin
-        private int _SunriseBeginLocation => _TNAMLocation!.Value + 0x0;
-        private bool _SunriseBegin_IsSet => GetSunriseBeginIsSetCustom();
-        public DateTime SunriseBegin => GetSunriseBeginCustom();
-        #endregion
-        #region SunriseEnd
-        private int _SunriseEndLocation => _TNAMLocation!.Value + 0x1;
-        private bool _SunriseEnd_IsSet => GetSunriseEndIsSetCustom();
-        public DateTime SunriseEnd => GetSunriseEndCustom();
-        #endregion
-        #region SunsetBegin
-        private int _SunsetBeginLocation => _TNAMLocation!.Value + 0x2;
-        private bool _SunsetBegin_IsSet => GetSunsetBeginIsSetCustom();
-        public DateTime SunsetBegin => GetSunsetBeginCustom();
-        #endregion
-        #region SunsetEnd
-        private int _SunsetEndLocation => _TNAMLocation!.Value + 0x3;
-        private bool _SunsetEnd_IsSet => GetSunsetEndIsSetCustom();
-        public DateTime SunsetEnd => GetSunsetEndCustom();
-        #endregion
-        #region Volatility
-        private int _VolatilityLocation => _TNAMLocation!.Value + 0x4;
-        private bool _Volatility_IsSet => _TNAMLocation.HasValue;
-        public Byte Volatility => _Volatility_IsSet ? _data.Span[_VolatilityLocation] : default;
-        #endregion
-        #region Phase
-        private int _PhaseLocation => _TNAMLocation!.Value + 0x5;
-        private bool _Phase_IsSet => GetPhaseIsSetCustom();
-        public Climate.MoonPhase Phase => GetPhaseCustom();
-        #endregion
-        #region PhaseLength
-        private int _PhaseLengthLocation => _TNAMLocation!.Value + 0x6;
-        private bool _PhaseLength_IsSet => GetPhaseLengthIsSetCustom();
-        public Byte PhaseLength => GetPhaseLengthCustom();
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IClimateDataGetter? Data => _Data_IsSet ? ClimateDataBinaryOverlay.ClimateDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3666,9 +2804,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    _TNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.TNAMDataTypeState = Climate.TNAMDataType.Has;
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Data);
                 }
                 default:
                     return base.FillRecordType(
