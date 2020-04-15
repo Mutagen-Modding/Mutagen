@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// Parameter object for customizing binary export job instructions
+    /// </summary>
     public class BinaryWriteParameters
     {
         public static BinaryWriteParameters Default = new BinaryWriteParameters();
@@ -53,6 +56,16 @@ namespace Mutagen.Bethesda
         /// </summary>
         public MastersListSyncOption MastersListSync = MastersListSyncOption.Iterate;
 
+        /// <summary>
+        /// Aligns a mod's ModKey to a path's implied ModKey.
+        /// Will adjust its logic based on the MasterFlagSync option:
+        ///  - ThrowIfMisaligned:  If the path and mod do not match, throw.
+        ///  - CorrectToPath:  If the path and mod do not match, use path's key.
+        /// </summary>
+        /// <param name="mod">Mod to check and adjust</param>
+        /// <param name="path">Path to compare to</param>
+        /// <returns>ModKey to use</returns>
+        /// <exception cref="ArgumentException">If misaligned and set to ThrowIfMisaligned</exception>
         public ModKey RunMasterMatch(IModGetter mod, string path)
         {
             if (MasterFlagSync == MasterFlagSyncOption.NoCheck) return mod.ModKey;

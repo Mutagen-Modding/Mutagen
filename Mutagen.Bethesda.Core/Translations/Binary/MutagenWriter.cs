@@ -9,21 +9,42 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
+    /// <summary>
+    /// A wrapper around IBinaryWriter with extra Mutagen-specific reference data
+    /// </summary>
     public class MutagenWriter : IDisposable
     {
         private readonly bool dispose = true;
-        public System.IO.BinaryWriter Writer;
         private const byte Zero = 0;
+        
+        /// <summary>
+        /// Wrapped writer
+        /// </summary>
+        public System.IO.BinaryWriter Writer;
+        
+        /// <summary>
+        /// Base stream that the writer wraps
+        /// </summary>
         public Stream BaseStream { get; }
+        
+        /// <summary>
+        /// Game metadata content to refer to for header information
+        /// </summary>
         public GameConstants Meta { get; }
+        
+        /// <summary>
+        /// Optional master references for easy access during write operations
+        /// </summary>
         public MasterReferenceReader? MasterReferences { get; set; }
 
+        /// <inheritdoc/>
         public long Position
         {
             get => this.BaseStream.Position;
             set => this.BaseStream.Position = value;
         }
 
+        /// <inheritdoc/>
         public long Length
         {
             get => this.BaseStream.Length;
@@ -53,66 +74,78 @@ namespace Mutagen.Bethesda.Binary
             this.Meta = meta;
         }
 
+        /// <inheritdoc/>
         public void Write(bool b)
         {
             this.Writer.Write(b);
         }
 
+        /// <inheritdoc/>
         public void Write(bool? b)
         {
             if (!b.HasValue) return;
             this.Writer.Write(b.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(byte b)
         {
             this.Writer.Write(b);
         }
 
+        /// <inheritdoc/>
         public void Write(byte? b)
         {
             if (!b.HasValue) return;
             this.Writer.Write(b.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(byte[]? b)
         {
             if (b == null) return;
             this.Writer.Write(b);
         }
 
+        /// <inheritdoc/>
         public void Write(ReadOnlySpan<byte> b)
         {
             this.Writer.Write(b);
         }
 
+        /// <inheritdoc/>
         public void Write(ushort b)
         {
             this.Writer.Write(b);
         }
 
+        /// <inheritdoc/>
         public void Write(ushort? b)
         {
             if (!b.HasValue) return;
             this.Writer.Write(b.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(uint b)
         {
             this.Writer.Write(b);
         }
 
+        /// <inheritdoc/>
         public void Write(uint? b)
         {
             if (!b.HasValue) return;
             this.Writer.Write(b.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(ulong b)
         {
             this.Writer.Write(b);
         }
 
+        /// <inheritdoc/>
         public void Write(ulong? b)
         {
             if (!b.HasValue) return;
@@ -124,67 +157,79 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(s);
         }
 
+        /// <inheritdoc/>
         public void Write(sbyte? s)
         {
             if (!s.HasValue) return;
             this.Writer.Write(s.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(short s)
         {
             this.Writer.Write(s);
         }
 
+        /// <inheritdoc/>
         public void Write(short? s)
         {
             if (!s.HasValue) return;
             this.Writer.Write(s.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(int i)
         {
             this.Writer.Write(i);
         }
 
+        /// <inheritdoc/>
         public void Write(int? i)
         {
             if (!i.HasValue) return;
             this.Writer.Write(i.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(long i)
         {
             this.Writer.Write(i);
         }
 
+        /// <inheritdoc/>
         public void Write(long? i)
         {
             if (!i.HasValue) return;
             this.Writer.Write(i.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(float i)
         {
             this.Writer.Write(i);
         }
 
+        /// <inheritdoc/>
         public void Write(float? i)
         {
             if (!i.HasValue) return;
             this.Writer.Write(i.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(double i)
         {
             this.Writer.Write(i);
         }
 
+        /// <inheritdoc/>
         public void Write(double? i)
         {
             if (!i.HasValue) return;
             this.Writer.Write(i.Value);
         }
 
+        /// <inheritdoc/>
         public void Write(char c)
         {
             this.Writer.Write(c);
@@ -196,6 +241,7 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(c.Value);
         }
 
+        /// <inheritdoc/>
         public void WriteZeros(uint num)
         {
             for (uint i = 0; i < num; i++)
@@ -203,6 +249,7 @@ namespace Mutagen.Bethesda.Binary
                 this.Write(Zero);
             }
         }
+        /// <inheritdoc/>
 
         public void Write(ReadOnlySpan<char> str)
         {
@@ -215,6 +262,7 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(bytes);
         }
 
+        /// <inheritdoc/>
         public void Write(string str, StringBinaryType binaryType)
         {
             switch (binaryType)
@@ -239,6 +287,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        /// <inheritdoc/>
         public void Write(Color color, bool extraByte)
         {
             this.Writer.Write(color.R);
@@ -250,6 +299,9 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        /// <summary>
+        /// Disposes of Writer if applicable
+        /// </summary>
         public void Dispose()
         {
             if (dispose)

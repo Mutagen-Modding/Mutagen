@@ -7,16 +7,50 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
+    /// <summary>
+    /// Reference for all the alignment and length constants related to a specific game
+    /// </summary>
     public class GameConstants
     {
+        /// <summary>
+        /// Associated game type
+        /// </summary>
         public GameMode GameMode { get; }
+        
+        /// <summary>
+        /// Length of the Mod header's metadata, excluding content
+        /// </summary>
         public sbyte ModHeaderLength { get; }
+        
+        /// <summary>
+        /// Length of the Mod header's non-fundamental metadata
+        /// </summary>
         public sbyte ModHeaderFluffLength { get; }
 
+        /// <summary>
+        /// Group constants
+        /// </summary>
         public RecordHeaderConstants GroupConstants { get; }
+        
+        /// <summary>
+        /// Major Record constants
+        /// </summary>
         public MajorRecordConstants MajorConstants { get; }
+        
+        /// <summary>
+        /// Sub Record constants
+        /// </summary>
         public RecordHeaderConstants SubConstants { get; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="gameMode">GameMode to associate with the constants</param>
+        /// <param name="modHeaderLength">Length of the ModHeader</param>
+        /// <param name="modHeaderLength">Length of the ModHeader excluding initial recordtype and length bytes.</param>
+        /// <param name="groupConstants">Constants defining Groups</param>
+        /// <param name="majorConstants">Constants defining Major Records</param>
+        /// <param name="subConstants">Constants defining Sub Records</param>
         public GameConstants(
             GameMode gameMode,
             sbyte modHeaderLength,
@@ -33,6 +67,9 @@ namespace Mutagen.Bethesda.Binary
             SubConstants = subConstants;
         }
 
+        /// <summary>
+        /// Readonly singleton of Oblivion game constants
+        /// </summary>
         public static readonly GameConstants Oblivion = new GameConstants(
             gameMode: GameMode.Oblivion,
             modHeaderLength: 20,
@@ -55,6 +92,9 @@ namespace Mutagen.Bethesda.Binary
                 headerLength: 6,
                 lengthLength: 2));
 
+        /// <summary>
+        /// Readonly singleton of Skyrim LE game constants
+        /// </summary>
         public static readonly GameConstants Skyrim = new GameConstants(
             gameMode: GameMode.Skyrim,
             modHeaderLength: 24,
@@ -349,6 +389,11 @@ namespace Mutagen.Bethesda.Binary
         }
         #endregion
 
+        /// <summary>
+        /// Returns record constants related to a certain ObjectType
+        /// </summary>
+        /// <param name="type">ObjectType to query</param>
+        /// <returns>Record Constants associated with type</returns>
         public RecordHeaderConstants Constants(ObjectType type)
         {
             switch (type)
@@ -365,6 +410,11 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        /// <summary>
+        /// Returns GameConstant readonly singleton associated with a GameMode 
+        /// </summary>
+        /// <param name="mode">GameMode to query</param>
+        /// <returns>GameConstant readonly singleton associated with mode</returns>
         public static GameConstants Get(GameMode mode)
         {
             switch (mode)
