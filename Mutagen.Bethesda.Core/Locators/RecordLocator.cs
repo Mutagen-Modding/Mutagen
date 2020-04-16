@@ -162,13 +162,11 @@ namespace Mutagen.Bethesda
 
         private static void SkipHeader(IMutagenReadStream reader)
         {
-            ModHeader headerMeta = reader.GetHeader();
-            if (!headerMeta.HasContent)
+            if (!reader.TryReadMod(out var header))
             {
                 reader.Position = reader.Length;
-                return;
             }
-            reader.Position += headerMeta.TotalLength;
+            reader.Position += header.ContentLength;
         }
 
         public static FileLocations GetFileLocations(

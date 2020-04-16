@@ -116,9 +116,29 @@ namespace Mutagen.Bethesda.Binary
                 lengthLength: 2));
 
         #region Header Factories
-        public ModHeader Header(ReadOnlySpan<byte> span) => new ModHeader(this, span);
-        public ModHeader GetHeader(IBinaryReadStream stream) => new ModHeader(this, stream.GetSpan(this.ModHeaderLength));
-        public ModHeader ReadHeader(IBinaryReadStream stream) => new ModHeader(this, stream.ReadSpan(this.ModHeaderLength));
+        public ModHeader Mod(ReadOnlySpan<byte> span) => new ModHeader(this, span);
+        public ModHeader GetMod(IBinaryReadStream stream) => new ModHeader(this, stream.GetSpan(this.ModHeaderLength));
+        public ModHeader ReadMod(IBinaryReadStream stream) => new ModHeader(this, stream.ReadSpan(this.ModHeaderLength));
+        public bool TryGetMod(IBinaryReadStream stream, out ModHeader header)
+        {
+            if (stream.Remaining < this.ModHeaderLength)
+            {
+                header = default;
+                return false;
+            }
+            header = new ModHeader(this, stream.GetSpan(this.ModHeaderLength));
+            return true;
+        }
+        public bool TryReadMod(IBinaryReadStream stream, out ModHeader header)
+        {
+            if (stream.Remaining < this.ModHeaderLength)
+            {
+                header = default;
+                return false;
+            }
+            header = new ModHeader(this, stream.ReadSpan(this.ModHeaderLength));
+            return true;
+        }
 
         public GroupHeader Group(ReadOnlySpan<byte> span) => new GroupHeader(this, span);
         public GroupFrame GroupRecordFrame(ReadOnlySpan<byte> span) => new GroupFrame(this, span);
@@ -434,8 +454,10 @@ namespace Mutagen.Bethesda.Binary
 
     public static class GameConstantsExt
     {
-        public static ModHeader GetHeader(this IMutagenReadStream stream) => stream.MetaData.GetHeader(stream);
-        public static ModHeader ReadHeader(this IMutagenReadStream stream) => stream.MetaData.ReadHeader(stream);
+        public static ModHeader GetMod(this IMutagenReadStream stream) => stream.MetaData.GetMod(stream);
+        public static ModHeader ReadMod(this IMutagenReadStream stream) => stream.MetaData.ReadMod(stream);
+        public static bool TryGetMod(this IMutagenReadStream stream, out ModHeader header) => stream.MetaData.TryGetMod(stream, out header);
+        public static bool TryReadMod(this IMutagenReadStream stream, out ModHeader header) => stream.MetaData.TryReadMod(stream, out header);
 
         public static GroupHeader GetGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetGroup(stream, offset);
         public static GroupFrame GetGroupRecordFrame(IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetGroupRecordFrame(stream, offset);

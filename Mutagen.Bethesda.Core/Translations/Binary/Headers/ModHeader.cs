@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Binary
         /// GameMode associated with header
         /// </summary>
         public GameMode GameMode => Meta.GameMode;
-        public bool HasContent => this.Span.Length >= this.HeaderLength;
+        
         /// <summary>
         /// The length that the header itself takes
         /// </summary>

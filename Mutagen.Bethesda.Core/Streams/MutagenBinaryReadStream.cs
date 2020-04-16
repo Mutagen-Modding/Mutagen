@@ -12,6 +12,8 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
     {
+        private readonly string? _path;
+
         /// <summary>
         /// Convenience offset tracker variable for helping print meaningful position information
         /// relative to an original source file.  Only used if a stream gets reframed.
@@ -44,6 +46,7 @@ namespace Mutagen.Bethesda.Binary
             long offsetReference = 0)
             : base(path, bufferSize)
         {
+            this._path = path;
             this.MetaData = metaData;
             this.MasterReferences = masterReferences;
             this.OffsetReference = offsetReference;
@@ -83,6 +86,11 @@ namespace Mutagen.Bethesda.Binary
         {
             var offset = this.OffsetReference + this.Position;
             return new MutagenMemoryReadStream(this.ReadBytes(length), this.MetaData, this.MasterReferences, offsetReference: offset);
+        }
+
+        public override string ToString()
+        {
+            return $"{(_path == null ? " " : $"{_path}: ")}{this._stream.Position}-{this._stream.Length} ({this._stream.Remaining()})";
         }
     }
 }
